@@ -5,6 +5,7 @@ run.py
 .sconsign.dblite
 **/table_*.dat
 tmp
+HPW.code-workspace
 pgo/
 **/*.~lock.*
 **/delme 1.txt
