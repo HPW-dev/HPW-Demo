@@ -22,6 +22,7 @@
 
 Команды на сборку игры:
 ```
-cd "папка с кодом игры"
+git clone --depth=1 https://github.com/HPW-dev/HPW-Demo
+cd HPW-Demo
 py "script/build-game-release.py"
 ```
