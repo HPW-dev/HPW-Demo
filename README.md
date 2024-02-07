@@ -3,7 +3,7 @@
 Исходники демки HPW для ознакомления.
 
 ### Компиляция
-Использовались компиляторы GCC/Clang/MinGW64 [см. инструкцию по сборке](how-to-build-ru.md)
+Использовались компиляторы GCC/Clang/MinGW64 [см. инструкцию по сборке](script/how-to-build-ru.md)
 
 ### Copyright
 © 2020-2024, [HPW-dev](mailto:hpwdev0@gmail.com)
