@@ -1,0 +1,94 @@
+#!/usr/bin/env python
+Import([
+  "env",
+  "is_linux",
+  "is_debug",
+  "ld_flags",
+  "cpp_flags",
+  "compiler",
+  "defines",
+  "is_64bit",
+])
+
+enable_omp = True
+#enable_omp = False
+if enable_omp:
+  ld_flags.extend(["-fopenmp"])
+  cpp_flags.extend(["-fopenmp"])
+  
+lib_path = []
+build_dir = "../../build/"
+prog_name = "HPW"
+src_dir = "../../src/"
+thirdparty_dir = "../../thirdparty/"
+
+inc_path = [
+  ".",
+  src_dir,
+  thirdparty_dir + "include/",
+]
+
+used_libs = [
+  "yaml-cpp"
+]
+
+if is_linux:
+  used_libs.extend(["GL", "GLEW", "glfw"])
+else: # windows
+  inc_path.extend([
+    thirdparty_dir + "include/_windows_only",
+    thirdparty_dir + "include/_windows_only/GLEW"
+  ])
+  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  lib_path.extend([
+    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/yaml-cpp/"
+  ])
+
+sources = [
+  Glob(thirdparty_dir + "include/zip/*.c"),
+  Glob(src_dir + "util/*.cpp"),
+  Glob(src_dir + "util/file/*.cpp"),
+  Glob(src_dir + "util/math/*.cpp"),
+  Glob(src_dir + "util/math/*.c"),
+  Glob(src_dir + "host/*.cpp"),
+  Glob(src_dir + "game/*.cpp"),
+  Glob(src_dir + "game/util/post-effect/*.cpp"),
+  Glob(src_dir + "game/util/*.cpp"),
+  Glob(src_dir + "game/hud/*.cpp"),
+  Glob(src_dir + "game/entity/*.cpp"),
+  Glob(src_dir + "game/entity/enemy/*.cpp"),
+  Glob(src_dir + "game/entity/collider/*.cpp"),
+  Glob(src_dir + "game/entity/util/info/*.cpp"),
+  Glob(src_dir + "game/entity/util/*.cpp"),
+  Glob(src_dir + "game/menu/*.cpp"),
+  Glob(src_dir + "game/menu/item/*.cpp"),
+  Glob(src_dir + "game/scene/*.cpp"),
+  Glob(src_dir + "game/scene/cutscene/*.cpp"),
+  Glob(src_dir + "game/level/*.cpp"),
+  Glob(src_dir + "game/level/util/*.cpp"),
+  Glob(src_dir + "graphic/animation/*.cpp"),
+  Glob(src_dir + "graphic/image/*.cpp"),
+  Glob(src_dir + "graphic/sprite/*.cpp"),
+  Glob(src_dir + "graphic/effect/*.cpp"),
+  Glob(src_dir + "graphic/font/*.cpp"),
+  Glob(src_dir + "graphic/util/*.cpp"),
+]  
+
+if not is_debug and not is_linux:
+  ld_flags.append("-mwindows")
+
+# билд теста графики
+env.Append(CPPDEFINES = defines)
+env.Append(CXXFLAGS = cpp_flags)
+env.Program(
+  target = build_dir + prog_name,
+  source = sources,
+  CXX = compiler,
+  CXXFLAGS = cpp_flags,
+  LIBPATH = lib_path,
+  CPPPATH = inc_path,
+  LINKFLAGS = ld_flags,
+  LIBS = used_libs
+) # env.Program

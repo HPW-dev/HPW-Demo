@@ -1,0 +1,80 @@
+#!/usr/bin/env python
+Import([
+  "env",
+  "is_linux",
+  "is_debug",
+  "ld_flags",
+  "cpp_flags",
+  "compiler",
+  "defines",
+  "is_clang",
+  "is_64bit",
+])
+ld_flags.extend(["-fopenmp"])
+cpp_flags.extend(["-fopenmp"])
+build_dir = "../../build/"
+prog_name = "HPW"
+src_dir = "../../src/"
+thirdparty_dir = "../../thirdparty/"
+inc_path = [
+  ".",
+  src_dir,
+  thirdparty_dir + "include",
+  thirdparty_dir + "include/GLEW",
+]
+lib_path = [thirdparty_dir + "lib/yaml-cpp"]
+used_libs = ["yaml-cpp"]
+sources = [
+  src_dir + "host/host.cpp",
+  src_dir + "host/host-ogl.cpp",
+  src_dir + "host/host-glfw.cpp",
+  src_dir + "host/command.cpp",
+  src_dir + "host/resize.cpp",
+  src_dir + "host/protownd.cpp",
+  Glob(src_dir + "util/math/*.cpp"),
+  Glob(src_dir + "util/file/*.cpp"),
+  Glob(src_dir + "util/file/archive/*.cpp"),
+  Glob(src_dir + "util/file/yaml/*.cpp"),
+  thirdparty_dir + "include/zip/zip.c",
+  Glob(src_dir + "util/*.cpp"),
+  Glob(src_dir + "graphic/animation/*.cpp"),
+  Glob(src_dir + "graphic/animation/direct/*.cpp"),
+  Glob(src_dir + "graphic/image/*.cpp"),
+  Glob(src_dir + "graphic/font/*.cpp"),
+  Glob(src_dir + "graphic/*.cpp"),
+  src_dir + "game/store.cpp",
+  src_dir + "game/scene/scene.cpp",
+  src_dir + "game/scene/scene-info.cpp",
+  src_dir + "game/scene/manager.cpp",
+  src_dir + "game/util.cpp",
+  Glob(src_dir + "game/menu/*.cpp"),
+  Glob(src_dir + "game/menu/item/*.cpp"),
+  Glob(src_dir + "hpw/*.cpp"),
+  Glob("*.cpp"),
+]
+if is_linux:
+  used_libs.extend(["GL", "GLEW", "glfw"])
+else: # windows
+  inc_path.extend([thirdparty_dir + "include/_windows_only"])
+  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  lib_path.extend([
+    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/GLEW",
+  ])
+
+if not is_debug and not is_linux:
+  ld_flags.append("-mwindows")
+
+# билд теста графики
+env.Append(CPPDEFINES = defines)
+env.Append(CXXFLAGS = cpp_flags)
+env.Program(
+  target = build_dir + prog_name,
+  source = sources,
+  CXX = compiler,
+  CXXFLAGS = cpp_flags,
+  LIBPATH = lib_path,
+  CPPPATH = inc_path,
+  LINKFLAGS = ld_flags,
+  LIBS = used_libs
+) # env.Program

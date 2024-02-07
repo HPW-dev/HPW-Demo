@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+# скрипт удаляющий файлы билда
+import helper
+
+helper.rem_all('**/*.exe')
+helper.rem_all('**/vgcore.*')
+helper.rem_all('**/cpplint.txt')
+helper.rem_all('**/gmon.svg')
+helper.rem_all('**/*.o')
+helper.rem_all('**/*.out')
+helper.rem_all('**/*.gch')
+helper.rem_all('**/*.gcda')
+helper.rem_all('**/*.gcno')
+helper.rem_all('**/*.hpw_replay')
+helper.rem_all('**/imgui.ini')
+helper.rem_all('**/cpplint.txt')
+helper.rem_all('**/perf.data.old')
+helper.rem_all('**/perf.data')
+helper.rem_dir('__pycache__')
+helper.rem_dir('script/__pycache__')
+helper.rem_dir('pgo', True)
+helper.rem_if_exist('build/HPW')
+helper.rem_if_exist('build/test.yml')
+helper.rem_if_exist('.sconsign.dblite')
+helper.rem_all('build/screenshots/*')

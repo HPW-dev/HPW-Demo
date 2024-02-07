@@ -1,0 +1,17 @@
+GLEW: v2.2.0
+KHR: (2021)
+GLFW: v3.3
+DyLib: v1.6.1
+ImGui: v1.87
+OpenAL-soft: v1.23.1
+robin-hood-hashing: v3.11.5
+stb_truetype: v1.26
+stb_image_write: v1.16
+stb_image: v2.28
+YAML-cpp: v0.8.0
+Miniz: v1.15
+hash_sha256: (30 mar. 2023)
+GCC: v13.2.0
+MinGW-w64: i686-ucrt-mcf-dwarf, built by Brecht Sanders
+SCons: v4.3.0
+UPX: v4.0.2

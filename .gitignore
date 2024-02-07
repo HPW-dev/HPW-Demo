@@ -1,0 +1,45 @@
+﻿build/config.yml
+ignore me.lnk
+imgui.ini
+run.py
+.sconsign.dblite
+**/table_*.dat
+tmp
+pgo/
+**/*.~lock.*
+**/delme 1.txt
+**/delme 2.txt
+**/test.hpw_replay
+**/*.hpw_replay
+**/*.a
+**/*.bak
+**/*.svg
+**/*.o
+**/*.out
+**/*.gch
+**/*.mkv
+**/err.txt
+**/*.avi
+**/*.mp4
+**/delme
+**/delme.txt
+**/lib
+**/HPW-test.tar.gz
+**/vgcore.*
+**/__pycache__
+**/perf.data
+**/perf.data.old
+**/ignore me
+**/cpplint.txt
+**/*.gcda
+**/*.gcno
+build/*.so
+build/*.exe
+build/*.dll
+build/test.yml
+build/HPW
+build/screenshots/
+build/config
+build/resource
+test/yaml test/test.yml
+src/.sconsign.dblite

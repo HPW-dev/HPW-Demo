@@ -1,0 +1,47 @@
+{
+	"header file with class": {
+		"scope": "cpp,c++",
+		"prefix": "#pragma",
+		"body": [
+			"#pragma once",
+			"#include \"util/macro.hpp\"",
+			"",
+			"/// ",
+			"class $1 {",
+			"  nocopy($1);",
+			"",
+			"public:",
+			"  $1();",
+			"  ~$1();",
+			"}; // $1",
+			"",
+		],
+		"description": "header file with class"
+	},
+	"class with impl.": {
+		"scope": "cpp,c++",
+		"prefix": "class ",
+		"body": [
+			"#pragma once",
+			"#include \"util/mem-types.hpp\"",
+			"",
+			"/// ",
+			"class $1 {",
+			"  struct Impl;",
+			"  Unique<Impl> impl {};",
+			"",
+			"public:",
+			"  $1();",
+			"  ~$1();",
+			"}; // $1",
+			"",
+			"struct $1::Impl {",
+			"  inline Impl() = default;",
+			"};",
+			"",
+			"$1::$1(): impl{new_unique<Impl>()} {}",
+			"$1::~$1() {}",
+		],
+		"description": "header file with class"
+	}
+}

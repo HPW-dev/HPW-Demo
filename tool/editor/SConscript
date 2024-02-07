@@ -1,0 +1,126 @@
+#!/usr/bin/env python
+Import([
+  "env",
+  "is_linux",
+  "is_debug",
+  "ld_flags",
+  "cpp_flags",
+  "compiler",
+  "defines",
+  "is_64bit",
+])
+
+src_dir = "../../src/"
+build_dir = "../../build/"
+prog_name = "editor"
+thirdparty_dir = "../../thirdparty/"
+imgui_dir = thirdparty_dir + "include/imgui/"
+
+inc_path = [
+  ".",
+  src_dir,
+  thirdparty_dir + "include/",
+  imgui_dir,
+  imgui_dir + "backends/",
+]
+lib_path = []
+used_libs = [
+  "yaml-cpp",
+]
+
+ld_flags.extend(["-fopenmp"])
+cpp_flags.extend(["-fopenmp"])
+defines.extend(["-DEDITOR"])
+
+if is_linux:
+  used_libs.extend(["GL", "GLEW", "glfw"])
+else: # windows
+  inc_path.extend([
+    thirdparty_dir + "include/_windows_only",
+    thirdparty_dir + "include/_windows_only/GLEW"
+  ])
+  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  lib_path.extend([
+    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/yaml-cpp/"
+  ])
+
+sources = [
+  Glob(thirdparty_dir + "include/zip/*.c"),
+  Glob(src_dir + "util/file/archive/*.cpp"),
+  Glob(src_dir + "util/file/*.cpp"),
+  Glob(src_dir + "util/math/*.cpp"),
+  Glob(src_dir + "util/math/*.c"),
+  src_dir + "host/resize.cpp",
+  src_dir + "host/host-util.cpp",
+  src_dir + "host/host.cpp",
+  src_dir + "host/windows-keycodes.cpp",
+  src_dir + "host/protownd.cpp",
+  src_dir + "host/host-ogl.cpp",
+  src_dir + "host/host-glfw.cpp",
+  src_dir + "host/host-glfw-keymap.cpp",
+  Glob(src_dir + "game/util/*.cpp"),
+  src_dir + "game/game-sync.cpp",
+  src_dir + "game/scene/scene.cpp",
+  src_dir + "game/scene/scene-manager.cpp",
+  Glob(src_dir + "game/entity/enemy/*.cpp"),
+  src_dir + "game/entity/entity.cpp",
+  src_dir + "game/entity/entity-loader.cpp",
+  src_dir + "game/entity/player.cpp",
+  src_dir + "game/entity/player-dark.cpp",
+  src_dir + "game/entity/bonus-loader.cpp",
+  src_dir + "game/entity/bullet-loader.cpp",
+  src_dir + "game/entity/explosion-loader.cpp",
+  src_dir + "game/entity/particle-loader.cpp",
+  src_dir + "game/entity/particle.cpp",
+  src_dir + "game/entity/collidable.cpp",
+  src_dir + "game/entity/entity-manager.cpp",
+  src_dir + "game/entity/util/scatter.cpp",
+  src_dir + "game/entity/util/hitbox.cpp",
+  src_dir + "game/entity/util/entity-util.cpp",
+  src_dir + "game/entity/util/phys.cpp",
+  src_dir + "game/entity/util/anim-ctx.cpp",
+  Glob(src_dir + "game/entity/util/info/*.cpp"),
+  Glob(src_dir + "util/file/yaml/*.cpp"),
+  Glob(src_dir + "util/*.cpp"),
+  Glob(src_dir + "graphic/animation/*.cpp"),
+  Glob(src_dir + "graphic/image/*.cpp"),
+  Glob(src_dir + "graphic/sprite/*.cpp"),
+  Glob(src_dir + "graphic/font/*.cpp"),
+  Glob(src_dir + "graphic/util/*.cpp"),
+  Glob(src_dir + "graphic/effect/*.cpp"),
+  Glob(src_dir + "hpw/*.cpp"),
+  Glob(imgui_dir + "imgui*.cpp"),
+  imgui_dir + "backends/imgui_impl_opengl3.cpp",
+  imgui_dir + "backends/imgui_impl_glfw.cpp",
+  Glob("scene/*.cpp"),
+  Glob("window/*.cpp"),
+  Glob("*.cpp"),
+]
+if is_linux:
+  used_libs.extend(["GL", "GLEW", "glfw"])
+else: # windows
+  inc_path.extend([thirdparty_dir + "include/_windows_only"])
+  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  lib_path.extend([
+    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/GLEW",
+  ])
+
+if not is_debug and not is_linux:
+  ld_flags.append("-mwindows")
+
+# билд теста графики
+env.Append(CPPDEFINES = defines)
+env.Append(CXXFLAGS = cpp_flags)
+env.Program(
+  target = build_dir + prog_name,
+  source = sources,
+  CXX = compiler,
+  CXXFLAGS = cpp_flags,
+  LIBPATH = lib_path,
+  CPPPATH = inc_path,
+  LINKFLAGS = ld_flags,
+  LIBS = used_libs
+) # env.Program

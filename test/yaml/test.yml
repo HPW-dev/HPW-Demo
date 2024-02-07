@@ -1,0 +1,14 @@
+test_1:
+  float_val: 9.79969978
+  int_val: 97997
+  bool_val: true
+  default_test: defined str
+  v_real:
+    - 0.100000001
+    - 9.79969978
+    - 0
+    - 1000.67603
+node_2:
+  asci_str: HPW-dev
+  utf8_ru: чё ето?
+  utf8_ch: 是我这来中

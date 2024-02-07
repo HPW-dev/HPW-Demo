@@ -1,0 +1,75 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "launch",
+      "type": "shell",
+      "windows": {
+        "command": "build\\HPW.exe",
+      },
+      "linux": {
+        "command": "build/HPW",
+      }
+    },
+    {
+      "label": "build graphic debug",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-graphic-debug.py"]
+    },
+    {
+      "label": "build graphic release",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-graphic-release.py"]
+    },
+    {
+      "label": "build and launch table gen",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/table-gen.py"]
+    },
+    {
+      "label": "build yaml test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build yaml test.py"]
+    },
+    {
+      "label": "build editor",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-editor.py"]
+    },
+    {
+      "label": "build game (debug)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-debug.py"]
+    },
+    {
+      "label": "build game (release)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-release.py"]
+    },
+    {
+      "label": "mempool test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/mempool-test.py"]
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/clean.py"]
+    },
+    {
+      "label": "build tilemap-gen",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build tilemap-gen.py"]
+    },
+  ]
+}
