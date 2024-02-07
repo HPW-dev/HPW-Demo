@@ -22,6 +22,6 @@
 
 Команды на сборку игры:
 ```
-cd "путь к коду игры/HPW-Demo"
-py "script\build-game-release.py"
+cd "папка с кодом игры"
+py "script/build-game-release.py"
 ```
