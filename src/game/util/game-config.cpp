@@ -41,6 +41,8 @@ void save_config() {
   graphic_node.set_real ("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic_node.set_bool ("start_focused",       graphic::start_focused);
   graphic_node.set_str  ("palette",             graphic::current_palette_file);
+  graphic_node.set_int  ("frame_skip",          graphic::frame_skip);
+  graphic_node.set_bool ("auto_frame_skip",     graphic::auto_frame_skip);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool ("vsync",                 graphic::get_vsync());
@@ -49,7 +51,6 @@ void save_config() {
   sync_node.set_bool ("cpu_safe",              graphic::cpu_safe);
   sync_node.set_real ("autoopt_timeout_max",   graphic::autoopt_timeout_max);
   sync_node.set_bool("disable_frame_limit",    graphic::get_disable_frame_limit());
-  sync_node.set_bool("autoopt_trigger_is_fps", graphic::autoopt_trigger_is_fps);
 
   auto input_node = config.make_node("input");
   #define SAVE_KEY(name) input_node.set_int(#name, get_scancode(hpw::keycode::name));
@@ -106,6 +107,9 @@ void load_config() {
   graphic::start_focused = graphic_node.get_bool("start_focused", graphic::start_focused);
   if (hpw::init_palette_from_archive)
     hpw::init_palette_from_archive( graphic_node.get_str("palette") );
+  graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
+  assert(graphic::frame_skip < 30);
+  graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
@@ -114,7 +118,6 @@ void load_config() {
   graphic::set_target_fps( sync_node.get_int("target_fps", graphic::get_target_fps()) );
   graphic::cpu_safe = sync_node.get_bool("cpu_safe", graphic::cpu_safe);
   graphic::autoopt_timeout_max = sync_node.get_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
-  graphic::autoopt_trigger_is_fps = sync_node.get_bool("autoopt_trigger_is_fps", graphic::autoopt_trigger_is_fps);
 
   if (hpw::rebind_key_by_scancode) {
     cauto input_node = config["input"];

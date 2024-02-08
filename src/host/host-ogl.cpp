@@ -28,10 +28,7 @@ Host_ogl::Host_ogl(int argc, char *argv[])
   load_color_tables();
 }
 
-void Host_ogl::draw() {
-  ogl_draw();
-  ++graphic::frame_count;
-}
+void Host_ogl::draw() { ogl_draw(); }
 
 void Host_ogl::ogl_resize(int w, int h) {
   if ( !w || !h)

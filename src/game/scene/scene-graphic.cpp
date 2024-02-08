@@ -58,7 +58,6 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::set_disable_frame_limit(false);
           graphic::set_target_fps(60);
           graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
-          graphic::autoopt_trigger_is_fps = false;
           graphic::blink_bg = true;
           graphic::blink_motion_blur = true;
           graphic::blink_particles = true;
@@ -72,6 +71,8 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::enable_motion_blur = true;
           graphic::light_quality = Light_quality::medium;
           graphic::motion_blur_quality_reduct = true;
+          graphic::frame_skip = 2;
+          graphic::auto_frame_skip = true;
         }
       },
       Menu_list_item::Item {
@@ -81,7 +82,6 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::set_vsync(false);
           graphic::set_disable_frame_limit(true);
           graphic::autoopt_timeout_max = 15;
-          graphic::autoopt_trigger_is_fps = false;
           graphic::blink_bg = true;
           graphic::blink_particles = true;
           graphic::cpu_safe = false;
@@ -92,6 +92,8 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::enable_motion_blur = false;
           graphic::light_quality = Light_quality::low;
           graphic::motion_blur_quality_reduct = true;
+          graphic::frame_skip = 3;
+          graphic::auto_frame_skip = true;
         }
       },
       Menu_list_item::Item {
@@ -113,7 +115,8 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::enable_motion_blur = true;
           graphic::light_quality = Light_quality::high;
           graphic::motion_blur_quality_reduct = false;
-          graphic::autoopt_trigger_is_fps = true;
+          graphic::frame_skip = 0;
+          graphic::auto_frame_skip = false;
         }
       }
     } // items

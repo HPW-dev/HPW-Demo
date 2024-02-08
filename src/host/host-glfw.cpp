@@ -271,6 +271,7 @@ bool Host_glfw::is_ran() const { return is_run && !glfwWindowShouldClose(window)
 
 void Host_glfw::game_frame(double dt) {
   return_if (dt <= 0 || dt >= 10);
+  ++graphic::frame_count;
   check_frame_skip();
   return_if (graphic::skip_cur_frame); // не рисовать кадр при этом флаге
 
@@ -386,13 +387,25 @@ void Host_glfw::_set_mouse_cursour_mode(bool enable) {
 void Host_glfw::update(double dt) { }
 
 void Host_glfw::check_frame_skip() {
+  graphic::skip_cur_frame = false;
+
+  // скип через фаст форвард
   if (graphic::get_fast_forward()) {
-    graphic::skip_cur_frame = (graphic::frame_count++ % graphic::FAST_FWD_FRAMESKIP != 1);
+    graphic::skip_cur_frame = (graphic::frame_count % (1 + graphic::FAST_FWD_FRAMESKIP) == 0);
     graphic::render_lag = true; // для доп. ускорения рендера
-  } else {
-    graphic::skip_cur_frame = false;
   }
-}
+
+  // настраиваемый фреймскип
+  if (graphic::frame_skip > 0) {
+    const bool skip_me = graphic::frame_count % (1 + graphic::frame_skip) == 0;
+    if (graphic::auto_frame_skip) { // скип при лагах
+      if (graphic::render_lag)
+        graphic::skip_cur_frame = skip_me;
+    } else {
+      graphic::skip_cur_frame = skip_me;
+    }
+  }
+} // check_frame_skip
 
 void Host_glfw::frame_wait() {
   // ожидание для v-sync

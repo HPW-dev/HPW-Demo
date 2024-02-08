@@ -100,10 +100,7 @@ void set_draw_time_autoopt_limit(double val) {
 }
 
 void check_autoopt() {
-  // активация тригера автооптимизации
-  auto autoopt_trigger = graphic::autoopt_trigger_is_fps
-    ? graphic::cur_fps <= graphic::get_bad_fps()
-    : hpw::real_dt >= graphic::get_draw_time_autoopt_limit();
+  cauto autoopt_trigger = hpw::real_dt >= graphic::get_draw_time_autoopt_limit();
   if (autoopt_trigger) {
     graphic::render_lag = true;
     graphic::autoopt_timeout = graphic::autoopt_timeout_max;

@@ -180,7 +180,6 @@ Vec Scene_game::get_level_vel() const {
 }
 
 void Scene_game::replay_init() {
-
   clear_cur_keys();
   // globals
   hpw::game_updates_safe = 0;
@@ -203,8 +202,8 @@ void Scene_game::replay_init() {
 } // replay_init
 
 void Scene_game::replay_save_keys() {
-  return_if(!hpw::enable_replay);
-  return_if(hpw::replay_read_mode);
+  return_if ( !hpw::enable_replay);
+  return_if (hpw::replay_read_mode);
   Key_packet packet;
 
   #define check_key(key) if (is_pressed(key)) \
@@ -223,7 +222,7 @@ void Scene_game::replay_save_keys() {
 }
 
 void Scene_game::replay_load_keys() {
-  return_if (!hpw::replay_read_mode);
+  return_if ( !hpw::replay_read_mode);
 
   // сбросить свои клавиши
   clear_cur_keys();

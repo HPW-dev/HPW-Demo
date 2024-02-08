@@ -6,7 +6,6 @@ namespace graphic {
   constx int FAST_FWD_UPD_SPDUP = 10; /// во сколько раз ускорить апдейт при скипе
   constx int FAST_FWD_FRAMESKIP = 3; /// сколько кадров пропускать при скипе
   
-  inline bool autoopt_trigger_is_fps {true}; /// автооптимизация запускается по фпс, иначе по dt
   inline bool wait_frame {true}; /// ждать завершения отрисовки для стабильного апдейта
   inline bool step_mode {false}; /// режим пошагового выполнения
   inline bool skip_cur_frame {false}; /// пропустить отрисовку текущего кадра

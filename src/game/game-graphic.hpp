@@ -31,5 +31,7 @@ namespace graphic {
   inline bool enable_heat_distort {true}; /// отображает искажение воздуха
   inline bool disable_heat_distort_while_lag {true}; /// выключать искажение воздуха при лагах
   inline Light_quality light_quality {Light_quality::medium}; /// качество вcпышки
+  inline uint frame_skip {2};
+  inline bool auto_frame_skip {true};
 
 } // graphic ns
