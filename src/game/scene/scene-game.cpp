@@ -196,13 +196,10 @@ void Scene_game::replay_init() {
     detailed_log("назначен новый сид рандома: " << seed << '\n');
   #endif
 
-  if (hpw::enable_replay) {
-    if (hpw::replay_read_mode)
-      replay = new_unique<Replay>(hpw::cur_replay_file_name, false);
-    else
-      replay = new_unique<Replay>(hpw::cur_dir + "replays/" + get_random_replay_name(), true);
-  }
-
+  if (hpw::replay_read_mode)
+    replay = new_unique<Replay>(hpw::cur_replay_file_name, false);
+  else if (hpw::enable_replay)
+    replay = new_unique<Replay>(hpw::cur_dir + "replays/" + get_random_replay_name(), true);
 } // replay_init
 
 void Scene_game::replay_save_keys() {
