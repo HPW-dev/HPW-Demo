@@ -37,6 +37,7 @@ def write_game_version():
     version = open(file='_tmp_version_', mode='r').read()
     version = version.replace('\r\n', '')
     version = version.replace('\n', '')
+    print("generated version: " + version)
     os.remove('_tmp_version_')
 
     file.write (
