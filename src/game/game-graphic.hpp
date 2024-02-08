@@ -18,7 +18,6 @@ namespace graphic {
   inline bool enable_render       {true};
   inline bool blink_particles     {true}; /// включает мигание спрайтов при render_lag
   inline bool blink_motion_blur   {true}; /// включает мигание при размытии движения
-  inline bool blink_bg            {true}; /// при лагах, рисовать кадры фона не каждый раз
   inline bool motion_blur_quality_reduct {true}; /// уменьшить качество размытия при render_lag
   inline bool enable_motion_blur  {true};
   inline bool cpu_safe            {false}; /// при VSync снижает нагрузку на CPU, но -кадры

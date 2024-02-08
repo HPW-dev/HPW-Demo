@@ -42,7 +42,6 @@ struct Level_space::Impl {
   Layer_simple m_galaxy_1 {}; /// права галактика
   Layer_simple m_galaxy_2 {}; /// большая финальная галактика
   Layer_simple m_galaxy_3 {}; /// первая левая галактика
-  mutable Image copy_bg {}; /// рисовать копию предыдущих кадров при лагах
   real m_waiter_accel_additon {}; /// ускоряет появление новых ждунов
   bool predict_waiter {false}; /// если включён, ждун будет подбирать место спавна получше
 
@@ -51,7 +50,6 @@ struct Level_space::Impl {
     , m_galaxy_1{"resource/image/bg/space/galaxy 1/tilemap.yml", Vec{}, 0.1, &blend_max}
     , m_galaxy_2{"resource/image/bg/space/galaxy 2/tilemap.yml", Vec{}, 0.025001, &blend_fade_out_max}
     , m_galaxy_3{"resource/image/bg/space/galaxy 3/tilemap.yml", Vec{}, 0.05, &blend_max}
-    , copy_bg(graphic::width, graphic::height)
   {
     hpw::shmup_mode = true;
     init_collider();
@@ -73,24 +71,10 @@ struct Level_space::Impl {
   }
 
   inline void draw(Image& dst) const {
-
-    // если рендер лагает, то показывать предыдущий кадр
-    if (graphic::render_lag && graphic::blink_bg) {
-      if ((graphic::frame_count % 16) < 15) {
-        insert_fast(dst, copy_bg);
-        return;
-      }
-    }
-
     // отрисовка уровня:
     if (fill_bg_black)
       dst.fill(Pal8::black);
     draw_bg_layers(dst);
-
-    /* если дошли до сюда, то сейвим предыдущий кадр,
-    чтоб потом его копипастить при лагах */
-    if (graphic::render_lag && graphic::blink_bg)
-      insert_fast(copy_bg, dst);
   }
 
   inline void make_player() {

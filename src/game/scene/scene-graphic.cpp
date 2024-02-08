@@ -58,7 +58,6 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::set_disable_frame_limit(false);
           graphic::set_target_fps(60);
           graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
-          graphic::blink_bg = true;
           graphic::blink_motion_blur = true;
           graphic::blink_particles = true;
           graphic::blur_quality_mul = 1.0;
@@ -82,7 +81,6 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::set_vsync(false);
           graphic::set_disable_frame_limit(true);
           graphic::autoopt_timeout_max = 15;
-          graphic::blink_bg = true;
           graphic::blink_particles = true;
           graphic::cpu_safe = false;
           graphic::wait_frame = false;
@@ -102,7 +100,6 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
         []{
           graphic::set_vsync(true);
           graphic::set_disable_frame_limit(false);
-          graphic::blink_bg = false;
           graphic::blink_motion_blur = false;
           graphic::blink_particles = false;
           graphic::blur_quality_mul = 0.5;
