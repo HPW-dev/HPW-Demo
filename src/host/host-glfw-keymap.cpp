@@ -15,7 +15,7 @@ Key_mapper::Key_mapper() {
 void Key_mapper::bind(hpw::keycode dst_hpw_key, int scancode) {
   nauto dst = table[dst_hpw_key];
   dst.scancode = scancode;
-  utf32 name = U"error";
+  utf32 name = n2s<utf32>(scancode);
   // получить читаемое название кнопки
   if (auto win_name = get_windows_keycode_name(scancode); win_name) {
     name = *win_name;
