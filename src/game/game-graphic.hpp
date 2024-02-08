@@ -5,7 +5,7 @@ namespace graphic {
 
   /// как сильно снижать качество блюра при автооптимизации
   inline double max_motion_blur_quality_reduct = 16.0;
-  constx double default_autoopt_timeout = 4;
+  constx double default_autoopt_timeout = 2.5;
   /// сколько секунд не сбрасывать render_lag
   inline double autoopt_timeout_max = default_autoopt_timeout;
   /// если объект проходит меньшее растояние, то не включать блюр
