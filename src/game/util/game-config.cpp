@@ -10,6 +10,7 @@
 #include "game/util/game-replay.hpp"
 #include "game/util/game-palette.hpp"
 #include "util/file/yaml.hpp"
+#include "util/path.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 
@@ -72,8 +73,20 @@ void save_config() {
 void load_config() {
   hpw::config = new_shared<Yaml>(hpw::cur_dir + "config.yml", true);
 
-  cauto& config = *hpw::config;
+  auto& config = *hpw::config;
   hpw::enable_replay = config.get_bool("enable_replay");
+
+  auto path_node = config["path"];
+  // добавить инфу о путях, если конфиг сделан в первый раз
+  if ( !path_node.check()) {
+    path_node = config.make_node("path");
+    path_node.set_str("screenshots", "./screenshots/");
+    path_node.set_str("data", "./data.zip");
+    path_node.set_str("locale", "resource/locale/ru.yml");
+  }
+  // сделать папки, если их нет
+  make_dir_if_not_exist(hpw::cur_dir + path_node.get_str("screenshots"));
+  make_dir_if_not_exist(hpw::cur_dir + "replays/");
 
   cauto graphic_node = config["graphic"];
   cauto canvas_size = graphic_node.get_v_int("canvas_size", {graphic::width, graphic::height});
