@@ -271,7 +271,6 @@ bool Host_glfw::is_ran() const { return is_run && !glfwWindowShouldClose(window)
 
 void Host_glfw::game_frame(double dt) {
   return_if (dt <= 0 || dt >= 10);
-  ++graphic::frame_count;
   check_frame_skip();
   return_if (graphic::skip_cur_frame); // не рисовать кадр при этом флаге
 
@@ -404,6 +403,13 @@ void Host_glfw::check_frame_skip() {
     } else {
       graphic::skip_cur_frame = skip_me;
     }
+  }
+
+  // засчитать кадр как нарисованный
+  if (graphic::skip_cur_frame) {
+    ++graphic::frame_count;
+    ++fps;
+    frame_drawn = true;
   }
 } // check_frame_skip
 
