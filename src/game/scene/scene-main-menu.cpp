@@ -218,6 +218,7 @@ void Scene_main_menu::init_bg() {
     &bg_copy_2,
     &bg_copy_3,
     &bg_copy_4,
+    &bg_pattern_5,
     #endif
   };
   bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );
