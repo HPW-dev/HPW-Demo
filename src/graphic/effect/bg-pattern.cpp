@@ -21,10 +21,10 @@ class Waves final {
   inline Elem& get(const std::size_t x, const std::size_t y)
     { return m_grid[y * m_x + x]; }
 
-  inline Elem get_safe(const int x, const int y) const {
-    if (x >= 0 && x < scast<int>(m_x) && y >= 0 && y < scast<int>(m_y))
-      return m_grid[y * scast<int>(m_x) + x];
-    return {};
+  inline Elem get_safe(int x, int y) const {
+    x = std::clamp<int>(x, 0, m_x-1);
+    y = std::clamp<int>(y, 0, m_y-1);
+    return m_grid[y * scast<int>(m_x) + x];
   }
 
   inline void set_safe(const int x, const int y, const real value) {
