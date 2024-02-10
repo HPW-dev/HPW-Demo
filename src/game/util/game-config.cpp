@@ -43,6 +43,8 @@ void save_config() {
   graphic_node.set_str  ("palette",             graphic::current_palette_file);
   graphic_node.set_int  ("frame_skip",          graphic::frame_skip);
   graphic_node.set_bool ("auto_frame_skip",     graphic::auto_frame_skip);
+  graphic_node.set_bool ("enable_heat_distort", graphic::enable_heat_distort);
+  graphic_node.set_bool ("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool ("vsync",                 graphic::get_vsync());
@@ -108,8 +110,9 @@ void load_config() {
   if (hpw::init_palette_from_archive)
     hpw::init_palette_from_archive( graphic_node.get_str("palette") );
   graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
-  assert(graphic::frame_skip <= 30);
   graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
+  graphic::enable_heat_distort = graphic_node.get_bool("enable_heat_distort", graphic::enable_heat_distort);
+  graphic::disable_heat_distort_while_lag = graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
