@@ -52,6 +52,8 @@ Game_app::Game_app(int argc, char *argv[])
 void Game_app::update(double dt) {
   ALLOW_STABLE_RAND
   assert(dt == hpw::target_update_time);
+  update_graphic_autoopt(dt);
+  
   Host_glfw::update(dt);
 
   auto st = get_time();
@@ -60,8 +62,6 @@ void Game_app::update(double dt) {
     hpw::soft_exit();
   }
   hpw::update_time_unsafe = get_time() - st;
-
-  update_graphic_autoopt(dt);
 } // update
 
 void Game_app::draw() {

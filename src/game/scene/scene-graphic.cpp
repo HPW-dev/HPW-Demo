@@ -65,7 +65,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::disable_heat_distort_while_lag = true;
           graphic::wait_frame = true;
           graphic::double_buffering = true;
-          graphic::enable_heat_distort = true;
+          graphic::enable_heat_distort = false;
           graphic::enable_light = true;
           graphic::enable_motion_blur = true;
           graphic::light_quality = Light_quality::medium;
