@@ -23,7 +23,7 @@ namespace graphic {
   inline bool cpu_safe            {false}; /// при VSync снижает нагрузку на CPU, но -кадры
   inline bool fullscreen          {false};
   inline bool double_buffering    {true};
-  inline bool draw_border         {false}; /// показывать рамку на весь экране
+  inline bool draw_border         {true}; /// показывать рамку на весь экране
   inline bool show_mouse_cursour  {false}; /// показывать курсор мыши в окне игры
   inline bool start_focused       {false}; /// запускает окно сразу поверх других
   inline bool enable_light        {true}; /// отображает вспышки
