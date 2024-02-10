@@ -296,6 +296,19 @@ void Scene_graphic::init_detailed_menu() {
         0.25, // step speed
         get_locale_str("scene.graphic_menu.description.blur_quality_mul")
       ),
+      new_shared<Menu_int_item>(
+        get_locale_str("scene.graphic_menu.frame_skip"),
+        []{ return graphic::frame_skip; },
+        [](int val){ graphic::frame_skip = std::clamp(val, 0, 30); },
+        1,
+        get_locale_str("scene.graphic_menu.description.frame_skip")
+      ),
+      new_shared<Menu_bool_item>(
+        get_locale_str("scene.graphic_menu.auto_frame_skip"),
+        []{ return graphic::auto_frame_skip; },
+        [](bool val){ graphic::auto_frame_skip = val; },
+        get_locale_str("scene.graphic_menu.description.auto_frame_skipmeskip")
+      ),
       #ifdef DEBUG
       new_shared<Menu_text_item>(
         get_locale_str("scene.graphic_menu.set_fps_limit_70"),

@@ -108,7 +108,7 @@ void load_config() {
   if (hpw::init_palette_from_archive)
     hpw::init_palette_from_archive( graphic_node.get_str("palette") );
   graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
-  assert(graphic::frame_skip < 30);
+  assert(graphic::frame_skip <= 30);
   graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
 
   cauto sync_node = graphic_node["sync"];

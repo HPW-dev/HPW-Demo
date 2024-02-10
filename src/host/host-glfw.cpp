@@ -271,6 +271,7 @@ bool Host_glfw::is_ran() const { return is_run && !glfwWindowShouldClose(window)
 
 void Host_glfw::game_frame(double dt) {
   return_if (dt <= 0 || dt >= 10);
+  
   check_frame_skip();
   return_if (graphic::skip_cur_frame); // не рисовать кадр при этом флаге
 
@@ -288,6 +289,7 @@ void Host_glfw::game_frame(double dt) {
     draw();
     glfwSwapBuffers(window);
     ++fps;
+    ++graphic::frame_count;
     frame_drawn = true;
 
     // TODO в релизе убери
@@ -364,8 +366,15 @@ void Host_glfw::calc_upf() {
 }
 
 void Host_glfw::set_update_time(double dt) {
-  // ждать конца кадра, если используются синхронизации по VSync или лимиту кадров
-  if (graphic::wait_frame && !graphic::get_disable_frame_limit()) {
+  if (
+    // ждать конца кадра
+    graphic::wait_frame &&
+    // если используются синхронизации по VSync или лимиту кадров
+    !graphic::get_disable_frame_limit() &&
+    // юзать только при выключенном фреймскипе
+    (graphic::frame_skip == 0 || (graphic::auto_frame_skip && !graphic::render_lag))
+  ) {
+    // ждать завершения отрисовки кадра
     if (frame_drawn) {
       update_time_unsafe += graphic::get_vsync()
         ? graphic::get_target_vsync_frame_time()
@@ -396,7 +405,7 @@ void Host_glfw::check_frame_skip() {
 
   // настраиваемый фреймскип
   if (graphic::frame_skip > 0) {
-    const bool skip_me = graphic::frame_count % (1 + graphic::frame_skip) == 0;
+    const bool skip_me = (graphic::frame_count % (1 + graphic::frame_skip)) != 0;
     if (graphic::auto_frame_skip) { // скип при лагах
       if (graphic::render_lag)
         graphic::skip_cur_frame = skip_me;
@@ -408,8 +417,6 @@ void Host_glfw::check_frame_skip() {
   // засчитать кадр как нарисованный
   if (graphic::skip_cur_frame) {
     ++graphic::frame_count;
-    ++fps;
-    frame_drawn = true;
   }
 } // check_frame_skip
 
