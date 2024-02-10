@@ -2,6 +2,7 @@
 #include "windows-keycodes.hpp"
 
 std::optional<utf32> get_windows_keycode_name(int keycode) {
+#ifdef WINDOWS
   static const std::unordered_map<int, utf32> table {
     {1, U"ESC"},
     {2, U"1"},
@@ -96,4 +97,8 @@ std::optional<utf32> get_windows_keycode_name(int keycode) {
     return table.at(keycode);
   } catch (...) {}
   return {};
+#else
+  #pragma message("Linux scancodes not defined")
+  return {}; // на линуксе другие сканкоды
+#endif
 } // get_windows_keycode_name
