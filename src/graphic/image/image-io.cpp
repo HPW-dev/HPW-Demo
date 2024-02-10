@@ -4,11 +4,12 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 #include "image.hpp"
-#include "util/str-util.hpp"
 #include "graphic/util/convert.hpp"
+#include "util/str-util.hpp"
 #include "util/file/file.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "host/host-util.hpp"
 
 inline void _data_to_image(Image& dst, CN<Bytes> mem) {
   iferror(mem.empty(), "_data_to_image: mem.empty");
@@ -55,7 +56,7 @@ void save(CN<Image> src, Str name) {
   constexpr uint comp = 3;
   auto rgb24_p = Vector<uint8_t>(src.size * comp);
   cfor (i, src.size) {
-    auto col = to_rgb24(src[i]);
+    auto col = to_palette_rgb24(src[i]);
     auto rgb24_index = i * comp;
     rgb24_p[rgb24_index + 0] = col.r;
     rgb24_p[rgb24_index + 1] = col.g;

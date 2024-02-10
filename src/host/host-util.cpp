@@ -1,3 +1,4 @@
+#include "stb/stb_image.h"
 #include <cassert>
 #include <iostream>
 #include <array>
@@ -10,7 +11,10 @@
 #include "util/str-util.hpp"
 #include "util/file/archive.hpp"
 #include "util/error.hpp"
-#include "stb/stb_image.h"
+#include "graphic/util/convert.hpp"
+#include "graphic/image/color.hpp"
+
+static Vector<float> m_ogl_palette {};
 
 void set_target_ups(int new_ups) {
   assert(new_ups > 0);
@@ -161,5 +165,16 @@ Vector<float> load_ogl_palette(CN<Str> fname) {
     rgb_index += 3;
   }
   stbi_image_free(decoded);
+  m_ogl_palette = ogl_pal;
   return ogl_pal;
 } // load_ogl_palette
+
+Rgb24 to_palette_rgb24(const Pal8 x) {
+  if ( !m_ogl_palette.empty())
+    return Rgb24 {
+      scast<int>(m_ogl_palette.at(x.val * 3 + 0) * 255.0),
+      scast<int>(m_ogl_palette.at(x.val * 3 + 1) * 255.0),
+      scast<int>(m_ogl_palette.at(x.val * 3 + 2) * 255.0)
+    };
+  return to_rgb24(x);
+}
