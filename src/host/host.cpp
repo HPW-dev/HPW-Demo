@@ -7,6 +7,7 @@
 #include "game/game-common.hpp"
 #include "game/game-sync.hpp"
 #include "game/util/game-config.hpp"
+#include "game/util/logo.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
 #include "util/math/random.hpp"
@@ -35,7 +36,12 @@ Host::Host(int _argc, char** _argv)
   set_rnd_seed(seed);
   detailed_log("Сид рандома: " << seed << '\n');
 
-  print_logo();
+  std::cout << '\n';
+  std::cout << get_random_logo();
+  std::cout << '\n';
+  std::cout << "Запуск H.P.W\n";
+  std::cout.flush();
+
   callbacks_init();
 
   // узнать в какойо папке игра запущена
