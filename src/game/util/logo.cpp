@@ -1,10 +1,8 @@
 #include "logo.hpp"
-#include "util/vector-types.hpp"
-#include "util/macro.hpp"
 #include "util/math/random.hpp"
 
-Str get_random_logo() {
-  sconst Vector<Str> table_logo {
+CN<Strs> get_all_logos() {
+  sconst Strs table_logo {
     R"( |  | +--+ | | | )" "\n"
     R"( +--+ +--+ | | | )" "\n"
     R"( |  | |    +-+-+ )" "\n"
@@ -147,7 +145,12 @@ Str get_random_logo() {
     ,
   }; // table_logo
 
+  return table_logo;
+} // get_all_logos
+
+Str get_random_logo() {
   // случайный выбор лого
-  auto table_idx = rndu_fast(table_logo.size()-1);
+  cnauto table_logo = get_all_logos();
+  auto table_idx = rndu_fast(table_logo.size() - 1);
   return table_logo.at(table_idx);
 } // get_random_logo
