@@ -82,20 +82,21 @@ void Game_app::draw_border(Image& dst) const
 
 void Game_app::load_locale() {
   hpw::locale = new_shared<Locale>();
-  auto locale_path = (*hpw::config)["path"].get_str("locale", "resource/locale/en.yml");
-  auto locale_yml_mem = hpw::archive->get_file(locale_path);
-  auto locale_yml = Yaml(locale_yml_mem);
-  load_locales_to_store(locale_yml);
+  auto path = (*hpw::config)["path"].get_str("locale", "resource/locale/en.yml");
+  auto mem = hpw::archive->get_file(path);
+  auto yml = Yaml(mem);
+  load_locales_to_store(yml);
 }
 
 void Game_app::load_font() {
-  auto font_mem {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
-  graphic::font = new_shared<Unifont>(font_mem, 16, true);
+  auto mem {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
+  graphic::font = new_shared<Unifont>(mem, 16, true);
 }
 
 void Game_app::update_graphic_autoopt(double dt) {
+  using timeout_t = decltype(graphic::autoopt_timeout);
   // если рендер не будет лагать, то после таймера - тригер автооптимизации сбросится
-  graphic::autoopt_timeout = std::max(graphic::autoopt_timeout - dt, 0.0);
-  if (graphic::autoopt_timeout == 0)
+  graphic::autoopt_timeout = std::max(graphic::autoopt_timeout - dt, timeout_t(0));
+  if (graphic::autoopt_timeout == timeout_t(0))
     graphic::render_lag = false;
 }
