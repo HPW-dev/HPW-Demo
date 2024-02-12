@@ -1,5 +1,6 @@
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
+#include "scene-effect-plugin-select.hpp"
 #include "scene-manager.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
@@ -227,10 +228,18 @@ Shared<Menu_text_item> Scene_graphic::get_palette_item() {
   );
 }
 
+Shared<Menu_text_item> Scene_graphic::get_plugin_item() {
+  return new_shared<Menu_text_item>(
+    get_locale_str("scene.effect_plugin_select.title"),
+    []{ hpw::scene_mgr->add(new_shared<Scene_effect_plugin_select>()); }
+  );
+}
+
 void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     U"Настройки графики", // TODO locale
     Menu_items {
+      get_plugin_item(),
       get_palette_item(),
       get_preset_item(),
       get_fullscreen_item(),
@@ -251,6 +260,7 @@ void Scene_graphic::init_detailed_menu() {
   detailed_menu = new_shared<Advanced_text_menu>(
     U"Расширенные настройки графики", // TODO locale
     Menu_items {
+      get_plugin_item(),
       get_palette_item(),
       get_fullscreen_item(),
       get_vsync_item(),
