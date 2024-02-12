@@ -16,8 +16,8 @@ Str get_fileext(CN<Str> str) {
 Str get_filedir(CN<Str> str)
   { return str.substr(0, str.find_last_of(SEPARATOR)); }
 
-std::list<Str> files_in_dir(CN<Str> path) {
-  std::list<Str> ret = {};
+Strs files_in_dir(CN<Str> path) {
+  Strs ret = {};
   for (cnauto entry : std::filesystem::directory_iterator(path))
     ret.push_back(entry.path().string());
   return ret;

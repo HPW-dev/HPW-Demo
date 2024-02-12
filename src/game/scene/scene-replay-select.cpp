@@ -18,7 +18,7 @@
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
-  std::list<Str> m_replay_names {};
+  Strs m_replay_names {};
   uint m_replay_name_idx {};
 
   inline Impl() {
