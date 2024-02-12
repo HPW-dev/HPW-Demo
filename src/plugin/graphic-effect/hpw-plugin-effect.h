@@ -13,41 +13,42 @@ extern "C" {
 
 #define DEFAULT_EFFECT_API_VERSION 1
 
-typedef uint8_t Pal8;
-typedef const char* Cstr;
+typedef uint8_t pal8_t;
+typedef const char* cstr_t;
+typedef float real_t;
 
 /// name, description, value ref, speed step, min, max
-typedef void (*registrate_param_f32_ft)(Cstr, Cstr, float*, const float, const float, const float);
+typedef void (*registrate_param_f32_ft)(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
 /// name, description, value ref, speed step, min, max
-typedef void (*registrate_param_i32_ft)(Cstr, Cstr, int*, const int, const int, const int);
+typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int*, const int, const int, const int);
 
-struct Rgb24 {
+struct rgb24_t {
   uint8_t r;
   uint8_t g;
   uint8_t b;
 };
 
 /// Передаёт данные в эффект
-struct Context {
-  Pal8* dst;
-  uint16_t w;
-  uint16_t h;
+struct context_t {
+  pal8_t* dst;
+  const uint16_t w;
+  const uint16_t h;
   registrate_param_f32_ft registrate_param_f32;
   registrate_param_i32_ft registrate_param_i32;
 };
 
 /// для получения данных с эффекта
-struct Result {
+struct result_t {
   uint8_t version;
-  Cstr full_name;
-  Cstr description;
-  Cstr error;
+  cstr_t full_name;
+  cstr_t description;
+  cstr_t error;
   bool init_succsess;
 };
 
-void init(const struct Context* context, struct Result* result);
-void apply(uint32_t state);
-void finalize(void);
+void plugin_init(const struct context_t* context, struct result_t* result);
+void plugin_apply(uint32_t state);
+void plugin_finalize(void);
 
 #ifdef __cplusplus
 }
