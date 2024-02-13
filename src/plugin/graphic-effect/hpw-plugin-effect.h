@@ -31,8 +31,8 @@ struct rgb24_t {
 /// Передаёт данные в эффект
 struct context_t {
   pal8_t* dst;
-  const uint16_t w;
-  const uint16_t h;
+  uint16_t w;
+  uint16_t h;
   registrate_param_f32_ft registrate_param_f32;
   registrate_param_i32_ft registrate_param_i32;
 };

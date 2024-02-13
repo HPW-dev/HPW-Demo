@@ -8,45 +8,13 @@
 #include "game/game-font.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/game-effect-plugin.hpp"
+#include "game/util/plugin-graphic-effect.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/util/game-util.hpp"
-#include "game/game-canvas.hpp"
-#include "util/str-util.hpp"
 #include "util/path.hpp"
-
-using registrate_param_f32_ft = void (*)(Cstr, Cstr, float*, const float, const float, const float);
-using registrate_param_i32_ft = void (*)(Cstr, Cstr, int*, const int, const int, const int);
-
-/// Передаёт данные в эффект
-struct Context {
-  Pal8* dst {};
-  uint16_t w {};
-  uint16_t h {};
-  registrate_param_f32_ft registrate_param_f32 {};
-  registrate_param_i32_ft registrate_param_i32 {};
-};
-
-/// для получения данных с эффекта
-struct Result {
-  uint8_t version {};
-  Cstr full_name {};
-  Cstr description {};
-  Cstr error {};
-  bool init_succsess {};
-};
-
-using init_ft = void (const struct Context* context, struct Result* result);
-using apply_ft = void (uint32_t state);
-using finalize_ft = void (void);
-
-// ----------- [!] ---------------
-// вверх не перемещать
-#include <DyLib/DyLib.hpp>
-//#include <thirdparty/include/DyLib/DyLib.hpp>
-// ----------- [!] ---------------
+#include "util/str-util.hpp"
 
 struct Scene_effect_plugin_select::Impl {
   Unique<Advanced_text_menu> menu {};
@@ -124,26 +92,7 @@ struct Scene_effect_plugin_select::Impl {
     // TODO set current
     selected_effect = 0;
 
-    // TODO инициализация в другом месте
-    hpw::shared_lib_loader = new_shared<DyLib>();
-    hpw::shared_lib_loader->open( get_current_effect() );
-    cauto init_f = hpw::shared_lib_loader->getFunction<init_ft>("init");
-    cauto apply_f = hpw::shared_lib_loader->getFunction<apply_ft>("apply");
-    cauto finalize_f = hpw::shared_lib_loader->getFunction<finalize_ft>("finalize");
-    assert(init_f);
-    assert(apply_f);
-    assert(finalize_f);
-
-    Context context;
-    context.dst = graphic::canvas->data();
-    context.w = graphic::canvas->X;
-    context.h = graphic::canvas->Y;
-    context.registrate_param_f32 = {}; // TODO
-    context.registrate_param_i32 = {}; // TODO
-
-    Result result;
-    init_f(&context, &result);
-    hpw_log("plugin fullname: " << result.full_name << "\n");
+    load_plugin_graphic_effect(get_current_effect());
   }
 
   inline Str get_current_effect() const { return m_effects.at(selected_effect); }

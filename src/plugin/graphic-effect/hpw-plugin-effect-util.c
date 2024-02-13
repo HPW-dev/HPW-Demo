@@ -34,15 +34,15 @@ pal8_t rgb24_to_pal8(const struct rgb24_t src) {
   return round(gray * GRAY_MUL);
 }
 
-void check_params(const struct context_t* context, struct result_t* result) {
+bool check_params(const struct context_t* context, struct result_t* result) {
   result->error = "";
   result->version = DEFAULT_EFFECT_API_VERSION;
   result->init_succsess = true;
 
   #define iferror(cond, msg) if (cond) { \
-    result->error = "effect plugin: " msg; \
+    result->error = msg; \
     result->init_succsess = false; \
-    return; \
+    return false; \
   }
   iferror( !context->dst, "context.dst is null");
   iferror(context->h == 0, "context.h is 0");
@@ -50,4 +50,5 @@ void check_params(const struct context_t* context, struct result_t* result) {
   iferror( !context->registrate_param_f32, "registrate_param_f32 is null");
   iferror( !context->registrate_param_i32, "registrate_param_i32 is null");
   #undef iferror
+  return true;
 }
