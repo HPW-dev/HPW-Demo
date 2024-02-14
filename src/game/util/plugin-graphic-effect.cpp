@@ -105,7 +105,7 @@ const T speedstep, const T min, const T max) {
   iferror( !val, "неправильный адрес для value");
   iferror(Str(title).empty(), "параметру нужно задать имя");
   g_pge_params.push_back(std::move(param));
-}
+} // registrate_param
 
 void registrate_param_f32(cstr_t title, cstr_t desc, real_t* val,
 const real_t speedstep, const real_t min, const real_t max)
