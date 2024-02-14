@@ -70,7 +70,7 @@ void Game_app::update(double dt) {
   hpw::update_time_unsafe = get_time() - st;
 } // update
 
-void Game_app::draw() {
+void Game_app::draw_game_frame() {
   auto st = get_time();
 
   hpw::scene_mgr->draw(*graphic::canvas);
@@ -80,8 +80,6 @@ void Game_app::draw() {
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
-
-  Host_glfw::draw();
 }
 
 void Game_app::draw_border(Image& dst) const

@@ -21,6 +21,7 @@ protected:
   virtual void _set_mouse_cursour_mode(bool mode) = 0;
   /// получить текущее время в секундах
   virtual double get_time() const = 0;
+  inline virtual void draw_game_frame() {}
 
 public:
   explicit Host(int _argc, char** _argv);

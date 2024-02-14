@@ -286,6 +286,7 @@ void Host_glfw::game_frame(double dt) {
     calc_lerp_alpha();
     calc_upf();
 
+    draw_game_frame();
     draw();
     glfwSwapBuffers(window);
     ++fps;
