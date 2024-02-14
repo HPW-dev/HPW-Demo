@@ -1,3 +1,4 @@
+#include <utility>
 #include <cassert>
 #include <functional>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
@@ -89,7 +90,16 @@ void save_pge_to_config() {
   auto plugin_node = config.make_node_if_not_exist("plugin");
   auto graphic_node = plugin_node.make_node_if_not_exist("graphic");
   auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
-}
+  effect_node.set_str("path", get_cur_pge_path());
+  // сейв текущих настроек плагина
+  cnauto params = get_pge_params();
+  for (uint id = 0; cnauto param: params) {
+    auto param_node = effect_node.make_node_if_not_exist("param_" + n2s(id));
+    ++id;
+    assert(param);
+    param->save(param_node);
+  }
+} // save_pge_to_config
 
 template <class T>
 struct param_type_trait {
@@ -135,3 +145,27 @@ const std::int32_t speedstep, const std::int32_t min, const std::int32_t max)
 CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
 CN<Str> get_cur_pge_path() { return g_pge_path; }
 CN<Str> get_cur_pge_name() { return g_pge_name; }
+
+void Param_pge::save(Yaml& dst) const {
+  dst.set_str("title", title);
+  dst.set_str("description", description);
+  dst.set_int("type", std::to_underlying(type));
+}
+
+void Param_pge_int::save(Yaml& dst) const {
+  Param_pge::save(dst);
+  assert(value);
+  dst.set_int("value", *value);
+  dst.set_int("min", min);
+  dst.set_int("max", max);
+  dst.set_int("speed_step", speed_step);
+}
+
+void Param_pge_real::save(Yaml& dst) const {
+  Param_pge::save(dst);
+  assert(value);
+  dst.set_real("value", *value);
+  dst.set_real("min", min);
+  dst.set_real("max", max);
+  dst.set_real("speed_step", speed_step);
+}

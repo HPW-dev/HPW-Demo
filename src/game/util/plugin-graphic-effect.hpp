@@ -7,13 +7,16 @@
 #include "util/math/limit.hpp"
 #include "util/math/num-types.hpp"
 
+class Yaml;
+
 // pge is plugin graphic effect
 
 struct Param_pge {
   Str title {};
   Str description {};
-  enum Type { base, param_int, param_real };
-  Type type {base};
+  enum class Type { base, param_int, param_real };
+  Type type {Type::base};
+  virtual void save(Yaml& dst) const;
 };
 
 struct Param_pge_int: public Param_pge {
@@ -21,7 +24,8 @@ struct Param_pge_int: public Param_pge {
   std::int32_t min {num_min<std::int32_t>()};
   std::int32_t max {num_max<std::int32_t>()};
   std::int32_t speed_step {1};
-  inline explicit Param_pge_int() { type = Param_pge::param_int; }
+  inline explicit Param_pge_int() { type = Param_pge::Type::param_int; }
+  void save(Yaml& dst) const override;
 };
 
 struct Param_pge_real: public Param_pge {
@@ -29,7 +33,8 @@ struct Param_pge_real: public Param_pge {
   real min {num_min<real>()};
   real max {num_max<real>()};
   real speed_step {1};
-  inline explicit Param_pge_real() { type = Param_pge::param_real; }
+  inline explicit Param_pge_real() { type = Param_pge::Type::param_real; }
+  void save(Yaml& dst) const override;
 };
 
 /// грузить графический эффект из .dll/.so файл
