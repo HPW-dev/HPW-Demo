@@ -92,7 +92,7 @@ struct Scene_effect_plugin_select::Impl {
     // TODO set current
     selected_effect = 0;
 
-    load_plugin_graphic_effect(get_current_effect());
+    load_pge(get_current_effect());
   }
 
   inline Str get_current_effect() const { return m_effects.at(selected_effect); }

@@ -13,9 +13,12 @@
 #include <DyLib/DyLib.hpp>
 // ----------- [!] ---------------
 
-DyLib g_lib_loader {};
+DyLib g_lib_loader {}; /// для кросплатформ загрузки либ
+Vector<Shared<Param_pge>> g_pge_params {}; /// какие сейчас доступны настройки плагина
+Str g_pge_path {}; /// текущий путь к плагину 
+Str g_pge_name {}; /// текущее имя плагина
 
-void load_plugin_graphic_effect(Str libname) {
+void load_pge(Str libname) {
   conv_sep(libname);
   try {
     std::cout << "загрузка плагина: " << libname << std::endl;
@@ -43,12 +46,24 @@ void load_plugin_graphic_effect(Str libname) {
   } catch (...) {
     hpw_log("неизвестная ошибка при загрузке плагина\n");
   }
-} // load_plugin_graphic_effect
+} // load_pge
 
-void apply_plugin_graphic_effect(Image& dst) {
-
+void apply_pge(Image& dst) {
+  // TODO
 }
 
-void disable_plugin_graphic_effect() {
-
+void disable_pge() {
+  // TODO
 }
+
+void load_pge_from_config() {
+  // TODO
+}
+
+void save_pge_to_config() {
+  // TODO
+}
+
+CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
+CN<Str> get_cur_pge_path() { return g_pge_path; }
+CN<Str> get_cur_pge_name() { return g_pge_name; }
