@@ -32,12 +32,10 @@ struct Param_pge_real: public Param_pge {
   inline explicit Param_pge_real() { type = Param_pge::param_real; }
 };
 
-class Image;
-
 /// грузить графический эффект из .dll/.so файл
 void load_pge(Str libname);
 /// применяет графический эффект к кадру
-void apply_pge(Image& dst);
+void apply_pge(const uint32_t state);
 /// выключает текущий графический эффект
 void disable_pge();
 void load_pge_from_config();

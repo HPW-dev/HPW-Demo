@@ -14,7 +14,7 @@
 #include <DyLib/DyLib.hpp>
 // ----------- [!] ---------------
 
-DyLib g_lib_loader {}; /// для кросплатформ загрузки либ
+Shared<DyLib> g_lib_loader {}; /// для кросплатформ загрузки либ
 Vector<Shared<Param_pge>> g_pge_params {}; /// какие сейчас доступны настройки плагина
 Str g_pge_path {}; /// текущий путь к плагину 
 Str g_pge_name {}; /// текущее имя плагина
@@ -28,10 +28,10 @@ void load_pge(Str libname) {
   conv_sep(libname);
   try {
     std::cout << "загрузка плагина: " << libname << std::endl;
-    g_lib_loader.open(libname);
-    g_plugin_init = g_lib_loader.getFunction<decltype(plugin_init)>("plugin_init");
-    g_plugin_apply = g_lib_loader.getFunction<decltype(plugin_apply)>("plugin_apply");
-    g_plugin_finalize = g_lib_loader.getFunction<decltype(plugin_finalize)>("plugin_finalize");
+    g_lib_loader = new_shared<DyLib>(libname);
+    g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");
+    g_plugin_apply = g_lib_loader->getFunction<decltype(plugin_apply)>("plugin_apply");
+    g_plugin_finalize = g_lib_loader->getFunction<decltype(plugin_finalize)>("plugin_finalize");
     iferror( !g_plugin_init, "не удалось получить функцию plugin_init");
     iferror( !g_plugin_apply, "не удалось получить функцию plugin_apply");
     iferror( !g_plugin_finalize, "не удалось получить функцию plugin_finalize");
@@ -47,6 +47,9 @@ void load_pge(Str libname) {
     g_plugin_init(context.get(), result.get());
     iferror( result->version != 1, "несовпадение версий плагина и API");
     iferror( !result->init_succsess, result->error);
+    g_pge_path = libname;
+    g_pge_name = get_filename(g_pge_path);
+    std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
   } catch (CN<hpw::Error> err) {
     hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
     disable_pge();
@@ -56,14 +59,19 @@ void load_pge(Str libname) {
   }
 } // load_pge
 
-void apply_pge(Image& dst) {
+void apply_pge(const uint32_t state) {
   if (g_plugin_apply)
-    g_plugin_apply(dst);
+    g_plugin_apply(state);
 }
 
 void disable_pge() {
+  detailed_log("отключение плагина " + get_cur_pge_name() + '\n');
   if (g_plugin_finalize)
     g_plugin_finalize();
+  g_plugin_finalize = {};
+  g_plugin_apply = {};
+  g_plugin_init = {};
+  g_lib_loader = {};
 }
 
 void load_pge_from_config() {

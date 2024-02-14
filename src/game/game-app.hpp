@@ -15,7 +15,7 @@ class Game_app: public Host_glfw {
 
 public:
   explicit Game_app(int argc, char *argv[]);
-  ~Game_app() = default;
+  ~Game_app();
   void draw() override;
 }; // Game_app
 

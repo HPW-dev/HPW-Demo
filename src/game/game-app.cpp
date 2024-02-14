@@ -1,6 +1,7 @@
 #include <cassert>
 #include "game-app.hpp"
 #include "host/command.hpp"
+#include "game/util/plugin-graphic-effect.hpp"
 
 #ifdef DEBUG
   #include "game/scene/scene-main-menu.hpp"
@@ -47,7 +48,12 @@ Game_app::Game_app(int argc, char *argv[])
   /* к этому моменту кеймапер будет инициализирован и
   управление можно будет переназначить с конфига */
   load_config();
+  load_pge_from_config();
 } // c-tor
+
+Game_app::~Game_app() {
+  disable_pge();
+}
 
 void Game_app::update(double dt) {
   ALLOW_STABLE_RAND
@@ -70,6 +76,7 @@ void Game_app::draw() {
   hpw::scene_mgr->draw(*graphic::canvas);
   if (graphic::draw_border) // рамка по краям
     draw_border(*graphic::canvas);
+  apply_pge(graphic::frame_count);
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
