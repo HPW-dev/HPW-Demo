@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
@@ -16,15 +17,15 @@ struct Param_pge {
 };
 
 struct Param_pge_int: public Param_pge {
-  int value {};
-  int min {num_min<int>()};
-  int max {num_max<int>()};
-  int speed_step {1};
+  std::int32_t* value {};
+  std::int32_t min {num_min<std::int32_t>()};
+  std::int32_t max {num_max<std::int32_t>()};
+  std::int32_t speed_step {1};
   inline explicit Param_pge_int() { type = Param_pge::param_int; }
 };
 
 struct Param_pge_real: public Param_pge {
-  real value {};
+  real* value {};
   real min {num_min<real>()};
   real max {num_max<real>()};
   real speed_step {1};

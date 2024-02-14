@@ -20,7 +20,7 @@ typedef float real_t;
 /// name, description, value ref, speed step, min, max
 typedef void (*registrate_param_f32_ft)(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
 /// name, description, value ref, speed step, min, max
-typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int*, const int, const int, const int);
+typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int32_t*, const int32_t, const int32_t, const int32_t);
 
 struct rgb24_t {
   uint8_t r;
