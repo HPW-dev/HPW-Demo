@@ -75,8 +75,10 @@ struct Scene_effect_plugin_select::Impl {
           }
         }),*/
 
-        new_shared<Menu_text_item>(get_locale_str("common.back"),
-          []{ hpw::scene_mgr->back(); }),
+        new_shared<Menu_text_item>(get_locale_str("common.back"), []{
+          save_pge_to_config();
+          hpw::scene_mgr->back();
+        }),
       },
 
       Rect(50, 50, 400, 300)

@@ -30,6 +30,8 @@ public:
   void clear();
   /// создать пустую ветвь
   Yaml make_node(CN<Str> name);
+  /// не создаст пустую ветвь, если она уже есть с таким именем
+  Yaml make_node_if_not_exist(CN<Str> name);
   /// удалить ветку
   void delete_node(CN<Str> name);
 

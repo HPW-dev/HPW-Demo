@@ -163,6 +163,12 @@ public:
     return Impl(self[name], Resource::get_path());
   }
 
+  inline Yaml make_node_if_not_exist(CN<Str> name) {
+    if (auto node = Impl(self[name], Resource::get_path()); node.check())
+      return node;
+    return make_node(name);
+  }
+
   inline void delete_node(CN<Str> name) { self.remove(name); }
 
   inline void set_int(CN<Str> name, int val) { self[name] = val; }
@@ -273,6 +279,7 @@ Yaml& Yaml::operator = (Yaml&& other) noexcept {
 void Yaml::save(Str fname) { impl->save(fname); }
 void Yaml::clear() { impl->clear(); }
 Yaml Yaml::make_node(CN<Str> name) { return impl->make_node(name); }
+Yaml Yaml::make_node_if_not_exist(CN<Str> name) { return impl->make_node_if_not_exist(name); }
 void Yaml::delete_node(CN<Str> name) { impl->delete_node(name); }
 void Yaml::set_int(CN<Str> name, int val) { impl->set_int(name, val); }
 void Yaml::set_real(CN<Str> name, real val) { impl->set_real(name, val); }

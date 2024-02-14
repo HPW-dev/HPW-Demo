@@ -6,8 +6,10 @@
 #include "util/path.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/file/yaml.hpp"
 #include "graphic/image/image.hpp"
 #include "game/game-canvas.hpp"
+#include "game/game-common.hpp"
 
 // ----------- [!] ---------------
 // вверх не перемещать
@@ -79,7 +81,14 @@ void load_pge_from_config() {
 }
 
 void save_pge_to_config() {
-  // TODO
+  cauto plugin_name = get_cur_pge_name();
+  return_if(plugin_name.empty());
+
+  assert(hpw::config);
+  auto& config = *hpw::config;
+  auto plugin_node = config.make_node_if_not_exist("plugin");
+  auto graphic_node = plugin_node.make_node_if_not_exist("graphic");
+  auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
 }
 
 template <class T>
