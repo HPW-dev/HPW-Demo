@@ -231,7 +231,7 @@ Shared<Menu_text_item> Scene_graphic::get_palette_item() {
 Shared<Menu_text_item> Scene_graphic::get_plugin_item() {
   return new_shared<Menu_text_item>(
     get_locale_str("scene.effect_plugin_select.title"),
-    []{ hpw::scene_mgr->add(new_shared<Scene_effect_plugin_select>()); }
+    []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); }
   );
 }
 

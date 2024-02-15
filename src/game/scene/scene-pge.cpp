@@ -16,7 +16,7 @@
 #include "util/path.hpp"
 #include "util/str-util.hpp"
 
-struct Scene_effect_plugin_select::Impl {
+struct Scene_pge::Impl {
   Unique<Advanced_text_menu> menu {};
   Strs m_effects {}; /// список путей к файлам эффектов
   std::size_t selected_effect {};
@@ -101,7 +101,7 @@ struct Scene_effect_plugin_select::Impl {
 
 }; // impl
 
-Scene_effect_plugin_select::Scene_effect_plugin_select(): impl {new_unique<Impl>()} {}
-Scene_effect_plugin_select::~Scene_effect_plugin_select() {}
-void Scene_effect_plugin_select::update(double dt) { impl->update(dt); }
-void Scene_effect_plugin_select::draw(Image& dst) const { impl->draw(dst); }
+Scene_pge::Scene_pge(): impl {new_unique<Impl>()} {}
+Scene_pge::~Scene_pge() {}
+void Scene_pge::update(double dt) { impl->update(dt); }
+void Scene_pge::draw(Image& dst) const { impl->draw(dst); }
