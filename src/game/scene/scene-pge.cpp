@@ -32,10 +32,14 @@ struct Scene_pge::Impl {
   } // impl
 
   inline void update(double dt) {
-    if (is_pressed_once(hpw::keycode::escape))
+    if (is_pressed_once(hpw::keycode::escape)) {
+      save_pge_to_config();
       hpw::scene_mgr->back();
+    }
+
     if (m_reinit_menu)
       init_menu();
+
     m_menu->update(dt);
   }
 
@@ -54,6 +58,7 @@ struct Scene_pge::Impl {
         [this] { 
           m_reinit_menu = true;
           if ( !m_effects.empty()) {
+            save_pge_to_config();
             m_selected_effect = (m_selected_effect + 1) % m_effects.size();
             load_pge( get_current_effect() );
           }

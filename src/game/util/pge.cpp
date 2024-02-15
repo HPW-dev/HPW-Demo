@@ -11,6 +11,7 @@
 #include "graphic/image/image.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-common.hpp"
+#include "game/util/game-config.hpp"
 
 // ----------- [!] ---------------
 // вверх не перемещать
@@ -28,6 +29,7 @@ std::function<decltype(plugin_finalize)> g_plugin_finalize {};
 void registrate_param_f32(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
 void registrate_param_i32(cstr_t, cstr_t, std::int32_t*, const std::int32_t, const std::int32_t, const std::int32_t);
 void registrate_param_bool(cstr_t, cstr_t, bool*);
+void load_pge_params_only();
 
 void load_pge(Str libname) {
   if (libname.empty()) {
@@ -64,6 +66,8 @@ void load_pge(Str libname) {
     g_pge_description = result->description;
     g_pge_path = libname;
     g_pge_name = get_filename(g_pge_path);
+    // попытаться найти настройки плагина в конфиге
+    load_pge_params_only();
     std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
   } catch (CN<hpw::Error> err) {
     hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
@@ -93,38 +97,54 @@ void disable_pge() {
   g_lib_loader = {};
 }
 
+// перенос значений с конфига в настройки плагина
+void load_params(CN<Yaml> node) {
+  nauto params = get_pge_params();
+  for (uint id = 0; nauto param: params) {
+    auto param_node = node["param_" + n2s(id)];
+    ++id;
+    param->load(param_node);
+  }
+}
+
+// грузит только параметры для плагина
+void load_pge_params_only() {
+  assert(hpw::config);
+  cnauto config = *hpw::config;
+  cauto plugin_node = config["plugin"];
+  cauto graphic_node = plugin_node["graphic"];
+  cauto selected = graphic_node.get_str("selected");
+  if (cauto effect_node = graphic_node[selected]; effect_node.check()) {
+    cauto path = effect_node.get_str("path");
+    load_params(effect_node);
+  }
+}
+
 void load_pge_from_config() {
   assert(hpw::config);
   cnauto config = *hpw::config;
   cauto plugin_node = config["plugin"];
-
   cauto graphic_node = plugin_node["graphic"];
   cauto selected = graphic_node.get_str("selected");
-
   if (cauto effect_node = graphic_node[selected]; effect_node.check()) {
     cauto path = effect_node.get_str("path");
     load_pge(path);
-
-    // перенос значений с конфига в настройки плагина
-    nauto params = get_pge_params();
-    for (uint id = 0; nauto param: params) {
-      auto param_node = effect_node["param_" + n2s(id)];
-      ++id;
-      param->load(param_node);
-    }
+    load_params(effect_node);
   }
-} // load_pge_from_config
+}
 
 void save_pge_to_config() {
-  cauto plugin_name = get_cur_pge_name();
-
   assert(hpw::config);
   auto& config = *hpw::config;
   auto plugin_node = config.make_node_if_not_exist("plugin");
 
+  cauto plugin_name = get_cur_pge_name();
   auto graphic_node = plugin_node.make_node_if_not_exist("graphic");
   graphic_node.set_str("selected", plugin_name);
-  return_if(plugin_name.empty());
+  if (plugin_name.empty()) {
+    save_config();
+    return;
+  }
 
   auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
   effect_node.set_str("path", get_cur_pge_path());
@@ -136,6 +156,8 @@ void save_pge_to_config() {
     assert(param);
     param->save(param_node);
   }
+
+  save_config(); // сохраняет корневой файл конфига
 } // save_pge_to_config
 
 template <class T, class Param_type>
