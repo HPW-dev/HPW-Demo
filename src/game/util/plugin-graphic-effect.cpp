@@ -101,25 +101,9 @@ void save_pge_to_config() {
   }
 } // save_pge_to_config
 
-template <class T>
-struct param_type_trait {
-  using Type = Param_pge_int;
-};
-
-template <>
-struct param_type_trait<int> {
-  using Type = Param_pge_int;
-};
-
-template <>
-struct param_type_trait<real_t> {
-  using Type = Param_pge_real;
-};
-
-template <class T>
+template <class T, class Param_type>
 void registrate_param(cstr_t title, cstr_t desc, T* val,
 const T speedstep, const T min, const T max) {
-  using Param_type = param_type_trait<T>::Type;
   auto param = new_shared<Param_type>();
   param->max = max;
   param->min = min;
@@ -136,11 +120,11 @@ const T speedstep, const T min, const T max) {
 
 void registrate_param_f32(cstr_t title, cstr_t desc, real_t* val,
 const real_t speedstep, const real_t min, const real_t max)
-{ registrate_param<real_t>(title, desc, val, speedstep, min, max); }
+{ registrate_param<real_t, Param_pge_real>(title, desc, val, speedstep, min, max); }
 
 void registrate_param_i32(cstr_t title, cstr_t desc, std::int32_t* val,
 const std::int32_t speedstep, const std::int32_t min, const std::int32_t max)
-{ registrate_param<std::int32_t>(title, desc, val, speedstep, min, max); }
+{ registrate_param<std::int32_t, Param_pge_int>(title, desc, val, speedstep, min, max); }
 
 CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
 CN<Str> get_cur_pge_path() { return g_pge_path; }
