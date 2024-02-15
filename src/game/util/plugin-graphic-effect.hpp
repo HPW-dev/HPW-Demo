@@ -14,7 +14,7 @@ class Yaml;
 struct Param_pge {
   Str title {};
   Str description {};
-  enum class Type { base, param_int, param_real };
+  enum class Type { base, param_int, param_real, param_bool };
   Type type {Type::base};
   virtual void save(Yaml& dst) const;
   virtual void load(CN<Yaml> dst);
@@ -36,6 +36,13 @@ struct Param_pge_real: public Param_pge {
   real max {num_max<real>()};
   real speed_step {1};
   inline explicit Param_pge_real() { type = Param_pge::Type::param_real; }
+  void save(Yaml& dst) const override;
+  void load(CN<Yaml> dst) override;
+};
+
+struct Param_pge_bool: public Param_pge {
+  bool* value {};
+  inline explicit Param_pge_bool() { type = Param_pge::Type::param_bool; }
   void save(Yaml& dst) const override;
   void load(CN<Yaml> dst) override;
 };

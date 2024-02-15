@@ -21,6 +21,8 @@ typedef float real_t;
 typedef void (*registrate_param_f32_ft)(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
 /// name, description, value ref, speed step, min, max
 typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int32_t*, const int32_t, const int32_t, const int32_t);
+/// name, description, value ref
+typedef void (*registrate_param_bool_ft)(cstr_t, cstr_t, bool*);
 
 struct rgb24_t {
   uint8_t r;
@@ -35,6 +37,7 @@ struct context_t {
   uint16_t h;
   registrate_param_f32_ft registrate_param_f32;
   registrate_param_i32_ft registrate_param_i32;
+  registrate_param_bool_ft registrate_param_bool;
 };
 
 /// для получения данных с эффекта

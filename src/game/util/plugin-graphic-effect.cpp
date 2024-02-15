@@ -26,7 +26,7 @@ std::function<decltype(plugin_apply)> g_plugin_apply {};
 std::function<decltype(plugin_finalize)> g_plugin_finalize {};
 void registrate_param_f32(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
 void registrate_param_i32(cstr_t, cstr_t, std::int32_t*, const std::int32_t, const std::int32_t, const std::int32_t);
-void registrate_param_bool(cstr_t, cstr_t, bool*); // TODO
+void registrate_param_bool(cstr_t, cstr_t, bool*);
 
 void load_pge(Str libname) {
   conv_sep(libname);
@@ -46,7 +46,7 @@ void load_pge(Str libname) {
     context->h = graphic::canvas->Y;
     context->registrate_param_f32 = &registrate_param_f32;
     context->registrate_param_i32 = &registrate_param_i32;
-    // TODO bool
+    context->registrate_param_bool = &registrate_param_bool;
 
     auto result = new_shared<result_t>();
     g_plugin_init(context.get(), result.get());
@@ -150,6 +150,16 @@ void registrate_param_i32(cstr_t title, cstr_t desc, std::int32_t* val,
 const std::int32_t speedstep, const std::int32_t min, const std::int32_t max)
 { registrate_param<std::int32_t, Param_pge_int>(title, desc, val, speedstep, min, max); }
 
+void registrate_param_bool(cstr_t title, cstr_t desc, bool* val) {
+  auto param = new_shared<Param_pge_bool>();
+  param->description = desc;
+  param->title = title;
+  param->value = val;
+  iferror( !val, "неправильный адрес для value");
+  iferror(Str(title).empty(), "параметру нужно задать имя");
+  g_pge_params.push_back( std::move(param) );
+}
+
 CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
 CN<Str> get_cur_pge_path() { return g_pge_path; }
 CN<Str> get_cur_pge_name() { return g_pge_name; }
@@ -202,3 +212,17 @@ void Param_pge_real::load(CN<Yaml> dst) {
   max = dst.get_real("max");
   speed_step = dst.get_real("speed_step");
 }
+
+void Param_pge_bool::save(Yaml& dst) const {
+  Param_pge::save(dst);
+  assert(value);
+  dst.set_bool("value", *value);
+}
+
+void Param_pge_bool::load(CN<Yaml> dst) {
+  cauto loaded_type = scast<Param_pge::Type>(dst.get_int("type"));
+  iferror(type != loaded_type, "type != loaded_type");
+  assert(value);
+  *value = dst.get_bool("value");
+}
+

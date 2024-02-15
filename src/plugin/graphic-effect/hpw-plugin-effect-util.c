@@ -49,6 +49,7 @@ bool check_params(const struct context_t* context, struct result_t* result) {
   iferror(context->w == 0, "context.w is 0");
   iferror( !context->registrate_param_f32, "registrate_param_f32 is null");
   iferror( !context->registrate_param_i32, "registrate_param_i32 is null");
+  iferror( !context->registrate_param_bool, "registrate_param_bool is null");
   #undef iferror
   return true;
 }
