@@ -1,6 +1,6 @@
 #include <cassert>
 #include <functional>
-#include "scene-effect-plugin-select.hpp"
+#include "scene-pge.hpp"
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"

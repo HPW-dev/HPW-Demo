@@ -1,6 +1,6 @@
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
-#include "scene-effect-plugin-select.hpp"
+#include "scene-pge.hpp"
 #include "scene-manager.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
