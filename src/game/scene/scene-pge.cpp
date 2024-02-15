@@ -58,7 +58,7 @@ struct Scene_pge::Impl {
         [this] { 
           m_reinit_menu = true;
           if ( !m_effects.empty()) {
-            save_pge_to_config();
+            //save_pge_to_config();
             m_selected_effect = (m_selected_effect + 1) % m_effects.size();
             load_pge( get_current_effect() );
           }

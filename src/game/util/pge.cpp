@@ -113,11 +113,8 @@ void load_pge_params_only() {
   cnauto config = *hpw::config;
   cauto plugin_node = config["plugin"];
   cauto graphic_node = plugin_node["graphic"];
-  cauto selected = graphic_node.get_str("selected");
-  if (cauto effect_node = graphic_node[selected]; effect_node.check()) {
-    cauto path = effect_node.get_str("path");
+  if (cauto effect_node = graphic_node[get_cur_pge_name()]; effect_node.check())
     load_params(effect_node);
-  }
 }
 
 void load_pge_from_config() {
