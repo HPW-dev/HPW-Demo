@@ -17,8 +17,12 @@ OUT sconv(CN<IN> src)
 
 /// c-string convert
 template <class OUT, typename in_char_t>
-OUT sconvc(in_char_t src)
-  { return OUT(src, src + strlen(src)); }
+OUT sconvc(in_char_t src) {
+  cauto len = strlen(src);
+  if (len == 0)
+    return {};
+  return OUT(src, src + len);
+}
 
 template <class STR_T> STR_T
 yn2s(bool comp)

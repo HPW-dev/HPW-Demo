@@ -21,6 +21,7 @@ Shared<DyLib> g_lib_loader {}; /// для кросплатформ загруз�
 Vector<Shared<Param_pge>> g_pge_params {}; /// какие сейчас доступны настройки плагина
 Str g_pge_path {}; /// текущий путь к плагину 
 Str g_pge_name {}; /// текущее имя плагина
+Str g_pge_description {}; /// описание к плагину
 std::function<decltype(plugin_init)> g_plugin_init {};
 std::function<decltype(plugin_apply)> g_plugin_apply {};
 std::function<decltype(plugin_finalize)> g_plugin_finalize {};
@@ -60,6 +61,7 @@ void load_pge(Str libname) {
     g_plugin_init(context.get(), result.get());
     iferror( result->version != 1, "несовпадение версий плагина и API");
     iferror( !result->init_succsess, result->error);
+    g_pge_description = result->description;
     g_pge_path = libname;
     g_pge_name = get_filename(g_pge_path);
     std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
@@ -79,15 +81,16 @@ void apply_pge(const uint32_t state) {
 
 void disable_pge() {
   detailed_log("отключение плагина " + get_cur_pge_name() + '\n');
+  g_pge_params.clear();
+  g_pge_name.clear();
+  g_pge_path.clear();
+  g_pge_description.clear();
   if (g_plugin_finalize)
     g_plugin_finalize();
   g_plugin_finalize = {};
   g_plugin_apply = {};
   g_plugin_init = {};
   g_lib_loader = {};
-  g_pge_params.clear();
-  g_pge_name.clear();
-  g_pge_path.clear();
 }
 
 void load_pge_from_config() {
@@ -173,6 +176,7 @@ void registrate_param_bool(cstr_t title, cstr_t desc, bool* val) {
 CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
 CN<Str> get_cur_pge_path() { return g_pge_path; }
 CN<Str> get_cur_pge_name() { return g_pge_name; }
+CN<Str> get_cur_pge_description() { return g_pge_description; }
 
 void Param_pge::save(Yaml& dst) const {
   dst.set_str("title", title);
