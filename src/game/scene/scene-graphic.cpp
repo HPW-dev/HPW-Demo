@@ -230,7 +230,7 @@ Shared<Menu_text_item> Scene_graphic::get_palette_item() {
 
 Shared<Menu_text_item> Scene_graphic::get_plugin_item() {
   return new_shared<Menu_text_item>(
-    get_locale_str("scene.effect_plugin_select.title"),
+    get_locale_str("scene.graphic_menu.pge.title"),
     []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); }
   );
 }
@@ -239,7 +239,6 @@ void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     U"Настройки графики", // TODO locale
     Menu_items {
-      get_plugin_item(),
       get_palette_item(),
       get_preset_item(),
       get_fullscreen_item(),
@@ -249,6 +248,7 @@ void Scene_graphic::init_simple_menu() {
       get_disable_frame_limit_item(),
       get_draw_border_item(),
       get_mouse_cursour_item(),
+      get_plugin_item(),
       get_goto_detailed_item(),
       get_exit_item(),
     },
@@ -260,8 +260,8 @@ void Scene_graphic::init_detailed_menu() {
   detailed_menu = new_shared<Advanced_text_menu>(
     U"Расширенные настройки графики", // TODO locale
     Menu_items {
-      get_plugin_item(),
       get_palette_item(),
+      get_plugin_item(),
       get_fullscreen_item(),
       get_vsync_item(),
       get_draw_border_item(),

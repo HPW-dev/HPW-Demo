@@ -52,7 +52,7 @@ struct Scene_pge::Impl {
 
   inline void init_menu() {
     menu = new_unique<Advanced_text_menu>(
-      get_locale_str("scene.effect_plugin_select.title"),
+      get_locale_str("scene.graphic_menu.pge.title"),
       Menu_items {
         /*new_shared<Menu_text_item>(get_locale_str("scene.palette_select.next"), [this]{
           if ( !m_palette_files.empty()) {
@@ -75,6 +75,9 @@ struct Scene_pge::Impl {
           }
         }),*/
 
+        new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.pge.disable"),
+          []{ disable_pge(); }
+        ),
         new_shared<Menu_text_item>(get_locale_str("common.back"), []{
           save_pge_to_config();
           hpw::scene_mgr->back();

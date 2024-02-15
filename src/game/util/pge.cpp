@@ -78,6 +78,8 @@ void disable_pge() {
   g_plugin_init = {};
   g_lib_loader = {};
   g_pge_params.clear();
+  g_pge_name.clear();
+  g_pge_path.clear();
 }
 
 void load_pge_from_config() {
@@ -88,8 +90,7 @@ void load_pge_from_config() {
   cauto graphic_node = plugin_node["graphic"];
   cauto selected = graphic_node.get_str("selected");
 
-  cauto effect_node = graphic_node[selected];
-  if (effect_node.check()) {
+  if (cauto effect_node = graphic_node[selected]; effect_node.check()) {
     cauto path = effect_node.get_str("path");
     load_pge(path);
 
@@ -105,7 +106,6 @@ void load_pge_from_config() {
 
 void save_pge_to_config() {
   cauto plugin_name = get_cur_pge_name();
-  return_if(plugin_name.empty());
 
   assert(hpw::config);
   auto& config = *hpw::config;
@@ -113,6 +113,7 @@ void save_pge_to_config() {
 
   auto graphic_node = plugin_node.make_node_if_not_exist("graphic");
   graphic_node.set_str("selected", plugin_name);
+  return_if(plugin_name.empty());
 
   auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
   effect_node.set_str("path", get_cur_pge_path());
