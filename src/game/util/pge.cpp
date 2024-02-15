@@ -29,8 +29,16 @@ void registrate_param_i32(cstr_t, cstr_t, std::int32_t*, const std::int32_t, con
 void registrate_param_bool(cstr_t, cstr_t, bool*);
 
 void load_pge(Str libname) {
-  conv_sep(libname);
+  if (libname.empty()) {
+    detailed_log("loading empty plugin (ignore)\n");
+    disable_pge();
+    return;
+  }
+
   try {
+    disable_pge();
+    conv_sep(libname);
+
     std::cout << "загрузка плагина: " << libname << std::endl;
     g_lib_loader = new_shared<DyLib>(libname);
     g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");

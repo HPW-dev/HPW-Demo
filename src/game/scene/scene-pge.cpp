@@ -17,9 +17,10 @@
 #include "util/str-util.hpp"
 
 struct Scene_pge::Impl {
-  Unique<Advanced_text_menu> menu {};
+  Unique<Advanced_text_menu> m_menu {};
   Strs m_effects {}; /// список путей к файлам эффектов
-  std::size_t selected_effect {};
+  std::size_t m_selected_effect {};
+  bool m_reinit_menu {}; /// вызовет повторную инициализацию меню
 
   inline Impl() {
     init_menu();
@@ -29,12 +30,14 @@ struct Scene_pge::Impl {
   inline void update(double dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr->back();
-    menu->update(dt);
+    if (m_reinit_menu)
+      init_menu();
+    m_menu->update(dt);
   }
 
   inline void draw(Image& dst) const {
     dst.fill(Pal8::black);
-    menu->draw(dst);
+    m_menu->draw(dst);
     
     /*return_if (graphic::current_palette_file.empty());
 
@@ -45,43 +48,42 @@ struct Scene_pge::Impl {
       get_locale_str("scene.palette_select.cur_file") + U" : " +
       sconv<utf32>(palette_name));
 
-    menu->draw(dst);
+    m_menu->draw(dst);
     draw_palette(dst, Vec(50, 120));
     draw_test_image(dst, Vec(50, 150));*/
   }
 
   inline void init_menu() {
-    menu = new_unique<Advanced_text_menu>(
+    m_reinit_menu = false;
+
+    m_menu = new_unique<Advanced_text_menu>(
       get_locale_str("scene.graphic_menu.pge.title"),
       Menu_items {
-        /*new_shared<Menu_text_item>(get_locale_str("scene.palette_select.next"), [this]{
-          if ( !m_palette_files.empty()) {
-            ++m_cur_palette_idx;
-            if (m_cur_palette_idx >= m_palette_files.size())
-              m_cur_palette_idx = 0;
-            assert(hpw::init_palette_from_archive);
-            hpw::init_palette_from_archive(cur_palette_file());
+        new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.pge.selected"),
+          [this] { 
+            m_reinit_menu = true;
+            if ( !m_effects.empty()) {
+              m_selected_effect = (m_selected_effect + 1) % m_effects.size();
+              load_pge( get_current_effect() );
+            }
+          },
+          []->utf32 {
+            cauto cur_plug = sconv<utf32>(get_cur_pge_name());
+            return cur_plug.empty() ? U"-" : cur_plug;
           }
-        }),
-
-        new_shared<Menu_text_item>(get_locale_str("scene.palette_select.prev"), [this]{
-          if ( !m_palette_files.empty()) {
-            if (m_cur_palette_idx == 0)
-              m_cur_palette_idx = m_palette_files.size() - 1;
-            else
-              --m_cur_palette_idx;
-            assert(hpw::init_palette_from_archive);
-            hpw::init_palette_from_archive(cur_palette_file());
-          }
-        }),*/
-
-        new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.pge.disable"),
-          []{ disable_pge(); }
         ),
-        new_shared<Menu_text_item>(get_locale_str("common.back"), []{
-          save_pge_to_config();
-          hpw::scene_mgr->back();
-        }),
+        new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.pge.disable"),
+          [this] {
+            disable_pge();
+            m_reinit_menu = true;
+          }
+        ),
+        new_shared<Menu_text_item>(get_locale_str("common.back"),
+          [] {
+            save_pge_to_config();
+            hpw::scene_mgr->back();
+          }
+        ),
       },
 
       Rect(50, 50, 400, 300)
@@ -93,15 +95,30 @@ struct Scene_pge::Impl {
     auto path = hpw::cur_dir + "plugin/effect/";
     conv_sep(path);
     m_effects = files_in_dir(path);
+    return_if(m_effects.empty());
+    m_effects.push_back({});
+    std::swap(*m_effects.begin(), *(m_effects.end()-1));
 
-    // TODO set current
-    selected_effect = 0;
+    cauto pge_name = get_cur_pge_name();
 
-    load_pge(get_current_effect());
-  }
+    if (pge_name.empty()) {
+      m_selected_effect = 0;
+    } else {
+      // докрутить индекс до выбранного эффекта
+      for (uint idx = 0; auto effect: m_effects) {
+        effect = get_filename(effect);
+        if (effect == pge_name) {
+          m_selected_effect = idx;
+          break;
+        }
+        ++idx;
+      }
+    }
 
-  inline Str get_current_effect() const { return m_effects.at(selected_effect); }
+    load_pge( get_current_effect() );
+  } // init_plugins
 
+  inline Str get_current_effect() const { return m_effects.at(m_selected_effect); }
 }; // impl
 
 Scene_pge::Scene_pge(): impl {new_unique<Impl>()} {}
