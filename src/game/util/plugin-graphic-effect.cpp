@@ -77,6 +77,7 @@ void disable_pge() {
   g_plugin_apply = {};
   g_plugin_init = {};
   g_lib_loader = {};
+  g_pge_params.clear();
 }
 
 void load_pge_from_config() {
