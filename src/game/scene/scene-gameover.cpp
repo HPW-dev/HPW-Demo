@@ -7,7 +7,6 @@
 #include "game/game-font.hpp"
 #include "game/util/game-replay.hpp"
 #include "game/util/replay.hpp"
-#include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -23,10 +22,6 @@ struct Scene_gameover::Impl {
   }
 
   inline void update(double dt) {
-
-    if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
-
     if (hpw::replay_read_mode) {
       hpw::scene_mgr->back(); // to gameover
       hpw::scene_mgr->back(); // to replay-select
