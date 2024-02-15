@@ -1,7 +1,7 @@
 #include <cassert>
 #include "game-app.hpp"
 #include "host/command.hpp"
-#include "game/util/plugin-graphic-effect.hpp"
+#include "game/util/pge.hpp"
 
 #ifdef DEBUG
   #include "game/scene/scene-main-menu.hpp"
