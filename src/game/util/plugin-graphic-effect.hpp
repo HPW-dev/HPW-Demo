@@ -17,6 +17,7 @@ struct Param_pge {
   enum class Type { base, param_int, param_real };
   Type type {Type::base};
   virtual void save(Yaml& dst) const;
+  virtual void load(CN<Yaml> dst);
 };
 
 struct Param_pge_int: public Param_pge {
@@ -26,6 +27,7 @@ struct Param_pge_int: public Param_pge {
   std::int32_t speed_step {1};
   inline explicit Param_pge_int() { type = Param_pge::Type::param_int; }
   void save(Yaml& dst) const override;
+  void load(CN<Yaml> dst) override;
 };
 
 struct Param_pge_real: public Param_pge {
@@ -35,6 +37,7 @@ struct Param_pge_real: public Param_pge {
   real speed_step {1};
   inline explicit Param_pge_real() { type = Param_pge::Type::param_real; }
   void save(Yaml& dst) const override;
+  void load(CN<Yaml> dst) override;
 };
 
 /// грузить графический эффект из .dll/.so файл

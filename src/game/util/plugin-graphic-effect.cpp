@@ -1,4 +1,3 @@
-#include <utility>
 #include <cassert>
 #include <functional>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
@@ -6,6 +5,7 @@
 #include "util/str-util.hpp"
 #include "util/path.hpp"
 #include "util/log.hpp"
+#include "util/macro.hpp"
 #include "util/error.hpp"
 #include "util/file/yaml.hpp"
 #include "graphic/image/image.hpp"
@@ -26,6 +26,7 @@ std::function<decltype(plugin_apply)> g_plugin_apply {};
 std::function<decltype(plugin_finalize)> g_plugin_finalize {};
 void registrate_param_f32(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
 void registrate_param_i32(cstr_t, cstr_t, std::int32_t*, const std::int32_t, const std::int32_t, const std::int32_t);
+void registrate_param_bool(cstr_t, cstr_t, bool*); // TODO
 
 void load_pge(Str libname) {
   conv_sep(libname);
@@ -45,6 +46,7 @@ void load_pge(Str libname) {
     context->h = graphic::canvas->Y;
     context->registrate_param_f32 = &registrate_param_f32;
     context->registrate_param_i32 = &registrate_param_i32;
+    // TODO bool
 
     auto result = new_shared<result_t>();
     g_plugin_init(context.get(), result.get());
@@ -78,8 +80,27 @@ void disable_pge() {
 }
 
 void load_pge_from_config() {
-  // TODO
-}
+  assert(hpw::config);
+  cnauto config = *hpw::config;
+  cauto plugin_node = config["plugin"];
+
+  cauto graphic_node = plugin_node["graphic"];
+  cauto selected = graphic_node.get_str("selected");
+
+  cauto effect_node = graphic_node[selected];
+  if (effect_node.check()) {
+    cauto path = effect_node.get_str("path");
+    load_pge(path);
+
+    // перенос значений с конфига в настройки плагина
+    nauto params = get_pge_params();
+    for (uint id = 0; nauto param: params) {
+      auto param_node = effect_node["param_" + n2s(id)];
+      ++id;
+      param->load(param_node);
+    }
+  }
+} // load_pge_from_config
 
 void save_pge_to_config() {
   cauto plugin_name = get_cur_pge_name();
@@ -88,7 +109,10 @@ void save_pge_to_config() {
   assert(hpw::config);
   auto& config = *hpw::config;
   auto plugin_node = config.make_node_if_not_exist("plugin");
+
   auto graphic_node = plugin_node.make_node_if_not_exist("graphic");
+  graphic_node.set_str("selected", plugin_name);
+
   auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
   effect_node.set_str("path", get_cur_pge_path());
   // сейв текущих настроек плагина
@@ -115,7 +139,7 @@ const T speedstep, const T min, const T max) {
   iferror(min >= max, "min не должен быть больше max");
   iferror( !val, "неправильный адрес для value");
   iferror(Str(title).empty(), "параметру нужно задать имя");
-  g_pge_params.push_back(std::move(param));
+  g_pge_params.push_back( std::move(param) );
 } // registrate_param
 
 void registrate_param_f32(cstr_t title, cstr_t desc, real_t* val,
@@ -133,7 +157,12 @@ CN<Str> get_cur_pge_name() { return g_pge_name; }
 void Param_pge::save(Yaml& dst) const {
   dst.set_str("title", title);
   dst.set_str("description", description);
-  dst.set_int("type", std::to_underlying(type));
+  dst.set_int("type", scast<int>(type));
+}
+
+void Param_pge::load(CN<Yaml> dst) {
+  title = dst.get_str("title");
+  description = dst.get_str("description");
 }
 
 void Param_pge_int::save(Yaml& dst) const {
@@ -145,6 +174,16 @@ void Param_pge_int::save(Yaml& dst) const {
   dst.set_int("speed_step", speed_step);
 }
 
+void Param_pge_int::load(CN<Yaml> dst) {
+  cauto loaded_type = scast<Param_pge::Type>(dst.get_int("type"));
+  iferror(type != loaded_type, "type != loaded_type");
+  assert(value);
+  *value = dst.get_int("value");
+  min = dst.get_int("min");
+  max = dst.get_int("max");
+  speed_step = dst.get_int("speed_step");
+}
+
 void Param_pge_real::save(Yaml& dst) const {
   Param_pge::save(dst);
   assert(value);
@@ -152,4 +191,14 @@ void Param_pge_real::save(Yaml& dst) const {
   dst.set_real("min", min);
   dst.set_real("max", max);
   dst.set_real("speed_step", speed_step);
+}
+
+void Param_pge_real::load(CN<Yaml> dst) {
+  cauto loaded_type = scast<Param_pge::Type>(dst.get_int("type"));
+  iferror(type != loaded_type, "type != loaded_type");
+  assert(value);
+  *value = dst.get_real("value");
+  min = dst.get_real("min");
+  max = dst.get_real("max");
+  speed_step = dst.get_real("speed_step");
 }
