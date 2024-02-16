@@ -1,9 +1,12 @@
 # H.P.W Demo
 
 Исходники демки игры H.P.W для ознакомления.
+![](info/preview.gif)
 
 ### Компиляция
-Использовались компиляторы GCC/Clang/MinGW64 [см. инструкцию по сборке](script/how-to-build-ru.md)
+[см. инструкцию по сборке](script/how-to-build-ru.md).
+
+Протестировано на GCC/Clang/MinGW64.
 
 ### Моддинг
 [Палитры](info/palettes-ru.md)
