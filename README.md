@@ -10,7 +10,7 @@
 
 [Логотипы в меню игры](info/logos-ru.md)
 
-[Графические плагины](TODO)
+[Графические плагины](info/plugins-pge-ru.md)
 
 ### Copyright
 © 2020-2024, [HPW-dev](mailto:hpwdev0@gmail.com)
