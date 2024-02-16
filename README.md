@@ -1,7 +1,8 @@
 # H.P.W Demo
 
 Исходники демки игры H.P.W для ознакомления.
-![](info/preview.gif)
+
+![demo](info/preview.gif)
 
 ### Компиляция
 [см. инструкцию по сборке](script/how-to-build-ru.md).
