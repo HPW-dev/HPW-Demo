@@ -99,6 +99,20 @@ std::optional<utf32> get_windows_keycode_name(int keycode) {
   return {};
 #else
   #pragma message("Linux scancodes not defined")
+  /*
+  static const std::unordered_map<int, utf32> table {
+    {0x29, U"ESC"},
+    {0x52, U"↑"},
+    {0x51, U"↓"},
+    {0x50, U"←"},
+    {0x51, U"→"},
+    {0x16, U"S"},
+  };
+  try {
+    return table.at(keycode);
+  } catch (...) {}
+  return {};
+  */
   return {}; // на линуксе другие сканкоды
 #endif
 } // get_windows_keycode_name

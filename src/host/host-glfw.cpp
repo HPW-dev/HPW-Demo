@@ -93,6 +93,7 @@ Host_glfw::Host_glfw(int argc, char *argv[])
 
   init_window();
   key_mapper = new_shared<Key_mapper>();
+  key_mapper->reset();
   hpw::keys_info = key_mapper->get_info();
   init_commands();
 } // Host_glfw c-tor

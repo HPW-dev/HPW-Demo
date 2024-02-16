@@ -17,6 +17,10 @@ pgo/
 **/*.bak
 **/*.svg
 **/*.o
+**/*.dll
+**/*.so
+**/*.os
+**/*.exe
 **/*.out
 **/*.gch
 **/*.mkv
@@ -35,9 +39,6 @@ pgo/
 **/cpplint.txt
 **/*.gcda
 **/*.gcno
-build/*.so
-build/*.exe
-build/*.dll
 build/test.yml
 build/HPW
 build/screenshots/

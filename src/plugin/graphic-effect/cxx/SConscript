@@ -15,7 +15,7 @@ if enable_omp:
   ld_flags.extend(["-fopenmp"])
   cpp_flags.extend(["-fopenmp"])
   
-plugin_dir = "../../../build/plugin/effect/"
+plugin_dir = "../../../../build/plugin/effect/"
 src_dir = "../../../"
 src_plugin_dir = "../../../plugin/graphic-effect/cxx/"
 
