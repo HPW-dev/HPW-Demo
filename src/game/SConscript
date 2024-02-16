@@ -95,17 +95,28 @@ env.Program(
 )
 
 # билд плагинов
-env.SharedLibrary(
-  target = plugin_dir + "brightness",
-  source = [
-    src_plugin_dir + "brightness.cpp",
-    src_plugin_dir + "pge-util.cpp",
-    src_dir + "graphic/image/color.cpp",
-    src_dir + "graphic/util/convert.cpp",
-  ],
-  CXX = compiler,
-  CPPDEFINES = defines,
-  CXXFLAGS = cpp_flags,
-  LINKFLAGS = ld_flags,
-  CPPPATH = inc_path,
-)
+def build_plugin(target, source):
+  env.SharedLibrary(
+    target = plugin_dir + target,
+    source = source,
+    CXX = compiler,
+    CPPDEFINES = defines,
+    CXXFLAGS = cpp_flags,
+    LINKFLAGS = ld_flags,
+    CPPPATH = inc_path,
+  )
+
+build_plugin("brightness", [
+  src_plugin_dir + "brightness.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/util/convert.cpp",
+] )
+
+build_plugin("motion-blur", [
+  src_plugin_dir + "motion-blur.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/image.cpp",
+  src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/util/convert.cpp",
+] )
