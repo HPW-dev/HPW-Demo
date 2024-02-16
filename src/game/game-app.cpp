@@ -2,13 +2,7 @@
 #include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/util/pge.hpp"
-
-#ifdef DEBUG
-  #include "game/scene/scene-main-menu.hpp"
-#else
-  #include "game/scene/scene-validation.hpp"
-#endif
-
+#include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/game-common.hpp"
 #include "game/game-core.hpp"
@@ -33,17 +27,19 @@
 Game_app::Game_app(int argc, char *argv[])
 : Host_glfw(argc, argv)
 {
+  #ifdef RELEASE
+  #pragma message("need validation")
+  //exe_sha256
+  //data_sha256
+  #endif
+  
   check_color_tables();
   load_resources();
   load_locale();
   load_font();
   
   init_scene_mgr();
-  #ifdef DEBUG
   hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
-  #else 
-  hpw::scene_mgr->add( new_shared<Scene_validation>() );
-  #endif
 
   /* к этому моменту кеймапер будет инициализирован и
   управление можно будет переназначить с конфига */
