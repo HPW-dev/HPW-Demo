@@ -1,5 +1,4 @@
 #include <cassert>
-#include <filesystem>
 #include "scene-palette-select.hpp"
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
@@ -17,6 +16,7 @@
 #include "game/util/game-palette.hpp"
 #include "util/file/archive.hpp"
 #include "util/str-util.hpp"
+#include "util/path.hpp"
 #include "host/command.hpp"
 
 struct Scene_palette_select::Impl {
@@ -67,8 +67,7 @@ struct Scene_palette_select::Impl {
     return_if (graphic::current_palette_file.empty());
 
     // отобразить только имя файла палитры
-    auto palette_name = cur_palette_file();
-    palette_name = std::filesystem::path(palette_name).stem().string();
+    cauto palette_name = get_filename( cur_palette_file() );
     graphic::font->draw(dst, Vec(50, 25),
       get_locale_str("scene.palette_select.cur_file") + U" : " +
       sconv<utf32>(palette_name));

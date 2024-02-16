@@ -69,8 +69,8 @@ struct Scene_replay_select::Impl {
   } // init_menu
 
   inline void draw_selected_replay(Image& dst) const {
-    utf32 txt = U"File: " + sconv<utf32>(get_replay_name());
-    graphic::font->draw(dst, Vec(5, 150), txt);
+    utf32 txt = U"выбран файл реплея: " + sconv<utf32>(get_replay_name());
+    graphic::font->draw(dst, Vec(15, 150), txt);
   }
 
   inline void next_replay_file() {
@@ -80,14 +80,14 @@ struct Scene_replay_select::Impl {
 
   inline Str get_replay_name() const {
     if (m_replay_names.empty())
-      return "no replay";
+      return "-";
 
     auto it = m_replay_names.cbegin();
     std::advance(it, m_replay_name_idx);
     if (it == m_replay_names.cend())
-      return "no replay";
+      return "-";
 
-    return *it;
+    return get_filename(*it);
   }
 
   inline void load_replay_names()
