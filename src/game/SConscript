@@ -81,25 +81,31 @@ sources = [
 if not is_debug and not is_linux:
   ld_flags.append("-mwindows")
 
-env.Append(CPPDEFINES = defines)
-env.Append(CXXFLAGS = cpp_flags)
-env.Append(LINKFLAGS = ld_flags)
-env.Append(CPPPATH = inc_path)
-
 # билд игры
 env.Program(
   target = build_dir + prog_name,
   source = sources,
   LIBPATH = lib_path,
   LIBS = used_libs,
-  CXX = compiler
+  CXX = compiler,
+  CPPDEFINES = defines,
+  CXXFLAGS = cpp_flags,
+  LINKFLAGS = ld_flags,
+  CPPPATH = inc_path,
 )
 
 # билд плагинов
 env.SharedLibrary(
   target = plugin_dir + "brightness",
   source = [
-    src_plugin_dir + "brightness.cpp"
+    src_plugin_dir + "brightness.cpp",
+    src_plugin_dir + "pge-util.cpp",
+    src_dir + "graphic/image/color.cpp",
+    src_dir + "graphic/util/convert.cpp",
   ],
-  CXX = compiler
+  CXX = compiler,
+  CPPDEFINES = defines,
+  CXXFLAGS = cpp_flags,
+  LINKFLAGS = ld_flags,
+  CPPPATH = inc_path,
 )
