@@ -5,6 +5,11 @@
 ### Компиляция
 Использовались компиляторы GCC/Clang/MinGW64 [см. инструкцию по сборке](script/how-to-build-ru.md)
 
+### Моддинг
+[Палитры](info/palettes-ru.md)
+[Логотипы и фоны загрузки](TODO)
+[Графические плагины](TODO)
+
 ### Copyright
 © 2020-2024, [HPW-dev](mailto:hpwdev0@gmail.com)
 
