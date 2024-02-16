@@ -18,10 +18,8 @@ if enable_omp:
   
 lib_path = []
 build_dir = "../../build/"
-plugin_dir = "../../build/plugin/effect/"
 prog_name = "HPW"
 src_dir = "../../src/"
-src_plugin_dir = "../../src/plugin/graphic-effect/cxx/"
 thirdparty_dir = "../../thirdparty/"
 
 inc_path = [
@@ -93,38 +91,3 @@ env.Program(
   LINKFLAGS = ld_flags,
   CPPPATH = inc_path,
 )
-
-# билд плагинов
-def build_plugin(target, source):
-  env.SharedLibrary(
-    target = plugin_dir + target,
-    source = source,
-    CXX = compiler,
-    CPPDEFINES = defines,
-    CXXFLAGS = cpp_flags,
-    LINKFLAGS = ld_flags,
-    CPPPATH = inc_path,
-  )
-
-build_plugin("brightness", [
-  src_plugin_dir + "brightness.cpp",
-  src_plugin_dir + "pge-util.cpp",
-  src_dir + "graphic/image/color.cpp",
-  src_dir + "graphic/util/convert.cpp",
-] )
-
-build_plugin("motion-blur", [
-  src_plugin_dir + "motion-blur.cpp",
-  src_plugin_dir + "pge-util.cpp",
-  src_dir + "graphic/image/image.cpp",
-  src_dir + "graphic/image/color.cpp",
-  src_dir + "graphic/util/convert.cpp",
-] )
-
-build_plugin("epilepsy", [
-  src_plugin_dir + "epilepsy.cpp",
-  src_plugin_dir + "pge-util.cpp",
-  src_dir + "graphic/image/color.cpp",
-  src_dir + "graphic/util/convert.cpp",
-  src_dir + "util/math/random.cpp",
-] )
