@@ -16,8 +16,8 @@ Image g_old_frame; /// предыдущий кадр
 
 extern "C" void plugin_init(const struct context_t* context, struct result_t* result) {
   // описание плагина
-  result->full_name = "Brightness";
-  result->description = "Add brightness";
+  result->full_name = "Motion blur";
+  result->description = "Smoth all frames";
   // проверка валидности данных
   if ( !check_params(context, result))
     return;
@@ -26,7 +26,7 @@ extern "C" void plugin_init(const struct context_t* context, struct result_t* re
   g_dst = ptr2ptr<Pal8*>(context->dst);
   g_h = context->h;
   g_w = context->w;
-  g_motion_blur = 0.055;
+  g_motion_blur = 0.6;
   context->registrate_param_f32(
     "power",
     "power of motion blur",
