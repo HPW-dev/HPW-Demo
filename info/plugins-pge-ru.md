@@ -2,6 +2,7 @@
 
 Игра может запускать полноэкранные эффекты из .dll/.so файлов.
 
+Видео-демка:\
 [![HPW: Плагины на графику](https://img.youtube.com/vi/i_2XOWrNE4U/0.jpg)](https://youtu.be/i_2XOWrNE4U "HPW: Плагины на графику")
 
 **путь к плагинам: build/plugin/effect/**
