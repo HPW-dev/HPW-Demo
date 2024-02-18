@@ -1,11 +1,12 @@
 #pragma once
+#include <cstdint>
 
 using ldouble = long double;
 using real = float;
 using uint = unsigned;
-using byte = unsigned char;
-using i64_t = signed long long;
-using Uid = unsigned short;
+using byte = std::uint8_t;
+using i64_t = std::int64_t;
+using Uid = std::uint16_t;
 
 static_assert(sizeof(byte) == 1);
 static_assert(sizeof(i64_t) == 8);
