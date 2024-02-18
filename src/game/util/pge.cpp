@@ -24,6 +24,7 @@ Vector<Shared<Param_pge>> g_pge_params {}; /// какие сейчас дост�
 Str g_pge_path {}; /// текущий путь к плагину 
 Str g_pge_name {}; /// текущее имя плагина
 Str g_pge_description {}; /// описание к плагину
+bool g_pge_loaded {false}; /// флаг успешной загрузки плагина
 std::function<decltype(plugin_init)> g_plugin_init {};
 std::function<decltype(plugin_apply)> g_plugin_apply {};
 std::function<decltype(plugin_finalize)> g_plugin_finalize {};
@@ -70,6 +71,7 @@ void load_pge(Str libname) {
     // попытаться найти настройки плагина в конфиге
     load_pge_params_only();
     std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
+    g_pge_loaded = true;
   } catch (CN<hpw::Error> err) {
     hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
     disable_pge();
@@ -96,6 +98,7 @@ void disable_pge() {
   g_plugin_apply = {};
   g_plugin_init = {};
   g_lib_loader = {};
+  g_pge_loaded = false;
 }
 
 // перенос значений с конфига в настройки плагина
@@ -260,3 +263,4 @@ void Param_pge_bool::load(CN<Yaml> dst) {
   *value = dst.get_bool("value");
 }
 
+bool pge_loaded() { return g_pge_loaded; }

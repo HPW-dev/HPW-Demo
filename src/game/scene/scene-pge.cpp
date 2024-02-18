@@ -163,9 +163,10 @@ struct Scene_pge::Impl {
         }
         ++idx;
       }
-    }
 
-    load_pge( get_current_effect() );
+      if ( !pge_loaded()) // не грузить плагин, если уже загружен
+        load_pge( get_current_effect() );
+    }
   } // init_plugins
 
   inline Str get_current_effect() const { return m_effects.at(m_selected_effect); }
