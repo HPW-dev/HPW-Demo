@@ -58,3 +58,10 @@ build_plugin("epilepsy", [
   src_dir + "graphic/util/convert.cpp",
   src_dir + "util/math/random.cpp",
 ] )
+
+build_plugin("blink-dither", [
+  src_plugin_dir + "blink-dither.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/util/convert.cpp",
+] )
