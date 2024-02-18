@@ -9,7 +9,6 @@
 #include "game/game-common.hpp"
 #include "game/util/game-archive.hpp"
 #include "util/file/archive.hpp"
-#include "util/file/yaml.hpp"
 #include "util/path.hpp"
 
 struct Tile {

@@ -16,7 +16,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
 
 static Mem_pool qtree_mempool;
 

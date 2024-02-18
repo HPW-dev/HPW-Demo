@@ -9,10 +9,6 @@
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"
 
-#ifdef CLD_DEBUG
-#include "game/game-debug.hpp"
-#endif
-
 bool Hitbox::is_collided_with(const Vec this_pos, const Vec other_pos,
 CN<Hitbox> other) const {
   // если внешние упрощённые хитбоксы столкнулись

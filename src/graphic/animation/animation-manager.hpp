@@ -3,7 +3,6 @@
 #include "util/str.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
-#include "util/str.hpp"
 #include "util/macro.hpp"
 
 class Anim;

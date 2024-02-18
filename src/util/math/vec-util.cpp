@@ -4,7 +4,6 @@
 #include "vec.hpp"
 #include "mat.hpp"
 #include "random.hpp"
-#include "mat.hpp"
 
 #ifdef DEBUG
 #include "util/str-util.hpp"

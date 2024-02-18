@@ -10,7 +10,6 @@
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/util/game-util.hpp"
-#include "game/util/game-util.hpp"
 #include "game/game-common.hpp"
 
 class Anim::Hitbox_diections {
