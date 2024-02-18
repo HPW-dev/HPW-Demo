@@ -1,6 +1,6 @@
 #include <omp.h>
-#include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include <cassert>
+#include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include <algorithm>
 #include "pge-util.hpp"
 #include "util/macro.hpp"

@@ -1,5 +1,5 @@
-#include <cmath>
 #include <omp.h>
+#include <cmath>
 #include "level-debug-2.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"

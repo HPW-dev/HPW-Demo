@@ -1,5 +1,5 @@
-#include "stb/stb_image.h"
 #include <cassert>
+#include "stb/stb_image.h"
 #include "host-util.hpp"
 #include "command.hpp"
 #include "game/game-core.hpp"
