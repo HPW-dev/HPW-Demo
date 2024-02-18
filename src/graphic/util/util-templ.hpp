@@ -1,6 +1,8 @@
 #pragma once
 /// @file template funcs
 #include <cassert>
+#include <utility>
+#include <algorithm>
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/color-blend.hpp"

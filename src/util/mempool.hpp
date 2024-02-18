@@ -5,6 +5,8 @@
 #include <functional>
 #endif
 
+#include <memory>
+#include <utility>
 #include "util/mem-types.hpp"
 #include "util/vector-types.hpp"
 #include "util/macro.hpp"

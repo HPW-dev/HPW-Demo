@@ -1,6 +1,7 @@
 #include <cassert>
 #include <iostream>
 #include <functional>
+#include <utility>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include "pge.hpp"
 #include "util/str-util.hpp"

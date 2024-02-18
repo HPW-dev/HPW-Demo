@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/util/pge.hpp"

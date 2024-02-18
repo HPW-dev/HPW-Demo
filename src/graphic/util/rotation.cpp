@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cmath>
+#include <utility>
 #include "rotation.hpp"
 #include "graphic-util.hpp"
 #include "graphic/image/image.hpp"

@@ -1,5 +1,6 @@
 #include <cmath>
 #include <cassert>
+#include <algorithm>
 #include "graphic-util.hpp"
 #include "rotsprite.hpp"
 #include "graphic/image/image.hpp"

@@ -1,3 +1,5 @@
+#include <utility>
+#include <algorithm>
 #include <sstream>
 #include <ctime>
 #include "scene-game.hpp"

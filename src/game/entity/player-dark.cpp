@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 #include <cassert>
 #include "player-dark.hpp"
 #include "entity-manager.hpp"

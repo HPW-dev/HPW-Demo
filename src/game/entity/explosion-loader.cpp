@@ -1,4 +1,5 @@
 #include <cassert>
+#include <utility>
 #include "explosion-loader.hpp"
 #include "util/math/vec.hpp"
 #include "util/file/yaml.hpp"

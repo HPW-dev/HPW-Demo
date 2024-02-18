@@ -1,5 +1,6 @@
 #include <list>
 #include <cassert>
+#include <utility>
 #include <algorithm>
 #include "post-effects.hpp"
 #include "graphic/image/image.hpp"

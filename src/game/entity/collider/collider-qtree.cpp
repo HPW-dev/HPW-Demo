@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <cassert>
 #include <cstdint>
+#include <algorithm>
 #include <cmath>
 #include "collider-qtree.hpp"
 #include "game/entity/collidable.hpp"

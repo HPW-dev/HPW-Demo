@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <utility>
 #include "robin-hood-hashing/robin_hood.h"
 #include "util/mempool.hpp"
 #include "util/math/num-types.hpp"

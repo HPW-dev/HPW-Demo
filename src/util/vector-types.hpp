@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <vector>
 
 template <class T, class alloc = std::allocator<T>>

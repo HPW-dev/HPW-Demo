@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include "camera.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"

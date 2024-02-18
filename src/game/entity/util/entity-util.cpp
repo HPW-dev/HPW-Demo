@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include "entity-util.hpp"
 #include "phys.hpp"
 #include "anim-ctx.hpp"
