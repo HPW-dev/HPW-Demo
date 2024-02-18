@@ -5,6 +5,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "game/game-common.hpp"
+#include "game/game-canvas.hpp"
 #include "game/game-font.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
@@ -44,8 +45,6 @@ struct Scene_pge::Impl {
   }
 
   inline void draw(Image& dst) const {
-    dst.fill(Pal8::black);
-
     if (!m_reinit_menu) // не показывать меню, когда его нужно перестроить
       m_menu->draw(dst);
   }
@@ -136,7 +135,7 @@ struct Scene_pge::Impl {
     );
     m_menu = new_unique<Advanced_text_menu>(
       get_locale_str("scene.graphic_menu.pge.title"),
-      menu_items, Rect(50, 50, 400, 300)
+      menu_items, Rect{0, 0, graphic::width, graphic::height}
     );
   } // init_menu
 

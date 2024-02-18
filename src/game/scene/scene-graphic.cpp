@@ -6,6 +6,7 @@
 #include "host/host-util.hpp"
 #include "game/game-common.hpp"
 #include "game/game-core.hpp"
+#include "game/game-canvas.hpp"
 #include "game/game-window.hpp"
 #include "game/game-sync.hpp"
 #include "game/game-font.hpp"
@@ -40,7 +41,6 @@ void Scene_graphic::update(double dt) {
 }
 
 void Scene_graphic::draw(Image& dst) const {
-  dst.fill(Pal8::black);
   if (use_detailed_menu)
     detailed_menu->draw(dst);
   else
@@ -252,7 +252,7 @@ void Scene_graphic::init_simple_menu() {
       get_goto_detailed_item(),
       get_exit_item(),
     },
-    Rect{50, 50, 400, 300}
+    Rect{0, 0, graphic::width, graphic::height}
   );
 } // init_simple_menu
 
@@ -331,6 +331,6 @@ void Scene_graphic::init_detailed_menu() {
       ),
       get_exit_item(),
     },
-    Rect{50, 50, 400, 300}
+    Rect{0, 0, graphic::width, graphic::height}
   );
 } // init_detailed_menu
