@@ -83,7 +83,7 @@ struct Level_replay_test::Impl {
     Rect bar (pos.x, pos.y, 200, 9); // размер рамки полоски
     draw_rect<&blend_diff>(dst, bar, Pal8::white);
     // размер полоски загрузки
-    real load_value = m_lifetime / double(m_lifetime_max);
+    real load_value = m_lifetime / scast<double>(m_lifetime_max);
     load_value *= (bar.size.x - 2);
     Rect load_rect(pos.x+1, pos.y+1, load_value, bar.size.y - 2);
     draw_rect_filled<&blend_diff>(dst, load_rect, Pal8::white);

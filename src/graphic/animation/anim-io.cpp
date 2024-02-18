@@ -19,7 +19,7 @@
 inline void save_hitbox(CP<Anim> anim, Yaml& root) {
   auto hitbox_source = anim->get_hitbox_source();
   return_if (!hitbox_source);
-  return_if (!bool(*hitbox_source));
+  return_if (!scast<bool>(*hitbox_source));
 
   auto hitbox_node = root.make_node("hitbox");
 
@@ -76,7 +76,7 @@ inline void load_hitbox(Anim& anim, CN<Yaml> hitbox_node) {
     hitbox_source->polygons.emplace_back(loaded_poly);
   } // for polygons
 
-  if (bool(*hitbox_source))
+  if (scast<bool>(*hitbox_source))
     anim.update_hitbox(hitbox_source);
 } // save_hitbox
 

@@ -96,7 +96,7 @@ void Scene_main_menu::init_logo() {
   Str logo_name = m_logo_names.at(rndu_fast(m_logo_names.size()));
 
   auto finded_sprite = hpw::store_sprite->find(logo_name);
-  assert(finded_sprite && bool(*finded_sprite));
+  assert(finded_sprite && scast<bool>(*finded_sprite));
   logo = new_shared<Sprite>(*finded_sprite);
 
   // маленькие логотипы заресайзить

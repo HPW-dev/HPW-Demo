@@ -21,9 +21,9 @@ struct Pal8 {
   constx value_t white {255}; /// WHITE1
   constx value_t red_black {red_start};
   constx value_t red_end {red};
-  constx value_t red_size {int(red_end) - int(red_start)};
-  constx value_t gray_size {int(gray_end) - int(black) + 1};
-  constx value_t gray {int(gray_end) / 2};
+  constx value_t red_size {scast<int>(red_end) - scast<int>(red_start)};
+  constx value_t gray_size {scast<int>(gray_end) - scast<int>(black) + 1};
+  constx value_t gray {scast<int>(gray_end) / 2};
   constx value_t mask_visible {black};
   constx value_t mask_invisible {white};
   constx value_t none {mask_invisible}; /// for image get bound func

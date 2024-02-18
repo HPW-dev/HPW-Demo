@@ -208,7 +208,8 @@ void Level_debug_3::make_dummy() {
     entity->phys.set_force( 5_pps );
     entity->move_update_callback( &bounce_off_screen );
     entity->move_update_callback( Anim_speed_addiction(5_pps, 0, 3) );
-    entity->move_update_callback( Rotate_speed_addiction(5_pps, 0, 3, 8, bool(rndb() & 1)) );
+    entity->move_update_callback( Rotate_speed_addiction(5_pps, 0, 3, 8,
+      scast<bool>(rndb() & 1)) );
   }
   #endif
   

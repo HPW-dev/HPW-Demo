@@ -48,7 +48,7 @@
     inline T* get() const { return ptr; }
     inline T* operator->() const { return ptr; }
     inline T& operator*() const { return *ptr; }
-    inline operator bool() const { return bool(ptr); }
+    inline operator bool() const { return scast<bool>(ptr); }
   }; // _Pool_ptr
 
   #define Pool_ptr(T) _Pool_ptr<T> 
