@@ -1,5 +1,6 @@
 #include <omp.h>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
+#include <array>
 #include "pge-util.hpp"
 #include "util/macro.hpp"
 #include "graphic/image/image.hpp"
@@ -50,14 +51,36 @@ extern "C" void plugin_apply(uint32_t state) {
 
 extern "C" void plugin_finalize(void) {}
 
-void init_tables() {
+constexpr const std::size_t line_sz = 256;
+/// black, white, red [black .. blink .. white]
+std::array<Pal8::value_t, line_sz * 2> table_0 {};
 
+void init_tables() {
+  // table_0
+  cfor (state, 2) {
+    cfor (i, line_sz) {
+      const Pal8 color(i);
+      cauto is_red = color.is_red();
+      cauto cr = color.to_real();
+
+      if (cr <= 1.0 / 3.0) {
+        table_0.at(i + line_sz * state) = 0;
+      } else if (cr <= 2.0 / 3.0) {
+        table_0.at(i + line_sz * state) = Pal8::from_real(1 * state, is_red);
+      } else {
+        table_0.at(i + line_sz * state) = Pal8::from_real(1, is_red);
+      }
+    }
+  } // table_0
+
+  // table_1
+  // TODO
 }
 
 inline Pal8 get_from_table_0(const Pal8 src, uint32_t state) {
-  return src; // TODO
+  return table_0[src.val + line_sz * (state & 1u)];
 }
 
 inline Pal8 get_from_table_1(const Pal8 src, uint32_t state) {
-  return src; // TODO
+  return table_0[src.val + line_sz * (state & 1u)]; // TODO
 }
