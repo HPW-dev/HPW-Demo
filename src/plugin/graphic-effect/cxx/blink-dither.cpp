@@ -54,6 +54,8 @@ extern "C" void plugin_finalize(void) {}
 constexpr const std::size_t line_sz = 256;
 /// black, white, red [black .. blink .. white]
 std::array<Pal8::value_t, line_sz * 2> table_0 {};
+/// black, white, red [black .. blink .. white] окно в 5 кадров мерцания
+std::array<Pal8::value_t, line_sz * 6> table_1 {};
 
 void init_tables() {
   // table_0
@@ -74,7 +76,27 @@ void init_tables() {
   } // table_0
 
   // table_1
-  // TODO
+  cauto is_blink = [](const real val, const uint32_t state)->int {
+    switch (state) {
+      default:
+      case 5: return 1;
+      case 4: return (val >= 0.8) ? 1 : 0;
+      case 3: return (val >= 0.6) ? 1 : 0;
+      case 2: return (val >= 0.4) ? 1 : 0;
+      case 1: return (val >= 0.2) ? 1 : 0;
+      case 0: return 0;
+    }
+    return 0;
+  };
+
+  cfor (state, 6) {
+    cfor (i, line_sz) {
+      const Pal8 color(i);
+      cauto is_red = color.is_red();
+      cauto cr = color.to_real();
+      table_1.at(i + line_sz * state) = Pal8::from_real(1 * is_blink(cr, state), is_red);
+    }
+  } // table_1
 }
 
 inline Pal8 get_from_table_0(const Pal8 src, uint32_t state) {
@@ -82,5 +104,5 @@ inline Pal8 get_from_table_0(const Pal8 src, uint32_t state) {
 }
 
 inline Pal8 get_from_table_1(const Pal8 src, uint32_t state) {
-  return table_0[src.val + line_sz * (state & 1u)]; // TODO
+  return table_1[src.val + line_sz * (state % 5u)];
 }
