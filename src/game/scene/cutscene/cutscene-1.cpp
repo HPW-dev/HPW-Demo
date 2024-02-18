@@ -11,7 +11,7 @@ struct Cutscene_1::Impl {
 
   inline Impl() {
 
-  };
+  }
 
   inline void update(double dt) {
     if (is_pressed_once(hpw::keycode::escape))

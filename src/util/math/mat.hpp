@@ -1,6 +1,6 @@
 #pragma once
-#include <limits>
 #include <numbers>
+#include <limits>
 #include "util/math/num-types.hpp"
 
 constexpr real PI = std::numbers::pi;

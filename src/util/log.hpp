@@ -1,9 +1,9 @@
 #pragma once
 
 #ifdef DEBUG
+#include <syncstream>
 #include <atomic>
 #include <mutex>
-#include <syncstream>
 #include <iostream>
 
 namespace debug_ns {

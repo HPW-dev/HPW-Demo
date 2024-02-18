@@ -89,9 +89,9 @@ public:
           rd->add(entity);
       }
     } else { // еслви ветвей нет:
-      if (m_entitys.size() < entity_limit) // добавить объект, если есть свободное место
+      if (m_entitys.size() < entity_limit) { // добавить объект, если есть свободное место
         m_entitys.emplace_back(&entity);
-      else { // при отстуствии свободного места:
+      } else { // при отстуствии свободного места:
         // если размер вставляемого объекта больше сектора, то не делить
         auto hithox = entity.get_hitbox();
         return_if( !hithox);
@@ -107,8 +107,9 @@ public:
         if (depth < max_depth) {
           split();
           add(entity); // добавить что хотели в следующие ветви
-        } else // не делиться больше, добавить объект
+        } else { // не делиться больше, добавить объект
           m_entitys.emplace_back(&entity);
+        }
       }
     }
   } // add

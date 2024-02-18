@@ -170,7 +170,7 @@ void Player_dark::blink_contour() const {
 void Player_dark::draw_stars(Image& dst) const {
   assert(energy_max > 0);
   // расположение всех окошек бумера
-  const static Vector<Vec> window_pos_table {
+  sconst Vector<Vec> window_pos_table {
 
                               {0, 0},
                         {-3, 2},     {3, 2},
