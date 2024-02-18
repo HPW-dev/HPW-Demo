@@ -152,7 +152,7 @@ void save_pge_to_config() {
   // сейв текущих настроек плагина
   cnauto params = get_pge_params();
   for (uint id = 0; cnauto param: params) {
-    auto param_node = effect_node.make_node_if_not_exist("param_" + n2s(id));
+    auto param_node = effect_node.make_node("param_" + n2s(id));
     ++id;
     assert(param);
     param->save(param_node);

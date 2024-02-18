@@ -65,3 +65,10 @@ build_plugin("blink-dither", [
   src_dir + "graphic/image/color.cpp",
   src_dir + "graphic/util/convert.cpp",
 ] )
+
+build_plugin("pixelate", [
+  src_plugin_dir + "pixelate.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/util/convert.cpp",
+] )

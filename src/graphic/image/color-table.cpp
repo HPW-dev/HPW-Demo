@@ -5,6 +5,7 @@
 
 void load_color_tables() {
   const Str dir = "resource/color table/";
+  assert(hpw::archive);
   table_inv          = hpw::archive->get_file(dir + "table_inv.dat").data;
   table_inv_safe     = hpw::archive->get_file(dir + "table_inv_safe.dat").data;
   table_inc_safe     = hpw::archive->get_file(dir + "table_inc_safe.dat").data;
