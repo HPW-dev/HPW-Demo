@@ -69,7 +69,7 @@ struct Scene_replay_select::Impl {
   } // init_menu
 
   inline void draw_selected_replay(Image& dst) const {
-    utf32 txt = U"выбран файл реплея: " + sconv<utf32>(get_replay_name());
+    utf32 txt = U"выбран файл реплея: " + sconv<utf32>(get_filename( get_replay_name() ));
     graphic::font->draw(dst, Vec(15, 150), txt);
   }
 
@@ -87,7 +87,7 @@ struct Scene_replay_select::Impl {
     if (it == m_replay_names.cend())
       return "-";
 
-    return get_filename(*it);
+    return *it;
   }
 
   inline void load_replay_names()
