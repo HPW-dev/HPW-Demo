@@ -40,7 +40,6 @@ void Scene_difficulty::init_menu() {
         hpw::scene_mgr->add(new_shared<Scene_loading>( []{
           hpw::replay_read_mode = false;
           hpw::scene_mgr->add(new_shared<Scene_game>());
-          hpw_log("выбран уровень сложности: " << n2s( scast<int>(hpw::difficulty) ) << "\n");
         } ));
       }),
       new_shared<Menu_list_item>(get_locale_str("scene.difficulty_select.difficulty.title"),
