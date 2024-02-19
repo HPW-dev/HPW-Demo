@@ -1,5 +1,5 @@
 #include <cmath>
-#include "hud-asci-1.hpp"
+#include "hud-asci.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -38,6 +38,7 @@ void draw_expanded_text(Image& dst, CN<utf32> txt, const Vec pos) {
 void draw_hud_asci_1(Image& dst) {
   auto player = hpw::entity_mgr->get_player();
   return_if (!player);
+
   auto line_len = 20;
 
   // напечатать полоску hp
@@ -62,3 +63,20 @@ void draw_hud_asci_1(Image& dst) {
   draw_expanded_text(dst, hp_txt, {10, dst.Y - (graphic::font->h() + 2)});
   draw_expanded_text(dst, pts_txt, {400, dst.Y - (graphic::font->h() + 2)});
 } // draw_hud_asci_1
+
+struct Hud_asci::Impl {
+  inline Impl() = default;
+
+  inline void draw(Image& dst) const {
+    draw_hud_asci_1(dst);
+  }
+
+  inline void update(double dt) const {
+
+  }
+}; // Impl
+
+void Hud_asci::draw(Image& dst) const { impl->draw(dst); }
+void Hud_asci::update(double dt) const { impl->update(dt); }
+Hud_asci::Hud_asci(): impl{new_unique<Impl>()} {}
+Hud_asci::~Hud_asci() {}

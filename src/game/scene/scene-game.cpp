@@ -26,8 +26,9 @@
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
+#include "game/util/game-hud.hpp"
 #include "game/entity/util/mem-map.hpp"
-#include "game/hud/hud.hpp"
+#include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
 #include "game/scene/scene-gameover.hpp"
 #include "game/level/level-manager.hpp"
@@ -84,6 +85,8 @@ Scene_game::Scene_game(): death_timer {4} {
   // на средних настройках закэшировать вспышки перед запуском игры
   if (graphic::light_quality == Light_quality::medium)
     cache_light_spheres();
+  // TODO выбор HUD с конфига
+  graphic::hud = new_shared<Hud_asci>();
 }
 
 Scene_game::~Scene_game() {
@@ -109,6 +112,8 @@ void Scene_game::update(double dt) {
   replay_load_keys();
 
   hpw::level_mgr->update(get_level_vel(), dt);
+  if (graphic::hud)
+    graphic::hud->update(dt);
   hpw::entity_mgr->update(dt);
   graphic::camera->update(dt);
   graphic::post_effects->update(dt);
@@ -122,7 +127,8 @@ void Scene_game::draw(Image& dst) const {
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
   graphic::post_effects->draw(dst);
-  draw_hud(dst);
+  if (graphic::hud)
+    graphic::hud->draw(dst);
   post_draw(dst);
 } // draw
 

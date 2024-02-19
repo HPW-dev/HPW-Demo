@@ -2,10 +2,11 @@
 
 class Image;
 
-enum class hud_e {
-  simple, /// обычный интерфейс с полосками
-  asci_1, /// текстовый с @-полосками
+/// База для интерфейса игрока
+class Hud {
+public:
+  Hud() = default;
+  virtual ~Hud() = default;
+  virtual void draw(Image& dst) const = 0;
+  virtual void update(double dt) const = 0;
 };
-
-/// рисует интерфейс игрока
-void draw_hud(Image& dst);
