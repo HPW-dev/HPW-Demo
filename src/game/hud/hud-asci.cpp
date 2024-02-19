@@ -40,7 +40,7 @@ struct Hud_asci::Impl {
     cauto player_pos = player->phys.get_pos();
     player_rect = Rect(player_pos - Vec(15, 2), Vec(31, 17));
 
-    push_player();
+    push_player(player);
   }
 
   inline void draw(Image& dst) const {
@@ -104,10 +104,14 @@ struct Hud_asci::Impl {
   }
 
   // выпихивает игрока из надписей на интерфейсе
-  inline void push_player() const {
-    if (intersect(en_rect, player_rect)) {
-      
-    }
+  inline void push_player(Player* player) const {
+    cauto pos = player->phys.get_pos();
+
+    if (intersect(hp_rect, player_rect) ||
+        intersect(en_rect, player_rect) ||
+        intersect(pts_rect, player_rect)
+    )
+      player->phys.set_pos(Vec(pos.x, graphic::height - 31));
   }
 
   // убивает игрока, если его придавят полоски
