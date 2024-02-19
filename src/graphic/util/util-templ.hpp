@@ -3,6 +3,7 @@
 #include <cassert>
 #include <utility>
 #include <algorithm>
+#include <cmath>
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/color-blend.hpp"
@@ -73,15 +74,19 @@ template <blend_pf bf>
 void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col) {
   return_if( !dst);
   return_if(rect.size.x <= 2 || rect.size.y <= 2);
-  cauto ex = rect.pos.x + rect.size.x;
-  cauto ey = rect.pos.y + rect.size.y;
+  const int rect_pos_x = std::round(rect.pos.x);
+  const int rect_pos_y = std::round(rect.pos.y);
+  const int rect_sz_x = std::round(rect.size.x);
+  const int rect_sz_y = std::round(rect.size.y);
+  cauto ex = rect_pos_x + rect_sz_x;
+  cauto ey = rect_pos_y + rect_sz_y;
   // рисование линий по два раза:
-  for (int x = rect.pos.x; x < ex; ++x) {
-    dst.set<bf>(x, rect.pos.y, col);
+  for (int x = rect_pos_x; x < ex; ++x) {
+    dst.set<bf>(x, rect_pos_y, col);
     dst.set<bf>(x, ey-1, col);
   }
-  for (int y = rect.pos.y+1; y < ey-1; ++y) {
-    dst.set<bf>(rect.pos.x, y, col);
+  for (int y = rect_pos_y+1; y < ey-1; ++y) {
+    dst.set<bf>(rect_pos_x, y, col);
     dst.set<bf>(ex-1, y, col);
   }
 } // draw_rect

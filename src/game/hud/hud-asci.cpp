@@ -20,6 +20,7 @@ struct Hud_asci::Impl {
   mutable Rect hp_rect {};
   mutable Rect en_rect {};
   mutable Rect pts_rect {};
+  mutable Rect player_rect {};
 
   inline Impl() = default;
 
@@ -32,6 +33,9 @@ struct Hud_asci::Impl {
     hp_rect = Rect(0, 367, 27 + hp_sz * ch_sz, graphic::height - 367);
     en_rect = Rect(186, 367, 16 + en_sz * ch_sz, graphic::height - 367);
     pts_rect = Rect(361, 367, 31, graphic::height - 367);
+
+    cauto player_pos = player->phys.get_pos();
+    player_rect = Rect(player_pos - Vec(15, 2), Vec(31, 17));
   }
 
   inline void draw(Image& dst) const {
@@ -91,6 +95,7 @@ struct Hud_asci::Impl {
     draw_rect(*hpw::hitbox_layer, hp_rect, Pal8::white);
     draw_rect(*hpw::hitbox_layer, en_rect, Pal8::white);
     draw_rect(*hpw::hitbox_layer, pts_rect, Pal8::white);
+    draw_rect(*hpw::hitbox_layer, player_rect, Pal8::white);
   }
 
 }; // Impl
