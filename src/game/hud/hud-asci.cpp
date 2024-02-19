@@ -25,6 +25,9 @@ struct Hud_asci::Impl {
   inline Impl() = default;
 
   inline void update(double dt) const {
+    check_crush();
+
+    // хитбоксы надписей и полосок
     auto player = hpw::entity_mgr->get_player();
     return_if (!player);
     cauto hp_sz = load_bar_sz(player->get_hp(), player->hp_max, line_len);
@@ -33,9 +36,11 @@ struct Hud_asci::Impl {
     hp_rect = Rect(0, 367, 27 + hp_sz * ch_sz, graphic::height - 367);
     en_rect = Rect(186, 367, 16 + en_sz * ch_sz, graphic::height - 367);
     pts_rect = Rect(361, 367, 31, graphic::height - 367);
-
+    // хитбокс игрока
     cauto player_pos = player->phys.get_pos();
     player_rect = Rect(player_pos - Vec(15, 2), Vec(31, 17));
+
+    push_player();
   }
 
   inline void draw(Image& dst) const {
@@ -96,6 +101,18 @@ struct Hud_asci::Impl {
     draw_rect(*hpw::hitbox_layer, en_rect, Pal8::white);
     draw_rect(*hpw::hitbox_layer, pts_rect, Pal8::white);
     draw_rect(*hpw::hitbox_layer, player_rect, Pal8::white);
+  }
+
+  // выпихивает игрока из надписей на интерфейсе
+  inline void push_player() const {
+    if (intersect(en_rect, player_rect)) {
+      
+    }
+  }
+
+  // убивает игрока, если его придавят полоски
+  inline void check_crush() const {
+
   }
 
 }; // Impl

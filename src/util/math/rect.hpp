@@ -10,3 +10,5 @@ struct Rect {
   constexpr Rect(auto pos_x, auto pos_y, auto size_x, auto size_y)
     : pos(pos_x, pos_y), size(size_x, size_y) {}
 };
+
+bool intersect(const Rect a, const Rect b);
