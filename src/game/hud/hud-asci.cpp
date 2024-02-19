@@ -66,7 +66,7 @@ struct Hud_asci::Impl {
     utf32 pts_txt;
     pts_txt += U"PTS:" + n2s<utf32>(hpw::get_score());
 
-    draw_expanded_text(dst, hp_txt, {10, dst.Y - (graphic::font->h() + 2)});
+    draw_expanded_text(dst, hp_txt,  {10,  dst.Y - (graphic::font->h() + 2)});
     draw_expanded_text(dst, pts_txt, {360, dst.Y - (graphic::font->h() + 2)});
 
     if (graphic::draw_hitboxes)
@@ -92,7 +92,7 @@ struct Hud_asci::Impl {
     // вставка тёмного контура текста
     insert_blink<&blend_min>(dst, hp_overlay_black, pos, graphic::frame_count);
     // вставка текста
-    insert_blink<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
+    insert<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
   } // draw_expanded_text
 
   inline void debug_draw() const {
