@@ -40,3 +40,5 @@ Str get_random_replay_name();
 [[nodiscard]] Vec get_rand_pos_graphic(const real sx, const real sy, const real ex, const real ey);
 /// рисует нажатые игровые клавиши
 void draw_controls(Image& dst);
+/// вычисляет контрольные суммы по экзешнику и data.zip
+void init_validation_info();

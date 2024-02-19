@@ -3,6 +3,7 @@
 #include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/util/pge.hpp"
+#include "game/util/game-util.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/game-common.hpp"
@@ -29,11 +30,8 @@ Game_app::Game_app(int argc, char *argv[])
 : Host_glfw(argc, argv)
 {
   #ifdef RELEASE
-  #pragma message("need validation")
-  //exe_sha256
-  //data_sha256
+    init_validation_info();
   #endif
-  
   check_color_tables();
   load_resources();
   load_locale();

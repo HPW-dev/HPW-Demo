@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <sstream>
 #include "store.hpp"
+#include "hash_sha256/hash_sha256.h"
 #include "game/util/game-util.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
@@ -241,3 +242,34 @@ void draw_controls(Image& dst) {
   inputs += is_pressed(hpw::keycode::focus) ? U"F" : U"_";
   graphic::font->draw(dst, pos + text_offset, inputs);
 } // draw_controls
+
+Str calc_sum(CP<void> data, std::size_t sz) {
+  hash_sha256 hash;
+  hash.sha256_init();
+  hash.sha256_update(scast<CP<uint8_t>>(data), sz);
+  auto hash_ret = hash.sha256_final();
+        
+  std::stringstream ss;
+  for (auto val: hash_ret)
+    ss << std::hex << int(val);
+  return str_toupper(ss.str());
+}
+
+void init_validation_info() {
+  // EXE
+  #ifdef WINDOWS
+    Str path = hpw::cur_dir + "HPW.exe";
+  #else
+    Str path = hpw::cur_dir + "HPW";
+  #endif
+  auto mem = mem_from_file(path);
+  hpw::exe_sha256 = calc_sum( scast<CP<void>>(mem.data()), mem.size() );
+
+  // DATA
+  path = hpw::cur_dir + "data.zip";
+  mem = mem_from_file(path);
+  hpw::data_sha256 = calc_sum( scast<CP<void>>(mem.data()), mem.size() );
+
+  hpw_log("game executable SHA256: " + hpw::exe_sha256 + "\n");
+  hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
+} // init_validation_info
