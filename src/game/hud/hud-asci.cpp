@@ -13,6 +13,7 @@
 #include "game/game-font.hpp"
 #include "game/game-sync.hpp"
 #include "game/game-debug.hpp"
+#include "game/game-difficulty.hpp"
 #include "util/math/mat.hpp"
 
 struct Hud_asci::Impl {
@@ -35,6 +36,8 @@ struct Hud_asci::Impl {
   }
 
   inline void update(double dt) {
+    return_if (hpw::difficulty == Difficulty::easy);
+
     auto player = hpw::entity_mgr->get_player();
     return_if (!player);
 
@@ -96,7 +99,10 @@ struct Hud_asci::Impl {
     // вставка тёмного контура текста
     insert_blink<&blend_min>(dst, hp_overlay_black, pos, graphic::frame_count);
     // вставка текста
-    insert<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
+    if (hpw::difficulty == Difficulty::easy)
+      insert_blink<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
+    else
+      insert<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
   } // draw_expanded_text
 
   inline void debug_draw() const {
