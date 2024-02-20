@@ -16,6 +16,9 @@
 
 [Графические плагины](info/plugins-pge-ru.md)
 
+### Donate
+[Счета для доната](info/donate.md)
+
 ### Copyright
 © 2020-2024, [HPW-dev](mailto:hpwdev0@gmail.com)
 
