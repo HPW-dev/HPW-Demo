@@ -23,3 +23,5 @@ auto safe_div(auto a, auto b) -> decltype(a / b)
   { return (b == 0 ? 0 : a / b); }
 
 constexpr auto pow2(auto x) { return x * x; }
+// вычислить сколько цифр в записи числа
+int32_t digits_number_i32(int32_t x);

@@ -11,6 +11,6 @@ public:
   Hud_asci();
   ~Hud_asci();
   void draw(Image& dst) const override;
-  void update(double dt) const override;
+  void update(double dt) override;
 }; // Hud_asci
 
