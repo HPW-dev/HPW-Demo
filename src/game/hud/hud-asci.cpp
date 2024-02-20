@@ -20,27 +20,31 @@ struct Hud_asci::Impl {
   mutable Rect hp_rect {};
   mutable Rect en_rect {};
   mutable Rect pts_rect {};
+  mutable Rect hp_rect_old {};
+  mutable Rect en_rect_old {};
+  mutable Rect pts_rect_old {};
   mutable Rect player_rect {};
 
-  inline Impl() = default;
+  inline Impl() {
+    hp_rect = Rect(0, 367, 27, graphic::height - 367);
+    en_rect = Rect(186, 367, 16, graphic::height - 367);
+    pts_rect = Rect(361, 367, 31, graphic::height - 367);
+    hp_rect_old = hp_rect;
+    en_rect_old = en_rect;
+    pts_rect_old = pts_rect;
+  }
 
-  inline void update(double dt) const {
-    check_crush();
-
-    // хитбоксы надписей и полосок
+  inline void update(double dt) {
     auto player = hpw::entity_mgr->get_player();
     return_if (!player);
-    cauto hp_sz = load_bar_sz(player->get_hp(), player->hp_max, line_len);
-    cauto en_sz = load_bar_sz(player->energy, player->energy_max, line_len);
-    cauto ch_sz = 7u;
-    hp_rect = Rect(0, 367, 27 + hp_sz * ch_sz, graphic::height - 367);
-    en_rect = Rect(186, 367, 16 + en_sz * ch_sz, graphic::height - 367);
-    pts_rect = Rect(361, 367, 31, graphic::height - 367);
+
+    update_hud_rects(player);
     // хитбокс игрока
     cauto player_pos = player->phys.get_pos();
     player_rect = Rect(player_pos - Vec(15, 2), Vec(31, 17));
 
     push_player(player);
+    check_crush(player);
   }
 
   inline void draw(Image& dst) const {
@@ -105,23 +109,67 @@ struct Hud_asci::Impl {
 
   // выпихивает игрока из надписей на интерфейсе
   inline void push_player(Player* player) const {
-    cauto pos = player->phys.get_pos();
-
-    if (intersect(hp_rect, player_rect) ||
-        intersect(en_rect, player_rect) ||
-        intersect(pts_rect, player_rect)
-    )
-      player->phys.set_pos(Vec(pos.x, graphic::height - 31));
+    push_player_helper(player, hp_rect, hp_rect_old);
+    push_player_helper(player, pts_rect, pts_rect_old);
+    push_player_helper(player, en_rect, en_rect_old);
   }
+
+  inline void push_player_helper(Player* player, const Rect rect,
+  const Rect rect_old) const {
+    return_if( !intersect(player_rect, rect));
+    cauto pos = player->phys.get_pos();
+    // левый нижний угол игрока
+    const Vec player_ld_side(
+      player_rect.pos.x,
+      player_rect.pos.y + player_rect.size.y
+    );
+    // правый верхний угол полоски
+    const Vec rect_old_ur_side(
+      rect_old.pos.x + rect_old.size.x,
+      rect_old.pos.y
+    );
+
+    if ((player_ld_side.y >= rect_old_ur_side.y) &&
+        (player_ld_side.x >= rect_old_ur_side.x))
+    {
+      // толкать вправо
+      player->phys.set_pos(Vec(rect.pos.x + rect.size.x + 15, pos.y));
+    } else {
+      // толкать вверх
+      player->phys.set_pos(Vec(pos.x, graphic::height - 32));
+    }
+  } // push_player_helper
 
   // убивает игрока, если его придавят полоски
-  inline void check_crush() const {
-
+  inline void check_crush(Player* player) const {
+    bool killme {false};
+    if (intersect(player_rect, en_rect) && intersect(player_rect, hp_rect))
+      killme = true;
+    if (intersect(player_rect, en_rect) && intersect(player_rect, pts_rect))
+      killme = true;
+    // не взрывать игрока на такой высоте
+    if (player_rect.pos.y + player_rect.size.y <= en_rect.pos.y + 3)
+      killme = false;
+    if (killme)
+      player->sub_hp(player->get_hp());
   }
+
+  inline void update_hud_rects(Player* player) {
+    cauto hp_sz = load_bar_sz(player->get_hp(), player->hp_max, line_len);
+    cauto en_sz = load_bar_sz(player->energy, player->energy_max, line_len);
+    cauto ch_sz = 7u;
+    hp_rect_old = hp_rect;
+    en_rect_old = en_rect;
+    pts_rect_old = pts_rect;
+    hp_rect = Rect(0, 367, 27 + hp_sz * ch_sz, graphic::height - 367);
+    en_rect = Rect(186, 367, 16 + en_sz * ch_sz, graphic::height - 367);
+    pts_rect = Rect(361, 367, 24 + digits_number_i32(hpw::get_score()) * ch_sz,
+      graphic::height - 367);
+  } // update_hud_rects
 
 }; // Impl
 
 void Hud_asci::draw(Image& dst) const { impl->draw(dst); }
-void Hud_asci::update(double dt) const { impl->update(dt); }
+void Hud_asci::update(double dt) { impl->update(dt); }
 Hud_asci::Hud_asci(): impl{new_unique<Impl>()} {}
 Hud_asci::~Hud_asci() {}

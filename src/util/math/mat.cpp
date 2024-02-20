@@ -29,3 +29,18 @@ real ring_deg(real deg) {
 }
 
 real get_sign(real val) { return std::copysign(real(1), val); }
+
+int32_t digits_number_i32(int32_t x) {  
+  x = std::abs(x);  
+  return
+    (x <            10 ? 1 :   
+    (x <           100 ? 2 :   
+    (x <         1'000 ? 3 :   
+    (x <        10'000 ? 4 :   
+    (x <       100'000 ? 5 :   
+    (x <     1'000'000 ? 6 :   
+    (x <    10'000'000 ? 7 :  
+    (x <   100'000'000 ? 8 :  
+    (x < 1'000'000'000 ? 9 : 10
+    )))))))));  
+} 
