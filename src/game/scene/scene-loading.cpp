@@ -1,8 +1,8 @@
 #include <cassert>
 #include "scene-loading.hpp"
-#include "game/game-font.hpp"
-#include "game/util/game-scenes.hpp"
-#include "game/util/game-sprites.hpp"
+#include "game/core/fonts.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/sprites.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"

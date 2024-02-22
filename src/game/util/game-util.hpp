@@ -1,6 +1,6 @@
 #pragma once
-#include "game-sprites.hpp"
-#include "game-anims.hpp"
+#include "game/core/sprites.hpp"
+#include "game/core/anims.hpp"
 #include "util/unicode.hpp"
 #include "util/str.hpp"
 #include "util/mem-types.hpp"

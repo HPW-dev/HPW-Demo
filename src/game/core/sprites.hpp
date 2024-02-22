@@ -1,5 +1,5 @@
 #pragma once
-#include "store.hpp"
+#include "game/util/store.hpp"
 
 class Sprite;
 

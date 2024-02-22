@@ -7,7 +7,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/sprite/sprite.hpp"
-#include "game/game-canvas.hpp"
+#include "game/core/canvas.hpp"
 
 inline void color_check() {
   std::cout << "color check" << std::endl;

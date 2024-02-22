@@ -1,6 +1,6 @@
 #include "level-debug-bullets.hpp"
-#include "game/game-canvas.hpp"
-#include "game/util/game-entitys.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/entitys.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collider/collider-qtree.hpp"

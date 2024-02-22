@@ -1,10 +1,10 @@
 #include <algorithm>
 #include <cassert>
 #include "player-dark.hpp"
-#include "game/game-core.hpp"
-#include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
-#include "game/util/game-entitys.hpp"
+#include "game/core/core.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/common.hpp"
+#include "game/core/entitys.hpp"
 #include "game/util/keybits.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/scatter.hpp"

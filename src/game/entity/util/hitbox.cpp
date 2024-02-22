@@ -4,8 +4,8 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "game/game-sync.hpp"
-#include "game/game-debug.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/debug.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"
 

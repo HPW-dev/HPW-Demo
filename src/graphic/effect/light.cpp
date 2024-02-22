@@ -11,8 +11,8 @@
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
-#include "game/game-graphic.hpp"
-#include "game/game-sync.hpp"
+#include "game/core/graphic.hpp"
+#include "game/util/sync.hpp"
 
 std::unordered_map<int, Image> cached_spheres {}; /// для оптимизации с пререндером вспышек
 constexpr int cache_spheres_steps = 3; // чем меньше, тем больше пререндеров

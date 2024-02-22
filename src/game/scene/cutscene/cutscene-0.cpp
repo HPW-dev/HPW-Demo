@@ -1,6 +1,6 @@
 #include "cutscene-0.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-scenes.hpp"
+#include "game/core/scenes.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"

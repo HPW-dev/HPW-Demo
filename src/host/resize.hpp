@@ -1,6 +1,6 @@
 #pragma once
 #include "command.hpp"
-#include "game/game-window.hpp"
+#include "game/core/core-window.hpp"
 
 /// параметры ресайза окон
 struct Resize_ctx {

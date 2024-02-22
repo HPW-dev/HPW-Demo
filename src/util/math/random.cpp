@@ -2,7 +2,7 @@
 #include <random>
 #include "rand-table-256.hpp"
 #include "random.hpp"
-#include "game/game-debug.hpp"
+#include "game/core/debug.hpp"
 
 #ifdef STABLE_REPLAY
   #include "util/error.hpp"

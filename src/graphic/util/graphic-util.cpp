@@ -10,8 +10,8 @@
 #include "util/math/random.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/mat.hpp"
-#include "game/game-sync.hpp"
-#include "game/game-graphic.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/graphic.hpp"
 
 void insert_fast(Image& dst, CN<Image> src)
   { memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8)); }

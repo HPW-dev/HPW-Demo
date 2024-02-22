@@ -11,8 +11,8 @@
 #include "util/error.hpp"
 #include "util/file/yaml.hpp"
 #include "graphic/image/image.hpp"
-#include "game/game-canvas.hpp"
-#include "game/util/game-config.hpp"
+#include "game/core/canvas.hpp"
+#include "game/util/config.hpp"
 
 // ----------- [!] ---------------
 // вверх не перемещать

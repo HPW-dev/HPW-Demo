@@ -8,7 +8,7 @@
 
 
 #ifdef CLD_DEBUG
-#include "game/game-debug.hpp"
+#include "game/core/debug.hpp"
 #endif
 
 bool Polygon::collided_with(const Vec this_center, const Vec other_center,

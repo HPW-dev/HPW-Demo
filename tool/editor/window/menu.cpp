@@ -3,8 +3,8 @@
 #include <iomanip>
 #include "menu.hpp"
 #include "window-global.hpp"
-#include "game/game-core.hpp"
-#include "game/game-sync.hpp"
+#include "game/core/core.hpp"
+#include "game/util/sync.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"

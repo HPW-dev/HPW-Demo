@@ -4,7 +4,7 @@
 #include "anim-ctx.hpp"
 #include "phys.hpp"
 #include "game/entity/entity.hpp"
-#include "game/game-graphic.hpp"
+#include "game/core/graphic.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"

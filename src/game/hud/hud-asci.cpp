@@ -8,12 +8,12 @@
 #include "game/entity/player-dark.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/util/score-table.hpp"
-#include "game/util/game-entitys.hpp"
-#include "game/game-canvas.hpp"
-#include "game/game-font.hpp"
-#include "game/game-sync.hpp"
-#include "game/game-debug.hpp"
-#include "game/game-difficulty.hpp"
+#include "game/core/entitys.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/fonts.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/difficulty.hpp"
 #include "util/math/mat.hpp"
 
 struct Hud_asci::Impl {

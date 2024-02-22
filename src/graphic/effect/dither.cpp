@@ -9,7 +9,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "game/game-sync.hpp"
+#include "game/util/sync.hpp"
 
 constexpr Vec bayer_16x16_sz {16, 16};
 /// bayer 16x16 byte
