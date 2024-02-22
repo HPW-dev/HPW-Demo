@@ -27,7 +27,7 @@ void Cosmic_hunter::update(double dt) {
   phys.set_rot_spd(m_rotate_speed);
   phys.set_invert_rotation( !rot_to_right);
 
-  cfor (_, shoot_timer.update(dt)) {
+  cfor (_, m_shoot_timer.update(dt)) {
     // TODO conf
     auto bullet = hpw::entity_mgr->make(this, "bullet.cosmic.hunter", phys.get_pos());
     bullet->phys.set_speed(m_bullet_speed);
@@ -81,8 +81,8 @@ struct Cosmic_hunter::Loader::Impl {
     auto it = ptr2ptr<Cosmic_hunter*>(parent);
 
     it->phys.set_speed( pps(m_speed) );
-    it->shoot_timer = Timer(m_shoot_timer);
-    it->shoot_timer.randomize();
+    it->m_shoot_timer = Timer(m_shoot_timer);
+    it->m_shoot_timer.randomize();
     it->m_rotate_speed = pps(m_rotate_speed);
     it->m_bullet_speed = pps(m_bullet_speed);
     it->m_shoot_deg = m_shoot_deg;

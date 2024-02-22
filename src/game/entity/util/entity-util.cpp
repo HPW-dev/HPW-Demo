@@ -79,7 +79,7 @@ double min_ratio, double max_ratio)
 }
 
 void Anim_speed_addiction::operator()(Entity& entity, double dt) {
-  /* определить на сколько объект быстрее чем max_speed и
+  /* определить на сколько объект быстрее чем m_max_speed и
   эту разницу применить к скорости воспроизведения анимации */
   auto speed = entity.phys.get_speed();
   auto ratio = speed / m_target_speed;
@@ -101,7 +101,7 @@ double min_ratio, double max_ratio, double speed_scale, bool rot_right)
 }
 
 void Rotate_speed_addiction::operator()(Entity& entity, double dt) {
-  /* определить на сколько объект быстрее чем max_speed и
+  /* определить на сколько объект быстрее чем m_max_speed и
   эту разницу применить к скорости вращения */
   auto speed = entity.phys.get_speed();
   auto ratio = speed / m_target_speed;
