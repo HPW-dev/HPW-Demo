@@ -1,5 +1,6 @@
 #pragma once
 ///@file конвертирование строк
+#include <type_traits>
 #include <algorithm>
 #include <sstream>
 #include <vector>
@@ -10,10 +11,21 @@
 using utf8 = std::u8string;
 using utf32 = std::u32string;
 
+template <class T>
+concept have_begin_and_end = requires(T x) {
+  {x.begin()};
+  {x.end()};
+};
+
 /// string convert
 template <class OUT, class IN>
-OUT sconv(CN<IN> src)
+OUT sconv(CN<IN> src) requires have_begin_and_end<IN>
   { return OUT(src.begin(), src.end()); }
+
+/// other c-string style convert
+template <class OUT, class IN>
+OUT sconv(const IN* src) requires std::is_fundamental<IN>::value
+  { return OUT(src); }
 
 /// c-string convert
 template <class OUT, typename in_char_t>
