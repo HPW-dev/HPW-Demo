@@ -18,13 +18,13 @@
 
 struct Hud_asci::Impl {
   constx uint line_len {20};
-  mutable Rect hp_rect {};
-  mutable Rect en_rect {};
-  mutable Rect pts_rect {};
-  mutable Rect hp_rect_old {};
-  mutable Rect en_rect_old {};
-  mutable Rect pts_rect_old {};
-  mutable Rect player_rect {};
+  Rect hp_rect {};
+  Rect en_rect {};
+  Rect pts_rect {};
+  Rect hp_rect_old {};
+  Rect en_rect_old {};
+  Rect pts_rect_old {};
+  Rect player_rect {};
 
   inline Impl() {
     hp_rect = Rect(0, 367, 27, graphic::height - 367);
