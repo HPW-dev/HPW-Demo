@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <cstring>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 
@@ -25,7 +26,7 @@ OUT sconv(CN<IN> src) requires have_begin_and_end<IN>
 /// other c-string style convert
 template <class OUT, class IN>
 OUT sconv(const IN* src) requires std::is_fundamental<IN>::value
-  { return OUT(src); }
+  { return OUT(src, src + std::strlen(src)); }
 
 /// c-string convert
 template <class OUT, typename in_char_t>
