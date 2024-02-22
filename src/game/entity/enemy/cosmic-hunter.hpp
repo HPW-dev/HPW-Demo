@@ -5,7 +5,7 @@
 /// Простой противник стреляющий на упреждение в игрока
 class Cosmic_hunter final: public Proto_enemy {
   nocopy(Cosmic_hunter);
-  Timer shoot_timer {};
+  Timer m_shoot_timer {};
   real m_shoot_timer_max {};
   real m_rotate_speed {};
   real m_bullet_speed {};

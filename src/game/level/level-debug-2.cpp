@@ -4,10 +4,10 @@
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "game/game-graphic.hpp"
-#include "game/game-core.hpp"
-#include "game/game-font.hpp"
-#include "game/game-canvas.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/core.hpp"
+#include "game/core/fonts.hpp"
+#include "game/core/canvas.hpp"
 #include "game/util/game-util.hpp"
 
 Level_debug_2::Level_debug_2() {}

@@ -3,7 +3,6 @@
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
 #include "game/entity/entity-manager.hpp"
-#include "game/game-common.hpp"
 #include "util/file/yaml.hpp"
 
 Proto_enemy::Proto_enemy(): Collidable(GET_SELF_TYPE)

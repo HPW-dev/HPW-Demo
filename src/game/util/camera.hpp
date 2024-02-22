@@ -15,3 +15,7 @@ public:
   void add_shake(double intense); /// добавить тряску
   void update(double dt);
 };
+
+namespace graphic {
+inline Shared<Camera> camera {}; /// камера игрока
+}

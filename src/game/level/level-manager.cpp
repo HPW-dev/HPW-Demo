@@ -1,9 +1,10 @@
 #include <cassert>
 #include "level-manager.hpp"
 #include "level.hpp"
-#include "game/game-core.hpp"
-#include "game/game-common.hpp"
-#include "game/game-debug.hpp"
+#include "game/core/core.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/entitys.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/player.hpp"

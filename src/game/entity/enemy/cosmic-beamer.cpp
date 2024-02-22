@@ -1,8 +1,9 @@
 #include <cassert>
 #include "cosmic-beamer.hpp"
+#include "game/core/common.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/entity-manager.hpp"
-#include "game/game-common.hpp"
+#include "game/core/entitys.hpp"
 #include "graphic/image/image.hpp"
 #include "util/file/yaml.hpp"
 

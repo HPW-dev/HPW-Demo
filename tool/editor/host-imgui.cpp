@@ -5,8 +5,7 @@
 #include <cassert>
 #include "editor.hpp"
 #include "host-imgui.hpp"
-#include "game/game-common.hpp"
-#include "game/game-font.hpp"
+#include "game/core/fonts.hpp"
 #include "game/util/game-archive.hpp"
 #include "graphic/font/unifont.hpp"
 #include "util/error.hpp"

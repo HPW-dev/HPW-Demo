@@ -4,12 +4,12 @@
 #include "phys.hpp"
 #include "anim-ctx.hpp"
 #include "graphic/animation/animation-manager.hpp"
+#include "game/core/anims.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/particle.hpp"
-#include "game/game-common.hpp"
-#include "game/game-canvas.hpp"
+#include "game/core/canvas.hpp"
 #include "util/error.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/mat.hpp"
@@ -79,7 +79,7 @@ double min_ratio, double max_ratio)
 }
 
 void Anim_speed_addiction::operator()(Entity& entity, double dt) {
-  /* определить на сколько объект быстрее чем max_speed и
+  /* определить на сколько объект быстрее чем m_max_speed и
   эту разницу применить к скорости воспроизведения анимации */
   auto speed = entity.phys.get_speed();
   auto ratio = speed / m_target_speed;
@@ -101,7 +101,7 @@ double min_ratio, double max_ratio, double speed_scale, bool rot_right)
 }
 
 void Rotate_speed_addiction::operator()(Entity& entity, double dt) {
-  /* определить на сколько объект быстрее чем max_speed и
+  /* определить на сколько объект быстрее чем m_max_speed и
   эту разницу применить к скорости вращения */
   auto speed = entity.phys.get_speed();
   auto ratio = speed / m_target_speed;

@@ -4,8 +4,8 @@
 #include "util/phys.hpp"
 #include "util/error.hpp"
 #include "util/anim-ctx.hpp"
-#include "game/game-debug.hpp"
-#include "game/game-common.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/entitys.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "graphic/image/image.hpp"
 

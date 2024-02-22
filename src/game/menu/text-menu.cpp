@@ -2,7 +2,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "item/item.hpp"
-#include "game/game-font.hpp"
+#include "game/core/fonts.hpp"
 
 Text_menu::Text_menu(CN<Menu_items> _items, const Vec _draw_pos)
 : Menu(_items), draw_pos(_draw_pos) {}

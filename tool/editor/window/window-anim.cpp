@@ -4,7 +4,6 @@
 #include "window-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/mat.hpp"
-#include "game/game-common.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"

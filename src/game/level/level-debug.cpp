@@ -4,11 +4,10 @@
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/animation/animation-manager.hpp"
-#include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
-#include "game/game-sync.hpp"
+#include "game/core/canvas.hpp"
+#include "game/util/sync.hpp"
 #ifdef CLD_DEBUG
-#include "game/game-debug.hpp"
+#include "game/core/debug.hpp"
 #endif
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collidable.hpp"
@@ -20,6 +19,7 @@
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/core/entitys.hpp"
 #include "graphic/animation/anim.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"

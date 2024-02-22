@@ -1,32 +1,29 @@
-#include <cmath>
 #include <algorithm>
 #include <cassert>
 #include "player-dark.hpp"
-#include "entity-manager.hpp"
-#include "util/entity-util.hpp"
-#include "util/phys.hpp"
-#include "util/anim-ctx.hpp"
-#include "game/game-common.hpp"
-#include "game/game-core.hpp"
-#include "game/game-canvas.hpp"
+#include "game/core/core.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/common.hpp"
+#include "game/core/entitys.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-util.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
+#include "game/entity/entity-manager.hpp"
+#include "util/math/random.hpp"
+#include "util/math/vec-util.hpp"
+#include "util/hpw-util.hpp"
+#include "util/file/yaml.hpp"
+#include "graphic/effect/light.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/effect/light.hpp"
-#include "util/hpw-util.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
-#include "util/file/yaml.hpp"
 
 Player_dark::Player_dark()
 : Player()
-, shoot_timer(0.0666666) // TODO конфиг
+, m_shoot_timer(0.0666666) // TODO конфиг
 , m_shoot_price(70) // TODO конфиг
 , m_energy_regen(37) // TODO конфиг
 {
@@ -85,7 +82,7 @@ void Player_dark::shoot(double dt) {
   } else { // обычные выстрелы
     sub_en(m_shoot_price);
 
-    cfor (_, shoot_timer.update(dt)) {
+    cfor (_, m_shoot_timer.update(dt)) {
       cfor (__, 2) { /// по три выстрела за раз
         cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 5); // TODO конфиг
         auto bullet = hpw::entity_mgr->make(this, "bullet.player.small", spawn_pos);
@@ -123,10 +120,10 @@ void Player_dark::check_input(double dt) {
   real spd;
 
   if (is_pressed(hpw::keycode::focus)) {
-    spd = focus_speed;
+    spd = m_focus_speed;
     phys.set_force(focus_force);
   } else {
-    spd = max_speed;
+    spd = m_max_speed;
     phys.set_force(default_force);
   }
 
@@ -254,6 +251,8 @@ struct Player_dark::Loader::Impl {
     m_focus_force = config.get_real("focus_force");
     m_max_speed   = config.get_real("max_speed");
     m_focus_speed = config.get_real("focus_speed");
+    assert(m_max_speed > 0);
+    assert(m_focus_speed > 0);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -267,8 +266,8 @@ struct Player_dark::Loader::Impl {
     it.phys.set_force( pps(m_force) );
     it.default_force = pps(m_force);
     it.focus_force = pps(m_focus_force);
-    it.focus_speed = pps(m_focus_speed);
-    it.max_speed = pps(m_max_speed);
+    it.m_focus_speed = pps(m_focus_speed);
+    it.m_max_speed = pps(m_max_speed);
     // TODO en
     // TODO fuel
     it.hp_max = it.get_hp();

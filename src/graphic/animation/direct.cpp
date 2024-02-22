@@ -1,8 +1,8 @@
 #include <utility>
 #include "direct.hpp"
 #include "graphic/sprite/sprite.hpp"
-#include "game/game-common.hpp"
 #include "game/util/store.hpp"
+#include "game/core/sprites.hpp"
 
 Direct::Direct(Direct&& other) { this->operator=( std::move(other) ); }
 

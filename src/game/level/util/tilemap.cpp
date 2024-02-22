@@ -7,7 +7,7 @@
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "game/game-common.hpp"
+#include "game/core/sprites.hpp"
 #include "game/util/game-archive.hpp"
 #include "util/file/archive.hpp"
 #include "util/path.hpp"

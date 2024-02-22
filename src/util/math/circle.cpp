@@ -5,7 +5,7 @@
 #include "util/math/mat.hpp"
 
 #ifdef CLD_DEBUG
-#include "game/game-debug.hpp"
+#include "game/core/debug.hpp"
 #endif
 
 inline double fast_distance(const Vec pos_a, CN<Circle> a,

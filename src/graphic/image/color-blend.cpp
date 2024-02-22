@@ -1,7 +1,7 @@
 #include <cassert>
 #include <cmath>
 #include "color-blend.hpp"
-#include "game/game-graphic.hpp"
+#include "game/core/graphic.hpp"
 
 inline double get_state(const Pal8 src, int optional, double speed) {
   double state = src.to_real() + graphic::effect_state * speed;

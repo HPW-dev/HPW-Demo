@@ -3,7 +3,7 @@
 #include <imgui.h>
 #include "window-util.hpp"
 #include "window-global.hpp"
-#include "game/game-sync.hpp"
+#include "game/util/sync.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "graphic/util/graphic-util.hpp"

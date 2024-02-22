@@ -2,7 +2,6 @@
 #include "collidable-info.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/game-common.hpp"
 #include "util/file/yaml.hpp"
 
 void Collidable_info::load(CN<Yaml> node) {

@@ -1,7 +1,7 @@
 #include <cassert>
 #include "particle.hpp"
-#include "game/game-graphic.hpp"
-#include "game/game-sync.hpp"
+#include "game/core/graphic.hpp"
+#include "game/util/sync.hpp"
 #include "util/math/vec.hpp"
 
 Particle::Particle()

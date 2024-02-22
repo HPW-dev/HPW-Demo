@@ -12,12 +12,12 @@
 #include "util/error.hpp"
 #include "util/math/mat.hpp"
 #include "game/util/keybits.hpp"
-#include "game/game-core.hpp"
-#include "game/game-debug.hpp"
-#include "game/game-common.hpp"
-#include "game/game-sync.hpp"
-#include "game/game-window.hpp"
-#include "game/game-graphic.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/common.hpp"
+#include "game/core/core.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/core-window.hpp"
+#include "game/core/graphic.hpp"
 extern "C" {
   #include "ogl.hpp"
   #ifdef WINDOWS

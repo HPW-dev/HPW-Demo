@@ -2,7 +2,6 @@
 #include "input.hpp"
 #include "util/hpw-util.hpp"
 #include "game/util/keybits.hpp"
-#include "game/game-common.hpp"
 #include "game/scene/scene-manager.hpp"
 
 Input_scene::Input_scene(CN<Str> new_title, CN<callback_t> new_callback)

@@ -1,6 +1,5 @@
 #include <cassert>
 #include "anim-info.hpp"
-#include "game/game-common.hpp"
 #include "game/util/game-util.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"

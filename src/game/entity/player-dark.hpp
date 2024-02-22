@@ -19,19 +19,11 @@ class Player_dark final: public Player {
 
 public:
   /// Загрузчик для игрока
-  class Loader final: public Entity_loader {
-    struct Impl;
-    Unique<Impl> impl {};
-
-  public:
-    explicit Loader(CN<Yaml> config);
-    Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
-    ~Loader();
-  };
+  class Loader;
   
-  Timer shoot_timer {};
-  real max_speed {}; /// макс скорость обычного полёта
-  real focus_speed {}; /// скорость при фокусировке
+  Timer m_shoot_timer {}; /// задержка на обычный выстрел
+  real m_max_speed {}; /// макс скорость обычного полёта
+  real m_focus_speed {}; /// скорость при фокусировке
   hp_t m_shoot_price {}; /// стоимсть за выстрел (энергия)
   hp_t m_energy_regen {}; /// скорость восстановления энергии
   hp_t m_power_shoot_price {}; /// цена мощного выстрела
@@ -39,7 +31,16 @@ public:
 
   Player_dark();
   ~Player_dark() = default;
-
   void draw(Image& dst, const Vec offset) const override;
   void update(double dt) override;
 }; // Player_dark
+
+class Player_dark::Loader final: public Entity_loader {
+  struct Impl;
+  Unique<Impl> impl {};
+
+public:
+  explicit Loader(CN<Yaml> config);
+  Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
+  ~Loader();
+};

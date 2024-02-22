@@ -1,5 +1,5 @@
 #include "level-1.hpp"
-#include "game/game-font.hpp"
+#include "game/core/fonts.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 

@@ -1,7 +1,7 @@
 #include <cassert>
-#include "game-sync.hpp"
-#include "game-graphic.hpp"
-#include "game-core.hpp"
+#include "sync.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/core.hpp"
 #include "host/command.hpp"
 #include "util/log.hpp"
 

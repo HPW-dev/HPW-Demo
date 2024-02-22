@@ -2,7 +2,6 @@
 #include "yn.hpp"
 #include "util/hpw-util.hpp"
 #include "game/scene/scene-manager.hpp"
-#include "game/game-common.hpp"
 #include "game/util/keybits.hpp"
 #include "editor-util.hpp"
 

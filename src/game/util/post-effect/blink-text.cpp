@@ -6,8 +6,8 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "game/game-font.hpp"
-#include "game/game-sync.hpp"
+#include "game/core/fonts.hpp"
+#include "game/util/sync.hpp"
 
 struct Blink_text::Impl {
   mutable Timer m_timeout {};

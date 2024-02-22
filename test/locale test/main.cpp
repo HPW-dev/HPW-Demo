@@ -4,7 +4,6 @@
 #include "util/log.hpp"
 #include "game/locale.hpp"
 #include "game/util/game-util.hpp"
-#include "game/game-common.hpp"
 
 void test(CN<Str> fname) {
   hpw_log("\nLoading \"" << fname << "\"\n");

@@ -1,8 +1,8 @@
 #include <imgui.h>
 #include "opts.hpp"
-#include "game/game-graphic.hpp"
-#include "game/game-sync.hpp"
-#include "game/game-debug.hpp"
+#include "game/core/graphic.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/debug.hpp"
 #include "host/command.hpp"
 #include "util/hpw-util.hpp"
 #include "window-global.hpp"

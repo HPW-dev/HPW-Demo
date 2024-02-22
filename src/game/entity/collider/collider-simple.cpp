@@ -1,7 +1,7 @@
 #include <omp.h>
 #include "collider-simple.hpp"
 #include "game/entity/collidable.hpp"
-#include "game/game-debug.hpp"
+#include "game/core/debug.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "graphic/util/util-templ.hpp"

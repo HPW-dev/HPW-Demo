@@ -1,7 +1,7 @@
 #include "locale.hpp"
 #include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
-#include "game/game-common.hpp"
+#include "game/core/locales.hpp"
 #include "store.hpp"
 
 void load_locales_to_store(Yaml file) {

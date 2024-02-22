@@ -8,22 +8,23 @@
 #include "game/entity/player-dark.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/util/score-table.hpp"
-#include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
-#include "game/game-font.hpp"
-#include "game/game-sync.hpp"
-#include "game/game-debug.hpp"
+#include "game/core/entitys.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/fonts.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/difficulty.hpp"
 #include "util/math/mat.hpp"
 
 struct Hud_asci::Impl {
   constx uint line_len {20};
-  mutable Rect hp_rect {};
-  mutable Rect en_rect {};
-  mutable Rect pts_rect {};
-  mutable Rect hp_rect_old {};
-  mutable Rect en_rect_old {};
-  mutable Rect pts_rect_old {};
-  mutable Rect player_rect {};
+  Rect hp_rect {};
+  Rect en_rect {};
+  Rect pts_rect {};
+  Rect hp_rect_old {};
+  Rect en_rect_old {};
+  Rect pts_rect_old {};
+  Rect player_rect {};
 
   inline Impl() {
     hp_rect = Rect(0, 367, 27, graphic::height - 367);
@@ -35,6 +36,8 @@ struct Hud_asci::Impl {
   }
 
   inline void update(double dt) {
+    return_if (hpw::difficulty == Difficulty::easy);
+    
     auto player = hpw::entity_mgr->get_player();
     return_if (!player);
 
@@ -96,7 +99,10 @@ struct Hud_asci::Impl {
     // вставка тёмного контура текста
     insert_blink<&blend_min>(dst, hp_overlay_black, pos, graphic::frame_count);
     // вставка текста
-    insert<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
+    if (hpw::difficulty == Difficulty::easy)
+      insert_blink<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
+    else
+      insert<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
   } // draw_expanded_text
 
   inline void debug_draw() const {

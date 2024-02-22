@@ -6,7 +6,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/font/font.hpp"
 #include "item/item.hpp"
-#include "game/game-font.hpp"
+#include "game/core/fonts.hpp"
 
 struct Advanced_text_menu::Impl {
   Menu* m_base {};
