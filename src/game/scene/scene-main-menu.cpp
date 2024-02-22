@@ -122,8 +122,12 @@ void Scene_main_menu::draw(Image& dst) const {
   draw_logo(dst);
   menu->draw(dst);
 
-  graphic::font->draw(dst, {140, 300}, U"Версия игры: "
-    + sconv<utf32>(cstr_to_cxxstr(get_game_version())) );
+  // показать версию игры  
+  auto game_ver = sconv<utf32>( get_game_version() );
+  if (game_ver.empty())
+    game_ver = get_locale_str("common.unknown");
+  graphic::font->draw(dst, {140, 300}, get_locale_str("common.game_version") +
+    U": " + game_ver);
 }
 
 void Scene_main_menu::init_menu() {
