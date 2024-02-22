@@ -4,6 +4,7 @@
 #include "util/hpw-util.hpp"
 #include "graphic/image/image.hpp"
 #include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"

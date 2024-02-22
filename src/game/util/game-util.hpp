@@ -1,4 +1,6 @@
 #pragma once
+#include "game-sprites.hpp"
+#include "game-anims.hpp"
 #include "util/unicode.hpp"
 #include "util/str.hpp"
 #include "util/mem-types.hpp"
@@ -21,11 +23,8 @@ CN<utf32> get_locale_str(CN<Str> key);
 Circle cover_polygons(CN<Vector<Polygon>> polygons);
 
 #define init_store_sprite() hpw::store_sprite = new_shared<Store<Sprite>>();
-#define init_locale() hpw::locale = new_shared<Locale>();
 #define init_enity_mgr() hpw::entity_mgr = new_shared<Entity_mgr>();
 #define init_anim_mgr() hpw::anim_mgr = new_shared<Anim_mgr>();
-#define init_scene_mgr() hpw::scene_mgr = new_shared<Scene_mgr>();
-
 Vec get_screen_center();
 
 /** создаёт осветлённую обводку для контуров спрайта
@@ -42,3 +41,4 @@ Str get_random_replay_name();
 void draw_controls(Image& dst);
 /// вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
+void init_scene_mgr();

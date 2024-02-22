@@ -3,7 +3,7 @@
 #include "util/entity-util.hpp"
 #include "entity-manager.hpp"
 #include "util/phys.hpp"
-#include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 #include "game/entity/util/info/anim-info.hpp"
 #include "util/math/vec.hpp"
 #include "util/file/yaml.hpp"

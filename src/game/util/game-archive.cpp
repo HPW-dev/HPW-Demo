@@ -1,6 +1,7 @@
 #include <cassert>
 #include "game-archive.hpp"
 #include "game/game-common.hpp"
+#include "game/util/game-config.hpp"
 #include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
 

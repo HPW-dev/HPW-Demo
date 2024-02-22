@@ -1,9 +1,9 @@
 #include "cutscene-1.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/game-scenes.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "game/scene/scene-manager.hpp"
-#include "game/game-common.hpp"
 #include "game/game-font.hpp"
 
 struct Cutscene_1::Impl {

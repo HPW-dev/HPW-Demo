@@ -1,10 +1,11 @@
 #include <iomanip>
 #include "protownd.hpp"
 #include "command.hpp"
-#include "game/game-common.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-window.hpp"
 #include "game/game-graphic.hpp"
+#include "game/game-common.hpp"
+#include "game/util/game-config.hpp"
 #include "game/util/keybits.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"

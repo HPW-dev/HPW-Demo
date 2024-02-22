@@ -1,28 +1,25 @@
-#include <cmath>
 #include <algorithm>
 #include <cassert>
 #include "player-dark.hpp"
-#include "entity-manager.hpp"
-#include "util/entity-util.hpp"
-#include "util/phys.hpp"
-#include "util/anim-ctx.hpp"
-#include "game/game-common.hpp"
 #include "game/game-core.hpp"
 #include "game/game-canvas.hpp"
+#include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-util.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
+#include "game/entity/entity-manager.hpp"
+#include "util/math/random.hpp"
+#include "util/math/vec-util.hpp"
+#include "util/hpw-util.hpp"
+#include "util/file/yaml.hpp"
+#include "graphic/effect/light.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/effect/light.hpp"
-#include "util/hpw-util.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
-#include "util/file/yaml.hpp"
 
 Player_dark::Player_dark()
 : Player()

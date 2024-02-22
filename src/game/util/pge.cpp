@@ -12,7 +12,6 @@
 #include "util/file/yaml.hpp"
 #include "graphic/image/image.hpp"
 #include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
 #include "game/util/game-config.hpp"
 
 // ----------- [!] ---------------

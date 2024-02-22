@@ -16,7 +16,6 @@
 #include "util/file/yaml.hpp"
 #include "util/file/archive.hpp"
 #include "game/util/game-archive.hpp"
-#include "game/game-common.hpp"
 #include "game/game-core.hpp"
 #include "game/game-canvas.hpp"
 #include "game/entity/util/scatter.hpp"

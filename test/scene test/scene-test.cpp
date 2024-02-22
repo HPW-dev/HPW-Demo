@@ -3,7 +3,6 @@
 #include "game/scene/scene-manager.hpp"
 #include "game/scene/scene-info.hpp"
 #include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
 #include "game/game-font.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/image/image.hpp"

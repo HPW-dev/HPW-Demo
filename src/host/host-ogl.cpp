@@ -6,7 +6,6 @@
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/file/archive.hpp"
-#include "game/game-common.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-graphic.hpp"
 #include "game/game-sync.hpp"

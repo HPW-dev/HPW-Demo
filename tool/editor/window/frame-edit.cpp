@@ -6,7 +6,6 @@
 #include "util/math/polygon.hpp"
 #include "util/str-util.hpp"
 #include "util/log.hpp"
-#include "game/game-common.hpp"
 #include "game/game-debug.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/entity/entity.hpp"

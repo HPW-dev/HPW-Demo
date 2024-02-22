@@ -9,11 +9,10 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/particle.hpp"
-#include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 #include "game/game-font.hpp"
 
 void draw_entity_mem_map(Image& dst, const Vec pos) {
-
   // показать окошко
   cauto window = Rect(pos, Vec(300, 200));
   draw_rect<&blend_diff>(dst, window, Pal8::white);

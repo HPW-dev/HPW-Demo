@@ -1,7 +1,7 @@
 #include "scene-info.hpp"
-#include "game/game-common.hpp"
 #include "game/game-font.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"

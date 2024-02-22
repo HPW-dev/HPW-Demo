@@ -12,7 +12,6 @@
 #include "game/game-canvas.hpp"
 #include "game/game-core.hpp"
 #include "game/game-font.hpp"
-#include "game/game-common.hpp"
 #include "game/game-sync.hpp"
 #include "game/game-graphic.hpp"
 #include "game/util/keybits.hpp"

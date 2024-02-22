@@ -1,7 +1,7 @@
 #include "scene-game-pause.hpp"
 #include "scene-manager.hpp"
-#include "game/game-common.hpp"
 #include "game/game-font.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"

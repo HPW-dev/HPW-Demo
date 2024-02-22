@@ -7,11 +7,13 @@
 #include "store.hpp"
 #include "hash_sha256/hash_sha256.h"
 #include "game/util/game-util.hpp"
+#include "game/util/game-locales.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/game-common.hpp"
+#include "game/scene/scene-manager.hpp"
 #include "game/game-core.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-font.hpp"
@@ -273,3 +275,7 @@ void init_validation_info() {
   hpw_log("game executable SHA256: " + hpw::exe_sha256 + "\n");
   hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
 } // init_validation_info
+
+void init_scene_mgr() {
+  hpw::scene_mgr = new_shared<Scene_mgr>();
+}

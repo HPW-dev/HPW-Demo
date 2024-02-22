@@ -8,6 +8,7 @@
 #include "game/game-common.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-font.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/pge.hpp"

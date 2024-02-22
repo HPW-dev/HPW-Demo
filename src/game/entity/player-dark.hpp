@@ -35,7 +35,6 @@ public:
   void update(double dt) override;
 }; // Player_dark
 
-/// Загрузчик для игрока
 class Player_dark::Loader final: public Entity_loader {
   struct Impl;
   Unique<Impl> impl {};

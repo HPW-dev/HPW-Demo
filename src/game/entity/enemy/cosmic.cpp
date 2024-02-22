@@ -8,6 +8,7 @@
 #include "graphic/animation/animation-manager.hpp"
 #include "graphic/animation/anim.hpp"
 #include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"

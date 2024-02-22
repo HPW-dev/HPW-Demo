@@ -1,11 +1,11 @@
 #include <cassert>
 #include "game-config.hpp"
-#include "game/game-common.hpp"
 #include "game/game-core.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-window.hpp"
 #include "game/game-graphic.hpp"
 #include "game/game-sync.hpp"
+#include "game/game-common.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-replay.hpp"
 #include "game/util/game-palette.hpp"

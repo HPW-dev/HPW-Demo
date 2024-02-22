@@ -5,6 +5,7 @@
 #include "util/math/vec-util.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"

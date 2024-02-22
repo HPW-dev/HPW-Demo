@@ -1,5 +1,4 @@
 #include "menu-test.hpp"
-#include "game/game-common.hpp"
 #include "game/util/game-util.hpp"
 #include "game/scene/scene.hpp"
 #include "game/scene/scene-manager.hpp"

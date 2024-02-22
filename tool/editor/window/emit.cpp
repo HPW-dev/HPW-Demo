@@ -8,7 +8,6 @@
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 #include "game/util/game-util.hpp"
-#include "game/game-common.hpp"
 #include "game/game-canvas.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collidable.hpp"

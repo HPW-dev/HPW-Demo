@@ -5,6 +5,7 @@
 #include "graphic/font/font.hpp"
 #include "game/game-common.hpp"
 #include "game/game-font.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/util/game-replay.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/keybits.hpp"

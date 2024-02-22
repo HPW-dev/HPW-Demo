@@ -13,8 +13,8 @@
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/str-util.hpp"
-#include "game/game-common.hpp"
 #include "game/util/store.hpp"
+#include "game/util/game-sprites.hpp"
 
 Frame::Frame(): name {generate_frame_name()} {}
 

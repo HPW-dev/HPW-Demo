@@ -14,7 +14,6 @@
 #include "graphic/font/font.hpp"
 #include "graphic/animation/animation-manager.hpp"
 #include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
 #include "game/game-sync.hpp"
 #include "game/game-camera.hpp"
 #include "game/game-debug.hpp"

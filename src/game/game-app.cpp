@@ -4,15 +4,16 @@
 #include "host/command.hpp"
 #include "game/util/pge.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-manager.hpp"
-#include "game/game-common.hpp"
 #include "game/game-core.hpp"
 #include "game/game-font.hpp"
 #include "game/game-canvas.hpp"
 #include "game/game-sync.hpp"
 #include "game/game-graphic.hpp"
 #include "game/game-debug.hpp"
+#include "game/util/game-locales.hpp"
 #include "game/util/game-config.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
@@ -25,6 +26,7 @@
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/hpw-util.hpp"
+#include "util/log.hpp"
 
 Game_app::Game_app(int argc, char *argv[])
 : Host_glfw(argc, argv)
@@ -81,7 +83,6 @@ void Game_app::draw_border(Image& dst) const
   { draw_rect(dst, Rect{0,0, dst.X, dst.Y}, Pal8::white); }
 
 void Game_app::load_locale() {
-  hpw::locale = new_shared<Locale>();
   auto path = (*hpw::config)["path"].get_str("locale", "resource/locale/en.yml");
   auto mem = hpw::archive->get_file(path);
   auto yml = Yaml(mem);

@@ -1,7 +1,7 @@
 #include "scene-record-table.hpp"
 #include "scene-manager.hpp"
-#include "game/game-common.hpp"
 #include "game/game-font.hpp"
+#include "game/util/game-scenes.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/game-util.hpp"
@@ -9,6 +9,7 @@
 #include "graphic/font/font.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "util/log.hpp"
 
 Scene_record_table::Scene_record_table()
 { init_menu(); }

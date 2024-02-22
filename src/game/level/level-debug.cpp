@@ -5,7 +5,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/animation/animation-manager.hpp"
 #include "game/game-canvas.hpp"
-#include "game/game-common.hpp"
 #include "game/game-sync.hpp"
 #ifdef CLD_DEBUG
 #include "game/game-debug.hpp"
@@ -20,6 +19,7 @@
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/game-entitys.hpp"
 #include "graphic/animation/anim.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"

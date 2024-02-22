@@ -10,7 +10,7 @@
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/util/game-util.hpp"
-#include "game/game-common.hpp"
+#include "game/util/game-entitys.hpp"
 
 class Anim::Hitbox_diections {
   using Diections = Vector<Hitbox>;
