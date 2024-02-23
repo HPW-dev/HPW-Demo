@@ -11,5 +11,5 @@ enum class Resize_mode {
 };
 
 namespace graphic {
-  inline Resize_mode resize_mode = Resize_mode::one_to_one;
+inline Resize_mode resize_mode = Resize_mode::one_to_one;
 }

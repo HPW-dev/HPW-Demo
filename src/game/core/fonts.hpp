@@ -4,5 +4,5 @@
 namespace hpw { class Font; }
 
 namespace graphic {
-  inline Shared<hpw::Font> font; /// обычный шрифт игры
+inline Shared<hpw::Font> font; /// обычный шрифт игры
 }
