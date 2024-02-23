@@ -56,7 +56,6 @@ void Player_dark::shoot(double dt) {
   }
 } // shoot
 
-
 void Player_dark::power_shoot(double dt) {
   cfor (_, 30) { // TODO конфиг
     cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0); // TODO конфиг
