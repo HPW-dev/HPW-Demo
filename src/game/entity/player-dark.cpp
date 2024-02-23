@@ -160,8 +160,9 @@ void Player_dark::move(double dt) {
 
 void Player_dark::blink_contour() const {
   assert(energy_max > 0);
+
   // конгда энергии мало, контур тусклый
-  if (energy < energy_max * 0.9) { // TODO conf
+  if (energy <= m_level_for_blink) { // TODO conf
     cauto ratio = energy / scast<real>(energy_max);
     anim_ctx.contour_bf = &blend_158;
     // чем меньше энергии, тем реже мерцать
@@ -263,6 +264,7 @@ struct Player_dark::Loader::Impl {
   real m_shoot_speed {};
   real m_boost_up {};
   real m_boost_down {};
+  real m_percent_level_for_blink {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_collidable_info.load(config);
@@ -275,6 +277,7 @@ struct Player_dark::Loader::Impl {
     m_energy_max  = config.get_int ("energy_max");
     m_boost_up    = config.get_real("boost_up");
     m_boost_down  = config.get_real("boost_down");
+    m_percent_level_for_blink  = config.get_real("percent_level_for_blink");
 
     if (cauto shoot_node = config["shoot"]; shoot_node.check()) {
       m_shoot_timer  = shoot_node.get_real("shoot_timer");
@@ -297,12 +300,13 @@ struct Player_dark::Loader::Impl {
     assert(m_energy_max > 0);
     assert(m_percent_for_power_shoot > 0 && m_percent_for_power_shoot <= 100);
     assert(m_percent_for_power_shoot_price > 0 && m_percent_for_power_shoot_price <= 100);
-    assert(m_percent_for_decrease_shoot_speed > 0 && m_percent_for_decrease_shoot_speed <= 100);
+    assert(m_percent_for_decrease_shoot_speed > 0 && m_percent_for_decrease_shoot_speed < 100);
     assert(m_decrease_shoot_speed_ratio > 0);
     assert(m_default_shoot_count > 0);
     assert(m_shoot_speed > 0);
     assert(m_boost_up > 0);
     assert(m_boost_down > 0);
+    assert(m_percent_level_for_blink > 0 && m_percent_level_for_blink < 100);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -333,6 +337,7 @@ struct Player_dark::Loader::Impl {
     it.m_shoot_speed = pps(m_shoot_speed);
     it.m_boost_up = m_boost_up;
     it.m_boost_down = m_boost_down;
+    it.m_level_for_blink = it.energy_max * (m_percent_level_for_blink / 100.0);
 
     return entity;
   } // op ()

@@ -38,6 +38,7 @@ public:
   real m_shoot_speed {}; /// скорость обычных выстрелов
   real m_boost_up {}; /// ускорение вперёд
   real m_boost_down {}; /// ускорение назад
+  real m_level_for_blink {}; /// уровень энергии, при котором игрок мигает ярче
 
   Player_dark();
   ~Player_dark() = default;
