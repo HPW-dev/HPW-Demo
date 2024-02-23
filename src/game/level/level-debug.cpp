@@ -19,7 +19,7 @@
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "graphic/animation/anim.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"

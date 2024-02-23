@@ -13,7 +13,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/util/game-util.hpp"
 #include "game/core/levels.hpp"
 #include "game/entity/entity-manager.hpp"

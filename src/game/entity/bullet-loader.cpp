@@ -1,6 +1,6 @@
 #include "bullet-loader.hpp"
 #include "util/file/yaml.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
 #include "game/entity/collidable.hpp"

@@ -9,7 +9,7 @@
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
 #include "game/util/store.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/anims.hpp"
 #include "game/entity/util/hitbox.hpp"

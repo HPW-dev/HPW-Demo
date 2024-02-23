@@ -14,7 +14,7 @@
 #include "game/entity/collidable.hpp"
 #include "game/util/keybits.hpp"
 #include "game/core/scenes.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/scene/scene-manager.hpp"

@@ -12,7 +12,7 @@
 #include "game/level/util/task-spawn.hpp"
 #include "game/level/level-manager.hpp"
 #include "game/util/game-util.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/player.hpp"

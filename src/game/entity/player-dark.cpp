@@ -5,7 +5,7 @@
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/entity-util.hpp"

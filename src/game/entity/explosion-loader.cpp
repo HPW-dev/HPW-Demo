@@ -9,7 +9,7 @@
 #include "util/math/random.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/animation-manager.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/entity/particle.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/anim-ctx.hpp"

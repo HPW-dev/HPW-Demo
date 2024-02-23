@@ -4,7 +4,7 @@
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/util/camera.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"

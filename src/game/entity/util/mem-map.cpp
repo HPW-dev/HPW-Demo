@@ -9,7 +9,7 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/particle.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/core/fonts.hpp"
 
 void draw_entity_mem_map(Image& dst, const Vec pos) {

@@ -8,7 +8,7 @@
 #include "game/entity/player-dark.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/util/score-table.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/sync.hpp"

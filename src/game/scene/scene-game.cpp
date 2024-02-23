@@ -17,7 +17,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/fonts.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"

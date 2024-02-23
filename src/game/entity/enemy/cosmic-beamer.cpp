@@ -3,7 +3,7 @@
 #include "game/core/common.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/entity-manager.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "graphic/image/image.hpp"
 #include "util/file/yaml.hpp"
 

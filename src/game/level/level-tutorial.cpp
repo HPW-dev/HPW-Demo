@@ -5,7 +5,7 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/font/font.hpp"
 #include "game/core/common.hpp"
-#include "game/core/entitys.hpp"
+#include "game/core/entities.hpp"
 #include "game/util/game-util.hpp"
 #include "game/core/levels.hpp"
 #include "game/entity/entity-manager.hpp"
