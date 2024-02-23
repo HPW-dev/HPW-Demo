@@ -82,19 +82,20 @@ void Player_dark::power_shoot(double dt) {
 
 void Player_dark::default_shoot(double dt) {
   cfor (_, m_shoot_timer.update(dt)) {
-    cfor (__, 2) { /// по три выстрела за раз
-      cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 5); // TODO конфиг
+    cfor (bullet_count, m_default_shoot_count) { // несколько за раз
+      cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 5); // смещение пули при спавне
       auto bullet = hpw::entity_mgr->make(this, "bullet.player.small", spawn_pos);
       // пуля смотрит вверх в шмап моде
       bullet->phys.set_deg(270);
-      // передача импульса для шмап мода
-      bullet->phys.set_speed(20_pps); // TODO конфиг
+      bullet->phys.set_speed(m_shoot_speed);
+      // передача импульса
       bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
       // разброс
-      bullet->phys.set_deg(bullet->phys.get_deg() + rndr(-7, 7)); // TODO конфиг
+      cauto deg_spread = rndr(-m_deg_spread_shoot * 0.5, m_deg_spread_shoot * 0.5);
+      bullet->phys.set_deg(bullet->phys.get_deg() + deg_spread);
     }
-  }
-}
+  } // for m_shoot_timer
+} // default_shoot
 
 void Player_dark::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }
 void Player_dark::energy_regen() { energy = std::min<hp_t>(energy_max, energy + m_energy_regen); }
@@ -248,6 +249,9 @@ struct Player_dark::Loader::Impl {
   real m_percent_for_power_shoot_price {};
   real m_percent_for_decrease_shoot_speed {};
   real m_decrease_shoot_speed_ratio {};
+  real m_deg_spread_shoot {};
+  int m_default_shoot_count {};
+  real m_shoot_speed {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_collidable_info.load(config);
@@ -267,6 +271,9 @@ struct Player_dark::Loader::Impl {
       m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
       m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
       m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
+      m_default_shoot_count = shoot_node.get_int("default_shoot_count");
+      m_deg_spread_shoot = shoot_node.get_real("deg_spread_shoot");
+      m_shoot_speed = shoot_node.get_real("shoot_speed");
     }
 
     assert(m_max_speed > 0);
@@ -279,6 +286,8 @@ struct Player_dark::Loader::Impl {
     assert(m_percent_for_power_shoot_price > 0 && m_percent_for_power_shoot_price <= 100);
     assert(m_percent_for_decrease_shoot_speed > 0 && m_percent_for_decrease_shoot_speed <= 100);
     assert(m_decrease_shoot_speed_ratio > 0);
+    assert(m_default_shoot_count > 0);
+    assert(m_shoot_speed > 0);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -304,6 +313,9 @@ struct Player_dark::Loader::Impl {
     it.m_power_shoot_price = it.energy_max * (m_percent_for_power_shoot_price / 100.0);
     it.m_energy_level_for_decrease_shoot_speed = it.energy_max * (m_percent_for_decrease_shoot_speed / 100.0);
     it.m_decrease_shoot_speed_ratio = m_decrease_shoot_speed_ratio;
+    it.m_default_shoot_count = m_default_shoot_count;
+    it.m_deg_spread_shoot = m_deg_spread_shoot;
+    it.m_shoot_speed = pps(m_shoot_speed);
 
     return entity;
   } // op ()
