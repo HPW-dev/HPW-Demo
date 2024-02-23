@@ -18,6 +18,7 @@ class Player_dark final: public Player {
   void draw_stars(Image& dst) const; /// звёздочки на окошках игрока
   void power_shoot(double dt);
   void default_shoot(double dt);
+  void move(double dt);
 
 public:
   /// Загрузчик для игрока
@@ -35,6 +36,8 @@ public:
   uint m_default_shoot_count {}; /// сколько за раз выпустить пуль при обычной атаке
   real m_deg_spread_shoot {}; /// угол разброса при обычном выстреле
   real m_shoot_speed {}; /// скорость обычных выстрелов
+  real m_boost_up {}; /// ускорение вперёд
+  real m_boost_down {}; /// ускорение назад
 
   Player_dark();
   ~Player_dark() = default;

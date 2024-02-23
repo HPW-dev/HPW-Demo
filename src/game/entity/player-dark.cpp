@@ -116,38 +116,48 @@ void Player_dark::update(double dt) {
 }
 
 void Player_dark::check_input(double dt) {
-  real spd;
-
-  if (is_pressed(hpw::keycode::focus)) {
-    spd = m_focus_speed;
-    phys.set_force(focus_force);
-  } else {
-    spd = m_max_speed;
-    phys.set_force(default_force);
-  }
-
-  Vec dir;
-  if (is_pressed(hpw::keycode::up))    dir += Vec(0, -1);
-  if (is_pressed(hpw::keycode::down))  dir += Vec(0, +1);
-  if (is_pressed(hpw::keycode::left))  dir += Vec(-1, 0);
-  if (is_pressed(hpw::keycode::right)) dir += Vec(+1, 0);
-
-  // если игрок двигается
-  if (dir) {
-    auto motion = normalize_stable(dir) * spd;
-    auto cur_vel = phys.get_vel();
-    auto cur_speed = phys.get_speed();
-    phys.set_vel(cur_vel + motion);
-
-    // добавить скорость, но не больше чем есть сейчас или spd
-    auto avaliable_speed = std::max(cur_speed, spd);
-    phys.set_speed(std::min(avaliable_speed, phys.get_speed()) );
-  }
+  if (hpw::any_key_pressed)
+    move(dt);
 
   // стрельба
   if (is_pressed(hpw::keycode::shoot))
     shoot(dt);
 } // check_input
+
+void Player_dark::move(double dt) {
+  real spd = m_max_speed;
+  phys.set_force(default_force);
+
+  // фокусировка увеличивает сопротивление и уменьшает скорость
+  if (is_pressed(hpw::keycode::focus)) {
+    spd = m_focus_speed;
+    phys.set_force(focus_force);
+  }
+
+  // определить направление движения игрока
+  Vec dir;
+  if (is_pressed(hpw::keycode::up))    dir += Vec(0, -1);
+  if (is_pressed(hpw::keycode::down))  dir += Vec(0, +1);
+  if (is_pressed(hpw::keycode::left))  dir += Vec(-1, 0);
+  if (is_pressed(hpw::keycode::right)) dir += Vec(+1, 0);
+  // сложение векторов
+  if (dir) {
+    auto motion = normalize_stable(dir) * spd;
+    phys.set_vel(phys.get_vel() + motion);
+    // не превышать скорость движения игрока
+    phys.set_speed( std::min(phys.get_speed(), spd) );
+  }
+
+  // буст скорости в определённых направлениях
+  if ( !is_pressed(hpw::keycode::focus)) {
+    auto vel = phys.get_vel();
+    if (is_pressed(hpw::keycode::up))
+      vel.y *= m_boost_up;
+    else if (is_pressed(hpw::keycode::down))
+      vel.y *= m_boost_down;
+    phys.set_vel(vel);
+  }
+} // move
 
 void Player_dark::blink_contour() const {
   assert(energy_max > 0);
@@ -252,6 +262,8 @@ struct Player_dark::Loader::Impl {
   real m_deg_spread_shoot {};
   int m_default_shoot_count {};
   real m_shoot_speed {};
+  real m_boost_up {};
+  real m_boost_down {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_collidable_info.load(config);
@@ -262,6 +274,8 @@ struct Player_dark::Loader::Impl {
     m_focus_speed = config.get_real("focus_speed");
     m_fuel        = config.get_int ("fuel");
     m_energy_max  = config.get_int ("energy_max");
+    m_boost_up    = config.get_real("boost_up");
+    m_boost_down  = config.get_real("boost_down");
 
     if (cauto shoot_node = config["shoot"]; shoot_node.check()) {
       m_shoot_timer  = shoot_node.get_real("shoot_timer");
@@ -288,6 +302,8 @@ struct Player_dark::Loader::Impl {
     assert(m_decrease_shoot_speed_ratio > 0);
     assert(m_default_shoot_count > 0);
     assert(m_shoot_speed > 0);
+    assert(m_boost_up > 0);
+    assert(m_boost_down > 0);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -316,6 +332,8 @@ struct Player_dark::Loader::Impl {
     it.m_default_shoot_count = m_default_shoot_count;
     it.m_deg_spread_shoot = m_deg_spread_shoot;
     it.m_shoot_speed = pps(m_shoot_speed);
+    it.m_boost_up = m_boost_up;
+    it.m_boost_down = m_boost_down;
 
     return entity;
   } // op ()
