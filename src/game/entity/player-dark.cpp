@@ -1,36 +1,27 @@
-#include <algorithm>
 #include <cassert>
+#include <algorithm>
 #include "player-dark.hpp"
+#include "game/util/keybits.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entitys.hpp"
-#include "game/util/keybits.hpp"
-#include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/scatter.hpp"
+#include "game/entity/entity-manager.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
-#include "game/entity/entity-manager.hpp"
-#include "util/math/random.hpp"
-#include "util/math/vec-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
+#include "util/math/random.hpp"
+#include "util/math/vec-util.hpp"
+#include "graphic/image/image.hpp"
 #include "graphic/effect/light.hpp"
+#include "graphic/sprite/sprite.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/image/image.hpp"
 
-Player_dark::Player_dark()
-: Player()
-, m_shoot_timer(0.0666666) // TODO конфиг
-, m_shoot_price(70) // TODO конфиг
-, m_energy_regen(37) // TODO конфиг
-{
-  energy_max = 25'000; // TODO конфиг
-  m_energy_for_power_shoot = energy_max * 0.95; // TODO конфиг
-  m_power_shoot_price = energy_max * 0.75; // TODO конфиг
-}
+Player_dark::Player_dark(): Player() {}
 
 /// спавнит мелкие пульки в след за мощным выстрелом
 void spawn_small_bullets(Entity& master, double dt) {
@@ -58,45 +49,52 @@ void Player_dark::shoot(double dt) {
   // усиленый выстрел
   if (energy >= m_energy_for_power_shoot && ability.power_shoot) {
     sub_en(m_power_shoot_price);
+    power_shoot(dt);
+  } else { // обычные выстрелы
+    sub_en(m_shoot_price);
+    default_shoot(dt);
+  }
+} // shoot
 
-    cfor (_, 30) { // TODO конфиг
-      cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0); // TODO конфиг
-      auto bullet = hpw::entity_mgr->make(this, "bullet.player.mid", spawn_pos);
+
+void Player_dark::power_shoot(double dt) {
+  cfor (_, 30) { // TODO конфиг
+    cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0); // TODO конфиг
+    auto bullet = hpw::entity_mgr->make(this, "bullet.player.mid", spawn_pos);
+    // пуля смотрит вверх в шмап моде
+    bullet->phys.set_deg(270);
+    // передача импульса для шмап мода
+    bullet->phys.set_speed( pps(rndr(13, 17)) ); // TODO конфиг
+    bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
+    // разброс
+    bullet->phys.set_deg(bullet->phys.get_deg() + rndr(-75, 75)); // TODO конфиг
+    bullet->move_update_callback(&spawn_small_bullets);
+    bullet->status.layer_up = true;
+  }
+
+  // отдача
+  hpw::entity_mgr->add_scatter(Scatter {
+    .pos{ phys.get_pos() + Vec(0, -10) }, // создаёт источнив взрыва перед ноосом
+    .range{ 50 }, // TODO конфиг
+    .power{ pps(60) }, // TODO конфиг
+  });
+} // power_shoot
+
+void Player_dark::default_shoot(double dt) {
+  cfor (_, m_shoot_timer.update(dt)) {
+    cfor (__, 2) { /// по три выстрела за раз
+      cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 5); // TODO конфиг
+      auto bullet = hpw::entity_mgr->make(this, "bullet.player.small", spawn_pos);
       // пуля смотрит вверх в шмап моде
       bullet->phys.set_deg(270);
       // передача импульса для шмап мода
-      bullet->phys.set_speed( pps(rndr(13, 17)) ); // TODO конфиг
+      bullet->phys.set_speed(20_pps); // TODO конфиг
       bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
       // разброс
-      bullet->phys.set_deg(bullet->phys.get_deg() + rndr(-75, 75)); // TODO конфиг
-      bullet->move_update_callback(&spawn_small_bullets);
-      bullet->status.layer_up = true;
-    }
-
-    // отдача
-    hpw::entity_mgr->add_scatter(Scatter {
-      .pos{ phys.get_pos() + Vec(0, -10) }, // создаёт источнив взрыва перед ноосом
-      .range{ 50 }, // TODO конфиг
-      .power{ pps(60) }, // TODO конфиг
-    });
-  } else { // обычные выстрелы
-    sub_en(m_shoot_price);
-
-    cfor (_, m_shoot_timer.update(dt)) {
-      cfor (__, 2) { /// по три выстрела за раз
-        cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 5); // TODO конфиг
-        auto bullet = hpw::entity_mgr->make(this, "bullet.player.small", spawn_pos);
-        // пуля смотрит вверх в шмап моде
-        bullet->phys.set_deg(270);
-        // передача импульса для шмап мода
-        bullet->phys.set_speed(20_pps); // TODO конфиг
-        bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
-        // разброс
-        bullet->phys.set_deg(bullet->phys.get_deg() + rndr(-7, 7)); // TODO конфиг
-      }
+      bullet->phys.set_deg(bullet->phys.get_deg() + rndr(-7, 7)); // TODO конфиг
     }
   }
-} // shoot
+}
 
 void Player_dark::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }
 void Player_dark::energy_regen() { energy = std::min<hp_t>(energy_max, energy + m_energy_regen); }
@@ -168,14 +166,12 @@ void Player_dark::draw_stars(Image& dst) const {
   assert(energy_max > 0);
   // расположение всех окошек бумера
   sconst Vector<Vec> window_pos_table {
-
-                              {0, 0},
-                        {-3, 2},     {3, 2},
-                 {-6, 5},                  {6, 5},
-          {-9, 8},                                {9, 8},
-    {-12, 11},                                         {12, 11},
-
-  }; // window_pos_table
+                        {0, 0},
+                   {-3, 2}, {3, 2},
+               {-6, 5},         {6, 5},
+           {-9, 8},                 {9, 8},
+     {-12, 11},                         {12, 11},
+  };
 
   cauto ratio = energy / scast<real>(energy_max);
   for (cnauto window_pos: window_pos_table) {
@@ -243,6 +239,13 @@ struct Player_dark::Loader::Impl {
   real m_focus_force {};
   real m_max_speed {};
   real m_focus_speed {};
+  real m_shoot_timer {};
+  hp_t m_fuel {};
+  hp_t m_shoot_price {};
+  hp_t m_energy_regen {};
+  hp_t m_energy_max {};
+  real m_percent_for_power_shoot {};
+  real m_percent_for_power_shoot_price {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_collidable_info.load(config);
@@ -251,8 +254,25 @@ struct Player_dark::Loader::Impl {
     m_focus_force = config.get_real("focus_force");
     m_max_speed   = config.get_real("max_speed");
     m_focus_speed = config.get_real("focus_speed");
+    m_fuel        = config.get_int ("fuel");
+    m_energy_max  = config.get_int ("energy_max");
+
+    if (cauto shoot_node = config["shoot"]; shoot_node.check()) {
+      m_shoot_timer  = shoot_node.get_real("shoot_timer");
+      m_shoot_price  = shoot_node.get_int ("shoot_price");
+      m_energy_regen = shoot_node.get_int ("energy_regen");
+      m_percent_for_power_shoot = shoot_node.get_real("percent_for_power_shoot");
+      m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
+    }
+
     assert(m_max_speed > 0);
     assert(m_focus_speed > 0);
+    assert(m_shoot_timer > 0);
+    assert(m_fuel > 0);
+    assert(m_energy_regen > 0);
+    assert(m_energy_max > 0);
+    assert(m_percent_for_power_shoot > 0 && m_percent_for_power_shoot <= 100);
+    assert(m_percent_for_power_shoot_price > 0 && m_percent_for_power_shoot_price <= 100);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -268,9 +288,14 @@ struct Player_dark::Loader::Impl {
     it.focus_force = pps(m_focus_force);
     it.m_focus_speed = pps(m_focus_speed);
     it.m_max_speed = pps(m_max_speed);
-    // TODO en
-    // TODO fuel
+    it.m_shoot_timer = m_shoot_timer;
+    it.energy_max = m_energy_max;
     it.hp_max = it.get_hp();
+    it.m_fuel = it.m_fuel_max = m_fuel;
+    it.m_shoot_price = m_shoot_price;
+    it.m_energy_regen = m_energy_regen;
+    it.m_energy_for_power_shoot = it.energy_max * (m_percent_for_power_shoot / 100.0);
+    it.m_power_shoot_price = it.energy_max * (m_percent_for_power_shoot_price / 100.0);
 
     return entity;
   } // op ()

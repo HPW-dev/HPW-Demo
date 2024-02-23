@@ -21,8 +21,8 @@ public:
   hp_t hp_max {};
   hp_t energy {}; /// энергия, тратится на выстрелы и щит
   hp_t energy_max {};
-  hp_t fuel {}; /// топливо. Если кончится, то геймовер
-  hp_t fuel_max {};
+  hp_t m_fuel {}; /// топливо. Если кончится, то геймовер
+  hp_t m_fuel_max {};
   real default_force {}; /// сопротивление при обычном движении
   real focus_force {}; /// сопротивление при фокусировке
 
