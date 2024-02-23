@@ -317,10 +317,10 @@ void Host_glfw::game_update(double dt) {
   return_if (dt <= 0 || dt >= 10);
 
   if (graphic::get_fast_forward())
-    update_time_unsafe = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
+    update_time = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
 
-  while (update_time_unsafe >= hpw::target_update_time) {
-    update_time_unsafe -= hpw::target_update_time;
+  while (update_time >= hpw::target_update_time) {
+    update_time -= hpw::target_update_time;
     start_update_time = get_time();
 
     // обработка специальных кнопок
@@ -378,13 +378,13 @@ void Host_glfw::set_update_time(double dt) {
   ) {
     // ждать завершения отрисовки кадра
     if (frame_drawn) {
-      update_time_unsafe += graphic::get_vsync()
+      update_time += graphic::get_vsync()
         ? graphic::get_target_vsync_frame_time()
         : graphic::get_target_frame_time();
       frame_drawn = false;
     }
   } else {
-    update_time_unsafe += dt;
+    update_time += dt;
   }
 } // set_update_time
 
@@ -424,7 +424,7 @@ void Host_glfw::check_frame_skip() {
 
 void Host_glfw::frame_wait() {
   // ожидание для v-sync
-  auto delay = graphic::get_target_frame_time() - frame_time - update_time_unsafe;
+  auto delay = graphic::get_target_frame_time() - frame_time - update_time;
   constx double delay_timeout = 1.0 / 10.0;
   delay = std::clamp<double>(delay, 0, delay_timeout);
   glfwWaitEventsTimeout(delay);

@@ -26,7 +26,7 @@ protected:
   uint upf {};
   uint ips {};
   double frame_time {};
-  double update_time_unsafe {};
+  double update_time {};
   double start_update_time {}; /// нужен для интерполяции движения
   bool frame_drawn {false}; /// для плавного апдейта игры
 

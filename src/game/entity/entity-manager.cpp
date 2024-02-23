@@ -16,6 +16,7 @@
 #include "util/file/yaml.hpp"
 #include "util/file/archive.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/entity-util.hpp"
@@ -67,6 +68,7 @@ struct Entity_mgr::Impl {
   }
 
   inline void update(const double dt) {
+    assert(dt == hpw::target_update_time);
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
