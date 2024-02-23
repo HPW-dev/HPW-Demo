@@ -43,8 +43,8 @@ void spawn_small_bullets(Entity& master, double dt) {
 
 void Player_dark::shoot(double dt) {
   // стрелять менее часто, при нехватке энергии
-  if (energy <= 100) // TODO конфиг
-    dt *= 0.3; // TODO конфиг
+  if (energy <= m_energy_level_for_decrease_shoot_speed)
+    dt *= m_decrease_shoot_speed_ratio;
 
   // усиленый выстрел
   if (energy >= m_energy_for_power_shoot && ability.power_shoot) {
@@ -246,6 +246,8 @@ struct Player_dark::Loader::Impl {
   hp_t m_energy_max {};
   real m_percent_for_power_shoot {};
   real m_percent_for_power_shoot_price {};
+  real m_percent_for_decrease_shoot_speed {};
+  real m_decrease_shoot_speed_ratio {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_collidable_info.load(config);
@@ -263,6 +265,8 @@ struct Player_dark::Loader::Impl {
       m_energy_regen = shoot_node.get_int ("energy_regen");
       m_percent_for_power_shoot = shoot_node.get_real("percent_for_power_shoot");
       m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
+      m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
+      m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
     }
 
     assert(m_max_speed > 0);
@@ -273,6 +277,8 @@ struct Player_dark::Loader::Impl {
     assert(m_energy_max > 0);
     assert(m_percent_for_power_shoot > 0 && m_percent_for_power_shoot <= 100);
     assert(m_percent_for_power_shoot_price > 0 && m_percent_for_power_shoot_price <= 100);
+    assert(m_percent_for_decrease_shoot_speed > 0 && m_percent_for_decrease_shoot_speed <= 100);
+    assert(m_decrease_shoot_speed_ratio > 0);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -296,6 +302,8 @@ struct Player_dark::Loader::Impl {
     it.m_energy_regen = m_energy_regen;
     it.m_energy_for_power_shoot = it.energy_max * (m_percent_for_power_shoot / 100.0);
     it.m_power_shoot_price = it.energy_max * (m_percent_for_power_shoot_price / 100.0);
+    it.m_energy_level_for_decrease_shoot_speed = it.energy_max * (m_percent_for_decrease_shoot_speed / 100.0);
+    it.m_decrease_shoot_speed_ratio = m_decrease_shoot_speed_ratio;
 
     return entity;
   } // op ()

@@ -30,6 +30,8 @@ public:
   hp_t m_energy_regen {}; /// скорость восстановления энергии
   hp_t m_power_shoot_price {}; /// цена мощного выстрела
   hp_t m_energy_for_power_shoot {}; /// сколько должно быть энергии для мощного выстрела
+  hp_t m_energy_level_for_decrease_shoot_speed {}; /// если энергия ниже этого урвоня, то замедлить стрельбу
+  real m_decrease_shoot_speed_ratio {}; /// на сколько замедлить скорость стрельбы при нехватке энергии
 
   Player_dark();
   ~Player_dark() = default;
