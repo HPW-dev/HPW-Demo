@@ -135,10 +135,10 @@ void Player_dark::move(double dt) {
 
   // определить направление движения игрока
   Vec dir;
-  if (is_pressed(hpw::keycode::up))    dir += Vec(0, -1);
-  if (is_pressed(hpw::keycode::down))  dir += Vec(0, +1);
-  if (is_pressed(hpw::keycode::left))  dir += Vec(-1, 0);
-  if (is_pressed(hpw::keycode::right)) dir += Vec(+1, 0);
+  if ( is_pressed(hpw::keycode::up) && !is_pressed(hpw::keycode::down)) dir += Vec(0, -1);
+  if (!is_pressed(hpw::keycode::up) &&  is_pressed(hpw::keycode::down)) dir += Vec(0, +1);
+  if ( is_pressed(hpw::keycode::left) && !is_pressed(hpw::keycode::right)) dir += Vec(-1, 0);
+  if (!is_pressed(hpw::keycode::left) &&  is_pressed(hpw::keycode::right)) dir += Vec(+1, 0);
   // сложение векторов
   if (dir) {
     auto motion = normalize_stable(dir) * spd;
@@ -149,12 +149,18 @@ void Player_dark::move(double dt) {
 
   // буст скорости в определённых направлениях
   if ( !is_pressed(hpw::keycode::focus)) {
-    auto vel = phys.get_vel();
-    if (is_pressed(hpw::keycode::up))
+    if (is_pressed(hpw::keycode::up) && !is_pressed(hpw::keycode::down)) {
+      auto vel = phys.get_vel();
       vel.y *= m_boost_up;
-    else if (is_pressed(hpw::keycode::down))
+      phys.set_vel(vel);
+      phys.set_speed( std::min(phys.get_speed(), spd * m_boost_up) );
+    }
+    if (!is_pressed(hpw::keycode::up) && is_pressed(hpw::keycode::down)) {
+      auto vel = phys.get_vel();
       vel.y *= m_boost_down;
-    phys.set_vel(vel);
+      phys.set_vel(vel);
+      phys.set_speed( std::min(phys.get_speed(), spd * m_boost_down) );
+    }
   }
 } // move
 
