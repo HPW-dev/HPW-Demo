@@ -69,7 +69,7 @@ void Anim_ctx::update_frame_idx(Entity &entity) {
     prev_frame();
     /* дойдя до нуля включить обычный порядок
     и засчитать конец анимации */
-    if (frame_idx == 0) {
+    if (frame_idx == 0 && !entity.status.no_restart_anim) {
       entity.status.goto_prev_frame = false;
       entity.status.end_anim = true;
     }
@@ -81,7 +81,10 @@ void Anim_ctx::update_frame_idx(Entity &entity) {
         prev_frame();
         entity.status.goto_prev_frame = true;
       } else { // запустить анимацию заново
-        frame_idx = 0;
+        if (entity.status.no_restart_anim)
+          set_last_frame();
+        else
+          frame_idx = 0;
         entity.status.end_anim = true;
       }
     } // if end frame idx's
