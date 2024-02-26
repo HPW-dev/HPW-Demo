@@ -1,86 +1,13 @@
-H.P.W Source code:
-  Copyright (c) 2020-2024 HPW-dev <hpwdev0@gmail.com>
-  SPDX-License-Identifier: Apache-2.0
-  <https://www.apache.org/licenses/LICENSE-2.0.txt>
+Copyright (c) 2020-2024 HPW-dev <hpwdev0@gmail.com>
 
-H.P.W Assets:
-  Copyright (c) 2020-2024 HPW-dev <hpwdev0@gmail.com>
-  Copyright (c) 2020-2024 Girgen De <https://girgen-de.com/>
-  Copyright (c) 2024 K.I.R.I.M.E <https://vk.com/k_i_r_i_m_e>
-  SPDX-License-Identifier: CC-BY-4.0
-  <https://creativecommons.org/licenses/by/4.0/legalcode>
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
-GLEW:
-  Copyright (c) 2002-2007, Milan Ikits <milan ikits[]ieee org>
-  Copyright (c) 2002-2007, Marcelo E. Magallon <mmagallo[]debian org>
-  Copyright (c) 2002, Lev Povalahev
-  Copyright (c) 1999-2007 Brian Paul All Rights Reserved.
-  Copyright (c) 2007 The Khronos Group Inc.
-  SPDX-License-Identifier: MIT
-  <https://github.com/nigels-com/glew/LICENSE.txt>
-  
-KHR:
-  Copyright (c) 2008-2018 The Khronos Group Inc.
-  <https://github.com/KhronosGroup/EGL-Registry>
-  
-GLFW:
-  Copyright (c) 2002-2006 Marcus Geelnard
-  Copyright (c) 2006-2019 Camilla Löwy
-  SPDX-License-Identifier: Zlib
-  <https://github.com/glfw/glfw/blob/master/LICENSE.md>
+    http://www.apache.org/licenses/LICENSE-2.0
 
-DyLib:
-  Copyright (c) 2021 Martin Olivier
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-ImGui:
-  Copyright (c) 2014-2022 Omar Cornut
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-OpenAL-soft:
-  Copyright (c) 1991 Free Software Foundation, Inc.
-  SPDX-License-Identifier: LGPL-2.0
-  <https://www.gnu.org/licenses/old-licenses/lgpl-2.0-standalone.html>
-
-robin-hood-hashing:
-  Copyright (c) 2018-2021 Martin Ankerl
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-stb:
-  Copyright (c) 2017 Sean Barrett
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-YAML-cpp:
-  Copyright (c) 2008-2015 Jesse Beder.
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-Miniz:
-  Copyright 2013-2014 RAD Game Tools and Valve Software
-  Copyright 2010-2014 Rich Geldreich and Tenacious Software LLC
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-MinGW-w64:
-  Copyright (c) 2009-2010 by the mingw-w64 project
-  SPDX-License-Identifier: ZPL-2.1
-  <https://cdpstudio.com/manual/cdp-studio/legal/credits-mingw-w64.html>
-
-GCC:
-  Copyright (c) 2009 Free Software Foundation, Inc.
-  SPDX-License-Identifier: GPL-3.0+
-  <https://gcc.gnu.org/onlinedocs/libstdc++/manual/license.html>
-
-SCons:
-  Copyright (c) 2001-2021 The SCons Foundation
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
-hash_sha256:
-  Copyright (c) 2022-2023 Iliass Mahjoub
-  SPDX-License-Identifier: BSL-1.0
-  <http://www.boost.org/LICENSE_1_0.txt>
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
