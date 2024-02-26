@@ -1,4 +1,5 @@
 #include <cassert>
+#include <filesystem>
 #include <utility>
 #include <functional>
 #include "scene-pge.hpp"
@@ -147,6 +148,12 @@ struct Scene_pge::Impl {
     conv_sep(path);
     m_effects = files_in_dir(path);
     return_if(m_effects.empty());
+    // оставить только .so/.dll имена
+    std::erase_if(m_effects, [](CN<Str> fname)->bool {
+      cauto ext = std::filesystem::path(fname).extension().string();
+      hpw_log("ext: " << ext << "\n");
+      return !(ext == ".so" || ext == ".dll"); // допустимые форматы для плагина
+    });
     m_effects.push_back({});
     std::swap(*m_effects.begin(), *(m_effects.end()-1));
 
