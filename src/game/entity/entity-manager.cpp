@@ -20,7 +20,6 @@
 #include "game/core/canvas.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/entity/enemy/cosmic-beamer.hpp"
 #include "game/entity/enemy/cosmic-hunter.hpp"
 #include "game/entity/enemy/cosmic-waiter.hpp"
 #include "game/entity/enemy/cosmic.hpp"
@@ -159,7 +158,6 @@ struct Entity_mgr::Impl {
       {"bonus", [](CN<Yaml> config){ return new_shared<Bonus_loader>(config); } },
       {"bullet", [](CN<Yaml> config){ return new_shared<Bullet_loader>(config); } },
       {"particle", [](CN<Yaml> config){ return new_shared<Particle_loader>(config); } },
-      {"enemy.cosmic.beamer", [](CN<Yaml> config){ return new_shared<Cosmic_beamer::Loader>(config); } },
       {"enemy.cosmic.hunter", [](CN<Yaml> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
       {"enemy.cosmic.waiter", [](CN<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
       {"enemy.cosmic", [](CN<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
