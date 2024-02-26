@@ -39,6 +39,7 @@ public:
   real m_boost_up {}; /// ускорение вперёд
   real m_boost_down {}; /// ускорение назад
   real m_level_for_blink {}; /// уровень энергии, при котором игрок мигает ярче
+  real m_window_star_len {}; /// размер звёздочек на окошках бумера
 
   Player_dark();
   ~Player_dark() = default;

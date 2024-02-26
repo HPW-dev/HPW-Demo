@@ -192,7 +192,8 @@ void Player_dark::draw_stars(Image& dst) const {
     // рисует звезду
     Light star;
     star.set_duration(1);
-    star.radius = ratio * rndr_fast(0, 15); // TODO get star len from config
+    assert(m_window_star_len > 0);
+    star.radius = ratio * rndr_fast(0, m_window_star_len);
     star.flags.no_sphere = true;
     star.draw(dst, window_pos + anim_ctx.get_draw_pos());
   }
@@ -265,10 +266,17 @@ struct Player_dark::Loader::Impl {
   real m_boost_up {};
   real m_boost_down {};
   real m_percent_level_for_blink {};
+  real m_window_star_len {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_collidable_info.load(config);
-    m_anim_info.load(config["animation"]);
+
+    cauto anim_node = config["animation"];
+    m_anim_info.load(anim_node);
+    assert(anim_node.check());
+    m_percent_level_for_blink = anim_node.get_real("percent_level_for_blink");
+    m_window_star_len         = anim_node.get_real("window_star_len");
+
     m_force       = config.get_real("force");
     m_focus_force = config.get_real("focus_force");
     m_max_speed   = config.get_real("max_speed");
@@ -277,21 +285,22 @@ struct Player_dark::Loader::Impl {
     m_energy_max  = config.get_int ("energy_max");
     m_boost_up    = config.get_real("boost_up");
     m_boost_down  = config.get_real("boost_down");
-    m_percent_level_for_blink = config.get_real("percent_level_for_blink");
 
-    if (cauto shoot_node = config["shoot"]; shoot_node.check()) {
-      m_shoot_timer  = shoot_node.get_real("shoot_timer");
-      m_shoot_price  = shoot_node.get_int ("shoot_price");
-      m_energy_regen = shoot_node.get_int ("energy_regen");
-      m_percent_for_power_shoot = shoot_node.get_real("percent_for_power_shoot");
-      m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
-      m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
-      m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
-      m_default_shoot_count = shoot_node.get_int("default_shoot_count");
-      m_deg_spread_shoot = shoot_node.get_real("deg_spread_shoot");
-      m_shoot_speed = shoot_node.get_real("shoot_speed");
-    }
+    cauto shoot_node = config["shoot"];
+    assert( shoot_node.check() );
+    m_shoot_timer  = shoot_node.get_real("shoot_timer");
+    m_shoot_price  = shoot_node.get_int ("shoot_price");
+    m_energy_regen = shoot_node.get_int ("energy_regen");
+    m_percent_for_power_shoot = shoot_node.get_real("percent_for_power_shoot");
+    m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
+    m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
+    m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
+    m_default_shoot_count = shoot_node.get_int("default_shoot_count");
+    m_deg_spread_shoot = shoot_node.get_real("deg_spread_shoot");
+    m_shoot_speed = shoot_node.get_real("shoot_speed");
 
+    // проверка параметров
+    assert(m_window_star_len > 0);
     assert(m_max_speed > 0);
     assert(m_focus_speed > 0);
     assert(m_shoot_timer > 0);
@@ -340,6 +349,7 @@ struct Player_dark::Loader::Impl {
     it.m_boost_up = m_boost_up;
     it.m_boost_down = m_boost_down;
     it.m_level_for_blink = it.energy_max * (m_percent_level_for_blink / 100.0);
+    it.m_window_star_len = m_window_star_len;
 
     return entity;
   } // op ()
