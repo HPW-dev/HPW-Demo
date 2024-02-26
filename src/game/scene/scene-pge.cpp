@@ -2,6 +2,7 @@
 #include <filesystem>
 #include <utility>
 #include <functional>
+#include "scene-game.hpp"
 #include "scene-pge.hpp"
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
@@ -18,7 +19,6 @@
 #include "game/menu/item/int-item.hpp"
 #include "game/menu/item/double-item.hpp"
 #include "game/menu/item/bool-item.hpp"
-#include "game/scene/scene-game.hpp"
 #include "game/util/game-util.hpp"
 #include "util/path.hpp"
 #include "util/str-util.hpp"
@@ -60,7 +60,6 @@ struct Scene_pge::Impl {
         [this] { 
           m_reinit_menu = true;
           if ( !m_effects.empty()) {
-            //save_pge_to_config();
             m_selected_effect = (m_selected_effect + 1) % m_effects.size();
             load_pge( get_current_effect() );
           }
