@@ -151,9 +151,9 @@ struct Scene_pge::Impl {
     // оставить только .so/.dll имена
     std::erase_if(m_effects, [](CN<Str> fname)->bool {
       cauto ext = std::filesystem::path(fname).extension().string();
-      hpw_log("ext: " << ext << "\n");
       return !(ext == ".so" || ext == ".dll"); // допустимые форматы для плагина
     });
+    // чтобы в списке можно было выбирать пустой плагин
     m_effects.push_back({});
     std::swap(*m_effects.begin(), *(m_effects.end()-1));
 
