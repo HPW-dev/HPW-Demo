@@ -155,7 +155,6 @@ Sprite extract_contour(CN<Sprite> src) {
 } // extract_contour
 
 CN<Shared<Anim>> make_light_mask(CN<Str> src, CN<Str> dst) {
-
   auto dst_anim = new_shared<Anim>();
   auto src_anim = hpw::anim_mgr->find_anim(src);
   assert(src_anim);

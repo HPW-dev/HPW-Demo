@@ -37,16 +37,15 @@ void Cosmic::update(double dt) {
   if ( !m_fade_in_complete) {
     if (m_info.fade_in_timer.update(dt)) { // переход на следующую стадию
       m_fade_in_complete = true;
-      // запустить рисунок и выключить контур
+      // запустить рисунок
       anim_ctx.blend_f = &blend_diff;
       anim_ctx.set_speed_scale(1);
-      status.disable_contour = true;
+      status.disable_contour = false; // оставить контур включёным
     } else { // показывать контур
       anim_ctx.set_speed_scale(0); // не включать анимацию
       // мигать контуром
       status.disable_contour = rndr_fast() < m_info.fade_in_timer.ratio();
       anim_ctx.blend_f = &blend_none; // невидимый рисунок
-      anim_ctx.contour_bf = &blend_158;
     }
   }
   
@@ -55,6 +54,8 @@ void Cosmic::update(double dt) {
     if (m_info.eyes_open_timeout.update(dt)) {
       m_eyes_open_complete = true;
       anim_ctx.set_anim(m_info.state_2); // переход на финальную стадию
+      anim_ctx.set_contour(m_info.contour);
+      anim_ctx.contour_bf = &blend_past;
       status.disable_heat_distort = false;
       status.layer_up = false;
     }
