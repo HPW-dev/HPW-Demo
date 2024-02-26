@@ -25,13 +25,12 @@ void Cosmic_hunter::update(double dt) {
   
   // повернуться в игроку
   bool rot_to_right = need_rotate_right(*this, *player);
-  phys.set_rot_spd(m_rotate_speed);
+  phys.set_rot_spd(m_info.rotate_speed);
   phys.set_invert_rotation( !rot_to_right);
 
-  cfor (_, m_shoot_timer.update(dt)) {
-    // TODO conf
-    auto bullet = hpw::entity_mgr->make(this, "bullet.cosmic.hunter", phys.get_pos());
-    bullet->phys.set_speed(m_bullet_speed);
+  cfor (_, m_info.shoot_timer.update(dt)) {
+    auto bullet = hpw::entity_mgr->make(this, m_info.bullet_name, phys.get_pos());
+    bullet->phys.set_speed(m_info.bullet_speed);
     bullet->status.ignore_scatter = true;
 
     real deg_to;
@@ -48,7 +47,7 @@ void Cosmic_hunter::update(double dt) {
       }
       case 2: { // напрямую с отклоениями
         deg_to = deg_to_target(*bullet, *player);
-        deg_to += rndr(-m_shoot_deg, m_shoot_deg);
+        deg_to += rndr(-m_info.shoot_deg, m_info.shoot_deg);
         break;
       }
     } // switch shoot type
@@ -58,35 +57,29 @@ void Cosmic_hunter::update(double dt) {
 } // update
 
 struct Cosmic_hunter::Loader::Impl {
-  real m_shoot_timer {};
-  real m_speed {};
-  real m_rotate_speed {};
-  real m_bullet_speed {};
-  real m_shoot_deg {};
+  Info m_info {};
 
   inline explicit Impl(CN<Yaml> config) {
-    m_shoot_timer = config.get_real("shoot_timer");
-    m_speed = config.get_real("speed");
-    m_rotate_speed = config.get_real("rotate_speed");
-    m_bullet_speed = config.get_real("bullet_speed");
-    m_shoot_deg = config.get_real("shoot_deg");
-    assert(m_bullet_speed > 0);
-    assert(m_rotate_speed > 0);
-    assert(m_speed > 0);
-    assert(m_shoot_timer > 0);
+    m_info.shoot_timer = Timer( config.get_real("shoot_timer") );
+    m_info.speed = pps( config.get_real("speed") );
+    m_info.rotate_speed = pps( config.get_real("rotate_speed") );
+    m_info.bullet_speed = pps( config.get_real("bullet_speed") );
+    m_info.shoot_deg = config.get_real("shoot_deg");
+    m_info.bullet_name = config.get_str("bullet_name");
+    
+    assert(m_info.bullet_speed > 0);
+    assert(m_info.rotate_speed > 0);
+    assert(m_info.speed > 0);
+    assert( !m_info.bullet_name.empty());
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
     assert(parent);
     assert(parent->type == ENTITY_TYPE(Cosmic_hunter));
     auto it = ptr2ptr<Cosmic_hunter*>(parent);
-
-    it->phys.set_speed( pps(m_speed) );
-    it->m_shoot_timer = Timer(m_shoot_timer);
-    it->m_shoot_timer.randomize();
-    it->m_rotate_speed = pps(m_rotate_speed);
-    it->m_bullet_speed = pps(m_bullet_speed);
-    it->m_shoot_deg = m_shoot_deg;
+    it->m_info = m_info;
+    it->m_info.shoot_timer.randomize();
+    it->phys.set_speed(m_info.speed);
     // при спавне сразу смотрим в сторону игрока
     if (auto player = hpw::entity_mgr->get_player(); player)
       it->phys.set_deg( deg_to_target(*it, *player) );
