@@ -1,6 +1,7 @@
 #include <cassert>
 #include "level-manager.hpp"
 #include "level.hpp"
+#include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/scenes.hpp"
@@ -8,7 +9,9 @@
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/player.hpp"
+#include "game/util/game-util.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/font/font.hpp"
 #include "util/log.hpp"
 #include "util/math/vec.hpp"
 
@@ -31,11 +34,16 @@ void Level_mgr::update(const Vec vel, double dt) {
 } // update
 
 void Level_mgr::draw(Image& dst) const {
-  // показать уровень, иначе залить фон
-  if (graphic::draw_level && level)
-    level->draw(dst);
-  else
-    dst.fill({}); // TODO для красивого эффекта это можно вырубить
+  if (level) {
+    // показать уровень, иначе залить фон
+    if (graphic::draw_level)
+      level->draw(dst);
+    else
+      dst.fill({}); // TODO для красивого эффекта это можно вырубить
+  } else {
+    dst.fill(Pal8::black);
+    graphic::font->draw(dst, get_screen_center(), U"NO LEVEL");
+  }
 }
 
 void Level_mgr::draw_upper_layer(Image& dst) const {
