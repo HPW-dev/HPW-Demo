@@ -226,14 +226,18 @@ Shared<Menu_text_item> Scene_graphic::get_exit_item() {
 Shared<Menu_text_item> Scene_graphic::get_palette_item() {
   return new_shared<Menu_text_item>(
     get_locale_str("scene.palette_select.title"),
-    []{ hpw::scene_mgr->add(new_shared<Scene_palette_select>()); }
+    []{ hpw::scene_mgr->add(new_shared<Scene_palette_select>()); },
+    []->utf32 { return {}; },
+    get_locale_str("scene.graphic_menu.description.palette_select")
   );
 }
 
 Shared<Menu_text_item> Scene_graphic::get_plugin_item() {
   return new_shared<Menu_text_item>(
     get_locale_str("scene.graphic_menu.pge.title"),
-    []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); }
+    []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); },
+    []->utf32 { return {}; },
+    get_locale_str("scene.graphic_menu.description.pge")
   );
 }
 
@@ -247,24 +251,23 @@ Shared<Menu_text_item> Scene_graphic::get_epilepsy_item() {
     #else
       load_pge(hpw::cur_dir + "plugin/effect/epilepsy.so");
     #endif
-  } );
+  }, []->utf32 { return {}; },
+  get_locale_str("scene.graphic_menu.description.epilepsy") );
 }
 
 void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     U"Настройки графики", // TODO locale
     Menu_items {
-      get_palette_item(),
-      get_plugin_item(),
-      get_epilepsy_item(),
-      get_preset_item(),
       get_fullscreen_item(),
-      get_resize_type_item(),
+      get_preset_item(),
       get_vsync_item(),
       get_frame_limit_item(),
       get_disable_frame_limit_item(),
-      get_draw_border_item(),
-      get_mouse_cursour_item(),
+      get_resize_type_item(),
+      get_palette_item(),
+      get_plugin_item(),
+      get_epilepsy_item(),
       get_goto_detailed_item(),
       get_exit_item(),
     },
@@ -336,12 +339,6 @@ void Scene_graphic::init_detailed_menu() {
         [](bool val){ graphic::auto_frame_skip = val; },
         get_locale_str("scene.graphic_menu.description.auto_frame_skipmeskip")
       ),
-      #ifdef DEBUG
-      new_shared<Menu_text_item>(
-        get_locale_str("scene.graphic_menu.set_fps_limit_70"),
-        []{ graphic::set_target_fps(70); }
-      ),
-      #endif
       new_shared<Menu_text_item>(
         get_locale_str("common.back"),
         [this]{ use_detailed_menu = !use_detailed_menu; }
