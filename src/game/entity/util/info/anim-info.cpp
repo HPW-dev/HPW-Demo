@@ -23,6 +23,7 @@ void Anim_info::load(CN<Yaml> node) {
   return_back        = node.get_bool  ("return_back");
   rand_cur_frame     = node.get_bool  ("rand_cur_frame");
   speed_scale_minmax = node.get_v_real("anim_speed_scale");
+  layer_up           = node.get_bool  ("layer_up", false);
   
   // читать пиксель блендинг
   if (auto blend_f_name = node.get_str("blend_f"); !blend_f_name.empty())
@@ -42,6 +43,7 @@ void Anim_info::accept(Entity& dst) {
   dst.anim_ctx.set_default_deg(default_deg);
   dst.status.fixed_deg = fixed_deg;
   dst.status.return_back = return_back;
+  dst.status.layer_up = layer_up;
 
   if (light_mask_anim) {
     dst.anim_ctx.set_contour(light_mask_anim);

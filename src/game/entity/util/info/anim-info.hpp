@@ -14,6 +14,7 @@ struct Anim_info {
   blend_pf bf {&blend_past}; /// стиль наложения анимации
   blend_pf contour_bf {&blend_past}; /// эффект смешивания контура
   real default_deg {};
+  bool layer_up {};
   bool fixed_deg {};
   bool return_back {}; /// проиграть обратно при конце анимации
   bool rand_cur_frame {}; /// начальный фрейм будет случайным
