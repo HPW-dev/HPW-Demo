@@ -49,33 +49,35 @@ void Scene_graphic::draw(Image& dst) const {
     simple_menu->draw(dst);
 }
 
+void set_default() {
+  graphic::set_vsync(false);
+  graphic::set_disable_frame_limit(false);
+  graphic::set_target_fps(60);
+  graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
+  graphic::blink_motion_blur = true;
+  graphic::blink_particles = true;
+  graphic::blur_quality_mul = 1.0;
+  graphic::cpu_safe = false;
+  graphic::disable_heat_distort_while_lag = true;
+  graphic::wait_frame = true;
+  graphic::double_buffering = true;
+  graphic::enable_heat_distort = false;
+  graphic::enable_light = true;
+  graphic::enable_motion_blur = true;
+  graphic::light_quality = Light_quality::medium;
+  graphic::motion_blur_quality_reduct = true;
+  graphic::frame_skip = 2;
+  graphic::auto_frame_skip = true;
+} // set_default
+
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
-  return  new_shared<Menu_list_item>(
+  return new_shared<Menu_list_item>(
     get_locale_str("scene.graphic_menu.pressets.name"),
     Menu_list_item::Items {
       Menu_list_item::Item {
         get_locale_str("scene.graphic_menu.pressets.default"),
         get_locale_str("scene.graphic_menu.description.pressets.default"),
-        []{
-          graphic::set_vsync(false);
-          graphic::set_disable_frame_limit(false);
-          graphic::set_target_fps(60);
-          graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
-          graphic::blink_motion_blur = true;
-          graphic::blink_particles = true;
-          graphic::blur_quality_mul = 1.0;
-          graphic::cpu_safe = false;
-          graphic::disable_heat_distort_while_lag = true;
-          graphic::wait_frame = true;
-          graphic::double_buffering = true;
-          graphic::enable_heat_distort = false;
-          graphic::enable_light = true;
-          graphic::enable_motion_blur = true;
-          graphic::light_quality = Light_quality::medium;
-          graphic::motion_blur_quality_reduct = true;
-          graphic::frame_skip = 2;
-          graphic::auto_frame_skip = true;
-        }
+        &set_default
       },
       Menu_list_item::Item {
         get_locale_str("scene.graphic_menu.pressets.low_pc"),
@@ -255,6 +257,16 @@ Shared<Menu_text_item> Scene_graphic::get_epilepsy_item() {
   get_locale_str("scene.graphic_menu.description.epilepsy") );
 }
 
+Shared<Menu_text_item> Scene_graphic::get_reset_item() {
+  return new_shared<Menu_text_item>(get_locale_str("common.reset"), [] {
+    hpw::init_palette_from_archive("resource/image/palettes/default.png");
+    hpw::set_resize_mode(Resize_mode::by_height);
+    graphic::set_disable_frame_limit(false);
+    disable_pge();
+    set_default();
+  } );
+}
+
 void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     U"Настройки графики", // TODO locale
@@ -269,6 +281,7 @@ void Scene_graphic::init_simple_menu() {
       get_plugin_item(),
       get_epilepsy_item(),
       get_goto_detailed_item(),
+      get_reset_item(),
       get_exit_item(),
     },
     Rect{0, 0, graphic::width, graphic::height}
@@ -343,6 +356,7 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("common.back"),
         [this]{ use_detailed_menu = !use_detailed_menu; }
       ),
+      get_reset_item(),
       get_exit_item(),
     },
     Rect{0, 0, graphic::width, graphic::height}

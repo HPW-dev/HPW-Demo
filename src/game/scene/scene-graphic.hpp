@@ -30,6 +30,7 @@ class Scene_graphic final: public Scene {
   Shared<Menu_text_item> get_palette_item();
   Shared<Menu_text_item> get_plugin_item();
   Shared<Menu_text_item> get_epilepsy_item();
+  Shared<Menu_text_item> get_reset_item();
 
 public:
   Scene_graphic();
