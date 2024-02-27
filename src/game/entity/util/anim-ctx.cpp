@@ -92,6 +92,8 @@ void Anim_ctx::update_frame_idx(Entity &entity) {
 } // next_frame
 
 void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
+  return_if(entity.status.disable_anim);
+
   // TODO сделать межкадровый дизеринг
 
   // взять текущий кадр анимации

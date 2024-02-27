@@ -28,6 +28,7 @@ using blend_pf = Pal8 (*)(const Pal8 in, const Pal8 bg, int optional);
 [[nodiscard, gnu::const]] inline Pal8 blend_min      (const Pal8 in, const Pal8 bg, int optional=0) { return table_min      [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_max      (const Pal8 in, const Pal8 bg, int optional=0) { return table_max      [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_avr      (const Pal8 in, const Pal8 bg, int optional=0) { return table_avr      [uint(in.val)*256 + uint(bg.val)]; }
+[[nodiscard, gnu::const]] inline Pal8 blend_avr_max  (const Pal8 in, const Pal8 bg, int optional=0) { return table_avr_max  [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_158      (const Pal8 in, const Pal8 bg, int optional=0) { return table_blend158 [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_diff     (const Pal8 in, const Pal8 bg, int optional=0) { return table_diff     [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_xor      (const Pal8 in, const Pal8 bg, int optional=0) { return table_xor      [uint(in.val)*256 + uint(bg.val)]; }

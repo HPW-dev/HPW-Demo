@@ -411,6 +411,7 @@ blend_pf find_blend_f(CN<Str> name) {
     {"blend_min", &blend_min},
     {"blend_max", &blend_max},
     {"blend_avr", &blend_avr},
+    {"blend_avr_max", &blend_avr_max},
     {"blend_158", &blend_158},
     {"blend_diff", &blend_diff},
     {"blend_xor", &blend_xor},

@@ -32,6 +32,7 @@ struct Enity_status {
   bool disable_heat_distort: 1 {false}; /// выключает отображение искажений воздуха
   bool disable_light: 1 {false}; /// выключает отображение выспышки
   bool no_restart_anim: 1 {false}; /// не перезапускать анимацию после окончания проигрывания
+  bool disable_anim: 1 {false}; /// выключает отображение анимации
 }; // Enity_status
 
 constexpr auto ENITY_STATUS_BYTES {sizeof(Enity_status)};

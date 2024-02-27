@@ -1,24 +1,24 @@
 #include <cassert>
 #include "cosmic.hpp"
-#include "util/file/yaml.hpp"
 #include "util/hpw-util.hpp"
+#include "util/file/yaml.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/math/random.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/animation/animation-manager.hpp"
 #include "graphic/animation/anim.hpp"
+#include "graphic/effect/heat-distort.hpp"
+#include "graphic/effect/heat-distort-util.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
+#include "game/util/game-util.hpp"
 #include "game/entity/player.hpp"
+#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/entity/entity-manager.hpp"
-#include "game/util/game-util.hpp"
-#include "graphic/effect/heat-distort.hpp"
-#include "graphic/effect/heat-distort-util.hpp"
 
 Cosmic::Cosmic(): Proto_enemy(GET_SELF_TYPE) {}
 
@@ -58,7 +58,7 @@ void Cosmic::update(double dt) {
       anim_ctx.set_anim(m_info.state_2); // переход на финальную стадию
       anim_ctx.set_contour(m_info.contour);
       anim_ctx.contour_bf = &blend_past;
-      anim_ctx.blend_f = &blend_max;
+      anim_ctx.blend_f = &blend_avr_max;
       status.disable_heat_distort = false;
     }
   }
@@ -110,6 +110,7 @@ void Cosmic::make_particles(double dt) {
     for (int y = -1; y < Y + 2; ++y)
     for (int x = -1; x < X + 2; ++x) {
       const Vec pos (
+        // сдвиг по горизонтали каждую нечётную строку, чтобы были соты, а не сетка
         (x + ((y & 1) ? 0 : 0.5)) * (w / X),
         y * (h / Y) );
       hpw::entity_mgr->make(this, "particle.blink.star", pos);
@@ -161,7 +162,7 @@ struct Cosmic::Loader::Impl {
     it->anim_ctx.set_anim(m_info.state_1);
     it->anim_ctx.set_contour(m_info.contour);
     it->anim_ctx.contour_bf = &blend_past;
-    it->anim_ctx.blend_f = &blend_max;
+    it->anim_ctx.blend_f = &blend_avr_max;
     it->heat_distort = new_shared<Heat_distort>(m_info.heat_distort);
     it->status.disable_heat_distort = true;
     it->m_info.shoot_timer.randomize();

@@ -19,6 +19,7 @@ inline Bytes table_xor {};
 inline Bytes table_xor_safe {};
 inline Bytes table_diff {};
 inline Bytes table_avr {};
+inline Bytes table_avr_max {};
 inline Bytes table_blend158 {};
 inline Bytes table_max {};
 inline Bytes table_min {};

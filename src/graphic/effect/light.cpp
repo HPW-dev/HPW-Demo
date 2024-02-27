@@ -1,6 +1,5 @@
 #include <unordered_map>
 #include <utility>
-#include <mutex>
 #include <cmath>
 #include <cassert>
 #include <cstdint>
@@ -16,8 +15,13 @@
 
 std::unordered_map<int, Image> cached_spheres {}; /// для оптимизации с пререндером вспышек
 constexpr int cache_spheres_steps = 3; // чем меньше, тем больше пререндеров
+bool cache_spheres_once {true};
 
 void cache_light_spheres() {
+  // вызывать это только 1 раз
+  return_if (!cache_spheres_once);
+  cache_spheres_once = false;
+
   constexpr int count = Light::MAX_LIGHT_RADIUS / cache_spheres_steps;
   static_assert(count > 0);
   static_assert(count < 500);
@@ -45,8 +49,7 @@ void draw_cached_sphere(Image& dst, const real R, const Vec pos, blend_pf bf) {
   // TODO оптимизация выхода за dst
 
   // сгенерить пререндеры, если их нету
-  static std::once_flag cache_spheres_once;
-  std::call_once(cache_spheres_once, &cache_light_spheres);
+  cache_light_spheres();
 
   cnauto sphere = cached_spheres.at(R / cache_spheres_steps);
   cauto offset = pos - center_point(sphere);

@@ -232,6 +232,19 @@ int main(int argc, char *argv[]) {
     return desaturate_f(dst_rgb.r, dst_rgb.g, dst_rgb.b);
   });
 
+  gen_table_2d("table_avr_max.dat", [](int x, int y) {
+    Pal8 a(x);
+    Pal8 b(y);
+    cauto a_rgb = to_rgb24(a);
+    cauto b_rgb = to_rgb24(b);
+    const Rgb24 dst_rgb (
+      std::max<int>((int(a_rgb.r) + b_rgb.r) / 2, b_rgb.r),
+      std::max<int>((int(a_rgb.g) + b_rgb.g) / 2, b_rgb.g),
+      std::max<int>((int(a_rgb.b) + b_rgb.b) / 2, b_rgb.b)
+    );
+    return desaturate_f(dst_rgb.r, dst_rgb.g, dst_rgb.b);
+  });
+
   gen_table_2d("table_blend158.dat", [](int x, int y) {
     Pal8 a(x);
     Pal8 b(y);

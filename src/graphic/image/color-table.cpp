@@ -24,6 +24,7 @@ void load_color_tables() {
   table_xor_safe     = hpw::archive->get_file(dir + "table_xor_safe.dat").data;
   table_diff         = hpw::archive->get_file(dir + "table_diff.dat").data;
   table_avr          = hpw::archive->get_file(dir + "table_avr.dat").data;
+  table_avr_max      = hpw::archive->get_file(dir + "table_avr_max.dat").data;
   table_blend158     = hpw::archive->get_file(dir + "table_blend158.dat").data;
   table_max          = hpw::archive->get_file(dir + "table_max.dat").data;
   table_min          = hpw::archive->get_file(dir + "table_min.dat").data;
@@ -53,6 +54,7 @@ void check_color_tables() {
   assert( !table_xor_safe.empty());
   assert( !table_diff.empty());
   assert( !table_avr.empty());
+  assert( !table_avr_max.empty());
   assert( !table_blend158.empty());
   assert( !table_max.empty());
   assert( !table_min.empty());
