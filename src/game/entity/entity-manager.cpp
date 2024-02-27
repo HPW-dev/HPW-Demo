@@ -232,8 +232,8 @@ struct Entity_mgr::Impl {
   }
 
   inline void add_scatter(CN<Scatter> scatter) {
-    assert(scatter.power > 0);
-    assert(scatter.range > 0);
+    return_if(scatter.power <= 0);
+    return_if(scatter.range <= 0);
     scatters.emplace_back(scatter);
   }
 

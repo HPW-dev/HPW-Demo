@@ -34,6 +34,8 @@ class Cosmic final: public Proto_enemy {
 
   /// накидывает частиц, чтобы показать влияние гравитации
   void make_particles(double dt);
+  /// примагничивание всего вокруг
+  void update_magnet();
 
 public:
   class Loader;

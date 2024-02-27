@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include "cosmic.hpp"
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
@@ -34,6 +35,7 @@ void Cosmic::update(double dt) {
 
   Proto_enemy::update(dt);
   make_particles(dt);
+  update_magnet();
 
   // появление
   if ( !m_fade_in_complete) {
@@ -66,15 +68,6 @@ void Cosmic::update(double dt) {
   // основной алгоритм:
   return_if( !m_eyes_open_complete);
 
-  // притяжение
-  hpw::entity_mgr->add_scatter( Scatter {
-    .pos {phys.get_pos()},
-    .range {m_info.magnet_range},
-    .power {m_info.magnet_power},
-    .type {Scatter::Type::inside},
-    .disable_shake {true},
-  } );
-
   // стрелять в игрока
   cauto player = hpw::entity_mgr->get_player();
   assert(player);
@@ -100,6 +93,22 @@ void Cosmic::update(double dt) {
     }
   }
 } // update
+
+void Cosmic::update_magnet() {
+  // плавное нарастание притяжения
+  cauto magnet_power_ratio = m_fade_in_complete
+    ? 1.0
+    : 1.0 - (m_info.eyes_open_timeout.ratio() + m_info.fade_in_timer.ratio()) * 0.5;
+  cauto magnet_power = std::lerp(0, m_info.magnet_power, magnet_power_ratio);
+  // притяжение
+  hpw::entity_mgr->add_scatter( Scatter {
+    .pos {phys.get_pos()},
+    .range {m_info.magnet_range},
+    .power {magnet_power},
+    .type {Scatter::Type::inside},
+    .disable_shake {true},
+  } );
+}
 
 void Cosmic::make_particles(double dt) {
   cauto w = graphic::width;
