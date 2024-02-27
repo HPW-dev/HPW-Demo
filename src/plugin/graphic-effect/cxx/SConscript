@@ -57,6 +57,8 @@ build_plugin("epilepsy", [
   src_dir + "graphic/image/color.cpp",
   src_dir + "graphic/util/convert.cpp",
   src_dir + "util/math/random.cpp",
+  src_dir + "util/hpw-util.cpp",
+  src_dir + "util/error.cpp",
 ] )
 
 build_plugin("blink-dither", [
@@ -71,4 +73,5 @@ build_plugin("pixelate", [
   src_plugin_dir + "pge-util.cpp",
   src_dir + "graphic/image/color.cpp",
   src_dir + "graphic/util/convert.cpp",
+  src_dir + "util/error.cpp",
 ] )
