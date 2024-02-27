@@ -96,8 +96,9 @@ void Cosmic::update(double dt) {
 
 void Cosmic::update_magnet() {
   // плавное нарастание притяжения
-  cauto magnet_power_ratio = m_fade_in_complete
+  cauto magnet_power_ratio = (m_fade_in_complete && m_eyes_open_complete)
     ? 1.0
+    // учесть время появления из стемноты и время открытия глаз
     : 1.0 - (m_info.eyes_open_timeout.ratio() + m_info.fade_in_timer.ratio()) * 0.5;
   cauto magnet_power = std::lerp(0, m_info.magnet_power, magnet_power_ratio);
   // притяжение
