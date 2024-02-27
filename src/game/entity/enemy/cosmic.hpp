@@ -17,6 +17,7 @@ class Cosmic final: public Proto_enemy {
     Timer fade_in_timer {}; /// время на появление из темноты
     Timer eyes_open_timeout {}; /// время на анимацию открытия глаз
     Timer shoot_timer {}; /// таймер выстрела
+    Timer particle_timer {}; /// таймер появления частиц для показа гравитации
     real magnet_range {};
     real magnet_power {};
     real bullet_spawn_range {};
@@ -30,6 +31,9 @@ class Cosmic final: public Proto_enemy {
 
   bool m_fade_in_complete {false};
   bool m_eyes_open_complete {false};
+
+  /// накидывает частиц, чтобы показать влияние гравитации
+  void make_particles(double dt);
 
 public:
   class Loader;

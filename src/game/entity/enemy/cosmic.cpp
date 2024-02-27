@@ -9,6 +9,7 @@
 #include "graphic/animation/anim.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
+#include "game/core/canvas.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"
@@ -32,6 +33,7 @@ void Cosmic::update(double dt) {
   status.no_restart_anim = m_fade_in_complete && !m_eyes_open_complete;
 
   Proto_enemy::update(dt);
+  make_particles(dt);
 
   // появление
   if ( !m_fade_in_complete) {
@@ -56,13 +58,15 @@ void Cosmic::update(double dt) {
       anim_ctx.set_anim(m_info.state_2); // переход на финальную стадию
       anim_ctx.set_contour(m_info.contour);
       anim_ctx.contour_bf = &blend_past;
+      anim_ctx.blend_f = &blend_max;
       status.disable_heat_distort = false;
-      status.layer_up = false;
     }
   }
   
   // основной алгоритм:
   return_if( !m_eyes_open_complete);
+
+  // притяжение
   hpw::entity_mgr->add_scatter( Scatter {
     .pos {phys.get_pos()},
     .range {m_info.magnet_range},
@@ -97,6 +101,22 @@ void Cosmic::update(double dt) {
   }
 } // update
 
+void Cosmic::make_particles(double dt) {
+  cauto w = graphic::width;
+  cauto h = graphic::height;
+  const int X = 12;
+  const int Y = 9;
+  cfor (_, m_info.particle_timer.update(dt)) {
+    for (int y = -1; y < Y + 2; ++y)
+    for (int x = -1; x < X + 2; ++x) {
+      const Vec pos (
+        (x + ((y & 1) ? 0 : 0.5)) * (w / X),
+        y * (h / Y) );
+      hpw::entity_mgr->make(this, "particle.blink.star", pos);
+    } // for y x
+  } // for particle_timer
+}
+
 struct Cosmic::Loader::Impl {
   Info m_info {};
 
@@ -109,6 +129,7 @@ struct Cosmic::Loader::Impl {
     m_info.eyes_open_timeout = Timer( config.get_real("eyes_open_timeout") );
     m_info.fade_in_timer = Timer( config.get_real("fade_in_time") );
     m_info.shoot_timer = Timer( config.get_real("shoot_timer") );
+    m_info.particle_timer = Timer( config.get_real("particle_timer") );
     m_info.magnet_range = config.get_real("magnet_range");
     m_info.magnet_power = pps( config.get_real("magnet_power") );
     m_info.bullet_spawn_range = config.get_real("bullet_spawn_range");
@@ -136,12 +157,15 @@ struct Cosmic::Loader::Impl {
     it->m_info = m_info;
     // первая анимация проигрывается до конца и не перезапускается
     it->status.no_restart_anim = true;
+    it->status.layer_up = true;
     it->anim_ctx.set_anim(m_info.state_1);
     it->anim_ctx.set_contour(m_info.contour);
     it->anim_ctx.contour_bf = &blend_past;
+    it->anim_ctx.blend_f = &blend_max;
     it->heat_distort = new_shared<Heat_distort>(m_info.heat_distort);
     it->status.disable_heat_distort = true;
     it->m_info.shoot_timer.randomize();
+    it->m_info.particle_timer.randomize();
     return parent;
   } // op ()
 
