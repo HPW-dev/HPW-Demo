@@ -58,7 +58,7 @@
 void Scene_game::init_levels() {
   hpw::level_mgr = new_shared<Level_mgr>(Level_mgr::Makers{
     [] { return new_shared<Level_tutorial>(); },
-    //[] { return new_shared<Level_space>(); },
+    [] { return new_shared<Level_space>(); },
     //[] { return new_shared<Level_1>(); },
     
   #ifdef DEBUG
@@ -109,8 +109,10 @@ void Scene_game::update(double dt) {
     graphic::set_fast_forward( !graphic::get_fast_forward() );
   #endif
 
-  replay_save_keys();
-  replay_load_keys();
+  if (hpw::replay_read_mode)
+    replay_load_keys();
+  else if (hpw::enable_replay)
+    replay_save_keys();
 
   hpw::level_mgr->update(get_level_vel(), dt);
   if (graphic::hud)
@@ -222,8 +224,6 @@ void Scene_game::replay_init() {
 } // replay_init
 
 void Scene_game::replay_save_keys() {
-  return_if ( !hpw::enable_replay);
-  return_if (hpw::replay_read_mode);
   Key_packet packet;
 
   #define check_key(key) if (is_pressed(key)) \
@@ -235,6 +235,7 @@ void Scene_game::replay_save_keys() {
   check_key(hpw::keycode::enable)
   check_key(hpw::keycode::focus)
   check_key(hpw::keycode::mode)
+  check_key(hpw::keycode::bomb)
   check_key(hpw::keycode::shoot)
   #undef check_key
 
@@ -242,8 +243,6 @@ void Scene_game::replay_save_keys() {
 }
 
 void Scene_game::replay_load_keys() {
-  return_if ( !hpw::replay_read_mode);
-
   // сбросить свои клавиши
   clear_cur_keys();
   hpw::any_key_pressed = false;

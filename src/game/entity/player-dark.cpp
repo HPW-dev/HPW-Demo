@@ -115,8 +115,7 @@ void Player_dark::update(double dt) {
 }
 
 void Player_dark::check_input(double dt) {
-  if (hpw::any_key_pressed)
-    move(dt);
+  move(dt);
 
   // стрельба
   if (is_pressed(hpw::keycode::shoot))
