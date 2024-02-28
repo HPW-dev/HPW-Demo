@@ -39,7 +39,7 @@ void Protownd::save_screenshot() const {
   oss << screenshots_dir;
   make_dir_if_not_exist(oss.str());
   oss << std::put_time(&lt, "%d-%m-%Y %H-%M-%S");
-  oss << "-" + n2s(rndu(100'000)) + ".png";
+  oss << "-" + n2s(rndu_fast(100'000)) + ".png";
   save(*graphic::canvas, oss.str());
 } // save_screenshot
 
