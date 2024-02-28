@@ -127,8 +127,8 @@ void Scene_game::update(double dt) {
   #ifdef STABLE_REPLAY
     if ((hpw::game_updates_safe % 72) == 0)
       replay_stable_log();
-    if (hpw::game_updates_safe >= 6'000)
-      hpw::soft_exit();
+    /*if (hpw::game_updates_safe >= 6'000)
+      hpw::soft_exit();*/
   #endif
 } // update
 
