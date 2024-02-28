@@ -46,7 +46,9 @@ Vec center_point(CN<Image> src, CN<Sprite> dst);
 Vec center_point(const Vec src, const Vec dst);
 
 /// получить случайный цвет
-Pal8 rand_color(bool red=false);
+Pal8 rand_color_stable(bool red=false);
+/// получить случайный цвет (не синхронизирован с реплеем и быстрее)
+Pal8 rand_color_graphic(bool red=false);
 
 /// вставить картинку в картинку
 void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf, int optional=0);

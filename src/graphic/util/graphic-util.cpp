@@ -60,12 +60,21 @@ void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf, int optional) {
   }
 } // insert
 
-Pal8 rand_color(bool red) {
+Pal8 rand_color_stable(bool red) {
   Pal8::value_t val;
   if (red)
     val = rnd(Pal8::red_start, Pal8::red);
   else
     val = rndu(Pal8::gray_end);
+  return {val};
+}
+
+Pal8 rand_color_graphic(bool red) {
+  Pal8::value_t val;
+  if (red)
+    val = rnd_fast(Pal8::red_start, Pal8::red);
+  else
+    val = rndu_fast(Pal8::gray_end);
   return {val};
 }
 
