@@ -3,6 +3,8 @@ build/plugin
 ignore me.lnk
 imgui.ini
 run.py
+a.txt
+b.txt
 .sconsign.dblite
 **/table_*.dat
 tmp
