@@ -1,3 +1,4 @@
+#ifdef STABLE_REPLAY
 #include <cassert>
 #include <iostream>
 #include "replay-check.hpp"
@@ -118,3 +119,5 @@ void replay_stable_log() {
 
   std::clog << "\n";
 } // replay_stable_log
+
+#endif // STABLE_REPLAY

@@ -136,7 +136,7 @@ struct Level_space::Impl {
 
     tasks = {
       // при старте, фон не стирается некоторое время
-      /*Bg_blink(fill_bg_black, 6.0),
+      Bg_blink(fill_bg_black, 6.0),
       
       // включить показ фона из тени
       [this](double dt)->bool {
@@ -196,7 +196,7 @@ struct Level_space::Impl {
           hpw::entity_mgr->make({}, "enemy.cosmic.hunter", Vec(-30, graphic::height/2)),
           hpw::entity_mgr->make({}, "enemy.cosmic.hunter", Vec(graphic::width+30, graphic::height/2)),
         };
-      }, 20),*/
+      }, 20),
 
       // космические глаза x1
       Spwan_and_wait_for_death( []{
@@ -208,7 +208,7 @@ struct Level_space::Impl {
         };
       }, 60),
 
-      /*// включить показ второй галактики
+      // включить показ второй галактики
       [this](double dt)->bool {
         enable_galaxy_3_layer = true;
         // галактика сверху слева
@@ -318,7 +318,7 @@ struct Level_space::Impl {
         graphic::post_effects->move_to_back (
           new_unique<Blink_text>(10, U"дальше уровень недоделан, ничего не будет") );
         return true;
-      },*/
+      },
     }; // tasks
   } // init_tasks
 
