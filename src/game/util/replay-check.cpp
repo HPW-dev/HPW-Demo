@@ -3,6 +3,7 @@
 #include "replay-check.hpp"
 #include "game/core/core.hpp"
 #include "game/core/entities.hpp"
+#include "game/util/keybits.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/entity-type.hpp"
 #include "game/entity/player.hpp"
@@ -92,6 +93,20 @@ void player_log() {
   phys_log(player->phys);
 } // player_log
 
+void input_log() {
+  std::clog << "input (UDLRSMBFE): ";
+  std::clog << (is_pressed(hpw::keycode::up) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::down) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::left) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::right) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::shoot) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::mode) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::bomb) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::focus) ? 1 : 0);
+  std::clog << (is_pressed(hpw::keycode::enable) ? 1 : 0);
+  std::clog << "\n";
+}
+
 void replay_stable_log() {
   std::clog << "replay_stable_log(): chunk: " << chunk_id++ << "\n";
 
@@ -99,6 +114,7 @@ void replay_stable_log() {
   rnd_log();
   entities_log();
   player_log();
+  input_log();
 
   std::clog << "\n";
 } // replay_stable_log
