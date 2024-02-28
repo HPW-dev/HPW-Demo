@@ -60,9 +60,9 @@ void Entity::update(double dt) {
   for (cnauto callback: update_callbacks)
     callback(*this, dt);
 
-  if (heat_distort && graphic::enable_heat_distort && !status.disable_heat_distort)
+  if (heat_distort && !status.disable_heat_distort)
     heat_distort->update(dt);
-  if (light && graphic::enable_light && !status.disable_light)
+  if (light && !status.disable_light)
     light->update(dt);
 }
 
@@ -72,7 +72,7 @@ void Entity::set_master(Master_p new_master) {
 }
 
 void Entity::move_it(double dt) {
-  phys.update(dt); // тут оказались
+  phys.update(dt);
 }
 
 void Entity::set_pos(const Vec pos) {
