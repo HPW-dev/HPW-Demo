@@ -136,7 +136,7 @@ struct Level_space::Impl {
 
     tasks = {
       // при старте, фон не стирается некоторое время
-      Bg_blink(fill_bg_black, 6.0),
+      /*Bg_blink(fill_bg_black, 6.0),
       
       // включить показ фона из тени
       [this](double dt)->bool {
@@ -158,7 +158,7 @@ struct Level_space::Impl {
         return true; 
       },
 
-      /*// ждуны
+      // ждуны
       waiter_maker,
       waiter_maker,
       waiter_maker,

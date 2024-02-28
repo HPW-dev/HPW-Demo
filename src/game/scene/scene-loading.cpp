@@ -14,14 +14,11 @@
 
 Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
 : scene_maker {_scene_maker} {
-  static const Vector<Str> bg_names {
-    "resource/image/loading logo/tapir.png",
-    "resource/image/loading logo/hamuster.png",
-    "resource/image/loading logo/mouse.png",
-    "resource/image/loading logo/nose.png",
-    "resource/image/loading logo/puhnata.png",
-    "resource/image/loading logo/wlozuda.png",
-  };
+  // найти в ресурсах загруженные картинки с фонами
+  auto bg_names = hpw::store_sprite->list(true);
+  std::erase_if(bg_names, [](CN<Str> src) {
+    return src.find("resource/image/loading logo/") == Str::npos; });
+
   cauto bg_name = bg_names.at(rndu_fast(bg_names.size()));
   bg = hpw::store_sprite->find(bg_name).get();
   assert(bg);

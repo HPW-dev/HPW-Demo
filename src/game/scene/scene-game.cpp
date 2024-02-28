@@ -34,7 +34,6 @@
 #include "game/scene/scene-game-pause.hpp"
 #include "game/scene/scene-gameover.hpp"
 #include "game/level/level-manager.hpp"
-#include "game/level/level-replay-test.hpp"
 #include "game/level/level-space.hpp"
 #include "game/level/level-1.hpp"
 #include "game/level/level-tutorial.hpp"
@@ -58,13 +57,12 @@
 void Scene_game::init_levels() {
   hpw::level_mgr = new_shared<Level_mgr>(Level_mgr::Makers{
     //[] { return new_shared<Level_tutorial>(); },
-    [] { return new_shared<Level_space>(); },
+    //[] { return new_shared<Level_space>(); },
     //[] { return new_shared<Level_1>(); },
     
   #ifdef DEBUG
     //[] { return new_shared<Level_debug_bullets>(); },
     //[] { return new_shared<Level_debug_3>(); },
-    //[] { return new_shared<Level_replay_test>(); },
     //[] { return new_shared<Level_debug_1>(); },
     //[] { return new_shared<Level_debug>(); },
     //[] { return new_shared<Level_debug_2>(); },
