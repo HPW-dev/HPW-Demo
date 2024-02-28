@@ -40,8 +40,11 @@ real rad_between_vecs(const Vec a, const Vec b) {
 [[nodiscard]] real deg_between_vecs(const Vec a, const Vec b)
   { return rad_to_deg(rad_between_vecs(a, b)); }
 
-Vec make_rand_by_radius(const Vec pos, real r)
+Vec make_rand_by_radius_stable(const Vec pos, real r)
   { return pos + (deg_to_vec(rndr(0, 360)) * rndr(0, r)); }
+
+Vec make_rand_by_radius_graphic(const Vec pos, real r)
+  { return pos + (deg_to_vec(rndr_fast(0, 360)) * rndr_fast(0, r)); }
 
 #ifdef DEBUG
 Str to_str(const Vec src)

@@ -17,5 +17,5 @@ public:
   /// сколько раз сработал таймер использовать это для for
   unsigned update(double dt);
   /// ставит таймер на случайную позицию
-  void randomize();
+  void randomize_stable();
 }; // Timer

@@ -46,8 +46,7 @@ struct Explosion_loader::Impl {
     // TODO load hitbox anim
   }
 
-  inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
-    
+  inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {  
     // расталкивание
     hpw::entity_mgr->add_scatter( std::move( Scatter{
       .pos {pos},

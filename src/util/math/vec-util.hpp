@@ -20,8 +20,10 @@ Vec normalize_graphic(const Vec src);
 real rad_between_vecs(const Vec a, const Vec b);
 /// угол между вектором
 real get_between_vecs(const Vec a, const Vec b);
+/// получить случайную точку вокруг pos в радиусе r (синхронный)
+Vec make_rand_by_radius_stable(const Vec pos, real r);
 /// получить случайную точку вокруг pos в радиусе r
-Vec make_rand_by_radius(const Vec pos, real r);
+Vec make_rand_by_radius_graphic(const Vec pos, real r);
 
 #ifdef DEBUG
 Str to_str(const Vec src);

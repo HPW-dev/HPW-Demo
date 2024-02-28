@@ -78,7 +78,7 @@ struct Cosmic_hunter::Loader::Impl {
     assert(parent->type == ENTITY_TYPE(Cosmic_hunter));
     auto it = ptr2ptr<Cosmic_hunter*>(parent);
     it->m_info = m_info;
-    it->m_info.shoot_timer.randomize();
+    it->m_info.shoot_timer.randomize_stable();
     it->phys.set_speed(m_info.speed);
     // при спавне сразу смотрим в сторону игрока
     if (auto player = hpw::entity_mgr->get_player(); player)

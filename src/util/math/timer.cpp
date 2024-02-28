@@ -42,4 +42,4 @@ unsigned Timer::update(double dt) {
   return loops;
 }
 
-void Timer::randomize() { m_timer = rndr(0, m_timer_max); }
+void Timer::randomize_stable() { m_timer = rndr(0, m_timer_max); }
