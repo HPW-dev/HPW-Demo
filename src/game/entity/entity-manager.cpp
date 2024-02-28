@@ -50,7 +50,7 @@ struct Entity_mgr::Impl {
 
   ~Impl() = default;
 
-  inline CN<Entitys> get_entitys() const { return entities; }
+  inline CN<Entitys> get_entities() const { return entities; }
 
   inline void set_collider(CN<Shared<Collider>> new_collider)
     { collision_resolver = new_collider; }
@@ -259,7 +259,7 @@ struct Entity_mgr::Impl {
 
   // возвращает первый попавшийся мёртвый объект нужного типа
   inline Entity* find_avaliable_entity(const Entity_type type) {
-    for (nauto entity: get_entitys())
+    for (nauto entity: get_entities())
       if (entity->type == type && !entity->status.live)
         return entity.get();
     return {};
@@ -284,7 +284,7 @@ void Entity_mgr::debug_draw(Image& dst) const { impl->debug_draw(dst); }
 Mem_pool& Entity_mgr::get_phys_pool() { return impl->get_phys_pool(); }
 Mem_pool& Entity_mgr::get_hitbox_pool() { return impl->get_hitbox_pool(); }
 Mem_pool& Entity_mgr::get_entity_pool() { return impl->get_entity_pool(); }
-CN<Entitys> Entity_mgr::get_entitys() const { return impl->get_entitys(); }
+CN<Entitys> Entity_mgr::get_entities() const { return impl->get_entities(); }
 Entity* Entity_mgr::find_avaliable_entity(const Entity_type type) { return impl->find_avaliable_entity(type); }
 Player* Entity_mgr::get_player() const { return impl->get_player(); }
 void Entity_mgr::set_player(Player* player) { impl->set_player(player); }

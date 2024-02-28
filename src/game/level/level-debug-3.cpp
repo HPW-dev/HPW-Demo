@@ -245,7 +245,7 @@ void Level_debug_3::spawn_bullets(double dt) {
 
 void Level_debug_3::save_dbg_info() {
   #ifdef DEBUG
-  for (uint idx {}; auto entity: hpw::entity_mgr->get_entitys()) {
+  for (uint idx {}; auto entity: hpw::entity_mgr->get_entities()) {
     if (entity->status.live) {
       std::cerr << "game_update: " << hpw::game_updates_safe << "\n";
       std::cerr << "entity [" << idx << "]:\n";

@@ -53,7 +53,7 @@ public:
   Mem_pool& get_hitbox_pool();
   Mem_pool& get_entity_pool();
   /// получить массив всех объектов
-  CN<Entitys> get_entitys() const;
+  CN<Entitys> get_entities() const;
   /// ссылка на игрока
   Player* get_player() const;
   void set_player(Player* player);

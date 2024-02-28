@@ -33,7 +33,7 @@ void draw_entity_mem_map(Image& dst, const Vec pos) {
   constexpr std::size_t table_mx = 140;
   constexpr std::size_t table_my = 80;
   // узнать сколько сейчас объектов живо и отобразить их в таблице
-  cnauto entities = hpw::entity_mgr->get_entitys();
+  cnauto entities = hpw::entity_mgr->get_entities();
   std::size_t lived {};
   for (cnauto entity: entities) {
     Pal8 color = dead_color;

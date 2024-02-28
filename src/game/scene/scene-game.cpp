@@ -12,7 +12,6 @@
 #include "host/command.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
@@ -21,6 +20,8 @@
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"
+#include "game/util/sync.hpp"
+#include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
@@ -120,6 +121,11 @@ void Scene_game::update(double dt) {
   check_death(dt);
   
   ++hpw::game_updates_safe;
+
+  #ifdef STABLE_REPLAY
+  if ((hpw::game_updates_safe % 72) == 0)
+    replay_stable_log();
+  #endif
 } // update
 
 void Scene_game::draw(Image& dst) const {
