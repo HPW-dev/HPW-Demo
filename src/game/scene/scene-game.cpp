@@ -57,7 +57,7 @@
 
 void Scene_game::init_levels() {
   hpw::level_mgr = new_shared<Level_mgr>(Level_mgr::Makers{
-    //[] { return new_shared<Level_tutorial>(); },
+    [] { return new_shared<Level_tutorial>(); },
     //[] { return new_shared<Level_space>(); },
     //[] { return new_shared<Level_1>(); },
     
@@ -159,6 +159,10 @@ void Scene_game::post_draw(Image& dst) const {
     draw_controls(dst);
   if (hpw::show_entity_mem_map) // память занятая объектами
     draw_entity_mem_map(dst, Vec(5, 5));
+  #ifdef STABLE_REPLAY
+    graphic::font->draw(dst, Vec(5, 5), U"game updates: " +
+      n2s<utf32>(hpw::game_updates_safe), &blend_diff);
+  #endif
 } // post_draw
 
 void Scene_game::draw_debug_info(Image& dst) const {
@@ -242,12 +246,15 @@ void Scene_game::replay_load_keys() {
 
   // сбросить свои клавиши
   clear_cur_keys();
+  hpw::any_key_pressed = false;
 
   // прочитать клавиши с реплея
   auto key_packet = replay->pop();
   if (key_packet) {
-    for (cnauto key: *key_packet)
+    for (cnauto key: *key_packet) {
       press(key);
+      hpw::any_key_pressed = true;
+    }
   } else {
     // по завершению реплея выходить из сцены обратно
     hpw_log("replay end\n");

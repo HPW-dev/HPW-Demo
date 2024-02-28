@@ -209,17 +209,10 @@ Vec predict(CN<Entity> self_, CN<Entity> target_, double dt) {
   if (self.get_speed() <= 0)
     return target.get_pos();
 
-  /*Phys future_target = target;
-  future_target.update(dt);
-  return future_target.get_pos();*/
-  //return target.get_pos();
-
   // определить растояние до цели
   cauto dist = distance(target.get_pos(), self.get_pos());
   // узнать за сколько времени мы окажемся у цели
   const real t = dist / self.get_speed();
   // узнать где будет цель за это же время
   return target.get_pos() + normalize_stable(target.get_vel()) * target.get_speed() * t;
-
-  //// определить растояние от нас, до того места, где окажется цель
 }
