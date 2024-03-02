@@ -9,9 +9,24 @@ class Anim;
 /// Белые космические глаза (отталкивают)
 class Illaen final: public Proto_enemy {
   nocopy(Illaen);
+
+  enum class State {
+    fade_in,  /// анимация появления
+    attack,   /// атака пулями
+    fade_out, /// исчезновение
+    teleport, /// перестановка на новое место
+  };
+
   struct Info {
-    // TODO
+    State state {State::fade_in};
   } m_info {};
+
+  void fade_in(double dt);
+  void attack(double dt);
+  void fade_out(double dt);
+  void teleport(double dt);
+  void update_magnet(double dt);
+  void make_particles(double dt);
 
 public:
   class Loader;

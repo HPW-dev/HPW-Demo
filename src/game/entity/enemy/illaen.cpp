@@ -29,8 +29,39 @@ void Illaen::draw(Image& dst, const Vec offset) const {
 void Illaen::update(double dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
   Proto_enemy::update(dt);
-  // TODO
+  
+  switch (m_info.state) {
+    case State::fade_in: fade_in(dt); break;
+    default:
+    case State::attack: attack(dt); break;
+    case State::fade_out: fade_out(dt); break;
+    case State::teleport: teleport(dt); break;
+  }
 } // update
+
+void Illaen::fade_in(double dt) {
+  // TODO
+}
+
+void Illaen::attack(double dt) {
+  // TODO
+}
+
+void Illaen::fade_out(double dt) {
+  // TODO
+}
+
+void Illaen::teleport(double dt) {
+  // TODO
+}
+
+void Illaen::update_magnet(double dt) {
+  // TODO
+}
+
+void Illaen::make_particles(double dt) {
+  // TODO
+}
 
 struct Illaen::Loader::Impl {
   Info m_info {};
