@@ -135,6 +135,7 @@ struct Level_space::Impl {
     ); // 
 
     tasks = {
+      /*
       // при старте, фон не стирается некоторое время
       Bg_blink(fill_bg_black, 6.0),
       
@@ -157,7 +158,15 @@ struct Level_space::Impl {
         m_galaxy_1.pos = -Vec(100, 300);
         return true; 
       },
+      */
 
+      Spwan_and_wait_for_death( []{
+        return Spwan_and_wait_for_death::Death_list {
+          hpw::entity_mgr->make({}, "enemy.illaen", get_screen_center())
+        };
+      }, 5),
+      
+      /*
       // ждуны
       waiter_maker,
       waiter_maker,
@@ -319,6 +328,7 @@ struct Level_space::Impl {
           new_unique<Blink_text>(10, U"дальше уровень недоделан, ничего не будет") );
         return true;
       },
+      */
     }; // tasks
   } // init_tasks
 

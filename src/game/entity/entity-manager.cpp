@@ -25,6 +25,7 @@
 #include "game/entity/enemy/cosmic-hunter.hpp"
 #include "game/entity/enemy/cosmic-waiter.hpp"
 #include "game/entity/enemy/cosmic.hpp"
+#include "game/entity/enemy/Illaen.hpp"
 
 struct Entity_mgr::Impl {
   /// за пределами этого расстояние пули за экраном умирают в шмап-моде
@@ -164,6 +165,7 @@ struct Entity_mgr::Impl {
       {"bonus", [](CN<Yaml> config){ return new_shared<Bonus_loader>(config); } },
       {"bullet", [](CN<Yaml> config){ return new_shared<Bullet_loader>(config); } },
       {"particle", [](CN<Yaml> config){ return new_shared<Particle_loader>(config); } },
+      {"enemy.illaen", [](CN<Yaml> config){ return new_shared<Illaen::Loader>(config); } },
       {"enemy.cosmic.hunter", [](CN<Yaml> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
       {"enemy.cosmic.waiter", [](CN<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
       {"enemy.cosmic", [](CN<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
@@ -187,7 +189,7 @@ struct Entity_mgr::Impl {
       auto config = load_entity_config();
       for (cnauto entity_name: config.root_tags()) {
         auto entity_node = config[entity_name];
-        auto type = entity_node.get_str("type");
+        auto type = entity_node.get_str("type", "error type");
         entity_loaders[entity_name] = make_entity_loader(type, entity_node);
       }
     #endif
@@ -197,7 +199,7 @@ struct Entity_mgr::Impl {
     // попытаться загрузить отсутствующий объект
     auto config = load_entity_config();
     auto entity_node = config[name];
-    auto type = entity_node.get_str("type");
+    auto type = entity_node.get_str("type", "error type");
     entity_loaders[name] = make_entity_loader(type, entity_node);
         
     try {
