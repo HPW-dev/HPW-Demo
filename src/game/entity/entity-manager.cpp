@@ -11,6 +11,7 @@
 #include "collider/collider-empty.hpp"
 #include "util/hitbox.hpp"
 #include "util/phys.hpp"
+#include "util/safecall.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/file/yaml.hpp"
@@ -71,11 +72,7 @@ struct Entity_mgr::Impl {
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
-
-    // получить пары столкновений
-    if (collision_resolver)
-      (*collision_resolver)(entities, dt);
-
+    safecall(collision_resolver, entities, dt);
     bound_check();
     update_kills();
   } // update
