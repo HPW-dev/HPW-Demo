@@ -16,6 +16,7 @@
 #include "util/file/yaml.hpp"
 #include "util/file/archive.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/core/time-scale.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/entity/util/scatter.hpp"
@@ -67,7 +68,6 @@ struct Entity_mgr::Impl {
   }
 
   inline void update(const double dt) {
-    assert(dt == hpw::target_update_time);
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
@@ -117,10 +117,19 @@ struct Entity_mgr::Impl {
   }
 
   inline void update_entitys(double dt) {
-    for (nauto entity: entities)
-      if (entity->status.live)
-        entity->update(dt);
-  }
+    assert(hpw::time_scale > 0);
+
+    for (nauto entity: entities) {
+      if (entity->status.live) {
+        // изменять время для игрока и его объектов
+        cauto player = get_player();
+        if (entity.get() == player || entity->master == player)
+          entity->update(dt / hpw::time_scale);
+        else // все остальные сущности
+          entity->update(dt);
+      }
+    } // if live
+  } // update_entitys
 
   inline void update_kills() {
     for (nauto entity: entities) {

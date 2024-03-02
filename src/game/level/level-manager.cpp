@@ -21,8 +21,6 @@ Level_mgr::Level_mgr(CN<Makers> _makers)
 }
 
 void Level_mgr::update(const Vec vel, double dt) {
-  assert(dt == hpw::target_update_time);
-
   if (level) {
     level->update(vel, dt);
     if (level->complete)
