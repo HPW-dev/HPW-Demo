@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <utility>
 #include "sprite-io.hpp"
 #include "graphic/image/image.hpp"
@@ -15,6 +16,7 @@
 /** делает контур картинки жирнее
 Нужен для картинки в rotsprite, чтобы при повороте не было артефактов */
 inline void expand_contour(Image& image, CN<Image> mask) {
+  #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, image.Y)
   cfor (x, image.X) {
     if (mask(x, y) == Pal8::mask_visible) {
