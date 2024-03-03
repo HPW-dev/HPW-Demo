@@ -31,7 +31,7 @@ extern "C" {
 #endif
 
 #ifdef __GNUC__
-  #define PLUG_CALL __attribute__((__cdecl__))
+  #define PLUG_CALL __attribute__ ((__cdecl__))
 #else
   #define PLUG_CALL __cdecl
 #endif
