@@ -8,13 +8,14 @@
 #include "graphic/image/color.hpp"
 #include "graphic/util/convert.hpp"
 
-Pal8* g_dst {}; // ссыль на растр от игры
-uint16_t g_w {}; // ширина растра
-uint16_t g_h {}; // высота растра
-real_t g_motion_blur; /// как сильно надо размывать кадры
-Image g_old_frame; /// предыдущий кадр
+NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
+NOT_EXPORTED uint16_t g_w {}; // ширина растра
+NOT_EXPORTED uint16_t g_h {}; // высота растра
+NOT_EXPORTED real_t g_motion_blur; /// как сильно надо размывать кадры
+NOT_EXPORTED Image g_old_frame; /// предыдущий кадр
 
-extern "C" void plugin_init(const struct context_t* context, struct result_t* result) {
+extern "C" EXPORTED void plugin_init(const struct context_t* context,
+struct result_t* result) {
   // описание плагина
   result->full_name = "Motion blur";
   result->description = "Smoth all frames";
@@ -36,7 +37,7 @@ extern "C" void plugin_init(const struct context_t* context, struct result_t* re
   g_old_frame.init(g_w, g_h);
 } // plugin_init
 
-extern "C" void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void plugin_apply(uint32_t state) {
   const real_t dst_ratio = g_motion_blur;
   const real_t old_frame_ratio = 1.0 - g_motion_blur;
   assert(old_frame_ratio > 0.0 && old_frame_ratio < 1.0);
@@ -54,4 +55,4 @@ extern "C" void plugin_apply(uint32_t state) {
   }
 }
 
-extern "C" void plugin_finalize(void) { g_old_frame.free(); }
+extern "C" EXPORTED void plugin_finalize(void) { g_old_frame.free(); }

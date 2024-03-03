@@ -2,6 +2,7 @@
 #include "pge-util.hpp"
 #include "graphic/image/color.hpp"
 
+NOT_EXPORTED
 bool check_params(const context_t* context, result_t* result) {
   result->error = "";
   result->version = DEFAULT_EFFECT_API_VERSION;
@@ -22,9 +23,12 @@ bool check_params(const context_t* context, result_t* result) {
   return true;
 } // check_params
 
-Pal8& get_pixel_fast(Pal8 image[], const int x, const int y, const int width)
-{ return image[x + width * y]; }
+NOT_EXPORTED
+Pal8& get_pixel_fast(Pal8 image[], const int x, const int y,
+const int width)
+  { return image[x + width * y]; }
 
-void set_pixel_fast(Pal8 image[], const int x, const int y, const int width,
-const Pal8 val)
+NOT_EXPORTED
+void set_pixel_fast(Pal8 image[], const int x, const int y,
+const int width, const Pal8 val)
   { image[x + width * y] = val; }

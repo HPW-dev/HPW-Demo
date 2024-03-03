@@ -8,12 +8,13 @@
 #include "graphic/image/color.hpp"
 #include "graphic/util/convert.hpp"
 
-Pal8* g_dst {}; // ссыль на растр от игры
-uint16_t g_w {}; // ширина растра
-uint16_t g_h {}; // высота растра
-int32_t g_mode {}; /// режим смешивания
+NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
+NOT_EXPORTED uint16_t g_w {}; // ширина растра
+NOT_EXPORTED uint16_t g_h {}; // высота растра
+NOT_EXPORTED int32_t g_mode {}; /// режим смешивания
 
-extern "C" void plugin_init(const struct context_t* context, struct result_t* result) {
+extern "C" EXPORTED void plugin_init(const struct context_t* context,
+struct result_t* result) {
   set_rnd_seed( time({}) );
   // описание плагина
   result->full_name = "Epilepsy";
@@ -36,7 +37,7 @@ extern "C" void plugin_init(const struct context_t* context, struct result_t* re
   );
 } // plugin_init
 
-extern "C" void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void plugin_apply(uint32_t state) {
   cauto rnd = rndu_fast() % 256u;
 
   switch (g_mode) {
@@ -62,4 +63,4 @@ extern "C" void plugin_apply(uint32_t state) {
   } // switch mode
 } // plugin_apply
 
-extern "C" void plugin_finalize(void) {}
+extern "C" EXPORTED void plugin_finalize(void) {}

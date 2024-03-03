@@ -7,15 +7,16 @@
 #include "graphic/image/color.hpp"
 #include "graphic/util/convert.hpp"
 
-Pal8* g_dst {}; // ссыль на растр от игры
-uint16_t g_w {}; // ширина растра
-uint16_t g_h {}; // высота растра
-int32_t g_mode {1}; // режим мерцания (0 - 2 кадра, 1 - много)
-void init_tables();
-inline Pal8 get_from_table_0(const Pal8 src, uint32_t state);
-inline Pal8 get_from_table_1(const Pal8 src, uint32_t state);
+NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
+NOT_EXPORTED uint16_t g_w {}; // ширина растра
+NOT_EXPORTED uint16_t g_h {}; // высота растра
+NOT_EXPORTED int32_t g_mode {1}; // режим мерцания (0 - 2 кадра, 1 - много)
+NOT_EXPORTED void init_tables();
+NOT_EXPORTED inline Pal8 get_from_table_0(const Pal8 src, uint32_t state);
+NOT_EXPORTED inline Pal8 get_from_table_1(const Pal8 src, uint32_t state);
 
-extern "C" void plugin_init(const struct context_t* context, struct result_t* result) {
+extern "C" EXPORTED void plugin_init(const struct context_t* context,
+struct result_t* result) {
   // описание плагина
   result->full_name = "Blink-dithering";
   result->description = "Color-innertion dithering withm small palette";
@@ -37,7 +38,7 @@ extern "C" void plugin_init(const struct context_t* context, struct result_t* re
   init_tables();
 } // plugin_init
 
-extern "C" void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void plugin_apply(uint32_t state) {
   if (g_mode == 0) {
     #pragma omp parallel for simd schedule(static, 4)
     cfor (i, g_w * g_h)
@@ -49,15 +50,15 @@ extern "C" void plugin_apply(uint32_t state) {
   }
 }
 
-extern "C" void plugin_finalize(void) {}
+extern "C" EXPORTED void plugin_finalize(void) {}
 
-constexpr const std::size_t line_sz = 256;
+NOT_EXPORTED constexpr const std::size_t line_sz = 256;
 /// black, white, red [black .. blink .. white]
-std::array<Pal8::value_t, line_sz * 2> table_0 {};
+NOT_EXPORTED std::array<Pal8::value_t, line_sz * 2> table_0 {};
 /// black, white, red [black .. blink .. white] окно в 5 кадров мерцания
-std::array<Pal8::value_t, line_sz * 6> table_1 {};
+NOT_EXPORTED std::array<Pal8::value_t, line_sz * 6> table_1 {};
 
-void init_tables() {
+NOT_EXPORTED void init_tables() {
   // table_0
   cfor (state, 2) {
     cfor (i, line_sz) {
@@ -99,10 +100,10 @@ void init_tables() {
   } // table_1
 }
 
-inline Pal8 get_from_table_0(const Pal8 src, uint32_t state) {
+NOT_EXPORTED inline Pal8 get_from_table_0(const Pal8 src, uint32_t state) {
   return table_0[src.val + line_sz * (state & 1u)];
 }
 
-inline Pal8 get_from_table_1(const Pal8 src, uint32_t state) {
+NOT_EXPORTED inline Pal8 get_from_table_1(const Pal8 src, uint32_t state) {
   return table_1[src.val + line_sz * (state % 5u)];
 }

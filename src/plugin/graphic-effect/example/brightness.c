@@ -6,11 +6,12 @@
 получившийся .dll/.so файл скиньте в build/plugin/effect/, затем
 найдите его в игре в настройках графики. */
 
-static pal8_t* g_dst; // ссыль на растр от игры
-static uint16_t g_w; // ширина растра
-static uint16_t g_h; // высота растра
-static int32_t g_value; // параметр яркости от эффекта
+NOT_EXPORTED static pal8_t* g_dst; // ссыль на растр от игры
+NOT_EXPORTED static uint16_t g_w; // ширина растра
+NOT_EXPORTED static uint16_t g_h; // высота растра
+NOT_EXPORTED static int32_t g_value; // параметр яркости от эффекта
 
+EXPORTED
 void plugin_init(const struct context_t* context, struct result_t* result) {
   // описание плагина
   result->full_name = "Brightness";
@@ -32,6 +33,7 @@ void plugin_init(const struct context_t* context, struct result_t* result) {
   );
 } // plugin_init
 
+NOT_EXPORTED
 int clamp(int x, int min, int max) {
   if (x < min)
     x = min;
@@ -40,6 +42,7 @@ int clamp(int x, int min, int max) {
   return x;
 }
 
+EXPORTED
 void plugin_apply(const uint32_t state) {
   // пройтись по всем пикселям
   for (size_t i = 0; i < g_w * g_h; ++i) {
@@ -51,6 +54,7 @@ void plugin_apply(const uint32_t state) {
   }
 }
 
+EXPORTED
 void plugin_finalize(void) {
   // сюда можно писать код для освобождения ресурсов выделенных в plugin_init
 }

@@ -6,12 +6,13 @@
 #include "graphic/image/color.hpp"
 #include "graphic/util/convert.hpp"
 
-Pal8* g_dst {}; // ссыль на растр от игры
-uint16_t g_w {}; // ширина растра
-uint16_t g_h {}; // высота растра
-int32_t g_value {}; // параметр яркости от эффекта
+NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
+NOT_EXPORTED uint16_t g_w {}; // ширина растра
+NOT_EXPORTED uint16_t g_h {}; // высота растра
+NOT_EXPORTED int32_t g_value {}; // параметр яркости от эффекта
 
-extern "C" void plugin_init(const struct context_t* context, struct result_t* result) {
+extern "C" EXPORTED void plugin_init(const struct context_t* context,
+struct result_t* result) {
   // описание плагина
   result->full_name = "Brightness";
   result->description = "Add brightness";
@@ -32,7 +33,7 @@ extern "C" void plugin_init(const struct context_t* context, struct result_t* re
   );
 } // plugin_init
 
-extern "C" void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void plugin_apply(uint32_t state) {
   #pragma omp parallel for simd schedule(static, 4)
   cfor (i, g_w * g_h) {
     auto rgb = to_rgb24(g_dst[i]);
@@ -43,4 +44,4 @@ extern "C" void plugin_apply(uint32_t state) {
   }
 }
 
-extern "C" void plugin_finalize(void) {}
+extern "C" EXPORTED void plugin_finalize(void) {}

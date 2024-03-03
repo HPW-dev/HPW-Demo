@@ -1,6 +1,7 @@
 #include <math.h>
 #include "hpw-plugin-effect-util.h"
 
+NOT_EXPORTED
 struct rgb24_t pal8_to_rgb24(const pal8_t src) {
   struct rgb24_t ret;
   if (src == 255u) {
@@ -19,6 +20,7 @@ struct rgb24_t pal8_to_rgb24(const pal8_t src) {
   return ret;
 }
 
+NOT_EXPORTED
 pal8_t rgb24_to_pal8(const struct rgb24_t src) {
   // если R оттенок сильнее G и B, то это красный цвет с палитры
   if (src.r > 10 + ((src.g + src.b) >> 1)) {
@@ -34,6 +36,7 @@ pal8_t rgb24_to_pal8(const struct rgb24_t src) {
   return round(gray * GRAY_MUL);
 }
 
+NOT_EXPORTED
 bool check_params(const struct context_t* context, struct result_t* result) {
   result->error = "";
   result->version = DEFAULT_EFFECT_API_VERSION;

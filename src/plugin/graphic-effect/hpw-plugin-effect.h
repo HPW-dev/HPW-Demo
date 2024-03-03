@@ -11,6 +11,27 @@ extern "C" {
 #include "stdint.h"
 #include "stdbool.h"
 
+// EXPORTED - делает функцию видной из .dll/.so
+// NOT_EXPORTED - скрывает функцию в .dll/.so
+#if defined _WIN32 || defined __CYGWIN__
+  #ifdef __GNUC__
+    #define EXPORTED __attribute__ ((dllexport))
+  #else
+    #define EXPORTED __declspec(dllexport) // Note: actually gcc seems to also supports this syntax.
+  #endif
+  #define NOT_EXPORTED
+#else
+  #if __GNUC__ >= 4
+    #define EXPORTED __attribute__ ((visibility ("default")))
+    #define NOT_EXPORTED  __attribute__ ((visibility ("hidden")))
+  #else
+    #define EXPORTED
+    #define NOT_EXPORTED
+  #endif
+#endif
+
+
+
 #define DEFAULT_EFFECT_API_VERSION 1
 
 typedef uint8_t pal8_t;
@@ -49,9 +70,9 @@ struct result_t {
   bool init_succsess;
 };
 
-void plugin_init(const struct context_t* context, struct result_t* result);
-void plugin_apply(uint32_t state);
-void plugin_finalize(void);
+EXPORTED void plugin_init(const struct context_t* context, struct result_t* result);
+EXPORTED void plugin_apply(uint32_t state);
+EXPORTED void plugin_finalize(void);
 
 #ifdef __cplusplus
 }
