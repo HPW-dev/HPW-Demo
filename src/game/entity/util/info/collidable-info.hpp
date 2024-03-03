@@ -3,7 +3,7 @@
 #include "util/str.hpp"
 
 class Yaml;
-class Entity;
+class Collidable;
 
 /// Инфа о хп и дамаге для загрузчика entity
 struct Collidable_info {
@@ -18,5 +18,5 @@ struct Collidable_info {
   bool ignore_player {};
 
   void load(CN<Yaml> node);
-  void accept(Entity& dst);
+  void accept(Collidable& dst);
 };
