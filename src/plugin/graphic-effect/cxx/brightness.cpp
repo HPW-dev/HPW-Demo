@@ -11,7 +11,7 @@ NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
 NOT_EXPORTED int32_t g_value {}; // параметр яркости от эффекта
 
-extern "C" EXPORTED void plugin_init(const struct context_t* context,
+extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Brightness";
@@ -33,7 +33,7 @@ struct result_t* result) {
   );
 } // plugin_init
 
-extern "C" EXPORTED void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   #pragma omp parallel for simd schedule(static, 4)
   cfor (i, g_w * g_h) {
     auto rgb = to_rgb24(g_dst[i]);
@@ -44,4 +44,4 @@ extern "C" EXPORTED void plugin_apply(uint32_t state) {
   }
 }
 
-extern "C" EXPORTED void plugin_finalize(void) {}
+extern "C" EXPORTED void PLUG_CALL plugin_finalize(void) {}

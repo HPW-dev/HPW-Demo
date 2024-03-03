@@ -30,7 +30,11 @@ extern "C" {
   #endif
 #endif
 
-
+#ifdef __GNUC__
+  #define PLUG_CALL __attribute__((__cdecl__))
+#else
+  #define PLUG_CALL __cdecl
+#endif
 
 #define DEFAULT_EFFECT_API_VERSION 1
 
@@ -70,9 +74,9 @@ struct result_t {
   bool init_succsess;
 };
 
-EXPORTED void plugin_init(const struct context_t* context, struct result_t* result);
-EXPORTED void plugin_apply(uint32_t state);
-EXPORTED void plugin_finalize(void);
+EXPORTED void PLUG_CALL plugin_init(const struct context_t* context, struct result_t* result);
+EXPORTED void PLUG_CALL plugin_apply(uint32_t state);
+EXPORTED void PLUG_CALL plugin_finalize(void);
 
 #ifdef __cplusplus
 }

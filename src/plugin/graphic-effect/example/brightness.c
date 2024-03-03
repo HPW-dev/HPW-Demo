@@ -12,7 +12,7 @@ NOT_EXPORTED static uint16_t g_h; // высота растра
 NOT_EXPORTED static int32_t g_value; // параметр яркости от эффекта
 
 EXPORTED
-void plugin_init(const struct context_t* context, struct result_t* result) {
+void PLUG_CALL plugin_init(const struct context_t* context, struct result_t* result) {
   // описание плагина
   result->full_name = "Brightness";
   result->description = "";
@@ -42,8 +42,7 @@ int clamp(int x, int min, int max) {
   return x;
 }
 
-EXPORTED
-void plugin_apply(const uint32_t state) {
+EXPORTED void PLUG_CALL plugin_apply(const uint32_t state) {
   // пройтись по всем пикселям
   for (size_t i = 0; i < g_w * g_h; ++i) {
     struct rgb24_t rgb = pal8_to_rgb24(g_dst[i]);
@@ -54,7 +53,6 @@ void plugin_apply(const uint32_t state) {
   }
 }
 
-EXPORTED
-void plugin_finalize(void) {
+EXPORTED void PLUG_CALL plugin_finalize(void) {
   // сюда можно писать код для освобождения ресурсов выделенных в plugin_init
 }

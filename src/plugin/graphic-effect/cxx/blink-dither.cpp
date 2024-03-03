@@ -15,7 +15,7 @@ NOT_EXPORTED void init_tables();
 NOT_EXPORTED inline Pal8 get_from_table_0(const Pal8 src, uint32_t state);
 NOT_EXPORTED inline Pal8 get_from_table_1(const Pal8 src, uint32_t state);
 
-extern "C" EXPORTED void plugin_init(const struct context_t* context,
+extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Blink-dithering";
@@ -38,7 +38,7 @@ struct result_t* result) {
   init_tables();
 } // plugin_init
 
-extern "C" EXPORTED void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   if (g_mode == 0) {
     #pragma omp parallel for simd schedule(static, 4)
     cfor (i, g_w * g_h)
@@ -50,7 +50,7 @@ extern "C" EXPORTED void plugin_apply(uint32_t state) {
   }
 }
 
-extern "C" EXPORTED void plugin_finalize(void) {}
+extern "C" EXPORTED void PLUG_CALL plugin_finalize(void) {}
 
 NOT_EXPORTED constexpr const std::size_t line_sz = 256;
 /// black, white, red [black .. blink .. white]

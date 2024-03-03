@@ -12,7 +12,7 @@ NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
 NOT_EXPORTED int32_t g_blend {0}; // режим смешивания (0 - среднее, 1 - макс, 2 - сосед)
 
-extern "C" EXPORTED void plugin_init(const struct context_t* context,
+extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Pixelate";
@@ -35,7 +35,7 @@ struct result_t* result) {
   );
 } // plugin_init
 
-extern "C" EXPORTED void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   switch (g_blend) {
     default:
     case 0: { // average
@@ -94,4 +94,4 @@ extern "C" EXPORTED void plugin_apply(uint32_t state) {
   }
 } // plugin_apply
 
-extern "C" EXPORTED void plugin_finalize(void) {}
+extern "C" EXPORTED void PLUG_CALL plugin_finalize(void) {}

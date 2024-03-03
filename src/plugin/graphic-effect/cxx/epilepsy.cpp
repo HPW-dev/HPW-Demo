@@ -13,7 +13,7 @@ NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
 NOT_EXPORTED int32_t g_mode {}; /// режим смешивания
 
-extern "C" EXPORTED void plugin_init(const struct context_t* context,
+extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   set_rnd_seed( time({}) );
   // описание плагина
@@ -37,7 +37,7 @@ struct result_t* result) {
   );
 } // plugin_init
 
-extern "C" EXPORTED void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   cauto rnd = rndu_fast() % 256u;
 
   switch (g_mode) {
@@ -63,4 +63,4 @@ extern "C" EXPORTED void plugin_apply(uint32_t state) {
   } // switch mode
 } // plugin_apply
 
-extern "C" EXPORTED void plugin_finalize(void) {}
+extern "C" EXPORTED void PLUG_CALL plugin_finalize(void) {}

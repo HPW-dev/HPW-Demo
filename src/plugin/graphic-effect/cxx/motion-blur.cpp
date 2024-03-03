@@ -14,7 +14,7 @@ NOT_EXPORTED uint16_t g_h {}; // высота растра
 NOT_EXPORTED real_t g_motion_blur; /// как сильно надо размывать кадры
 NOT_EXPORTED Image g_old_frame; /// предыдущий кадр
 
-extern "C" EXPORTED void plugin_init(const struct context_t* context,
+extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Motion blur";
@@ -37,7 +37,7 @@ struct result_t* result) {
   g_old_frame.init(g_w, g_h);
 } // plugin_init
 
-extern "C" EXPORTED void plugin_apply(uint32_t state) {
+extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   const real_t dst_ratio = g_motion_blur;
   const real_t old_frame_ratio = 1.0 - g_motion_blur;
   assert(old_frame_ratio > 0.0 && old_frame_ratio < 1.0);
@@ -55,4 +55,4 @@ extern "C" EXPORTED void plugin_apply(uint32_t state) {
   }
 }
 
-extern "C" EXPORTED void plugin_finalize(void) { g_old_frame.free(); }
+extern "C" EXPORTED void PLUG_CALL plugin_finalize(void) { g_old_frame.free(); }
