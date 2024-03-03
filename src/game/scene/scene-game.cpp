@@ -91,7 +91,6 @@ Scene_game::Scene_game(): death_timer {4} {
 }
 
 Scene_game::~Scene_game() {
-  hpw::entity_mgr = {};
   if (graphic::get_fast_forward())
     graphic::set_fast_forward(false);
 }
