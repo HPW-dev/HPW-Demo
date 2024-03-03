@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <unordered_map>
 #include <utility>
 #include <cmath>
@@ -26,6 +27,7 @@ void cache_light_spheres() {
   static_assert(count > 0);
   static_assert(count < 500);
 
+  #pragma omp parallel for schedule(dynamic)
   cfor (i, count) {
     cauto R = (i + 1) * cache_spheres_steps;
     // нарисовать сферический градиент на чёрной картинке
@@ -39,7 +41,8 @@ void cache_light_spheres() {
       sphere(x, y) = Pal8::from_real(ratio);
     }
     Light::make_lines(sphere);
-    cached_spheres[i] = std::move(sphere);
+    #pragma omp critical (write_to_cached_spheres)
+    { cached_spheres[i] = std::move(sphere); }
   }
 }
 
