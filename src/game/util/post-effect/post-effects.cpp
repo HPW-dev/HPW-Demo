@@ -6,12 +6,12 @@
 #include "graphic/image/image.hpp"
 
 struct Effect_mgr::Impl {
-  std::list<Unique<Effect>> effects {}; /// эффекты постобработки
+  std::list<Shared<Effect>> effects {}; /// эффекты постобработки
 
-  inline void move_to_front(Unique<Effect>&& effect)
+  inline void move_to_front(Shared<Effect>&& effect)
     { effects.emplace_front(std::move(effect)); }
 
-  inline void move_to_back(Unique<Effect>&& effect)
+  inline void move_to_back(Shared<Effect>&& effect)
     { effects.emplace_back(std::move(effect)); }
 
   inline void update(double dt) {
@@ -29,7 +29,7 @@ struct Effect_mgr::Impl {
 
 Effect_mgr::Effect_mgr(): impl {new_unique<Impl>()} {}
 Effect_mgr::~Effect_mgr() {}
-void Effect_mgr::move_to_front(Unique<Effect>&& effect) { impl->move_to_front(std::move(effect)); }
-void Effect_mgr::move_to_back(Unique<Effect>&& effect) { impl->move_to_back(std::move(effect)); }
+void Effect_mgr::move_to_front(Shared<Effect>&& effect) { impl->move_to_front(std::move(effect)); }
+void Effect_mgr::move_to_back(Shared<Effect>&& effect) { impl->move_to_back(std::move(effect)); }
 void Effect_mgr::update(double dt) { impl->update(dt); }
 void Effect_mgr::draw(Image& dst) const { impl->draw(dst); }

@@ -2,6 +2,7 @@
 build/plugin
 ignore me.lnk
 imgui.ini
+memleaks.txt
 run.py
 a.txt
 b.txt

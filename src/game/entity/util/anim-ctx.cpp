@@ -15,17 +15,10 @@
 #include "util/math/vec-util.hpp"
 #include "util/log.hpp"
 
-Anim_ctx::Anim_ctx()
-: draw_pos {new_shared<Vec>()}
-, old_draw_pos {new_shared<Vec>()}
-, old_interpolated_pos {new_shared<Vec>()}
-{}
+Anim_ctx::Anim_ctx() {}
 
 Anim_ctx::Anim_ctx(CN<decltype(anim)> new_anim)
 : anim {new_anim}
-, draw_pos {new_shared<Vec>()}
-, old_draw_pos {new_shared<Vec>()}
-, old_interpolated_pos {new_shared<Vec>()}
 { assert(anim); }
 
 void Anim_ctx::update(double dt, Entity &entity) {
@@ -110,46 +103,46 @@ void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
   return_if(direct->sprite.expired());
 
   // вычислить корды вставки анимации
-  *draw_pos = entity.phys.get_pos();
-  Vec contour_pos = *draw_pos;
+  draw_pos = entity.phys.get_pos();
+  Vec contour_pos = draw_pos;
 
   /* если old_draw_pos нулевой, то с высокой вероятностью отрисовка
   происходит в первый раз, поэтому нужно задать хоть какое-то значение,
   иначе вся анимация размажется по экрану */
-  if (!*old_draw_pos)
-    *old_draw_pos = *draw_pos;
+  if (!old_draw_pos)
+    old_draw_pos = draw_pos;
 
   if (entity.status.no_motion_interp) { // рендер без интерполяции
-    insert(dst, *direct->sprite.lock(), *draw_pos + direct->offset + offset, blend_f, entity.uid);
-    m_draw_pos = *draw_pos;
+    insert(dst, *direct->sprite.lock(), draw_pos + direct->offset + offset, blend_f, entity.uid);
+    m_draw_pos = draw_pos;
   } else { 
     auto interpolated_pos = get_interpolated_pos();
     contour_pos = interpolated_pos;
     // то же, что и с old_draw_pos (см.выше)
-    if (!*old_interpolated_pos)
-      *old_interpolated_pos = interpolated_pos;
+    if (!old_interpolated_pos)
+      old_interpolated_pos = interpolated_pos;
 
     if (graphic::enable_motion_blur) { // рендер с размытием
       insert_blured( dst, *direct->sprite.lock(),
-        *old_interpolated_pos + direct->offset + offset,
+        old_interpolated_pos + direct->offset + offset,
         interpolated_pos + direct->offset + offset, blend_f, entity.uid );
     } else { // обычный рендер
       insert(dst, *direct->sprite.lock(), interpolated_pos + direct->offset + offset, blend_f, entity.uid);
     }
     
     m_draw_pos = interpolated_pos;
-    *old_interpolated_pos = interpolated_pos;
+    old_interpolated_pos = interpolated_pos;
   } // else motion interp
 
-  *old_draw_pos = *draw_pos;
+  old_draw_pos = draw_pos;
   if (!entity.status.disable_contour)
     draw_contour(dst, contour_pos + offset, degree);
 } // draw
 
 Vec Anim_ctx::get_interpolated_pos() const {
   return Vec (
-    std::lerp<double>(old_draw_pos->x, draw_pos->x, graphic::lerp_alpha),
-    std::lerp<double>(old_draw_pos->y, draw_pos->y, graphic::lerp_alpha)
+    std::lerp<double>(old_draw_pos.x, draw_pos.x, graphic::lerp_alpha),
+    std::lerp<double>(old_draw_pos.y, draw_pos.y, graphic::lerp_alpha)
   );
 }
 

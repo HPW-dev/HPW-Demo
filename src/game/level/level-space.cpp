@@ -61,7 +61,7 @@ struct Level_space::Impl {
     // надпись о низкой гравитации
     // TODO locale
     graphic::post_effects->move_to_back (
-      new_unique<Blink_text>(6, U"слабая гравитация") );
+      new_shared<Blink_text>(6, U"слабая гравитация") );
   }
 
   inline void update(const Vec vel, double dt) {
@@ -135,7 +135,7 @@ struct Level_space::Impl {
     ); // 
 
     tasks = {
-      /*
+      
       // при старте, фон не стирается некоторое время
       Bg_blink(fill_bg_black, 6.0),
       
@@ -158,15 +158,15 @@ struct Level_space::Impl {
         m_galaxy_1.pos = -Vec(100, 300);
         return true; 
       },
-      */
+      
 
-      Spwan_and_wait_for_death( []{
+      /*Spwan_and_wait_for_death( []{
         return Spwan_and_wait_for_death::Death_list {
           hpw::entity_mgr->make({}, "enemy.illaen", get_screen_center())
         };
-      }, 5),
+      }, 5),*/
       
-      /*
+      
       // ждуны
       waiter_maker,
       waiter_maker,
@@ -325,10 +325,10 @@ struct Level_space::Impl {
       // TODO табличка что уровень закончился
       [this](double dt)->bool {
         graphic::post_effects->move_to_back (
-          new_unique<Blink_text>(10, U"дальше уровень недоделан, ничего не будет") );
+          new_shared<Blink_text>(10, U"дальше уровень недоделан, ничего не будет") );
         return true;
       },
-      */
+      
     }; // tasks
   } // init_tasks
 

@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <unordered_map>
 #include <utility>
 #include <algorithm>
@@ -93,6 +94,7 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
   };
 
   auto dst = Image(src.X / 3, src.Y / 3);
+  #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
     auto colors = cgp_table.at(cgp) (src, x * 3, y * 3);

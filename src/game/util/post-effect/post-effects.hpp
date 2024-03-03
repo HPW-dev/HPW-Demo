@@ -21,8 +21,8 @@ public:
 
   Effect_mgr();
   ~Effect_mgr();
-  void move_to_front(Unique<Effect>&& effect); // вставить эффект первым
-  void move_to_back(Unique<Effect>&& effect); // вставить эффект последним
+  void move_to_front(Shared<Effect>&& effect); // вставить эффект первым
+  void move_to_back(Shared<Effect>&& effect); // вставить эффект последним
   void update(double dt);
   void draw(Image& dst) const;
 };

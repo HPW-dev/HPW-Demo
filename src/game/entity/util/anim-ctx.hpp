@@ -19,9 +19,9 @@ class Anim_ctx final {
   real fixed_deg {}; /// поворот по умолчанию, для флага fixed_deg
   std::size_t frame_idx {}; /// текущий кадр в анимации
   std::size_t prev_frame_idx {}; /// предыдущий кадр
-  mutable Shared<Vec> draw_pos {}; /// место, где сейчас нарисовался объект
-  mutable Shared<Vec> old_draw_pos {}; /// место, где был нарисован объект
-  mutable Shared<Vec> old_interpolated_pos {}; /// место, где был нарисован объект с интерполяцией
+  mutable Vec draw_pos {}; /// место, где сейчас нарисовался объект
+  mutable Vec old_draw_pos {}; /// место, где был нарисован объект
+  mutable Vec old_interpolated_pos {}; /// место, где был нарисован объект с интерполяцией
   mutable Vec m_draw_pos {}; /// здесь объект был нарисован
 
   /// получение угла поворота с учётом флагов
