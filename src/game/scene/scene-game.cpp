@@ -93,6 +93,11 @@ Scene_game::Scene_game(): death_timer {4} {
 Scene_game::~Scene_game() {
   if (graphic::get_fast_forward())
     graphic::set_fast_forward(false);
+  graphic::post_effects = {};
+  hpw::entity_mgr = {};
+  graphic::camera = {};
+  hpw::hitbox_layer = {};
+  hpw::level_mgr = {};
 }
 
 void Scene_game::update(double dt) {

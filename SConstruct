@@ -3,10 +3,10 @@ import platform
 import sys
 
 sanitize = [
-  "-fsanitize=leak", "-fsanitize=address",
-  "-fsanitize=undefined", "-fsanitize=float-divide-by-zero", "-fsanitize=float-cast-overflow", "-fno-sanitize=null", "-fno-sanitize=alignment",
+  #"-fsanitize=leak", "-fsanitize=address",
+  #"-fsanitize=undefined", "-fsanitize=float-divide-by-zero", "-fsanitize=float-cast-overflow", "-fno-sanitize=null", "-fno-sanitize=alignment",
   #"-fsanitize=thread",
-  "-fno-omit-frame-pointer",
+  #"-fno-omit-frame-pointer",
   
   #"-pg", "-no-pie",
 ]
