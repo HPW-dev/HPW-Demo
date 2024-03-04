@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <cassert>
 #include <utility>
 #include "tilemap.hpp"
@@ -70,6 +71,7 @@ struct Tilemap::Impl {
   inline void draw(const Vec pos, Image& dst, blend_pf bf=&blend_past, int optional=0) const {
     assert(!m_tiles.empty());
 
+    #pragma omp parallel for schedule(dynamic)
     for (cnauto tile: m_tiles) {
       iferror(tile.sprite.expired(), "tile.sprite bad ptr");
       // TODO не рисовать за экраном
