@@ -50,6 +50,7 @@ Game_app::Game_app(int argc, char *argv[])
 
 Game_app::~Game_app() {
   disable_pge();
+  hpw::scene_mgr = {};
 }
 
 void Game_app::update(double dt) {

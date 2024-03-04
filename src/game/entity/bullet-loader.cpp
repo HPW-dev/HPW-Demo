@@ -1,3 +1,4 @@
+#include <cassert>
 #include "bullet-loader.hpp"
 #include "util/file/yaml.hpp"
 #include "game/core/entities.hpp"
@@ -17,6 +18,7 @@ struct Bullet_loader::Impl {
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
     auto it = hpw::entity_mgr->allocate<Collidable>();
+    assert(it);
     Entity_loader::prepare(*it, master, pos);
     m_collidable_info.accept(*it);
     m_anim_info.accept(*it);

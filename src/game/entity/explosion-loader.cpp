@@ -69,7 +69,7 @@ struct Explosion_loader::Impl {
       // разлёт в случайную сторону, но с сохранением начального направления
       Vec motion = rand_normalized_stable() * rndr(0, pps(m_particles_range));
       it->phys.set_vel(it->phys.get_vel() + motion);
-      it->heat_distort = new_shared<Heat_distort>(std::move(m_heat_distort));
+      it->heat_distort = new_shared<Heat_distort>(m_heat_distort);
       // TODO создание вспышки
     } // for m_particle_count
     

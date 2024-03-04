@@ -29,6 +29,8 @@ public:
   };
   mutable Status status {};
 
+  Scene_mgr() = default;
+  ~Scene_mgr() = default;
   /// @return false если сцены кончились
   bool update(double dt);
   void draw(Image& dst) const;

@@ -66,6 +66,7 @@ template <class T> inline T* Entity_mgr::allocate() {
   // поиск объекта в такого же типа, но мёртвого
   if (auto it = find_avaliable_entity(ENTITY_TYPE(T)); it) {
     auto ret = ptr2ptr<T*>(it);
+    ret->~T(); // вызвать декструктор для корректной работы
     new (ret) T(); // воскресить объект
     return ret;
   }

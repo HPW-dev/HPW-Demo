@@ -16,8 +16,7 @@ void Collidable_info::load(CN<Yaml> node) {
   ignore_player = node.get_bool("ignore_player");
 }
 
-void Collidable_info::accept(Entity& dst_) {
-  nauto dst = *to_collidable(dst_); // каст в Collidable
+void Collidable_info::accept(Collidable& dst) {
   dst.set_dmg(dmg);
   dst.set_hp(hp);
   dst.set_explosion_name(exolosion_name);
