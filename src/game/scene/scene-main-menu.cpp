@@ -217,6 +217,8 @@ void Scene_main_menu::init_bg() {
     &bg_pattern_1,
     &bg_pattern_2,
     &bg_pattern_4,
+    &bg_pattern_8,
+    &bg_pattern_9,
     #ifndef ECOMEM
     &bg_copy_1,
     &bg_copy_2,
@@ -224,6 +226,7 @@ void Scene_main_menu::init_bg() {
     &bg_copy_4,
     &bg_pattern_5,
     &bg_pattern_6,
+    &bg_pattern_7,
     #endif
   };
   bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );

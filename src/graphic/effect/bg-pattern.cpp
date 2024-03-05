@@ -3,9 +3,14 @@
 #include <algorithm>
 #include "bg-pattern.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/util/graphic-util.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/sprite/sprite.hpp"
 #include "util/math/random.hpp"
+#include "util/math/mat.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"
+#include "game/util/game-util.hpp"
 
 /// симуляция волн
 class Waves final {
@@ -226,3 +231,83 @@ void bg_pattern_6(Image& dst, const int bg_state) {
   waves.update();
   waves.draw(dst);
 } // bg_pattern_6
+
+inline void bg_pattern_7_line(const Vec center, const real deg,
+const Pal8 color, Sprite& dst) {
+  Vec a (center.x, center.y - 700);
+  Vec b (center.x, center.y + 700);
+  a = rotate_deg(center, a, deg);
+  b = rotate_deg(center, b, deg);
+  Vec offset(1, 0); // будет делать линию жирнее
+  offset = rotate_deg({}, offset, deg);
+  // нарисовать толстую линию
+  constexpr int line_bold = 20; // ширина линии
+  for (int i = -line_bold; i < line_bold; i += 3) {
+    draw_line(*dst.get_image(), a + (offset * i), b + (offset * i), color);
+    draw_line(*dst.get_mask(), a + (offset * i), b + (offset * i), Pal8::mask_visible);
+  }
+}
+
+void bg_pattern_7(Image& dst, const int bg_state) {
+  // красный фон
+  cauto bg_color = Pal8::from_real(0.25 + std::fmod(bg_state * 0.003, 0.75), true);
+  dst.fill(bg_color);
+
+  // нарисовать несколько отрезков в буффере
+  Sprite lines(dst.X, dst.Y);
+  lines.get_image()->fill(Pal8::black);
+  lines.get_mask()->fill(Pal8::mask_invisible);
+  constexpr uint max_lines = 5;
+  #pragma omp parallel for
+  cfor (line_id, max_lines) {
+    cauto center = Vec(
+      (bg_state + line_id * 516262) % dst.X,
+      (bg_state + line_id * 15125126) % dst.Y
+    );
+    const real deg = ring_deg(bg_state + line_id * 35325326);
+    cauto color (Pal8::from_real(0.5 + std::fmod((((bg_state * 0.2) + (line_id * 1.65))), 0.5)));
+    bg_pattern_7_line(center, deg, color, lines);
+  }
+
+  // вставить отрезки с буффера со скроллингом и тенью
+  auto& mask = *lines.get_mask();
+  cauto mask_bak = Image(mask);
+  cauto shadow_len = 8;
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    if (cauto pixel = mask_bak(x, y); pixel == Pal8::mask_visible)
+      cfor (shadow, shadow_len)
+        mask.set(x + shadow, y, Pal8::mask_visible, {});
+  }
+
+  insert(dst, lines);
+} // bg_pattern_7
+
+void bg_pattern_8(Image& dst, const int bg_state) {
+  cauto bg_color = Pal8::from_real(0.25, true);
+  dst.fill(bg_color);
+
+  cauto max_lines = 200;
+  #pragma omp parallel for
+  cfor (i, max_lines) {
+    const Vec a((bg_state + i * 12421515) % dst.X, 0);
+    const Vec b((bg_state + i * 23346632) % dst.X, dst.Y);
+    draw_line(dst, a, b, Pal8::white);
+  }
+} // bg_pattern_8
+
+void bg_pattern_9(Image& dst, const int bg_state) {
+  cauto bg_color = Pal8::from_real(0.25, true);
+  dst.fill(bg_color);
+
+  cauto max_lines = 4;
+  cfor (i, max_lines) {
+    const Vec a((bg_state + i * 5519204) % dst.X, 0);
+    const Vec b((bg_state * 2 + i * 1492945) % dst.X, dst.Y);
+    const Vec a1(0, (bg_state * 3 + i * 21441335) % dst.Y);
+    const Vec b1(dst.X, (bg_state * 4 + i * 412499) % dst.Y);
+    draw_line(dst, a, b, Pal8::white);
+    draw_line(dst, a1, b1, Pal8::white);
+  }
+} // bg_pattern_9
