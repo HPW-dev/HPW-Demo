@@ -120,14 +120,7 @@ void Scene_main_menu::draw_logo(Image& dst) const {
 void Scene_main_menu::draw(Image& dst) const {
   draw_bg(dst);
   draw_logo(dst);
-  menu->draw(dst);
-
-  // показать версию игры  
-  auto game_ver = sconv<utf32>( get_game_version() );
-  if (game_ver.empty())
-    game_ver = get_locale_str("common.unknown");
-  graphic::font->draw(dst, {140, 300}, get_locale_str("common.game_version") +
-    U": " + game_ver);
+  draw_text(dst);
 }
 
 void Scene_main_menu::init_menu() {
@@ -230,4 +223,29 @@ void Scene_main_menu::init_bg() {
     #endif
   };
   bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );
+}
+
+void Scene_main_menu::draw_text(Image& dst) const {
+  static Image text_layer(dst.X, dst.Y);
+  assert(text_layer.size == dst.size);
+  text_layer.fill(Pal8::black);
+  menu->draw(text_layer);
+
+  // показать версию игры  
+  auto game_ver = sconv<utf32>( get_game_version() );
+  if (game_ver.empty())
+    game_ver = get_locale_str("common.unknown");
+  graphic::font->draw(text_layer, {140, 300}, get_locale_str("common.game_version") +
+    U": " + game_ver);
+
+  // нарисовать тень от текста
+  static Image shadow_layer(text_layer);
+  assert(shadow_layer.size == dst.size);
+  insert_fast(shadow_layer, text_layer);
+  apply_invert(shadow_layer);
+  expand_color_4(shadow_layer, Pal8::black);
+  insert<&blend_min>(dst, shadow_layer);
+
+  // нарисовать текст
+  insert<&blend_max>(dst, text_layer);
 }
