@@ -2,7 +2,7 @@
 ///@file управление движком, контроль dt
 
 namespace hpw {
-inline int target_ups = 144; /// updates per sec.
+inline int target_ups = 240; /// updates per sec.
 inline std::size_t cur_upf {}; /// апдейтов за кадр
 inline double target_update_time = 1.0 / target_ups;
 inline double cur_ups {}; /// апдейты в секунду

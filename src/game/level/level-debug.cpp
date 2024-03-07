@@ -32,7 +32,8 @@ Level_debug::Level_debug() {
 
   // сделать рандомные объекты
   //cfor (_, 7'000) {
-  cfor (_, 2'000) {
+  //cfor (_, 2'000) {
+  cfor (_, 1'000) {
   //cfor (_, 100) {
     auto entity = hpw::entity_mgr->allocate<Collidable>();
 
