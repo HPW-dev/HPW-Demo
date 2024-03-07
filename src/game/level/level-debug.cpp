@@ -32,7 +32,7 @@ Level_debug::Level_debug() {
 
   // сделать рандомные объекты
   //cfor (_, 7'000) {
-  cfor (_, 1'000) {
+  cfor (_, 2'000) {
   //cfor (_, 100) {
     auto entity = hpw::entity_mgr->allocate<Collidable>();
 
@@ -46,6 +46,8 @@ Level_debug::Level_debug() {
     entity->anim_ctx.set_speed_scale(rndr());
     entity->anim_ctx.randomize_cur_frame_safe();
     entity->move_update_callback( &bounce_off_screen );
+    entity->set_hp(100);
+    entity->set_dmg(0);
 
     #if 1
       // двигаться
@@ -67,8 +69,6 @@ void Level_debug::draw(Image& dst) const {
   #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    // черезстрочка для ускорения рендера
-    cont_if ((y & 1) ^ (graphic::frame_count & 1));
     Pal8 col(x & y);
     col = blend_add(col, brightness);
     col = blend_sub_safe(127, col);

@@ -161,23 +161,11 @@ struct Level_space::Impl {
         return true; 
       },
 
-      // охотник сверху
-      Spwan_and_wait_for_death( []{
-        Spwan_and_wait_for_death::Death_list list;
-        cfor (_, 100)
-          list.push_back(
-            hpw::entity_mgr->make({}, "enemy.cosmic.hunter", Vec(graphic::width / 2.0, -30))
-          );
-        return list;
-      }, 20),
-      
-
       /*Spwan_and_wait_for_death( []{
         return Spwan_and_wait_for_death::Death_list {
           hpw::entity_mgr->make({}, "enemy.illaen", get_screen_center())
         };
       }, 5),*/
-      
       
       // ждуны
       waiter_maker,
