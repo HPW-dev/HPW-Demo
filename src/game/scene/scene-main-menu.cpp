@@ -78,7 +78,6 @@ void Scene_main_menu::draw_bg(Image& dst) const {
     adaptive_blur(for_blur, 5);
   #endif
 
-  //apply_invert(for_blur);
   // мягкий контраст
   apply_contrast(for_blur, 0.5);
   // затенение

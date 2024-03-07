@@ -82,7 +82,9 @@ struct Level_space::Impl {
   inline void make_player() {
     auto player_pos_from_prev_level = hpw::level_mgr->get_player_pos_from_prev_level();
 
-    auto pos = player_pos_from_prev_level ? player_pos_from_prev_level : get_screen_center();
+    auto pos = player_pos_from_prev_level
+      ? player_pos_from_prev_level
+      : get_screen_center();
     hpw::entity_mgr->make({}, "player.boo.dark", pos);
     // на этом уорвне у игрока гравитация снижена
     auto player = hpw::entity_mgr->get_player();
@@ -158,6 +160,16 @@ struct Level_space::Impl {
         m_galaxy_1.pos = -Vec(100, 300);
         return true; 
       },
+
+      // охотник сверху
+      Spwan_and_wait_for_death( []{
+        Spwan_and_wait_for_death::Death_list list;
+        cfor (_, 100)
+          list.push_back(
+            hpw::entity_mgr->make({}, "enemy.cosmic.hunter", Vec(graphic::width / 2.0, -30))
+          );
+        return list;
+      }, 20),
       
 
       /*Spwan_and_wait_for_death( []{

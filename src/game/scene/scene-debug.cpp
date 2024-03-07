@@ -1,16 +1,19 @@
 #include <ctime>
 #include "scene-debug.hpp"
 #include "scene-manager.hpp"
+#include "game/core/entities.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
+#include "game/core/scenes.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
-#include "game/core/scenes.hpp"
 #include "game/util/game-util.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/int-item.hpp"
+#include "game/entity/player.hpp"
+#include "game/entity/entity-manager.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
@@ -45,6 +48,21 @@ void Scene_debug::init_menu() {
       new_shared<Menu_bool_item>(U"Entity mem",
         [] { return hpw::show_entity_mem_map; },
         [] (bool new_val) { hpw::show_entity_mem_map = new_val; }
+      ),
+      new_shared<Menu_bool_item>(U"ignore enemy",
+        [] {
+          cauto player = hpw::entity_mgr->get_player();
+          if (player)
+            return player->status.ignore_enemy;
+          return false;
+        },
+        [] (bool new_val) {
+          cauto player = hpw::entity_mgr->get_player();
+          if (player) {
+            player->status.ignore_enemy = new_val;
+            player->status.ignore_bullet = new_val;
+          }
+        }
       ),
       new_shared<Menu_bool_item>(U"Step mode",
         [] { return graphic::step_mode; },
