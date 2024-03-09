@@ -17,3 +17,7 @@ void bg_pattern_7(Image& dst, const int bg_state);
 void bg_pattern_8(Image& dst, const int bg_state);
 /// рандомные полосы (меньше)
 void bg_pattern_9(Image& dst, const int bg_state);
+/// узор из меандров на чёрном фоне
+void bg_pattern_10(Image& dst, const int bg_state);
+/// случайный узор из углов на чёрном фоне
+void bg_pattern_11(Image& dst, const int bg_state);

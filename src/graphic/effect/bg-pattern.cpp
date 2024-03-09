@@ -1,10 +1,12 @@
 #include <omp.h>
+#include <array>
 #include <cassert>
 #include <algorithm>
 #include "bg-pattern.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "graphic/util/rotation.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
@@ -311,3 +313,101 @@ void bg_pattern_9(Image& dst, const int bg_state) {
     draw_line(dst, a1, b1, Pal8::white);
   }
 } // bg_pattern_9
+
+void bg_pattern_10(Image& dst, const int bg_state) {
+  cauto state = bg_state >> 2;
+
+  // узоры
+  constexpr auto block_sz = 11u;
+  Vector<Image> blocks;
+  { // block gen
+    Image block(block_sz, block_sz);
+    // горизонтальная прямая
+    block.fill(Pal8::black);
+    cfor (x, block_sz)
+      block(x, block.Y / 2) = Pal8::white;
+    blocks.push_back(block);
+    // вернтикальная прямая
+    blocks.push_back( rotate90(block) );
+    // крест
+    block.fill(Pal8::black);
+    cfor (i, block_sz) {
+      block(i, block.Y / 2) = Pal8::white;
+      block(block.X / 2, i) = Pal8::white;
+    }
+    blocks.push_back(block);
+    // угол L
+    block.fill(Pal8::black);
+    cfor (i, block_sz / 2 + 1) {
+      block(i, block.Y / 2) = Pal8::white;
+      block(block.X / 2, i) = Pal8::white;
+    }
+    blocks.push_back(block);
+    // повороты углов
+    blocks.push_back( rotate90(block, 1) );
+    blocks.push_back( rotate90(block, 2) );
+    blocks.push_back( rotate90(block, 3) );
+  } // block gen
+
+  // генерация узора
+  constexpr auto map_x = 64u;
+  constexpr auto map_y = 56u;
+  std::array<std::size_t, map_x * map_y> map;
+  for (uint i = 0; nauto elem: map) {
+    elem = ((i ^ (i % block_sz)) * state) % blocks.size();
+    ++i;
+  }
+  
+  // отрисовка
+  #pragma omp parallel for schedule(static, 4)
+  cfor (y, map_y)
+  cfor (x, map_x) {
+    cauto id = map[y * map_x + x];
+    cauto pos = Vec(x * block_sz, y * block_sz);
+    insert(dst, blocks[id], pos);
+  }
+} // bg_pattern_10
+
+void bg_pattern_11(Image& dst, const int bg_state) {
+  // узоры
+  constexpr auto block_sz = 11u;
+  static Vector<Image> blocks;
+  static bool firt_init = true;
+  if (firt_init) { // block gen
+    Image block(block_sz, block_sz);
+    // угол L
+    block.fill(Pal8::black);
+    cfor (i, block_sz / 2 + 1) {
+      block(i, block.Y / 2) = Pal8::white;
+      block(block.X / 2, i) = Pal8::white;
+    }
+    blocks.push_back(block);
+    // повороты углов
+    blocks.push_back( rotate90(block, 1) );
+    blocks.push_back( rotate90(block, 2) );
+    blocks.push_back( rotate90(block, 3) );
+  } // block gen
+
+  // генерация узора
+  constexpr auto map_x = 64u;
+  constexpr auto map_y = 56u;
+  static std::array<std::size_t, map_x * map_y> map;
+  if (firt_init)
+    for (uint i = 0; nauto elem: map)
+      elem = ((++i) % block_sz) % blocks.size();
+  
+  // случайно поменять несколько блоков узора
+  cfor (_, 50)
+    map[rndu(map.size() - 1)] = rndu(blocks.size() - 1);
+
+  // отрисовка
+  #pragma omp parallel for schedule(static, 4)
+  cfor (y, map_y)
+  cfor (x, map_x) {
+    cauto id = map[y * map_x + x];
+    cauto pos = Vec(x * block_sz, y * block_sz);
+    insert(dst, blocks[id], pos);
+  }
+
+  firt_init = false;
+} // bg_pattern_11
