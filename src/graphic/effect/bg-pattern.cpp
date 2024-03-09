@@ -315,7 +315,7 @@ void bg_pattern_9(Image& dst, const int bg_state) {
 } // bg_pattern_9
 
 void bg_pattern_10(Image& dst, const int bg_state) {
-  cauto state = bg_state >> 2;
+  cauto state = bg_state / 95; // замедляет анимацию
 
   // узоры
   constexpr auto block_sz = 11u;
@@ -354,7 +354,7 @@ void bg_pattern_10(Image& dst, const int bg_state) {
   constexpr auto map_y = 56u;
   std::array<std::size_t, map_x * map_y> map;
   for (uint i = 0; nauto elem: map) {
-    elem = ((i ^ (i % block_sz)) * state) % blocks.size();
+    elem = (i ^ ((i % block_sz) * state)) % blocks.size();
     ++i;
   }
   
