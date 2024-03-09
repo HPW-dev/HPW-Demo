@@ -20,7 +20,7 @@ public:
   Menu() = default;
   explicit Menu(CN<Menu_items> items);
   virtual ~Menu() = default;
-  virtual void draw(Image& dst) const;
+  virtual void draw(Image& dst) const = 0;
   virtual void update(double dt);
   std::size_t get_cur_item_id() const;
   CN<decltype(m_items)::value_type> get_cur_item() const;

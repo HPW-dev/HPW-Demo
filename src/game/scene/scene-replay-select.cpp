@@ -1,19 +1,15 @@
 #include "scene-replay-select.hpp"
 #include "scene-manager.hpp"
 #include "scene-loading.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "game/core/common.hpp"
-#include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/replays.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/game-util.hpp"
-#include "game/menu/text-menu.hpp"
-#include "game/menu/item/text-item.hpp"
-#include "game/menu/item/bool-item.hpp"
+#include "game/menu/table-menu.hpp"
+#include "game/menu/item/table-row-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/path.hpp"
 
@@ -34,15 +30,11 @@ struct Scene_replay_select::Impl {
   }
 
   inline void draw(Image& dst) const {
-    dst.fill(Pal8::black);
     menu->draw(dst);
-    // TODO locale
-    graphic::font->draw(dst, {30, 40}, U"Выбор реплея", &blend_max);
-    draw_selected_replay(dst);
   }
 
   inline void init_menu() {
-    menu = new_unique<Text_menu>(
+    /*menu = new_unique<Text_menu>(
       Menu_items {
 
         new_shared<Menu_text_item>( get_locale_str("scene.replay.play"), [this]{
@@ -66,13 +58,39 @@ struct Scene_replay_select::Impl {
       }, // Menu_items
 
       Vec{60, 80}
+    );*/
+
+    menu = new_unique<Table_menu>(
+      get_locale_str("scene.replay.title"),
+      Strs { // TODO locale
+        "player",
+        "date",
+        "mode",
+        "levels",
+        "score",
+      },
+      generate_rows()
     );
   } // init_menu
 
-  inline void draw_selected_replay(Image& dst) const {
-    utf32 txt = U"выбран файл реплея: " + sconv<utf32>(get_filename( get_replay_name() ));
-    graphic::font->draw(dst, Vec(15, 150), txt);
-  }
+  inline Menu_items generate_rows() const {
+    Menu_items ret;
+
+    // TODO через std::bind передай какие файлы запускаются в action
+
+    // TODO del:
+    auto item = new_shared<Menu_item_table_row>(
+      []{ hpw_log("it work! (TODO)\n"); },
+      Menu_item_table_row::Content_getters {
+        []->utf32 { return U"test 1"; },
+        []->utf32 { return U"test 2"; },
+        []->utf32 { return U"test 3"; }
+      }
+    );
+    ret.push_back(item);
+
+    return ret;
+  } // generate_rows
 
   inline void next_replay_file() {
     return_if(m_replay_names.empty());

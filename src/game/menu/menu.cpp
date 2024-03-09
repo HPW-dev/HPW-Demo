@@ -38,8 +38,6 @@ void Menu::next_item() {
     m_cur_item = 0;
 }
 
-void Menu::draw(Image& dst) const {}
-
 std::size_t Menu::get_cur_item_id() const { return m_cur_item; }
 CN<decltype(Menu::m_items)::value_type> Menu::get_cur_item() const { return m_items.at(m_cur_item); }
 CN<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }

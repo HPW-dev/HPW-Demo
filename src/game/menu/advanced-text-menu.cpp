@@ -38,8 +38,10 @@ struct Advanced_text_menu::Impl {
       m_rect.size - Vec(0, 30 + m_rect.size.y * ITEMS_DESC_RATIO));
     assert(m_items_rect.size.y >= 11);
     
-    m_desc_rect = Rect( Vec(m_rect.pos.x, m_items_rect.pos.y + m_items_rect.size.y - 1),
-      Vec(m_rect.size.x, m_rect.size.y - m_items_rect.size.y - 24) );
+    m_desc_rect = Rect (
+      Vec(m_rect.pos.x, m_items_rect.pos.y + m_items_rect.size.y - 1),
+      Vec(m_rect.size.x, m_rect.size.y - m_items_rect.size.y - 24)
+    );
     assert(m_desc_rect.size.y >= 11);
   } // Impl c-tor
 
@@ -80,18 +82,21 @@ struct Advanced_text_menu::Impl {
         str += U" <";
 
       cauto text_offset_h = i * (graphic::font->text_height(str) + 2);
-      graphic::font->draw(items_rect, Vec(14, 11 + text_offset_h - m_items_h_offset), str);
+      graphic::font->draw(items_rect,
+        Vec(14, 11 + text_offset_h - m_items_h_offset), str);
     }
 
     cauto crop_rect = Rect(Vec(1, 1), m_items_rect.size - Vec(2, 2));
-    draw_rect(items_rect, crop_rect, Pal8::black); // обрезать символы возле рамки
+    // обрезать символы возле рамки
+    draw_rect(items_rect, crop_rect, Pal8::black);
     insert<&blend_max>(dst, items_rect, m_items_rect.pos);
   }
 
   inline void draw_decription(Image& dst) const {
     auto item = m_base->get_cur_item();
     assert(item);
-    graphic::font->draw(dst, m_desc_rect.pos + Vec(9, 11), item->get_description());
+    graphic::font->draw(dst, m_desc_rect.pos + Vec(9, 11),
+      item->get_description());
   }
   
   // скроллинг по тексту пунктов
@@ -103,7 +108,8 @@ struct Advanced_text_menu::Impl {
 
     const real pos_h = item_h * m_base->get_cur_item_id();
     // двигать камеру, когда курсор ниже середины меню
-    const real ret = std::lerp(m_items_h_offset, pos_h - menu_h / 2.0, dt * SCROLL_SPEED);
+    const real ret = std::lerp(m_items_h_offset, pos_h - menu_h / 2.0,
+      dt * SCROLL_SPEED);
     cauto crop_h = items_h - menu_h + item_h;
     assert(crop_h > item_h);
     return std::clamp<real>(ret, 0, crop_h);
@@ -111,15 +117,13 @@ struct Advanced_text_menu::Impl {
 
 }; // impl
 
-Advanced_text_menu::Advanced_text_menu(CN<utf32> title, CN<Menu_items> items, const Rect rect)
-  : Menu {items}
-  , impl {new_unique<Impl>(this, title, rect)}
-  {}
+Advanced_text_menu::Advanced_text_menu(CN<utf32> title, CN<Menu_items> items,
+const Rect rect)
+: Menu {items}
+, impl {new_unique<Impl>(this, title, rect)}
+{}
 
-void Advanced_text_menu::draw(Image& dst) const {
-  Menu::draw(dst);
-  impl->draw(dst);
-}
+void Advanced_text_menu::draw(Image& dst) const { impl->draw(dst); }
 
 void Advanced_text_menu::update(double dt) {
   Menu::update(dt);
