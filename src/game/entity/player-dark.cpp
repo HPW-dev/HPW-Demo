@@ -90,7 +90,10 @@ void Player_dark::default_shoot(double dt) {
       // передача импульса
       bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
       // разброс
-      cauto deg_spread = rndr(-m_deg_spread_shoot * 0.5, m_deg_spread_shoot * 0.5);
+      auto deg_spread = is_pressed(hpw::keycode::focus)
+        ? m_deg_focused_shoot
+        : m_deg_spread_shoot;
+      deg_spread = rndr(-deg_spread * 0.5, deg_spread * 0.5);
       bullet->phys.set_deg(bullet->phys.get_deg() + deg_spread);
     }
   } // for m_shoot_timer
@@ -266,6 +269,7 @@ struct Player_dark::Loader::Impl {
   real m_percent_for_decrease_shoot_speed {};
   real m_decrease_shoot_speed_ratio {};
   real m_deg_spread_shoot {};
+  real m_deg_focused_shoot {};
   int m_default_shoot_count {};
   real m_shoot_speed {};
   real m_boost_up {};
@@ -302,6 +306,7 @@ struct Player_dark::Loader::Impl {
     m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
     m_default_shoot_count = shoot_node.get_int("default_shoot_count");
     m_deg_spread_shoot = shoot_node.get_real("deg_spread_shoot");
+    m_deg_focused_shoot = shoot_node.get_real("deg_focused_shoot");
     m_shoot_speed = shoot_node.get_real("shoot_speed");
 
     // проверка параметров
@@ -350,6 +355,7 @@ struct Player_dark::Loader::Impl {
     it.m_decrease_shoot_speed_ratio = m_decrease_shoot_speed_ratio;
     it.m_default_shoot_count = m_default_shoot_count;
     it.m_deg_spread_shoot = m_deg_spread_shoot;
+    it.m_deg_focused_shoot = m_deg_focused_shoot;
     it.m_shoot_speed = pps(m_shoot_speed);
     it.m_boost_up = m_boost_up;
     it.m_boost_down = m_boost_down;

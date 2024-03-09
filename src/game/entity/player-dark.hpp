@@ -35,6 +35,7 @@ public:
   real m_decrease_shoot_speed_ratio {}; /// на сколько замедлить скорость стрельбы при нехватке энергии
   uint m_default_shoot_count {}; /// сколько за раз выпустить пуль при обычной атаке
   real m_deg_spread_shoot {}; /// угол разброса при обычном выстреле
+  real m_deg_focused_shoot {}; /// угол разброса при фокусировке
   real m_shoot_speed {}; /// скорость обычных выстрелов
   real m_boost_up {}; /// ускорение вперёд
   real m_boost_down {}; /// ускорение назад
