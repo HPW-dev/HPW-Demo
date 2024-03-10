@@ -63,10 +63,10 @@ struct Scene_replay_select::Impl {
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.title"),
       Table_menu::Rows {
-        Table_menu::Row {.name = U"player", .sz = 100},
-        Table_menu::Row {.name = U"date",   .sz = 50},
-        Table_menu::Row {.name = U"mode",   .sz = 100},
-        Table_menu::Row {.name = U"levels", .sz = 100},
+        Table_menu::Row {.name = U"player", .sz = 170},
+        Table_menu::Row {.name = U"date",   .sz = 70},
+        Table_menu::Row {.name = U"mode",   .sz = 85},
+        Table_menu::Row {.name = U"levels", .sz = 60},
         Table_menu::Row {.name = U"score"},
       },
       25,
@@ -88,9 +88,18 @@ struct Scene_replay_select::Impl {
         []->utf32 { return U"test 3"; }
       }
     );
-    ret.push_back(item);
-    ret.push_back(item);
-    ret.push_back(item);
+    cfor (_, 10)
+      ret.push_back(new_shared<Menu_item_table_row>(*item));
+    
+    item = new_shared<Menu_item_table_row>(
+      []{ hpw_log("it work 2! (TODO)\n"); },
+      Menu_item_table_row::Content_getters {
+        []->utf32 { return U"test 4"; },
+        []->utf32 { return U"test 5"; },
+      }
+    );
+    cfor (_, 10)
+      ret.push_back(new_shared<Menu_item_table_row>(*item));
 
     return ret;
   } // generate_rows
