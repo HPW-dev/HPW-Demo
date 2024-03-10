@@ -61,6 +61,7 @@ struct Table_menu::Impl {
     cauto items = m_base->get_items();
     for (cnauto item: items) {
       break_if (pos.y > dst.Y); // не надо показывать таблицу за пределами экрана
+      cauto selected = item == this->m_base->get_cur_item();
 
       pos.x = 0;
       // геттеры получают контент в строках таблицы
@@ -73,7 +74,7 @@ struct Table_menu::Impl {
         // если размер 0, то значит размер элемента до конца строки
         auto row_sz = (row.sz > 0) ? row.sz : (dst.X - pos.x);
         const Rect rect(pos, Vec(row_sz, m_row_height));
-        cauto rect_color = item == this->m_base->get_cur_item()
+        cauto rect_color = selected
           ? Pal8::white
           : Pal8::gray;
         draw_rect<&blend_max>(dst, rect, rect_color);
@@ -82,7 +83,7 @@ struct Table_menu::Impl {
         if (i < content_getters.size()) {
           cauto getter = content_getters[i];
           if (getter) {
-            cauto text_color = item == this->m_base->get_cur_item()
+            cauto text_color = selected
               ? &blend_past
               : &blend_158;
             graphic::font->draw(dst, pos + text_offset, getter(), text_color);
