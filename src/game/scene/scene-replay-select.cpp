@@ -63,13 +63,13 @@ struct Scene_replay_select::Impl {
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.title"),
       Table_menu::Rows {
-        Table_menu::Row {.name = "player", .sz = 100},
-        Table_menu::Row {.name = "date",   .sz = 50},
-        Table_menu::Row {.name = "mode",   .sz = 100},
-        Table_menu::Row {.name = "levels", .sz = 100},
-        Table_menu::Row {.name = "score"},
+        Table_menu::Row {.name = U"player", .sz = 100},
+        Table_menu::Row {.name = U"date",   .sz = 50},
+        Table_menu::Row {.name = U"mode",   .sz = 100},
+        Table_menu::Row {.name = U"levels", .sz = 100},
+        Table_menu::Row {.name = U"score"},
       },
-      16,
+      25,
       generate_rows()
     );
   } // init_menu
@@ -88,6 +88,8 @@ struct Scene_replay_select::Impl {
         []->utf32 { return U"test 3"; }
       }
     );
+    ret.push_back(item);
+    ret.push_back(item);
     ret.push_back(item);
 
     return ret;

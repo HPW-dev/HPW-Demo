@@ -11,7 +11,7 @@ class Table_menu: public Menu {
 
 public:
   struct Row {
-    Str name {}; // название столбца
+    utf32 name {}; // название столбца
     uint sz {}; // ширина столбца
   };
   using Rows = Vector<Row>;
