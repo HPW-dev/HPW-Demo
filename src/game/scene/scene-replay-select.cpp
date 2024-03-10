@@ -62,13 +62,14 @@ struct Scene_replay_select::Impl {
 
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.title"),
-      Strs { // TODO locale
-        "player",
-        "date",
-        "mode",
-        "levels",
-        "score",
+      Table_menu::Rows {
+        Table_menu::Row {.name = "player", .sz = 100},
+        Table_menu::Row {.name = "date",   .sz = 50},
+        Table_menu::Row {.name = "mode",   .sz = 100},
+        Table_menu::Row {.name = "levels", .sz = 100},
+        Table_menu::Row {.name = "score"},
       },
+      16,
       generate_rows()
     );
   } // init_menu
