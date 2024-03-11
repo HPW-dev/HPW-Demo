@@ -59,7 +59,10 @@ struct Table_menu::Impl {
     pos.y += m_row_height - 1; // отступ от хедера
     // нарисовать элементы таблицы
     cauto items = m_base->get_items();
-    for (cnauto item: items) {
+    // после нескольких строк двигать список
+    const uint item_idx_start = std::max<int>(0, m_base->get_cur_item_id() - 6);
+    for (auto item_idx = item_idx_start; item_idx < items.size(); ++item_idx) {
+      cnauto item = items[item_idx];
       break_if (pos.y > dst.Y); // не надо показывать таблицу за пределами экрана
       cauto selected = item == this->m_base->get_cur_item();
 
