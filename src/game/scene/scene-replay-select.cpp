@@ -1,3 +1,4 @@
+#include <cassert>
 #include "scene-replay-select.hpp"
 #include "scene-manager.hpp"
 #include "scene-loading.hpp"
@@ -11,16 +12,25 @@
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
 #include "game/scene/scene-game.hpp"
+#include "game/core/difficulty.hpp"
 #include "util/path.hpp"
+
+struct Replay_info {
+  Str path {};
+  utf32 player_name {};
+  Str date {};
+  Difficulty difficulty {};
+  uint level {};
+  int64_t score {};
+};
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
-  Strs m_replay_names {};
-  uint m_replay_name_idx {};
+  Vector<Replay_info> m_replay_info_table {};
 
   inline Impl() {
+    load_replays();
     init_menu();
-    load_replay_names();
   }
 
   inline void update(double dt) {
@@ -34,31 +44,7 @@ struct Scene_replay_select::Impl {
   }
 
   inline void init_menu() {
-    /*menu = new_unique<Text_menu>(
-      Menu_items {
-
-        new_shared<Menu_text_item>( get_locale_str("scene.replay.play"), [this]{
-          return_if (m_replay_names.empty());
-
-          hpw::scene_mgr->add(new_shared<Scene_loading>( [this]{
-            // TODO проследи чтоб реплей грузил настройки сложности и сам их выбирал
-            hpw::replay_read_mode = true;
-            hpw::cur_replay_file_name = get_replay_name();
-            hpw::scene_mgr->add(new_shared<Scene_game>());
-          } ));
-        } ),
-
-        // TODO сделай удобнее
-        new_shared<Menu_text_item>(U"следующий файл", [this]{ next_replay_file(); } ),
-
-        new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-          hpw::scene_mgr->back(); // to main menu
-        }),
-
-      }, // Menu_items
-
-      Vec{60, 80}
-    );*/
+    assert( !m_replay_info_table.empty()); // вызови перед этим load_replays
 
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.name"),
@@ -75,55 +61,47 @@ struct Scene_replay_select::Impl {
   } // init_menu
 
   inline Menu_items generate_rows() const {
+    return_if(m_replay_info_table.empty(), {});
+
     Menu_items ret;
-
-    // TODO через std::bind передай какие файлы запускаются в action
-
-    // TODO del:
-    auto item = new_shared<Menu_item_table_row>(
-      []{ hpw_log("it work! (TODO)\n"); },
-      Menu_item_table_row::Content_getters {
-        []->utf32 { return U"test 1"; },
-        []->utf32 { return U"test 2"; },
-        []->utf32 { return U"test 3"; }
-      }
-    );
-    cfor (_, 10)
-      ret.push_back(new_shared<Menu_item_table_row>(*item));
-    
-    item = new_shared<Menu_item_table_row>(
-      []{ hpw_log("it work 2! (TODO)\n"); },
-      Menu_item_table_row::Content_getters {
-        []->utf32 { return U"test 4"; },
-        []->utf32 { return U"test 5"; },
-      }
-    );
-    cfor (_, 10)
-      ret.push_back(new_shared<Menu_item_table_row>(*item));
-
+    for (cnauto replay_info: m_replay_info_table) {
+      ret.emplace_back( new_shared<Menu_item_table_row>(
+        [replay_info] { // запуск файла реплея
+          assert(!replay_info.path.empty());
+          hpw::scene_mgr->add(new_shared<Scene_loading>( [replay_info]{
+            // TODO проследи чтоб реплей грузил настройки сложности и сам их выбирал
+            hpw::replay_read_mode = true;
+            hpw::cur_replay_file_name = replay_info.path;
+            hpw::scene_mgr->add(new_shared<Scene_game>());
+          } ));
+        },
+        Menu_item_table_row::Content_getters {
+          [replay_info]->utf32 { return replay_info.player_name; },
+          [replay_info]->utf32 { return sconv<utf32>(replay_info.date); },
+          [replay_info]->utf32 { return U"TODO"; /*replay_info.difficulty;*/ },
+          [replay_info]->utf32 { return n2s<utf32>(replay_info.level); },
+          [replay_info]->utf32 { return n2s<utf32>(replay_info.score); },
+        }
+      ) );
+    }
     return ret;
   } // generate_rows
 
-  inline void next_replay_file() {
-    return_if(m_replay_names.empty());
-    m_replay_name_idx = (m_replay_name_idx + 1) % m_replay_names.size();
-  }
+  inline void load_replays() {
+    cauto replay_files = files_in_dir(hpw::cur_dir + "replays/");
+    return_if(replay_files.empty());
 
-  inline Str get_replay_name() const {
-    if (m_replay_names.empty())
-      return "-";
-
-    auto it = m_replay_names.cbegin();
-    std::advance(it, m_replay_name_idx);
-    if (it == m_replay_names.cend())
-      return "-";
-
-    return *it;
-  }
-
-  inline void load_replay_names()
-    { m_replay_names = files_in_dir(hpw::cur_dir + "replays/"); }
-
+    for (cnauto replay_file: replay_files) {
+      m_replay_info_table.emplace_back(Replay_info {
+        .path = replay_file,
+        .player_name = U"TODO",
+        .date = "TODO",
+        .difficulty = Difficulty::normal, // TODO
+        .level = 0, // TODO
+        .score = 0, // TODO
+      });
+    }
+  } // load_replays
 }; // impl
 
 Scene_replay_select::Scene_replay_select(): impl {new_unique<Impl>()} {}

@@ -21,5 +21,4 @@ public:
   explicit Table_menu(CN<utf32> title, CN<Rows> rows, const uint row_height,
     CN<Menu_items> items);
   void draw(Image& dst) const override;
-  void update(double dt) override;
 };

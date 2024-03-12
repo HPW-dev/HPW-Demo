@@ -7,6 +7,7 @@
 #include "graphic/font/font.hpp"
 #include "item/table-row-item.hpp"
 #include "game/core/fonts.hpp"
+#include "game/util/game-util.hpp"
 
 struct Table_menu::Impl {
   Menu* m_base {};
@@ -26,9 +27,8 @@ struct Table_menu::Impl {
     assert( !m_title.empty());
     assert( !m_rows.empty());
 
-    cauto items = base->get_items();
-    assert( !items.empty());
     // тест на то, что в таблице только табличные элементы нужного формата
+    cauto items = base->get_items();
     for (cnauto item: items) {
       cauto ptr = dcast< CP<Menu_item_table_row> >(item.get());
       assert(ptr);
@@ -57,10 +57,16 @@ struct Table_menu::Impl {
     }
 
     pos.y += m_row_height - 1; // отступ от хедера
-    // нарисовать элементы таблицы
+
     cauto items = m_base->get_items();
+    if (items.empty()) {
+      graphic::font->draw(dst, pos + text_offset, get_locale_str("scene.replay.no_replay"));
+      return;
+    }
+
     // после нескольких строк двигать список
     const uint item_idx_start = std::max<int>(0, m_base->get_cur_item_id() - 6);
+    // нарисовать элементы таблицы
     for (auto item_idx = item_idx_start; item_idx < items.size(); ++item_idx) {
       cnauto item = items[item_idx];
       break_if (pos.y > dst.Y); // не надо показывать таблицу за пределами экрана
@@ -98,9 +104,6 @@ struct Table_menu::Impl {
       pos.y += m_row_height - 1; // след. строка
     } // for items
   } // draw_table
-
-  inline void update(double dt) {}
-
 }; // impl
 
 Table_menu::Table_menu(CN<utf32> title, CN<Rows> rows, const uint row_height,
@@ -110,10 +113,4 @@ CN<Menu_items> items)
 {}
 
 void Table_menu::draw(Image& dst) const { impl->draw(dst); }
-
-void Table_menu::update(double dt) {
-  Menu::update(dt);
-  impl->update(dt);
-}
-
 Table_menu::~Table_menu() {}
