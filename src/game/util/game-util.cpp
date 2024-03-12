@@ -1,16 +1,17 @@
 #include <ranges>
 #include <ctime>
 #include <algorithm>
+#include <unordered_map>
 #include <cassert>
 #include <filesystem>
 #include <sstream>
 #include "store.hpp"
 #include "hash_sha256/hash_sha256.h"
 #include "game/util/game-util.hpp"
-#include "game/core/locales.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
+#include "game/core/locales.hpp"
 #include "game/core/user.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
@@ -277,4 +278,13 @@ void init_validation_info() {
 
 void init_scene_mgr() {
   hpw::scene_mgr = new_shared<Scene_mgr>();
+}
+
+utf32 difficulty_to_str(const Difficulty difficulty) {
+  static const std::unordered_map<Difficulty, utf32> table {
+    {Difficulty::easy, get_locale_str("scene.difficulty_select.difficulty.easy")},
+    {Difficulty::normal, get_locale_str("scene.difficulty_select.difficulty.normal")},
+    {Difficulty::hardcore, get_locale_str("scene.difficulty_select.difficulty.hardcore")},
+  };
+  return table.at(difficulty);
 }

@@ -58,7 +58,6 @@ struct Scene_replay_select::Impl {
         [replay_info] { // запуск файла реплея
           assert(!replay_info.path.empty());
           hpw::scene_mgr->add(new_shared<Scene_loading>( [replay_info]{
-            // TODO проследи чтоб реплей грузил настройки сложности и сам их выбирал
             hpw::replay_read_mode = true;
             hpw::cur_replay_file_name = replay_info.path;
             hpw::scene_mgr->add(new_shared<Scene_game>());
@@ -67,7 +66,7 @@ struct Scene_replay_select::Impl {
         Menu_item_table_row::Content_getters {
           [replay_info]->utf32 { return replay_info.player_name; },
           [replay_info]->utf32 { return sconv<utf32>(replay_info.date); },
-          [replay_info]->utf32 { return U"TODO"; /*replay_info.difficulty;*/ },
+          [replay_info]->utf32 { return difficulty_to_str(replay_info.difficulty); },
           [replay_info]->utf32 { return n2s<utf32>(replay_info.level); },
           [replay_info]->utf32 { return n2s<utf32>(replay_info.score); },
         }

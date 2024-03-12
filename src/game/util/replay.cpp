@@ -249,7 +249,7 @@ struct Replay::Impl {
     cauto player_name = sconv<utf32>( read_str(m_file) );
     // уровень сложности
     cauto difficulty = read_data<Difficulty>(m_file);
-    // TODO применить смену сложности в реплее
+    hpw::difficulty = difficulty;
     // рекорд
     cauto score = read_data<int64_t>(m_file);
     // дата

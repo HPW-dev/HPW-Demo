@@ -1,6 +1,7 @@
 #pragma once
 #include "game/core/sprites.hpp"
 #include "game/core/anims.hpp"
+#include "game/core/difficulty.hpp"
 #include "util/unicode.hpp"
 #include "util/str.hpp"
 #include "util/mem-types.hpp"
@@ -42,3 +43,5 @@ void draw_controls(Image& dst);
 /// вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
 void init_scene_mgr();
+/// перевести названия уровней сложности
+utf32 difficulty_to_str(const Difficulty difficulty);
