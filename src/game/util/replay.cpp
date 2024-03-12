@@ -1,3 +1,4 @@
+#include <iomanip>
 #include <cassert>
 #include <fstream>
 #include <sstream>
@@ -51,7 +52,6 @@ struct Stream {
   inline void set_pos(std::size_t new_pos) { pos = new_pos; }
 
   inline bool eof() const { return pos >= data.size(); }
-
 };
 #endif
 
@@ -142,12 +142,15 @@ struct Replay::Impl {
   Str m_path {};
   Stream m_file {};
   bool m_write_mode {};
+  Info m_info {};
+  bool m_nosave {false};
 
   inline ~Impl() { close(); }
 
-  inline Impl(CN<Str> path, bool write_mode)
-  : m_path{ path }
-  , m_write_mode{ write_mode }
+  inline Impl(CN<Str> path, const bool write_mode, const bool nosave=false)
+  : m_path { path }
+  , m_write_mode { write_mode }
+  , m_nosave { nosave }
   {
     conv_sep(m_path);
     #ifdef ECOMEM
@@ -180,12 +183,13 @@ struct Replay::Impl {
     const uint32_t seed = get_rnd_seed();
     write_data(m_file, seed);
     // имя игрока
-    write_str(m_file, hpw::player_name);
+    write_str(m_file, sconv<Str>(hpw::player_name));
     // уровень сложности
     write_data(m_file, hpw::difficulty);
     // рекорд
     write_data(m_file, hpw::get_score());
-    // TODO дата
+    // дата
+    write_str(m_file, get_data_str());
     // TODO сколько уровней пройдено
   } // write_header
 
@@ -242,22 +246,48 @@ struct Replay::Impl {
     cauto seed = read_data<uint32_t>(m_file);
     set_rnd_seed(seed);
     // имя игрока
-    cauto player_name = read_str(m_file); // нигде не юзать
+    cauto player_name = sconv<utf32>( read_str(m_file) );
     // уровень сложности
     cauto difficulty = read_data<Difficulty>(m_file);
-    (void)difficulty; // пока не юзается
     // TODO применить смену сложности в реплее
     // рекорд
     cauto score = read_data<int64_t>(m_file);
-    (void)score; // пока не юзается
-    // TODO дата
+    // дата
+    cauto date = read_str(m_file);
     // TODO сколько уровней пройдено
+
+    m_info.path = m_path;
+    m_info.date = date;
+    //m_info.level = TODO
+    m_info.difficulty = difficulty;
+    m_info.score = score;
+    m_info.player_name = player_name;
   } // read_header
+
+  inline Str get_data_str() const {
+    auto t = std::time(nullptr);
+    #ifdef LINUX
+      struct ::tm lt;
+      ::localtime_r(&t, &lt);
+    #else // WINDOWS
+      auto lt = *std::localtime(&t);
+    #endif
+    std::stringstream ss;
+    ss << std::put_time(&lt, "%d.%m.%Y %H:%M:%S");
+    return ss.str();
+  }
+
+  inline static Info get_info(CN<Str> path) {
+    Impl replay(path, false, true);
+    return replay.m_info;
+  }
 
   inline void close() {
     #ifdef ECOMEM
       m_file.close();
     #else
+      return_if(m_nosave); // не сейвить в файл
+
       // запись с буффера на диск
       std::ofstream file(m_path, std::ios_base::binary);
       iferror(!file || file.bad(), "не удалось записать реплей по пути \""
@@ -277,7 +307,6 @@ struct Replay::Impl {
       return {};
     return read_key_packet(m_file);
   }
-
 }; // Impl
 
 Replay::Replay(CN<Str> path, bool write_mode)
@@ -287,3 +316,4 @@ void Replay::close() { impl->close(); }
 void Replay::push(CN<Key_packet> key_packet) { impl->push(key_packet); }
 std::optional<Key_packet> Replay::pop() { return impl->pop(); }
 CP<Replay::Impl> Replay::get_impl() const { return impl.get(); }
+Replay::Info Replay::get_info(CN<Str> path) { return Impl::get_info(path); }

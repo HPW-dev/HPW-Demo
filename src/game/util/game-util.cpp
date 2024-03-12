@@ -11,6 +11,7 @@
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
+#include "game/core/user.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
 #include "game/scene/scene-manager.hpp"
@@ -185,8 +186,7 @@ CN<Shared<Anim>> make_light_mask(CN<Str> src, CN<Str> dst) {
 Str get_random_replay_name() {
   std::stringstream name;
   
-  // TODO + player name
-  name << "Rename";
+  name << sconv<Str>(hpw::player_name);
 
   auto t = std::time(nullptr);
   #ifdef LINUX

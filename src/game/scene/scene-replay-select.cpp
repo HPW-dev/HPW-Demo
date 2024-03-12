@@ -12,24 +12,13 @@
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
 #include "game/scene/scene-game.hpp"
-#include "game/core/difficulty.hpp"
 #include "util/path.hpp"
-
-struct Replay_info {
-  Str path {};
-  utf32 player_name {};
-  Str date {};
-  Difficulty difficulty {};
-  uint level {};
-  int64_t score {};
-};
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
-  Vector<Replay_info> m_replay_info_table {};
+  Vector<Replay::Info> m_replay_info_table {};
 
   inline Impl() {
-    load_replays();
     init_menu();
   }
 
@@ -44,14 +33,14 @@ struct Scene_replay_select::Impl {
   }
 
   inline void init_menu() {
-    iflog (m_replay_info_table.empty(), "вызови перед этим load_replays\n");
+    load_replays();
 
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.name"),
       Table_menu::Rows {
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 170},
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.date"), .sz = 70},
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.difficulty"), .sz = 85},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 140},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.date"), .sz = 135},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.difficulty"), .sz = 80},
         Table_menu::Row {.name = get_locale_str("scene.replay.table.levels"), .sz = 60},
         Table_menu::Row {.name = get_locale_str("scene.replay.table.score")},
       },
@@ -90,17 +79,8 @@ struct Scene_replay_select::Impl {
   inline void load_replays() {
     cauto replay_files = files_in_dir(hpw::cur_dir + "replays/");
     return_if(replay_files.empty());
-
-    for (cnauto replay_file: replay_files) {
-      m_replay_info_table.emplace_back(Replay_info {
-        .path = replay_file,
-        .player_name = U"TODO",
-        .date = "TODO",
-        .difficulty = Difficulty::normal, // TODO
-        .level = 0, // TODO
-        .score = 0, // TODO
-      });
-    }
+    for (cnauto replay_file: replay_files)
+      m_replay_info_table.push_back( Replay::get_info(replay_file) );
   } // load_replays
 }; // impl
 

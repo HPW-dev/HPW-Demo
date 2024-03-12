@@ -1,6 +1,6 @@
 #pragma once
-#include "util/str.hpp"
+#include "util/unicode.hpp"
 
 namespace hpw {
-Str player_name {"noname"}; /// текущее имя игрока
+inline utf32 player_name {U"noname"}; /// текущее имя игрока
 }
