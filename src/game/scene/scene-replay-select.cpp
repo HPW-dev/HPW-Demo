@@ -61,13 +61,13 @@ struct Scene_replay_select::Impl {
     );*/
 
     menu = new_unique<Table_menu>(
-      get_locale_str("scene.replay.title"),
+      get_locale_str("scene.replay.name"),
       Table_menu::Rows {
-        Table_menu::Row {.name = U"player", .sz = 170},
-        Table_menu::Row {.name = U"date",   .sz = 70},
-        Table_menu::Row {.name = U"mode",   .sz = 85},
-        Table_menu::Row {.name = U"levels", .sz = 60},
-        Table_menu::Row {.name = U"score"},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 170},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.date"), .sz = 70},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.difficulty"), .sz = 85},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.levels"), .sz = 60},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.score")},
       },
       25,
       generate_rows()
