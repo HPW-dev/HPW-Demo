@@ -44,7 +44,7 @@ struct Scene_replay_select::Impl {
   }
 
   inline void init_menu() {
-    assert( !m_replay_info_table.empty()); // вызови перед этим load_replays
+    iflog (m_replay_info_table.empty(), "вызови перед этим load_replays\n");
 
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.name"),

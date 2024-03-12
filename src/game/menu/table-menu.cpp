@@ -58,8 +58,10 @@ struct Table_menu::Impl {
 
     pos.y += m_row_height - 1; // отступ от хедера
 
+    // если реплеев нет, то надпись
     cauto items = m_base->get_items();
     if (items.empty()) {
+      pos.x = 0;
       graphic::font->draw(dst, pos + text_offset, get_locale_str("scene.replay.no_replay"));
       return;
     }
