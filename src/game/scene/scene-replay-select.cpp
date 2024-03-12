@@ -13,10 +13,11 @@
 #include "game/menu/item/table-row-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/path.hpp"
+#include "util/str-util.hpp"
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
-  Vector<Replay::Info> m_replay_info_table {};
+  mutable Vector<Replay::Info> m_replay_info_table {};
 
   inline Impl() {
     init_menu();
@@ -51,6 +52,14 @@ struct Scene_replay_select::Impl {
 
   inline Menu_items generate_rows() const {
     return_if(m_replay_info_table.empty(), {});
+    // сортировать реплеи по дате создания
+    std::sort(m_replay_info_table.begin(), m_replay_info_table.end(),
+      [](CN<Replay::Info> a, CN<Replay::Info> b)->bool {
+        cauto a_score = Impl::date_score(a.date);
+        cauto b_score = Impl::date_score(b.date);
+        return a_score > b_score;
+      }
+    );
 
     Menu_items ret;
     for (cnauto replay_info: m_replay_info_table) {
@@ -81,6 +90,33 @@ struct Scene_replay_select::Impl {
     for (cnauto replay_file: replay_files)
       m_replay_info_table.push_back( Replay::get_info(replay_file) );
   } // load_replays
+
+  /// для сравнения времени создания реплея
+  inline static uint date_score(CN<Str> date) {
+    assert(!date.empty());
+    // разделение на дату и время
+    auto strs = split_str(date, ' ');
+    cauto date_str = strs.at(0);
+    cauto time_str = strs.at(1);
+    // разделить на DD.MM.YY
+    strs = split_str(date_str, '.');
+    cauto DD = s2n<int>( strs.at(0) );
+    cauto MM1 = s2n<int>( strs.at(1) );
+    cauto YY = s2n<int>( strs.at(2) );
+    // разделить на HH:MM:SS
+    strs = split_str(time_str, ':');
+    cauto HH = s2n<int>( strs.at(0) );
+    cauto MM2 = s2n<int>( strs.at(1) );
+    cauto SS = s2n<int>( strs.at(2) );
+
+    uint score = 0;
+    score += YY;
+    score += DD * MM1;
+    score += SS;
+    score += MM2 * 60;
+    score += HH * 60 * 60;
+    return score;
+  } // date_score
 }; // impl
 
 Scene_replay_select::Scene_replay_select(): impl {new_unique<Impl>()} {}
