@@ -9,6 +9,9 @@
 #include "game/core/core.hpp"
 #include "game/core/common.hpp"
 #include "game/core/replays.hpp"
+#include "game/core/user.hpp"
+#include "game/util/score-table.hpp"
+#include "game/core/difficulty.hpp"
 #include "util/vector-types.hpp"
 #include "util/error.hpp"
 #include "util/math/random.hpp"
@@ -122,9 +125,20 @@ inline Key_packet read_key_packet(Stream& file) {
   return ret;
 }
 
-struct Replay::Impl {
+template <typename T>
+T read_data(Stream& file) {
+  T ret;
+  file.read(ptr2ptr<char*>(&ret), sizeof(T));
+  return ret;
+}
 
-  Str m_ver {"v1.0"};
+template <typename T>
+void write_data(Stream& file, const T data) {
+  file.write(cptr2ptr<CP<char>>(&data), sizeof(T));
+}
+
+struct Replay::Impl {
+  Str m_ver {"v2.0"};
   Str m_path {};
   Stream m_file {};
   bool m_write_mode {};
@@ -154,19 +168,25 @@ struct Replay::Impl {
     // версия игры
     write_str(m_file, cstr_to_cxxstr(get_game_version()));
     // платформа
-    auto bits = get_bits();
-    auto platform = get_platform();
-    m_file.write(cptr2ptr<CP<char>>(&platform), sizeof(platform));
-    m_file.write(cptr2ptr<CP<char>>(&bits), sizeof(bits));
+    write_data(m_file, get_platform());
+    write_data(m_file, get_bits());
     // SHA256
     write_str(m_file, hpw::exe_sha256);
     write_str(m_file, hpw::data_sha256);
     // UPS
-    uint32_t target_ups = hpw::target_ups;
-    m_file.write(cptr2ptr<CP<char>>(&target_ups), sizeof(target_ups));
+    const uint32_t target_ups = hpw::target_ups;
+    write_data(m_file, target_ups);
     // сид рандома
-    uint32_t seed = get_rnd_seed();
-    m_file.write(cptr2ptr<CP<char>>(&seed), sizeof(seed));
+    const uint32_t seed = get_rnd_seed();
+    write_data(m_file, seed);
+    // имя игрока
+    write_str(m_file, hpw::player_name);
+    // уровень сложности
+    write_data(m_file, hpw::difficulty);
+    // рекорд
+    write_data(m_file, hpw::get_score());
+    // TODO дата
+    // TODO сколько уровней пройдено
   } // write_header
 
   /// чтение заголовка
@@ -193,10 +213,8 @@ struct Replay::Impl {
       hpw_log("версия игры в реплее: " << rep_game_ver << '\n');
     }
     // платформа
-    Bits bits;
-    Platform platform;
-    m_file.read(ptr2ptr<char*>(&platform), sizeof(platform));
-    m_file.read(ptr2ptr<char*>(&bits), sizeof(bits));
+    cauto platform = read_data<Platform>(m_file);
+    cauto bits = read_data<Bits>(m_file);
     if (bits != get_bits()) {
       hpw_log("реплей записан на системе с разрядностью отличающейся от вашей\n");
       // TODO окно с предупреждением
@@ -218,13 +236,22 @@ struct Replay::Impl {
       // TODO вызов окна с надписью
     }
     // UPS
-    uint32_t target_ups {};
-    m_file.read(ptr2ptr<char*>(&target_ups), sizeof(target_ups));
+    cauto target_ups = read_data<uint32_t>(m_file);
     assert(target_ups == scast<uint32_t>(hpw::target_ups));
     // сид рандома
-    uint32_t seed {};
-    m_file.read(ptr2ptr<char*>(&seed), sizeof(seed));
+    cauto seed = read_data<uint32_t>(m_file);
     set_rnd_seed(seed);
+    // имя игрока
+    cauto player_name = read_str(m_file); // нигде не юзать
+    // уровень сложности
+    cauto difficulty = read_data<Difficulty>(m_file);
+    (void)difficulty; // пока не юзается
+    // TODO применить смену сложности в реплее
+    // рекорд
+    cauto score = read_data<int64_t>(m_file);
+    (void)score; // пока не юзается
+    // TODO дата
+    // TODO сколько уровней пройдено
   } // read_header
 
   inline void close() {
