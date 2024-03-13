@@ -269,18 +269,18 @@ Shared<Menu_text_item> Scene_graphic::get_reset_item() {
 
 void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
-    U"Настройки графики", // TODO locale
+    get_locale_str("scene.graphic_menu.title"),
     Menu_items {
       get_fullscreen_item(),
+      get_palette_item(),
       get_preset_item(),
+      get_goto_detailed_item(),
+      get_plugin_item(),
+      get_resize_type_item(),
       get_vsync_item(),
       get_frame_limit_item(),
       get_disable_frame_limit_item(),
-      get_resize_type_item(),
-      get_palette_item(),
-      get_plugin_item(),
       get_epilepsy_item(),
-      get_goto_detailed_item(),
       get_reset_item(),
       get_exit_item(),
     },
