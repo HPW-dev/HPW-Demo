@@ -15,6 +15,15 @@
 #include "util/path.hpp"
 #include "util/str-util.hpp"
 
+struct Date {
+  uint year {};
+  uint month {};
+  uint day {};
+  uint hour {};
+  uint minute {};
+  uint second {};
+};
+
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
   mutable Vector<Replay::Info> m_replay_info_table {};
@@ -54,12 +63,7 @@ struct Scene_replay_select::Impl {
     return_if(m_replay_info_table.empty(), {});
     // сортировать реплеи по дате создания
     std::sort(m_replay_info_table.begin(), m_replay_info_table.end(),
-      [](CN<Replay::Info> a, CN<Replay::Info> b)->bool {
-        cauto a_score = Impl::date_score(a.date);
-        cauto b_score = Impl::date_score(b.date);
-        return a_score > b_score;
-      }
-    );
+      &Impl::date_comparator);
 
     Menu_items ret;
     for (cnauto replay_info: m_replay_info_table) {
@@ -92,31 +96,46 @@ struct Scene_replay_select::Impl {
   } // load_replays
 
   /// для сравнения времени создания реплея
-  inline static uint date_score(CN<Str> date) {
+  inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
+    cauto a_date = Impl::to_date(a.date);
+    cauto b_date = Impl::to_date(b.date);
+    bool ret {false};
+    if (a_date.year > b_date.year) {
+      ret = true;
+    } else if (a_date.month > b_date.month) {
+      ret = true;
+    } else if (a_date.day > b_date.day) {
+      ret = true;
+    } else if (a_date.hour > b_date.hour) {
+      ret = true;
+    } else if (a_date.minute > b_date.minute) {
+      ret = true;
+    } else if (a_date.second > b_date.second) {
+      ret = true;
+    }
+    return ret;
+  } // date_comparator
+
+  /// конвертирует дату и время из строки в удобный формат
+  inline static Date to_date(CN<Str> date) {
     assert(!date.empty());
     // разделение на дату и время
     auto strs = split_str(date, ' ');
     cauto date_str = strs.at(0);
     cauto time_str = strs.at(1);
+    Date ret;
     // разделить на DD.MM.YY
     strs = split_str(date_str, '.');
-    cauto DD = s2n<int>( strs.at(0) );
-    cauto MM1 = s2n<int>( strs.at(1) );
-    cauto YY = s2n<int>( strs.at(2) );
+    ret.day = s2n<int>( strs.at(0) );
+    ret.month = s2n<int>( strs.at(1) );
+    ret.year = s2n<int>( strs.at(2) );
     // разделить на HH:MM:SS
     strs = split_str(time_str, ':');
-    cauto HH = s2n<int>( strs.at(0) );
-    cauto MM2 = s2n<int>( strs.at(1) );
-    cauto SS = s2n<int>( strs.at(2) );
-
-    uint score = 0;
-    score += YY;
-    score += DD * MM1;
-    score += SS;
-    score += MM2 * 60;
-    score += HH * 60 * 60;
-    return score;
-  } // date_score
+    ret.hour = s2n<int>( strs.at(0) );
+    ret.month = s2n<int>( strs.at(1) );
+    ret.second = s2n<int>( strs.at(2) );
+    return ret;
+  } // to_date
 }; // impl
 
 Scene_replay_select::Scene_replay_select(): impl {new_unique<Impl>()} {}
