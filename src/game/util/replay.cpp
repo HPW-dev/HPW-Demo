@@ -242,6 +242,7 @@ struct Replay::Impl {
     // UPS
     cauto target_ups = read_data<uint32_t>(m_file);
     assert(target_ups == scast<uint32_t>(hpw::target_ups));
+    (void)target_ups; // чтоб небыло ворнинга при релизе
     // сид рандома
     cauto seed = read_data<uint32_t>(m_file);
     set_rnd_seed(seed);
