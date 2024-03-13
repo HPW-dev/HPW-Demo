@@ -25,7 +25,7 @@
 #include "game/entity/enemy/cosmic-hunter.hpp"
 #include "game/entity/enemy/cosmic-waiter.hpp"
 #include "game/entity/enemy/cosmic.hpp"
-#include "game/entity/enemy/Illaen.hpp"
+#include "game/entity/enemy/illaen.hpp"
 
 struct Entity_mgr::Impl {
   /// за пределами этого расстояние пули за экраном умирают в шмап-моде
