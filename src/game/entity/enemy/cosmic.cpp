@@ -89,7 +89,6 @@ void Cosmic::update(double dt) {
       bullet->phys.set_accel(m_info.bullet_accel);
       bullet->phys.set_speed(m_info.bullet_speed);
       bullet->status.ignore_scatter = true;
-      bullet->status.layer_up = true;
     }
   }
 } // update
@@ -168,7 +167,7 @@ struct Cosmic::Loader::Impl {
     it->m_info = m_info;
     // первая анимация проигрывается до конца и не перезапускается
     it->status.no_restart_anim = true;
-    it->status.layer_up = true;
+    it->status.layer_up = false;
     it->anim_ctx.set_anim(m_info.state_1);
     it->anim_ctx.set_contour(m_info.contour);
     it->anim_ctx.contour_bf = &blend_past;
