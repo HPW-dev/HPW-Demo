@@ -213,8 +213,9 @@ struct Replay::Impl {
     if (cur_game_ver != rep_game_ver) {
       // TODO показывать окно с ворнингом
       hpw_log("версия реплея не совпадает с версией игры\n");
-      hpw_log("версия игры: " << cur_game_ver << '\n');
-      hpw_log("версия игры в реплее: " << rep_game_ver << '\n');
+      hpw_log("  текущая версия игры: " << cur_game_ver << '\n');
+      hpw_log("  версия игры в реплее: " << rep_game_ver << '\n');
+      hpw_log("  файл реплея: \"" << m_path << "\"\n");
     }
     // платформа
     cauto platform = read_data<Platform>(m_file);
