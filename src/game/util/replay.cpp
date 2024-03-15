@@ -268,7 +268,8 @@ struct Replay::Impl {
     // TODO сколько уровней пройдено
 
     m_info.path = m_path;
-    m_info.date = date;
+    m_info.date_str = date;
+    m_info.date = to_date(date);
     //m_info.level = TODO
     m_info.difficulty = difficulty;
     m_info.score = score;
@@ -318,6 +319,34 @@ struct Replay::Impl {
       return {};
     return read_key_packet(m_file);
   }
+
+  /// конвертирует дату и время из строки в удобный формат
+  inline static Date to_date(CN<Str> date) {
+    assert(!date.empty());
+    // разделение на дату и время
+    auto strs = split_str(date, ' ');
+    cauto date_str = strs.at(0);
+    cauto time_str = strs.at(1);
+    Date ret;
+    // разделить на DD.MM.YY
+    strs = split_str(date_str, '.');
+    ret.day = s2n<int>( strs.at(0) );
+    ret.month = s2n<int>( strs.at(1) );
+    ret.year = s2n<int>( strs.at(2) );
+    // разделить на HH:MM:SS
+    strs = split_str(time_str, ':');
+    ret.hour = s2n<int>( strs.at(0) );
+    ret.minute = s2n<int>( strs.at(1) );
+    ret.second = s2n<int>( strs.at(2) );
+    // проверить диапазоны
+    iferror(ret.day == 0 || ret.day >= 32, "неправильный день (" << n2s(ret.day) << ")");
+    iferror(ret.month == 0 || ret.month > 12, "неправильный месяц (" << n2s(ret.month) << ")");
+    iferror(ret.year < 1815, "год не должен быть меньше чем 1815 (" << n2s(ret.year) << ")");
+    iferror(ret.hour > 24, "неправильный час (" << n2s(ret.hour) << ")");
+    iferror(ret.minute > 59, "неправильная минута (" << n2s(ret.minute) << ")");
+    iferror(ret.second > 59, "неправильная секунда (" << n2s(ret.second) << ")");
+    return ret;
+  } // to_date
 }; // Impl
 
 Replay::Replay(CN<Str> path, bool write_mode)
