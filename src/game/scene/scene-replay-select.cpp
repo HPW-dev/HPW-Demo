@@ -61,10 +61,9 @@ struct Scene_replay_select::Impl {
 
   inline Menu_items generate_rows() {
     return_if(m_replay_info_table.empty(), {});
-    sort_replay_info_by_date();
     // сортировать реплеи по дате создания
-    /*std::sort(m_replay_info_table.begin(), m_replay_info_table.end(),
-      &Impl::date_comparator);*/
+    std::sort(m_replay_info_table.begin(), m_replay_info_table.end(),
+      &Impl::date_comparator);
 
     Menu_items ret;
     for (cnauto replay_info: m_replay_info_table) {
@@ -101,20 +100,6 @@ struct Scene_replay_select::Impl {
       }
     }
   } // load_replays
-
-  inline void sort_replay_info_by_date() {
-    cauto table_sz = m_replay_info_table.size();
-    if (table_sz <= 1)
-      return;
-
-    for (std::size_t i = 0; i < table_sz; ++i)
-    for (std::size_t j = i + 1; j < table_sz; ++j) {
-      nauto a = m_replay_info_table.at(i);
-      nauto b = m_replay_info_table.at(j);
-      if (Impl::date_comparator(a, b))
-        std::swap(a, b);
-    }
-  }
 
   /// для сравнения времени создания реплея
   inline static bool date_comparator(const Replay::Info a, const Replay::Info b) {
