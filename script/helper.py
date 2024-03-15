@@ -32,24 +32,15 @@ def exec_cmd (cmd):
   print()
 
 def write_game_version():
-  # бэкап для восстановления файла с версией
-  shutil.copy("src/game/util/version.cpp", "src/game/util/version.cppbak")
-
   with open(file='src/game/util/version.cpp', mode='w', newline='\n') as file:
-    try:
-      os.system('git tag --sort=committerdate | tail -1 > _tmp_version_')
-      version = open(file='_tmp_version_', mode='r').read()
-      version = version.replace('\r\n', '')
-      version = version.replace('\n', '')
-      print("generated version: " + version)
-      os.remove('_tmp_version_')
-      file.write (
-        '#include "version.hpp"\n'
-        '\n'
-        'const char* get_game_version() { return "' + version + '"; }\n'
-      )
-    except Exception as e:
-      print("не удалось получить строку с последней версией проекта")
-      shutil.copy("src/game/util/version.cppbak", "src/game/util/version.cpp")
-  os.remove("src/game/util/version.cppbak")
-    
+    os.system('git describe --tags --abbrev=0 > _tmp_version_')
+    version = open(file='_tmp_version_', mode='r').read()
+    version = version.replace('\r\n', '')
+    version = version.replace('\n', '')
+    print("generated version: " + version)
+    os.remove('_tmp_version_')
+    file.write (
+      '#include "version.hpp"\n'
+      '\n'
+      'const char* get_game_version() { return "' + version + '"; }\n'
+    )
