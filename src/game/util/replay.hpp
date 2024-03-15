@@ -28,11 +28,21 @@ public:
   static Info get_info(CN<Str> path);
 }; // Replay
 
+struct Date {
+  uint year {};
+  uint month {};
+  uint day {};
+  uint hour {};
+  uint minute {};
+  uint second {};
+};
+
 struct Replay::Info {
   utf32 player_name {};
   Str path {};
-  Str date {};
-  int64_t score {};
+  Str date_str {};
+  Date date {};
+  std::int64_t score {};
   uint level {};
   Difficulty difficulty {};
 };

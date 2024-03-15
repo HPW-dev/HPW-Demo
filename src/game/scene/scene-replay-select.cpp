@@ -14,16 +14,6 @@
 #include "game/scene/scene-game.hpp"
 #include "util/path.hpp"
 #include "util/str-util.hpp"
-#include "util/error.hpp"
-
-struct Date {
-  uint year {};
-  uint month {};
-  uint day {};
-  uint hour {};
-  uint minute {};
-  uint second {};
-};
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
@@ -79,7 +69,7 @@ struct Scene_replay_select::Impl {
         },
         Menu_item_table_row::Content_getters {
           [replay_info]->utf32 { return replay_info.player_name; },
-          [replay_info]->utf32 { return sconv<utf32>(replay_info.date); },
+          [replay_info]->utf32 { return sconv<utf32>(replay_info.date_str); },
           [replay_info]->utf32 { return difficulty_to_str(replay_info.difficulty); },
           [replay_info]->utf32 { return n2s<utf32>(replay_info.level); },
           [replay_info]->utf32 { return n2s<utf32>(replay_info.score); },
@@ -104,54 +94,24 @@ struct Scene_replay_select::Impl {
 
   /// для сравнения времени создания реплея
   inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
-    cauto a_date = Impl::to_date(a.date);
-    cauto b_date = Impl::to_date(b.date);
     // год
-    if (a_date.year < b_date.year) return false;
-    if (a_date.year > b_date.year) return true;
+    if (a.date.year < b.date.year) return false;
+    if (a.date.year > b.date.year) return true;
     // месяц
-    if (a_date.month < b_date.month) return false;
-    if (a_date.month > b_date.month) return true;
+    if (a.date.month < b.date.month) return false;
+    if (a.date.month > b.date.month) return true;
     // день
-    if (a_date.day < b_date.day) return false;
-    if (a_date.day > b_date.day) return true;
+    if (a.date.day < b.date.day) return false;
+    if (a.date.day > b.date.day) return true;
     // час
-    if (a_date.hour < b_date.hour) return false;
-    if (a_date.hour > b_date.hour) return true;
+    if (a.date.hour < b.date.hour) return false;
+    if (a.date.hour > b.date.hour) return true;
     // минута
-    if (a_date.minute < b_date.minute) return false;
-    if (a_date.minute > b_date.minute) return true;
+    if (a.date.minute < b.date.minute) return false;
+    if (a.date.minute > b.date.minute) return true;
     // секунда
-    return a_date.second > b_date.second;
+    return a.date.second > b.date.second;
   } // date_comparator
-
-  /// конвертирует дату и время из строки в удобный формат
-  inline static Date to_date(CN<Str> date) {
-    assert(!date.empty());
-    // разделение на дату и время
-    auto strs = split_str(date, ' ');
-    cauto date_str = strs.at(0);
-    cauto time_str = strs.at(1);
-    Date ret;
-    // разделить на DD.MM.YY
-    strs = split_str(date_str, '.');
-    ret.day = s2n<int>( strs.at(0) );
-    ret.month = s2n<int>( strs.at(1) );
-    ret.year = s2n<int>( strs.at(2) );
-    // разделить на HH:MM:SS
-    strs = split_str(time_str, ':');
-    ret.hour = s2n<int>( strs.at(0) );
-    ret.minute = s2n<int>( strs.at(1) );
-    ret.second = s2n<int>( strs.at(2) );
-    // проверить диапазоны
-    iferror(ret.day == 0 || ret.day >= 32, "неправильный день (" << n2s(ret.day) << ")");
-    iferror(ret.month == 0 || ret.month > 12, "неправильный месяц (" << n2s(ret.month) << ")");
-    iferror(ret.year < 1815, "год не должен быть меньше чем 1815 (" << n2s(ret.year) << ")");
-    iferror(ret.hour > 24, "неправильный час (" << n2s(ret.hour) << ")");
-    iferror(ret.minute > 59, "неправильная минута (" << n2s(ret.minute) << ")");
-    iferror(ret.second > 59, "неправильная секунда (" << n2s(ret.second) << ")");
-    return ret;
-  } // to_date
 }; // impl
 
 Scene_replay_select::Scene_replay_select(): impl {new_unique<Impl>()} {}
