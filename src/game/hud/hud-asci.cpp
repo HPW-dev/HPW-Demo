@@ -149,8 +149,6 @@ struct Hud_asci::Impl {
   // убивает игрока, если его придавят полоски
   inline void check_crush(Player* player) const {
     bool killme {false};
-    if (intersect(player_rect, en_rect) && intersect(player_rect, hp_rect))
-      killme = true;
     if (intersect(player_rect, en_rect) && intersect(player_rect, pts_rect))
       killme = true;
     // не взрывать игрока на такой высоте
