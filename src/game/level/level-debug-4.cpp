@@ -24,7 +24,7 @@
 #include "game/level/level-manager.hpp"
 
 struct Level_debug_4::Impl {
-  Timer spawn_timer {0.1};
+  Timer spawn_timer {0.005};
 
   inline Impl() {
     make_player();
@@ -38,10 +38,14 @@ struct Level_debug_4::Impl {
     cfor (_, spawn_timer.update(dt)) {
       cauto pos = player->phys.get_pos();
       auto it = hpw::entity_mgr->make(player, "bullet.placeholder.1", pos);
+      //auto it = hpw::entity_mgr->make(player, "particle.123", pos);
       it->phys.set_speed( rndr(0.5_pps, 1.5_pps) );
+      it->phys.set_force(0);
       it->phys.set_deg( rand_degree_stable() );
-      it->status.ignore_bullet = false;
-      it->status.ignore_self_type = false;
+      if (it->status.collidable) {
+        auto collidable = ptr2ptr<Collidable*>(it);
+        collidable->set_explosion_name({});
+      }
     }
   }
 
