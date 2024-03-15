@@ -14,6 +14,7 @@
 #include "game/scene/scene-game.hpp"
 #include "util/path.hpp"
 #include "util/str-util.hpp"
+#include "util/error.hpp"
 
 struct Date {
   uint year {};
@@ -142,6 +143,13 @@ struct Scene_replay_select::Impl {
     ret.hour = s2n<int>( strs.at(0) );
     ret.minute = s2n<int>( strs.at(1) );
     ret.second = s2n<int>( strs.at(2) );
+    // проверить диапазоны
+    iferror(ret.day == 0 || ret.day >= 32, "неправильный день (" << n2s(ret.day) << ")");
+    iferror(ret.month == 0 || ret.month > 12, "неправильный месяц (" << n2s(ret.month) << ")");
+    iferror(ret.year < 1815, "год не должен быть меньше чем 1815 (" << n2s(ret.year) << ")");
+    iferror(ret.hour > 24, "неправильный час (" << n2s(ret.hour) << ")");
+    iferror(ret.minute > 59, "неправильная минута (" << n2s(ret.minute) << ")");
+    iferror(ret.second > 59, "неправильная секунда (" << n2s(ret.second) << ")");
     return ret;
   } // to_date
 }; // impl
