@@ -102,24 +102,26 @@ struct Scene_replay_select::Impl {
   } // load_replays
 
   /// для сравнения времени создания реплея
-  inline static bool date_comparator(const Replay::Info a, const Replay::Info b) {
+  inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
     cauto a_date = Impl::to_date(a.date);
     cauto b_date = Impl::to_date(b.date);
-    bool ret {true};
-    if (a_date.year < b_date.year) {
-      ret = false;
-    } else if (a_date.month < b_date.month) {
-      ret = false;
-    } else if (a_date.day < b_date.day) {
-      ret = false;
-    } else if (a_date.hour < b_date.hour) {
-      ret = false;
-    } else if (a_date.minute < b_date.minute) {
-      ret = false;
-    } else if (a_date.second < b_date.second) {
-      ret = false;
-    }
-    return !ret;
+    // год
+    if (a_date.year < b_date.year) return false;
+    if (a_date.year > b_date.year) return true;
+    // месяц
+    if (a_date.month < b_date.month) return false;
+    if (a_date.month > b_date.month) return true;
+    // день
+    if (a_date.day < b_date.day) return false;
+    if (a_date.day > b_date.day) return true;
+    // час
+    if (a_date.hour < b_date.hour) return false;
+    if (a_date.hour > b_date.hour) return true;
+    // минута
+    if (a_date.minute < b_date.minute) return false;
+    if (a_date.minute > b_date.minute) return true;
+    // секунда
+    return a_date.second > b_date.second;
   } // date_comparator
 
   /// конвертирует дату и время из строки в удобный формат
@@ -138,7 +140,7 @@ struct Scene_replay_select::Impl {
     // разделить на HH:MM:SS
     strs = split_str(time_str, ':');
     ret.hour = s2n<int>( strs.at(0) );
-    ret.month = s2n<int>( strs.at(1) );
+    ret.minute = s2n<int>( strs.at(1) );
     ret.second = s2n<int>( strs.at(2) );
     return ret;
   } // to_date
