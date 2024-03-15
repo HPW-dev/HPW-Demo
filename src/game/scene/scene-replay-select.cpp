@@ -26,7 +26,7 @@ struct Date {
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
-  mutable Vector<Replay::Info> m_replay_info_table {};
+  Vector<Replay::Info> m_replay_info_table {};
 
   inline Impl() {
     init_menu();
@@ -59,11 +59,12 @@ struct Scene_replay_select::Impl {
     );
   } // init_menu
 
-  inline Menu_items generate_rows() const {
+  inline Menu_items generate_rows() {
     return_if(m_replay_info_table.empty(), {});
+    sort_replay_info_by_date();
     // сортировать реплеи по дате создания
-    std::sort(m_replay_info_table.begin(), m_replay_info_table.end(),
-      &Impl::date_comparator);
+    /*std::sort(m_replay_info_table.begin(), m_replay_info_table.end(),
+      &Impl::date_comparator);*/
 
     Menu_items ret;
     for (cnauto replay_info: m_replay_info_table) {
@@ -91,29 +92,49 @@ struct Scene_replay_select::Impl {
   inline void load_replays() {
     cauto replay_files = files_in_dir(hpw::cur_dir + "replays/");
     return_if(replay_files.empty());
-    for (cnauto replay_file: replay_files)
-      m_replay_info_table.push_back( Replay::get_info(replay_file) );
+    for (cnauto replay_file: replay_files) {
+      try {
+        cauto info = Replay::get_info(replay_file);
+        m_replay_info_table.push_back(info);
+      } catch (...) {
+        hpw_log("не удалось загрузить один из реплеев\n");
+      }
+    }
   } // load_replays
 
+  inline void sort_replay_info_by_date() {
+    cauto table_sz = m_replay_info_table.size();
+    if (table_sz <= 1)
+      return;
+
+    for (std::size_t i = 0; i < table_sz; ++i)
+    for (std::size_t j = i + 1; j < table_sz; ++j) {
+      nauto a = m_replay_info_table.at(i);
+      nauto b = m_replay_info_table.at(j);
+      if (Impl::date_comparator(a, b))
+        std::swap(a, b);
+    }
+  }
+
   /// для сравнения времени создания реплея
-  inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
+  inline static bool date_comparator(const Replay::Info a, const Replay::Info b) {
     cauto a_date = Impl::to_date(a.date);
     cauto b_date = Impl::to_date(b.date);
-    bool ret {false};
-    if (a_date.year > b_date.year) {
-      ret = true;
-    } else if (a_date.month > b_date.month) {
-      ret = true;
-    } else if (a_date.day > b_date.day) {
-      ret = true;
-    } else if (a_date.hour > b_date.hour) {
-      ret = true;
-    } else if (a_date.minute > b_date.minute) {
-      ret = true;
-    } else if (a_date.second > b_date.second) {
-      ret = true;
+    bool ret {true};
+    if (a_date.year < b_date.year) {
+      ret = false;
+    } else if (a_date.month < b_date.month) {
+      ret = false;
+    } else if (a_date.day < b_date.day) {
+      ret = false;
+    } else if (a_date.hour < b_date.hour) {
+      ret = false;
+    } else if (a_date.minute < b_date.minute) {
+      ret = false;
+    } else if (a_date.second < b_date.second) {
+      ret = false;
     }
-    return ret;
+    return !ret;
   } // date_comparator
 
   /// конвертирует дату и время из строки в удобный формат

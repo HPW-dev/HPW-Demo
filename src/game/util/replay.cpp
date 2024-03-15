@@ -32,7 +32,7 @@ struct Stream {
     data.reserve(1024 * 100); // обычно столько весит реплей
   }
 
-  inline void write(CP<char> in, std::size_t sz) {
+  inline void write(CP<char> in, const std::size_t sz) {
     assert(sz > 0);
     assert(in != nullptr);
     data.resize(data.size() + sz);
@@ -41,10 +41,10 @@ struct Stream {
     pos += sz;
   }
 
-  inline void read(char* out, std::size_t sz) {
+  inline void read(char* out, const std::size_t sz) {
     assert(sz > 0);
     assert(out != nullptr);
-    iferror (pos + sz > data.size(), "прочитано больше, чем есть данных в Stream");
+    iferror (pos + sz > data.size(), "прочитано больше данных, чем есть в Stream");
     std::memcpy(out, data.data() + pos, sz);
     pos += sz;
   }
@@ -89,14 +89,16 @@ inline Bits get_bits() {
 }
 
 inline void write_str(Stream& file, CN<Str> str) {
-  uint32_t sz = str.size();
+  const uint32_t sz = str.size();
+  assert(sz < 1'000);
   file.write(cptr2ptr<CP<char>>(&sz), sizeof(sz));
   if (sz > 0)
     file.write(cptr2ptr<CP<char>>(str.data()), sz * sizeof(Str::value_type));
 }
 
 inline void write_key_packet(Stream& file, CN<Key_packet> key_packet) {
-  uint32_t sz = key_packet.size();
+  const uint32_t sz = key_packet.size();
+  assert(sz < 1'000);
   file.write(cptr2ptr<CP<char>>(&sz), sizeof(sz));
   if (sz > 0)
     file.write(cptr2ptr<CP<char>>(key_packet.data()), sz * sizeof(Key_packet::value_type));
@@ -105,8 +107,8 @@ inline void write_key_packet(Stream& file, CN<Key_packet> key_packet) {
 inline Str read_str(Stream& file) {
   uint32_t sz {0};
   file.read(ptr2ptr<char*>(&sz), sizeof(sz));
-  if (sz == 0)
-    return {};
+  assert(sz < 1'000);
+  return_if (sz == 0, {});
 
   Vector<Str::value_type> data(sz);
   file.read(ptr2ptr<char*>(data.data()), sz * sizeof(Str::value_type));
@@ -116,9 +118,8 @@ inline Str read_str(Stream& file) {
 inline Key_packet read_key_packet(Stream& file) {
   uint32_t sz {};
   file.read(ptr2ptr<char*>(&sz), sizeof(sz));
-
-  if (sz == 0)
-    return {};
+  assert(sz < 1'000);
+  return_if (sz == 0, {});
 
   Key_packet ret(sz);
   file.read(ptr2ptr<char*>(ret.data()), sz * sizeof(Key_packet::value_type));
@@ -127,13 +128,21 @@ inline Key_packet read_key_packet(Stream& file) {
 
 template <typename T>
 T read_data(Stream& file) {
+  static_assert(sizeof(T) > 0);
   T ret;
   file.read(ptr2ptr<char*>(&ret), sizeof(T));
   return ret;
 }
 
 template <typename T>
-void write_data(Stream& file, const T data) {
+void write_data(Stream& file, const T& data) {
+  static_assert(sizeof(T) > 0);
+  file.write(cptr2ptr<CP<char>>(&data), sizeof(T));
+}
+
+template <typename T>
+void write_data(Stream& file, const T&& data) {
+  static_assert(sizeof(T) > 0);
   file.write(cptr2ptr<CP<char>>(&data), sizeof(T));
 }
 
