@@ -29,10 +29,10 @@ public:
 }; // Replay
 
 struct Replay::Info {
-  Str path {};
   utf32 player_name {};
+  Str path {};
   Str date {};
-  Difficulty difficulty {};
-  uint level {};
   int64_t score {};
+  uint level {};
+  Difficulty difficulty {};
 };
