@@ -24,6 +24,8 @@
 #include "game/level/level-manager.hpp"
 
 struct Level_debug_4::Impl {
+  Timer spawn_timer {0.66666};
+
   inline Impl() {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(6, 1,
@@ -31,7 +33,14 @@ struct Level_debug_4::Impl {
   }
 
   inline void update(const Vec vel, double dt) {
-    
+    cauto player = hpw::entity_mgr->get_player();
+    assert(player);
+    cfor (_, spawn_timer.update(dt)) {
+      cauto pos = player->phys.get_pos();
+      auto it = hpw::entity_mgr->make(player, "bullet.placeholder.2", pos);
+      it->phys.set_speed( rndr(0.5_pps, 1.5_pps) );
+      it->phys.set_deg( rand_degree_stable() );
+    }
   }
 
   inline void draw(Image& dst) const {
