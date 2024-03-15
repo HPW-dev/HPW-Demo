@@ -293,8 +293,8 @@ void bg_pattern_8(Image& dst, const int bg_state) {
   cauto max_lines = 200;
   #pragma omp parallel for
   cfor (i, max_lines) {
-    const Vec a((bg_state + i * 12421515) % dst.X, 0);
-    const Vec b((bg_state + i * 23346632) % dst.X, dst.Y);
+    const Vec a((bg_state + i * 1421515) % dst.X, 0);
+    const Vec b((bg_state + i * 2346632) % dst.X, dst.Y);
     draw_line(dst, a, b, Pal8::white);
   }
 } // bg_pattern_8
