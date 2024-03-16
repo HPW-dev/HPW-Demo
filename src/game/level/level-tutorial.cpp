@@ -8,6 +8,7 @@
 #include "game/core/common.hpp"
 #include "game/core/levels.hpp"
 #include "game/level/util/level-tasks.hpp"
+#include "game/level/util/task-timed.hpp"
 #include "game/level/level-manager.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
@@ -46,7 +47,9 @@ struct Level_tutorial::Impl {
 
   inline void init_tasks() {
     tasks = Level_tasks {
-      [](double dt) { return false; }, // заглушка
+      Timed_task(3.0, [](double dt) {
+        return false;
+      }),
       // выйти с уровня
       [](double dt) {
         hpw::level_mgr->finalize_level();
