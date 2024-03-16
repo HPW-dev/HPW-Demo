@@ -11,8 +11,11 @@
 #endif
 
 // узнать какая разрядность:
-#define is_x64 __x86_64__
-#define is_x32 __i386__
+#ifdef __i386__
+  #define is_x32 
+#else
+  #define is_x64
+#endif
 
 #if defined(__clang__)
   #define COMPILER_CLANG
