@@ -13,7 +13,7 @@ class Level {
 
 public:
   /// if true - level complete. Use Level_mgr::finalize_level
-  bool complete {false};
+  bool m_complete {false};
 
   Level();
   virtual ~Level();

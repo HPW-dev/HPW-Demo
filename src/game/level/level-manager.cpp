@@ -23,7 +23,7 @@ Level_mgr::Level_mgr(CN<Makers> _makers)
 void Level_mgr::update(const Vec vel, double dt) {
   if (level) {
     level->update(vel, dt);
-    if (level->complete)
+    if (level->m_complete)
       level = {};
   } else { // смена уровня
     hpw::entity_mgr->clear();
@@ -67,7 +67,7 @@ void Level_mgr::finalize_level() {
   set_player_pos_from_prev_level(player->phys.get_pos());
   
   if (level)
-    level->complete = true;
+    level->m_complete = true;
 }
 
 Vec Level_mgr::get_player_pos_from_prev_level() const
