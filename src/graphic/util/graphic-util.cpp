@@ -455,3 +455,14 @@ void apply_contrast(Image& dst, double contrast) {
     pix = Pal8::from_real(dst, is_red);
   }
 }
+
+void apply_brightness(Image& dst, const int val) {
+  assert(dst);
+  if (val < 0) {
+    for (nauto pix: dst)
+      pix.sub(val * -1);
+  } else {
+    for (nauto pix: dst)
+      pix.add(val);
+  }
+}

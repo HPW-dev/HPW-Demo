@@ -9,8 +9,12 @@
 #include "game/core/levels.hpp"
 #include "game/level/util/level-tasks.hpp"
 #include "game/level/level-manager.hpp"
+#include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/effect/bg-pattern.hpp"
+#include "graphic/util/graphic-util.hpp"
+#include "graphic/util/util-templ.hpp"
 
 struct Level_tutorial::Impl {
   Level_tasks tasks {};
@@ -27,7 +31,7 @@ struct Level_tutorial::Impl {
   }
 
   inline void draw(Image& dst) const {
-    dst.fill(Pal8::black);
+    draw_bg(dst);
   }
 
   inline void draw_upper_layer(Image& dst) const {}
@@ -42,12 +46,19 @@ struct Level_tutorial::Impl {
 
   inline void init_tasks() {
     tasks = Level_tasks {
+      [](double dt) { return false; }, // заглушка
+      // выйти с уровня
       [](double dt) {
         hpw::level_mgr->finalize_level();
         return true;
       },
     }; // Level_tasks c-tor
   } // init_tasks
+
+  inline void draw_bg(Image& dst) const {
+    bg_pattern_1(dst, graphic::frame_count >> 2);
+    apply_brightness(dst, -140);
+  }
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>()} {}

@@ -75,3 +75,5 @@ void insert_blured(Image& dst, CN<Sprite> src, const Vec old_pos, const Vec cur_
 Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src);
 /// контраст (0 .. 1 .. inf)
 void apply_contrast(Image& dst, double contrast);
+/// меняет яркость картинки
+void apply_brightness(Image& dst, const int val);
