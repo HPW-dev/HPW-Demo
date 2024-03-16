@@ -13,6 +13,8 @@
 Level_debug_2::Level_debug_2() {}
 
 void Level_debug_2::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
+
   pos_old = pos;
   pos_future_old = pos_future;
   constexpr real speed = 60;

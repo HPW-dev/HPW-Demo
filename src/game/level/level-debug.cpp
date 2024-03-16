@@ -6,9 +6,6 @@
 #include "graphic/animation/animation-manager.hpp"
 #include "game/core/canvas.hpp"
 #include "game/util/sync.hpp"
-#ifdef CLD_DEBUG
-#include "game/core/debug.hpp"
-#endif
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
@@ -61,9 +58,8 @@ Level_debug::Level_debug() {
 } // c-tor
 
 void Level_debug::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
   brightness += 20 * dt;
-  
-  print_collision_info();
 } // update
 
 void Level_debug::draw(Image& dst) const {
@@ -76,19 +72,6 @@ void Level_debug::draw(Image& dst) const {
     dst(x, y) = col;
   }
 } // draw
-
-void Level_debug::print_collision_info() {
-#ifdef CLD_DEBUG
-  Str txt;
-  txt += "circle check: " + n2s<Str>(hpw::circle_checks);
-  txt += ", poly: " + n2s<Str>(hpw::poly_checks);
-  txt += ", collided: " + n2s<Str>(hpw::total_collided);
-  hpw_log(txt << "\n");
-  hpw::circle_checks = 0;
-  hpw::poly_checks = 0;
-  hpw::total_collided = 0;
-#endif
-} // print_collision_info
 
 void Level_debug::hitbox_test() {
   #ifdef DEBUG

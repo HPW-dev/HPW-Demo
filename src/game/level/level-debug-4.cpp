@@ -63,5 +63,8 @@ struct Level_debug_4::Impl {
 
 Level_debug_4::Level_debug_4(): impl {new_unique<Impl>()} {}
 Level_debug_4::~Level_debug_4() {}
-void Level_debug_4::update(const Vec vel, double dt) { impl->update(vel, dt); }
+void Level_debug_4::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
+  impl->update(vel, dt);
+}
 void Level_debug_4::draw(Image& dst) const { impl->draw(dst); }

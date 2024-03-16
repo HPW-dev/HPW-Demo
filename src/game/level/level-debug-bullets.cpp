@@ -43,5 +43,8 @@ struct Level_debug_bullets::Impl {
 
 Level_debug_bullets::Level_debug_bullets(): impl {new_unique<Impl>()} {}
 Level_debug_bullets::~Level_debug_bullets() {}
-void Level_debug_bullets::update(const Vec vel, double dt) { impl->update(vel, dt); }
+void Level_debug_bullets::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
+  impl->update(vel, dt);
+}
 void Level_debug_bullets::draw(Image& dst) const { impl->draw(dst); }

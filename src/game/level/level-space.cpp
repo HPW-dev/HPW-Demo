@@ -420,5 +420,8 @@ struct Level_space::Impl {
 
 Level_space::Level_space(): impl {new_unique<Impl>()} {}
 Level_space::~Level_space() {}
-void Level_space::update(const Vec vel, double dt) { impl->update(vel, dt); }
+void Level_space::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
+  impl->update(vel, dt);
+}
 void Level_space::draw(Image& dst) const { impl->draw(dst); }

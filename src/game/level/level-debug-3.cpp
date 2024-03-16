@@ -79,6 +79,7 @@ Level_debug_3::Level_debug_3()
 Level_debug_3::~Level_debug_3() {}
 
 void Level_debug_3::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
 
   // спавн волн пуль
   #if 1

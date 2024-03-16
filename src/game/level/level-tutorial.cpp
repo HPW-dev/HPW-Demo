@@ -179,6 +179,9 @@ void Button::draw(Image& dst) const {
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>()} {}
 Level_tutorial::~Level_tutorial() {}
-void Level_tutorial::update(const Vec vel, double dt) { impl->update(vel, dt); }
+void Level_tutorial::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
+  impl->update(vel, dt);
+}
 void Level_tutorial::draw(Image& dst) const { impl->draw(dst); }
 void Level_tutorial::draw_upper_layer(Image& dst) const { impl->draw_upper_layer(dst); }

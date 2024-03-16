@@ -7,7 +7,6 @@ class Level_debug final: public Level {
   nocopy(Level_debug);
   real brightness {};
 
-  void print_collision_info();
   static void hitbox_test(); /// тестирование функционала хитбоксов
 
 public:

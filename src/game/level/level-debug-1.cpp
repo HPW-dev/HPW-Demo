@@ -76,6 +76,8 @@ Level_debug_1::Level_debug_1() {
 } // c-tor
 
 void Level_debug_1::update(const Vec vel, double dt) {
+  Level::update(vel, dt);
+  
   for (nauto obj: objs) {
     obj->update(dt);
     bound_check(*obj);
