@@ -84,6 +84,9 @@ void set_target_fps(int val) {
   m_target_fps = val;
   set_target_frame_time( 1.0 / m_target_fps );
   set_bad_fps( 0.9 * (get_vsync() ? get_target_vsync_fps() : val) );
+  // при таком низком фпс, ожидание кадра просто заставляет всё лагать
+  if (val < 30)
+    graphic::wait_frame = false;
 }
 
 void set_target_vsync_fps(int val) {
