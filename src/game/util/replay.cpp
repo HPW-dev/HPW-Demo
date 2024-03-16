@@ -81,8 +81,7 @@ inline Platform get_platform() {
 inline Bits get_bits() {
   #ifdef is_x32
     return Bits::x32;
-  #endif
-  #ifdef is_x64
+  #else
     return Bits::x64;
   #endif
   return Bits::error;

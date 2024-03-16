@@ -236,6 +236,20 @@ void Scene_main_menu::draw_text(Image& dst) const {
   auto game_ver = sconv<utf32>( get_game_version() );
   if (game_ver.empty())
     game_ver = get_locale_str("common.unknown");
+  // добавить инфу по платформе
+  #ifdef WINDOWS
+    game_ver += U" Windows";
+  #else
+    game_ver += U" Linux";
+  #endif
+  #ifdef is_x64
+    game_ver += U" x64";
+  #else
+    game_ver += U" x32";
+  #endif
+  #ifdef ECOMEM
+    game_ver += U" ECOMEM";
+  #endif
   graphic::font->draw(text_layer, {140, 300}, get_locale_str("common.game_version") +
     U": " + game_ver);
 
