@@ -121,9 +121,15 @@ void set_draw_time_autoopt_limit(double val) {
 
 void check_autoopt() {
   cauto autoopt_trigger = hpw::real_dt >= graphic::get_draw_time_autoopt_limit();
+  static auto wait_frame_bak = graphic::wait_frame;
+
   if (autoopt_trigger) {
     graphic::render_lag = true;
+    wait_frame_bak = graphic::wait_frame;
+    graphic::wait_frame = false;
     graphic::autoopt_timeout = graphic::autoopt_timeout_max;
+  } else {
+    graphic::wait_frame = wait_frame_bak;
   }
 }
 

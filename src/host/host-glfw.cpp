@@ -294,7 +294,7 @@ void Host_glfw::game_frame(double dt) {
     ++graphic::frame_count;
     frame_drawn = true;
 
-    // TODO в релизе убери
+    #ifdef DEBUG
     if (hpw::render_delay) {
       graphic::render_lag = true;
       graphic::autoopt_timeout = graphic::autoopt_timeout_max;
@@ -304,6 +304,7 @@ void Host_glfw::game_frame(double dt) {
       usleep(200);
       #endif
     }
+    #endif
 
     auto frame_draw_end = get_time();
     graphic::hard_draw_time = frame_draw_end - frame_draw_start;
