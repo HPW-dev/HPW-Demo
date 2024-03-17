@@ -75,3 +75,10 @@ build_plugin("pixelate", [
   src_dir + "graphic/util/convert.cpp",
   src_dir + "util/error.cpp",
 ] )
+
+build_plugin("sharpen", [
+  src_plugin_dir + "sharpen.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/util/convert.cpp",
+] )
