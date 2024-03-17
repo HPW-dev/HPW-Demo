@@ -266,7 +266,7 @@ void Host_glfw::game_set_fps_info(double gameloop_time) {
     ups = 0;
     second_timer -= 1;
   }
-} // game_update_fps_info
+}
 
 bool Host_glfw::is_ran() const { return is_run && !glfwWindowShouldClose(window); }
 
@@ -293,17 +293,7 @@ void Host_glfw::game_frame(double dt) {
     ++fps;
     ++graphic::frame_count;
     frame_drawn = true;
-
-    // TODO в релизе убери
-    if (hpw::render_delay) {
-      graphic::render_lag = true;
-      graphic::autoopt_timeout = graphic::autoopt_timeout_max;
-      #ifdef WINDOWS
-      Sleep(200);
-      #else
-      usleep(200);
-      #endif
-    }
+    apply_render_delay();
 
     auto frame_draw_end = get_time();
     graphic::hard_draw_time = frame_draw_end - frame_draw_start;
@@ -342,17 +332,35 @@ void Host_glfw::game_update(double dt) {
     keys_cur_to_prev();
     ++upf;
     ++ups;
-
-    // TODO в релизе убери
-    if (hpw::update_delay) {
-      #ifdef WINDOWS
-      Sleep(5);
-      #else
-      usleep(5);
-      #endif
-    }
+    apply_update_delay();
   } // while update time
 } // game_update
+
+void Host_glfw::apply_render_delay() {
+  #ifdef DEBUG
+  if (hpw::render_delay) {
+    graphic::render_lag = true;
+    graphic::autoopt_timeout = graphic::autoopt_timeout_max;
+    #ifdef WINDOWS
+    Sleep(200);
+    #else
+    usleep(200);
+    #endif
+  }
+  #endif
+}
+
+void Host_glfw::apply_update_delay() {
+  #ifdef DEBUG
+  if (hpw::update_delay) {
+    #ifdef WINDOWS
+    Sleep(5);
+    #else
+    usleep(5);
+    #endif
+  }
+  #endif
+}
 
 void Host_glfw::calc_lerp_alpha() {
   auto start_draw_time = get_time() - start_update_time;
