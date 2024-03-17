@@ -38,6 +38,8 @@ protected:
   void calc_lerp_alpha();
   void calc_upf();
   void set_update_time(double dt); /// контроль плавности апдейта
+  void apply_render_delay();
+  void apply_update_delay();
 
   void _set_mouse_cursour_mode(bool enable) override;
   void _set_fullscreen(bool enable) override;
