@@ -28,7 +28,7 @@ public:
   virtual Vec text_size(CN<utf32> text) const;
   /// отобразить текст
   virtual void draw(Image& dst, const Vec pos, CN<utf32> text,
-    blend_pf bf = &blend_past) const = 0;
+    blend_pf bf = &blend_past, const int optional = 0) const = 0;
   inline cnauto w() const { return w_; }
   inline cnauto h() const { return h_; }
   inline cnauto space() const { return space_; }

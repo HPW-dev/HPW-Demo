@@ -55,7 +55,7 @@ int Unifont::text_width(CN<utf32> text) const {
 
 
 void Unifont::draw(Image& dst, const Vec pos, CN<utf32> text,
-blend_pf bf) const {
+blend_pf bf, const int optional) const {
   int posx = pos.x;
   int posy = pos.y;
   posy += h_ / 2 + 2; // компенсация оффсета
@@ -69,7 +69,7 @@ blend_pf bf) const {
     auto glyph = _get_glyph(ch);
     if ( !glyph)
       continue;
-    insert(dst, glyph->image, {posx + glyph->xoff, posy + glyph->yoff}, bf);
+    insert(dst, glyph->image, {posx + glyph->xoff, posy + glyph->yoff}, bf, optional);
     posx += glyph->image.X() + space().x;
   } // for text size
 } // draw

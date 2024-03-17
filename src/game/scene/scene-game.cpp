@@ -59,7 +59,7 @@
 void Scene_game::init_levels() {
   hpw::level_mgr = new_shared<Level_mgr>(Level_mgr::Makers{
     [] { return new_shared<Level_tutorial>(); },
-    //[] { return new_shared<Level_space>(); },
+    [] { return new_shared<Level_space>(); },
     //[] { return new_shared<Level_1>(); },
     
   #ifdef DEBUG

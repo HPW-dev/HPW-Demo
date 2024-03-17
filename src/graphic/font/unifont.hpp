@@ -30,5 +30,5 @@ public:
   int text_width(CN<utf32> text) const override;
   /// отобразить текст
   void draw(Image& dst, const Vec pos, CN<utf32> text,
-    blend_pf bf=&blend_diff) const override;
+    blend_pf bf=&blend_diff, const int optional=0) const override;
 }; // Unifont
