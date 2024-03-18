@@ -82,3 +82,11 @@ build_plugin("sharpen", [
   src_dir + "graphic/image/color.cpp",
   src_dir + "graphic/util/convert.cpp",
 ] )
+
+build_plugin("random-frame", [
+  src_plugin_dir + "random-frame.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/util/convert.cpp",
+  src_dir + "util/math/random.cpp",
+] )
