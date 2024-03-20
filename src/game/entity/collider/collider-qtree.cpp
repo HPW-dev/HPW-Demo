@@ -128,6 +128,7 @@ public:
     // перенос объектов из ветки выше в новые
     for (nauto entity: m_entitys)
       add(*entity);
+    //m_entitys.clear();
     m_entitys.clear();
   } // split
 
@@ -180,6 +181,7 @@ public:
   }
 
   inline void clear() {
+    //m_entitys.clear();
     m_entitys.clear();
 
     if (have_branches) {
@@ -269,7 +271,12 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
   auto th_max = omp_get_max_threads();
   assert(th_max > 0);
   // для хранения локальных списков в потоках
-  Vector<decltype(collision_pairs)> list_table(th_max);
+  static Vector<decltype(collision_pairs)> list_table;
+  static Vector< Vector<Entity*> > lists;
+  list_table.resize(th_max);
+  for (nauto table: list_table)
+    table.clear();
+  lists.resize(th_max);
 
   /* проверить области вокруг каждой точки и закинуть в пару
   коллизии соседние ноды входящие в область */
@@ -285,22 +292,23 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
     Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
     
     // найти соседей к этой точке
-    Vector<Entity*> list;
-    root->find(area, list);
+    
+    cauto th_idx = omp_get_thread_num();
+    lists[th_idx].clear();
+    root->find(area, lists[th_idx]);
 
     // добавить этих соседей в пары на проверки
-    for (nauto other: list) {
+    for (nauto other: lists[th_idx]) {
       auto addr_a = entity.get();
       auto addr_b = other;
       // сами себя не проверяем
       cont_if (addr_a == addr_b);
       // проверить на возможность сталкиваться по флагам
       cont_if (!cld_flag_compat(*addr_a, *addr_b));
-      // эта перестановка сократит число одинаковых пар
+      // эта перестановка сократит число одинаsковых пар
       if (addr_b > addr_a)
         std::swap(addr_a, addr_b);
         
-      cauto th_idx = omp_get_thread_num();
       list_table.at(th_idx).emplace(addr_a, addr_b);
     } // for list
   } // for entities
