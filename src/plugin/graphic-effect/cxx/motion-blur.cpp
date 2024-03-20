@@ -30,7 +30,7 @@ struct result_t* result) {
   g_motion_blur = 0.6;
   context->registrate_param_f32(
     "power",
-    "power of motion blur",
+    "power of motion blur (less = smooth)",
     &g_motion_blur, 0.05, 0.1, 0.8
   );
   // создание буфера предыдущего кадра
