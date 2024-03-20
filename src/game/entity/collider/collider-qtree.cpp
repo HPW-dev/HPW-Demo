@@ -17,9 +17,10 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 
+/// память под ветви
 static Mem_pool qtree_mempool;
 
-/// quad-tree
+/// quad-tree односвязное дерево
 class Qtree final {
   Vector<Entity*> m_entitys {}; /// список объектов в текущей ноде
   Pool_ptr(Qtree) lu {}; /// лево верх
@@ -59,7 +60,8 @@ public:
 
   ~Qtree() = default;
 
-  inline Qtree(CN<Rect> _bound, std::size_t _depth, std::size_t _max_depth, std::size_t _entity_limit)
+  inline Qtree(CN<Rect> _bound, std::size_t _depth, std::size_t _max_depth,
+  std::size_t _entity_limit)
   : bound( _bound )
   , depth( _depth )
   , max_depth( _max_depth )
@@ -75,23 +77,25 @@ public:
     if (have_branches) {
       auto pos_x = std::floor(entity.phys.get_pos().x);
       auto pos_y = std::floor(entity.phys.get_pos().y);
-      // определение, в какую ветвь кинуть объект
-      if (pos_y >= bound.pos.y && pos_y < bound.pos.y + (bound.size.y / 2.0)) { // верх
+      // определение, в какую ветвь кинуть объект:
+      // верх
+      if (pos_y >= bound.pos.y && pos_y < bound.pos.y + (bound.size.y / 2.0)) {
         if (pos_x >= bound.pos.x && pos_x < bound.pos.x + (bound.size.x / 2.0))
-          lu->add(entity);
+          lu->add(entity); // лево
         else
-          ru->add(entity);
+          ru->add(entity); // право
       } else { // низ
         if (pos_x >= bound.pos.x && pos_x < bound.pos.x + (bound.size.x / 2.0))
-          ld->add(entity);
+          ld->add(entity); // лево
         else
-          rd->add(entity);
+          rd->add(entity); // право
       }
-    } else { // еслви ветвей нет:
-      if (m_entitys.size() < entity_limit) { // добавить объект, если есть свободное место
+    } else { // если ветвей нет:
+      // добавить объект, если есть свободное место
+      if (m_entitys.size() < entity_limit) {
         m_entitys.emplace_back(&entity);
       } else { // при отстуствии свободного места:
-        // если размер вставляемого объекта больше сектора, то не делить
+        // если размер вставляемого объекта больше сектора, то не делить пространство
         auto hithox = entity.get_hitbox();
         return_if( !hithox);
         if (
@@ -101,16 +105,15 @@ public:
           m_entitys.emplace_back(&entity);
           return;
         }
-
-        // поделиться на 4 части, если глубина не макс
+        // поделиться на 4 части, если глубина меньше лимита объектов в ноде
         if (depth < max_depth) {
           split();
           add(entity); // добавить что хотели в следующие ветви
         } else { // не делиться больше, добавить объект
           m_entitys.emplace_back(&entity);
         }
-      }
-    }
+      } // else m_entitys.size() >= entity_limit
+    } // if not have_branches
   } // add
 
   /// поделить ноду на 4 части
@@ -137,12 +140,16 @@ public:
     // нарисовать разделяющую сетку
     Pal8 grid_color = Pal8::white;
     draw_line<&blend_diff>(dst, 
-      Vec(camera_offset.x + bound.pos.x + (bound.size.x / 2.0), std::floor(bound.pos.y)),
-      Vec(camera_offset.x + bound.pos.x + (bound.size.x / 2.0), std::ceil(bound.pos.y + bound.size.y)),
+      Vec(camera_offset.x + bound.pos.x + (bound.size.x / 2.0),
+        std::floor(bound.pos.y)),
+      Vec(camera_offset.x + bound.pos.x + (bound.size.x / 2.0),
+        std::ceil(bound.pos.y + bound.size.y)),
       grid_color);
     draw_line<&blend_diff>(dst, 
-      Vec(std::floor(bound.pos.x), camera_offset.y + bound.pos.y + (bound.size.y / 2.0)),
-      Vec(std::ceil(bound.pos.x + bound.size.x), camera_offset.y + bound.pos.y + (bound.size.y / 2.0)),
+      Vec(std::floor(bound.pos.x),
+        camera_offset.y + bound.pos.y + (bound.size.y / 2.0)),
+      Vec(std::ceil(bound.pos.x + bound.size.x),
+        camera_offset.y + bound.pos.y + (bound.size.y / 2.0)),
       grid_color);
     if (have_branches) {
       lu->draw(dst, camera_offset);
@@ -212,29 +219,29 @@ void Collider_qtree::operator()(CN<Entitys> entities, double dt) {
     cnauto pair = tmp_pairs[i];
     test_collide_pair(*pair.first, *pair.second);
   }
-} // processing
+}
 
 void Collider_qtree::test_collide_pair(Entity& a, Entity& b) {
-  // объекты, что сюда попадут, точно можно будет сталкивать
-  auto a_collidable = scast<Collidable*>(&a);
-  auto b_collidable = scast<Collidable*>(&b);
+  // объектыs что сюда попадут, точно можно будет сталкивать
+  nauto a_collidable = *(ptr2ptr<Collidable*>(&a));
+  nauto b_collidable = *(ptr2ptr<Collidable*>(&b));
   // обновление флага столкновений
-  cauto collided = a_collidable->is_collided_with(*b_collidable);
-  a_collidable->status.collided |= collided;
-  b_collidable->status.collided |= collided;
+  cauto collided = a_collidable.is_collided_with(b_collidable);
   // снести хп
   if (collided) {
-    a_collidable->sub_hp( b_collidable->get_dmg() );
-    b_collidable->sub_hp( a_collidable->get_dmg() );
+    a_collidable.status.collided |= collided;
+    a_collidable.sub_hp( b_collidable.get_dmg() );
+    b_collidable.status.collided |= collided;
+    b_collidable.sub_hp( a_collidable.get_dmg() );
   }
-} // test_collide
+}
 
 void Collider_qtree::debug_draw(Image& dst, const Vec camera_offset) {
   root->draw(dst, camera_offset);
-} // debug_draw
+}
 
 Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
-  Entitys ret;
+  Entitys ret; /// объекты пригодные к сталкиванию
 
   #ifdef ECOMEM
     // сбросить листы в дереве
@@ -251,7 +258,7 @@ Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
   // перестроить всё дерево заново
   for (cnauto entity_p: entities) {
     nauto entity = *entity_p;
-    // проверить что объект жив и может сталкиваться
+    // проверить что объект может сталкиваться и что он жив
     if (entity.status.collidable && entity.status.live) {
       root->add(entity);
       ret.emplace_back(entity_p);
@@ -265,11 +272,16 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
   collision_pairs.clear();
 
 #ifdef _OPENMP
-
+  // узнать сколько потоков сделал OpenMP
   auto th_max = omp_get_max_threads();
   assert(th_max > 0);
   // для хранения локальных списков в потоках
-  Vector<decltype(collision_pairs)> list_table(th_max);
+  static Vector<decltype(collision_pairs)> list_table;
+  static Vector< Vector<Entity*> > lists;
+  list_table.resize(th_max);
+  for (nauto table: list_table)
+    table.clear();
+  lists.resize(th_max);
 
   /* проверить области вокруг каждой точки и закинуть в пару
   коллизии соседние ноды входящие в область */
@@ -279,28 +291,27 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
   for (nauto entity: entities) {
     auto hitbox = entity->get_hitbox();
     cont_if(!hitbox);
-    auto pos = entity->phys.get_pos();
-
+    // узнать какой сейчас поток
+    cauto th_idx = omp_get_thread_num();
+    lists[th_idx].clear();
     // искать соседей вокруг хитбокса объекта
-    Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
-    
+    cauto pos = entity->phys.get_pos();
+    const Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
     // найти соседей к этой точке
-    Vector<Entity*> list;
-    root->find(area, list);
+    root->find(area, lists[th_idx]);
 
     // добавить этих соседей в пары на проверки
-    for (nauto other: list) {
+    for (nauto other: lists[th_idx]) {
       auto addr_a = entity.get();
       auto addr_b = other;
       // сами себя не проверяем
       cont_if (addr_a == addr_b);
       // проверить на возможность сталкиваться по флагам
       cont_if (!cld_flag_compat(*addr_a, *addr_b));
-      // эта перестановка сократит число одинаковых пар
+      // эта перестановка сократит число одинаsковых пар
       if (addr_b > addr_a)
         std::swap(addr_a, addr_b);
-        
-      cauto th_idx = omp_get_thread_num();
+      // unordered_set сам уберёт повторы
       list_table.at(th_idx).emplace(addr_a, addr_b);
     } // for list
   } // for entities
@@ -317,9 +328,10 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
       // эта перестановка сократит число одинаковых пар
       if (addr_b > addr_a)
         std::swap(addr_a, addr_b);
+      // unordered_set сам уберёт повторы
       collision_pairs.emplace( std::move(it) );
-    }
-  }
+    } // for table
+  } // for list_table
 
 #else // вариант без многопотока
 
@@ -348,7 +360,7 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
       // эта перестановка сократит число одинаковых пар
       if (addr_b > addr_a)
         std::swap(addr_a, addr_b);
-        
+      // unordered_set сам уберёт повторы
       collision_pairs.emplace(addr_a, addr_b);
     } // for list
   } // for entities
