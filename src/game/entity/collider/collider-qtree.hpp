@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <utility>
+#include <bit>
 #include "robin-hood-hashing/robin_hood.h"
 #include "util/mempool.hpp"
 #include "util/math/num-types.hpp"
@@ -25,8 +26,8 @@ public:
   /// хешер для collision_pairs
   struct Collision_pairs_hash {
     inline std::size_t operator()(CN<Collision_pair> val) const {
-      auto a = rcast<std::uintptr_t>(val.first);
-      auto b = rcast<std::uintptr_t>(val.second);
+      auto a = std::bit_cast<std::uintptr_t>(val.first);
+      auto b = std::bit_cast<std::uintptr_t>(val.second);
       return (a << 18) + b;
     }
   };
