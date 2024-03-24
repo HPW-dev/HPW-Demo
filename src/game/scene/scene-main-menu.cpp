@@ -129,7 +129,9 @@ void Scene_main_menu::init_menu() {
         hpw::scene_mgr->add(new_shared<Scene_difficulty>());
       }),
       new_shared<Menu_text_item>(get_locale_str("scene.replay.name"), []{
-        hpw::scene_mgr->add(new_shared<Scene_replay_select>());
+        hpw::scene_mgr->add(new_shared<Scene_loading>( []{
+          hpw::scene_mgr->add(new_shared<Scene_replay_select>());
+        } ));
       }),
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr->add(new_shared<Scene_info>());

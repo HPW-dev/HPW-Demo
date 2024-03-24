@@ -5,7 +5,7 @@
 
 class Sprite;
 
-/// инфо о разрабах и т.п.
+/// фон загрузки
 class Scene_loading final: public Scene {
   std::function<void ()> scene_maker {};
   mutable bool drawed {false};
