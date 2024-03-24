@@ -4,6 +4,7 @@
 #include <bit>
 #include "robin-hood-hashing/robin_hood.h"
 #include "util/mempool.hpp"
+#include "util/platform.hpp"
 #include "util/math/num-types.hpp"
 #include "collider.hpp"
 
@@ -27,11 +28,15 @@ public:
 
   /// хешер для collision_pairs
   struct Collision_pairs_hash {
-    inline std::size_t operator()(CN<Collision_pair> val) const {
+    inline static std::size_t operator()(const Collision_pair val) {
       // сделать поинтеры числом и юзать это как уникальный ID
-      auto a = std::bit_cast<std::uintptr_t>(val.first);
-      auto b = std::bit_cast<std::uintptr_t>(val.second);
-      return (a << 18) + b;
+      cauto a = std::bit_cast<std::uintptr_t>(val.first);
+      cauto b = std::bit_cast<std::uintptr_t>(val.second);
+      #ifdef is_x32
+        return (a << 15) + b;
+      #else
+        return (a << 31) + b;
+      #endif
     }
   };
 
