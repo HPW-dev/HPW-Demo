@@ -14,6 +14,7 @@
 #include "game/level/level-manager.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/keybits.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/effect/bg-pattern.hpp"
@@ -52,14 +53,11 @@ struct Level_tutorial::Impl {
 
   inline void init_tasks() {
     tasks = Level_tasks {
-      Timed_task(30.0, [](double dt) {
-        return false;
-      }),
-      // выйти с уровня
-      [](double dt) {
-        hpw::level_mgr->finalize_level();
-        return true;
-      },
+      // в начале ничего не происходит
+      Timed_task(3.3, [](double dt) { return false; }),
+      getf_draw_motion_keys(),
+      getf_placeholder(), // TODO del
+      &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
 
@@ -74,9 +72,47 @@ struct Level_tutorial::Impl {
     cauto center = get_screen_center();
     cauto text_sz = graphic::font->text_size(bg_text);
     cauto pos = center - (text_sz / 2);
+    // затемнение фона текста
+    cauto border = Vec(11, 11);
+    cauto bg_shadow = Rect(pos - border, text_sz + border * 2);
+    draw_rect_filled<&blend_158>(dst, bg_shadow, Pal8::black);
     // яркость текста сменяется
     cauto text_brightness = 150u + ((graphic::frame_count / 3u) % (255u - 150u));
     graphic::font->draw(dst, pos, bg_text, &blend_alpha, text_brightness);
+  }
+
+  /// кнопки движения
+  inline Timed_task getf_draw_motion_keys() {
+    return Timed_task(9.0, [this](double dt) {
+      draw_motion_keys();
+      return false;
+    } );
+  }
+
+  inline void draw_motion_keys() {
+    bg_text = get_locale_str("scene.tutorial.text.move_keys");
+    #define KEY_TEXT(key_name) { \
+      const bool pressed = is_pressed(hpw::keycode::key_name); \
+      cauto scope_l = pressed ? U'{' : U' '; \
+      cauto scope_r = pressed ? U'}' : U' '; \
+      bg_text += U'\n' + get_locale_str("scene.input."#key_name) + U" - "; \
+      bg_text += scope_l + hpw::keys_info.find(hpw::keycode::key_name)->name + scope_r; \
+    }
+    KEY_TEXT(up)
+    KEY_TEXT(down)
+    KEY_TEXT(left)
+    KEY_TEXT(right)
+    #undef KEY_TEXT
+  } // draw_motion_keys
+
+  /// задержка уровня TODO del
+  inline Timed_task getf_placeholder()
+  { return Timed_task( 30.0, [](double dt) { return false; } ); }
+
+  /// выйти с уровня
+  inline static bool exit_from_level(double dt) {
+    hpw::level_mgr->finalize_level();
+    return true;
   }
 }; // Impl
 
