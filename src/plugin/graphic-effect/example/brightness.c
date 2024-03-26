@@ -2,7 +2,7 @@
 #include "hpw-plugin-effect-util.h"
 /* Как собрать:
 Закиньте hpw-plugin-effect.h и util-файлы в папку с кодом плагина
-и соберите командой: gcc -std=c2x -Wall -O2 -m32 *.c -o brightness.dll
+и соберите командой: gcc -std=c2x -Wall -O2 -shared *.c -o brightness.dll
 получившийся .dll/.so файл скиньте в build/plugin/effect/, затем
 найдите его в игре в настройках графики. */
 
