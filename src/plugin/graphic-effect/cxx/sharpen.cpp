@@ -1,4 +1,5 @@
 #include <omp.h>
+#include <cstring>
 #include <algorithm>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include "pge-util.hpp"
@@ -38,7 +39,7 @@ struct result_t* result) {
 
 extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   // скопировать кадр в буффер
-  memcpy(g_buffer.data(), g_dst, sizeof(Pal8) * g_buffer.size());
+  std::memcpy(g_buffer.data(), g_dst, sizeof(Pal8) * g_buffer.size());
   constexpr float sin45d = 0.70710678118;
   constexpr float center = sin45d * 4.0 + 4.0 + 1;
 

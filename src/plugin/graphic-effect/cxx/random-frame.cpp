@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <cassert>
 #include <ctime>
+#include <cstring>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include "pge-util.hpp"
 #include "util/macro.hpp"
@@ -49,7 +50,7 @@ struct result_t* result) {
   resize_buffers(g_length);
   // начальная заливка всех буфферов одним и тем же кадром
   for (nauto buffer: g_buffers)
-    memcpy( ptr2ptr<Pal8*>(buffer.data()),
+    std::memcpy( ptr2ptr<Pal8*>(buffer.data()),
       g_dst, buffer.size() * sizeof(Pal8) );
 } // plugin_init
 
@@ -61,11 +62,11 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   // сейв текущего буфера 
   assert(g_length != 0);
   cauto idx = state % g_length;
-  memcpy( ptr2ptr<Pal8*>(g_buffers.at(idx).data()),
+  std::memcpy( ptr2ptr<Pal8*>(g_buffers.at(idx).data()),
     g_dst, g_buffers.at(idx).size() * sizeof(Pal8) );
   // отрисовка случайного буффера
   cauto rnd_idx = rndu_fast(g_length - 1);
-  memcpy( g_dst, cptr2ptr<CP<Pal8>>(g_buffers.at(rnd_idx).data()),
+  std::memcpy( g_dst, cptr2ptr<CP<Pal8>>(g_buffers.at(rnd_idx).data()),
     g_buffers.at(rnd_idx).size() * sizeof(Pal8) );
 } // plugin_apply
 
