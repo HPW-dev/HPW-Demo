@@ -56,6 +56,7 @@ struct Level_tutorial::Impl {
       // в начале ничего не происходит
       Timed_task(3.3, [](double dt) { return false; }),
       getf_draw_motion_keys(),
+      getf_motion_with_bullets(),
       getf_placeholder(), // TODO del
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -113,6 +114,15 @@ struct Level_tutorial::Impl {
   inline static bool exit_from_level(double dt) {
     hpw::level_mgr->finalize_level();
     return true;
+  }
+
+  inline Level_task getf_motion_with_bullets() {
+    return [this](double dt) {
+      draw_motion_keys();
+      // накида рандомных пуль с краёв экрана, чтобы заставить игрока подвигаться
+      
+      return false;
+    };
   }
 }; // Impl
 
