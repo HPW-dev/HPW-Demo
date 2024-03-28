@@ -25,6 +25,7 @@ struct Level_tutorial::Impl {
   Level_tasks tasks {};
   utf32 bg_text {}; /// текст, который показывается на фоне
 
+
   inline explicit Impl() {
     hpw::shmup_mode = true;
     init_collider();
@@ -55,9 +56,8 @@ struct Level_tutorial::Impl {
     tasks = Level_tasks {
       // в начале ничего не происходит
       Timed_task(3.3, [](double dt) { return false; }),
-      getf_draw_motion_keys(),
-      getf_motion_with_bullets(),
-      getf_placeholder(), // TODO del
+      Timed_task(9.0, Task_draw_motion_keys(this)),
+      Spawner_border_bullet(this, 10, 1.0),
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
@@ -82,13 +82,28 @@ struct Level_tutorial::Impl {
     graphic::font->draw(dst, pos, bg_text, &blend_alpha, text_brightness);
   }
 
-  /// кнопки движения
-  inline Timed_task getf_draw_motion_keys() {
-    return Timed_task(9.0, [this](double dt) {
-      draw_motion_keys();
-      return false;
-    } );
-  }
+  /// Кнопки движения. Пропуск, когда всё нажато
+  struct Task_draw_motion_keys {
+    Impl* master {};
+    bool key_l {};
+    bool key_r {};
+    bool key_u {};
+    bool key_d {};
+
+    inline explicit Task_draw_motion_keys (Impl* _master)
+    : master {_master} {}
+
+    inline bool operator()(double dt) {
+      assert(master);
+      master->draw_motion_keys();
+      key_u |= is_pressed(hpw::keycode::up);
+      key_d |= is_pressed(hpw::keycode::down);
+      key_l |= is_pressed(hpw::keycode::left);
+      key_r |= is_pressed(hpw::keycode::right);
+      // выйти со сцены, если всё нажато
+      return key_u && key_d && key_l && key_r;
+    }
+  }; // Task_draw_motion_keys
 
   inline void draw_motion_keys() {
     bg_text = get_locale_str("scene.tutorial.text.move_keys");
@@ -99,10 +114,10 @@ struct Level_tutorial::Impl {
       bg_text += U'\n' + get_locale_str("scene.input."#key_name) + U" - "; \
       bg_text += scope_l + hpw::keys_info.find(hpw::keycode::key_name)->name + scope_r; \
     }
-    KEY_TEXT(up)
-    KEY_TEXT(down)
     KEY_TEXT(left)
     KEY_TEXT(right)
+    KEY_TEXT(up)
+    KEY_TEXT(down)
     #undef KEY_TEXT
   } // draw_motion_keys
 
@@ -116,14 +131,32 @@ struct Level_tutorial::Impl {
     return true;
   }
 
-  inline Level_task getf_motion_with_bullets() {
-    return [this](double dt) {
-      draw_motion_keys();
-      // накида рандомных пуль с краёв экрана, чтобы заставить игрока подвигаться
-      
-      return false;
-    };
-  }
+  /// спавнит пули по краям экрана, чтобы заставить игрока подвигаться
+  struct Spawner_border_bullet {
+    Impl* master {};
+    uint count {}; /// когда станет 0, завершить
+    Timer spwan_timer {}; /// скорость спавна пуль
+
+    inline bool operator()(double dt) {
+      master->draw_motion_keys();
+      cfor (_, spwan_timer.update(dt)) {
+        // TODO
+        --count;
+      }
+      return count == 0 || count >= 9999;
+    }
+
+    inline explicit Spawner_border_bullet(Impl* _master, const uint _count,
+    const real _spwan_timer)
+    : master{_master}
+    , count{_count}
+    , spwan_timer{_spwan_timer}
+    {
+      assert(_master);
+      assert(count > 0 && count < 9999);
+      assert(_spwan_timer > 0 && _spwan_timer < 100);
+    }
+  }; // Spawner_border_bullet
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>()} {}
