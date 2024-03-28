@@ -62,7 +62,7 @@ struct Level_tutorial::Impl {
   } // init_tasks
 
   inline void draw_bg(Image& dst) const {
-    bg_pattern_1(dst, graphic::frame_count >> 2);
+    bgp_bit_1(dst, graphic::frame_count >> 2);
     apply_brightness(dst, -140);
   }
 

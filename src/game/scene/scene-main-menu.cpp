@@ -213,25 +213,25 @@ void bg_copy_4(Image& dst, const int state) {
 
 void Scene_main_menu::init_bg() {
   sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
-    &bg_pattern_1,
-    &bg_pattern_2,
-    &bg_pattern_4,
-    &bg_pattern_8,
-    &bg_pattern_9,
+    &bgp_bit_1,
+    &bgp_bit_2,
+    &bgp_pinterest_1,
+    &bgp_random_lines_1,
+    &bgp_random_lines_2,
     #ifndef ECOMEM
     &bg_copy_1,
     &bg_copy_2,
     &bg_copy_3,
     &bg_copy_4,
-    &bg_pattern_5,
-    &bg_pattern_6,
-    &bg_pattern_7,
-    &bg_pattern_10,
-    &bg_pattern_11,
+    &bgp_rain_waves,
+    &bgp_line_waves,
+    &bgp_rotated_lines,
+    &bgp_labyrinth_1,
+    &bgp_labyrinth_2,
     #endif
-  };
+  }; // bg_patterns table
   bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );
-}
+} // init_bg
 
 void Scene_main_menu::draw_text(Image& dst) const {
   static Image text_layer(dst.X, dst.Y);

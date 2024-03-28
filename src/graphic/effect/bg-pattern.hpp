@@ -2,22 +2,25 @@
 
 class Image;
 
-void bg_pattern_1(Image& dst, const int bg_state);
-void bg_pattern_2(Image& dst, const int bg_state);
-void bg_pattern_3(Image& dst, const int bg_state);
+// битовой узор 1
+void bgp_bit_1(Image& dst, const int bg_state);
+// битовой узор 2
+void bgp_bit_2(Image& dst, const int bg_state);
+// битовой узор 3
+void bgp_bit_3(Image& dst, const int bg_state);
 /// узор из пинтереста
-void bg_pattern_4(Image& dst, const int bg_state);
+void bgp_pinterest_1(Image& dst, const int bg_state);
 /// волны от случайных капель
-void bg_pattern_5(Image& dst, const int bg_state);
+void bgp_rain_waves(Image& dst, const int bg_state);
 /// волны из случайных линий
-void bg_pattern_6(Image& dst, const int bg_state);
+void bgp_line_waves(Image& dst, const int bg_state);
 /// белые полоски на красном фоне
-void bg_pattern_7(Image& dst, const int bg_state);
+void bgp_rotated_lines(Image& dst, const int bg_state);
 /// рандомные полосы
-void bg_pattern_8(Image& dst, const int bg_state);
+void bgp_random_lines_1(Image& dst, const int bg_state);
 /// рандомные полосы (меньше)
-void bg_pattern_9(Image& dst, const int bg_state);
+void bgp_random_lines_2(Image& dst, const int bg_state);
 /// узор из меандров на чёрном фоне
-void bg_pattern_10(Image& dst, const int bg_state);
+void bgp_labyrinth_1(Image& dst, const int bg_state);
 /// случайный узор из углов на чёрном фоне
-void bg_pattern_11(Image& dst, const int bg_state);
+void bgp_labyrinth_2(Image& dst, const int bg_state);

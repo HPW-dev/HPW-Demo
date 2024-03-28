@@ -129,8 +129,7 @@ public:
   }
 }; // Waves
 
-void bg_pattern_1(Image& dst, const int bg_state) {
-  // нарисовать фон
+void bgp_bit_1(Image& dst, const int bg_state) {
   int v = bg_state;
   cfor (y, dst.Y)
   cfor (x, dst.X) {
@@ -147,9 +146,9 @@ void bg_pattern_1(Image& dst, const int bg_state) {
     pix &= pix2;
     dst(x, y) = pix;
   }
-}
+} // bgp_bit_1
 
-void bg_pattern_2(Image& dst, const int bg_state) {
+void bgp_bit_2(Image& dst, const int bg_state) {
   int v = bg_state;
   cfor (y, dst.Y)
   cfor (x, dst.X) {
@@ -161,7 +160,7 @@ void bg_pattern_2(Image& dst, const int bg_state) {
   }
 }
 
-void bg_pattern_3(Image& dst, const int bg_state) {
+void bgp_bit_3(Image& dst, const int bg_state) {
   int v = bg_state;
   cfor (y, dst.Y)
   cfor (x, dst.X) {
@@ -173,7 +172,7 @@ void bg_pattern_3(Image& dst, const int bg_state) {
 
 inline Pal8 rnd_color_fast() { return Pal8::from_real(rndr_fast(), rndu_fast() & 1); }
 
-void bg_pattern_4(Image& dst, const int bg_state) {
+void bgp_pinterest_1(Image& dst, const int bg_state) {
   constx auto MX = 12u;
   constx auto ICONS = 5u;
 
@@ -211,9 +210,9 @@ void bg_pattern_4(Image& dst, const int bg_state) {
       } // for y2 -> 2
     } // for x -> MX
   }
-} // bg_pattern_4
+} // bgp_pinterest_1
 
-void bg_pattern_5(Image& dst, const int bg_state) {
+void bgp_rain_waves(Image& dst, const int bg_state) {
   static Waves waves(0.6);
   waves.update_size(dst.X, dst.Y);
   if (bg_state % 1'200 == 0)
@@ -221,9 +220,9 @@ void bg_pattern_5(Image& dst, const int bg_state) {
   waves.make_noise(7.5, 1);
   waves.update();
   waves.draw(dst);
-} // bg_pattern_5
+} // bgp_rain_waves
 
-void bg_pattern_6(Image& dst, const int bg_state) {
+void bgp_line_waves(Image& dst, const int bg_state) {
   static Waves waves(2.0);
   waves.update_size(dst.X, dst.Y);
   if (bg_state % 1'200 == 0)
@@ -232,7 +231,7 @@ void bg_pattern_6(Image& dst, const int bg_state) {
     waves.make_random_lines(1.75, 300, 5);
   waves.update();
   waves.draw(dst);
-} // bg_pattern_6
+} // bgp_line_waves
 
 inline void bg_pattern_7_line(const Vec center, const real deg,
 const Pal8 color, Sprite& dst) {
@@ -250,7 +249,7 @@ const Pal8 color, Sprite& dst) {
   }
 }
 
-void bg_pattern_7(Image& dst, const int bg_state) {
+void bgp_rotated_lines(Image& dst, const int bg_state) {
   // красный фон
   cauto bg_color = Pal8::from_real(0.25 + std::fmod(bg_state * 0.003, 0.75), true);
   dst.fill(bg_color);
@@ -284,9 +283,9 @@ void bg_pattern_7(Image& dst, const int bg_state) {
   }
 
   insert(dst, lines);
-} // bg_pattern_7
+} // bgp_rotated_lines
 
-void bg_pattern_8(Image& dst, const int bg_state) {
+void bgp_random_lines_1(Image& dst, const int bg_state) {
   cauto bg_color = Pal8::from_real(0.25, true);
   dst.fill(bg_color);
 
@@ -297,9 +296,9 @@ void bg_pattern_8(Image& dst, const int bg_state) {
     const Vec b((bg_state + i * 2346632) % dst.X, dst.Y);
     draw_line(dst, a, b, Pal8::white);
   }
-} // bg_pattern_8
+} // bgp_random_lines_1
 
-void bg_pattern_9(Image& dst, const int bg_state) {
+void bgp_random_lines_2(Image& dst, const int bg_state) {
   cauto bg_color = Pal8::from_real(0.25, true);
   dst.fill(bg_color);
 
@@ -312,9 +311,9 @@ void bg_pattern_9(Image& dst, const int bg_state) {
     draw_line(dst, a, b, Pal8::white);
     draw_line(dst, a1, b1, Pal8::white);
   }
-} // bg_pattern_9
+} // bgp_random_lines_2
 
-void bg_pattern_10(Image& dst, const int bg_state) {
+void bgp_labyrinth_1(Image& dst, const int bg_state) {
   cauto state = bg_state / 95; // замедляет анимацию
 
   // узоры
@@ -366,9 +365,9 @@ void bg_pattern_10(Image& dst, const int bg_state) {
     cauto pos = Vec(x * block_sz, y * block_sz);
     insert(dst, blocks[id], pos);
   }
-} // bg_pattern_10
+} // bgp_labyrinth_1
 
-void bg_pattern_11(Image& dst, const int bg_state) {
+void bgp_labyrinth_2(Image& dst, const int bg_state) {
   // узоры
   constexpr auto block_sz = 11u;
   static Vector<Image> blocks;
@@ -410,4 +409,4 @@ void bg_pattern_11(Image& dst, const int bg_state) {
   }
 
   firt_init = false;
-} // bg_pattern_11
+} // bgp_labyrinth_2
