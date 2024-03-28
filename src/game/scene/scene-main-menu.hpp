@@ -28,6 +28,7 @@ class Scene_main_menu final: public Scene {
   void init_bg();
   void draw_logo(Image& dst) const;
   void draw_text(Image& dst) const;
+  void draw_wnd(Image& dst) const;
   void cache_logo_names();
   void next_bg();
   

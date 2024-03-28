@@ -63,27 +63,6 @@ void Scene_main_menu::update(double dt) {
 
 void Scene_main_menu::draw_bg(Image& dst) const {
   bg_pattern_pf(dst, std::floor(pps(bg_state)));
-
-  // вырезаем часть фона и блюрим
-  Rect rect(120, 50, 270, 280);
-  auto for_blur = fast_cut(dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
-
-  #ifdef DEBUG
-    blur_fast(for_blur, 5);
-  #elifdef ECOMEM
-    blur_fast(for_blur, 5);
-  #else
-    adaptive_blur(for_blur, 5);
-  #endif
-
-  // мягкий контраст
-  apply_contrast(for_blur, 0.5);
-  // затенение
-  sub_brightness(for_blur, Pal8::from_real(0.33333));
-
-  insert(dst, for_blur, rect.pos);
-  // контур
-  draw_rect<&blend_diff>(dst, rect, Pal8::white);
 } // draw_bg
 
 void Scene_main_menu::init_logo() {
@@ -114,8 +93,32 @@ void Scene_main_menu::draw_logo(Image& dst) const {
   insert<&blend_diff>(dst, *logo, logo_pos);
 }
 
+void Scene_main_menu::draw_wnd(Image& dst) const {
+  // вырезаем часть фона и блюрим
+  Rect rect(120, 50, 270, 280);
+  auto for_blur = fast_cut(dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
+
+  #ifdef DEBUG
+    blur_fast(for_blur, 5);
+  #elifdef ECOMEM
+    blur_fast(for_blur, 5);
+  #else
+    adaptive_blur(for_blur, 5);
+  #endif
+
+  // мягкий контраст
+  apply_contrast(for_blur, 0.5);
+  // затенение
+  sub_brightness(for_blur, Pal8::from_real(0.33333));
+
+  insert(dst, for_blur, rect.pos);
+  // контур
+  draw_rect<&blend_diff>(dst, rect, Pal8::white);
+} // draw_wnd
+
 void Scene_main_menu::draw(Image& dst) const {
   draw_bg(dst);
+  draw_wnd(dst);
   draw_logo(dst);
   draw_text(dst);
 }
@@ -218,6 +221,7 @@ void Scene_main_menu::init_bg() {
     &bgp_pinterest_1,
     &bgp_random_lines_1,
     &bgp_random_lines_2,
+    &bgp_3d_atomar_cube,
     #ifndef ECOMEM
     &bg_copy_1,
     &bg_copy_2,

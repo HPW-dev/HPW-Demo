@@ -24,3 +24,5 @@ void bgp_random_lines_2(Image& dst, const int bg_state);
 void bgp_labyrinth_1(Image& dst, const int bg_state);
 /// случайный узор из углов на чёрном фоне
 void bgp_labyrinth_2(Image& dst, const int bg_state);
+/// 3D куб из точек
+void bgp_3d_atomar_cube(Image& dst, const int bg_state);

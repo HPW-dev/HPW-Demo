@@ -410,3 +410,75 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
 
   firt_init = false;
 } // bgp_labyrinth_2
+
+/// 3D точка
+struct Vec3 { real x {}, y {}, z {}; };
+
+/// рисует 3D точку
+inline void draw_3d_point(Image& dst, const Vec3 point, const Vec offset,
+const Pal8 color, const real focal_len = 1.0) {
+  const Vec pos (
+    safe_div(point.x, point.z) * focal_len,
+    safe_div(point.y, point.z) * focal_len
+  );
+  dst.set(offset.x + pos.x, offset.y + pos.y, color);
+}
+
+/// рисует 3D точку в изометрии
+inline void draw_3d_point_isometry(Image& dst, const Vec3 point, const Vec offset,
+const Pal8 color, const real scale = 1.0) {
+  const Vec pos (
+    (point.x * 2.1 + point.z * 0.15) * 0.75,
+    point.y - point.z
+  );
+  cfor (y, 3)
+  cfor (x, 3)
+    dst.set<&blend_max>(
+      offset.x + pos.x * scale + x - 1,
+      offset.y + pos.y * scale + y - 1,
+      color, {});
+}
+
+Vec3 rotate(const Vec3 src, const real pitch, const real roll, const real yaw) {
+  cauto cosa = std::cos(yaw);
+  cauto sina = std::sin(yaw);
+
+  cauto cosb = std::cos(pitch);
+  cauto sinb = std::sin(pitch);
+
+  cauto cosc = std::cos(roll);
+  cauto sinc = std::sin(roll);
+
+  cauto Axx = cosa*cosb;
+  cauto Axy = cosa*sinb*sinc - sina*cosc;
+  cauto Axz = cosa*sinb*cosc + sina*sinc;
+
+  cauto Ayx = sina*cosb;
+  cauto Ayy = sina*sinb*sinc + cosa*cosc;
+  cauto Ayz = sina*sinb*cosc - cosa*sinc;
+
+  cauto Azx = -sinb;
+  cauto Azy = cosb*sinc;
+  cauto Azz = cosb*cosc;
+
+  return Vec3 {
+    .x = Axx * src.x + Axy * src.y + Axz * src.z,
+    .y = Ayx * src.x + Ayy * src.y + Ayz * src.z,
+    .z = Azx * src.x + Azy * src.y + Azz * src.z};
+} // rotate
+
+void bgp_3d_atomar_cube(Image& dst, const int bg_state) {
+  const real rot_speed = bg_state / 240.0;
+  cauto center = center_point(dst);
+
+  dst.fill(Pal8::black);
+  for (real z = -1; z < 1; z += 0.1)
+  for (real y = -1; y < 1; y += 0.1)
+  for (real x = -1; x < 1; x += 0.1) {
+    Vec3 pos {.x = x, .y = y, .z = z};
+    pos = rotate(pos, rot_speed, 0, 0);
+    // делать дальние точки темнее
+    auto color = Pal8::from_real( 1.0 - ((pos.z + 0.5) * 0.33333) );
+    draw_3d_point_isometry(dst, pos, center, color, 80.0);
+  }
+}
