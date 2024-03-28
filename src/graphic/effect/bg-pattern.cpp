@@ -554,3 +554,59 @@ void bgp_3d_flat_stars(Image& dst, const int bg_state) {
     star.draw(dst, center + pos_2d);
   }
 } // bgp_3d_flat_stars
+
+void bgp_3d_waves(Image& dst, const int bg_state) {
+  real scale = 850.0 + std::cos(bg_state * 0.01) * 250.0;
+  cauto center = center_point(dst);
+  // карта высот
+  constexpr uint terrain_y = 30;
+  constexpr uint terrain_x = 30;
+  static std::vector<real> terrain(terrain_x * terrain_y, 0);
+  // сгенерить ландшафт
+  static bool generate_once {true};
+  if (generate_once) {
+    for (nauto height: terrain)
+      height = rndr_fast(0, 0.035);
+    generate_once = false;
+  }
+  // сделать волны
+  for (nauto height: terrain)
+    height = std::clamp<real>(height + rndr_fast(-0.002, 0.002), 0, 0.035);
+
+  dst.fill(Pal8::black);
+  cfor (y, terrain_y - 1)
+  cfor (x, terrain_x - 1) {
+    Vec3 p00 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at(y * terrain_x + x),
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p01 {
+      .x = scast<real>((x + 1 - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at(y * terrain_x + x + 1),
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p10 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at((y + 1) * terrain_x + x),
+      .z = scast<real>((y + 1 - terrain_y / 2.0) / terrain_y) };
+    p00 = rotate(p00, -0.5, -0.1, 0);
+    p01 = rotate(p01, -0.5, -0.1, 0);
+    p10 = rotate(p10, -0.5, -0.1, 0);
+    // делать дальние точки темнее
+    auto color = Pal8::from_real( 1.0 - (p00.z + 0.5) );
+    cauto p00_2d = conv_3d_to_2d_isometry(p00, scale) + center;
+    cauto p01_2d = conv_3d_to_2d_isometry(p01, scale) + center;
+    cauto p10_2d = conv_3d_to_2d_isometry(p10, scale) + center;
+    draw_2d_point(dst, p00_2d, color);
+    draw_line<&blend_max>(dst, p00_2d, p01_2d, color);
+    draw_line<&blend_max>(dst, p00_2d, p10_2d, color);
+    draw_line<&blend_max>(dst, p10_2d, p01_2d, color);
+    // составить полигоны из линий
+  }
+
+  // градиент горизонтальный
+  cfor (y, dst.Y) 
+  cfor (x, dst.X) {
+    cauto color = Pal8::from_real((x / scast<real>(dst.X)) * 0.1);
+    dst.set<&blend_diff>(x, y, color, {});
+  }
+} // bgp_3d_terrain

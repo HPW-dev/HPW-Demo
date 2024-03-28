@@ -30,3 +30,5 @@ void bgp_3d_atomar_cube(Image& dst, const int bg_state);
 void bgp_3d_terrain(Image& dst, const int bg_state);
 /// 3D звёздочки на земле
 void bgp_3d_flat_stars(Image& dst, const int bg_state);
+/// 3D волны
+void bgp_3d_waves(Image& dst, const int bg_state);
