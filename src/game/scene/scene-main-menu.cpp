@@ -216,6 +216,7 @@ void bg_copy_4(Image& dst, const int state) {
 
 void Scene_main_menu::init_bg() {
   sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
+    &bgp_hpw_text_lines
     &bgp_bit_1,
     &bgp_bit_2,
     &bgp_pinterest_1,

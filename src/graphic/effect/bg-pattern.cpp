@@ -9,11 +9,13 @@
 #include "graphic/util/rotation.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/effect/light.hpp"
+#include "graphic/font/font.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"
 #include "game/util/game-util.hpp"
+#include "game/core/fonts.hpp"
 
 /// симуляция волн
 class Waves final {
@@ -610,3 +612,27 @@ void bgp_3d_waves(Image& dst, const int bg_state) {
     dst.set<&blend_diff>(x, y, color, {});
   }
 } // bgp_3d_terrain
+
+void bgp_hpw_text_lines(Image& dst, const int bg_state) {
+  dst.fill(Pal8::black);
+  cfor (y, 50)
+  cfor (x, 15) {
+    const Vec pos(x * 36, y * 10);
+    graphic::font->draw(dst, pos, U"H.P.W");
+  }
+
+  cauto line = (bg_state * 3) % dst.Y;
+
+  cfor (x, dst.X) {
+    for (int y = 0; y < line; ++y) {
+      cauto color = dst.get(x, line);
+      dst.set(x, y, color, {});
+    }
+    for (int y = line + 66; y < dst.Y; ++y) {
+      cauto color = dst.get(x, line + 66);
+      dst.set(x, y, color, {});
+    }
+  }
+
+  apply_brightness(dst, -255 / 3);
+} // bgp_hpw_text_lines
