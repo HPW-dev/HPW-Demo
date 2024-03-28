@@ -28,20 +28,6 @@ class Waves final {
   std::size_t m_y {};
   real m_amp {1}; /// усиление волны
 
-  inline Elem& get(const std::size_t x, const std::size_t y)
-    { return m_grid[y * m_x + x]; }
-
-  inline Elem get_safe(int x, int y) const {
-    x = std::clamp<int>(x, 0, m_x-1);
-    y = std::clamp<int>(y, 0, m_y-1);
-    return m_grid[y * scast<int>(m_x) + x];
-  }
-
-  inline void set_safe(const int x, const int y, const real value) {
-    if (x >= 0 && x < scast<int>(m_x) && y >= 0 && y < scast<int>(m_y))
-      m_grid[y * scast<int>(m_x) + x].value = value;
-  }
-
 public:
   Waves() = default;
   ~Waves() = default;
@@ -129,6 +115,20 @@ public:
       cauto normalized = (std::clamp<real>(m_grid[i].value, -1, 1) + 1.0) * 0.5;
       dst[i] = Pal8::from_real(normalized);
     }
+  }
+
+  inline Elem& get(const std::size_t x, const std::size_t y)
+    { return m_grid[y * m_x + x]; }
+
+  inline Elem get_safe(int x, int y) const {
+    x = std::clamp<int>(x, 0, m_x-1);
+    y = std::clamp<int>(y, 0, m_y-1);
+    return m_grid[y * scast<int>(m_x) + x];
+  }
+
+  inline void set_safe(const int x, const int y, const real value) {
+    if (x >= 0 && x < scast<int>(m_x) && y >= 0 && y < scast<int>(m_y))
+      m_grid[y * scast<int>(m_x) + x].value = value;
   }
 }; // Waves
 
@@ -524,11 +524,10 @@ void bgp_3d_terrain(Image& dst, const int bg_state) {
     cauto p00_2d = conv_3d_to_2d_isometry(p00, scale) + center;
     cauto p01_2d = conv_3d_to_2d_isometry(p01, scale) + center;
     cauto p10_2d = conv_3d_to_2d_isometry(p10, scale) + center;
-    draw_2d_point(dst, p00_2d, color);
+    // составить полигоны из линий
     draw_line<&blend_max>(dst, p00_2d, p01_2d, color);
     draw_line<&blend_max>(dst, p00_2d, p10_2d, color);
     draw_line<&blend_max>(dst, p10_2d, p01_2d, color);
-    // составить полигоны из линий
   }
 } // bgp_3d_terrain
 
@@ -598,11 +597,10 @@ void bgp_3d_waves(Image& dst, const int bg_state) {
     cauto p00_2d = conv_3d_to_2d_isometry(p00, scale) + center;
     cauto p01_2d = conv_3d_to_2d_isometry(p01, scale) + center;
     cauto p10_2d = conv_3d_to_2d_isometry(p10, scale) + center;
-    draw_2d_point(dst, p00_2d, color);
+    // составить полигоны из линий
     draw_line<&blend_max>(dst, p00_2d, p01_2d, color);
     draw_line<&blend_max>(dst, p00_2d, p10_2d, color);
     draw_line<&blend_max>(dst, p10_2d, p01_2d, color);
-    // составить полигоны из линий
   }
 
   // градиент горизонтальный
@@ -615,14 +613,15 @@ void bgp_3d_waves(Image& dst, const int bg_state) {
 
 void bgp_hpw_text_lines(Image& dst, const int bg_state) {
   dst.fill(Pal8::black);
+  // замостить надписями
   cfor (y, 50)
   cfor (x, 15) {
     const Vec pos(x * 36, y * 10);
     graphic::font->draw(dst, pos, U"H.P.W");
   }
-
+  // строка, которая не изменяется
   cauto line = (bg_state * 3) % dst.Y;
-
+  // выше строки line растягивать текст до краёв экрана
   cfor (x, dst.X) {
     for (int y = 0; y < line; ++y) {
       cauto color = dst.get(x, line);
@@ -633,6 +632,81 @@ void bgp_hpw_text_lines(Image& dst, const int bg_state) {
       dst.set(x, y, color, {});
     }
   }
-
+  // понизить яркость
   apply_brightness(dst, -255 / 3);
 } // bgp_hpw_text_lines
+
+void bgp_3d_rain_waves(Image& dst, const int bg_state) {
+  constexpr real scale = 550.0;
+  const real rot_speed = bg_state * 0.0008;
+  cauto center = center_point(dst);
+
+  static Waves waves(0.35);
+  constexpr uint terrain_y = 60;
+  constexpr uint terrain_x = 60;
+  waves.update_size(terrain_x, terrain_y);
+  if (bg_state % 1'200 == 0)
+    waves.clean();
+  
+  // создать капли в случайных местах
+  bool is_drop {false};
+  Vec drop_pos;
+  if (bg_state % 40 == 0) {
+    is_drop = true;
+    drop_pos = get_rand_pos_graphic(0, 0, terrain_x, terrain_y);
+    waves.set_safe(drop_pos.x, drop_pos.y, 0.2);
+  }
+  waves.update();
+
+  dst.fill(Pal8::black);
+  cfor (y, terrain_y - 1)
+  cfor (x, terrain_x - 1) {
+    Vec3 p00 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = waves.get(x, y).value,
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p01 {
+      .x = scast<real>((x + 1 - terrain_x / 2.0) / terrain_x),
+      .y = waves.get(x + 1, y).value,
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p10 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = waves.get(x, y + 1).value,
+      .z = scast<real>((y + 1 - terrain_y / 2.0) / terrain_y) };
+    p00 = rotate(p00, rot_speed, -0.1, 0);
+    p01 = rotate(p01, rot_speed, -0.1, 0);
+    p10 = rotate(p10, rot_speed, -0.1, 0);
+    // делать дальние точки темнее
+    auto color = Pal8::from_real( 1.0 - (p00.z + 0.5) );
+    cauto p00_2d = conv_3d_to_2d_isometry(p00, scale) + center;
+    cauto p01_2d = conv_3d_to_2d_isometry(p01, scale) + center;
+    cauto p10_2d = conv_3d_to_2d_isometry(p10, scale) + center;
+    // составить полигоны из линий
+    draw_line<&blend_max>(dst, p00_2d, p01_2d, color);
+    draw_line<&blend_max>(dst, p00_2d, p10_2d, color);
+    draw_line<&blend_max>(dst, p10_2d, p01_2d, color);
+  } // for terrain_y terrain_x
+
+  // подсветить каплю
+  if (is_drop) {
+    Vec3 drop_pos_3d {
+      .x = scast<real>( (drop_pos.x - terrain_x / 2.0) / terrain_x ),
+      .y = 0,
+      .z = scast<real>( (drop_pos.y - terrain_y / 2.0) / terrain_y ) };
+    drop_pos_3d = rotate(drop_pos_3d, rot_speed, -0.1, 0);
+    cauto drop_pos_2d = conv_3d_to_2d_isometry(drop_pos_3d, scale) + center;
+
+    Light star;
+    star.flags.random_radius = false;
+    star.set_duration(1);
+    star.radius = 175;
+    star.draw(dst, drop_pos_2d);
+  }
+
+  // градиент горизонтальный
+  cfor (y, dst.Y) 
+  cfor (x, dst.X) {
+    cauto color = Pal8::from_real((x / scast<real>(dst.X)) * 0.1);
+    dst.set<&blend_diff>(x, y, color, {});
+  }
+} // bgp_3d_rain_waves
