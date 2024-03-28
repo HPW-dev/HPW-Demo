@@ -25,7 +25,6 @@ struct Level_tutorial::Impl {
   Level_tasks tasks {};
   utf32 bg_text {}; /// текст, который показывается на фоне
 
-
   inline explicit Impl() {
     hpw::shmup_mode = true;
     init_collider();

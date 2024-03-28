@@ -57,9 +57,7 @@ void Scene_main_menu::update(double dt) {
     // поменять фон по таймеру
     change_bg_timer.update(dt)
   ) {
-    init_logo();
-    init_bg();
-    change_bg_timer.reset();
+    next_bg();
   }
 }
 
@@ -133,6 +131,7 @@ void Scene_main_menu::init_menu() {
           hpw::scene_mgr->add(new_shared<Scene_replay_select>());
         } ));
       }),
+      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"), [this]{ next_bg(); }),
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr->add(new_shared<Scene_info>());
       }), TODO*/
@@ -146,6 +145,12 @@ void Scene_main_menu::init_menu() {
     Vec{140, 200}
   );
 } // init_menu
+
+void Scene_main_menu::next_bg() {
+  init_logo();
+  init_bg();
+  change_bg_timer.reset();
+}
 
 void Scene_main_menu::cache_logo_names() {
   cauto config_file = hpw::archive->get_file("resource/image/logo/list.yml");
