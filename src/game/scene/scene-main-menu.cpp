@@ -222,7 +222,9 @@ void Scene_main_menu::init_bg() {
     &bgp_random_lines_1,
     &bgp_random_lines_2,
     &bgp_3d_atomar_cube,
+    //&bgp_3d_terrain,
     #ifndef ECOMEM
+    &bgp_3d_flat_stars,
     &bg_copy_1,
     &bg_copy_2,
     &bg_copy_3,

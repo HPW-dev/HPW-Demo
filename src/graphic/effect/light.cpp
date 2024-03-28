@@ -62,7 +62,7 @@ void draw_cached_sphere(Image& dst, const real R, const Vec pos, blend_pf bf) {
 void Light::reset() { cur_duration = max_duration; }
 
 bool Light::update(double dt) {
-  assert(dt > 0);
+  return_if(dt <= 0, cur_duration > 0);
   cur_duration -= dt;
 
   // перезапуск, если бесконечная вспышка

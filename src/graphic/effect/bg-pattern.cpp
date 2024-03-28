@@ -8,6 +8,7 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/rotation.hpp"
 #include "graphic/sprite/sprite.hpp"
+#include "graphic/effect/light.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/vec.hpp"
@@ -414,29 +415,27 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
 /// 3D точка
 struct Vec3 { real x {}, y {}, z {}; };
 
-/// рисует 3D точку
-inline void draw_3d_point(Image& dst, const Vec3 point, const Vec offset,
-const Pal8 color, const real focal_len = 1.0) {
-  const Vec pos (
+/// рисует 2D точку
+inline void draw_2d_point(Image& dst, const Vec point, const Pal8 color) {
+  cfor (y, 3)
+  cfor (x, 3)
+    dst.set<&blend_max>(point.x + x - 1, point.y + y - 1, color, {});
+}
+
+/// конвертирует 3D точку в 2D
+inline Vec conv_3d_to_2d(const Vec3 point, const real focal_len = 1.0) {
+  return Vec (
     safe_div(point.x, point.z) * focal_len,
     safe_div(point.y, point.z) * focal_len
   );
-  dst.set(offset.x + pos.x, offset.y + pos.y, color);
 }
 
-/// рисует 3D точку в изометрии
-inline void draw_3d_point_isometry(Image& dst, const Vec3 point, const Vec offset,
-const Pal8 color, const real scale = 1.0) {
-  const Vec pos (
-    (point.x * 2.1 + point.z * 0.15) * 0.75,
-    point.y - point.z
+/// конвертирует 3D точку в 2D в изометрии
+inline Vec conv_3d_to_2d_isometry(const Vec3 point, const real scale = 1.0) {
+  return Vec (
+    (point.x * 2.1 + point.z * 0.15) * 0.75 * scale,
+    (point.y - point.z) * scale
   );
-  cfor (y, 3)
-  cfor (x, 3)
-    dst.set<&blend_max>(
-      offset.x + pos.x * scale + x - 1,
-      offset.y + pos.y * scale + y - 1,
-      color, {});
 }
 
 Vec3 rotate(const Vec3 src, const real pitch, const real roll, const real yaw) {
@@ -479,6 +478,48 @@ void bgp_3d_atomar_cube(Image& dst, const int bg_state) {
     pos = rotate(pos, rot_speed, 0, 0);
     // делать дальние точки темнее
     auto color = Pal8::from_real( 1.0 - ((pos.z + 0.5) * 0.33333) );
-    draw_3d_point_isometry(dst, pos, center, color, 80.0);
+    cauto pos_2d = conv_3d_to_2d_isometry(pos, 80.0);
+    draw_2d_point(dst, center + pos_2d, color);
   }
 }
+
+void bgp_3d_terrain(Image& dst, const int bg_state) {
+  const real rot_speed = bg_state / 240.0;
+  cauto center = center_point(dst);
+
+  dst.fill(Pal8::black);
+  for (real z = -1; z < 1; z += 0.1)
+  for (real x = -1; x < 1; x += 0.1) {
+    Vec3 pos {.x = x, .y = 0, .z = z};
+    pos = rotate(pos, rot_speed, 0, 0);
+    // делать дальние точки темнее
+    auto color = Pal8::from_real( 1.0 - ((pos.z + 0.5) * 0.33333) );
+    cauto pos_2d = conv_3d_to_2d_isometry(pos, 250.0);
+    draw_2d_point(dst, center + pos_2d, color);
+  }
+} // bgp_3d_terrain
+
+void bgp_3d_flat_stars(Image& dst, const int bg_state) {
+  const real motion_speed = bg_state * 1.0;
+  const real rot_speed = bg_state / 240.0;
+  cauto center = center_point(dst);
+
+  dst.fill(Pal8::black);
+  for (real z = -1; z < 1; z += 0.075)
+  for (real x = -1; x < 1; x += 0.075) {
+    Vec3 pos {.x = x, .y = 0, .z = z};
+    pos = rotate(pos, rot_speed, 0, 0);
+    cauto pos_2d = conv_3d_to_2d_isometry(pos, 250.0);
+    Light star;
+    star.flags.random_radius = true;
+    star.flags.decrease_radius = true;
+    star.set_duration(1);
+    star.radius = 10;
+    const real star_brightness =
+      ((scast<int>((x + 1.0) * 127.0 + motion_speed) ^
+        scast<int>((z + 1.0) * 127.0))
+        % 256) / 255.0;
+    star.update(star_brightness);
+    star.draw(dst, center + pos_2d);
+  }
+} // bgp_3d_flat_stars
