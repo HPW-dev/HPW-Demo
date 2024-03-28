@@ -484,18 +484,49 @@ void bgp_3d_atomar_cube(Image& dst, const int bg_state) {
 }
 
 void bgp_3d_terrain(Image& dst, const int bg_state) {
+  constexpr real scale = 550.0;
   const real rot_speed = bg_state / 240.0;
   cauto center = center_point(dst);
+  constexpr uint terrain_y = 30;
+  constexpr uint terrain_x = 30;
+  // карта высот
+  static std::vector<real> terrain(terrain_x * terrain_y, 0);
+  static bool generate_once {true};
+  if (generate_once) {
+    // сгенерить ландшафт
+    for (nauto height: terrain)
+      height = rndr_fast(0, 0.04);
+    generate_once = false;
+  }
 
   dst.fill(Pal8::black);
-  for (real z = -1; z < 1; z += 0.1)
-  for (real x = -1; x < 1; x += 0.1) {
-    Vec3 pos {.x = x, .y = 0, .z = z};
-    pos = rotate(pos, rot_speed, 0, 0);
+  cfor (y, terrain_y - 1)
+  cfor (x, terrain_x - 1) {
+    Vec3 p00 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at(y * terrain_x + x),
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p01 {
+      .x = scast<real>((x + 1 - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at(y * terrain_x + x + 1),
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p10 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at((y + 1) * terrain_x + x),
+      .z = scast<real>((y + 1 - terrain_y / 2.0) / terrain_y) };
+    p00 = rotate(p00, -rot_speed, 0, 0);
+    p01 = rotate(p01, -rot_speed, 0, 0);
+    p10 = rotate(p10, -rot_speed, 0, 0);
     // делать дальние точки темнее
-    auto color = Pal8::from_real( 1.0 - ((pos.z + 0.5) * 0.33333) );
-    cauto pos_2d = conv_3d_to_2d_isometry(pos, 250.0);
-    draw_2d_point(dst, center + pos_2d, color);
+    auto color = Pal8::from_real( 1.0 - ((p00.z + 0.5) * 0.75) );
+    cauto p00_2d = conv_3d_to_2d_isometry(p00, scale) + center;
+    cauto p01_2d = conv_3d_to_2d_isometry(p01, scale) + center;
+    cauto p10_2d = conv_3d_to_2d_isometry(p10, scale) + center;
+    draw_2d_point(dst, p00_2d, color);
+    draw_line<&blend_max>(dst, p00_2d, p01_2d, color);
+    draw_line<&blend_max>(dst, p00_2d, p10_2d, color);
+    draw_line<&blend_max>(dst, p10_2d, p01_2d, color);
+    // составить полигоны из линий
   }
 } // bgp_3d_terrain
 
