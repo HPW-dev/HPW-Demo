@@ -223,7 +223,7 @@ void Scene_main_menu::init_bg() {
     &bgp_random_lines_1,
     &bgp_random_lines_2,
     &bgp_3d_atomar_cube,
-    #ifndef ECOMEM
+  #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,
     &bgp_3d_terrain,
@@ -237,7 +237,7 @@ void Scene_main_menu::init_bg() {
     &bgp_rotated_lines,
     &bgp_labyrinth_1,
     &bgp_labyrinth_2,
-    #endif
+  #endif
   }; // bg_patterns table
   bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );
 } // init_bg

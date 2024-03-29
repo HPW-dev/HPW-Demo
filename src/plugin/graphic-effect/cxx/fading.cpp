@@ -33,7 +33,7 @@ struct result_t* result) {
     return;
   }
   context->registrate_param_f32 ("Fading speed", "Light fading speed",
-    &g_fading, 0.01, 0.01, 0.5 );
+    &g_fading, 0.005, 0.005, 0.5 );
 } // plugin_init
 
 extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
