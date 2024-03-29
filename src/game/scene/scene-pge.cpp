@@ -72,6 +72,17 @@ struct Scene_pge::Impl {
       )
     };
 
+    // отобразить автора эффекта
+    cauto author = get_cur_pge_author();
+    if ( !author.empty()) {
+      menu_items.push_back (
+        new_shared<Menu_text_item> (
+          get_locale_str("scene.graphic_menu.pge.author"),
+          []{}, []->utf32 { return sconv<utf32>( get_cur_pge_author() ); }
+        )
+      );
+    }
+
     // накидать опций от плагина
     cnauto params = get_pge_params();
     for (cnauto param: params) {

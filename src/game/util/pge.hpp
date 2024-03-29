@@ -60,4 +60,5 @@ CN< Vector<Shared<Param_pge>> > get_pge_params();
 CN<Str> get_cur_pge_path();
 CN<Str> get_cur_pge_name();
 CN<Str> get_cur_pge_description();
+CN<Str> get_cur_pge_author();
 bool pge_loaded();

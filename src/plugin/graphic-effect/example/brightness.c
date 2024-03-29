@@ -15,7 +15,8 @@ EXPORTED
 void PLUG_CALL plugin_init(const struct context_t* context, struct result_t* result) {
   // описание плагина
   result->full_name = "Brightness";
-  result->description = "";
+  result->author = "(edit name)";
+  result->description = "(edit description)";
   // проверка валидности данных
   if ( !check_params(context, result))
     return;

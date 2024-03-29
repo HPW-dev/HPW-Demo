@@ -15,6 +15,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Brightness";
+  result->author = "HPW-dev";
   result->description = "Add brightness";
   // проверка валидности данных
   if ( !check_params(context, result))

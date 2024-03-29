@@ -30,22 +30,28 @@ extern "C" {
   #endif
 #endif
 
-#ifdef __GNUC__
-  #define PLUG_CALL __attribute__ ((__cdecl__))
+#if defined _WIN32 || defined __CYGWIN__
+  #ifdef __GNUC__
+    #define PLUG_CALL __attribute__ ((__cdecl__))
+  #else
+    #define PLUG_CALL __cdecl
+  #endif
 #else
-  #define PLUG_CALL __cdecl
+  #define PLUG_CALL
 #endif
 
-#define DEFAULT_EFFECT_API_VERSION 1
+#define DEFAULT_EFFECT_API_VERSION 2
 
 typedef uint8_t pal8_t;
 typedef const char* cstr_t;
 typedef float real_t;
 
 /// name, description, value ref, speed step, min, max
-typedef void (*registrate_param_f32_ft)(cstr_t, cstr_t, real_t*, const real_t, const real_t, const real_t);
+typedef void (*registrate_param_f32_ft)(cstr_t, cstr_t, real_t*,
+  const real_t, const real_t, const real_t);
 /// name, description, value ref, speed step, min, max
-typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int32_t*, const int32_t, const int32_t, const int32_t);
+typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int32_t*,
+  const int32_t, const int32_t, const int32_t);
 /// name, description, value ref
 typedef void (*registrate_param_bool_ft)(cstr_t, cstr_t, bool*);
 
@@ -69,6 +75,7 @@ struct context_t {
 struct result_t {
   uint8_t version;
   cstr_t full_name;
+  cstr_t author;
   cstr_t description;
   cstr_t error;
   bool init_succsess;

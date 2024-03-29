@@ -17,6 +17,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Fading";
+  result->author = "HPW-dev";
   result->description = "Light fading effect (same as motion blur)";
   // проверка валидности данных
   if ( !check_params(context, result))

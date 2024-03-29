@@ -32,6 +32,7 @@ struct result_t* result) {
   set_rnd_seed( time({}) );
   // описание плагина
   result->full_name = "Random frame";
+  result->author = "HPW-dev";
   result->description = "Randomize frames";
   // проверка валидности данных
   if ( !check_params(context, result))

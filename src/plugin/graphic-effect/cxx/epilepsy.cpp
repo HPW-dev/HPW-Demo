@@ -18,6 +18,7 @@ struct result_t* result) {
   set_rnd_seed( time({}) );
   // описание плагина
   result->full_name = "Epilepsy";
+  result->author = "HPW-dev";
   result->description = "Randomly pixel blending every frame";
   // проверка валидности данных
   if ( !check_params(context, result))

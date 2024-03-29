@@ -18,7 +18,8 @@ extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {
   // описание плагина
   result->full_name = "Motion blur";
-  result->description = "Smoth all frames";
+  result->author = "HPW-dev";
+  result->description = "Smooth all frames";
   // проверка валидности данных
   if ( !check_params(context, result))
     return;

@@ -24,6 +24,7 @@ Vector<Shared<Param_pge>> g_pge_params {}; /// какие сейчас дост�
 Str g_pge_path {}; /// текущий путь к плагину 
 Str g_pge_name {}; /// текущее имя плагина
 Str g_pge_description {}; /// описание к плагину
+Str g_pge_author {}; /// имя автора эффекта
 bool g_pge_loaded {false}; /// флаг успешной загрузки плагина
 std::function<decltype(plugin_init)> g_plugin_init {};
 std::function<decltype(plugin_apply)> g_plugin_apply {};
@@ -63,9 +64,11 @@ void load_pge(Str libname) {
 
     auto result = new_shared<result_t>();
     g_plugin_init(context.get(), result.get());
-    iferror( result->version != 1, "несовпадение версий плагина и API");
+    iferror( result->version != DEFAULT_EFFECT_API_VERSION,
+      "несовпадение версий плагина и API");
     iferror( !result->init_succsess, result->error);
     g_pge_description = result->description;
+    g_pge_author = result->author;
     g_pge_path = libname;
     g_pge_name = get_filename(g_pge_path);
     // попытаться найти настройки плагина в конфиге
@@ -92,6 +95,7 @@ void disable_pge() {
   g_pge_name.clear();
   g_pge_path.clear();
   g_pge_description.clear();
+  g_pge_author.clear();
   if (g_plugin_finalize)
     g_plugin_finalize();
   g_plugin_finalize = {};
@@ -200,6 +204,7 @@ CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
 CN<Str> get_cur_pge_path() { return g_pge_path; }
 CN<Str> get_cur_pge_name() { return g_pge_name; }
 CN<Str> get_cur_pge_description() { return g_pge_description; }
+CN<Str> get_cur_pge_author() { return g_pge_author; }
 
 void Param_pge::save(Yaml& dst) const {
   dst.set_str("title", title);

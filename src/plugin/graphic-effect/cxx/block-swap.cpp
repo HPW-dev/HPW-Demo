@@ -57,6 +57,7 @@ struct result_t* result) {
   g_rnd_generator.seed( time({}) );
   // описание плагина
   result->full_name = "Block swap";
+  result->author = "HPW-dev";
   result->description = "Random swap and rotate for blocks of image";
   // проверка валидности данных
   if ( !check_params(context, result))
