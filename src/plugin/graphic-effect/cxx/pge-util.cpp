@@ -32,3 +32,18 @@ NOT_EXPORTED
 void set_pixel_fast(Pal8 image[], const int x, const int y,
 const int width, const Pal8 val)
   { image[x + width * y] = val; }
+
+NOT_EXPORTED
+Pal8 get_pixel_safe(Pal8 image[], const int x, const int y,
+const int width, const int height) {
+  if (x >= 0 && x < width && y >= 0 && y < height)
+    return image[x + width * y];
+  return Pal8::black;
+}
+
+NOT_EXPORTED
+void set_pixel_safe(Pal8 image[], const int x, const int y,
+const int width, const int height, const Pal8 val) {
+  if (x >= 0 && x < width && y >= 0 && y < height)
+    image[x + width * y] = val;
+}
