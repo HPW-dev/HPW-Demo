@@ -194,17 +194,29 @@ void Host_glfw::_set_double_buffering(bool enable) {
 void Host_glfw::init_window() {
   if (window) // на случай реинита
     glfwDestroyWindow(window);
-  
+
+  // настройки для контекста OGL
+  glfwWindowHint(GLFW_DEPTH_BITS, 0);
+  glfwWindowHint(GLFW_STENCIL_BITS, 0);
+  glfwWindowHint(GLFW_ALPHA_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_RED_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_GREEN_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_BLUE_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_ALPHA_BITS, 0);
+  glfwWindowHint(GLFW_AUX_BUFFERS, 0);
+  glfwWindowHint(GLFW_STEREO, 0);
+  glfwWindowHint(GLFW_SAMPLES, 0);
+  glfwWindowHint(GLFW_SRGB_CAPABLE, 0);
   // выбор версии OGL
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  //glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); это нужно только для MacOS
-  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-  glfwWindowHint(GLFW_SAMPLES, 0); // выключение сглаживания
   if (graphic::start_focused) {
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
     glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
+    glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
   }
   // вкл/выкл даблбуфер
   glfwWindowHint (
@@ -215,7 +227,7 @@ void Host_glfw::init_window() {
   ); 
   detailed_log("make window\n");
   window = glfwCreateWindow(w_, h_, "H.P.W", nullptr, nullptr);
-  iferror(!window, "!window");
+  iferror(!window, "bad init GLFW window");
   glfwSetWindowPos(window, wnd_x, wnd_y);
   glfwMakeContextCurrent(window);
 

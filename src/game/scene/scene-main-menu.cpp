@@ -266,8 +266,8 @@ void Scene_main_menu::draw_text(Image& dst) const {
   #ifdef ECOMEM
     game_ver += U" ECOMEM";
   #endif
-  graphic::font->draw(text_layer, {140, 300}, get_locale_str("common.game_version") +
-    U": " + game_ver);
+  graphic::font->draw(text_layer, {140, 300},
+    get_locale_str("common.game_version") + U": " + game_ver);
 
   // нарисовать тень от текста
   static Image shadow_layer(text_layer);
@@ -279,4 +279,4 @@ void Scene_main_menu::draw_text(Image& dst) const {
 
   // нарисовать текст
   insert<&blend_max>(dst, text_layer);
-}
+} // draw_text
