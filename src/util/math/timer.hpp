@@ -4,12 +4,13 @@
 class Timer final {
   double m_timer {}; /// текущее время
   double m_timer_max {};
-  double m_loop_limit {};
+  double m_loop_limit {1};
 
   void set_timer(double new_timer);
 
 public:
-  explicit Timer(double new_timer=0, unsigned new_loop_limit=30u);
+  Timer() = default;
+  explicit Timer(double new_timer, unsigned new_loop_limit=30u);
   template <typename T> void operator = (T x) { set_timer(x); }
   inline void reset() { m_timer = m_timer_max; }
   /// оставшееся время в (0..1)

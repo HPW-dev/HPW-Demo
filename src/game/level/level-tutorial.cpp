@@ -56,12 +56,14 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      //Timed_task(3.3, [](double dt) { return false; }),
+      Timed_task(3.3, [](double dt) { return false; }),
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(3.0, [this](double dt) {
-        bg_text = get_locale_str("scene.tutorial.text.move_up"); return true;
+      Timed_task(3.5, [this](double dt) {
+        bg_text = get_locale_str("scene.tutorial.text.move_up");
+        return false;
       }),
+      Up_speed_test(this),
       [](double dt) { return false; }, // TODO заглушка
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -132,6 +134,9 @@ struct Level_tutorial::Impl {
     return true;
   }
 
+  inline Entity* make_wave(const Vec pos)
+    { return hpw::entity_mgr->make({}, "bullet.sphere.wave", pos); }
+
   /// спавнит пули по краям экрана, чтобы заставить игрока подвигаться
   struct Spawner_border_bullet {
     Impl* master {};
@@ -174,7 +179,7 @@ struct Level_tutorial::Impl {
 
         cauto pos = get_rand_pos_safe(wave_dir.rnd_st.x, wave_dir.rnd_st.y,
           wave_dir.rnd_ed.x, wave_dir.rnd_ed.y);
-        auto wave = hpw::entity_mgr->make({}, "bullet.sphere.wave", pos);
+        auto wave = master->make_wave(pos);
         wave->phys.set_vel(wave_dir.vel);
         wave->anim_ctx.set_speed_scale(0.8);
       }
@@ -192,6 +197,63 @@ struct Level_tutorial::Impl {
       assert(_spwan_timer > 0 && _spwan_timer < 100);
     }
   }; // Spawner_border_bullet
+
+  /// заставить игрока подвигаться вверх и вниз чтобы увидеть разницу в скорости
+  struct Up_speed_test {
+    constx real wave_speed_down {2.25_pps}; /// скорость пуль при движении волны вниз
+    constx real wave_speed_up {4.5_pps}; /// скорость пуль при движении волны вверх
+    constx real delay {2.3}; /// сколько подождать перед спавном следующей волны
+    constx real step {25}; /// шаг между пулями
+    constx real spawn_delay {0.1}; /// сколько ждать перед спавном следующей пули
+
+    Impl* master {};
+    uint repeats {3}; /// сколько раз спавнить волны
+    real spawn_height {-20}; /// высота спавна волны
+    bool reverse {false}; /// спавнить волны снизу вверх
+    real wave_speed {}; /// скорость пуль
+    Timer spwan_timer {spawn_delay};
+    Timer delay_timer {};
+
+    inline explicit Up_speed_test(Impl* _master): master{ _master} {}
+
+    inline bool operator ()(double dt) {
+      // при перерыве между волнами ничего не делать
+      if (delay_timer.update(dt)) {
+        delay_timer = {};
+      } else {
+        return false;
+      }
+
+      cfor (_, spwan_timer.update(dt)) {
+        spawn_height += reverse ? -step : +step;
+        wave_speed = reverse ? wave_speed_up : wave_speed_down;
+        // полна дошла до верха
+        if (reverse && spawn_height <= 35) {
+          reverse = false;
+          spawn_height = -30;
+          delay_timer = Timer(delay);
+          --repeats;
+        }
+        // полна дошла до низа
+        if (!reverse && spawn_height >= graphic::height - 50) {
+          reverse = true;
+          spawn_height = graphic::height + 30;
+          delay_timer = Timer(delay);
+        }
+
+        cauto anim_speed_scale = reverse ? 2.0 : 0.9;
+        // сделать пули по бокам
+        auto
+        wave = master->make_wave({-20, spawn_height});
+        wave->phys.set_vel({+wave_speed, 0});
+        wave->anim_ctx.set_speed_scale(anim_speed_scale);
+        wave = master->make_wave({graphic::width + 20, spawn_height});
+        wave->phys.set_vel({-wave_speed, 0});
+        wave->anim_ctx.set_speed_scale(anim_speed_scale);
+      }
+      return repeats == 0 || repeats >= 10;
+    }
+  }; // Up_speed_test
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>()} {}

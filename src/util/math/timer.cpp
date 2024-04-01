@@ -19,7 +19,10 @@ Timer::Timer(double new_timer, unsigned new_loop_limit)
 double Timer::ratio() const { return m_timer / m_timer_max; }
 
 unsigned Timer::update(double dt) {
-  assert(m_timer_max > 0);
+  assert(m_timer_max >= 0);
+  if (m_timer_max == 0)
+    return 1;
+
   m_timer -= dt;
   unsigned loops = 0; // сколько раз таймер сработал за один вызов
 
