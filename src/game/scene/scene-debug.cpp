@@ -83,6 +83,10 @@ void Scene_debug::init_menu() {
         [] { return graphic::draw_controls; },
         [] (bool new_val) { graphic::draw_controls = new_val; }
       ),
+      new_shared<Menu_bool_item>(U"Entity HP",
+        [] { return graphic::draw_entity_hp; },
+        [] (bool new_val) { graphic::draw_entity_hp = new_val; }
+      ),
       new_shared<Menu_bool_item>(U"Entity pos",
         [] { return graphic::draw_entity_pos; },
         [] (bool new_val) { graphic::draw_entity_pos = new_val; }

@@ -32,6 +32,7 @@ inline bool draw_entity_pos     {false};
 inline bool draw_entitys        {true};
 inline bool draw_level          {true};  /// рисовать фон уровня
 inline bool draw_controls       {false}; /// показать что за кнопки нажимаются
+inline bool draw_entity_hp      {false}; /// показать жизни у объекта
 }
 
 #ifdef STABLE_REPLAY

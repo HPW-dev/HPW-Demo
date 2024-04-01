@@ -1,6 +1,7 @@
 #include <cassert>
 #include <utility>
 #include "entity.hpp"
+#include "collidable.hpp"
 #include "util/error.hpp"
 #include "graphic/effect/heat-distort.hpp"
 #include "graphic/effect/light.hpp"
@@ -99,8 +100,17 @@ void Entity::debug_draw(Image& dst, const Vec offset) const {
     // отрисовка позиций объекта
     draw_pos(dst, offset);
     // перекрестие по центру
-    draw_line<&blend_diff>(dst, Vec(0, graphic::height/2.0), Vec(graphic::width, graphic::height/2.0), Pal8::white);
-    draw_line<&blend_diff>(dst, Vec(graphic::width/2.0, 0), Vec(graphic::width/2.0, graphic::height), Pal8::white);
+    draw_line<&blend_diff>(dst, Vec(0, graphic::height/2.0),
+      Vec(graphic::width, graphic::height/2.0), Pal8::white);
+    draw_line<&blend_diff>(dst, Vec(graphic::width/2.0, 0),
+      Vec(graphic::width/2.0, graphic::height), Pal8::white);
+  }
+  // показать жизни объекта
+  if (graphic::draw_entity_hp && status.collidable) {
+    const Vec pos(phys.get_pos() + Vec(15, 10));
+    cauto casted = cptr2ptr<CP<Collidable>>(this);
+    utf32 hp_text = U"HP: " + n2s<utf32>(casted->get_hp());
+    graphic::font->draw(dst, pos, hp_text, &blend_diff);
   }
 }
 
