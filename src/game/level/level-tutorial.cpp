@@ -1,6 +1,7 @@
 #include "level-tutorial.hpp"
 #include "util/math/vec.hpp"
 #include "util/unicode.hpp"
+#include "util/hpw-util.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
@@ -54,8 +55,8 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      Timed_task(3.3, [](double dt) { return false; }),
-      Timed_task(9.0, Task_draw_motion_keys(this)),
+      //Timed_task(3.3, [](double dt) { return false; }),
+      //Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 10, 1.0),
       [](double dt) { return false; }, // TODO заглушка
       &exit_from_level,
@@ -140,8 +141,11 @@ struct Level_tutorial::Impl {
     inline bool operator()(double dt) {
       master->draw_motion_keys();
       cfor (_, spwan_timer.update(dt)) {
-        // TODO
         --count;
+        cauto pos = Vec(graphic::width / 2, -20);
+        auto wave = hpw::entity_mgr->make({}, "bullet.sphere.wave", pos);
+        wave->phys.set_vel({0, 1.5_pps});
+        wave->anim_ctx.set_speed_scale(0.8);
       }
       return count == 0 || count >= 9999;
     }
