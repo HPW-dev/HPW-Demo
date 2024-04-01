@@ -59,6 +59,9 @@ struct Level_tutorial::Impl {
       //Timed_task(3.3, [](double dt) { return false; }),
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 40, 0.6),
+      Timed_task(3.0, [this](double dt) {
+        bg_text = get_locale_str("scene.tutorial.text.move_up"); return true;
+      }),
       [](double dt) { return false; }, // TODO заглушка
       &exit_from_level,
     }; // Level_tasks c-tor
