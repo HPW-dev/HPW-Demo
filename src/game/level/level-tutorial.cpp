@@ -59,7 +59,7 @@ struct Level_tutorial::Impl {
       Timed_task(3.3, [](double dt) { return false; }),
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(3.5, [this](double dt) {
+      Timed_task(5, [this](double dt) {
         bg_text = get_locale_str("scene.tutorial.text.move_up");
         return false;
       }),
@@ -135,13 +135,14 @@ struct Level_tutorial::Impl {
   }
 
   inline Entity* make_wave(const Vec pos)
-    { return hpw::entity_mgr->make({}, "bullet.sphere.wave", pos); }
+    { return hpw::entity_mgr->make({}, "bullet.sphere.wave.tutorial", pos); }
 
   /// спавнит пули по краям экрана, чтобы заставить игрока подвигаться
   struct Spawner_border_bullet {
     Impl* master {};
     uint count {}; /// когда станет 0, завершить
     Timer spwan_timer {}; /// скорость спавна пуль
+    real wave_speed = 1.4_pps; /// скорость пули
 
     inline bool operator()(double dt) {
       master->draw_motion_keys();
@@ -151,7 +152,6 @@ struct Level_tutorial::Impl {
       cfor (_, spwan_timer.update(dt)) {
         --count;
 
-        constexpr auto wave_speed = 1.7_pps;
         cauto w = graphic::width;
         cauto h = graphic::height;
         cauto player = hpw::entity_mgr->get_player();
@@ -182,6 +182,7 @@ struct Level_tutorial::Impl {
         auto wave = master->make_wave(pos);
         wave->phys.set_vel(wave_dir.vel);
         wave->anim_ctx.set_speed_scale(0.8);
+        wave_speed += 0.03_pps; // ускорять пулю
       }
       return count == 0 || count >= 9999;
     } // op ()
@@ -208,13 +209,15 @@ struct Level_tutorial::Impl {
 
     Impl* master {};
     uint repeats {3}; /// сколько раз спавнить волны
-    real spawn_height {-20}; /// высота спавна волны
-    bool reverse {false}; /// спавнить волны снизу вверх
+    real spawn_height {}; /// высота спавна волны
+    bool reverse {true}; /// спавнить волны снизу вверх
     real wave_speed {}; /// скорость пуль
     Timer spwan_timer {spawn_delay};
     Timer delay_timer {};
 
-    inline explicit Up_speed_test(Impl* _master): master{ _master} {}
+    inline explicit Up_speed_test(Impl* _master): master{ _master} {
+      spawn_height = graphic::height + 20;
+    }
 
     inline bool operator ()(double dt) {
       // при перерыве между волнами ничего не делать
@@ -232,13 +235,13 @@ struct Level_tutorial::Impl {
           reverse = false;
           spawn_height = -30;
           delay_timer = Timer(delay);
-          --repeats;
         }
         // полна дошла до низа
         if (!reverse && spawn_height >= graphic::height - 50) {
           reverse = true;
           spawn_height = graphic::height + 30;
           delay_timer = Timer(delay);
+          --repeats;
         }
 
         cauto anim_speed_scale = reverse ? 2.0 : 0.9;
