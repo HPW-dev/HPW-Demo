@@ -57,6 +57,7 @@ struct Level_tutorial::Impl {
       Timed_task(3.3, [](double dt) { return false; }),
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 10, 1.0),
+      [](double dt) { return false; }, // TODO заглушка
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks

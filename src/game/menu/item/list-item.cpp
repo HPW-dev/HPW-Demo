@@ -2,10 +2,15 @@
 #include "list-item.hpp"
 #include "util/str-util.hpp"
 
-Menu_list_item::Menu_list_item(CN<utf32> title, CN<Menu_list_item::Items> items)
+Menu_list_item::Menu_list_item(CN<utf32> title, CN<Menu_list_item::Items> items,
+const std::size_t default_selected)
 : m_items {items}
 , m_title {title}
-{ assert( !m_items.empty()); }
+, m_selected {default_selected}
+{
+  assert( !m_items.empty());
+  assert(default_selected < m_items.size());
+}
 
 void Menu_list_item::enable() { plus(); }
 

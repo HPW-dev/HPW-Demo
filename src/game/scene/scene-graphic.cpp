@@ -9,11 +9,11 @@
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core-window.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/graphic.hpp"
-#include "game/util/config.hpp"
 #include "game/core/scenes.hpp"
+#include "game/util/config.hpp"
+#include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/menu/text-menu.hpp"
@@ -25,10 +25,13 @@
 #include "game/menu/item/list-item.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
+#include "util/error.hpp"
 
 Scene_graphic::Scene_graphic() {
   init_simple_menu();
   init_detailed_menu();
+  init_preset_menu();
+  cur_menu = simple_menu;
 }
 
 void Scene_graphic::update(double dt) {
@@ -36,17 +39,14 @@ void Scene_graphic::update(double dt) {
     hpw::scene_mgr->back();
     save_config();
   }
-  if (use_detailed_menu)
-    detailed_menu->update(dt);
-  else
-    simple_menu->update(dt);
+  
+  iferror (cur_menu.expired(), "menu ptr error");
+  cur_menu.lock()->update(dt);
 }
 
 void Scene_graphic::draw(Image& dst) const {
-  if (use_detailed_menu)
-    detailed_menu->draw(dst);
-  else
-    simple_menu->draw(dst);
+  iferror (cur_menu.expired(), "menu ptr error");
+  cur_menu.lock()->draw(dst);
 }
 
 void set_default() {
@@ -204,14 +204,15 @@ Shared<Menu_list_item> Scene_graphic::get_resize_type_item() {
         .desc = get_locale_str("scene.graphic_menu.description.resize_type.full"),
         .action = []{ hpw::set_resize_mode(Resize_mode::full); }
       }
-    } // items
+    }, // items
+    scast<std::size_t>(graphic::resize_mode)
   );
 }
 
 Shared<Menu_text_item> Scene_graphic::get_goto_detailed_item() {
-  return new_shared<Menu_text_item>(
+  return new_shared<Menu_text_item> (
     get_locale_str("scene.graphic_menu.goto_detailed"),
-    [this]{ use_detailed_menu = !use_detailed_menu; }
+    [this]{ cur_menu = detailed_menu; }
   );
 }
 
@@ -273,7 +274,10 @@ void Scene_graphic::init_simple_menu() {
     Menu_items {
       get_fullscreen_item(),
       get_palette_item(),
-      get_preset_item(),
+      new_shared<Menu_text_item>(
+        get_locale_str("scene.graphic_menu.pressets.name"),
+        [this]{ cur_menu = preset_menu; }
+      ),
       get_goto_detailed_item(),
       get_plugin_item(),
       get_resize_type_item(),
@@ -354,7 +358,7 @@ void Scene_graphic::init_detailed_menu() {
       ),
       new_shared<Menu_text_item>(
         get_locale_str("common.back"),
-        [this]{ use_detailed_menu = !use_detailed_menu; }
+        [this]{ cur_menu = simple_menu; }
       ),
       get_reset_item(),
       get_exit_item(),
@@ -362,3 +366,18 @@ void Scene_graphic::init_detailed_menu() {
     Rect{0, 0, graphic::width, graphic::height}
   );
 } // init_detailed_menu
+
+void Scene_graphic::init_preset_menu() {
+  preset_menu = new_shared<Advanced_text_menu>(
+    get_locale_str("scene.graphic_menu.pressets.name"),
+    Menu_items {
+      get_preset_item(),
+      new_shared<Menu_text_item>(
+        get_locale_str("common.back"),
+        [this]{ cur_menu = simple_menu; }
+      ),
+      get_exit_item(),
+    },
+    Rect{0, 0, graphic::width, graphic::height}
+  );
+}
