@@ -1,5 +1,6 @@
 #include "level-tutorial.hpp"
 #include "util/math/vec.hpp"
+#include "util/math/random.hpp"
 #include "util/unicode.hpp"
 #include "util/hpw-util.hpp"
 #include "game/entity/player.hpp"
@@ -56,8 +57,8 @@ struct Level_tutorial::Impl {
     tasks = Level_tasks {
       // в начале ничего не происходит
       //Timed_task(3.3, [](double dt) { return false; }),
-      //Timed_task(9.0, Task_draw_motion_keys(this)),
-      Spawner_border_bullet(this, 10, 1.0),
+      Timed_task(9.0, Task_draw_motion_keys(this)),
+      Spawner_border_bullet(this, 40, 0.6),
       [](double dt) { return false; }, // TODO заглушка
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -122,10 +123,6 @@ struct Level_tutorial::Impl {
     #undef KEY_TEXT
   } // draw_motion_keys
 
-  /// задержка уровня TODO del
-  inline Timed_task getf_placeholder()
-  { return Timed_task( 30.0, [](double dt) { return false; } ); }
-
   /// выйти с уровня
   inline static bool exit_from_level(double dt) {
     hpw::level_mgr->finalize_level();
@@ -140,15 +137,46 @@ struct Level_tutorial::Impl {
 
     inline bool operator()(double dt) {
       master->draw_motion_keys();
+      // надпись об уклонении
+      master->bg_text += U"\n\n" + get_locale_str("scene.tutorial.text.wave_warning");
+
       cfor (_, spwan_timer.update(dt)) {
         --count;
-        cauto pos = Vec(graphic::width / 2, -20);
+
+        constexpr auto wave_speed = 1.7_pps;
+        cauto w = graphic::width;
+        cauto h = graphic::height;
+        cauto player = hpw::entity_mgr->get_player();
+        cont_if(!player);
+        cauto px = player->phys.get_pos().x;
+        cauto py = player->phys.get_pos().y;
+
+        struct Wave_dir {
+          Vec rnd_st {};
+          Vec rnd_ed {};
+          Vec vel {};
+        };
+        Vector<Wave_dir> wave_dir_table {
+          Wave_dir {.rnd_st={10, -20},  .rnd_ed={w-10, -20},  .vel={0, wave_speed}},
+          Wave_dir {.rnd_st={10, h-10}, .rnd_ed={w-10, h-10}, .vel={0, -wave_speed}},
+          Wave_dir {.rnd_st={-20, 10},  .rnd_ed={-20, h-10},  .vel={wave_speed, 0}},
+          Wave_dir {.rnd_st={w-10, 10}, .rnd_ed={w-10, h-10}, .vel={-wave_speed, 0}},
+          // нацелены на игрока:
+          Wave_dir {.rnd_st={px, -20},  .rnd_ed={px, -20},  .vel={0, wave_speed}},
+          Wave_dir {.rnd_st={px, h-10}, .rnd_ed={px, h-10}, .vel={0, -wave_speed}},
+          Wave_dir {.rnd_st={-20, py},  .rnd_ed={-20, py},  .vel={wave_speed, 0}},
+          Wave_dir {.rnd_st={w-10, py}, .rnd_ed={w-10, py}, .vel={-wave_speed, 0}},
+        };
+        cnauto wave_dir = wave_dir_table.at( rndu(wave_dir_table.size()-1) );
+
+        cauto pos = get_rand_pos_safe(wave_dir.rnd_st.x, wave_dir.rnd_st.y,
+          wave_dir.rnd_ed.x, wave_dir.rnd_ed.y);
         auto wave = hpw::entity_mgr->make({}, "bullet.sphere.wave", pos);
-        wave->phys.set_vel({0, 1.5_pps});
+        wave->phys.set_vel(wave_dir.vel);
         wave->anim_ctx.set_speed_scale(0.8);
       }
       return count == 0 || count >= 9999;
-    }
+    } // op ()
 
     inline explicit Spawner_border_bullet(Impl* _master, const uint _count,
     const real _spwan_timer)
