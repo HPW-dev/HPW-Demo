@@ -35,15 +35,15 @@
 #include "game/scene/scene-game-pause.hpp"
 #include "game/level/level-manager.hpp"
 #include "game/level/level-space.hpp"
-#include "game/level/level-1.hpp"
 #include "game/level/level-tutorial.hpp"
+//#include "game/level/level-1.hpp"
 #ifdef DEBUG
-#include "game/level/level-debug.hpp"
-#include "game/level/level-debug-1.hpp"
-#include "game/level/level-debug-2.hpp"
-#include "game/level/level-debug-3.hpp"
-#include "game/level/level-debug-4.hpp"
-#include "game/level/level-debug-bullets.hpp"
+//#include "game/level/level-debug.hpp"
+//#include "game/level/level-debug-1.hpp"
+//#include "game/level/level-debug-2.hpp"
+//#include "game/level/level-debug-3.hpp"
+//#include "game/level/level-debug-4.hpp"
+//#include "game/level/level-debug-bullets.hpp"
 #endif
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/player-dark.hpp"
@@ -56,23 +56,27 @@
 #include "graphic/util/graphic-util.hpp"
 
 void Scene_game::init_levels() {
-  hpw::level_mgr = new_shared<Level_mgr>( Level_mgr::Makers{
-    [] { return new_shared<Level_tutorial>(); },
-    //[] { return new_shared<Level_space>(); },
-    //[] { return new_shared<Level_1>(); },
-    
-  #ifdef DEBUG
-    //[] { return new_shared<Level_debug_bullets>(); },
-    //[] { return new_shared<Level_debug_4>(); },
-    //[] { return new_shared<Level_debug_3>(); },
-    //[] { return new_shared<Level_debug_1>(); },
-    //[] { return new_shared<Level_debug>(); },
-    //[] { return new_shared<Level_debug_2>(); },
-  #endif
-  }); // init level order
+  if (m_start_tutorial) { // начать с туториала
+    hpw::level_mgr = new_shared<Level_mgr>( Level_mgr::Makers{
+      [] { return new_shared<Level_tutorial>(); }
+    });
+  } else {
+    hpw::level_mgr = new_shared<Level_mgr>( Level_mgr::Makers{
+      [] { return new_shared<Level_space>(); },
+      //[] { return new_shared<Level_1>(); },
+      #ifdef DEBUG
+      //[] { return new_shared<Level_debug_bullets>(); },
+      //[] { return new_shared<Level_debug_4>(); },
+      //[] { return new_shared<Level_debug_3>(); },
+      //[] { return new_shared<Level_debug_1>(); },
+      //[] { return new_shared<Level_debug>(); },
+      //[] { return new_shared<Level_debug_2>(); },
+      #endif
+    }); // init level order
+  }
 } // init_levels
 
-Scene_game::Scene_game() {
+Scene_game::Scene_game(const bool start_tutorial): m_start_tutorial {start_tutorial} {
   // -------------- [!] ----------------
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
