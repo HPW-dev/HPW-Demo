@@ -28,11 +28,13 @@ struct Table_menu::Impl {
     assert( !m_rows.empty());
 
     // тест на то, что в таблице только табличные элементы нужного формата
-    cauto items = base->get_items();
-    for (cnauto item: items) {
-      cauto ptr = dcast< CP<Menu_item_table_row> >(item.get());
-      assert(ptr);
-    }
+    #ifdef DEBUG
+      cauto items = base->get_items();
+      for (cnauto item: items) {
+        cauto ptr = dcast< CP<Menu_item_table_row> >(item.get());
+        assert(ptr);
+      }
+    #endif
   } // Impl c-tor
 
   inline void draw(Image& dst) const {
