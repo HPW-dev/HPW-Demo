@@ -33,7 +33,6 @@
 #include "game/entity/util/mem-map.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
-#include "game/scene/scene-gameover.hpp"
 #include "game/level/level-manager.hpp"
 #include "game/level/level-space.hpp"
 #include "game/level/level-1.hpp"
@@ -73,7 +72,7 @@ void Scene_game::init_levels() {
   }); // init level order
 } // init_levels
 
-Scene_game::Scene_game(): death_timer {4} {
+Scene_game::Scene_game() {
   // -------------- [!] ----------------
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
@@ -126,7 +125,6 @@ void Scene_game::update(double dt) {
   hpw::entity_mgr->update(dt);
   graphic::camera->update(dt);
   graphic::post_effects->update(dt);
-  check_death(dt);
   
   ++hpw::game_updates_safe;
 
@@ -267,11 +265,3 @@ void Scene_game::replay_load_keys() {
     hpw::scene_mgr->back();
   }
 } // replay_load_keys
-
-void Scene_game::check_death(double dt) {
-  // перезапуск уровня, если игрок умер
-  if (cauto player = hpw::entity_mgr->get_player(); player)
-    if ( !player->status.live)
-      if (death_timer.update(dt)) // по завершению таймера
-        hpw::scene_mgr->add( new_shared<Scene_gameover>() );
-}

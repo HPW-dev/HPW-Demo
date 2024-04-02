@@ -23,4 +23,6 @@ public:
   virtual void draw(Image& dst) const = 0;
   /// отрисовка на уровне выше (post draw)
   inline virtual void draw_upper_layer(Image& dst) const {}
+  /// действие при смерти игрока
+  virtual void on_player_death(const double dt);
 }; // Level
