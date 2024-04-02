@@ -57,6 +57,8 @@ public:
   /// ссылка на игрока
   Player* get_player() const;
   void set_player(Player* player);
+  /// сюда должны стрелять противники
+  Vec target_for_enemy() const;
   
   /// выделить память под объект
   template <class T> inline T* allocate();

@@ -6,6 +6,7 @@
 #include "game/entity/player.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
@@ -67,13 +68,15 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      //Timed_task(3.3, [](double dt) { return false; }),
-      //Timed_task(9.0, Task_draw_motion_keys(this)),
-      //Spawner_border_bullet(this, 40, 0.6),
-      //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
-      //Up_speed_test(this),
-      //Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      Timed_task(3.3, [](double dt) { return false; }),
+      Timed_task(9.0, Task_draw_motion_keys(this)),
+      Spawner_border_bullet(this, 40, 0.6),
+      Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      Up_speed_test(this),
+      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
       Spawner_enemy_noshoot(this, 4.0),
+      Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
+      Spawner_enemy_shoot(this, 8.0),
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -324,7 +327,7 @@ struct Level_tutorial::Impl {
         Vec vel(std::cos(state * 2.0) * SPEED * 2.5, SPEED);
         self.phys.set_vel(vel);
       }
-    }; // Zigzag_motion
+    };
 
     Collidable* spawn(const Vec pos) {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
@@ -335,6 +338,55 @@ struct Level_tutorial::Impl {
       return ptr2ptr<Collidable*>(enemy);
     }
   }; // Spawner_enemy_noshoot
+
+  /// создаёт стреляющий противников по бокам
+  struct Spawner_enemy_shoot {
+    Impl* master {};
+    Timer spawn_timer {0.8}; /// через сколько спавнить противника
+    Timer lifetime {}; /// сколько времени будет работать спавнер
+    bool check_death {}; /// начать проверять, что все соспавненные объекты умерли
+    uint live_count {}; /// сколько объектов сейчас живы
+
+    explicit Spawner_enemy_shoot(Impl* _master, const real _total_time=1.0)
+    : master {_master}
+    , lifetime {_total_time}
+    {
+      assert(_total_time > 0 && _total_time < 60);
+    }
+
+    inline bool operator()(const double dt) {
+      if (!check_death) {
+        cfor (_, spawn_timer.update(dt)) {
+          spawn({+20, -20});
+          spawn({graphic::width-20, -20});
+        }
+      }
+
+      if (lifetime.update(dt))
+        check_death = true;
+      if (check_death)
+        return live_count == 0 || live_count >= 100'000u;
+      return false;
+    } // op ()
+
+    Collidable* spawn(const Vec pos) {
+      auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
+      enemy->phys.set_vel({0, 1_pps});
+      /// стрельба в игрока
+      enemy->move_update_callback([](Entity& self, double dt)->void {
+        if (rndu(1'500) == 0) {
+          auto bullet = hpw::entity_mgr->make(&self, "enemy.tutorial.bullet",
+            self.phys.get_pos());
+          bullet->phys.set_speed(2_pps);
+          bullet->phys.set_deg( deg_to_target(*bullet, hpw::entity_mgr->target_for_enemy()) );
+        }
+      });
+      enemy->move_kill_callback([this](Entity&){ --live_count; });
+      ++live_count;
+      assert(enemy->status.collidable);
+      return ptr2ptr<Collidable*>(enemy);
+    }
+  }; // Spawner_enemy_shoot
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}

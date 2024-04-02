@@ -17,6 +17,7 @@
 #include "util/file/yaml.hpp"
 #include "util/file/archive.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/game-util.hpp"
 #include "game/core/time-scale.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -280,6 +281,13 @@ struct Entity_mgr::Impl {
   inline Player* get_player() const { return m_player; }
   inline void set_player(Player* player) { m_player = player; }
 
+  Vec target_for_enemy() const {
+    cauto player = get_player();
+    if (player)
+      return player->phys.get_pos();
+    // если игрока не нашли, стрелять куда попало
+    return get_rand_pos_safe(0, 0, graphic::width, graphic::height);
+  }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>()} {}
@@ -300,3 +308,4 @@ CN<Entitys> Entity_mgr::get_entities() const { return impl->get_entities(); }
 Entity* Entity_mgr::find_avaliable_entity(const Entity_type type) { return impl->find_avaliable_entity(type); }
 Player* Entity_mgr::get_player() const { return impl->get_player(); }
 void Entity_mgr::set_player(Player* player) { impl->set_player(player); }
+Vec Entity_mgr::target_for_enemy() const { return impl->target_for_enemy(); }
