@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 
@@ -14,6 +15,8 @@ class Level {
 public:
   /// if true - level complete. Use Level_mgr::finalize_level
   bool m_complete {false};
+  /// какое действие выполнить при смерти игрока
+  std::function<void ()> on_player_death_action {};
 
   Level();
   virtual ~Level();

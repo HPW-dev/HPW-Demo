@@ -11,6 +11,8 @@
 #include "game/core/common.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/scenes.hpp"
+#include "game/scene/scene-manager.hpp"
 #include "game/level/util/level-tasks.hpp"
 #include "game/level/util/task-timed.hpp"
 #include "game/level/level-manager.hpp"
@@ -24,14 +26,23 @@
 #include "graphic/util/util-templ.hpp"
 
 struct Level_tutorial::Impl {
+  Level_tutorial* m_master {};
   Level_tasks tasks {};
   utf32 bg_text {}; /// текст, который показывается на фоне
 
-  inline explicit Impl() {
+  inline explicit Impl(Level_tutorial* master): m_master{master}
+    { restart(); }
+
+  inline void restart() {
+    hpw::entity_mgr->clear();
     hpw::shmup_mode = true;
+    bg_text = {};
     init_collider();
     make_player();
     init_tasks();
+
+    // рестарт уровня при смерти
+    m_master->on_player_death_action = [this] { restart(); };
   }
 
   inline void update(const Vec vel, double dt) {
@@ -259,7 +270,7 @@ struct Level_tutorial::Impl {
   }; // Up_speed_test
 }; // Impl
 
-Level_tutorial::Level_tutorial(): impl {new_unique<Impl>()} {}
+Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}
 Level_tutorial::~Level_tutorial() {}
 void Level_tutorial::update(const Vec vel, double dt) {
   Level::update(vel, dt);

@@ -15,12 +15,13 @@
 #endif
 
 struct Level::Impl {
+  Level* master {};
   Timer death_timer {4.0}; /// через это время засчитывается смерть игрока
   #ifdef CLD_DEBUG
   Timer cld_debug_timer {1};
   #endif
 
-  Impl() = default;
+  explicit Impl(Level* _master): master {_master} {}
   ~Impl() = default;
 
   inline void update(const Vec vel, double dt) {
@@ -46,15 +47,23 @@ struct Level::Impl {
   }
 
   inline void on_player_death(const double dt) {
+    return_if (!master->on_player_death_action);
+
     // перезапуск уровня, если игрок умер
     if (cauto player = hpw::entity_mgr->get_player(); player)
       if ( !player->status.live)
         if (death_timer.update(dt)) // по завершению таймера
-          hpw::scene_mgr->add( new_shared<Scene_gameover>() );
+          master->on_player_death_action();
   }
-};
+}; // Impl
 
 void Level::update(const Vec vel, double dt) { impl->update(vel, dt); }
 void Level::on_player_death(const double dt) { impl->on_player_death(dt); }
-Level::Level(): impl {new_unique<Impl>()} {}
 Level::~Level() {}
+
+Level::Level(): impl {new_unique<Impl>(this)} {
+  on_player_death_action = [] {
+    hpw::scene_mgr->add( new_shared<Scene_gameover>() );
+  };
+}
+
