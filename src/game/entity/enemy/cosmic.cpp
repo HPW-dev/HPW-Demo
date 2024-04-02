@@ -83,7 +83,7 @@ void Cosmic::update(double dt) {
       if (rndb() & 1)
         deg = deg_to_target(*bullet, predict(*bullet, *player, dt) );
       else
-        deg = deg_to_target(*bullet, *player);
+        deg = deg_to_target(*bullet, hpw::entity_mgr->target_for_enemy());
       bullet->phys.set_deg(deg);
 
       bullet->phys.set_accel(m_info.bullet_accel);

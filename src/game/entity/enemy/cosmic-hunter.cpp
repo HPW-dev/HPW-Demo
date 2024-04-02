@@ -81,8 +81,7 @@ struct Cosmic_hunter::Loader::Impl {
     it->m_info.shoot_timer.randomize_stable();
     it->phys.set_speed(m_info.speed);
     // при спавне сразу смотрим в сторону игрока
-    if (auto player = hpw::entity_mgr->get_player(); player)
-      it->phys.set_deg( deg_to_target(*it, *player) );
+    it->phys.set_deg( deg_to_target(*it, hpw::entity_mgr->target_for_enemy()) );
     return parent;
   } // op ()
 
