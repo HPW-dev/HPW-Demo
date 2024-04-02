@@ -321,7 +321,7 @@ struct Level_tutorial::Impl {
       inline void operator()(Entity& self, double dt) {
         state += dt;
         constexpr real SPEED = 0.666_pps;
-        Vec vel(std::cos(state * 2) * SPEED * 4.0, SPEED);
+        Vec vel(std::cos(state * 2.0) * SPEED * 2.5, SPEED);
         self.phys.set_vel(vel);
       }
     }; // Zigzag_motion
