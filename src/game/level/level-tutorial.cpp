@@ -73,6 +73,7 @@ struct Level_tutorial::Impl {
       //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
       //Up_speed_test(this),
       Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      Spawner_enemy_noshoot(this),
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -121,6 +122,7 @@ struct Level_tutorial::Impl {
     }
   }; // Task_draw_motion_keys
 
+  /// показать кнопки движения
   inline void draw_motion_keys() {
     bg_text = get_locale_str("scene.tutorial.text.move_keys");
     #define KEY_TEXT(key_name) { \
@@ -137,11 +139,12 @@ struct Level_tutorial::Impl {
     #undef KEY_TEXT
   } // draw_motion_keys
 
+  /// показать кнопку стрельбы
   inline void draw_shoot_key() {
     bg_text = get_locale_str("scene.tutorial.text.shoot_key");
     const bool pressed = is_pressed(hpw::keycode::shoot);
-    cauto scope_l = pressed ? U'{' : U' ';
-    cauto scope_r = pressed ? U'}' : U' ';
+    cauto scope_l = pressed ? U'<' : U' ';
+    cauto scope_r = pressed ? U'>' : U' ';
     bg_text += utf32(U": ") +
       scope_l + hpw::keys_info.find(hpw::keycode::shoot)->name + scope_r;
   }
@@ -279,6 +282,18 @@ struct Level_tutorial::Impl {
       return repeats == 0 || repeats >= 10;
     }
   }; // Up_speed_test
+
+  /// создаёт противников, которые не стреляют в игрока
+  struct Spawner_enemy_noshoot {
+    Impl* master {};
+
+    explicit Spawner_enemy_noshoot(Impl* _master): master {_master} {}
+
+    bool operator()(const double dt) {
+      master->draw_shoot_key();
+      return false;
+    } // op ()
+  }; // Spawner_enemy_noshoot
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}
