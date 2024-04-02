@@ -67,18 +67,13 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      Timed_task(3.3, [](double dt) { return false; }),
-      Timed_task(9.0, Task_draw_motion_keys(this)),
-      Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(4.5, [this](double dt) {
-        bg_text = get_locale_str("scene.tutorial.text.move_up");
-        return false;
-      }),
-      Up_speed_test(this),
-      Timed_task(6.5, [this](double dt) {
-        bg_text = get_locale_str("scene.tutorial.text.end");
-        return false;
-      }),
+      //Timed_task(3.3, [](double dt) { return false; }),
+      //Timed_task(9.0, Task_draw_motion_keys(this)),
+      //Spawner_border_bullet(this, 40, 0.6),
+      //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      //Up_speed_test(this),
+      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
@@ -141,6 +136,15 @@ struct Level_tutorial::Impl {
     KEY_TEXT(down)
     #undef KEY_TEXT
   } // draw_motion_keys
+
+  inline void draw_shoot_key() {
+    bg_text = get_locale_str("scene.tutorial.text.shoot_key");
+    const bool pressed = is_pressed(hpw::keycode::shoot);
+    cauto scope_l = pressed ? U'{' : U' ';
+    cauto scope_r = pressed ? U'}' : U' ';
+    bg_text += utf32(U": ") +
+      scope_l + hpw::keys_info.find(hpw::keycode::shoot)->name + scope_r;
+  }
 
   /// выйти с уровня
   inline static bool exit_from_level(double dt) {
