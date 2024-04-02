@@ -72,8 +72,8 @@ struct Level_tutorial::Impl {
       //Spawner_border_bullet(this, 40, 0.6),
       //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
       //Up_speed_test(this),
-      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
-      Spawner_enemy_noshoot(this),
+      //Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      Spawner_enemy_noshoot(this, 4.0),
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -286,13 +286,54 @@ struct Level_tutorial::Impl {
   /// создаёт противников, которые не стреляют в игрока
   struct Spawner_enemy_noshoot {
     Impl* master {};
+    Timer spawn_timer {0.5}; /// через сколько спавнить противника
+    Timer lifetime {}; /// сколько времени будет работать спавнер
+    bool check_death {}; /// начать проверять, что все соспавненные объекты умерли
+    uint live_count {}; /// сколько объектов сейчас живы
 
-    explicit Spawner_enemy_noshoot(Impl* _master): master {_master} {}
+    explicit Spawner_enemy_noshoot(Impl* _master, const real _total_time=1.0)
+    : master {_master}
+    , lifetime {_total_time}
+    {
+      assert(_total_time > 0 && _total_time < 60);
+    }
 
-    bool operator()(const double dt) {
+    inline bool operator()(const double dt) {
       master->draw_shoot_key();
+
+      if (!check_death) {
+        cfor (_, spawn_timer.update(dt)) {
+          spawn({graphic::width/2, -20});
+        }
+      }
+
+      if (lifetime.update(dt))
+        check_death = true;
+      if (check_death)
+        return live_count == 0 || live_count >= 100'000u;
       return false;
     } // op ()
+
+    /// движение зигзагом для противника
+    struct Zigzag_motion {
+      real state {};
+
+      inline void operator()(Entity& self, double dt) {
+        state += dt;
+        constexpr real SPEED = 0.666_pps;
+        Vec vel(std::cos(state * 2) * SPEED * 4.0, SPEED);
+        self.phys.set_vel(vel);
+      }
+    }; // Zigzag_motion
+
+    Collidable* spawn(const Vec pos) {
+      auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
+      enemy->move_update_callback(Zigzag_motion());
+      enemy->move_kill_callback([this](Entity&){ --live_count; });
+      ++live_count;
+      assert(enemy->status.collidable);
+      return ptr2ptr<Collidable*>(enemy);
+    }
   }; // Spawner_enemy_noshoot
 }; // Impl
 

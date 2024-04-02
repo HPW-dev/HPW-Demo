@@ -17,6 +17,7 @@
 
 Entity::Entity()
 : update_callbacks {}
+, kill_callbacks {}
 , phys {}
 , anim_ctx {}
 , heat_distort {}
@@ -29,7 +30,16 @@ Entity::Entity()
 
 Entity::Entity(Entity_type new_type): Entity() { type = new_type; }
 
-void Entity::kill() { status.live = false; }
+void Entity::kill() {
+  status.live = false;
+  status.killed = true;
+  accept_kill_callbacks();
+}
+
+void Entity::accept_kill_callbacks() {
+  for (cnauto callback: kill_callbacks)
+    callback(*this);
+}
 
 void Entity::draw(Image& dst, const Vec offset) const {
   // отрисовка игрового объекта
@@ -119,4 +129,12 @@ void Entity::move_update_callback(Update_callback&& callback) {
     update_callbacks.emplace_back(std::move(callback));
 }
 
-void Entity::clear_callbacks() { update_callbacks.clear(); }
+void Entity::move_kill_callback(Kill_callback&& callback) {
+  if (callback)
+    kill_callbacks.emplace_back(std::move(callback));
+}
+
+void Entity::clear_callbacks() {
+  update_callbacks.clear();
+  kill_callbacks.clear();
+}

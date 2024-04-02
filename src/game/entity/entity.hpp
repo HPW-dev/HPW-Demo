@@ -20,8 +20,12 @@ struct Vec;
 class Entity {
   nocopy(Entity);
 
-  using Update_callback = std::function<void (Entity&, double dt)>;
+  /// <self ptr, dt>
+  using Update_callback = std::function<void (Entity&, double)>;
+  /// <self ptr>
+  using Kill_callback = std::function<void (Entity&)>;
   Vector<Update_callback> update_callbacks {}; /// внешние колбэки на обработку апдейта
+  Vector<Kill_callback> kill_callbacks {}; /// внешние колбэки на обработку смерти
 
   void move_it(double dt);
   void draw_pos(Image& dst, const Vec offset) const;
@@ -47,6 +51,8 @@ public:
   virtual void kill();
   void set_pos(const Vec pos);
   void move_update_callback(Update_callback&& callback);
+  void move_kill_callback(Kill_callback&& callback);
+  void accept_kill_callbacks();
   void clear_callbacks();
   void set_master(Master_p new_master);
   inline CN<Master_p> get_master() const { return master; }

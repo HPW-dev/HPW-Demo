@@ -26,6 +26,7 @@
 #include "game/entity/enemy/cosmic-waiter.hpp"
 #include "game/entity/enemy/cosmic.hpp"
 #include "game/entity/enemy/illaen.hpp"
+#include "game/entity/enemy/enemy-tutorial.hpp"
 
 struct Entity_mgr::Impl {
   /// за пределами этого расстояние пули за экраном умирают в шмап-моде
@@ -169,6 +170,7 @@ struct Entity_mgr::Impl {
       {"enemy.cosmic.hunter", [](CN<Yaml> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
       {"enemy.cosmic.waiter", [](CN<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
       {"enemy.cosmic", [](CN<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
+      {"enemy.tutorial", [](CN<Yaml> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
       {"player.boo.dark", [](CN<Yaml> config){ return new_shared<Player_dark::Loader>(config); } },
     };
 
@@ -260,6 +262,8 @@ struct Entity_mgr::Impl {
           entity_pos.y >= graphic::height + bound
         ) {
           entity->status.live = false;
+          entity->status.killed = true;
+          entity->accept_kill_callbacks();
         }
       } // if live
     } // for entities

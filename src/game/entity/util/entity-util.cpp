@@ -119,7 +119,7 @@ Kill_by_timeout::Kill_by_timeout(double timeout)
 
 void Kill_by_timeout::operator()(Entity& entity, double dt) {
   if (m_timeout <= 0) {
-    entity.status.killed = true;
+    entity.kill();
     return;
   }
   m_timeout -= dt;
