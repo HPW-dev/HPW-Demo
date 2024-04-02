@@ -95,7 +95,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::enable_motion_blur = false;
           graphic::light_quality = Light_quality::low;
           graphic::motion_blur_quality_reduct = true;
-          graphic::frame_skip = 3;
+          graphic::frame_skip = 5;
           graphic::auto_frame_skip = true;
         }
       },
@@ -278,8 +278,8 @@ void Scene_graphic::init_simple_menu() {
         get_locale_str("scene.graphic_menu.pressets.name"),
         [this]{ cur_menu = preset_menu; }
       ),
-      get_goto_detailed_item(),
       get_plugin_item(),
+      get_goto_detailed_item(),
       get_resize_type_item(),
       get_vsync_item(),
       get_frame_limit_item(),

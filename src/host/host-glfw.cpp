@@ -284,9 +284,6 @@ bool Host_glfw::is_ran() const { return is_run && !glfwWindowShouldClose(window)
 
 void Host_glfw::game_frame(double dt) {
   return_if (dt <= 0 || dt >= 10);
-  
-  check_frame_skip();
-  return_if (graphic::skip_cur_frame); // не рисовать кадр при этом флаге
 
   frame_time += dt;
 
@@ -296,16 +293,20 @@ void Host_glfw::game_frame(double dt) {
   ) {
     auto frame_draw_start = get_time();
     frame_time = 0;
-    calc_lerp_alpha();
-    calc_upf();
+    check_frame_skip();
+    
+    if (!graphic::skip_cur_frame) { // не рисовать кадр при этом флаге
+      calc_lerp_alpha();
+      calc_upf();
 
-    draw_game_frame();
-    draw();
-    glfwSwapBuffers(window);
-    ++fps;
+      draw_game_frame();
+      draw();
+      glfwSwapBuffers(window);
+      frame_drawn = true;
+      apply_render_delay();
+      ++fps;
+    }
     ++graphic::frame_count;
-    frame_drawn = true;
-    apply_render_delay();
 
     auto frame_draw_end = get_time();
     graphic::hard_draw_time = frame_draw_end - frame_draw_start;
@@ -428,18 +429,14 @@ void Host_glfw::check_frame_skip() {
 
   // настраиваемый фреймскип
   if (graphic::frame_skip > 0) {
+    //const bool skip_me = (graphic::frame_count % (1 + graphic::frame_skip)) != 0;
     const bool skip_me = (graphic::frame_count % (1 + graphic::frame_skip)) != 0;
     if (graphic::auto_frame_skip) { // скип при лагах
       if (graphic::render_lag)
         graphic::skip_cur_frame = skip_me;
-    } else {
+    } else { // постоянный скип
       graphic::skip_cur_frame = skip_me;
     }
-  }
-
-  // засчитать кадр как нарисованный
-  if (graphic::skip_cur_frame) {
-    ++graphic::frame_count;
   }
 } // check_frame_skip
 
