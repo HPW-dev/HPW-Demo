@@ -263,11 +263,14 @@ struct Level_tutorial::Impl {
         // сделать пули по бокам
         auto
         wave = master->make_wave({-20, spawn_height});
+        assert(wave->status.collidable);
         wave->phys.set_vel({+wave_speed, 0});
         wave->anim_ctx.set_speed_scale(anim_speed_scale);
+        ptr2ptr<Collidable*>(wave)->set_dmg(24'000/6);
         wave = master->make_wave({graphic::width + 20, spawn_height});
         wave->phys.set_vel({-wave_speed, 0});
         wave->anim_ctx.set_speed_scale(anim_speed_scale);
+        ptr2ptr<Collidable*>(wave)->set_dmg(24'000/6);
       }
       return repeats == 0 || repeats >= 10;
     }
