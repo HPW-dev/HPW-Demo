@@ -324,6 +324,7 @@ void Host_glfw::game_update(double dt) {
   while (update_time >= hpw::target_update_time) {
     update_time -= hpw::target_update_time;
     start_update_time = get_time();
+    glfwPollEvents();
 
     // обработка специальных кнопок
     if (is_pressed_once(hpw::keycode::fulscrn))
