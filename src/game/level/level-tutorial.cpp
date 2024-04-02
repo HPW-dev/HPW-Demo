@@ -70,12 +70,15 @@ struct Level_tutorial::Impl {
       Timed_task(3.3, [](double dt) { return false; }),
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(5, [this](double dt) {
+      Timed_task(4.5, [this](double dt) {
         bg_text = get_locale_str("scene.tutorial.text.move_up");
         return false;
       }),
       Up_speed_test(this),
-      [](double dt) { return false; }, // TODO заглушка
+      Timed_task(6.5, [this](double dt) {
+        bg_text = get_locale_str("scene.tutorial.text.end");
+        return false;
+      }),
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
@@ -142,6 +145,7 @@ struct Level_tutorial::Impl {
   /// выйти с уровня
   inline static bool exit_from_level(double dt) {
     hpw::level_mgr->finalize_level();
+    hpw::need_tutorial = false;
     return true;
   }
 
@@ -214,7 +218,7 @@ struct Level_tutorial::Impl {
   struct Up_speed_test {
     constx real wave_speed_down {2.25_pps}; /// скорость пуль при движении волны вниз
     constx real wave_speed_up {4.5_pps}; /// скорость пуль при движении волны вверх
-    constx real delay {2.3}; /// сколько подождать перед спавном следующей волны
+    constx real delay {2.1}; /// сколько подождать перед спавном следующей волны
     constx real step {25}; /// шаг между пулями
     constx real spawn_delay {0.1}; /// сколько ждать перед спавном следующей пули
 

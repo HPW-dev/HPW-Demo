@@ -25,6 +25,7 @@ int get_scancode(const hpw::keycode keycode) {
 void save_config() {
   auto& config = *hpw::config;
   config.set_bool("enable_replay", hpw::enable_replay);
+  config.set_bool("need_tutorial", hpw::need_tutorial);
 
   auto graphic_node = config.make_node("graphic");
   graphic_node.set_v_int("canvas_size",        {graphic::width, graphic::height} );
@@ -77,7 +78,8 @@ void load_config() {
   hpw::config = new_shared<Yaml>(hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;
-  hpw::enable_replay = config.get_bool("enable_replay");
+  hpw::enable_replay = config.get_bool("enable_replay", true);
+  hpw::need_tutorial = config.get_bool("need_tutorial", true);
 
   auto path_node = config["path"];
   // добавить инфу о путях, если конфиг сделан в первый раз

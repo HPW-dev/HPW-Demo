@@ -124,6 +124,13 @@ void Scene_game::update(double dt) {
     replay_save_keys();
 
   hpw::level_mgr->update(get_level_vel(), dt);
+  if (hpw::level_mgr->end_of_levels) {
+    hpw::scene_mgr->back(); // exit to loading screen
+    hpw::scene_mgr->back(); // exit to diffuculty
+    hpw::scene_mgr->back(); // exit to main menu
+    detailed_log("уровни кончились, выход из сцены игры\n");
+  }
+
   if (graphic::hud)
     graphic::hud->update(dt);
   hpw::entity_mgr->update(dt);
