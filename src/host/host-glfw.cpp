@@ -429,7 +429,6 @@ void Host_glfw::check_frame_skip() {
 
   // настраиваемый фреймскип
   if (graphic::frame_skip > 0) {
-    //const bool skip_me = (graphic::frame_count % (1 + graphic::frame_skip)) != 0;
     const bool skip_me = (graphic::frame_count % (1 + graphic::frame_skip)) != 0;
     if (graphic::auto_frame_skip) { // скип при лагах
       if (graphic::render_lag)
