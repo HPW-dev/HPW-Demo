@@ -1,10 +1,13 @@
 #include <assert.h>
 #include "hpw-plugin-effect-util.h"
-/* Как собрать:
-Закиньте hpw-plugin-effect.h и util-файлы в папку с кодом плагина
-и соберите командой: gcc -std=c2x -Wall -O2 -shared *.c -o brightness.dll
-получившийся .dll/.so файл скиньте в build/plugin/effect/, затем
-найдите его в игре в настройках графики. */
+/*
+Как собрать:
+Закиньте hpw-plugin-effect.h и util-файлы в папку с кодом плагина.
+Сборка на Windows: gcc -std=c2x -Wall -O2 -shared *.c -o brightness.dll
+Сборка на Linux: gcc -std=c2x -Wall -O2 -shared -fPIC *.c -o brightness.so
+Получившийся .dll/.so файл скиньте в build/plugin/effect/, затем
+найдите его в игре в "настройках графики"->"графические эффекты".
+*/
 
 NOT_EXPORTED static pal8_t* g_dst; // ссыль на растр от игры
 NOT_EXPORTED static uint16_t g_w; // ширина растра
