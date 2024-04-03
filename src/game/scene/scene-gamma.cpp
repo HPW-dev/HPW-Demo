@@ -22,12 +22,18 @@
 struct Scene_gamma::Impl {
   Unique<Advanced_text_menu> m_menu {};
   Sprite* test_image {};
+  bool fullscreen_bak {};
 
   inline explicit Impl() {
     init_menu();
     test_image = hpw::store_sprite->find("resource/image/other/gamma test.png").get();
     assert(test_image);
+    // тест надо проводить в масштабе 1:1 
+    fullscreen_bak = graphic::fullscreen;
+    hpw::set_fullscreen(false);
   } // impl
+
+  inline ~Impl() { hpw::set_fullscreen(fullscreen_bak); }
 
   inline void update(double dt) {
     if (is_pressed_once(hpw::keycode::escape))
