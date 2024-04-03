@@ -80,7 +80,7 @@ struct Level_tutorial::Impl {
       //Spawner_enemy_shoot(this, 8.0),
       //Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
       //Energy_test(this),
-      Timed_task(5.0, [this](double dt) { draw_focus_key(); return false; }),
+      Timed_task(5.0, [this](double dt) { return draw_focus_key(); }),
       Focus_test(this),
 
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
@@ -446,25 +446,44 @@ struct Level_tutorial::Impl {
   }; // Energy_test
 
   /// показать кнопку фокусировки
-  inline void draw_focus_key() {
+  inline bool draw_focus_key() {
     bg_text = get_locale_str("scene.tutorial.text.focus_key");
     cauto key = hpw::keycode::focus;
     cauto pressed = is_pressed(key);
     cauto scope_l = pressed ? U'[' : U' ';
     cauto scope_r = pressed ? U']' : U' ';
     bg_text += utf32(U": ") + scope_l + hpw::keys_info.find(key)->name + scope_r;
+    return pressed;
   }
 
   /// спавнит сетку сужающихся пуль чтобы научить игрока медленно двигаться
   struct Focus_test {
     Impl* master {};
+    Timer m_lifetime {6}; /// сколько продлится спавн пуль
+    Timer m_bullet_delay {0.25}; /// задержка перед спавном пули
+    constx real BULLET_SPEED {2_pps};
+    constx real MAX_STEP {50}; /// максимальное расстояние между пулями на старте
+    constx real MIN_STEP {30}; /// конечное расстояние между пулями
+    constx real STEP_DECREASE {0.05}; /// скорость изменения расстояния между пулями
+    real m_step {MAX_STEP};
+    bool is_end {};
 
     inline explicit Focus_test(Impl* _master): master {_master} {}
 
     inline bool operator()(const double dt) {
       master->draw_focus_key();
-      return false;
+      cfor (_, m_bullet_delay.update(dt))
+        spwan_hatch(dt);
+      m_step = std::clamp<real>(m_step - STEP_DECREASE, MIN_STEP, MAX_STEP);
+      cfor (_, m_lifetime.update(dt))
+        is_end = true;
+      return is_end;
     } // op ()
+
+    // создаёт сетку пуль
+    inline void spwan_hatch(const double dt) {
+      
+    }
   }; // Focus_test
 }; // Impl
 
