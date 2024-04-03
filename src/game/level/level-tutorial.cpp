@@ -77,7 +77,7 @@ struct Level_tutorial::Impl {
       Spawner_enemy_noshoot(this, 4.0),
       Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
       Spawner_enemy_shoot(this, 8.0),
-      Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
+      Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
       Energy_test(this),
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
@@ -262,13 +262,13 @@ struct Level_tutorial::Impl {
           reverse = false;
           spawn_height = -30;
           delay_timer = Timer(delay);
+          --repeats;
         }
         // полна дошла до низа
         if (!reverse && spawn_height >= graphic::height - 50) {
           reverse = true;
           spawn_height = graphic::height + 30;
           delay_timer = Timer(delay);
-          --repeats;
         }
 
         cauto anim_speed_scale = reverse ? 2.0 : 0.9;
