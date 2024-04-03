@@ -68,22 +68,22 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      //Timed_task(3.3, [](double dt) { return false; }),
+      Timed_task(3.3, [](double dt) { return false; }),
 
-      //Timed_task(9.0, Task_draw_motion_keys(this)),
-      //Spawner_border_bullet(this, 40, 0.6),
-      //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
-      //Up_speed_test(this),
-      //Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
-      //Spawner_enemy_noshoot(this, 4.0),
-      //Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
-      //Spawner_enemy_shoot(this, 8.0),
-      //Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
-      //Energy_test(this),
+      Timed_task(9.0, Task_draw_motion_keys(this)),
+      Spawner_border_bullet(this, 40, 0.6),
+      Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      Up_speed_test(this),
+      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      Spawner_enemy_noshoot(this, 4.0),
+      Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
+      Spawner_enemy_shoot(this, 8.0),
+      Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
+      Energy_test(this),
       Timed_task(5.0, [this](double dt) { return draw_focus_key(); }),
       Focus_test(this),
 
-      Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
+      Timed_task(8.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
@@ -234,7 +234,7 @@ struct Level_tutorial::Impl {
   struct Up_speed_test {
     constx real wave_speed_down {2.25_pps}; /// скорость пуль при движении волны вниз
     constx real wave_speed_up {4.5_pps}; /// скорость пуль при движении волны вверх
-    constx real delay {2.1}; /// сколько подождать перед спавном следующей волны
+    constx real delay {2.2}; /// сколько подождать перед спавном следующей волны
     constx real step {25}; /// шаг между пулями
     constx real spawn_delay {0.1}; /// сколько ждать перед спавном следующей пули
 
@@ -412,6 +412,9 @@ struct Level_tutorial::Impl {
         wave_delay(dt);
       else
         wave_spawn(dt);
+      // выключить табличку после нескольких волн
+      if (m_repeats <= 2)
+        master->bg_text = {};
       return m_repeats == 0 || m_repeats >= 100;
     } // op ()
 
@@ -459,31 +462,61 @@ struct Level_tutorial::Impl {
   /// спавнит сетку сужающихся пуль чтобы научить игрока медленно двигаться
   struct Focus_test {
     Impl* master {};
-    Timer m_lifetime {6}; /// сколько продлится спавн пуль
-    Timer m_bullet_delay {0.25}; /// задержка перед спавном пули
-    constx real BULLET_SPEED {2_pps};
-    constx real MAX_STEP {50}; /// максимальное расстояние между пулями на старте
-    constx real MIN_STEP {30}; /// конечное расстояние между пулями
-    constx real STEP_DECREASE {0.05}; /// скорость изменения расстояния между пулями
-    real m_step {MAX_STEP};
-    bool is_end {};
+    Timer m_lifetime_state_1 {18.5}; /// сколько продлится спавн пуль сверху
+    Timer m_lifetime_state_2 {18.5}; /// сколько продлится спавн пуль сбоку
+    Timer m_bullet_delay {0.23}; /// задержка перед спавном пули
+    constx real BULLET_SPEED {1.5_pps};
+    constx real MAX_STEP {110}; /// максимальное расстояние между пулями на старте
+    constx real MIN_STEP {64}; /// конечное расстояние между пулями
+    constx real STEP_DECREASE {0.01717}; /// скорость изменения расстояния между пулями
+    real m_step_x {MAX_STEP};
+    real m_step_y {MAX_STEP};
+    bool m_complete_state_1 {};
+    bool m_complete_state_2 {};
 
     inline explicit Focus_test(Impl* _master): master {_master} {}
 
     inline bool operator()(const double dt) {
-      master->draw_focus_key();
+      if (m_step_x != MIN_STEP) {
+        master->draw_focus_key();
+        master->bg_text += utf32(U"\n") +
+          get_locale_str("scene.tutorial.text.it_help_in_space");
+      } else {
+        master->bg_text = {};
+      }
+      // сделать сетку
       cfor (_, m_bullet_delay.update(dt))
         spwan_hatch(dt);
-      m_step = std::clamp<real>(m_step - STEP_DECREASE, MIN_STEP, MAX_STEP);
-      cfor (_, m_lifetime.update(dt))
-        is_end = true;
-      return is_end;
+      // сужение пуль
+      m_step_x = std::clamp<real>(m_step_x - STEP_DECREASE, MIN_STEP, MAX_STEP);
+      if (m_complete_state_1)
+        m_step_y = std::clamp<real>(m_step_y - STEP_DECREASE, MIN_STEP, MAX_STEP);
+      // задержка между фазами
+      cfor (_, m_lifetime_state_1.update(dt))
+        m_complete_state_1 = true;
+      if (m_complete_state_1)
+        cfor (_, m_lifetime_state_2.update(dt))
+          m_complete_state_2 = true;
+      return m_complete_state_1 && m_complete_state_2;
     } // op ()
 
     // создаёт сетку пуль
     inline void spwan_hatch(const double dt) {
-      
-    }
+      // пули сверху
+      for (real x = 25; x < graphic::width; x += m_step_x) {
+        const Vec pos(x, -20);
+        auto bullet = hpw::entity_mgr->make({}, "enemy.tutorial.bullet", pos);
+        bullet->phys.set_vel({0, BULLET_SPEED});
+      }
+      // пули сбоку
+      if (m_complete_state_1) {
+        for (real y = 25; y < graphic::height; y += m_step_y) {
+          const Vec pos(-20, y);
+          auto bullet = hpw::entity_mgr->make({}, "enemy.tutorial.bullet", pos);
+          bullet->phys.set_vel({BULLET_SPEED, 0});
+        }
+      }
+    } // spwan_hatch
   }; // Focus_test
 }; // Impl
 
