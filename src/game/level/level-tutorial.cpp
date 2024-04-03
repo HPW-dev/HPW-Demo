@@ -68,17 +68,21 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      Timed_task(3.3, [](double dt) { return false; }),
-      Timed_task(9.0, Task_draw_motion_keys(this)),
-      Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
-      Up_speed_test(this),
-      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
-      Spawner_enemy_noshoot(this, 4.0),
-      Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
-      Spawner_enemy_shoot(this, 8.0),
-      Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
-      Energy_test(this),
+      //Timed_task(3.3, [](double dt) { return false; }),
+
+      //Timed_task(9.0, Task_draw_motion_keys(this)),
+      //Spawner_border_bullet(this, 40, 0.6),
+      //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      //Up_speed_test(this),
+      //Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      //Spawner_enemy_noshoot(this, 4.0),
+      //Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
+      //Spawner_enemy_shoot(this, 8.0),
+      //Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
+      //Energy_test(this),
+      Timed_task(5.0, [this](double dt) { draw_focus_key(); return false; }),
+      Focus_test(this),
+
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -440,6 +444,28 @@ struct Level_tutorial::Impl {
       }
     }
   }; // Energy_test
+
+  /// показать кнопку фокусировки
+  inline void draw_focus_key() {
+    bg_text = get_locale_str("scene.tutorial.text.focus_key");
+    cauto key = hpw::keycode::focus;
+    cauto pressed = is_pressed(key);
+    cauto scope_l = pressed ? U'[' : U' ';
+    cauto scope_r = pressed ? U']' : U' ';
+    bg_text += utf32(U": ") + scope_l + hpw::keys_info.find(key)->name + scope_r;
+  }
+
+  /// спавнит сетку сужающихся пуль чтобы научить игрока медленно двигаться
+  struct Focus_test {
+    Impl* master {};
+
+    inline explicit Focus_test(Impl* _master): master {_master} {}
+
+    inline bool operator()(const double dt) {
+      master->draw_focus_key();
+      return false;
+    } // op ()
+  }; // Focus_test
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}
