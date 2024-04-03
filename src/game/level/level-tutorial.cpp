@@ -427,12 +427,12 @@ struct Level_tutorial::Impl {
       if (m_wave == 0 || m_wave >= 100)
         m_delay_state = true;
     }
-  }; // Energy_test
 
-  /// создаёт линию противников
-  inline void spawn_line() {
-    // TODO make enemy
-  }
+    /// создаёт линию противников
+    inline void spawn_line() {
+      // TODO make enemy
+    }
+  }; // Energy_test
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}

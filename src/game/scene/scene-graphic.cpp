@@ -4,7 +4,6 @@
 #include "scene-manager.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
-#include "game/util/pge.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -12,10 +11,12 @@
 #include "game/core/fonts.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
+#include "game/util/pge.hpp"
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/scene/scene-gamma.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/bool-item.hpp"
@@ -268,6 +269,11 @@ Shared<Menu_text_item> Scene_graphic::get_reset_item() {
   } );
 }
 
+Shared<Menu_text_item> Scene_graphic::get_gamma_item() {
+  return new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.gamma.title"),
+    []{ hpw::scene_mgr->add(new_shared<Scene_gamma>()); } );
+}
+
 void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     get_locale_str("scene.graphic_menu.title"),
@@ -301,6 +307,7 @@ void Scene_graphic::init_detailed_menu() {
       get_epilepsy_item(),
       get_fullscreen_item(),
       get_vsync_item(),
+      get_gamma_item(),
       get_draw_border_item(),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.double_buffering"),
