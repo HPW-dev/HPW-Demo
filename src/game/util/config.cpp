@@ -11,6 +11,7 @@
 #include "game/core/replays.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
+#include "util/safecall.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 
@@ -46,6 +47,7 @@ void save_config() {
   graphic_node.set_bool ("auto_frame_skip",     graphic::auto_frame_skip);
   graphic_node.set_bool ("enable_heat_distort", graphic::enable_heat_distort);
   graphic_node.set_bool ("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
+  graphic_node.set_real ("gamma",               graphic::gamma);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool ("vsync",                 graphic::get_vsync());
@@ -109,12 +111,12 @@ void load_config() {
   graphic::motion_blur_quality_reduct = graphic_node.get_bool("motion_blur_quality_reduct", graphic::motion_blur_quality_reduct);
   graphic::max_motion_blur_quality_reduct = graphic_node.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic::start_focused = graphic_node.get_bool("start_focused", graphic::start_focused);
-  if (hpw::init_palette_from_archive)
-    hpw::init_palette_from_archive( graphic_node.get_str("palette") );
+  safecall(hpw::init_palette_from_archive, graphic_node.get_str("palette"));
   graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
   graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
   graphic::enable_heat_distort = graphic_node.get_bool("enable_heat_distort", graphic::enable_heat_distort);
   graphic::disable_heat_distort_while_lag = graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
+  safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );

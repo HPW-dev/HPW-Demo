@@ -111,17 +111,16 @@ void Host_glfw::init_commands() {
     rebind_key_mode = true;
     key_for_rebind = hpw_key;
   };
-
   hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode){
     return_if( !key_mapper);
     key_mapper->bind(hpw_key, scancode);
     hpw::keys_info = key_mapper->get_info();
   };
-
   hpw::reset_keymap = [this]{
     key_mapper->reset();
     hpw::keys_info = key_mapper->get_info();
   };
+  hpw::set_gamma = [this](const double val) { this->set_gamma(val); };
 } // init_commands
 
 void Host_glfw::init() {

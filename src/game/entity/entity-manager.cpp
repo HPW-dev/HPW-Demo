@@ -75,7 +75,8 @@ struct Entity_mgr::Impl {
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
-    safecall(collision_resolver, entities, dt);
+    if (collision_resolver)
+      (*collision_resolver)(entities, dt);
     bound_check();
     update_kills();
   } // update
