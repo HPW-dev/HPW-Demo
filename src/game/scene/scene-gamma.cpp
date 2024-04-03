@@ -60,9 +60,11 @@ struct Scene_gamma::Impl {
         get_locale_str("scene.graphic_menu.gamma.gamma_value"),
         []()->double { return graphic::gamma; },
         [](const double val) { hpw::set_gamma(val); },
-        0.001,
+        0.005,
         get_locale_str("scene.graphic_menu.gamma.description.gamma_value")
       ),
+      new_shared<Menu_text_item>( get_locale_str("common.reset"),
+        []{ hpw::set_gamma(1.0); } ),
       new_shared<Menu_text_item>( get_locale_str("common.exit"),
         []{ hpw::scene_mgr->back(); } ),
     }; // menu_items
