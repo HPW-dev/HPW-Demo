@@ -68,7 +68,7 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      Timed_task(3.3, [](double dt) { return false; }),
+      Timed_task(3.3),
 
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 40, 0.6),
@@ -82,7 +82,15 @@ struct Level_tutorial::Impl {
       Energy_test(this),
       Timed_task(5.0, [this](double dt) { return draw_focus_key(); }),
       Focus_test(this),
+      Timed_task(1.5),
 
+      // проверить что игрок дожил до конца
+      [](double dt) {
+        cauto player = hpw::entity_mgr->get_player();
+        if (player)
+          return player->status.live;
+        return false;
+      },
       Timed_task(8.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
