@@ -5,6 +5,7 @@
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
+#include "game/core/palette.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
@@ -23,6 +24,7 @@ struct Scene_gamma::Impl {
   Unique<Advanced_text_menu> m_menu {};
   Sprite* test_image {};
   bool fullscreen_bak {};
+  Str palette_bak {};
 
   inline explicit Impl() {
     init_menu();
@@ -31,9 +33,14 @@ struct Scene_gamma::Impl {
     // тест надо проводить в масштабе 1:1 
     fullscreen_bak = graphic::fullscreen;
     hpw::set_fullscreen(false);
+    palette_bak = graphic::current_palette_file;
+    hpw::init_palette_from_archive("resource/image/palettes/default.png");
   } // impl
 
-  inline ~Impl() { hpw::set_fullscreen(fullscreen_bak); }
+  inline ~Impl() {
+    hpw::set_fullscreen(fullscreen_bak);
+    hpw::init_palette_from_archive(palette_bak);
+  }
 
   inline void update(double dt) {
     if (is_pressed_once(hpw::keycode::escape))
