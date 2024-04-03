@@ -44,6 +44,7 @@ protected:
   void _set_mouse_cursour_mode(bool enable) override;
   void _set_fullscreen(bool enable) override;
   void _set_double_buffering(bool enable) override;
+  void set_gamma(const double gamma) override;
   virtual void init_window();
   void init_commands();
   virtual void update(double dt);

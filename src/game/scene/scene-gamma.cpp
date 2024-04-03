@@ -3,6 +3,7 @@
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
+#include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
@@ -14,6 +15,7 @@
 #include "game/menu/item/double-item.hpp"
 #include "game/util/game-util.hpp"
 #include "util/error.hpp"
+#include "host/command.hpp"
 
 struct Scene_gamma::Impl {
   Unique<Advanced_text_menu> m_menu {};
@@ -34,9 +36,17 @@ struct Scene_gamma::Impl {
 
   inline void init_menu() {
     Menu_items menu_items {
+      new_shared<Menu_double_item>(
+        get_locale_str("scene.graphic_menu.gamma.gamma_value"),
+        []()->double { return graphic::gamma; },
+        [](const double val) { hpw::set_gamma(val); },
+        0.025,
+        get_locale_str("scene.graphic_menu.gamma.description.gamma_value")
+      ),
       new_shared<Menu_text_item>( get_locale_str("common.exit"),
         []{ hpw::scene_mgr->back(); } ),
     }; // menu_items
+
     m_menu = new_unique<Advanced_text_menu>(
       get_locale_str("scene.graphic_menu.gamma.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}

@@ -19,6 +19,7 @@ protected:
   virtual void _set_double_buffering(bool enable) = 0;
   virtual void _set_resize_mode(Resize_mode mode) = 0;
   virtual void _set_mouse_cursour_mode(bool mode) = 0;
+  virtual void set_gamma(const double gamma) = 0;
   /// получить текущее время в секундах
   virtual double get_time() const = 0;
   inline virtual void draw_game_frame() {}

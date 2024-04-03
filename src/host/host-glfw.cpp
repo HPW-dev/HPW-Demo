@@ -73,6 +73,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 /// колбэк для ошибок нужен для GLFW
 static void error_callback(int error, Cstr description) {
   std::cerr << "GLFW error: " << error << ": " << description << std::endl;
+  glfwSetGamma(monitor, 1.0); // на всякий случай вернуть гамму как была
   std::terminate();
 }
 
@@ -189,6 +190,12 @@ void Host_glfw::_set_double_buffering(bool enable) {
   detailed_log("Host_glfw._set_double_buffering: " << enable << "\n");
   graphic::double_buffering = enable;
   init_window();
+}
+
+void Host_glfw::set_gamma(const double gamma) {
+  graphic::gamma = std::clamp<double>(gamma, 0.025, 3);
+  auto monitor = glfwGetPrimaryMonitor();
+  glfwSetGamma(monitor, graphic::gamma);
 }
 
 void Host_glfw::init_window() {

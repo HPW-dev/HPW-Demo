@@ -32,5 +32,6 @@ inline bool disable_heat_distort_while_lag {true}; /// выключать иск
 inline Light_quality light_quality {Light_quality::medium}; /// качество вcпышки
 inline uint frame_skip {2};
 inline bool auto_frame_skip {true};
+inline double gamma {1.0};
 
 } // graphic ns

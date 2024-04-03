@@ -31,5 +31,7 @@ inline std::function<void (keycode, int)> rebind_key_by_scancode {};
 inline std::function<void ()> reset_keymap {};
 /// меняет палитру в игре
 inline std::function<void (const Str&)> init_palette_from_archive {};
+/// устанавливает гамму
+inline std::function<void (const double)> set_gamma {};
 
 } // hpw ns

@@ -65,6 +65,7 @@ void Host::callbacks_init() {
   hpw::soft_exit = [this] { this->exit(); };
   hpw::set_fullscreen = [this](bool enable) { this->_set_fullscreen(enable); };
   hpw::set_double_buffering = [this](bool enable) { this->_set_double_buffering(enable); };
+  hpw::set_gamma = [this](const double val) { this->set_gamma(val); };
   hpw::make_screenshot = [this] { this->save_screenshot(); };
   hpw::set_resize_mode = [this](Resize_mode mode) { this->_set_resize_mode(mode); };
   hpw::set_mouse_cursour_mode = [this](bool enable) { this->_set_mouse_cursour_mode(enable); };
