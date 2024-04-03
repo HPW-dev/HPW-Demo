@@ -429,6 +429,7 @@ struct Level_tutorial::Impl {
     }
   }; // Energy_test
 
+  /// создаёт линию противников
   inline void spawn_line() {
     // TODO make enemy
   }

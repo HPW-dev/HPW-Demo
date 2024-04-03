@@ -38,6 +38,7 @@ void Scene_difficulty::init_menu() {
     new_shared<Menu_text_item>(get_locale_str("scene.difficulty_select.start"), []{
       hpw::scene_mgr->add(new_shared<Scene_loading>( []{
         hpw::replay_read_mode = false;
+        hpw::need_tutorial = false;
         hpw::scene_mgr->add(new_shared<Scene_game>());
       } ));
     }),
