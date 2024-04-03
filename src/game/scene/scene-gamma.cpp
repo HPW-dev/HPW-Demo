@@ -3,6 +3,8 @@
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
@@ -19,9 +21,12 @@
 
 struct Scene_gamma::Impl {
   Unique<Advanced_text_menu> m_menu {};
+  Sprite* test_image {};
 
-  inline Impl() {
+  inline explicit Impl() {
     init_menu();
+    test_image = hpw::store_sprite->find("resource/image/other/gamma test.png").get();
+    assert(test_image);
   } // impl
 
   inline void update(double dt) {
@@ -32,6 +37,7 @@ struct Scene_gamma::Impl {
 
   inline void draw(Image& dst) const {
     m_menu->draw(dst);
+    insert<&blend_diff>(dst, *test_image, {graphic::width - test_image->X() - 15, 60});
   }
 
   inline void init_menu() {
@@ -40,7 +46,7 @@ struct Scene_gamma::Impl {
         get_locale_str("scene.graphic_menu.gamma.gamma_value"),
         []()->double { return graphic::gamma; },
         [](const double val) { hpw::set_gamma(val); },
-        0.025,
+        0.001,
         get_locale_str("scene.graphic_menu.gamma.description.gamma_value")
       ),
       new_shared<Menu_text_item>( get_locale_str("common.exit"),

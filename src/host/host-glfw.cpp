@@ -72,9 +72,10 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 
 /// колбэк для ошибок нужен для GLFW
 static void error_callback(int error, Cstr description) {
-  std::cerr << "GLFW error: " << error << ": " << description << std::endl;
-  glfwSetGamma(monitor, 1.0); // на всякий случай вернуть гамму как была
-  std::terminate();
+  // на всякий случай вернуть гамму как была
+  auto monitor = glfwGetPrimaryMonitor();
+  glfwSetGamma(monitor, 1.0);
+  error("GLFW error: " << error << ": " << description);
 }
 
 static void reshape_callback(GLFWwindow* /*window*/, int w, int h)
