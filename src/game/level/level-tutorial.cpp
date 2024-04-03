@@ -477,13 +477,11 @@ struct Level_tutorial::Impl {
     inline explicit Focus_test(Impl* _master): master {_master} {}
 
     inline bool operator()(const double dt) {
-      if (m_step_x != MIN_STEP) {
+      // убрать табличку через время
+      if (m_step_x != MIN_STEP)
         master->draw_focus_key();
-        master->bg_text += utf32(U"\n") +
-          get_locale_str("scene.tutorial.text.it_help_in_space");
-      } else {
+      else
         master->bg_text = {};
-      }
       // сделать сетку
       cfor (_, m_bullet_delay.update(dt))
         spwan_hatch(dt);
