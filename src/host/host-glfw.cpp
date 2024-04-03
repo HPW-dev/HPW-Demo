@@ -301,11 +301,10 @@ void Host_glfw::game_frame(double dt) {
     auto frame_draw_start = get_time();
     frame_time = 0;
     check_frame_skip();
+    calc_upf();
     
     if (!graphic::skip_cur_frame) { // не рисовать кадр при этом флаге
       calc_lerp_alpha();
-      calc_upf();
-
       draw_game_frame();
       draw();
       glfwSwapBuffers(window);

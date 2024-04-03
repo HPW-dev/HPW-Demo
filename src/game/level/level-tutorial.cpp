@@ -76,7 +76,7 @@ struct Level_tutorial::Impl {
       //Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
       //Spawner_enemy_noshoot(this, 4.0),
       //Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
-      //Spawner_enemy_shoot(this, 8.0),
+      Spawner_enemy_shoot(this, 8.0),
       Energy_test(this),
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
@@ -392,12 +392,13 @@ struct Level_tutorial::Impl {
   /// спавн волн противников, чтобы показать игроку как копить ману
   struct Energy_test {
     Impl* master {};
-    Timer m_spawn_delay {0.75}; /// сколько ждать между спавном
-    constx uint WAVES {4}; /// сколько волн врагов в пачке
+    Timer m_spawn_delay {0.3666}; /// сколько ждать между спавном
+    constx uint WAVES {8}; /// сколько волн врагов в пачке
+    constx real ENEMY_SPEED {2.5_pps};
     uint m_wave {WAVES};
     bool m_delay_state {false}; /// не спавнить врагов, когда true
-    Timer m_wave_delay {2.0}; /// задержка перед волнами
-    uint m_repeats {6}; /// сколько повторять волны
+    Timer m_wave_delay {3.0}; /// задержка перед волнами
+    uint m_repeats {4}; /// сколько повторять волны
 
     inline explicit Energy_test(Impl* _master): master {_master} {}
 
@@ -430,7 +431,12 @@ struct Level_tutorial::Impl {
 
     /// создаёт линию противников
     inline void spawn_line() {
-      // TODO make enemy
+      constexpr real STEP = 50;
+      for (real x = 0; x < graphic::width; x += STEP) {
+        const Vec pos(x, -20);
+        auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
+        enemy->phys.set_vel({0, ENEMY_SPEED});
+      }
     }
   }; // Energy_test
 }; // Impl
