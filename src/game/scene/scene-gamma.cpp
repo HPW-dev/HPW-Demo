@@ -33,6 +33,7 @@ struct Scene_gamma::Impl {
     // тест надо проводить в масштабе 1:1 
     fullscreen_bak = graphic::fullscreen;
     hpw::set_fullscreen(false);
+    // стандартная палитра для теста
     palette_bak = graphic::current_palette_file;
     hpw::init_palette_from_archive("resource/image/palettes/default.png");
   } // impl

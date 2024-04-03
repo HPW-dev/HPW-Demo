@@ -262,7 +262,8 @@ Shared<Menu_text_item> Scene_graphic::get_epilepsy_item() {
 Shared<Menu_text_item> Scene_graphic::get_reset_item() {
   return new_shared<Menu_text_item>(get_locale_str("common.reset"), [] {
     hpw::init_palette_from_archive("resource/image/palettes/default.png");
-    hpw::set_resize_mode(Resize_mode::by_height);
+    hpw::set_resize_mode(Resize_mode::one_to_one);
+    hpw::set_gamma(1.0);
     graphic::set_disable_frame_limit(false);
     disable_pge();
     set_default();
