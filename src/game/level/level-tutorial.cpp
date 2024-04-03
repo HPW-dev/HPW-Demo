@@ -68,15 +68,16 @@ struct Level_tutorial::Impl {
   inline void init_tasks() {
     tasks = Level_tasks {
       // в начале ничего не происходит
-      Timed_task(3.3, [](double dt) { return false; }),
-      Timed_task(9.0, Task_draw_motion_keys(this)),
-      Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
-      Up_speed_test(this),
-      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
-      Spawner_enemy_noshoot(this, 4.0),
-      Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
-      Spawner_enemy_shoot(this, 8.0),
+      //Timed_task(3.3, [](double dt) { return false; }),
+      //Timed_task(9.0, Task_draw_motion_keys(this)),
+      //Spawner_border_bullet(this, 40, 0.6),
+      //Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      //Up_speed_test(this),
+      //Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      //Spawner_enemy_noshoot(this, 4.0),
+      //Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
+      //Spawner_enemy_shoot(this, 8.0),
+      Energy_test(this),
       Timed_task(6.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
@@ -387,6 +388,50 @@ struct Level_tutorial::Impl {
       return ptr2ptr<Collidable*>(enemy);
     }
   }; // Spawner_enemy_shoot
+
+  /// спавн волн противников, чтобы показать игроку как копить ману
+  struct Energy_test {
+    Impl* master {};
+    Timer m_spawn_delay {0.75}; /// сколько ждать между спавном
+    constx uint WAVES {4}; /// сколько волн врагов в пачке
+    uint m_wave {WAVES};
+    bool m_delay_state {false}; /// не спавнить врагов, когда true
+    Timer m_wave_delay {2.0}; /// задержка перед волнами
+    uint m_repeats {6}; /// сколько повторять волны
+
+    inline explicit Energy_test(Impl* _master): master {_master} {}
+
+    inline bool operator()(const double dt) {
+      if (m_delay_state)
+        wave_delay(dt);
+      else
+        wave_spawn(dt);
+      return m_repeats == 0 || m_repeats >= 100;
+    } // op ()
+
+    // пауза между волнами
+    inline void wave_delay(const double dt) {
+      cfor (_, m_wave_delay.update(dt)) {
+        m_delay_state = false;
+        m_wave = WAVES;
+        --m_repeats;
+      }
+    }
+
+    // спавнить волны врагов
+    inline void wave_spawn(const double dt) {
+      cfor (_, m_spawn_delay.update(dt)) {
+        spawn_line();
+        --m_wave;
+      }
+      if (m_wave == 0 || m_wave >= 100)
+        m_delay_state = true;
+    }
+  }; // Energy_test
+
+  inline void spawn_line() {
+    // TODO make enemy
+  }
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}
