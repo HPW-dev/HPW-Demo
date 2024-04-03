@@ -7,6 +7,8 @@
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
@@ -21,18 +23,25 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/util/game-util.hpp"
 #include "util/path.hpp"
+#include "util/math/vec-util.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
+#include "util/hpw-util.hpp"
 
 struct Scene_pge::Impl {
   Unique<Advanced_text_menu> m_menu {};
   Strs m_effects {}; /// список путей к файлам эффектов
   std::size_t m_selected_effect {};
   bool m_reinit_menu {}; /// вызовет повторную инициализацию меню
+  Image m_ball {}; /// скачет по экрану и нужен для оценки эффекта
+  Vec m_ball_pos {};
+  constx real BALL_SPEED {2_pps};
+  Vec m_ball_vel {BALL_SPEED, BALL_SPEED};
 
   inline Impl() {
     init_menu();
     init_plugins();
+    init_ball();
   } // impl
 
   inline void update(double dt) {
@@ -45,11 +54,13 @@ struct Scene_pge::Impl {
       init_menu();
 
     m_menu->update(dt);
+    update_ball(dt);
   }
 
   inline void draw(Image& dst) const {
     if (!m_reinit_menu) // не показывать меню, когда его нужно перестроить
       m_menu->draw(dst);
+    draw_ball(dst);
   }
 
   inline void init_menu() {
@@ -188,6 +199,44 @@ struct Scene_pge::Impl {
   } // init_plugins
 
   inline Str get_current_effect() const { return m_effects.at(m_selected_effect); }
+
+  inline void init_ball() {
+    constexpr int sz = 64;
+    m_ball.init(sz, sz, Pal8::black);
+    cfor (y, sz)
+    cfor (x, sz) {
+      real luma = distance({sz/2, sz/2}, {x, y});
+      luma /= sz/2;
+      luma = 1.0 - luma;
+      m_ball(x, y) = Pal8::from_real(luma);
+    }
+    graphic::font->draw(m_ball, {20, 30}, U"Test", &blend_diff);
+  }
+
+  inline void draw_ball(Image& dst) const {
+    insert<&blend_diff>(dst, m_ball, m_ball_pos);
+  }
+
+  inline void update_ball(const double dt) {
+    m_ball_pos.x += m_ball_vel.x * dt;
+    m_ball_pos.y += m_ball_vel.y * dt;
+    if (m_ball_pos.x >= graphic::width - m_ball.X) {
+      m_ball_pos.x = graphic::width - m_ball.X - 1;
+      m_ball_vel.x *= -1;
+    }
+    if (m_ball_pos.y >= graphic::height - m_ball.Y) {
+      m_ball_pos.y = graphic::height - m_ball.Y - 1;
+      m_ball_vel.y *= -1;
+    }
+    if (m_ball_pos.x < 0) {
+      m_ball_pos.x = 0;
+      m_ball_vel.x *= -1;
+    }
+    if (m_ball_pos.y < 0) {
+      m_ball_pos.y = 0;
+      m_ball_vel.y *= -1;
+    }
+  } // update_ball
 }; // impl
 
 Scene_pge::Scene_pge(): impl {new_unique<Impl>()} {}
