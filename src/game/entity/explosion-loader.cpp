@@ -19,7 +19,6 @@
 #include "graphic/effect/light.hpp"
 
 struct Explosion_loader::Impl {
-
   /* создаёт m_particle_count частиц из списка m_entity_names и раскидывает
   их по сторонам. Дальность раздёла - m_particles_range */
   real m_power {}; // pps
