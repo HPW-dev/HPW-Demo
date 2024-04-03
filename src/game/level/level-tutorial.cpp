@@ -91,7 +91,7 @@ struct Level_tutorial::Impl {
           return player->status.live;
         return false;
       },
-      Timed_task(8.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
+      Timed_task(7.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
