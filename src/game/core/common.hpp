@@ -12,5 +12,6 @@ inline bool shmup_mode {true}; /// традиционный shoot'em-up режи
 inline Str exe_sha256 {}; /// чексумма для экзешника игры
 inline Str data_sha256 {}; /// чексумма для данных игры
 inline bool need_tutorial {true}; /// играя первый раз, предлагать туториал первым в списке
+inline bool save_last_replay {false}; /// сохранить последний реплей в именной файл?
 
 } // hpw ns

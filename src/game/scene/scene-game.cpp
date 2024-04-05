@@ -1,4 +1,5 @@
 #include <utility>
+#include <fstream>
 #include <algorithm>
 #include <sstream>
 #include <ctime>
@@ -93,6 +94,7 @@ Scene_game::Scene_game(const bool start_tutorial): m_start_tutorial {start_tutor
     cache_light_spheres();
   // TODO выбор HUD с конфига
   graphic::hud = new_shared<Hud_asci>();
+  hpw::save_last_replay = false;
 }
 
 Scene_game::~Scene_game() {
@@ -103,7 +105,21 @@ Scene_game::~Scene_game() {
   graphic::camera = {};
   hpw::hitbox_layer = {};
   hpw::level_mgr = {};
-}
+
+  try {
+    // реплей сейвится при закрытии
+    replay->close();
+    if (hpw::save_last_replay) {
+      // открыть файл последнего реплея и скопировать в именной файл
+      std::ifstream source(hpw::cur_dir + "replays/last_replay.hpw_replay", std::ios::binary);
+      std::ofstream dest(hpw::cur_dir + "replays/" + get_random_replay_name(), std::ios::binary);
+      dest << source.rdbuf();
+    }
+  } catch (...) {
+    // TODO окно с ошибкой
+    hpw_log("ошибка при сохранении реплея\n");
+  }
+} // d-tor
 
 void Scene_game::update(double dt) {
   assert(dt == hpw::target_update_time);
@@ -235,7 +251,7 @@ void Scene_game::replay_init() {
   if (hpw::replay_read_mode)
     replay = new_unique<Replay>(hpw::cur_replay_file_name, false);
   else if (hpw::enable_replay)
-    replay = new_unique<Replay>(hpw::cur_dir + "replays/" + get_random_replay_name(), true);
+    replay = new_unique<Replay>(hpw::cur_dir + "replays/last_replay.hpw_replay", true);
 } // replay_init
 
 void Scene_game::replay_save_keys() {
