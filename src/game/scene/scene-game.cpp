@@ -105,20 +105,8 @@ Scene_game::~Scene_game() {
   graphic::camera = {};
   hpw::hitbox_layer = {};
   hpw::level_mgr = {};
-
-  try {
-    // реплей сейвится при закрытии
-    replay->close();
-    if (hpw::save_last_replay) {
-      // открыть файл последнего реплея и скопировать в именной файл
-      std::ifstream source(hpw::cur_dir + "replays/last_replay.hpw_replay", std::ios::binary);
-      std::ofstream dest(hpw::cur_dir + "replays/" + get_random_replay_name(), std::ios::binary);
-      dest << source.rdbuf();
-    }
-  } catch (...) {
-    // TODO окно с ошибкой
-    hpw_log("ошибка при сохранении реплея\n");
-  }
+  if (hpw::enable_replay)
+    save_named_replay();
 } // d-tor
 
 void Scene_game::update(double dt) {
@@ -292,3 +280,20 @@ void Scene_game::replay_load_keys() {
     hpw::scene_mgr->back();
   }
 } // replay_load_keys
+
+void Scene_game::save_named_replay() {
+  assert(hpw::enable_replay);
+  try {
+    // реплей сейвится при закрытии
+    replay->close();
+    if (hpw::save_last_replay) {
+      // открыть файл последнего реплея и скопировать в именной файл
+      std::ifstream source(hpw::cur_dir + "replays/last_replay.hpw_replay", std::ios::binary);
+      std::ofstream dest(hpw::cur_dir + "replays/" + get_random_replay_name(), std::ios::binary);
+      dest << source.rdbuf();
+    }
+  } catch (...) {
+    // TODO окно с ошибкой
+    hpw_log("ошибка при сохранении реплея\n");
+  }
+}

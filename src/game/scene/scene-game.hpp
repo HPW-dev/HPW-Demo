@@ -19,6 +19,7 @@ class Scene_game final: public Scene {
   void post_draw(Image& dst) const;
   void draw_border(Image& dst) const; /// рамка по краям экрана
   Vec get_level_vel() const; /// безопасно получить сдвиг кординат уровня
+  void save_named_replay();
 
 public:
   explicit Scene_game(const bool start_tutorial=false);
