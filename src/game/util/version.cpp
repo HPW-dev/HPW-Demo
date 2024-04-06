@@ -1,3 +1,3 @@
 #include "version.hpp"
 
-const char* get_game_version() { return "v0.115.0"; }
+const char* get_game_version() { return "v0.115.0.1"; }

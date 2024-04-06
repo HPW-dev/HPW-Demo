@@ -27,11 +27,11 @@
 #include "graphic/util/util-templ.hpp"
 
 struct Level_tutorial::Impl {
-  Level_tutorial* m_master {};
+  Level_tutorial* master {};
   Level_tasks tasks {};
   utf32 bg_text {}; /// текст, который показывается на фоне
 
-  inline explicit Impl(Level_tutorial* master): m_master{master}
+  inline explicit Impl(Level_tutorial* _master): master{_master}
     { restart(); }
 
   inline void restart() {
@@ -43,7 +43,7 @@ struct Level_tutorial::Impl {
     init_tasks();
 
     // рестарт уровня при смерти
-    m_master->on_player_death_action = [this] { restart(); };
+    master->on_player_death_action = [this] { restart(); };
   }
 
   inline void update(const Vec vel, double dt) {
@@ -405,44 +405,44 @@ struct Level_tutorial::Impl {
   /// спавн волн противников, чтобы показать игроку как копить ману
   struct Energy_test {
     Impl* master {};
-    Timer m_spawn_delay {0.3666}; /// сколько ждать между спавном
+    Timer spawn_delay {0.3666}; /// сколько ждать между спавном
     constx uint WAVES {8}; /// сколько волн врагов в пачке
     constx real ENEMY_SPEED {2.5_pps};
-    uint m_wave {WAVES};
-    bool m_delay_state {false}; /// не спавнить врагов, когда true
-    Timer m_wave_delay {3.0}; /// задержка перед волнами
-    uint m_repeats {4}; /// сколько повторять волны
+    uint wave {WAVES};
+    bool delay_state {false}; /// не спавнить врагов, когда true
+    Timer wave_delay {3.0}; /// задержка перед волнами
+    uint repeats {4}; /// сколько повторять волны
 
     inline explicit Energy_test(Impl* _master): master {_master} {}
 
     inline bool operator()(const double dt) {
-      if (m_delay_state)
-        wave_delay(dt);
+      if (delay_state)
+        accept_wave_delay(dt);
       else
         wave_spawn(dt);
       // выключить табличку после нескольких волн
-      if (m_repeats <= 2)
+      if (repeats <= 2)
         master->bg_text = {};
-      return m_repeats == 0 || m_repeats >= 100;
+      return repeats == 0 || repeats >= 100;
     } // op ()
 
     // пауза между волнами
-    inline void wave_delay(const double dt) {
-      cfor (_, m_wave_delay.update(dt)) {
-        m_delay_state = false;
-        m_wave = WAVES;
-        --m_repeats;
+    inline void accept_wave_delay(const double dt) {
+      cfor (_, wave_delay.update(dt)) {
+        delay_state = false;
+        wave = WAVES;
+        --repeats;
       }
     }
 
     // спавнить волны врагов
     inline void wave_spawn(const double dt) {
-      cfor (_, m_spawn_delay.update(dt)) {
+      cfor (_, spawn_delay.update(dt)) {
         spawn_line();
-        --m_wave;
+        --wave;
       }
-      if (m_wave == 0 || m_wave >= 100)
-        m_delay_state = true;
+      if (wave == 0 || wave >= 100)
+        delay_state = true;
     }
 
     /// создаёт линию противников
@@ -470,53 +470,53 @@ struct Level_tutorial::Impl {
   /// спавнит сетку сужающихся пуль чтобы научить игрока медленно двигаться
   struct Focus_test {
     Impl* master {};
-    Timer m_lifetime_state_1 {18.5}; /// сколько продлится спавн пуль сверху
-    Timer m_lifetime_state_2 {18.5}; /// сколько продлится спавн пуль сбоку
-    Timer m_bullet_delay {0.23}; /// задержка перед спавном пули
+    Timer lifetime_state_1 {18.5}; /// сколько продлится спавн пуль сверху
+    Timer lifetime_state_2 {18.5}; /// сколько продлится спавн пуль сбоку
+    Timer bullet_delay {0.23}; /// задержка перед спавном пули
     constx real BULLET_SPEED {1.5_pps};
     constx real MAX_STEP {110}; /// максимальное расстояние между пулями на старте
     constx real MIN_STEP {64}; /// конечное расстояние между пулями
     constx real STEP_DECREASE {0.01717}; /// скорость изменения расстояния между пулями
-    real m_step_x {MAX_STEP};
-    real m_step_y {MAX_STEP};
-    bool m_complete_state_1 {};
-    bool m_complete_state_2 {};
+    real step_x {MAX_STEP};
+    real step_y {MAX_STEP};
+    bool complete_state_1 {};
+    bool complete_state_2 {};
 
     inline explicit Focus_test(Impl* _master): master {_master} {}
 
     inline bool operator()(const double dt) {
       // убрать табличку через время
-      if (m_step_x != MIN_STEP)
+      if (step_x != MIN_STEP)
         master->draw_focus_key();
       else
         master->bg_text = {};
       // сделать сетку
-      cfor (_, m_bullet_delay.update(dt))
+      cfor (_, bullet_delay.update(dt))
         spwan_hatch(dt);
       // сужение пуль
-      m_step_x = std::clamp<real>(m_step_x - STEP_DECREASE, MIN_STEP, MAX_STEP);
-      if (m_complete_state_1)
-        m_step_y = std::clamp<real>(m_step_y - STEP_DECREASE, MIN_STEP, MAX_STEP);
+      step_x = std::clamp<real>(step_x - STEP_DECREASE, MIN_STEP, MAX_STEP);
+      if (complete_state_1)
+        step_y = std::clamp<real>(step_y - STEP_DECREASE, MIN_STEP, MAX_STEP);
       // задержка между фазами
-      cfor (_, m_lifetime_state_1.update(dt))
-        m_complete_state_1 = true;
-      if (m_complete_state_1)
-        cfor (_, m_lifetime_state_2.update(dt))
-          m_complete_state_2 = true;
-      return m_complete_state_1 && m_complete_state_2;
+      cfor (_, lifetime_state_1.update(dt))
+        complete_state_1 = true;
+      if (complete_state_1)
+        cfor (_, lifetime_state_2.update(dt))
+          complete_state_2 = true;
+      return complete_state_1 && complete_state_2;
     } // op ()
 
     // создаёт сетку пуль
     inline void spwan_hatch(const double dt) {
       // пули сверху
-      for (real x = 25; x < graphic::width; x += m_step_x) {
+      for (real x = 25; x < graphic::width; x += step_x) {
         const Vec pos(x, -20);
         auto bullet = hpw::entity_mgr->make({}, "enemy.tutorial.bullet", pos);
         bullet->phys.set_vel({0, BULLET_SPEED});
       }
       // пули сбоку
-      if (m_complete_state_1) {
-        for (real y = 25; y < graphic::height; y += m_step_y) {
+      if (complete_state_1) {
+        for (real y = 25; y < graphic::height; y += step_y) {
           const Vec pos(-20, y);
           auto bullet = hpw::entity_mgr->make({}, "enemy.tutorial.bullet", pos);
           bullet->phys.set_vel({BULLET_SPEED, 0});
