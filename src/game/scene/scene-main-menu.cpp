@@ -225,9 +225,9 @@ void Scene_main_menu::init_bg() {
     &bgp_3d_atomar_cube,
     &bgp_circles,
     &bgp_circles_moire,
-    bgp_circles_moire_2,
-    bgp_red_circles_1,
-    bgp_red_circles_2,
+    &bgp_circles_moire_2,
+    &bgp_red_circles_1,
+    &bgp_red_circles_2,
   #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,
