@@ -710,3 +710,95 @@ void bgp_3d_rain_waves(Image& dst, const int bg_state) {
     dst.set<&blend_diff>(x, y, color, {});
   }
 } // bgp_3d_rain_waves
+
+void bgp_circles(Image& dst, const int bg_state) {
+  cfor (r, 85)
+    draw_circle(dst, {dst.X / 2.0, dst.Y / 2.0}, r * 4.0, Pal8::white);
+}
+
+void bgp_circles_moire(Image& dst, const int bg_state) {
+  cauto SPEED = bg_state * 0.01;
+  cauto OFFSET = 7.0;
+  cauto COS = std::cos(SPEED) * 20.0;
+  cauto SIN = std::sin(SPEED) * 20.0;
+  constexpr auto COLOR = Pal8::from_real(1.0 / 3.0);
+
+  const Vec pos1(dst.X / 2.0 + COS,      dst.Y / 2.0 + SIN);
+  const Vec pos2(dst.X / 2.0 - COS + 10, dst.Y / 2.0 + SIN);
+  const Vec pos3(dst.X / 2.0 + COS,      dst.Y / 2.0 - SIN + 10);
+
+  dst.fill(Pal8::black);
+  #pragma omp parallel for simd schedule(static, 4)  
+  cfor (r, 50) {
+    draw_circle<&blend_add_safe>(dst, pos1, r * OFFSET, COLOR);
+    draw_circle<&blend_add_safe>(dst, pos3, r * OFFSET, COLOR);
+    draw_circle<&blend_add_safe>(dst, pos2, r * OFFSET, COLOR);
+  }
+}
+
+void bgp_circles_moire_2(Image& dst, const int bg_state) {
+  cauto OFFSET = 6.0;
+  cauto COS1 = std::cos(bg_state * 0.01) * std::sin(bg_state * 0.001) * 90.0;
+  cauto SIN1 = std::sin(bg_state * 0.01) * std::sin(bg_state * 0.001) * 90.0;
+  cauto COS2 = std::cos(bg_state * 0.001) * std::sin(bg_state * 0.01) * 90.0;
+  cauto SIN2 = std::sin(bg_state * 0.001) * std::sin(bg_state * 0.01) * 90.0;
+  const Vec pos1(dst.X / 2.0 + COS1, dst.Y / 2.0 + SIN1);
+  const Vec pos2(dst.X / 2.0 - COS2, dst.Y / 2.0 - SIN2);
+
+  dst.fill(Pal8::black);
+  #pragma omp parallel for simd schedule(static, 4)
+  cfor (r, 90) {
+    draw_circle(dst, pos1, r * OFFSET, Pal8::white);
+    draw_circle(dst, pos2, r * OFFSET, Pal8::white);
+  }
+}
+
+void bgp_red_circles_1(Image& dst, const int bg_state) {
+  const real SPEED = bg_state * 0.006;
+
+  constexpr auto effect = [](Vec uv, const Vec offset)->real {
+    uv += offset;
+    real l = uv.x * uv.x + uv.y * uv.y;
+    l *= 0.001;
+    l = std::fmod(l, 1.0);
+    l = l >= 0.75 ? 1.0 : 0.0;
+    return l;
+  };  
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const Vec pos{x, y};
+    real l = 0;
+    cauto pos1 = Vec(-200.0 + std::cos(SPEED) * 20.0, -100.0 + std::sin(SPEED) * 50.0);
+    cauto pos2 = Vec(-200.0 + std::cos(SPEED) * 18.0, -100.0 + std::sin(SPEED) * 48.0);
+    l += effect(pos, pos1);
+    l *= effect(pos, pos2);
+    dst(x, y) = Pal8::from_real(l, true);
+  }
+} // bgp_red_circles_1
+
+void bgp_red_circles_2(Image& dst, const int bg_state) {
+  const real SPEED = bg_state * 0.006;
+
+  constexpr auto effect = [](Vec uv, const Vec offset)->real {
+    uv += offset;
+    real l = uv.x * uv.x + uv.y * uv.y;
+    l *= 0.001;
+    l = std::fmod(l, 1.0);
+    l = l >= 0.75 ? 1.0 : 0.0;
+    return l;
+  };  
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const Vec pos{x, y};
+    real l = 0;
+    cauto pos1 = Vec(-200.0 + std::cos(SPEED) * 20.0, -100.0 + std::sin(SPEED) * 50.0);
+    cauto pos2 = Vec(-200.0 + std::cos(SPEED) * 18.0, -100.0 + std::sin(SPEED) * 48.0);
+    l += effect(pos, pos1);
+    l += effect(pos, pos2);
+    dst(x, y) = Pal8::from_real(l, true);
+  }
+} // bgp_red_circles_2

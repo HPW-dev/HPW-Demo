@@ -46,7 +46,7 @@ void Scene_main_menu::update(double dt) {
     hpw::scene_mgr->back();
 #endif
 
-  bg_state = std::fmod(bg_state + dt, 12.0);
+  bg_state += dt;
   menu->update(dt);
 
   if (
@@ -223,6 +223,11 @@ void Scene_main_menu::init_bg() {
     &bgp_random_lines_1,
     &bgp_random_lines_2,
     &bgp_3d_atomar_cube,
+    &bgp_circles,
+    &bgp_circles_moire,
+    bgp_circles_moire_2,
+    bgp_red_circles_1,
+    bgp_red_circles_2,
   #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,

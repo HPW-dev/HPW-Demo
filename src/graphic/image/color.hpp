@@ -21,6 +21,7 @@ struct Pal8 {
   constx value_t white {255}; /// WHITE1
   constx value_t red_black {red_start};
   constx value_t red_end {red};
+  constx value_t red_mid {red_start + (red_end - red_start) / 2};
   constx value_t red_size {scast<int>(red_end) - scast<int>(red_start)};
   constx value_t gray_size {scast<int>(gray_end) - scast<int>(black) + 1};
   constx value_t gray {scast<int>(gray_end) / 2};
@@ -71,5 +72,15 @@ struct Pal8 {
   real to_real() const; /// преобразование цвета в число 0..1
   
   /// создаёт цвет из числа в диапазоне 0..1
-  static Pal8 from_real(real src, bool is_red = false);
+  static constexpr Pal8 from_real(real src, bool is_red = false);
 }; // Pal8
+
+constexpr Pal8 Pal8::from_real(real src, bool is_red) {
+  if (src >= 1.0)
+    return is_red ? red : white;
+  if (src <= 0.0)
+    return is_red ? red_start : black;
+  return is_red ?
+    get_red(src * red_size) :
+    Pal8(src * gray_size);
+} // from_real

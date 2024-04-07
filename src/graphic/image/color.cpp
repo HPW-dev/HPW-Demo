@@ -30,17 +30,7 @@ real Pal8::to_real() const {
   // gray:
   constexpr real gray_mul = 1.0 / gray_size;
   return val * gray_mul;
-} // to_d
-
-Pal8 Pal8::from_real(real src, bool is_red) {
-  if (src >= 1.0)
-    return is_red ? red : white;
-  if (src <= 0.0)
-    return is_red ? red_start : black;
-  return is_red ?
-    get_red(src * red_size) :
-    Pal8(src * gray_size);
-} // from_d
+} // to_real
 
 Pal8& Pal8::operator = (value_t nval) { val = nval; return *this; }
 
