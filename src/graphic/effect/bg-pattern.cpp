@@ -810,3 +810,30 @@ void bgp_red_circles_2(Image& dst, const int bg_state) {
     dst(x, y) = Pal8::from_real(l, true);
   }
 } // bgp_red_circles_2
+
+void bgp_pixel_font(Image& dst, const int bg_state) {
+  constexpr uint MY {34};
+  constexpr uint MX {64};
+  uint state = bg_state / 200;
+
+  cfor (y, MY)
+  cfor (x, MX) {
+    bool matrix[4][6] {0};
+    if (x % 8 != 7) {
+      for (uint my = 3; my < 6; ++my)
+      for (uint mx = 1; mx < 4; ++mx) {
+        matrix[mx][my] = ((state * (x + y + mx + my)) % 1000u) > 500u;
+        state = state * 8'253'729u + 2'396'403u;
+      }
+    }
+
+    cfor (my, 6)
+    cfor (mx, 4) {
+      cauto color = matrix[mx][my] ? Pal8::from_real(0.5) : Pal8::from_real(0);
+      dst.set(x * 8 + mx * 2 + 0, y * 12 + my * 2 + 0, color, {});
+      dst.set(x * 8 + mx * 2 + 1, y * 12 + my * 2 + 0, color, {});
+      dst.set(x * 8 + mx * 2 + 0, y * 12 + my * 2 + 1, color, {});
+      dst.set(x * 8 + mx * 2 + 1, y * 12 + my * 2 + 1, color, {});
+    }
+  }
+} // bgp_pixel_font

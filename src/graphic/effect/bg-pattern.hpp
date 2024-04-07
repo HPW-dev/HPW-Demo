@@ -48,3 +48,5 @@ void bgp_circles_moire_2(Image& dst, const int bg_state);
 void bgp_red_circles_1(Image& dst, const int bg_state);
 /// порт моего шейдера с shader sandbox
 void bgp_red_circles_2(Image& dst, const int bg_state);
+/// узор с пинтереста - пиксельные шрифты
+void bgp_pixel_font(Image& dst, const int bg_state);
