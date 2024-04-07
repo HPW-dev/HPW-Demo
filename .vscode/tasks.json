@@ -71,5 +71,11 @@
       "command": "python",
       "args": ["script/build tilemap-gen.py"]
     },
+    {
+      "label": "sound test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/sound-test.py"]
+    },
   ]
 }
