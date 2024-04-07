@@ -22,8 +22,8 @@ inc_path = [
 lib_path = []
 used_libs = []
 sources = [
-  #Glob(src_dir + "util/math/*.cpp"),
-  #Glob(src_dir + "hpw/*.cpp"),
+  Glob(src_dir + "sound/*.cpp"),
+  src_dir + "util/error.cpp",
   Glob("*.cpp"),
 ]
 inc_path.extend([thirdparty_dir + "include/_windows_only"])
