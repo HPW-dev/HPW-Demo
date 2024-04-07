@@ -712,8 +712,16 @@ void bgp_3d_rain_waves(Image& dst, const int bg_state) {
 } // bgp_3d_rain_waves
 
 void bgp_circles(Image& dst, const int bg_state) {
+  dst.fill(Pal8::black);
+  #pragma omp parallel for simd
   cfor (r, 85)
     draw_circle(dst, {dst.X / 2.0, dst.Y / 2.0}, r * 4.0, Pal8::white);
+}
+
+void bgp_circles_2(Image& dst, const int bg_state) {
+  #pragma omp parallel for simd
+  cfor (r, 85)
+    draw_circle<&blend_diff>(dst, {dst.X / 2.0, dst.Y / 2.0}, r * 4.0, Pal8::white);
 }
 
 void bgp_circles_moire(Image& dst, const int bg_state) {
@@ -728,7 +736,7 @@ void bgp_circles_moire(Image& dst, const int bg_state) {
   const Vec pos3(dst.X / 2.0 + COS,      dst.Y / 2.0 - SIN + 10);
 
   dst.fill(Pal8::black);
-  #pragma omp parallel for simd schedule(static, 4)  
+  #pragma omp parallel for simd
   cfor (r, 50) {
     draw_circle<&blend_add_safe>(dst, pos1, r * OFFSET, COLOR);
     draw_circle<&blend_add_safe>(dst, pos3, r * OFFSET, COLOR);
@@ -746,7 +754,7 @@ void bgp_circles_moire_2(Image& dst, const int bg_state) {
   const Vec pos2(dst.X / 2.0 - COS2, dst.Y / 2.0 - SIN2);
 
   dst.fill(Pal8::black);
-  #pragma omp parallel for simd schedule(static, 4)
+  #pragma omp parallel for simd
   cfor (r, 90) {
     draw_circle(dst, pos1, r * OFFSET, Pal8::white);
     draw_circle(dst, pos2, r * OFFSET, Pal8::white);

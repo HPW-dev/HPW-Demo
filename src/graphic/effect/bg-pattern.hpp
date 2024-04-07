@@ -38,6 +38,8 @@ void bgp_hpw_text_lines(Image& dst, const int bg_state);
 void bgp_3d_rain_waves(Image& dst, const int bg_state);
 /// множество статичных окружностей из центра
 void bgp_circles(Image& dst, const int bg_state);
+/// как bgp_circles но с учётом предыдущего фона
+void bgp_circles_2(Image& dst, const int bg_state);
 /// демосценерский эффект муара на окружностях
 void bgp_circles_moire(Image& dst, const int bg_state);
 /// демосценерский эффект муара на окружностях (вторая вариация)

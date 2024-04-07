@@ -224,6 +224,7 @@ void Scene_main_menu::init_bg() {
     &bgp_random_lines_2,
     &bgp_3d_atomar_cube,
     &bgp_circles,
+    &bgp_circles_2,
     &bgp_circles_moire,
     &bgp_circles_moire_2,
     &bgp_red_circles_1,
