@@ -3,6 +3,7 @@
 #include "level.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
+#include "game/core/levels.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/entities.hpp"
@@ -19,6 +20,8 @@
 Level_mgr::Level_mgr(CN<Makers> _makers)
 : makers(_makers) {
   detailed_iflog(makers.empty(), "Level_mgr.c-tor makers is empty\n");
+  hpw::last_level_name.clear();
+  hpw::first_level_name.clear();
 }
 
 void Level_mgr::update(const Vec vel, double dt) {
@@ -26,11 +29,19 @@ void Level_mgr::update(const Vec vel, double dt) {
     level->update(vel, dt);
     if (level->m_complete)
       level = {};
-  } else { // смена уровня
+  } 
+  // смена уровня
+  if (!level) {
     hpw::entity_mgr->clear();
     accept_maker();
-    detailed_log("выбран уровень: \"" << level_name() << "\"\n");
-  }
+    
+    if (cauto _level_name = level_name(); !_level_name.empty()) {
+      if (hpw::first_level_name.empty())
+        hpw::first_level_name = _level_name;
+      hpw::last_level_name = _level_name;
+      detailed_log("выбран уровень: \"" << _level_name << "\"\n");
+    }
+  } // if !level
 } // update
 
 void Level_mgr::draw(Image& dst) const {
@@ -81,5 +92,6 @@ void Level_mgr::set_player_pos_from_prev_level(const Vec pos)
 Str Level_mgr::level_name() const {
   if (level)
     return level->level_name();
-  return "empty level";
+  detailed_log("empty level\n");
+  return {};
 }

@@ -40,10 +40,9 @@ struct Scene_replay_select::Impl {
     menu = new_unique<Table_menu>(
       get_locale_str("scene.replay.name"),
       Table_menu::Rows {
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 140},
+        Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 200},
         Table_menu::Row {.name = get_locale_str("scene.replay.table.date"), .sz = 135},
         Table_menu::Row {.name = get_locale_str("scene.replay.table.difficulty"), .sz = 80},
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.levels"), .sz = 60},
         Table_menu::Row {.name = get_locale_str("scene.replay.table.score")},
       },
       25,
@@ -72,7 +71,6 @@ struct Scene_replay_select::Impl {
           [replay_info]->utf32 { return replay_info.player_name; },
           [replay_info]->utf32 { return sconv<utf32>(replay_info.date_str); },
           [replay_info]->utf32 { return difficulty_to_str(replay_info.difficulty); },
-          [replay_info]->utf32 { return sconv<utf32>(replay_info.last_level_name); },
           [replay_info]->utf32 { return n2s<utf32>(replay_info.score); },
         }
       ) );

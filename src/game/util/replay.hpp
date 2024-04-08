@@ -43,7 +43,6 @@ struct Replay::Info {
   Str path {};
   Str date_str {};
   Str first_level_name {}; // с этого уровня стартовали
-  Str last_level_name {}; // каким уровнем закончился реплей
   std::int64_t score {};
   Difficulty difficulty {};
 };
