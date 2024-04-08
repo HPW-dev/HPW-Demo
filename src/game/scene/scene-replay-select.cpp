@@ -12,6 +12,7 @@
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
 #include "game/scene/scene-game.hpp"
+#include "game/level/level-tutorial.hpp"
 #include "util/path.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
@@ -64,7 +65,9 @@ struct Scene_replay_select::Impl {
           hpw::scene_mgr->add(new_shared<Scene_loading>( [replay_info]{
             hpw::replay_read_mode = true;
             hpw::cur_replay_file_name = replay_info.path;
-            hpw::scene_mgr->add(new_shared<Scene_game>());
+            hpw::scene_mgr->add (
+              new_shared<Scene_game>(replay_info.first_level_is_tutorial)
+            );
           } ));
         },
         Menu_item_table_row::Content_getters {

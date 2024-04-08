@@ -42,7 +42,7 @@ struct Replay::Info {
   utf32 player_name {};
   Str path {};
   Str date_str {};
-  Str first_level_name {}; // с этого уровня стартовали
   std::int64_t score {};
   Difficulty difficulty {};
+  bool first_level_is_tutorial {};
 };

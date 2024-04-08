@@ -6,12 +6,13 @@
 /// Уровень для копипаста
 class Level_tutorial final: public Level {
   nocopy(Level_tutorial);
-  constx std::string_view NAME {"Tutorial"};
 
   struct Impl;
   Unique<Impl> impl {};
 
 public:
+  constx std::string_view NAME {"Tutorial"};
+  
   Level_tutorial();
   ~Level_tutorial();
   void update(const Vec vel, double dt) override;

@@ -147,7 +147,7 @@ void write_data(Stream& file, const T&& data) {
 }
 
 struct Replay::Impl {
-  Str m_ver {"v3.1"};
+  Str m_ver {"v3.2"};
   Str m_path {};
   Stream m_file {};
   bool m_write_mode {};
@@ -199,8 +199,8 @@ struct Replay::Impl {
     write_data(m_file, hpw::get_score());
     // дата
     write_str(m_file, get_data_str());
-    // начальный уровень
-    write_str(m_file, hpw::first_level_name);
+    // начальный уровень туториал?
+    write_data(m_file, hpw::first_level_is_tutorial);
   } // write_header
 
   /// чтение заголовка
@@ -267,13 +267,13 @@ struct Replay::Impl {
     cauto score = read_data<int64_t>(m_file);
     // дата
     cauto date = read_str(m_file);
-    // начальный уровень
-    cauto first_level_name = read_str(m_file);
+    // начальный уровень - туториал?
+    hpw::first_level_is_tutorial = read_data<decltype(hpw::first_level_is_tutorial)>(m_file);
 
     m_info.path = m_path;
     m_info.date_str = date;
     m_info.date = to_date(date);
-    m_info.first_level_name = first_level_name;
+    m_info.first_level_is_tutorial = hpw::first_level_is_tutorial;
     m_info.difficulty = difficulty;
     m_info.score = score;
     m_info.player_name = player_name;

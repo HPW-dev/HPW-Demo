@@ -20,8 +20,6 @@
 Level_mgr::Level_mgr(CN<Makers> _makers)
 : makers(_makers) {
   detailed_iflog(makers.empty(), "Level_mgr.c-tor makers is empty\n");
-  hpw::last_level_name.clear();
-  hpw::first_level_name.clear();
 }
 
 void Level_mgr::update(const Vec vel, double dt) {
@@ -35,12 +33,8 @@ void Level_mgr::update(const Vec vel, double dt) {
     hpw::entity_mgr->clear();
     accept_maker();
     
-    if (cauto _level_name = level_name(); !_level_name.empty()) {
-      if (hpw::first_level_name.empty())
-        hpw::first_level_name = _level_name;
-      hpw::last_level_name = _level_name;
+    if (cauto _level_name = level_name(); !_level_name.empty())
       detailed_log("выбран уровень: \"" << _level_name << "\"\n");
-    }
   } // if !level
 } // update
 

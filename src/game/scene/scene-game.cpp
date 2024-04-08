@@ -77,7 +77,10 @@ void Scene_game::init_levels() {
   }
 } // init_levels
 
-Scene_game::Scene_game(const bool start_tutorial): m_start_tutorial {start_tutorial} {
+Scene_game::Scene_game(const bool start_tutorial)
+: m_start_tutorial {start_tutorial} {
+  hpw::first_level_is_tutorial = start_tutorial;
+
   // -------------- [!] ----------------
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
