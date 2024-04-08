@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 
@@ -28,4 +29,5 @@ public:
   inline virtual void draw_upper_layer(Image& dst) const {}
   /// действие при смерти игрока
   virtual void on_player_death(const double dt);
+  virtual Str level_name() const = 0;
 }; // Level

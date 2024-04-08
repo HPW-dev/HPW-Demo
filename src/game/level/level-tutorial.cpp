@@ -534,3 +534,4 @@ void Level_tutorial::update(const Vec vel, double dt) {
 }
 void Level_tutorial::draw(Image& dst) const { impl->draw(dst); }
 void Level_tutorial::draw_upper_layer(Image& dst) const { impl->draw_upper_layer(dst); }
+Str Level_tutorial::level_name() const { return Str{Level_tutorial::NAME}; }

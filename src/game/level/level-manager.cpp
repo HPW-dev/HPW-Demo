@@ -13,6 +13,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "util/log.hpp"
+#include "util/safecall.hpp"
 #include "util/math/vec.hpp"
 
 Level_mgr::Level_mgr(CN<Makers> _makers)
@@ -28,6 +29,7 @@ void Level_mgr::update(const Vec vel, double dt) {
   } else { // смена уровня
     hpw::entity_mgr->clear();
     accept_maker();
+    detailed_log("выбран уровень: \"" << level_name() << "\"\n");
   }
 } // update
 
@@ -75,3 +77,9 @@ Vec Level_mgr::get_player_pos_from_prev_level() const
 
 void Level_mgr::set_player_pos_from_prev_level(const Vec pos)
   { m_player_pos_from_prev_level = pos; }
+
+Str Level_mgr::level_name() const {
+  if (level)
+    return level->level_name();
+  return "empty level";
+}

@@ -415,7 +415,6 @@ struct Level_space::Impl {
     return_if ( !enable_galaxy_3_layer);
     m_galaxy_3.update(Vec(vel.x * layer_speed_scale, layer_h_speed), dt);
   }
-
 }; // Impl
 
 Level_space::Level_space(): impl {new_unique<Impl>()} {}
@@ -425,3 +424,4 @@ void Level_space::update(const Vec vel, double dt) {
   impl->update(vel, dt);
 }
 void Level_space::draw(Image& dst) const { impl->draw(dst); }
+Str Level_space::level_name() const { return Str{Level_space::NAME}; }

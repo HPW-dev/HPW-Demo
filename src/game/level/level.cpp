@@ -66,4 +66,3 @@ Level::Level(): impl {new_unique<Impl>(this)} {
     hpw::scene_mgr->add( new_shared<Scene_gameover>() );
   };
 }
-
