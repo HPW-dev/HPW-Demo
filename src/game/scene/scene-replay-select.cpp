@@ -14,6 +14,7 @@
 #include "game/scene/scene-game.hpp"
 #include "util/path.hpp"
 #include "util/str-util.hpp"
+#include "util/error.hpp"
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};
@@ -71,7 +72,7 @@ struct Scene_replay_select::Impl {
           [replay_info]->utf32 { return replay_info.player_name; },
           [replay_info]->utf32 { return sconv<utf32>(replay_info.date_str); },
           [replay_info]->utf32 { return difficulty_to_str(replay_info.difficulty); },
-          [replay_info]->utf32 { return n2s<utf32>(replay_info.level); },
+          [replay_info]->utf32 { return sconv<utf32>(replay_info.last_level_name); },
           [replay_info]->utf32 { return n2s<utf32>(replay_info.score); },
         }
       ) );
@@ -86,6 +87,8 @@ struct Scene_replay_select::Impl {
       try {
         cauto info = Replay::get_info(replay_file);
         m_replay_info_table.push_back(info);
+      } catch (CN<hpw::Error> error) {
+        hpw_log("не удалось загрузить один из реплеев: " << error.what() << "\n");
       } catch (...) {
         hpw_log("не удалось загрузить один из реплеев\n");
       }

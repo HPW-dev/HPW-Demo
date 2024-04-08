@@ -38,11 +38,12 @@ struct Date {
 };
 
 struct Replay::Info {
+  Date date {};
   utf32 player_name {};
   Str path {};
   Str date_str {};
-  Date date {};
+  Str first_level_name {}; // с этого уровня стартовали
+  Str last_level_name {}; // каким уровнем закончился реплей
   std::int64_t score {};
-  uint level {};
   Difficulty difficulty {};
 };

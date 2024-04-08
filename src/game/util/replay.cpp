@@ -7,17 +7,18 @@
 #include "replay.hpp"
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/score-table.hpp"
 #include "game/core/core.hpp"
 #include "game/core/common.hpp"
 #include "game/core/replays.hpp"
 #include "game/core/user.hpp"
-#include "game/util/score-table.hpp"
 #include "game/core/difficulty.hpp"
+#include "game/core/levels.hpp"
+#include "util/file/file.hpp"
 #include "util/vector-types.hpp"
 #include "util/error.hpp"
 #include "util/math/random.hpp"
 #include "util/str-util.hpp"
-#include "util/file/file.hpp"
 #include "util/log.hpp"
 #include "util/platform.hpp"
 
@@ -146,7 +147,7 @@ void write_data(Stream& file, const T&& data) {
 }
 
 struct Replay::Impl {
-  Str m_ver {"v2.0"};
+  Str m_ver {"v3.0"};
   Str m_path {};
   Stream m_file {};
   bool m_write_mode {};
@@ -198,7 +199,9 @@ struct Replay::Impl {
     write_data(m_file, hpw::get_score());
     // дата
     write_str(m_file, get_data_str());
-    // TODO сколько уровней пройдено
+    // начальный и последний уровень
+    write_str(m_file, hpw::first_level_name);
+    write_str(m_file, hpw::last_level_name);
   } // write_header
 
   /// чтение заголовка
@@ -265,12 +268,15 @@ struct Replay::Impl {
     cauto score = read_data<int64_t>(m_file);
     // дата
     cauto date = read_str(m_file);
-    // TODO сколько уровней пройдено
+    // начальный и последний уровень
+    cauto first_level_name = read_str(m_file);
+    cauto last_level_name = read_str(m_file);
 
     m_info.path = m_path;
     m_info.date_str = date;
     m_info.date = to_date(date);
-    //m_info.level = TODO
+    m_info.first_level_name = first_level_name;
+    m_info.last_level_name = last_level_name;
     m_info.difficulty = difficulty;
     m_info.score = score;
     m_info.player_name = player_name;
