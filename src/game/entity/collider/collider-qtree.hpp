@@ -28,7 +28,7 @@ public:
 
   /// хешер для collision_pairs
   struct Collision_pairs_hash {
-    inline static std::size_t operator()(const Collision_pair val) {
+    inline std::size_t operator() const (const Collision_pair val) {
       // сделать поинтеры числом и юзать это как уникальный ID
       cauto a = std::bit_cast<std::uintptr_t>(val.first);
       cauto b = std::bit_cast<std::uintptr_t>(val.second);
