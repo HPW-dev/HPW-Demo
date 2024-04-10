@@ -387,3 +387,19 @@ void save_all_sprites(CN<Str> save_dir, const int MX, const int MY) {
     break_if(!continue_stream);
   }
 }
+
+std::size_t sizeof_all_sprites() {
+  if (!hpw::store_sprite)
+    return 0;
+  std::size_t ret {};
+  cauto sprite_list = hpw::store_sprite->list();
+  for (cnauto sprite_name: sprite_list) {
+    cauto sprite = hpw::store_sprite->find(sprite_name);
+    if (sprite) {
+      ret += sizeof(Sprite); // размер класса под спрайт
+      if (*sprite) // размер пикселей в маске и картинке
+        ret += sprite->size() * 2 * sizeof(Pal8);
+    }
+  }
+  return ret;
+}

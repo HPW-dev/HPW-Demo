@@ -47,3 +47,5 @@ void init_scene_mgr();
 utf32 difficulty_to_str(const Difficulty difficulty);
 /// сохраняет все текстуры в папку в виде атласной текстуры
 void save_all_sprites(CN<Str> save_dir, const int MX=512, const int MY=512);
+/// размер всех спрайтов в банке
+std::size_t sizeof_all_sprites();
