@@ -61,3 +61,4 @@ Sprite::operator bool() const {
 
 int Sprite::X() const { return _image ? _image->X : 0; }
 int Sprite::Y() const { return _image ? _image->Y : 0; }
+int Sprite::size() const { return _image ? _image->size : 0; }

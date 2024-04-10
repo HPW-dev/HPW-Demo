@@ -65,5 +65,4 @@ void save(CN<Image> src, Str name) {
   
   auto ok = stbi_write_png(name.c_str(), src.X, src.Y, STBI_rgb, rgb24_p.data(), 0);
   iferror(!ok, "не удалось сохранить картинку: \"" << name <<"\"");
-
 } // save

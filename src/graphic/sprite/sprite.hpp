@@ -13,6 +13,7 @@ protected:
 public:
   int X() const;
   int Y() const;
+  int size() const;
   inline Image* get_image() { return _image.get(); }
   inline Image* get_mask() { return _mask.get(); }
   inline CP<Image> get_image() const { return _image.get(); }
