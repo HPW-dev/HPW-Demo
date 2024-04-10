@@ -1,4 +1,5 @@
 #include <ranges>
+#include <ranges>
 #include <ctime>
 #include <algorithm>
 #include <unordered_map>
@@ -21,6 +22,7 @@
 #include "game/core/fonts.hpp"
 #include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
+#include "util/path.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 #include "util/math/circle.hpp"
@@ -287,4 +289,101 @@ utf32 difficulty_to_str(const Difficulty difficulty) {
     {Difficulty::hardcore, get_locale_str("scene.difficulty_select.difficulty.hardcore")},
   };
   return table.at(difficulty);
+}
+
+/** нарезает ресурсы на атлас для save_all_sprites
+*@return если вернул true, то можно продолжать нарезку ресурсов */
+inline static bool stream_concat(CN<Strs> sprite_list,
+std::size_t& idx, Sprite& buffer) {
+  assert(!sprite_list.empty());
+  assert(buffer);
+  uint timeout = 100'000;
+  int pos_x {}, pos_y {};
+  /* чтобы следующая строка спрайта не была на уровне меньше,
+  чем максимальная высота спрайтов на уровне выше */
+  int max_pos_y {}; 
+
+  while (idx < sprite_list.size()) {
+    // чтобы не уйти в вечный цикл
+    if (timeout == 0)
+      break;
+    else
+      --timeout;
+
+    cauto sprite = hpw::store_sprite->find(sprite_list.at(idx));
+    ++idx;
+    cont_if (!sprite || !(*sprite));
+
+    // скипнуть слишком большие спрайты
+    cont_if(sprite->size() >= 256*256);
+
+    max_pos_y = std::max(max_pos_y, sprite->Y());
+
+    // найти свободное место для вставки
+    if (pos_x + sprite->X() >= buffer.X()) {
+      pos_x = 0;
+      pos_y += max_pos_y;
+      max_pos_y = 0;
+    }
+    // если места не нашлось, оставить вставку другим вызовам этой функции
+    if (pos_y + sprite->Y() >= buffer.Y()) {
+      idx = std::max<int>(idx - 1, 0); // отменить смену спрайта
+      break;
+    }
+    insert(*buffer.get_image(), *sprite->get_image(), Vec(pos_x, pos_y));
+    insert(*buffer.get_mask(), *sprite->get_mask(), Vec(pos_x, pos_y));
+    pos_x += sprite->X();
+  }
+  return idx < sprite_list.size();
+}
+
+// фильтрует и сортирует имена спрайтов для save_all_sprites
+inline static void prepare_sprite_list(Strs& sprite_list) {
+  assert(hpw::store_sprite);
+  constexpr auto name_filter = [](CN<Str> sprite_name) {
+    cauto sprite = hpw::store_sprite->find(sprite_name);
+    const bool exist = sprite && *sprite;
+    return sprite_name.find("tile") == str_npos // тайлы уровня не нужны
+      && sprite_name.find("contour") == str_npos // контуры не нужны
+      && sprite_name.find("logo") == str_npos // логотипы не нужны
+      && sprite_name.find("palette") == str_npos // палитры не нужны
+      && exist; // картинка есть
+  };
+  Strs tmp;
+  to_vector(tmp, sprite_list | std::views::filter(name_filter));
+  sprite_list = tmp;
+
+  // сортировка спрайтов по размеру
+  std::sort(sprite_list.begin(), sprite_list.end(), [](CN<Str> a, CN<Str> b) {
+    cauto sprite_a = hpw::store_sprite->find(a);
+    cauto sprite_b = hpw::store_sprite->find(b);
+    // при одинаковых размерах сортировать по ширине
+    if (sprite_a->size() == sprite_b->size())
+      return sprite_a->X() > sprite_b->X();
+    return sprite_a->size() > sprite_b->size();
+  });
+} // prepare_sprite_list
+
+void save_all_sprites(CN<Str> save_dir, const int MX, const int MY) {
+  assert(MX >= 256);
+  assert(MY >= 256);
+  assert(hpw::store_sprite);
+  make_dir_if_not_exist(save_dir);
+  auto sprite_list = hpw::store_sprite->list();
+  prepare_sprite_list(sprite_list);
+  std::size_t idx {};
+  uint time_out = 1'000;
+  
+  while (true) {
+    // чтобы не уйти в вечный цикл
+    if (time_out == 0)
+      break;
+    else
+      --time_out;
+
+    Sprite buffer(MX, MY);
+    cauto continue_stream = stream_concat(sprite_list, idx, buffer);
+    save(buffer, save_dir + "sprite pack " + n2s(idx) + ".png");
+    break_if(!continue_stream);
+  }
 }

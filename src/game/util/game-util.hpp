@@ -45,3 +45,5 @@ void init_validation_info();
 void init_scene_mgr();
 /// перевести названия уровней сложности
 utf32 difficulty_to_str(const Difficulty difficulty);
+/// сохраняет все текстуры в папку в виде атласной текстуры
+void save_all_sprites(CN<Str> save_dir, const int MX=512, const int MY=512);
