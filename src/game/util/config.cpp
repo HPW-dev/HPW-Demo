@@ -31,6 +31,7 @@ void save_config() {
   auto graphic_node = config.make_node("graphic");
   graphic_node.set_v_int("canvas_size",        {graphic::width, graphic::height} );
   graphic_node.set_int  ("light_quality",       scast<int>(graphic::light_quality) );
+  graphic_node.set_bool ("enable_motion_interp",graphic::enable_motion_interp);
   graphic_node.set_bool ("fullscren",           graphic::fullscreen);
   graphic_node.set_bool ("draw_border",         graphic::draw_border);
   graphic_node.set_bool ("show_mouse_cursour",  graphic::show_mouse_cursour);
@@ -99,6 +100,7 @@ void load_config() {
   cauto canvas_size = graphic_node.get_v_int("canvas_size", {graphic::width, graphic::height});
   graphic::width  = canvas_size.at(0);
   graphic::height = canvas_size.at(1);
+  graphic::enable_motion_interp = graphic_node.get_bool("enable_motion_interp", graphic::enable_motion_interp);
   graphic::fullscreen = graphic_node.get_bool("fullscren", graphic::fullscreen);
   graphic::draw_border = graphic_node.get_bool("draw_border", graphic::draw_border);
   graphic::show_mouse_cursour = graphic_node.get_bool("show_mouse_cursour", graphic::show_mouse_cursour);

@@ -112,10 +112,12 @@ void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
   if (!old_draw_pos)
     old_draw_pos = draw_pos;
 
-  if (entity.status.no_motion_interp) { // рендер без интерполяции
-    insert(dst, *direct->sprite.lock(), draw_pos + direct->offset + offset, blend_f, entity.uid);
+  // рендер без интерполяции
+  if (entity.status.no_motion_interp || !graphic::enable_motion_interp) {
+    insert(dst, *direct->sprite.lock(), draw_pos + direct->offset + offset,
+      blend_f, entity.uid);
     m_draw_pos = draw_pos;
-  } else { 
+  } else { // рендер с интерполяцией
     auto interpolated_pos = get_interpolated_pos();
     contour_pos = interpolated_pos;
     // то же, что и с old_draw_pos (см.выше)

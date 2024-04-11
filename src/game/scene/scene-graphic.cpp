@@ -69,6 +69,7 @@ void set_default() {
   graphic::motion_blur_quality_reduct = true;
   graphic::frame_skip = 2;
   graphic::auto_frame_skip = true;
+  graphic::enable_motion_interp = true;
 } // set_default
 
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
@@ -98,6 +99,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::motion_blur_quality_reduct = true;
           graphic::frame_skip = 5;
           graphic::auto_frame_skip = true;
+          graphic::enable_motion_interp = false;
         }
       },
       Menu_list_item::Item {
@@ -120,6 +122,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::motion_blur_quality_reduct = false;
           graphic::frame_skip = 0;
           graphic::auto_frame_skip = false;
+          graphic::enable_motion_interp = true;
         }
       }
     } // items
@@ -286,12 +289,12 @@ void Scene_graphic::init_simple_menu() {
         [this]{ cur_menu = preset_menu; }
       ),
       get_plugin_item(),
-      get_goto_detailed_item(),
       get_resize_type_item(),
       get_vsync_item(),
       get_frame_limit_item(),
       get_disable_frame_limit_item(),
       get_epilepsy_item(),
+      get_goto_detailed_item(),
       get_reset_item(),
       get_exit_item(),
     },
@@ -364,11 +367,21 @@ void Scene_graphic::init_detailed_menu() {
         [](bool val){ graphic::auto_frame_skip = val; },
         get_locale_str("scene.graphic_menu.description.auto_frame_skipmeskip")
       ),
+      new_shared<Menu_bool_item>(
+        get_locale_str("scene.graphic_menu.enable_motion_interp"),
+        []{ return graphic::enable_motion_interp; },
+        [](bool val) {
+          if (!val)
+            graphic::enable_motion_blur = false;
+          graphic::enable_motion_interp = val;
+        },
+        get_locale_str("scene.graphic_menu.description.enable_motion_interp")
+      ),
+      get_reset_item(),
       new_shared<Menu_text_item>(
         get_locale_str("common.back"),
         [this]{ cur_menu = simple_menu; }
       ),
-      get_reset_item(),
       get_exit_item(),
     },
     Rect{0, 0, graphic::width, graphic::height}
