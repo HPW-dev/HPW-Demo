@@ -27,11 +27,7 @@ Circle::operator bool() const {
   return r != 0 || offset;
 }
 
-bool Circle::is_collided(const Vec this_pos, const Vec other_pos, CN<Circle> other) const {
-  // себя не проверять
-  if (*this == other)
-    return false;
-    
+bool Circle::is_collided(const Vec this_pos, const Vec other_pos, CN<Circle> other) const {    
   #ifdef CLD_DEBUG
   ++hpw::circle_checks;
   #endif

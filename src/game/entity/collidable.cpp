@@ -34,6 +34,10 @@ void Collidable::update(double dt) {
 }
 
 bool Collidable::is_collided_with(CN<Collidable> other) const {
+  // столкновение с собой не проверять
+  if (this == std::addressof(other))
+    return false;
+
   auto this_hitbox = this->get_hitbox();
   if ( !this_hitbox)
     return false;
