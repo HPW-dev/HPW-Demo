@@ -24,7 +24,7 @@
 #include "game/level/level-manager.hpp"
 
 struct Level_debug_4::Impl {
-  inline Impl() {
+  inline explicit Impl() {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(6, 1,
       graphic::canvas->X, graphic::canvas->Y));
@@ -54,3 +54,4 @@ void Level_debug_4::update(const Vec vel, double dt) {
   impl->update(vel, dt);
 }
 void Level_debug_4::draw(Image& dst) const { impl->draw(dst); }
+Str Level_debug_4::level_name() const { return "Test level 4"; }

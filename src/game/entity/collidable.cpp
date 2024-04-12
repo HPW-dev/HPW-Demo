@@ -41,12 +41,12 @@ bool Collidable::is_collided_with(CN<Collidable> other) const {
   auto this_hitbox = this->get_hitbox();
   if ( !this_hitbox)
     return false;
-  cnauto this_pos = phys.get_pos();
+  cauto this_pos = phys.get_pos();
   
   auto other_hitbox = other.get_hitbox();
   if ( !other_hitbox)
     return false;
-  cnauto other_pos = other.phys.get_pos();
+  cauto other_pos = other.phys.get_pos();
 
   return this_hitbox->is_collided_with(this_pos, other_pos, *other_hitbox);
 } // is_collided_with

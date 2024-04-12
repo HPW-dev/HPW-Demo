@@ -13,4 +13,5 @@ public:
   ~Level_debug_4();
   void update(const Vec vel, double dt) override;
   void draw(Image& dst) const override;
+  Str level_name() const override;
 }; // Level_debug_4

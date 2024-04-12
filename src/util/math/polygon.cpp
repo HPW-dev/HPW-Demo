@@ -13,10 +13,6 @@
 
 bool Polygon::collided_with(const Vec this_center, const Vec other_center,
 CN<Polygon> other) const {
-  // сами себя не проверяем
-  if (*this == other)
-    return false;
-
   // добавить смещения
 	auto this_offset = offset + this_center;
   auto this_poly = *this;
