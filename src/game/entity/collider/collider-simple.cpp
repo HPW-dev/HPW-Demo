@@ -19,8 +19,12 @@ void Collider_simple::test_collide(Entity& a, Entity& b) {
     bool collided = cld_flag_compat(a, b)
       ? a_collidable->is_collided_with(*b_collidable)
       : false;
-    a_collidable->status.collided |= collided;
-    b_collidable->status.collided |= collided;
+    if (collided) {
+      a_collidable->status.collided |= collided;
+      a_collidable->sub_hp( b_collidable->get_dmg() );
+      b_collidable->status.collided |= collided;
+      b_collidable->sub_hp( a_collidable->get_dmg() );
+    }
   }
 } // test_collide
 
