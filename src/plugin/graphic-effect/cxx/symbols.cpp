@@ -11,7 +11,7 @@
 NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
-NOT_EXPORTED int32_t g_symbol_set {2}; // сет символов
+NOT_EXPORTED int32_t g_symbol_set {1}; // сет символов
 NOT_EXPORTED int32_t g_symbol_set_old {};
 NOT_EXPORTED int32_t g_downscale_mode {1}; // режим уменьшения блоков
 NOT_EXPORTED int32_t g_downscale_mode_old {};
