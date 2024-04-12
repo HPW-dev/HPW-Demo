@@ -98,6 +98,12 @@ build_plugin("fading", [
   src_dir + "graphic/util/convert.cpp",
 ] )
 
+build_plugin("symbols", [
+  src_plugin_dir + "symbols.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+] )
+
 ''' TODO исправь эффект
 build_plugin("block-swap", [
   src_plugin_dir + "block-swap.cpp",
