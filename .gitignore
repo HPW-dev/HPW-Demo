@@ -6,6 +6,7 @@ memleaks.txt
 run.py
 a.txt
 b.txt
+.vscode/settings.json
 .sconsign.dblite
 **/table_*.dat
 tmp
