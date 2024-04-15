@@ -58,6 +58,7 @@ if is_debug:
 
     #"-g0",
     "-ggdb3",
+    ("-m64" if is_64bit else "-m32")
   ])
 else: # release
   defines.extend(["-DNDEBUG"])

@@ -39,10 +39,10 @@ else: # windows
     thirdparty_dir + "include/_windows_only",
     thirdparty_dir + "include/_windows_only/GLEW"
   ])
-  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  used_libs.extend(["glfw3dll", "glew32", "opengl32"])
   lib_path.extend([
-    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
     thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
     thirdparty_dir + "lib/yaml-cpp/"
   ])
 
