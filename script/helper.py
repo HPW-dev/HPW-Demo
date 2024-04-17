@@ -32,13 +32,15 @@ def exec_cmd (cmd):
   print()
 
 def write_game_version():
-  with open(file='src/game/util/version.cpp', mode='w', newline='\n') as file:
-    os.system('git describe --tags --abbrev=0 > _tmp_version_')
-    version = open(file='_tmp_version_', mode='r').read()
-    version = version.replace('\r\n', '')
-    version = version.replace('\n', '')
+  version = "???"
+  try:
+    cmd = "git describe --tags --abbrev=0"
+    version = subprocess.check_output(cmd.split()).decode().strip()
     print("generated version: " + version)
-    os.remove('_tmp_version_')
+  except:
+    print("[!] Error when getting game version")
+    
+  with open(file='src/game/util/version.cpp', mode='w', newline='\n') as file:
     file.write (
       '#include "version.hpp"\n'
       '\n'
