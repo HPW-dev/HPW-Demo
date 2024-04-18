@@ -3,8 +3,8 @@
 #include <limits>
 #include "util/math/num-types.hpp"
 
-constexpr real PI = std::numbers::pi;
-constexpr auto real_inf = std::numeric_limits<real>::infinity();
+inline constexpr real PI = std::numbers::pi;
+inline constexpr auto real_inf = std::numeric_limits<real>::infinity();
 
 /// радианы в градусы
 real rad_to_deg(real rad);
@@ -22,6 +22,6 @@ real get_sign(real val);
 auto safe_div(auto a, auto b) -> decltype(a / b)
   { return (b == 0 ? 0 : a / b); }
 
-constexpr auto pow2(auto x) { return x * x; }
+inline constexpr auto pow2(auto x) { return x * x; }
 // вычислить сколько цифр в записи числа
 int32_t digits_number_i32(int32_t x);

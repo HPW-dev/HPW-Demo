@@ -12,9 +12,9 @@
 #include "util/error.hpp"
 
 namespace {
-  constexpr inline uint w {70};
-  constexpr inline uint h {10};
-  constexpr inline uint times {500'000};
+  inline constexpr uint w {70};
+  inline constexpr uint h {10};
+  inline constexpr uint times {500'000};
   inline std::array<uint, h> table;
 }
 

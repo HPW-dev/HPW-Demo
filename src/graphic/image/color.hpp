@@ -32,12 +32,12 @@ struct Pal8 {
 
   Pal8() = default;
   Pal8(CN<Pal8>) = default;
-  constexpr Pal8(value_t nval) noexcept: val(nval) {}
+  inline constexpr Pal8(value_t nval) noexcept: val(nval) {}
   Pal8& operator = (CN<Pal8>) = default;
   Pal8& operator = (value_t nval);
   bool operator == (auto other) const { return val == Pal8(other).val; }
   bool operator != (auto other) const { return val ^ Pal8(other).val; }
-  constexpr void set(int nval) { val = scast<byte>(nval); }
+  inline constexpr void set(int nval) { val = scast<byte>(nval); }
   void set_gray(int value);
   void set_red(int value);
   void set_red_nosafe(int value);
@@ -72,10 +72,10 @@ struct Pal8 {
   real to_real() const; /// преобразование цвета в число 0..1
   
   /// создаёт цвет из числа в диапазоне 0..1
-  static constexpr Pal8 from_real(real src, bool is_red = false);
+  inline static constexpr Pal8 from_real(real src, bool is_red = false);
 }; // Pal8
 
-constexpr Pal8 Pal8::from_real(real src, bool is_red) {
+inline constexpr Pal8 Pal8::from_real(real src, bool is_red) {
   if (src >= 1.0)
     return is_red ? red : white;
   if (src <= 0.0)

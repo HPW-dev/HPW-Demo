@@ -8,7 +8,7 @@
 #include "util/log.hpp"
 #endif
 
-constexpr uint32_t to_u32(real r) {
+inline constexpr uint32_t to_u32(real r) {
   return *scast<uint32_t*>(std::addressof(r));
 }
 

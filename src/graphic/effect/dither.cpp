@@ -11,9 +11,9 @@
 #include "graphic/util/graphic-util.hpp"
 #include "game/util/sync.hpp"
 
-constexpr Vec bayer_16x16_sz {16, 16};
+inline constexpr Vec bayer_16x16_sz {16, 16};
 /// bayer 16x16 byte
-constexpr std::array<byte, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_byte = {
+inline constexpr std::array<byte, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_byte {
   255, 127, 223, 95 , 247, 119, 215, 87 , 253, 125, 221, 93 , 245, 117, 213, 85 ,
   63 , 191, 31 , 159, 55 , 183, 23 , 151, 61 , 189, 29 , 157, 53 , 181, 21 , 149,
   207, 79 , 239, 111, 199, 71 , 231, 103, 205, 77 , 237, 109, 197, 69 , 229, 101,
@@ -33,7 +33,7 @@ constexpr std::array<byte, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.
 };
 
 /// bayer 16x16 real normalized
-constexpr const std::array<real, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_real = {
+inline constexpr const std::array<real, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_real {
   0.496094, -0.253906, 0.308594, -0.441406, 0.449219, -0.300781, 0.261719, -0.488281, 0.484375, -0.265625, 0.296875, -0.453125, 0.4375, -0.3125, 0.25, -0.5,
   -0.00390625, 0.246094, -0.191406, 0.0585938, -0.0507812, 0.199219, -0.238281, 0.0117188, -0.015625, 0.234375, -0.203125, 0.046875, -0.0625, 0.1875, -0.25, 0,
   0.371094, -0.378906, 0.433594, -0.316406, 0.324219, -0.425781, 0.386719, -0.363281, 0.359375, -0.390625, 0.421875, -0.328125, 0.3125, -0.4375, 0.375, -0.375,
@@ -52,15 +52,15 @@ constexpr const std::array<real, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x
   -0.167969, 0.0820312, -0.105469, 0.144531, -0.152344, 0.0976562, -0.0898438, 0.160156, -0.164062, 0.0859375, -0.101562, 0.148438, -0.148438, 0.101562, -0.0859375, 0.16406
 };
 
-constexpr Vec bayer_2x2_sz {2, 2};
+inline constexpr Vec bayer_2x2_sz {2, 2};
 /// bayer 2x2 byte
-constexpr std::array<byte, scast<std::size_t>(bayer_2x2_sz.x * bayer_2x2_sz.y)> bayer_2x2_byte = {
+inline constexpr std::array<byte, scast<std::size_t>(bayer_2x2_sz.x * bayer_2x2_sz.y)> bayer_2x2_byte {
   85, 190,
   255,  0
 };
 
 /// bayer 2x2 real normalized
-constexpr const std::array<real, scast<std::size_t>(bayer_2x2_sz.x * bayer_2x2_sz.y)> bayer_2x2_real = {
+inline constexpr const std::array<real, scast<std::size_t>(bayer_2x2_sz.x * bayer_2x2_sz.y)> bayer_2x2_real {
   -0.25, 0.25,
    0.5,  0.0
 };

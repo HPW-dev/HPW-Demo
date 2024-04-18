@@ -11,4 +11,4 @@ struct Audio: public Resource {
 
 // контекст для управления воспроизведения аудио файла
 using Audio_ctx = std::uintptr_t;
-constexpr Audio_ctx BAD_AUDIO = 0;
+inline constexpr Audio_ctx BAD_AUDIO = 0;

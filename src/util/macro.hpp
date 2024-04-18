@@ -8,22 +8,22 @@
 #define constx constexpr static const
 
 template <class T>
-constexpr T scast(auto&& val) { return static_cast<T>(val); }
+inline constexpr T scast(auto&& val) { return static_cast<T>(val); }
 
 template <class T>
-constexpr T dcast(auto&& val) { return dynamic_cast<T>(val); }
+inline constexpr T dcast(auto&& val) { return dynamic_cast<T>(val); }
 
 template <class T>
-constexpr T rcast(auto&& val) { return reinterpret_cast<T>(val); }
+inline constexpr T rcast(auto&& val) { return reinterpret_cast<T>(val); }
 
 template <class T>
-constexpr T ccast(auto&& val) { return const_cast<T>(val); }
+inline constexpr T ccast(auto&& val) { return const_cast<T>(val); }
 
 template <class T>
-constexpr T ptr2ptr(auto* src) { return static_cast<T>( static_cast<void*>(src) ); }
+inline constexpr T ptr2ptr(auto* src) { return static_cast<T>( static_cast<void*>(src) ); }
 
 template <class T>
-constexpr T cptr2ptr(auto* src) { return static_cast<T>( static_cast<const void*>(src) ); }
+inline constexpr T cptr2ptr(auto* src) { return static_cast<T>( static_cast<const void*>(src) ); }
 
 template <class T>
 using CN = const T&;
@@ -31,7 +31,7 @@ using CN = const T&;
 template <class T>
 using CP = const T*;
 
-constexpr const char* s2yn(const bool cond) { return cond ? "yes" : "no"; }
+inline constexpr const char* s2yn(const bool cond) { return cond ? "yes" : "no"; }
 
 // for с авто определением типа индекса
 #define cfor(index_name, maximum) \

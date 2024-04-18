@@ -35,4 +35,4 @@ struct Enity_status {
   bool disable_anim: 1 {false}; /// выключает отображение анимации
 }; // Enity_status
 
-constexpr auto ENITY_STATUS_BYTES {sizeof(Enity_status)};
+inline constexpr auto ENITY_STATUS_BYTES {sizeof(Enity_status)};

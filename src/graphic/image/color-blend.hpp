@@ -16,8 +16,8 @@ using blend_pf = Pal8 (*)(const Pal8 in, const Pal8 bg, int optional);
 [[nodiscard, gnu::const]] Pal8 blend_rotate_safe     (const Pal8 in, const Pal8 bg, int optional=0);
 [[nodiscard, gnu::const]] Pal8 blend_rotate_x4_safe  (const Pal8 in, const Pal8 bg, int optional=0);
 [[nodiscard, gnu::const]] Pal8 blend_rotate_x16_safe (const Pal8 in, const Pal8 bg, int optional=0);
-[[nodiscard, gnu::const]] constexpr Pal8 blend_none  (const Pal8 in, const Pal8 bg, int optional=0) { return bg; }
-[[nodiscard, gnu::const]] constexpr Pal8 blend_past  (const Pal8 in, const Pal8 bg, int optional=0) { return in; }
+[[nodiscard, gnu::const]] inline constexpr Pal8 blend_none(const Pal8 in, const Pal8 bg, int optional=0) { return bg; }
+[[nodiscard, gnu::const]] inline constexpr Pal8 blend_past(const Pal8 in, const Pal8 bg, int optional=0) { return in; }
 [[nodiscard, gnu::const]] inline Pal8 blend_fade_in_max(const Pal8 in, const Pal8 bg, int optional) { return table_fade_in_max[uint(in.val) + uint(bg.val)*256 + scast<uint>(scast<byte>(optional))*256*256]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_fade_out_max(const Pal8 in, const Pal8 bg, int optional) { return table_fade_out_max[uint(in.val) + uint(bg.val)*256 + scast<uint>(scast<byte>(optional))*256*256]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_or       (const Pal8 in, const Pal8 bg, int optional=0) { return table_or       [uint(in.val)*256 + uint(bg.val)]; }

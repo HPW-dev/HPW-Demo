@@ -5,6 +5,6 @@
 using Cstr = const char*;
 using Str = std::string;
 
-constexpr auto str_npos {Str::npos};
+inline constexpr auto str_npos {Str::npos};
 
 using Strs = Vector<Str>;
