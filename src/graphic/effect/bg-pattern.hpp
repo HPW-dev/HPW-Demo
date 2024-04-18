@@ -58,3 +58,5 @@ void bgp_numbers_alpha(Image& dst, const int bg_state);
 void bgp_unicode(Image& dst, const int bg_state);
 /// рандомные символы на красном фоне
 void bgp_unicode_red(Image& dst, const int bg_state);
+/// порт glsl шейдера с светящимися сферами (https://glslsandbox.com/e#109700.0)
+void bgp_glsl_spheres(Image& dst, const int bg_state);

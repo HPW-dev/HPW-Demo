@@ -910,3 +910,34 @@ void bgp_unicode_red(Image& dst, const int bg_state) {
   for (nauto pix: dst)
     pix = blend_and_safe(Pal8::red, pix);
 }
+
+void bgp_glsl_spheres(Image& dst, const int bg_state) {
+  // порт glsl шейдера с светящимися сферами (https://glslsandbox.com/e#109700.0)
+  constexpr cauto process = [](const Vec uv, const int state)->real {
+    constexpr cauto circle = [](const Vec pos, const real size, const real color, const Vec uv)->real {
+      return color * size / distance(pos, uv);
+    };
+
+    constexpr int N = 7;
+    const real t = state * 0.0015f;
+    real theta = 11.0f;
+    constexpr real r = 0.4f;
+    real color {};
+    cfor(i, N) {
+      cauto size = real(i) * 0.05f;
+      theta += 3.14159265358979f / (real(N) * 0.5f);
+      cauto pos = Vec(std::cos(theta * t) * r, std::sin(theta - t) * r);
+      cauto c = 0.1f * std::sin(t * real(i));
+      color += circle(pos, size, c, uv - Vec(0.5f, 0.5f));
+    }
+    return color;
+  }; // process
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const Vec uv(scast<real>(x) / dst.X, scast<real>(y) / dst.Y);
+    cauto luma = process(uv, bg_state);
+    dst(x, y) = Pal8::from_real(luma);
+  }
+} // bgp_glsl_spheres
