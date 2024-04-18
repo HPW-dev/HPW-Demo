@@ -721,7 +721,7 @@ void bgp_circles(Image& dst, const int bg_state) {
 void bgp_circles_2(Image& dst, const int bg_state) {
   #pragma omp parallel for simd
   cfor (r, 85)
-    draw_circle<&blend_diff>(dst, {dst.X / 2.0, dst.Y / 2.0}, r * 4.0, Pal8::white);
+    draw_circle<&blend_or_safe>(dst, {dst.X / 2.0, dst.Y / 2.0}, r * 4.0, Pal8::white);
 }
 
 void bgp_circles_moire(Image& dst, const int bg_state) {
