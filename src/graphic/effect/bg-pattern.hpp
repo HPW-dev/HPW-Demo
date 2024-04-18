@@ -50,3 +50,7 @@ void bgp_red_circles_1(Image& dst, const int bg_state);
 void bgp_red_circles_2(Image& dst, const int bg_state);
 /// узор с пинтереста - пиксельные шрифты
 void bgp_pixel_font(Image& dst, const int bg_state);
+/// узор с пинтереста - дробные цифры
+void bgp_numbers(Image& dst, const int bg_state);
+/// узор с пинтереста - дробные цифры c разными оттенками
+void bgp_numbers_alpha(Image& dst, const int bg_state);

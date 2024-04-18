@@ -230,6 +230,8 @@ void Scene_main_menu::init_bg() {
     &bgp_red_circles_1,
     &bgp_red_circles_2,
     &bgp_pixel_font,
+    &bgp_numbers,
+    &bgp_numbers_alpha,
   #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,

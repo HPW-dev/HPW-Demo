@@ -837,3 +837,39 @@ void bgp_pixel_font(Image& dst, const int bg_state) {
     }
   }
 } // bgp_pixel_font
+
+void bgp_numbers(Image& dst, const int bg_state) {
+  uint32_t state = bg_state + 12451515;
+  constexpr uint W = 6;
+  constexpr uint H = 21;
+
+  dst.fill({});
+  cfor (y, H)
+  cfor (x, W) {
+    const Vec pos(10 + x * 85.5, 6 + y * 18);
+    state = state * 123'467 + 623'424;
+    cauto num = std::fmod(state / 100'000'000.0, 9.0);
+    cauto num_str = n2s<utf32>(num, 8);
+    graphic::font->draw(dst, pos, num_str, &blend_or_safe);
+  }
+  // добавить красный оттенок шрифту
+  for (nauto pix: dst)
+    pix = blend_and_safe(Pal8::red, pix);
+}
+
+void bgp_numbers_alpha(Image& dst, const int bg_state) {
+  uint32_t state = (bg_state + 12451515) / 600;
+  constexpr uint W = 6;
+  constexpr uint H = 21;
+
+  dst.fill({});
+  cfor (y, H)
+  cfor (x, W) {
+    const Vec pos(10 + x * 85.5, 6 + y * 18);
+    state = state * 123'467 + 623'424;
+    cauto num = std::fmod(state / 100'000'000.0, 9.0);
+    cauto num_str = n2s<utf32>(num, 8);
+    cauto alpha = (num / 9.0) * 255.0;
+    graphic::font->draw(dst, pos, num_str, &blend_alpha, alpha);
+  }
+}
