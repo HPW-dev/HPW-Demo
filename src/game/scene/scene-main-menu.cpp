@@ -232,6 +232,9 @@ void Scene_main_menu::init_bg() {
     &bgp_pixel_font,
     &bgp_numbers,
     &bgp_numbers_alpha,
+    &bgp_unicode,
+    &bgp_unicode,
+    &bgp_unicode_red,
   #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,

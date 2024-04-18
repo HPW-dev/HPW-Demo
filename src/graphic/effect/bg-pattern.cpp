@@ -873,3 +873,40 @@ void bgp_numbers_alpha(Image& dst, const int bg_state) {
     graphic::font->draw(dst, pos, num_str, &blend_alpha, alpha);
   }
 }
+
+void bgp_unicode(Image& dst, const int bg_state) {
+  uint state = (bg_state + 123) / 600;
+  constexpr uint W = 80;
+  constexpr uint H = 24;
+  constexpr std::string_view charset {"1234567890ZKLMNPABCDEFGIJLXVQRTYUH"};
+  Str text;
+  cfor (y, H) {
+    cfor (x, W) {
+      state = state + x + y * y;
+      text += charset.at(state % charset.size());
+    }
+    text += '\n';
+  }
+  dst.fill({});
+  graphic::font->draw(dst, {}, sconv<utf32>(text));
+}
+
+void bgp_unicode_red(Image& dst, const int bg_state) {
+  uint state = bg_state + 123;
+  constexpr uint W = 100;
+  constexpr uint H = 24;
+  constexpr std::string_view charset {"1234567890ZKLMNPABCDEFGIJLXVQRTYUH-=+_|/\\!@#$%^&*(){}[]><?\"'.,:;"};
+  Str text;
+  cfor (y, H) {
+    cfor (x, W) {
+      state = state + x + y * y;
+      text += charset.at(state % charset.size());
+    }
+    text += '\n';
+  }
+  dst.fill({});
+  graphic::font->draw(dst, {}, sconv<utf32>(text));
+  // добавить красный оттенок шрифту
+  for (nauto pix: dst)
+    pix = blend_and_safe(Pal8::red, pix);
+}

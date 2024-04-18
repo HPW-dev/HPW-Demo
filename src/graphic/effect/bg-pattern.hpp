@@ -54,3 +54,7 @@ void bgp_pixel_font(Image& dst, const int bg_state);
 void bgp_numbers(Image& dst, const int bg_state);
 /// узор с пинтереста - дробные цифры c разными оттенками
 void bgp_numbers_alpha(Image& dst, const int bg_state);
+/// рандомные символы
+void bgp_unicode(Image& dst, const int bg_state);
+/// рандомные символы на красном фоне
+void bgp_unicode_red(Image& dst, const int bg_state);
