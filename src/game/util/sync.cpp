@@ -5,8 +5,8 @@
 #include "host/command.hpp"
 #include "util/log.hpp"
 
-static bool m_vsync {true};
-static bool m_disable_frame_limit {true};
+static bool m_vsync {false};
+static bool m_disable_frame_limit {false};
 static bool m_fast_forward {false}; /// ускорение игры
 static int m_target_fps = 360;
 static int m_target_vsync_fps = 60;

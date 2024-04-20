@@ -28,7 +28,7 @@ inline bool draw_border         {true}; /// показывать рамку на
 inline bool show_mouse_cursour  {false}; /// показывать курсор мыши в окне игры
 inline bool start_focused       {false}; /// запускает окно сразу поверх других
 inline bool enable_light        {true}; /// отображает вспышки
-inline bool enable_heat_distort {true}; /// отображает искажение воздуха
+inline bool enable_heat_distort {false}; /// отображает искажение воздуха
 inline bool disable_heat_distort_while_lag {true}; /// выключать искажение воздуха при лагах
 inline Light_quality light_quality {Light_quality::medium}; /// качество вcпышки
 inline uint frame_skip {2};
