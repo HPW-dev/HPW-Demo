@@ -1106,3 +1106,25 @@ void bgp_clock_24(Image& dst, const int bg_state) {
   draw_circle_filled(dst, center, 8, Pal8::red);
   draw_circle_filled(dst, center, 3, Pal8::black);
 } // bgp_clock
+
+void bgp_graph(Image& dst, const int bg_state) {
+  //dst.fill({});
+  const Rect AREA(28, 0, dst.X - 28, dst.Y - 25);
+
+  // нарисовать график
+  const int x = (bg_state / 3) % int(AREA.size.x);
+  real val = std::sin(bg_state / 1000.0) + std::cos(bg_state / 330.0) * 2.0;
+  val = std::fmod(std::abs(val) / 4.0, 1.0);
+  for (int y = AREA.size.y - (val * AREA.size.y); y < AREA.size.y; ++y)
+    dst.fast_set<&blend_alpha>(AREA.pos.x + x, y, Pal8::red, 92);
+  // оси
+  draw_line(dst, Vec(AREA.pos.x, AREA.pos.y + AREA.size.y),
+    Vec(AREA.pos.x + AREA.size.x, AREA.pos.y + AREA.size.y), Pal8::white);
+  draw_line(dst, Vec(AREA.pos.x, AREA.pos.y), Vec(AREA.pos.x, AREA.pos.y + AREA.size.y), Pal8::white);
+  // цифры на оси
+  cfor (y, 10)
+    graphic::font->draw(dst, Vec(5, 5 + dst.Y / 10.0 * y), n2s<utf32>((10 - y) * 15));
+  cfor (x, 7)
+    graphic::font->draw(dst, Vec(25 + (dst.X / 7.0) * x, AREA.pos.y + AREA.size.y + 7),
+      n2s<utf32>(x * 200));
+}

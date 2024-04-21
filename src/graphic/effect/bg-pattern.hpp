@@ -68,3 +68,5 @@ void bgp_glsl_spheres(Image& dst, const int bg_state);
 void bgp_clock(Image& dst, const int bg_state);
 /// часы с циферблатом на 24 цифр
 void bgp_clock_24(Image& dst, const int bg_state);
+/// рандомный график
+void bgp_graph(Image& dst, const int bg_state);
