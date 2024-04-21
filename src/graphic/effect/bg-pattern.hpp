@@ -54,11 +54,17 @@ void bgp_pixel_font(Image& dst, const int bg_state);
 void bgp_numbers(Image& dst, const int bg_state);
 /// узор с пинтереста - дробные цифры c разными оттенками
 void bgp_numbers_alpha(Image& dst, const int bg_state);
+/// рандомные айпишники
+void bgp_ipv4(Image& dst, const int bg_state);
+/// рандомные айпишники xxx.xxx.xxx.xxx
+void bgp_ipv4_2(Image& dst, const int bg_state);
 /// рандомные символы
 void bgp_unicode(Image& dst, const int bg_state);
 /// рандомные символы на красном фоне
 void bgp_unicode_red(Image& dst, const int bg_state);
 /// порт glsl шейдера с светящимися сферами (https://glslsandbox.com/e#109700.0)
 void bgp_glsl_spheres(Image& dst, const int bg_state);
-/// часы с циферблатом
+/// часы с циферблатом на 12 цифр
 void bgp_clock(Image& dst, const int bg_state);
+/// часы с циферблатом на 24 цифр
+void bgp_clock_24(Image& dst, const int bg_state);

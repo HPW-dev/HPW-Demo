@@ -876,6 +876,71 @@ void bgp_numbers_alpha(Image& dst, const int bg_state) {
   }
 }
 
+void bgp_ipv4(Image& dst, const int bg_state) {
+  uint32_t state = (bg_state + 12451515) / 600;
+  constexpr uint W = 4;
+  constexpr uint H = 21;
+  cauto get_rnd = [&state]->uint32_t {
+    state = state * 123 + 117;
+    return state;
+  };
+
+  dst.fill({});
+  cfor (y, H)
+  cfor (x, W) {
+    const Vec pos(10 + x * 135, 6 + y * 18);
+    utf32 num_str;
+    num_str += n2s<utf32>(get_rnd() % 256u);
+    num_str += U'.';
+    num_str += n2s<utf32>(get_rnd() % 256u);
+    num_str += U'.';
+    num_str += n2s<utf32>(get_rnd() % 256u);
+    num_str += U'.';
+    num_str += n2s<utf32>(get_rnd() % 256u);
+    cauto alpha = get_rnd() % 256u;
+    graphic::font->draw(dst, pos, num_str, &blend_alpha, alpha);
+  }
+} // bgp_ipv4
+
+void bgp_ipv4_2(Image& dst, const int bg_state) {
+  uint32_t state = (bg_state + 12451515) / 600;
+  constexpr uint W = 3;
+  constexpr uint H = 21;
+  cauto get_rnd = [&state]->uint32_t {
+    state = state * 123 + 117;
+    return state;
+  };
+
+  cauto get_num = [get_rnd]->utf32 {
+    cauto num = get_rnd() % 256u;
+    auto num_str = n2s<utf32>(num);
+    if (num < 10)
+      num_str = U"00" + num_str;
+    else if (num < 100)
+      num_str = U"0" + num_str;
+    return num_str;
+  };
+
+  dst.fill({});
+  cfor (y, H)
+  cfor (x, W) {
+    const Vec pos(10 + x * 185, 6 + y * 18);
+    utf32 num_str;
+    num_str += U'A' + (get_rnd() % 26);
+    num_str += U'A' + (get_rnd() % 26);
+    num_str += U'A' + (get_rnd() % 26);
+    num_str += U' ';
+    num_str += get_num();
+    num_str += U'.';
+    num_str += get_num();
+    num_str += U'.';
+    num_str += get_num();
+    num_str += U'.';
+    num_str += get_num();
+    graphic::font->draw(dst, pos, num_str);
+  }
+} // bgp_ipv4_2
+
 void bgp_unicode(Image& dst, const int bg_state) {
   uint state = (bg_state + 123) / 600;
   constexpr uint W = 80;
@@ -982,6 +1047,55 @@ void bgp_clock(Image& dst, const int bg_state) {
   cauto minute_arrow_len = 150;
   cauto second_arrow_len = 180;
   cauto hour_point = center + deg_to_vec(hour_arrow_deg) * hour_arrow_len;
+  cauto minute_point = center + deg_to_vec(minute_arrow_deg) * minute_arrow_len;
+  cauto second_point = center + deg_to_vec(second_arrow_deg) * second_arrow_len;
+  draw_line<&blend_diff>(dst, center, second_point, Pal8::white);
+  for (real i = 0; i < 3.0; i += 0.5) // линия пожирнее
+    draw_line(dst, center + Vec(0, i - 1.5), minute_point + Vec(0, i - 1.5), Pal8::white);
+  for (real i = 0; i < 7.0; i += 0.5) // линия пожирнее
+    draw_line(dst, center + Vec(0, i - 3.5), hour_point + Vec(0, i - 3.5), Pal8::red);
+  draw_circle_filled(dst, center, 8, Pal8::red);
+  draw_circle_filled(dst, center, 3, Pal8::black);
+} // bgp_clock
+
+void bgp_clock_24(Image& dst, const int bg_state) {
+  dst.fill(Pal8::black);
+  cauto center = center_point(dst);
+  
+  // расставить цифры по кругу
+  uint num = 1;
+  for (real degree = 0; degree < 360; degree += 360 / 24.0) {
+    // нарисовать цифры по кругу за границами кадра
+    constexpr real R = 175.0;
+    const Vec pos = center + deg_to_vec(degree - (360 / 24.0) * 5.0) * R; // смещение чтобы 24 сверху
+    // отрисовать число в картинку и увеличить
+    const utf32 number = n2s<utf32>(num);
+    ++num;
+    cauto nubler_sz = graphic::font->text_size(number);
+    Image number_image(nubler_sz.x, nubler_sz.y, Pal8::black);
+    graphic::font->draw(number_image, {}, number);
+    //zoom_x2(number_image);
+    // нарисовать цифру на кадре
+    cauto number_image_center = center_point(number_image);
+    insert(dst, number_image, pos - number_image_center);
+  }
+
+  // определить время
+  std::time_t cur_time;
+  std::time(&cur_time);
+  cauto local_time = std::localtime(&cur_time);
+  cauto H = local_time->tm_hour;
+  cauto M = local_time->tm_min;
+  cauto S = local_time->tm_sec;
+
+  // нарисовать стрелки часов
+  cauto hour_arrow_deg   = 360.0 * (H / 24.0) - 90.0;
+  cauto minute_arrow_deg = 360.0 * (M / 60.0) - 90.0;
+  cauto second_arrow_deg = 360.0 * (S / 60.0) - 90.0;
+  cauto hour_arrow_len   = 100;
+  cauto minute_arrow_len = 150;
+  cauto second_arrow_len = 190;
+  cauto hour_point   = center + deg_to_vec(hour_arrow_deg)   * hour_arrow_len;
   cauto minute_point = center + deg_to_vec(minute_arrow_deg) * minute_arrow_len;
   cauto second_point = center + deg_to_vec(second_arrow_deg) * second_arrow_len;
   draw_line<&blend_diff>(dst, center, second_point, Pal8::white);
