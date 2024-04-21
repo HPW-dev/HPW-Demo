@@ -1108,7 +1108,8 @@ void bgp_clock_24(Image& dst, const int bg_state) {
 } // bgp_clock
 
 void bgp_graph(Image& dst, const int bg_state) {
-  //dst.fill({});
+  for (nauto pix: dst)
+    pix = blend_alpha(Pal8::black, pix, 10);
   const Rect AREA(28, 0, dst.X - 28, dst.Y - 25);
 
   // нарисовать график
