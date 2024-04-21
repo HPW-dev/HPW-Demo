@@ -236,6 +236,7 @@ void Scene_main_menu::init_bg() {
     &bgp_unicode,
     &bgp_unicode_red,
     &bgp_glsl_spheres,
+    &bgp_clock,
   #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,

@@ -24,6 +24,8 @@ enum class Color_get_pattern {
 void zoom_x2(Image& dst);
 /// увеличивает спрайт в 2 раза
 void zoom_x2(Sprite& dst);
+/// увеличивает картинку в 3 раза
+void zoom_x3(Image& dst);
 /// увеличивает картинку в 4 раза
 void zoom_x4(Image& dst);
 /// увеличивает спрайт в 4 раза

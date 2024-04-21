@@ -50,6 +50,22 @@ void zoom_x8(Image& dst) {
   }
 } // zoom_x8
 
+void zoom_x3(Image& dst) {
+  assert(dst);
+  Image src(dst);
+  dst.init(dst.X*3, dst.Y*3);
+
+  cfor(y, src.Y)
+  cfor(x, src.X) {
+    cauto pix = src(x, y);
+    #define SET(_x, _y) dst(x * 3 + _x, y * 3 + _y) = pix;
+    SET(0, 0) SET(1, 0) SET(2, 0)
+    SET(0, 1) SET(1, 1) SET(2, 1)
+    SET(0, 2) SET(1, 2) SET(2, 2)
+    #undef SET
+  }
+} // zoom_x3
+
 void zoom_x4(Image& dst) {
   assert(dst);
   Image src(dst);

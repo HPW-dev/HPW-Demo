@@ -2,11 +2,13 @@
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include <ctime>
 #include "bg-pattern.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/rotation.hpp"
+#include "graphic/util/resize.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/effect/light.hpp"
 #include "graphic/font/font.hpp"
@@ -941,3 +943,52 @@ void bgp_glsl_spheres(Image& dst, const int bg_state) {
     dst(x, y) = Pal8::from_real(luma);
   }
 } // bgp_glsl_spheres
+
+void bgp_clock(Image& dst, const int bg_state) {
+  dst.fill(Pal8::black);
+  cauto center = center_point(dst);
+  
+  // расставить цифры по кругу
+  uint num = 1;
+  for (real degree = 0; degree < 360; degree += 360 / 12.0) {
+    // нарисовать цифры по кругу за границами кадра
+    constexpr real R = 160.0;
+    const Vec pos = center + deg_to_vec(degree - (360 / 12.0) * 2.0) * R; // смещение чтобы 12 сверху
+    // отрисовать число в картинку и увеличить
+    const utf32 number = n2s<utf32>(num);
+    ++num;
+    cauto nubler_sz = graphic::font->text_size(number);
+    Image number_image(nubler_sz.x, nubler_sz.y, Pal8::black);
+    graphic::font->draw(number_image, {}, number);
+    zoom_x3(number_image);
+    // нарисовать цифру на кадре
+    cauto number_image_center = center_point(number_image);
+    insert(dst, number_image, pos - number_image_center);
+  }
+
+  // определить время
+  std::time_t cur_time;
+  std::time(&cur_time);
+  cauto local_time = std::localtime(&cur_time);
+  cauto H = local_time->tm_hour;
+  cauto M = local_time->tm_min;
+  cauto S = local_time->tm_sec;
+
+  // нарисовать стрелки часов
+  cauto hour_arrow_deg   = 360.0 * (H / 12.0) - 90.0;
+  cauto minute_arrow_deg = 360.0 * (M / 60.0) - 90.0;
+  cauto second_arrow_deg = 360.0 * (S / 60.0) - 90.0;
+  cauto hour_arrow_len   = 100;
+  cauto minute_arrow_len = 150;
+  cauto second_arrow_len = 180;
+  cauto hour_point = center + deg_to_vec(hour_arrow_deg) * hour_arrow_len;
+  cauto minute_point = center + deg_to_vec(minute_arrow_deg) * minute_arrow_len;
+  cauto second_point = center + deg_to_vec(second_arrow_deg) * second_arrow_len;
+  draw_line<&blend_diff>(dst, center, second_point, Pal8::white);
+  for (real i = 0; i < 3.0; i += 0.5) // линия пожирнее
+    draw_line(dst, center + Vec(0, i - 1.5), minute_point + Vec(0, i - 1.5), Pal8::white);
+  for (real i = 0; i < 7.0; i += 0.5) // линия пожирнее
+    draw_line(dst, center + Vec(0, i - 3.5), hour_point + Vec(0, i - 3.5), Pal8::red);
+  draw_circle_filled(dst, center, 8, Pal8::red);
+  draw_circle_filled(dst, center, 3, Pal8::black);
+} // bgp_clock
