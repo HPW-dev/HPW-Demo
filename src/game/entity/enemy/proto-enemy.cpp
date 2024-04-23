@@ -26,10 +26,10 @@ struct Proto_enemy::Loader::Impl {
     auto it = ptr2ptr<Proto_enemy*>(parent);
 
     Entity_loader::prepare(*it, master, pos);
-    it->status.ignore_scatter = true;
-    it->status.ignore_self_type = true;
     m_anim_info.accept(*it);
     m_collidable_info.accept(*it);
+    it->status.ignore_scatter = true;
+    it->status.ignore_self_type = true;
     return parent;
   } // op ()
 
