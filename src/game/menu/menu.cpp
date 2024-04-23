@@ -51,8 +51,12 @@ Menu::Menu(CN<Menu_items> items)
 void Menu::update(double dt) {
   return_if(m_items.empty());
 
-  if (check_pressed_or_holded(hpw::keycode::enable, 60, 60))
+  if (check_pressed_or_holded(hpw::keycode::enable, 60, 60)) {
     m_items[m_cur_item]->enable();
+    m_item_selected = true;
+  } else {
+    m_item_selected = false;
+  }
   if (check_pressed_or_holded(hpw::keycode::left, 50, 18))
     m_items[m_cur_item]->minus();
   if (check_pressed_or_holded(hpw::keycode::right, 50, 18))
@@ -86,3 +90,4 @@ void Menu::next_item() {
 std::size_t Menu::get_cur_item_id() const { return m_cur_item; }
 CN<decltype(Menu::m_items)::value_type> Menu::get_cur_item() const { return m_items.at(m_cur_item); }
 CN<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }
+bool Menu::item_selected() const { return m_item_selected; }

@@ -100,7 +100,6 @@ Scene_game::Scene_game(const bool start_tutorial)
   // TODO выбор HUD с конфига
   graphic::hud = new_shared<Hud_asci>();
   hpw::save_last_replay = false;
-  hpw::shop = new_unique<Shop_debug>(); // TODO релизный выбор способностей
 }
 
 Scene_game::~Scene_game() {

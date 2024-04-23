@@ -47,7 +47,7 @@ void Player_dark::shoot(double dt) {
     dt *= m_decrease_shoot_speed_ratio;
 
   // усиленый выстрел
-  if (energy >= m_energy_for_power_shoot && ability.power_shoot) {
+  if (energy >= m_energy_for_power_shoot && check_capability(Ability::power_shoot)) {
     sub_en(m_power_shoot_price);
     power_shoot(dt);
   } else { // обычные выстрелы

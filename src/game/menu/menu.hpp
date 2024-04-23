@@ -12,6 +12,7 @@ class Menu {
 protected:
   Menu_items m_items {}; /// пункты меню
   std::size_t m_cur_item {}; /// текущий выбранный элемент
+  bool m_item_selected {false};
 
   void next_item(); /// перейти к следующему элементу
   void prev_item(); /// перейти к предыдущему элементу
@@ -25,4 +26,5 @@ public:
   std::size_t get_cur_item_id() const;
   CN<decltype(m_items)::value_type> get_cur_item() const;
   CN<decltype(m_items)> get_items() const;
+  bool item_selected() const; // проверить что был выбран один из пунктов меню
 };

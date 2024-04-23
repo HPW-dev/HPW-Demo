@@ -1,26 +1,28 @@
 #include <cassert>
 #include "level-space.hpp"
+#include "game/util/sync.hpp"
+#include "game/util/game-util.hpp"
+#include "game/util/game-shop-debug.hpp"
+#include "game/util/post-effect/post-effects.hpp"
+#include "game/util/post-effect/blink-text.hpp"
+#include "game/util/post-effect/game-post-effects.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/shop.hpp"
+#include "game/core/entities.hpp"
+#include "game/core/levels.hpp"
 #include "game/level/util/level-tasks.hpp"
 #include "game/level/util/level-util.hpp"
 #include "game/level/util/tilemap.hpp"
 #include "game/level/util/layer-simple.hpp"
 #include "game/level/util/task-spawn.hpp"
 #include "game/level/level-manager.hpp"
-#include "game/util/game-util.hpp"
-#include "game/core/entities.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/util/post-effect/post-effects.hpp"
-#include "game/util/post-effect/blink-text.hpp"
-#include "game/util/post-effect/game-post-effects.hpp"
-#include "game/core/levels.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/random.hpp"
 #include "graphic/image/image.hpp"
@@ -62,6 +64,8 @@ struct Level_space::Impl {
     // TODO locale
     graphic::post_effects->move_to_back (
       new_shared<Blink_text>(6, U"слабая гравитация") );
+    
+    hpw::shop = new_unique<Shop_debug>(); // TODO это дебажный выбор способностей
   }
 
   inline void update(const Vec vel, double dt) {

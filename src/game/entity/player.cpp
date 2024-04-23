@@ -13,3 +13,8 @@ Player::~Player() {
   if (hpw::entity_mgr)
     hpw::entity_mgr->set_player({});
 }
+
+bool Player::check_capability(const Ability ability) const {
+  cauto it = std::find(capabilities.begin(), capabilities.end(), ability);
+  return it != capabilities.end();
+}
