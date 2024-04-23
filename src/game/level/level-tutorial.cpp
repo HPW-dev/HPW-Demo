@@ -513,6 +513,7 @@ struct Level_tutorial::Impl {
         const Vec pos(x, -20);
         auto bullet = hpw::entity_mgr->make({}, "enemy.tutorial.bullet", pos);
         bullet->phys.set_vel({0, BULLET_SPEED});
+        bullet->status.ignore_self_type = true;
       }
       // пули сбоку
       if (complete_state_1) {
@@ -520,6 +521,7 @@ struct Level_tutorial::Impl {
           const Vec pos(-20, y);
           auto bullet = hpw::entity_mgr->make({}, "enemy.tutorial.bullet", pos);
           bullet->phys.set_vel({BULLET_SPEED, 0});
+          bullet->status.ignore_self_type = true;
         }
       }
     } // spwan_hatch

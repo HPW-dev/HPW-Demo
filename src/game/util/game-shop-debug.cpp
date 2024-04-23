@@ -9,8 +9,7 @@ struct Shop_debug::Impl {
   }
 
   inline bool update(const double dt) {
-    //return false;
-    return true;
+    return false;
   }
 };
 
