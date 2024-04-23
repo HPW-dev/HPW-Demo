@@ -239,6 +239,7 @@ void Scene_main_menu::init_bg() {
     &bgp_glsl_spheres,
     &bgp_clock,
     &bgp_clock_24,
+    &bgp_graph,
   #ifndef ECOMEM
     &bgp_3d_rain_waves,
     &bgp_3d_waves,
@@ -253,7 +254,6 @@ void Scene_main_menu::init_bg() {
     &bgp_rotated_lines,
     &bgp_labyrinth_1,
     &bgp_labyrinth_2,
-    &bgp_graph,
   #endif
   }; // bg_patterns table
   bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );

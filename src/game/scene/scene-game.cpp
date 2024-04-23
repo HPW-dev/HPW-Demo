@@ -7,10 +7,11 @@
 #include "scene-loading.hpp"
 #include "scene-debug.hpp"
 #include "scene-manager.hpp"
+#include "host/command.hpp"
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
-#include "host/command.hpp"
+#include "game/core/shop.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -21,6 +22,7 @@
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/huds.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
@@ -30,7 +32,7 @@
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
-#include "game/core/huds.hpp"
+#include "game/util/game-shop-debug.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
@@ -98,6 +100,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   // TODO выбор HUD с конфига
   graphic::hud = new_shared<Hud_asci>();
   hpw::save_last_replay = false;
+  hpw::shop = new_unique<Shop_debug>(); // TODO релизный выбор способностей
 }
 
 Scene_game::~Scene_game() {
@@ -130,6 +133,12 @@ void Scene_game::update(double dt) {
   else if (hpw::enable_replay)
     replay_save_keys();
 
+  if (hpw::shop) {
+    if (!hpw::shop->update(dt))
+      hpw::shop = {};
+    return;
+  }
+
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
     hpw::scene_mgr->back(); // exit to loading screen
@@ -155,6 +164,11 @@ void Scene_game::update(double dt) {
 } // update
 
 void Scene_game::draw(Image& dst) const {
+  if (hpw::shop) {
+    hpw::shop->draw(dst);
+    return;
+  }
+
   hpw::level_mgr->draw(dst);
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
