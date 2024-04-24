@@ -70,7 +70,7 @@ struct Shop_debug::Impl {
 
   inline bool update(const double dt) {
     item_table->update(dt);
-    return !item_table->item_selected();;
+    return !item_table->item_selected();
   }
 }; // Impl
 
