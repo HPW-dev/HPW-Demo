@@ -54,6 +54,7 @@ void set_default() {
   graphic::set_vsync(false);
   graphic::set_disable_frame_limit(false);
   graphic::set_target_fps(60);
+  hpw::set_resize_mode(graphic::default_resize_mode);
   graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
   graphic::blink_motion_blur = true;
   graphic::blink_particles = true;
@@ -87,6 +88,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
         []{
           graphic::set_vsync(false);
           graphic::set_disable_frame_limit(true);
+          hpw::set_resize_mode(graphic::default_resize_mode);
           graphic::autoopt_timeout_max = 15;
           graphic::blink_particles = true;
           graphic::cpu_safe = false;
@@ -123,6 +125,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::frame_skip = 0;
           graphic::auto_frame_skip = false;
           graphic::enable_motion_interp = true;
+          hpw::set_resize_mode(graphic::default_resize_mode);
         }
       }
     } // items
@@ -265,7 +268,7 @@ Shared<Menu_text_item> Scene_graphic::get_epilepsy_item() {
 Shared<Menu_text_item> Scene_graphic::get_reset_item() {
   return new_shared<Menu_text_item>(get_locale_str("common.reset"), [] {
     hpw::init_palette_from_archive("resource/image/palettes/default.png");
-    hpw::set_resize_mode(Resize_mode::one_to_one);
+    hpw::set_resize_mode(graphic::default_resize_mode);
     hpw::set_gamma(1.0);
     graphic::set_disable_frame_limit(false);
     disable_pge();

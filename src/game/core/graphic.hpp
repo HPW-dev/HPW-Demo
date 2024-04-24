@@ -20,7 +20,7 @@ inline bool blink_particles     {true}; /// включает мигание сп
 inline bool blink_motion_blur   {true}; /// включает мигание при размытии движения
 inline bool motion_blur_quality_reduct {true}; /// уменьшить качество размытия при render_lag
 inline bool enable_motion_blur  {true};
-inline bool enable_motion_interp {true}; /// плавное движение
+inline bool enable_motion_interp{true}; /// плавное движение
 inline bool cpu_safe            {false}; /// при VSync снижает нагрузку на CPU, но -кадры
 inline bool fullscreen          {false};
 inline bool double_buffering    {true};

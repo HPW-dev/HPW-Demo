@@ -266,6 +266,15 @@ void Host_glfw::init_window() {
     graphic::set_target_vsync_fps(monitor_framerate);
   if (graphic::get_target_fps() == 0)
     graphic::set_target_fps(std::max(monitor_framerate * 2, 90));
+  // определить растягивание окна по умолчанию
+  if (monitor_mode->width > 0 && monitor_mode->height > 0) {
+    if (monitor_mode->width == monitor_mode->height)
+      graphic::default_resize_mode = Resize_mode::one_to_one;
+    else if (monitor_mode->width > monitor_mode->height)
+      graphic::default_resize_mode = Resize_mode::by_height;
+    else
+      graphic::default_resize_mode = Resize_mode::by_width;
+  }
 
   // ивенты клавы
   glfwSetKeyCallback(window, &key_callback);
