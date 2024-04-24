@@ -20,6 +20,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/camera.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/effect/bg-pattern.hpp"
@@ -30,6 +31,8 @@ struct Level_tutorial::Impl {
   Level_tutorial* master {};
   Level_tasks tasks {};
   utf32 bg_text {}; /// текст, который показывается на фоне
+  Vec bg_offset {};
+  bool enable_epilepsy_bg {}; /// пыточный фон для последней секции
 
   inline explicit Impl(Level_tutorial* _master): master{_master}
     { restart(); }
@@ -47,6 +50,7 @@ struct Level_tutorial::Impl {
   }
 
   inline void update(const Vec vel, double dt) {
+    bg_offset = vel;
     execute_tasks(tasks, dt);
   }
 
@@ -91,13 +95,39 @@ struct Level_tutorial::Impl {
           return player->status.live;
         return false;
       },
-      Timed_task(7.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.end"); return false; }),
+      Timed_task(7.0, [this](double dt) {
+        enable_epilepsy_bg = false;
+        bg_text = get_locale_str("scene.tutorial.text.end");
+        return false;
+      }),
       &exit_from_level,
     }; // Level_tasks c-tor
   } // init_tasks
 
   inline void draw_bg(Image& dst) const {
-    bgp_bit_1(dst, graphic::frame_count >> 2);
+    const int v = graphic::frame_count >> 2;
+    const int ox = bg_offset.x;
+    const int oy = bg_offset.y;
+    cfor (y, dst.Y)
+    cfor (x, dst.X) {
+      int pix =
+        ((x + v + ox) >> 2) *
+        ((y - v + oy) >> 2);
+      int tmp = pix << 4;
+      tmp |= v;
+      pix &= v;
+      pix ^= tmp;
+      int pix2 = (x + v - ox) ^ (y - v - oy);
+      tmp = pix2 >> 2;
+      tmp |= v;
+      pix2 &= v;
+      pix2 ^= tmp;
+      if (enable_epilepsy_bg)
+        pix |= pix2;
+      else
+        pix &= pix2;
+      dst(x, y) = pix;
+    }
     apply_brightness(dst, -140);
   }
 
@@ -485,6 +515,7 @@ struct Level_tutorial::Impl {
     inline explicit Focus_test(Impl* _master): master {_master} {}
 
     inline bool operator()(const double dt) {
+      master->enable_epilepsy_bg = true;
       // убрать табличку через время
       if (step_x != MIN_STEP)
         master->draw_focus_key();
@@ -531,8 +562,12 @@ struct Level_tutorial::Impl {
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}
 Level_tutorial::~Level_tutorial() {}
 void Level_tutorial::update(const Vec vel, double dt) {
-  Level::update(vel, dt);
-  impl->update(vel, dt);
+  cauto camera_offset = graphic::camera->get_offset();
+  Level::update(vel + camera_offset, dt);
+  if (impl->enable_epilepsy_bg)
+    impl->update(vel + camera_offset, dt);
+  else
+    impl->update(camera_offset, dt);
 }
 void Level_tutorial::draw(Image& dst) const { impl->draw(dst); }
 void Level_tutorial::draw_upper_layer(Image& dst) const { impl->draw_upper_layer(dst); }
