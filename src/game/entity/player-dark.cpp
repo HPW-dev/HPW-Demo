@@ -113,7 +113,7 @@ void Player_dark::update(double dt) {
 
   energy_regen();
   set_dmg(get_hp()); /// урон при столкновении с игроком равен текущему хп игрока
-  Collidable::update(dt);
+  Player::update(dt);
   check_input(dt);
 }
 

@@ -31,4 +31,5 @@ public:
   ~Player();
   /// проверить что у игрока есть определённая способность
   bool check_capability(const Ability ability) const;
+  void update(double dt) override;
 };
