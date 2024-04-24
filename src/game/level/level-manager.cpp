@@ -19,7 +19,7 @@
 
 Level_mgr::Level_mgr(CN<Makers> _makers)
 : makers(_makers) {
-  detailed_iflog(makers.empty(), "Level_mgr.c-tor makers is empty\n");
+  iflog(makers.empty(), "Генераторы уровней не заданы\n");
 }
 
 void Level_mgr::update(const Vec vel, double dt) {
