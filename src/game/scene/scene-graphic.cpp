@@ -53,7 +53,7 @@ void Scene_graphic::draw(Image& dst) const {
 void set_default() {
   graphic::set_vsync(false);
   graphic::set_disable_frame_limit(false);
-  graphic::set_target_fps(60);
+  graphic::set_target_fps(graphic::get_target_vsync_fps());
   hpw::set_resize_mode(graphic::default_resize_mode);
   graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
   graphic::blink_motion_blur = true;
