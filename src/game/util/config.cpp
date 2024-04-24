@@ -124,7 +124,7 @@ void load_config() {
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
   graphic::wait_frame = sync_node.get_bool("wait_frame", graphic::wait_frame);
   graphic::set_disable_frame_limit( sync_node.get_bool("disable_frame_limit", graphic::get_disable_frame_limit()) );
-  graphic::set_target_fps( sync_node.get_int("target_fps", graphic::get_target_fps()) );
+  graphic::set_target_fps( sync_node.get_int("target_fps", graphic::get_target_vsync_fps()) );
   graphic::cpu_safe = sync_node.get_bool("cpu_safe", graphic::cpu_safe);
   graphic::autoopt_timeout_max = sync_node.get_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
 
