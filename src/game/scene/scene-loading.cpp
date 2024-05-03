@@ -4,6 +4,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sprites.hpp"
 #include "game/scene/scene-manager.hpp"
+#include "game/util/game-util.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/sprite/sprite.hpp"
@@ -50,7 +51,7 @@ void Scene_loading::draw(Image& dst) const {
   fast_dither_bayer16x16_4bit(dst);
 
   // нарисовать надпись с затенением
-  utf32 loading_txt = U"З А Г Р У З К А . . ."; // TODO locale
+  cauto loading_txt = get_locale_str("common.loading");
   Image txt_overlay(dst.X, dst.Y, Pal8::black); // верхний белый слой текста
   Vec font_pos (
     (txt_overlay.X - graphic::font->text_width(loading_txt)) / 2.0,
