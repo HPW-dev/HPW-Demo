@@ -11,7 +11,7 @@
 NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
-NOT_EXPORTED int32_t g_mode {}; /// режим смешивания
+NOT_EXPORTED int32_t g_mode {}; // режим смешивания
 
 extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {

@@ -8,7 +8,7 @@
 class Scene;
 class Image;
 
-/// управление сценами
+// управление сценами
 class Scene_mgr final {
   std::stack<Shared<Scene>> scene_stack {};
 
@@ -23,18 +23,18 @@ class Scene_mgr final {
 
 public:
   struct Status {
-    bool came_back: 1 {}; /// было возвращение из сцены
-    bool next_scene: 1 {}; /// был переход в новую сцену
-    bool empty: 1 {}; /// сцены кончились
+    bool came_back: 1 {}; // было возвращение из сцены
+    bool next_scene: 1 {}; // был переход в новую сцену
+    bool empty: 1 {}; // сцены кончились
   };
   mutable Status status {};
 
   Scene_mgr() = default;
   ~Scene_mgr() = default;
-  /// @return false если сцены кончились
+  // @return false если сцены кончились
   bool update(double dt);
   void draw(Image& dst) const;
   Scene* get_current() const;
-  void add(CN<Shared<Scene>> scene); /// добавить новую сцену
-  void back(); /// вернуться в предыдущую сцену
+  void add(CN<Shared<Scene>> scene); // добавить новую сцену
+  void back(); // вернуться в предыдущую сцену
 }; // Scene_mgr

@@ -14,9 +14,9 @@
 
 class Anim::Hitbox_diections {
   using Diections = Vector<Hitbox>;
-  Diections diections {}; /// таблица хитбоксов-направлений
+  Diections diections {}; // таблица хитбоксов-направлений
 
-  /// получить хитбокс с таблицы по углу направления
+  // получить хитбокс с таблицы по углу направления
   inline std::size_t degree_to_idx(real degree=0) const {
     auto diections_sz = diections.size();
     if (diections_sz == 0)

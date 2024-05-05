@@ -4,7 +4,7 @@
 
 class Menu;
 
-/// меню настроек управления
+// меню настроек управления
 class Scene_input final: public Scene {
   Shared<Menu> menu {};
   

@@ -5,11 +5,11 @@
 struct File;
 class Sprite;
 
-/// load from mem
+// load from mem
 void load(Sprite &dst, CN<File> file);
-/// load from file
+// load from file
 void load(Sprite &dst, CN<Str> name);
-/// load from memory
+// load from memory
 void load(CN<File> file, Sprite &dst);
-/// save to file
+// save to file
 void save(CN<Sprite> src, Str file_name);

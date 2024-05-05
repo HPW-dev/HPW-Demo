@@ -9,12 +9,12 @@ class Menu_int_item;
 class Menu_list_item;
 class Menu_text_item;
 
-/// меню настроек графики
+// меню настроек графики
 class Scene_graphic final: public Scene {
   Shared<Menu> simple_menu {};
   Shared<Menu> detailed_menu {};
   Shared<Menu> preset_menu {};
-  Weak<Menu> cur_menu {}; /// переключает менюшки
+  Weak<Menu> cur_menu {}; // переключает менюшки
 
   void init_simple_menu();
   void init_detailed_menu();

@@ -2,12 +2,12 @@
 #include "level.hpp"
 #include "util/math/num-types.hpp"
 
-/// уровень для теста нагрузки системы коллизий
+// уровень для теста нагрузки системы коллизий
 class Level_debug final: public Level {
   nocopy(Level_debug);
   real brightness {};
 
-  static void hitbox_test(); /// тестирование функционала хитбоксов
+  static void hitbox_test(); // тестирование функционала хитбоксов
 
 public:
   Level_debug();

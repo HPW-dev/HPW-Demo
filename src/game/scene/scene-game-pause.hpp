@@ -4,7 +4,7 @@
 
 class Menu;
 
-/// окно паузы игры
+// окно паузы игры
 class Scene_game_pause final: public Scene {
   Shared<Menu> menu {};
 

@@ -4,5 +4,5 @@
 class Locale;
 
 namespace hpw {
-inline Shared<Store<Locale>> store_locale {}; /// локализованные строки
+inline Shared<Store<Locale>> store_locale {}; // локализованные строки
 }

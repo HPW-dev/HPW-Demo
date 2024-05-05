@@ -1,11 +1,11 @@
 #pragma once
 #include "entity.hpp"
 
-/// частица, ни с чем не сталкивается
+// частица, ни с чем не сталкивается
 class Particle final: public Entity {
   nocopy(Particle);
   
-  double lifetime {}; /// время жизни частицы
+  double lifetime {}; // время жизни частицы
 
   void lifetime_update(double dt);
 

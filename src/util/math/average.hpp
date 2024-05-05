@@ -4,7 +4,7 @@
 #include <deque>
 #include "util/macro.hpp"
 
-/// Для получения среднего значения или медианы нескольких значений
+// Для получения среднего значения или медианы нескольких значений
 template <class T, std::size_t size>
 class Average final {
   std::deque<T> samples {};

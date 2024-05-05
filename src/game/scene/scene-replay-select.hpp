@@ -2,7 +2,7 @@
 #include "util/mem-types.hpp"
 #include "scene.hpp"
 
-/// выбор реплея
+// выбор реплея
 class Scene_replay_select final: public Scene {
   struct Impl;
   Unique<Impl> impl {};

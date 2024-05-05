@@ -4,5 +4,5 @@
 class Scene_mgr;
 
 namespace hpw {
-inline Shared<Scene_mgr> scene_mgr {}; /// управление сценами
+inline Shared<Scene_mgr> scene_mgr {}; // управление сценами
 }

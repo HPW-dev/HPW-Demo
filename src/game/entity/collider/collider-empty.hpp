@@ -2,7 +2,7 @@
 // TODO удалить на релизе, если не понадобится
 #include "collider.hpp"
 
-/// Никакой проверки столкновений
+// Никакой проверки столкновений
 class Collider_empty final: public Collider {
   nocopy(Collider_empty);
 

@@ -14,7 +14,7 @@
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
 
-std::unordered_map<int, Image> cached_spheres {}; /// для оптимизации с пререндером вспышек
+std::unordered_map<int, Image> cached_spheres {}; // для оптимизации с пререндером вспышек
 inline constexpr int cache_spheres_steps = 3; // чем меньше, тем больше пререндеров
 bool cache_spheres_once {true};
 

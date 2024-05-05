@@ -3,7 +3,7 @@
 #include "level.hpp"
 #include "util/mem-types.hpp"
 
-/// Уровень для копипаста
+// Уровень для копипаста
 class Level_tutorial final: public Level {
   nocopy(Level_tutorial);
 

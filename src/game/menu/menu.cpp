@@ -5,7 +5,7 @@
 #include "game/scene/scene-manager.hpp"
 #include "graphic/font/font.hpp"
 
-/// учитывает одиночное нажатие или зажатие клавиши
+// учитывает одиночное нажатие или зажатие клавиши
 bool check_pressed_or_holded (
 const hpw::keycode keycode,
 const uint UPDATES_THRESHOLD = 60,

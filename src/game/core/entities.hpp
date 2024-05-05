@@ -4,5 +4,5 @@
 class Entity_mgr;
 
 namespace hpw {
-inline Shared<Entity_mgr> entity_mgr {}; /// управление сущностями игры
+inline Shared<Entity_mgr> entity_mgr {}; // управление сущностями игры
 }

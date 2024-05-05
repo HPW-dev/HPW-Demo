@@ -1,7 +1,7 @@
 #pragma once
 #include "window.hpp"
 
-/// глобальные настройки редактора
+// глобальные настройки редактора
 class Opts_wnd: public Window {
 public:
   Opts_wnd() = default;

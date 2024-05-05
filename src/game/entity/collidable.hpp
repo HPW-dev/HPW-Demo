@@ -2,12 +2,12 @@
 #include "entity.hpp"
 #include "util/str.hpp"
 
-/// Всё что способно сталкиваться и дохнуть от дамага
+// Всё что способно сталкиваться и дохнуть от дамага
 class Collidable: public Entity {
   nocopy(Collidable);
-  hp_t m_hp {}; /// жизни (можно сносить в минус)
-  hp_t m_dmg {}; /// урон от столкновения с объектом
-  Str m_explosion_name {}; /// имя анимации взрыва
+  hp_t m_hp {}; // жизни (можно сносить в минус)
+  hp_t m_dmg {}; // урон от столкновения с объектом
+  Str m_explosion_name {}; // имя анимации взрыва
 
   void draw_hitbox(Image& dst, const Vec offset) const;
 
@@ -18,7 +18,7 @@ public:
   CP<Hitbox> get_hitbox() const override;
   void kill() override;
 
-  /// нанесение урона
+  // нанесение урона
   virtual void sub_hp(hp_t incoming_dmg);
   inline void set_hp(hp_t val) { m_hp = val; }
   inline void set_dmg(hp_t val) { m_dmg = val; }

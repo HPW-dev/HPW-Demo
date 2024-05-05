@@ -1,5 +1,5 @@
 #pragma once
-///@file пиксельблендинг операции
+//@file пиксельблендинг операции
 #include "color.hpp"
 #include "color-table.hpp"
 
@@ -42,5 +42,5 @@ using blend_pf = Pal8 (*)(const Pal8 in, const Pal8 bg, int optional);
 [[nodiscard, gnu::const]] inline Pal8 blend_softlight(const Pal8 in, const Pal8 bg, int optional=0) { return table_softlight[uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_no_black (const Pal8 in, const Pal8 bg, int optional=0) { return in == Pal8::black ? bg : in; }
 [[nodiscard, gnu::const]] inline Pal8 blend_diff_no_black (const Pal8 in, const Pal8 bg, int optional=0) { return in == Pal8::black ? bg : blend_diff(in, bg, optional); }
-/// @param optional это прозрачность (255 - непрозрачен, 0 - полностью прозрачен)
+// @param optional это прозрачность (255 - непрозрачен, 0 - полностью прозрачен)
 [[nodiscard, gnu::const]] inline Pal8 blend_alpha(const Pal8 in, const Pal8 bg, int optional) { return table_blend_alpha[uint(in.val) + uint(bg.val)*256 + scast<uint>(scast<byte>(optional))*256*256]; }

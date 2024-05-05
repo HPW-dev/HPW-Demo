@@ -20,29 +20,29 @@ enum class Color_get_pattern {
   box,
 };
 
-/// увеличивает картинку в 2 раза
+// увеличивает картинку в 2 раза
 void zoom_x2(Image& dst);
-/// увеличивает спрайт в 2 раза
+// увеличивает спрайт в 2 раза
 void zoom_x2(Sprite& dst);
-/// увеличивает картинку в 3 раза
+// увеличивает картинку в 3 раза
 void zoom_x3(Image& dst);
-/// увеличивает картинку в 4 раза
+// увеличивает картинку в 4 раза
 void zoom_x4(Image& dst);
-/// увеличивает спрайт в 4 раза
+// увеличивает спрайт в 4 раза
 void zoom_x4(Sprite& dst);
-/// увеличивает картинку в 8 раз
+// увеличивает картинку в 8 раз
 void zoom_x8(Image& dst);
-/// увеличивает спрайт в 8 раз
+// увеличивает спрайт в 8 раз
 void zoom_x8(Sprite& dst);
-/// увеличивает спрайт в 3 раза
+// увеличивает спрайт в 3 раза
 Sprite pixel_upscale_x3(CN<Sprite> src);
-/// увеличивает картинку в 3 раза
+// увеличивает картинку в 3 раза
 Image pixel_upscale_x3(CN<Image> src);
-/// уменьшает спрайт в 3 раза
+// уменьшает спрайт в 3 раза
 Sprite pixel_downscale_x3(CN<Sprite> src,
   Color_get_pattern cgp = Color_get_pattern::cross,
   Color_compute ccf = Color_compute::most_common);
-/// уменьшает картинку в 3 раза
+// уменьшает картинку в 3 раза
 Image pixel_downscale_x3(CN<Image> src,
   Color_get_pattern cgp = Color_get_pattern::cross,
   Color_compute ccf = Color_compute::most_common);
@@ -59,11 +59,11 @@ Pal8 min_col(CN<Vector<Pal8>> colors);
 // среднее между цветами
 Pal8 average_col(CN<Vector<Pal8>> colors);
 
-/// Color_compute -> Str
+// Color_compute -> Str
 Str convert(Color_compute ccf);
-/// Color_get_pattern -> Str
+// Color_get_pattern -> Str
 Str convert(Color_get_pattern cgp);
-/// Str -> Color_compute
+// Str -> Color_compute
 Color_compute convert_to_ccf(Str name);
-/// Str -> Color_get_pattern
+// Str -> Color_get_pattern
 Color_get_pattern convert_to_cgp(Str name);

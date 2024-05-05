@@ -2,7 +2,7 @@
 #include "level.hpp"
 #include "util/mem-types.hpp"
 
-/// Пустой уровень для тестов
+// Пустой уровень для тестов
 class Level_debug_4 final: public Level {
   nocopy(Level_debug_4);
   struct Impl;

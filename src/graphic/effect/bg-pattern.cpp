@@ -19,7 +19,7 @@
 #include "game/util/game-util.hpp"
 #include "game/core/fonts.hpp"
 
-/// симуляция волн
+// симуляция волн
 class Waves final {
   struct Elem {
     real value {};
@@ -28,7 +28,7 @@ class Waves final {
   Vector<Elem> m_grid {};
   std::size_t m_x {};
   std::size_t m_y {};
-  real m_amp {1}; /// усиление волны
+  real m_amp {1}; // усиление волны
 
 public:
   Waves() = default;
@@ -416,17 +416,17 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
   firt_init = false;
 } // bgp_labyrinth_2
 
-/// 3D точка
+// 3D точка
 struct Vec3 { real x {}, y {}, z {}; };
 
-/// рисует 2D точку
+// рисует 2D точку
 inline void draw_2d_point(Image& dst, const Vec point, const Pal8 color) {
   cfor (y, 3)
   cfor (x, 3)
     dst.set<&blend_max>(point.x + x - 1, point.y + y - 1, color, {});
 }
 
-/// конвертирует 3D точку в 2D
+// конвертирует 3D точку в 2D
 inline Vec conv_3d_to_2d(const Vec3 point, const real focal_len = 1.0) {
   return Vec (
     safe_div(point.x, point.z) * focal_len,
@@ -434,7 +434,7 @@ inline Vec conv_3d_to_2d(const Vec3 point, const real focal_len = 1.0) {
   );
 }
 
-/// конвертирует 3D точку в 2D в изометрии
+// конвертирует 3D точку в 2D в изометрии
 inline Vec conv_3d_to_2d_isometry(const Vec3 point, const real scale = 1.0) {
   return Vec (
     (point.x * 2.1 + point.z * 0.15) * 0.75 * scale,

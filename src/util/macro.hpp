@@ -52,7 +52,7 @@ for (auto& val: container) \
 #define continue_if(cond) if (cond) continue;
 #define cont_if continue_if
 
-/// макрос для классов запрещающий копирование
+// макрос для классов запрещающий копирование
 #define nocopy(name) \
 name(name&&) = delete; \
 name(CN<name>) = delete; \

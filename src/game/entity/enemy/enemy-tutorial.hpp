@@ -3,7 +3,7 @@
 
 class Anim;
 
-/// Противник для туториала
+// Противник для туториала
 class Enemy_tutorial final: public Proto_enemy {
   nocopy(Enemy_tutorial);
 
@@ -18,7 +18,7 @@ public:
   void update(double dt) override;
 }; // Enemy_tutorial
 
-/// Загрузчик
+// Загрузчик
 class Enemy_tutorial::Loader final: public Proto_enemy::Loader {
   struct Impl;
   Unique<Impl> impl {};

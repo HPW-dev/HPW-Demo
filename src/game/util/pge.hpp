@@ -47,15 +47,15 @@ struct Param_pge_bool: public Param_pge {
   void load(CN<Yaml> dst) override;
 };
 
-/// грузить графический эффект из .dll/.so файл
+// грузить графический эффект из .dll/.so файл
 void load_pge(Str libname);
-/// применяет графический эффект к кадру
+// применяет графический эффект к кадру
 void apply_pge(const uint32_t state);
-/// выключает текущий графический эффект
+// выключает текущий графический эффект
 void disable_pge();
 void load_pge_from_config();
 void save_pge_to_config();
-/// получить настраиваемые параметры из граф-о эффекта
+// получить настраиваемые параметры из граф-о эффекта
 CN< Vector<Shared<Param_pge>> > get_pge_params();
 CN<Str> get_cur_pge_path();
 CN<Str> get_cur_pge_name();

@@ -5,7 +5,7 @@
 template <class T>
 concept have_xy = requires { T::x; T::y; };
 
-/// 2D вектор
+// 2D вектор
 struct Vec {
   real x {};
   real y {};

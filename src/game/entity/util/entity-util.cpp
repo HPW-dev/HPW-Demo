@@ -129,7 +129,7 @@ Uid get_entity_uid() { return ++m_entity_uid; }
 
 void clear_entity_uid() { m_entity_uid = 0; }
 
-/// @return false if flag success
+// @return false if flag success
 inline bool check_flag_ignore_master(CN<Entity> a, CN<Entity> b) {
   return ( !(
     (a.status.ignore_master && a.master == std::addressof(b)) ||
@@ -137,7 +137,7 @@ inline bool check_flag_ignore_master(CN<Entity> a, CN<Entity> b) {
   ) );
 }
 
-/// @return false if flag success
+// @return false if flag success
 inline bool check_flag_ignore_enemy(CN<Entity> a, CN<Entity> b) {
   return ( !(
     (a.status.ignore_enemy && b.status.is_enemy) ||
@@ -145,7 +145,7 @@ inline bool check_flag_ignore_enemy(CN<Entity> a, CN<Entity> b) {
   ) );
 }
 
-/// @return false if flag success
+// @return false if flag success
 inline bool check_flag_ignore_player(CN<Entity> a, CN<Entity> b) {
   return ( !(
     (a.status.ignore_player && b.type == ENTITY_TYPE(Player)) ||
@@ -153,14 +153,14 @@ inline bool check_flag_ignore_player(CN<Entity> a, CN<Entity> b) {
   ) );
 }
 
-/// @return false if flag success
+// @return false if flag success
 inline bool check_flag_ignore_self_type(CN<Entity> a, CN<Entity> b) {
   return ( !(
     (a.status.ignore_self_type || b.status.ignore_self_type) && (a.type == b.type)
   ) );
 }
 
-/// @return false if flag success
+// @return false if flag success
 inline bool check_flag_ignore_bullet(CN<Entity> a, CN<Entity> b) {
   return ( !(
     (a.status.ignore_bullet && b.status.is_bullet) ||

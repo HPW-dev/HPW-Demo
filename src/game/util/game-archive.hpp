@@ -4,7 +4,7 @@
 class Archive;
 
 namespace hpw {
-  inline Shared<Archive> archive {}; /// архив с данными игры в памяти
+  inline Shared<Archive> archive {}; // архив с данными игры в памяти
 }
 
 void init_archive();

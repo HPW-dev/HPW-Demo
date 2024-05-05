@@ -7,9 +7,9 @@
 
 class Sprite;
 
-/// меню выбора и просмотра ресурсов
+// меню выбора и просмотра ресурсов
 class Sprite_select: public Editor_scene_base {
-  /// колбэк получит поинтер на выбранный спрайт и путь к нему
+  // колбэк получит поинтер на выбранный спрайт и путь к нему
   std::function<void (Shared<Sprite>, CN<Str>)> callback {};
   Str sel_spr {};
   Strs _list {};

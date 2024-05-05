@@ -1,15 +1,15 @@
 #pragma once
 #include "item.hpp"
 
-/// пункт меню с числовыми опциями
+// пункт меню с числовыми опциями
 class Menu_int_item final: public Menu_item {
   using Get_value = std::function<int ()>;
   using Set_value = std::function<void (int)>;
 
   utf32 name {};
   utf32 m_desc {};
-  Get_value get_value_f {}; /// для корректного получения текущих данных
-  Set_value set_value_f {}; /// для корректного изменения данных
+  Get_value get_value_f {}; // для корректного получения текущих данных
+  Set_value set_value_f {}; // для корректного изменения данных
   int speed_step {};
 
 public:

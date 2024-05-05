@@ -6,7 +6,7 @@
 struct GLFWwindow;
 class Key_mapper;
 
-/// рендерер от GLFW
+// рендерер от GLFW
 class Host_glfw: public Host_ogl {
 public:
   Shared<Key_mapper> key_mapper {};
@@ -18,17 +18,17 @@ public:
   void run() override;
 
 protected:
-  int wnd_x {}, wnd_y {}; /// позиция окна на рабочем столе
+  int wnd_x {}, wnd_y {}; // позиция окна на рабочем столе
   GLFWwindow* window {};
-  double second_timer {}; /// для высчитывания фпс
+  double second_timer {}; // для высчитывания фпс
   uint fps {};
   uint ups {};
   uint upf {};
   uint ips {};
   double frame_time {};
   double update_time {};
-  double start_update_time {}; /// нужен для интерполяции движения
-  bool frame_drawn {false}; /// для плавного апдейта игры
+  double start_update_time {}; // нужен для интерполяции движения
+  bool frame_drawn {false}; // для плавного апдейта игры
 
   void game_set_dt(double gameloop_time);
   void game_set_fps_info(double gameloop_time);
@@ -37,7 +37,7 @@ protected:
   bool is_ran() const;
   void calc_lerp_alpha();
   void calc_upf();
-  void set_update_time(double dt); /// контроль плавности апдейта
+  void set_update_time(double dt); // контроль плавности апдейта
   void apply_render_delay();
   void apply_update_delay();
 
@@ -50,7 +50,7 @@ protected:
   virtual void update(double dt);
   virtual void init();
   double get_time() const override;
-  /// определить какой кадр надо скипать
+  // определить какой кадр надо скипать
   void check_frame_skip();
   void frame_wait();
 }; // Host_glfw

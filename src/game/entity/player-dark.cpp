@@ -23,7 +23,7 @@
 
 Player_dark::Player_dark(): Player() {}
 
-/// спавнит мелкие пульки в след за мощным выстрелом
+// спавнит мелкие пульки в след за мощным выстрелом
 void spawn_small_bullets(Entity& master, double dt) {
   // TODO all vals by config
 
@@ -112,7 +112,7 @@ void Player_dark::update(double dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
 
   energy_regen();
-  set_dmg(get_hp()); /// урон при столкновении с игроком равен текущему хп игрока
+  set_dmg(get_hp()); // урон при столкновении с игроком равен текущему хп игрока
   Player::update(dt);
   check_input(dt);
 }
@@ -207,10 +207,10 @@ void Player_dark::draw_stars(Image& dst) const {
   }
 } // draw_stars
 
-/// ограничитель позиции игрока в пределах экрана
+// ограничитель позиции игрока в пределах экрана
 struct Bound_off_screen {
-  Vec screen_lu {}; /// ограничение слева сверху
-  Vec screen_rd {}; /// ограничение справа снизу
+  Vec screen_lu {}; // ограничение слева сверху
+  Vec screen_rd {}; // ограничение справа снизу
 
   inline explicit Bound_off_screen(CN<Entity> src) {
     // получить размеры игрока

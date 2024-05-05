@@ -128,7 +128,7 @@ Circle cover_polygons(CN<Vector<Polygon>> polygons) {
 
 Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0); }
 
-/// создаёт спрайт только с белыми контурами по исходному спрайту
+// создаёт спрайт только с белыми контурами по исходному спрайту
 Sprite extract_contour(CN<Sprite> src) {
   // расширение спрайта во все стороны на 1 пиксель (нужна только маска)
   Image ext_mask(src.X() + 2, src.Y() + 2, Pal8::mask_invisible);

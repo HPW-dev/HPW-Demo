@@ -11,7 +11,7 @@ NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED Vector<Pal8> g_buffer {};
 NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
-NOT_EXPORTED real_t g_fading {0.11f}; /// как быстро затухает картинка
+NOT_EXPORTED real_t g_fading {0.11f}; // как быстро затухает картинка
 
 extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {

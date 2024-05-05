@@ -11,8 +11,8 @@
 NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
-NOT_EXPORTED real_t g_motion_blur; /// как сильно надо размывать кадры
-NOT_EXPORTED Image g_old_frame; /// предыдущий кадр
+NOT_EXPORTED real_t g_motion_blur; // как сильно надо размывать кадры
+NOT_EXPORTED Image g_old_frame; // предыдущий кадр
 
 extern "C" EXPORTED void PLUG_CALL plugin_init(const struct context_t* context,
 struct result_t* result) {

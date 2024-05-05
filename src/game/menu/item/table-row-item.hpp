@@ -1,7 +1,7 @@
 #pragma once
 #include "item.hpp"
 
-/// пункт меню с числовыми опциями
+// пункт меню с числовыми опциями
 class Menu_item_table_row final: public Menu_item {
 public:
   using Action = std::function<void ()>;
@@ -14,6 +14,6 @@ public:
   CN<Content_getters> get_content_getters() const;
 
 private:
-  Action m_action {}; /// действие при выборе строки таблицы
-  Content_getters m_content_getters {}; /// столбцы в строке таблицы
+  Action m_action {}; // действие при выборе строки таблицы
+  Content_getters m_content_getters {}; // столбцы в строке таблицы
 };

@@ -18,10 +18,10 @@ NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED Vector<Pal8> g_buffer {};
 NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
-NOT_EXPORTED int32_t g_block_sz {8}; /// размер блока
+NOT_EXPORTED int32_t g_block_sz {8}; // размер блока
 NOT_EXPORTED int32_t g_block_sz_old {8};
-NOT_EXPORTED int32_t g_enable_block_swap {1}; /// менять ли блоки местами
-NOT_EXPORTED int32_t g_enable_block_rotate {1}; /// вращать блоки
+NOT_EXPORTED int32_t g_enable_block_swap {1}; // менять ли блоки местами
+NOT_EXPORTED int32_t g_enable_block_rotate {1}; // вращать блоки
 NOT_EXPORTED std::minstd_rand g_rnd_generator;
 
 struct Block {
@@ -38,7 +38,7 @@ struct Block {
 NOT_EXPORTED bool g_need_update {true};
 NOT_EXPORTED std::size_t g_block_y {};
 NOT_EXPORTED std::size_t g_block_x {};
-NOT_EXPORTED Vector<Block> blocks {}; /// block map
+NOT_EXPORTED Vector<Block> blocks {}; // block map
 
 inline void check_opts() {
   if (g_block_sz != g_block_sz_old) {

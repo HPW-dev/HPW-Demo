@@ -6,7 +6,7 @@ class Yaml;
 class Image;
 struct Vec;
 
-/// общая база для изичного построения врагов
+// общая база для изичного построения врагов
 class Proto_enemy: public Collidable {
   nocopy(Proto_enemy);
 public:
@@ -14,7 +14,7 @@ public:
   explicit Proto_enemy(Entity_type new_type);
   ~Proto_enemy() = default;
 
-  /// Загрузчик
+  // Загрузчик
   class Loader: public Entity_loader {
     struct Impl;
     Unique<Impl> impl {};

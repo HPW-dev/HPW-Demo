@@ -30,7 +30,7 @@ extern "C" {
 
 inline std::atomic<Host_glfw*> instance {};
 inline bool rebind_key_mode {false};
-inline hpw::keycode key_for_rebind; /// появится при hpw::rebind_key
+inline hpw::keycode key_for_rebind; // появится при hpw::rebind_key
 
 static void host_glfw_set_vsync(bool enable) {
   detailed_log("vsync: " << enable << '\n');
@@ -70,7 +70,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     hpw::set_fullscreen( !graphic::fullscreen);
 } // key_callback
 
-/// колбэк для ошибок нужен для GLFW
+// колбэк для ошибок нужен для GLFW
 static void error_callback(int error, Cstr description) {
   // на всякий случай вернуть гамму как была
   auto monitor = glfwGetPrimaryMonitor();

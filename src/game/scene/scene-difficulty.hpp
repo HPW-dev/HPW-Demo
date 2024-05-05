@@ -4,7 +4,7 @@
 
 class Menu;
 
-/// меню выбора сложности
+// меню выбора сложности
 class Scene_difficulty final: public Scene {
   Shared<Menu> menu {};
 

@@ -1,5 +1,5 @@
 #pragma once
-///@file конвертирование строк
+//@file конвертирование строк
 #include <type_traits>
 #include <algorithm>
 #include <sstream>
@@ -18,17 +18,17 @@ concept have_begin_and_end = requires(T x) {
   {x.end()};
 };
 
-/// string convert
+// string convert
 template <class OUT, class IN>
 OUT sconv(CN<IN> src) requires have_begin_and_end<IN>
   { return OUT(src.begin(), src.end()); }
 
-/// other c-string style convert
+// other c-string style convert
 template <class OUT, class IN>
 OUT sconv(const IN* src) requires std::is_fundamental<IN>::value
   { return OUT(src, src + std::strlen(src)); }
 
-/// c-string convert
+// c-string convert
 template <class OUT, typename in_char_t>
 OUT sconvc(in_char_t src) {
   cauto len = strlen(src);
@@ -41,7 +41,7 @@ template <class STR_T> STR_T
 yn2s(bool comp)
   { return comp ? sconvc<STR_T>("YES") : sconvc<STR_T>("NO"); }
 
-/// num -> str
+// num -> str
 template <class OUT, typename NUM_T>
 OUT n2s(CN<NUM_T> num) {
   cauto str_num = std::to_string(num);
@@ -49,7 +49,7 @@ OUT n2s(CN<NUM_T> num) {
   return ret;
 }
 
-/// num -> str + precission len
+// num -> str + precission len
 template <class OUT, typename NUM_T>
 OUT n2s(CN<NUM_T> num, int prec) {
   std::ostringstream out;
@@ -58,7 +58,7 @@ OUT n2s(CN<NUM_T> num, int prec) {
   return sconv<OUT>(out.str());
 }
 
-/// делит строку в местах разделительного символа
+// делит строку в местах разделительного символа
 template <class str_t, typename ch_t>
 Vector<str_t> split(CN<str_t> str, ch_t separator) {
   Vector<str_t> ret;
@@ -70,7 +70,7 @@ Vector<str_t> split(CN<str_t> str, ch_t separator) {
   return ret;
 } // split
 
-/// удаляет символы ch из строки
+// удаляет символы ch из строки
 template <class str_t, typename ch_t>
 void remove_all(str_t& str, ch_t ch)
   { str.erase(std::remove(str.begin(), str.end(), ch), str.end()); }
@@ -84,7 +84,7 @@ void replace_all(str_t& str, ch_t find_it, ch_t replace_to) {
   );
 }
 
-/// строку в число
+// строку в число
 template <class str_t, typename T>
 T s2n(CN<str_t> str,
 auto base = std::hex) {

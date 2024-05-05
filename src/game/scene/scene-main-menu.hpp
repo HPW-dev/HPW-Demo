@@ -10,17 +10,17 @@
 class Menu;
 class Sprite;
 
-/// стартовое меню игры
+// стартовое меню игры
 class Scene_main_menu final: public Scene {
   Shared<Menu> menu {};
   Shared<Sprite> logo {};
   Vec logo_pos {};
-  Strs m_logo_names {}; /// пути к картинкам для лого
+  Strs m_logo_names {}; // пути к картинкам для лого
   std::once_flag m_logo_load_once {};
-  double bg_state {}; /// чтобы менять узор на фоне
-  /// функция рисующая фон
+  double bg_state {}; // чтобы менять узор на фоне
+  // функция рисующая фон
   std::function<void (Image& dst, const int bg_state)> bg_pattern_pf {};
-  Timer change_bg_timer {12}; /// таймер сменяющий фон
+  Timer change_bg_timer {12}; // таймер сменяющий фон
 
   void draw_bg(Image& dst) const;
   void init_menu();

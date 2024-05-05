@@ -15,7 +15,7 @@
   #define Pool_ptr(T) Shared<T>
 
 #else
-  /// заглушка за место Shared
+  // заглушка за место Shared
   template <class T>
   class _Pool_ptr final {
     T* ptr {};

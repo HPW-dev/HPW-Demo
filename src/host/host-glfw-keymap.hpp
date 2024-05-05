@@ -14,17 +14,17 @@ class Key_mapper final {
 
   struct GLFW_key {
     utf32 name {};
-    int scancode {}; /// системный код клавиши
+    int scancode {}; // системный код клавиши
   };
 
-  /// <hpw key, GLFW key>
+  // <hpw key, GLFW key>
   std::unordered_map<hpw::keycode, GLFW_key> table {};
 
 public:
   Key_mapper();
   ~Key_mapper() = default;
-  void reset(); /// поставить клавиши по умолчанию
-  void bind(hpw::keycode dst_hpw_key, int glfw_key); /// забиндить клавишу
+  void reset(); // поставить клавиши по умолчанию
+  void bind(hpw::keycode dst_hpw_key, int glfw_key); // забиндить клавишу
   inline decltype(table)& get_table() { return table; }
   Keys_info get_info() const;
 };

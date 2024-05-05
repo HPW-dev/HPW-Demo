@@ -4,5 +4,5 @@
 class Anim_mgr;
 
 namespace hpw {
-inline Shared<Anim_mgr> anim_mgr {}; /// управление анимациями
+inline Shared<Anim_mgr> anim_mgr {}; // управление анимациями
 }

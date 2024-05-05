@@ -5,7 +5,7 @@
 
 class Phys;
 
-/// Уровень для теста phys
+// Уровень для теста phys
 class Level_debug_1 final: public Level {
   nocopy(Level_debug_1);
   Vector<Shared<Phys>> objs {};

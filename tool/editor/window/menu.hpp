@@ -1,7 +1,7 @@
 #pragma once
 #include "window.hpp"
 
-/// верхнее меню
+// верхнее меню
 class Menu_wnd: public Window {
   void back_from_wnd();
 

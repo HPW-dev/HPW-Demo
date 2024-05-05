@@ -2,7 +2,7 @@
 #include "level.hpp"
 #include "util/mem-types.hpp"
 
-/// Уровень для теста игрока
+// Уровень для теста игрока
 class Level_debug_3 final: public Level {
   nocopy(Level_debug_3);
 

@@ -2,7 +2,7 @@
 #include <cassert>
 #include "util/math/random.hpp"
 
-/// меняет blink_flag так, чтобы он мигал в зависимости от времени time
+// меняет blink_flag так, чтобы он мигал в зависимости от времени time
 Bg_blink::Bg_blink(bool& blink_flag, double time)
 : m_time_start {time}
 , m_time {time}

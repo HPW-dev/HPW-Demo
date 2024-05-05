@@ -2,7 +2,7 @@
 #include "util/mem-types.hpp"
 #include "scene.hpp"
 
-/// окно смены палитры
+// окно смены палитры
 class Scene_palette_select final: public Scene {
   struct Impl;
   Unique<Impl> impl {};

@@ -2,10 +2,10 @@
 #include "util/macro.hpp"
 #include "util/str.hpp"
 
-/// базовый класс для ресурсов
+// базовый класс для ресурсов
 class Resource {
-  Str path {}; /// путь к ресурсу
-  bool generated {}; /// был ли сгенерирован ресурс уже в игре
+  Str path {}; // путь к ресурсу
+  bool generated {}; // был ли сгенерирован ресурс уже в игре
 
 public:
   Resource() = default;

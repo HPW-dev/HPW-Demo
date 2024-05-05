@@ -3,7 +3,7 @@
 #include "scene.hpp"
 #include "util/unicode.hpp"
 
-/// окно подтверждения
+// окно подтверждения
 class Yes_no_scene: public Editor_scene_base {
   nocopy(Yes_no_scene);
   utf8 msg_ {};

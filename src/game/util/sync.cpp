@@ -7,13 +7,13 @@
 
 static bool m_vsync {false};
 static bool m_disable_frame_limit {false};
-static bool m_fast_forward {false}; /// ускорение игры
+static bool m_fast_forward {false}; // ускорение игры
 static int m_target_fps = 360;
 static int m_target_vsync_fps = 60;
 static double m_target_frame_time = 1.0 / m_target_fps;
 static double m_target_vsync_frame_time = m_target_frame_time;
-static double m_bad_fps = 60 * 0.9; /// значение, ниже которго включается оптимизация
-static double m_draw_time_autoopt_limit = 1.0 / (60 * 0.9); /// лимит рендер тайма, для автооптимизации
+static double m_bad_fps = 60 * 0.9; // значение, ниже которго включается оптимизация
+static double m_draw_time_autoopt_limit = 1.0 / (60 * 0.9); // лимит рендер тайма, для автооптимизации
 
 namespace graphic {
 

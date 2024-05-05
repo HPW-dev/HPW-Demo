@@ -4,7 +4,7 @@
 
 class Yaml;
 
-/// Загрузчик бонусов
+// Загрузчик бонусов
 class Bonus_loader final: public Entity_loader {
   struct Impl;
   Unique<Impl> impl {};

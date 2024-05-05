@@ -4,11 +4,11 @@
 #include "scene.hpp"
 #include "util/str-util.hpp"
 
-/// окно ввода названий
+// окно ввода названий
 class Input_scene: public Editor_scene_base {
   nocopy(Input_scene);
   Str title {};
-  /// вызываемая функция через строку получит введёные символы
+  // вызываемая функция через строку получит введёные символы
   using callback_t = std::function<void (CN<Str>)>;
   callback_t callback {};
   std::array<char, 256> charbuf {};

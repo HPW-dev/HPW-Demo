@@ -4,7 +4,7 @@
 
 class Menu;
   
-/// стартовое меню игры
+// стартовое меню игры
 class Scene_options final: public Scene {
   Shared<Menu> menu {};
 

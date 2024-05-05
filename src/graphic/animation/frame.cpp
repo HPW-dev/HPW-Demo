@@ -156,7 +156,7 @@ Vector<Vec> Frame::get_offsets() const {
 }
 
 void Frame::accept_degree_offset(real &degree) const {
-  /// применить смещение угла
+  // применить смещение угла
   if (degree_offset != 0) {
     degree += degree_offset;
     degree = ring_deg(degree);

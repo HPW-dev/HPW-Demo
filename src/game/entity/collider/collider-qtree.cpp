@@ -17,23 +17,23 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 
-/// память под ветви
+// память под ветви
 static Mem_pool qtree_mempool;
 
-/// quad-tree односвязное дерево
+// quad-tree односвязное дерево
 class Qtree final {
-  Vector<Entity*> m_entitys {}; /// список объектов в текущей ноде
-  Pool_ptr(Qtree) lu {}; /// лево верх
-  Pool_ptr(Qtree) ru {}; /// право верх
-  Pool_ptr(Qtree) ld {}; /// лево низ
-  Pool_ptr(Qtree) rd {}; /// право низ
-  bool have_branches {}; /// если true, есть деление на ноды
+  Vector<Entity*> m_entitys {}; // список объектов в текущей ноде
+  Pool_ptr(Qtree) lu {}; // лево верх
+  Pool_ptr(Qtree) ru {}; // право верх
+  Pool_ptr(Qtree) ld {}; // лево низ
+  Pool_ptr(Qtree) rd {}; // право низ
+  bool have_branches {}; // если true, есть деление на ноды
 
-  /// https://www.tutorialspoint.com/circle-and-rectangle-overlapping-in-cplusplus
+  // https://www.tutorialspoint.com/circle-and-rectangle-overlapping-in-cplusplus
   static inline auto eval(auto a, auto b, auto c)
     { return std::max(b, std::min(a, c)); }
 
-  /// https://www.tutorialspoint.com/circle-and-rectangle-overlapping-in-cplusplus
+  // https://www.tutorialspoint.com/circle-and-rectangle-overlapping-in-cplusplus
   static inline bool intersect(CN<Rect> a, CN<Circle> b) {
     auto cx = b.offset.x;
     auto cy = b.offset.y;
@@ -53,10 +53,10 @@ class Qtree final {
   } // intersect
 
 public:
-  Rect bound {}; /// размер ограничивающей области в текущей ноде
-  std::size_t depth {}; /// текущая глубина ноды
-  std::size_t max_depth {}; /// макс. глубина деления нод
-  std::size_t entity_limit {}; /// макс. число объектов в ноде
+  Rect bound {}; // размер ограничивающей области в текущей ноде
+  std::size_t depth {}; // текущая глубина ноды
+  std::size_t max_depth {}; // макс. глубина деления нод
+  std::size_t entity_limit {}; // макс. число объектов в ноде
 
   ~Qtree() = default;
 
@@ -71,7 +71,7 @@ public:
     assert(bound.size.x * bound.size.y > 0);
   }
 
-  /// добавить объект в систему
+  // добавить объект в систему
   inline void add(Entity& entity) {
     // если есть ветви, то записываем объекы в них
     if (have_branches) {
@@ -116,7 +116,7 @@ public:
     } // if not have_branches
   } // add
 
-  /// поделить ноду на 4 части
+  // поделить ноду на 4 части
   inline void split() {
     auto rect_size = Vec(bound.size.x / 2.0, bound.size.y / 2.0);
     Rect lu_rect {Vec(bound.pos.x, bound.pos.y), rect_size};
@@ -159,7 +159,7 @@ public:
     }
   } // draw
 
-  /// найти соседей в области area
+  // найти соседей в области area
   inline void find(CN<Circle> area, Vector<Entity*>& list) const {
     if (intersect(this->bound, area)) {
       // так быстрее, чем std::copy или list.insert
@@ -175,7 +175,7 @@ public:
     } // if intersected
   } // find
 
-  /// подсчитывает число активных нод
+  // подсчитывает число активных нод
   inline void node_count(uint& cnt) const {
     ++cnt;
     if (have_branches) {
@@ -241,7 +241,7 @@ void Collider_qtree::debug_draw(Image& dst, const Vec camera_offset) {
 }
 
 Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
-  Entitys ret; /// объекты пригодные к сталкиванию
+  Entitys ret; // объекты пригодные к сталкиванию
 
   #ifdef ECOMEM
     // сбросить листы в дереве

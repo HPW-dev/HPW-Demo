@@ -2,7 +2,7 @@
 #include "menu.hpp"
 #include "util/math/vec.hpp"
 
-/// простое текстовое меню
+// простое текстовое меню
 class Text_menu final: public Menu {
   Vec draw_pos {};
 

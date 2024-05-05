@@ -74,7 +74,7 @@ void Host_ogl::init_palette_loader() {
   };
 }
 
-/// отрисовать кадр на текстуру
+// отрисовать кадр на текстуру
 void Host_ogl::ogl_draw() {
   /* TODO пока не будут картинки по краям экрана, надо заливать чёрным,
   чтобы на линуксе не была эпилепсия */
@@ -108,7 +108,7 @@ void Host_ogl::ogl_draw() {
     glFlush();
 } // ogl_draw
 
-/// вызывается в конце инита наследника
+// вызывается в конце инита наследника
 void Host_ogl::ogl_post_init() {
   ogl_init();
   reshape(window_ctx_.w, window_ctx_.h);

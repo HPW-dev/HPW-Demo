@@ -2,7 +2,7 @@
 #include "hud.hpp"
 #include "util/mem-types.hpp"
 
-/// Буквенный интерфейс игрока
+// Буквенный интерфейс игрока
 class Hud_asci: public Hud {
   struct Impl;
   Unique<Impl> impl {};

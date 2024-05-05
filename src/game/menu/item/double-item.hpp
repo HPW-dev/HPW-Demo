@@ -1,15 +1,15 @@
 #pragma once
 #include "item.hpp"
 
-/// пункт меню с числовыми (double) опциями
+// пункт меню с числовыми (double) опциями
 class Menu_double_item final: public Menu_item {
   using Get_value = std::function<double ()>;
   using Set_value = std::function<void (double)>;
 
   utf32 name {};
   utf32 m_desc {};
-  Get_value get_value_f {}; /// для корректного получения текущих данных
-  Set_value set_value_f {}; /// для корректного изменения данных
+  Get_value get_value_f {}; // для корректного получения текущих данных
+  Set_value set_value_f {}; // для корректного изменения данных
   double speed_step {};
 
 public:

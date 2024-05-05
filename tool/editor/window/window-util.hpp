@@ -10,12 +10,12 @@ class Image;
 class Entity;
 class Anim;
 
-/// рисует все кадры поворотных анимаций
+// рисует все кадры поворотных анимаций
 void draw_frames(Pool_ptr(Entity) entity, Image& dst, const Vec pos);
-/// безопасное получении анимации из anim_ctx
+// безопасное получении анимации из anim_ctx
 Anim* get_anim();
 
-/// для удобного редактирования флагов imgui
+// для удобного редактирования флагов imgui
 class Flag_editor {
 public:
   using get_flag_pf = std::function<bool ()>;

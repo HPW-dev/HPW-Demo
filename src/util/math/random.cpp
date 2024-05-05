@@ -21,7 +21,7 @@ namespace {
   inline uint8_t table_idx {0};
 }
 
-/// узнаёт, можно ли вызывать эту функцию при hpw::allow_random_stable
+// узнаёт, можно ли вызывать эту функцию при hpw::allow_random_stable
 inline void check_safe_random() {
   #ifdef STABLE_REPLAY
   if ( !hpw::allow_random_stable)
@@ -56,7 +56,7 @@ inline uint32_t lcg_parkmiller(uint32_t& state) {
   return state = result;
 }
 
-/// прогрев генераторов
+// прогрев генераторов
 inline void init_generators() {
   ALLOW_STABLE_RAND
   cfor (_, 10u) {

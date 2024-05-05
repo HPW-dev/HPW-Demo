@@ -5,7 +5,7 @@
 
 class Image;
 
-/// ресолвер коллизий (база)
+// ресолвер коллизий (база)
 class Collider {
   nocopy(Collider);
 

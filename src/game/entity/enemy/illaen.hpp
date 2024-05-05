@@ -6,15 +6,15 @@
 
 class Anim;
 
-/// Белые космические глаза (отталкивают)
+// Белые космические глаза (отталкивают)
 class Illaen final: public Proto_enemy {
   nocopy(Illaen);
 
   enum class State {
-    fade_in,  /// анимация появления
-    attack,   /// атака пулями
-    fade_out, /// исчезновение
-    teleport, /// перестановка на новое место
+    fade_in,  // анимация появления
+    attack,   // атака пулями
+    fade_out, // исчезновение
+    teleport, // перестановка на новое место
   };
 
   struct Info {
@@ -36,7 +36,7 @@ public:
   void update(double dt) override;
 }; // Illaen
 
-/// Загрузчик
+// Загрузчик
 class Illaen::Loader final: public Proto_enemy::Loader {
   struct Impl;
   Unique<Impl> impl {};

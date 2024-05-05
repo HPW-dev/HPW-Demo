@@ -12,7 +12,7 @@
 #include "game/util/sync.hpp"
 
 inline constexpr Vec bayer_16x16_sz {16, 16};
-/// bayer 16x16 byte
+// bayer 16x16 byte
 inline constexpr std::array<byte, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_byte {
   255, 127, 223, 95 , 247, 119, 215, 87 , 253, 125, 221, 93 , 245, 117, 213, 85 ,
   63 , 191, 31 , 159, 55 , 183, 23 , 151, 61 , 189, 29 , 157, 53 , 181, 21 , 149,
@@ -32,7 +32,7 @@ inline constexpr std::array<byte, scast<std::size_t>(bayer_16x16_sz.x * bayer_16
   0  , 128, 32 , 160, 8  , 136, 40 , 168, 2  , 130, 34 , 162, 10 , 138, 42 , 170
 };
 
-/// bayer 16x16 real normalized
+// bayer 16x16 real normalized
 inline constexpr const std::array<real, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_real {
   0.496094, -0.253906, 0.308594, -0.441406, 0.449219, -0.300781, 0.261719, -0.488281, 0.484375, -0.265625, 0.296875, -0.453125, 0.4375, -0.3125, 0.25, -0.5,
   -0.00390625, 0.246094, -0.191406, 0.0585938, -0.0507812, 0.199219, -0.238281, 0.0117188, -0.015625, 0.234375, -0.203125, 0.046875, -0.0625, 0.1875, -0.25, 0,
@@ -53,13 +53,13 @@ inline constexpr const std::array<real, scast<std::size_t>(bayer_16x16_sz.x * ba
 };
 
 inline constexpr Vec bayer_2x2_sz {2, 2};
-/// bayer 2x2 byte
+// bayer 2x2 byte
 inline constexpr std::array<byte, scast<std::size_t>(bayer_2x2_sz.x * bayer_2x2_sz.y)> bayer_2x2_byte {
   85, 190,
   255,  0
 };
 
-/// bayer 2x2 real normalized
+// bayer 2x2 real normalized
 inline constexpr const std::array<real, scast<std::size_t>(bayer_2x2_sz.x * bayer_2x2_sz.y)> bayer_2x2_real {
   -0.25, 0.25,
    0.5,  0.0
@@ -130,10 +130,10 @@ Dither type, blend_pf bf) {
 inline constexpr real to_4bit(real src) { return scast<int>(src * 4.0) * (1.0 / 4.0); }
 
 static std::once_flag init_table_db16b4_once {};
-/// [color][table_x][table_y]
+// [color][table_x][table_y]
 static Pal8 table_db16b4 [256][16][16]{};
 
-/// init precalculated table for dither bayer 16x16 4-bit
+// init precalculated table for dither bayer 16x16 4-bit
 inline void init_table_db16b4() {
   const real mul = 1.0 / 4.0; // for 4 bit
   const std::size_t table_x = 16;

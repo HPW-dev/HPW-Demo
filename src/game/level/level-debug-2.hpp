@@ -2,7 +2,7 @@
 #include "level.hpp"
 #include "util/math/vec.hpp"
 
-/// Уровень для теста статтеринга
+// Уровень для теста статтеринга
 class Level_debug_2 final: public Level {
   nocopy(Level_debug_2);
   real brightness {};

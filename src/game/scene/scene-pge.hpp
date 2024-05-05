@@ -2,7 +2,7 @@
 #include "util/mem-types.hpp"
 #include "scene.hpp"
 
-/// окно смены плагина с эффектом
+// окно смены плагина с эффектом
 class Scene_pge final: public Scene {
   struct Impl;
   Unique<Impl> impl {};

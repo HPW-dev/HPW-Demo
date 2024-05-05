@@ -11,22 +11,22 @@
 class Entity;
 class Qtree;
 
-/// Нахождение столкновений с помощью разбиения пространства Quad Tree
+// Нахождение столкновений с помощью разбиения пространства Quad Tree
 class Collider_qtree final: public Collider {
   nocopy(Collider_qtree);
-  Pool_ptr(Qtree) root {}; /// старт дерева
+  Pool_ptr(Qtree) root {}; // старт дерева
 
-  /// проверка хитбоксов на пересечения
+  // проверка хитбоксов на пересечения
   void test_collide_pair(Entity& a, Entity& b);
-  /// фильтрует список объектов для проверки по возможности сталкиваться
+  // фильтрует список объектов для проверки по возможности сталкиваться
   Entitys update_qtree(CN<Entitys> entities);
-  /// обновляет список пар столкновений
+  // обновляет список пар столкновений
   void update_pairs(CN<Entitys> entities);
 
 public:
   using Collision_pair = std::pair<Entity*, Entity*>;
 
-  /// хешер для collision_pairs
+  // хешер для collision_pairs
   struct Collision_pairs_hash {
     inline static std::size_t operator()(const Collision_pair val) {
       // сделать поинтеры числом и юзать это как уникальный ID
@@ -40,7 +40,7 @@ public:
     }
   };
 
-  /// список пар для проверок
+  // список пар для проверок
   robin_hood::unordered_set<Collision_pair, Collision_pairs_hash> collision_pairs {};
   /** за пределами области QTree, пересечения объектов не будут находится
   * @param depth сколько раз можно делить пространство
@@ -50,6 +50,6 @@ public:
   explicit Collider_qtree(uint depth, uint entity_limit, std::size_t X, std::size_t Y);
   ~Collider_qtree();
   void operator()(CN<Entitys> entities, double dt) override;
-  /// рисует сетку разделений для дебага
+  // рисует сетку разделений для дебага
   void debug_draw(Image& dst, const Vec camera_offset) override;
 }; // Collider_qtree

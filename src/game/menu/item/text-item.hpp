@@ -1,7 +1,7 @@
 #pragma once
 #include "item.hpp"
 
-/// на этот пункт меню можно только нажимать
+// на этот пункт меню можно только нажимать
 class Menu_text_item final: public Menu_item {
   menu_item_ft action = {};
   utf32 name = {};

@@ -16,7 +16,7 @@ void Scatter::accept(Entity& dst) const {
   return_if(power == 0);
 
   auto len = distance(this->pos, dst.phys.get_pos());
-  return_if (len > this->range); /// за пределами действия объекты не трогать
+  return_if (len > this->range); // за пределами действия объекты не трогать
 
   double intense = 1.0 - (len / range);
 

@@ -4,13 +4,13 @@
 
 class Image;
 
-/// применяет список эффектов к картинке
+// применяет список эффектов к картинке
 class Effect_mgr final {
   struct Impl;
   Unique<Impl> impl {};
 
 public:
-  /// если эффект вернёт true, значит он завершился
+  // если эффект вернёт true, значит он завершился
   class Effect {
   public:
     Effect() = default;

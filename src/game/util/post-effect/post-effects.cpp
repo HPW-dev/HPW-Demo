@@ -6,7 +6,7 @@
 #include "graphic/image/image.hpp"
 
 struct Effect_mgr::Impl {
-  std::list<Shared<Effect>> effects {}; /// эффекты постобработки
+  std::list<Shared<Effect>> effects {}; // эффекты постобработки
 
   inline void move_to_front(Shared<Effect>&& effect)
     { effects.emplace_front(std::move(effect)); }

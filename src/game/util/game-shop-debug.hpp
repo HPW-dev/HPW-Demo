@@ -4,7 +4,7 @@
 
 class Image;
 
-/// дебажное меню выбора всех способностей
+// дебажное меню выбора всех способностей
 class Shop_debug {
   nocopy(Shop_debug);
   struct Impl;
@@ -14,7 +14,7 @@ public:
   Shop_debug();
   ~Shop_debug();
   void draw(Image& dst) const;
-  /// @return false - выбор в меню сделан, его можно отключить
+  // @return false - выбор в меню сделан, его можно отключить
   bool update(const double dt);
 }; // Shop_debug
 

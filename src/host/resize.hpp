@@ -2,12 +2,12 @@
 #include "command.hpp"
 #include "game/core/core-window.hpp"
 
-/// параметры ресайза окон
+// параметры ресайза окон
 struct Resize_ctx {
   Resize_mode mode = Resize_mode::by_height;
-  /// window size:
+  // window size:
   int w = 0, h = 0;
-  /// visible output rectangle:
+  // visible output rectangle:
   int sx=0, sy=0, ex=0, ey=0;
   bool is_bad() const;
 

@@ -2,7 +2,7 @@
 #include "util/macro.hpp"
 #include "game/scene/scene.hpp"
 
-/// Сцены редактора с imGui графикой
+// Сцены редактора с imGui графикой
 class Editor_scene_base: public Scene {
   nocopy(Editor_scene_base);
 

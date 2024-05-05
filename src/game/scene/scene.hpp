@@ -2,7 +2,7 @@
 
 class Image;
 
-/// базовый класс для сцен (менюшки, катсцены, игра)
+// базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {
 public:
   virtual void update(double dt);

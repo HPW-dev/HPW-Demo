@@ -17,15 +17,15 @@ class Image;
 struct Vec;
 struct Scatter;
 
-/// управление игровыми объектами
+// управление игровыми объектами
 class Entity_mgr final {
   nocopy(Entity_mgr);
   struct Impl;
   Unique<Impl> impl {};
 
-  /// найти в памяти подходящий по типу объект
+  // найти в памяти подходящий по типу объект
   Entity* find_avaliable_entity(const Entity_type type);
-  /// добавить объект в систему
+  // добавить объект в систему
   Entity* registrate(Entitys::value_type&& entity);
 
 public:
@@ -37,9 +37,9 @@ public:
   void clear();
   void debug_draw(Image& dst) const;
 
-  /// задать обработчик столкновений
+  // задать обработчик столкновений
   void set_collider(CN<Shared<Collider>> new_collider);
-  /// вызвать это перед использованием make
+  // вызвать это перед использованием make
   void register_types();
   /** Создаёт объкт в памяти на указанном месте
   @param master родитель объекта, используется объектом для внутренней логики
@@ -47,20 +47,20 @@ public:
   @param pos соспавнить объект на этой позиции
   @return по возможности верёт объект, для последующего изменения извне */
   Entity* make(Entity* master, CN<Str> name, const Vec pos);
-  /// создать волну от взрыва расталкивающую объекты
+  // создать волну от взрыва расталкивающую объекты
   void add_scatter(CN<Scatter> scatter);
   Mem_pool& get_phys_pool();
   Mem_pool& get_hitbox_pool();
   Mem_pool& get_entity_pool();
-  /// получить массив всех объектов
+  // получить массив всех объектов
   CN<Entitys> get_entities() const;
-  /// ссылка на игрока
+  // ссылка на игрока
   Player* get_player() const;
   void set_player(Player* player);
-  /// сюда должны стрелять противники
+  // сюда должны стрелять противники
   Vec target_for_enemy() const;
   
-  /// выделить память под объект
+  // выделить память под объект
   template <class T> inline T* allocate();
 }; // Entity_mgr
 

@@ -10,7 +10,7 @@
 #include "graphic/image/image.hpp"
 #include "util/file/archive.hpp"
 
-/// вложенная тестовая сцена
+// вложенная тестовая сцена
 class Nested_scene final: public Scene {
   Shared<Menu> menu {};
 
@@ -27,7 +27,7 @@ public:
   void draw(Image& dst) const override { menu->draw(dst); }
 }; // Nested_scene
 
-/// начальная тестовая сцена
+// начальная тестовая сцена
 class Test_scene final: public Scene {
   Shared<Menu> menu {};
 

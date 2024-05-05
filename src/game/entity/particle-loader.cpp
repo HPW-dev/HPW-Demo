@@ -13,9 +13,9 @@
 
 struct Particle_loader::Impl {
   Anim_info m_anim_info {};
-  bool m_kill_by_end_anim {}; /// уничтожить частицу после конца анимации
-  bool m_rand_deg {}; /// начальный угол сделает случайным
-  real m_lifetime {}; /// частица умрёт через время
+  bool m_kill_by_end_anim {}; // уничтожить частицу после конца анимации
+  bool m_rand_deg {}; // начальный угол сделает случайным
+  real m_lifetime {}; // частица умрёт через время
   real m_force {};
 
   inline explicit Impl(CN<Yaml> config) {

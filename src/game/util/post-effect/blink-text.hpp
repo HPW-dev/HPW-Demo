@@ -4,7 +4,7 @@
 #include "util/unicode.hpp"
 #include "util/macro.hpp"
 
-/// рисует на экране мигающий текст в течении некоторого времени
+// рисует на экране мигающий текст в течении некоторого времени
 class Blink_text: public Effect_mgr::Effect {
   struct Impl;
   Unique<Impl> impl {};

@@ -16,30 +16,30 @@ class Light;
 class Hitbox;
 struct Vec;
 
-/// игровая сущность
+// игровая сущность
 class Entity {
   nocopy(Entity);
 
-  /// <self ptr, dt>
+  // <self ptr, dt>
   using Update_callback = std::function<void (Entity&, double)>;
-  /// <self ptr>
+  // <self ptr>
   using Kill_callback = std::function<void (Entity&)>;
-  Vector<Update_callback> update_callbacks {}; /// внешние колбэки на обработку апдейта
-  Vector<Kill_callback> kill_callbacks {}; /// внешние колбэки на обработку смерти
+  Vector<Update_callback> update_callbacks {}; // внешние колбэки на обработку апдейта
+  Vector<Kill_callback> kill_callbacks {}; // внешние колбэки на обработку смерти
 
   void move_it(double dt);
   void draw_pos(Image& dst, const Vec offset) const;
   void debug_draw(Image& dst, const Vec offset) const;
 
 public:
-  Phys phys {}; /// физический контекст
-  mutable Anim_ctx anim_ctx {}; /// анимация
-  Shared<Heat_distort> heat_distort {}; /// эффект искажения воздуха
-  Shared<Light> light {}; /// эффект вспышки
+  Phys phys {}; // физический контекст
+  mutable Anim_ctx anim_ctx {}; // анимация
+  Shared<Heat_distort> heat_distort {}; // эффект искажения воздуха
+  Shared<Light> light {}; // эффект вспышки
   using Master_p = CP<Entity>;
-  Master_p master {}; /// объект создатель
+  Master_p master {}; // объект создатель
   Uid uid {};
-  mutable Enity_status status {}; /// флаги
+  mutable Enity_status status {}; // флаги
   Entity_type type {GET_SELF_TYPE};
   
   Entity();
@@ -56,9 +56,9 @@ public:
   void clear_callbacks();
   void set_master(Master_p new_master);
   inline CN<Master_p> get_master() const { return master; }
-  /// узнать какой сейчас хитбокс
+  // узнать какой сейчас хитбокс
   inline virtual CP<Hitbox> get_hitbox() const { return {}; }
-  /// безопасно получить свою анимацию
+  // безопасно получить свою анимацию
   CP<Anim> get_anim() const;
 
 }; // Entity

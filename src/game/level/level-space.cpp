@@ -31,23 +31,23 @@
 #include "graphic/effect/dither.hpp"
 
 struct Level_space::Impl {
-  constx real layer_speed_scale {0.03333}; /// влияет на скорость движния фона по горизонтали
-  constx real layer_h_speed {1.25_pps}; /// скорость движния фона по вертикали
+  constx real layer_speed_scale {0.03333}; // влияет на скорость движния фона по горизонтали
+  constx real layer_h_speed {1.25_pps}; // скорость движния фона по вертикали
   
   Level_tasks tasks {};
-  bool fill_bg_black {true}; /// закрашивать фон чёрным
-  bool enable_bg_layer {false}; /// включает отрисовку фона с космосом
-  bool enable_galaxy_1_layer {false}; /// включает отрисовку фона с первой галактикой
-  bool enable_galaxy_2_layer {false}; /// включает отрисовку фона с большой галактикой
-  bool enable_galaxy_3_layer {false}; /// включает отрисовку фона со второй галактикой
-  mutable real bg_brightness_sub {1.0}; /// затенение фона
-  mutable real galaxy_2_brightness_sub {1.0}; /// затенение фона галактики
-  Layer_simple m_bg {}; /// чёрный фон со звёздочками
-  Layer_simple m_galaxy_1 {}; /// права галактика
-  Layer_simple m_galaxy_2 {}; /// большая финальная галактика
-  Layer_simple m_galaxy_3 {}; /// первая левая галактика
-  real m_waiter_accel_additon {}; /// ускоряет появление новых ждунов
-  bool predict_waiter {false}; /// если включён, ждун будет подбирать место спавна получше
+  bool fill_bg_black {true}; // закрашивать фон чёрным
+  bool enable_bg_layer {false}; // включает отрисовку фона с космосом
+  bool enable_galaxy_1_layer {false}; // включает отрисовку фона с первой галактикой
+  bool enable_galaxy_2_layer {false}; // включает отрисовку фона с большой галактикой
+  bool enable_galaxy_3_layer {false}; // включает отрисовку фона со второй галактикой
+  mutable real bg_brightness_sub {1.0}; // затенение фона
+  mutable real galaxy_2_brightness_sub {1.0}; // затенение фона галактики
+  Layer_simple m_bg {}; // чёрный фон со звёздочками
+  Layer_simple m_galaxy_1 {}; // права галактика
+  Layer_simple m_galaxy_2 {}; // большая финальная галактика
+  Layer_simple m_galaxy_3 {}; // первая левая галактика
+  real m_waiter_accel_additon {}; // ускоряет появление новых ждунов
+  bool predict_waiter {false}; // если включён, ждун будет подбирать место спавна получше
 
   inline Impl()
     : m_bg{"resource/image/bg/space/bg/tilemap.yml", Vec{}, 0.025, &blend_fade_out_max}
@@ -102,7 +102,7 @@ struct Level_space::Impl {
       graphic::width, graphic::height));
   }
 
-  /// наполнение уровня тригерами
+  // наполнение уровня тригерами
   inline void init_tasks() {
 
     // справнит ждуна сверху экрана

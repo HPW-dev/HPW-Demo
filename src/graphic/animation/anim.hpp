@@ -14,10 +14,10 @@ using Frames = Vector<Shared<Frame>>;
 class Anim final {
   Frames frames {};
   Str name {};
-  Pool_ptr(Hitbox) source_hitbox {}; /// эталонный хитбокс, для генерации повёрнутых версий
+  Pool_ptr(Hitbox) source_hitbox {}; // эталонный хитбокс, для генерации повёрнутых версий
 
   class Hitbox_diections;
-  /// pimpl-класс для храненния направлений хитбоксов
+  // pimpl-класс для храненния направлений хитбоксов
   Shared<Hitbox_diections> hitbox_diections {};
 
 public:
@@ -42,7 +42,7 @@ public:
   inline cnauto get_frames() const { return frames; }
   inline CN<Str> get_name() const { return name; }
 
-  /// получить хитбокс анимации по иуглу
+  // получить хитбокс анимации по иуглу
   CP<Hitbox> get_hitbox(real degree=0) const;
   /** назначить новых хитбокс
   @param _hitbox хитбокс для эталона

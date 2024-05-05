@@ -16,36 +16,36 @@ Vec normalize_graphic(const Vec src);
 [[nodiscard]] Vec floor(const Vec src);
 [[nodiscard]] Vec ceil(const Vec src);
 [[nodiscard]] Vec abs(const Vec src);
-/// угол между вектором в радианах
+// угол между вектором в радианах
 real rad_between_vecs(const Vec a, const Vec b);
-/// угол между вектором
+// угол между вектором
 real get_between_vecs(const Vec a, const Vec b);
-/// получить случайную точку вокруг pos в радиусе r (синхронный)
+// получить случайную точку вокруг pos в радиусе r (синхронный)
 Vec make_rand_by_radius_stable(const Vec pos, real r);
-/// получить случайную точку вокруг pos в радиусе r
+// получить случайную точку вокруг pos в радиусе r
 Vec make_rand_by_radius_graphic(const Vec pos, real r);
 
 #ifdef DEBUG
 Str to_str(const Vec src);
 #endif
 
-/// единичный вектор направления по углу
+// единичный вектор направления по углу
 Vec deg_to_vec(real deg);
 
-/// угол по единичному вектору
+// угол по единичному вектору
 real vec_to_deg(Vec vec);
 
-/// случайный угол для без защиты рандома
+// случайный угол для без защиты рандома
 real rand_degree_graphic();
-/// случайный угол для c защитой рандома
+// случайный угол для c защитой рандома
 real rand_degree_stable();
 
-/// случайный единичный вектор без защиты рандома
+// случайный единичный вектор без защиты рандома
 Vec rand_normalized_graphic();
-/// случайный единичный вектор c защитой рандома
+// случайный единичный вектор c защитой рандома
 Vec rand_normalized_stable();
 
 real distance(const Vec a, const Vec b);
 real fast_distance(const Vec a, const Vec b);
-/// угол между двумя векторами направления
+// угол между двумя векторами направления
 [[nodiscard]] real deg_between_vecs(const Vec a, const Vec b);

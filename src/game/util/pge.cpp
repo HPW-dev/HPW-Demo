@@ -19,13 +19,13 @@
 #include <DyLib/DyLib.hpp>
 // ----------- [!] ---------------
 
-Shared<DyLib> g_lib_loader {}; /// для кросплатформ загрузки либ
-Vector<Shared<Param_pge>> g_pge_params {}; /// какие сейчас доступны настройки плагина
-Str g_pge_path {}; /// текущий путь к плагину 
-Str g_pge_name {}; /// текущее имя плагина
-Str g_pge_description {}; /// описание к плагину
-Str g_pge_author {}; /// имя автора эффекта
-bool g_pge_loaded {false}; /// флаг успешной загрузки плагина
+Shared<DyLib> g_lib_loader {}; // для кросплатформ загрузки либ
+Vector<Shared<Param_pge>> g_pge_params {}; // какие сейчас доступны настройки плагина
+Str g_pge_path {}; // текущий путь к плагину 
+Str g_pge_name {}; // текущее имя плагина
+Str g_pge_description {}; // описание к плагину
+Str g_pge_author {}; // имя автора эффекта
+bool g_pge_loaded {false}; // флаг успешной загрузки плагина
 std::function<decltype(plugin_init)> g_plugin_init {};
 std::function<decltype(plugin_apply)> g_plugin_apply {};
 std::function<decltype(plugin_finalize)> g_plugin_finalize {};

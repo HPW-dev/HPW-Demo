@@ -1,7 +1,7 @@
 #pragma once
 #include "item.hpp"
 
-/// именованные параметры вызывающие действие
+// именованные параметры вызывающие действие
 class Menu_list_item final: public Menu_item {
 public:
   using Action = std::function<void ()>;

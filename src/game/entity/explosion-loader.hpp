@@ -4,7 +4,7 @@
 
 class Yaml;
 
-/// Загрузчик простых взрывов
+// Загрузчик простых взрывов
 class Explosion_loader final: public Entity_loader {
   struct Impl;
   Unique<Impl> impl {};

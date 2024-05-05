@@ -2,7 +2,7 @@
 #include "util/mem-types.hpp"
 #include "scene.hpp"
 
-/// окно геймовера
+// окно геймовера
 class Scene_gameover final: public Scene {
   struct Impl;
   Unique<Impl> impl {};

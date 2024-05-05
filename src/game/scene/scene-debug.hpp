@@ -4,7 +4,7 @@
 
 class Menu;
 
-/// меню отладки
+// меню отладки
 class Scene_debug final: public Scene {
   Shared<Menu> menu {};
 

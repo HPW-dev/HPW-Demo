@@ -11,7 +11,7 @@
 
 struct Table_menu::Impl {
   Menu* m_base {};
-  utf32 m_title {}; /// название всего меню
+  utf32 m_title {}; // название всего меню
   Rows m_rows {};
   uint m_row_height {};
 

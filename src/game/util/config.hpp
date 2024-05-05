@@ -7,5 +7,5 @@ void save_config();
 void load_config();
 
 namespace hpw {
-inline Shared<Yaml> config {}; /// config.yml
+inline Shared<Yaml> config {}; // config.yml
 }

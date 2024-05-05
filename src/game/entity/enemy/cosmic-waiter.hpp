@@ -1,7 +1,7 @@
 #pragma once
 #include "game/entity/enemy/proto-enemy.hpp"
 
-/// Простой противник стреляющий на упреждение в игрока
+// Простой противник стреляющий на упреждение в игрока
 class Cosmic_waiter final: public Proto_enemy {
   nocopy(Cosmic_waiter);
   
@@ -12,7 +12,7 @@ public:
   void draw(Image& dst, const Vec offset) const override;
   void update(double dt) override;
 
-  /// Загрузчик
+  // Загрузчик
   class Loader final: public Proto_enemy::Loader {
     struct Impl;
     Unique<Impl> impl {};

@@ -4,7 +4,7 @@
 #include "util/math/rect.hpp"
 #include "util/unicode.hpp"
 
-/// Более красивое текстовое меню с описанием
+// Более красивое текстовое меню с описанием
 class Advanced_text_menu: public Menu {
   struct Impl;
   Unique<Impl> impl {};

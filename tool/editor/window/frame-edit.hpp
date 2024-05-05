@@ -6,7 +6,7 @@ class Frame;
 class Hitbox;
 struct Polygon;
 
-/// редактирование отдельного кадра анимации
+// редактирование отдельного кадра анимации
 class Frame_wnd: public Window {
   bool reinit {false};
 
@@ -18,16 +18,16 @@ class Frame_wnd: public Window {
   void draw_duration_edit(Frame& frame);
 
   void edit_hitbox(Frame& frame);
-  /// хелпер-функция для получения редактируемого хитбокса
+  // хелпер-функция для получения редактируемого хитбокса
   Pool_ptr(Hitbox) get_hitbox_source() const;
   void update_hitbox(Pool_ptr(Hitbox) dst);
-  /// true, если в хитбкосе надо обновить изменения
+  // true, если в хитбкосе надо обновить изменения
   bool edit_polygon(Pool_ptr(Hitbox) hitbox) const;
-  /// true, если в хитбкосе надо обновить изменения
+  // true, если в хитбкосе надо обновить изменения
   bool edit_polygon_detailed(Pool_ptr(Hitbox) hitbox) const;
-  /// true, если в хитбкосе надо обновить изменения
+  // true, если в хитбкосе надо обновить изменения
   bool edit_polygon_offset(Polygon& poly) const;
-  /// true, если в хитбкосе надо обновить изменения
+  // true, если в хитбкосе надо обновить изменения
   bool edit_inserter_polygon_points(Polygon& poly) const;
 
 public:

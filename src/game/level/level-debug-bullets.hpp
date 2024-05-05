@@ -2,7 +2,7 @@
 #include "level.hpp"
 #include "util/mem-types.hpp"
 
-/// Уровень для теста проскакивания пуль
+// Уровень для теста проскакивания пуль
 class Level_debug_bullets final: public Level {
   nocopy(Level_debug_bullets);
   struct Impl;

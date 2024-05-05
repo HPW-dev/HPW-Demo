@@ -8,7 +8,7 @@
 struct Layer_simple {
   Tilemap tilemap {};
   Vec pos {};
-  real motion_ratio {1.0}; /// влияет на скорость движения фона
+  real motion_ratio {1.0}; // влияет на скорость движения фона
   blend_pf bf {&blend_past};
 
   Layer_simple() = default;

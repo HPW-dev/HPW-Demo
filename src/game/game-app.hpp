@@ -10,7 +10,7 @@ class Game_app: public Host_glfw {
   void load_locale();
   void load_font();
   void update_graphic_autoopt(double dt);
-  /// полноэкранная рамка
+  // полноэкранная рамка
   void draw_border(Image& dst) const;
   void draw_game_frame() override;
 

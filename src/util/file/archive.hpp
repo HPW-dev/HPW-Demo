@@ -6,7 +6,7 @@
 
 struct zip_t;
 
-/// для работы с архива типа .zip
+// для работы с архива типа .zip
 class Archive final: public Resource {
   zip_t *zip {};
   Bytes strm_buf {};
@@ -17,8 +17,8 @@ class Archive final: public Resource {
 public:
   explicit Archive(Str fname);
   ~Archive();
-  /// получить файл из архива в виде RAW данных
+  // получить файл из архива в виде RAW данных
   File get_file(Str fname) const;
-  /// все имена файлов в архиве
+  // все имена файлов в архиве
   Strs get_all_names() const;
 }; // Archive

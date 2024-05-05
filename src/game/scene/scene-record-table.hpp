@@ -4,7 +4,7 @@
 
 class Menu;
 
-/// таблица рекордов
+// таблица рекордов
 class Scene_record_table final: public Scene {
   Shared<Menu> menu {};
 

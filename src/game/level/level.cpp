@@ -16,7 +16,7 @@
 
 struct Level::Impl {
   Level* master {};
-  Timer death_timer {4.0}; /// через это время засчитывается смерть игрока
+  Timer death_timer {4.0}; // через это время засчитывается смерть игрока
   #ifdef CLD_DEBUG
   Timer cld_debug_timer {1};
   #endif
@@ -32,7 +32,7 @@ struct Level::Impl {
     on_player_death(dt);
   }
 
-  /// дебажный вывод количества столкновений
+  // дебажный вывод количества столкновений
   inline static void print_collision_info() {
     #ifdef CLD_DEBUG
     Str txt;

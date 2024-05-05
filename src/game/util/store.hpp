@@ -6,7 +6,7 @@
 #include "util/mem-types.hpp"
 #include "util/log.hpp"
 
-/// хранилище контента
+// хранилище контента
 template <class T>
 class Store {
 public:
@@ -14,7 +14,7 @@ public:
   ~Store() = default;
   Shared<T>& push(CN<Str> name, CN<Shared<T>> res);
   CN<Shared<T>> find(CN<Str> name) const;
-  /// узнать названия всех ресурсов
+  // узнать названия всех ресурсов
   Strs list(bool without_generated=false) const;
 
 private:

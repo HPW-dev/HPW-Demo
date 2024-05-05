@@ -2,7 +2,7 @@
 
 class Image;
 
-/// база для окошек imgui в редакторе
+// база для окошек imgui в редакторе
 class Window {
 public:
   virtual ~Window() = default;

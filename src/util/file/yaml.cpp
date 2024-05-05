@@ -11,7 +11,7 @@
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 
-/// Внутреннаяя реализация для Yaml
+// Внутреннаяя реализация для Yaml
 class Yaml::Impl: public Resource {
   YAML::Node self {};
 
@@ -44,7 +44,7 @@ class Yaml::Impl: public Resource {
       self[name][i] = val[i];
   }
 
-  /// helper for get value from YAML
+  // helper for get value from YAML
   template <class T>
   inline T _get(CN<Str> name, CN<T> default_val) const {
     try {
@@ -57,7 +57,7 @@ class Yaml::Impl: public Resource {
     }
   } // _get
 
-  /// версия для utf8 строк
+  // версия для utf8 строк
   inline utf8 _get_utf8(CN<Str> name, CN<utf8> default_val) const {
     try {
       return sconv<utf8>(self[name].as<Str>());

@@ -5,9 +5,9 @@
 
 class Image;
 
-/// load from mem
+// load from mem
 void load(Image& dst, CN<Bytes> mem);
-/// load from file
+// load from file
 void load(Image& dst, CN<Str> name);
-/// save to file
+// save to file
 void save(CN<Image> src, Str name);

@@ -30,21 +30,21 @@
 #include "game/entity/enemy/enemy-tutorial.hpp"
 
 struct Entity_mgr::Impl {
-  /// за пределами этого расстояние пули за экраном умирают в шмап-моде
+  // за пределами этого расстояние пули за экраном умирают в шмап-моде
   constx double shmup_bound_for_bullet = 34;
-  /// за пределами этого расстояние объект за экраном умирает в шмап-моде
+  // за пределами этого расстояние объект за экраном умирает в шмап-моде
   constx double shmup_bound = 250;
 
-  Entitys entities {}; /// массив всех игровых объектов
-  Shared<Collider> collision_resolver {}; /// обработчик столкновений
-  Mem_pool entity_pool {}; /// мем-пул под объекты
-  Mem_pool phys_pool {}; /// мем-пул под физические контексты
-  Mem_pool hitbox_pool {}; /// мем-пул под хитбоксы
-  /// БД инициализаторов объектов
+  Entitys entities {}; // массив всех игровых объектов
+  Shared<Collider> collision_resolver {}; // обработчик столкновений
+  Mem_pool entity_pool {}; // мем-пул под объекты
+  Mem_pool phys_pool {}; // мем-пул под физические контексты
+  Mem_pool hitbox_pool {}; // мем-пул под хитбоксы
+  // БД инициализаторов объектов
   std::unordered_map<Str, Shared<Entity_loader>> entity_loaders {};
-  Vector<Scatter> scatters {}; /// источники взрывных волн
+  Vector<Scatter> scatters {}; // источники взрывных волн
   Entitys registrate_list {};
-  /// текущая ссылка на игрока, чтобы враги могли брать его в таргет
+  // текущая ссылка на игрока, чтобы враги могли брать его в таргет
   Player* m_player {};
 
   inline Impl() {
@@ -81,7 +81,7 @@ struct Entity_mgr::Impl {
     update_kills();
   } // update
 
-  /// применить список на добавление объектов из очереди registrate_list
+  // применить список на добавление объектов из очереди registrate_list
   inline void accept_registrate_list() {
     entities.reserve(entities.size() + registrate_list.size());
     for (nauto elem: registrate_list)
@@ -89,7 +89,7 @@ struct Entity_mgr::Impl {
     registrate_list.clear();
   }
 
-  /// применить все взрывные волны к объектам
+  // применить все взрывные волны к объектам
   inline void update_scatters() {
     if (!scatters.empty()) {
       for (nauto entity: entities)
@@ -159,7 +159,7 @@ struct Entity_mgr::Impl {
   inline Mem_pool& get_hitbox_pool() { return hitbox_pool; }
   inline Mem_pool& get_entity_pool() { return entity_pool; }
 
-  /// по type определяет какой Entity_loader создать и передать ему параметры с конфига
+  // по type определяет какой Entity_loader создать и передать ему параметры с конфига
   inline Shared<Entity_loader> make_entity_loader(CN<Str> type, CN<Yaml> config) {
     // регистрация загрузчиков объектов
     using Maker = std::function< Shared<Entity_loader> (CN<Yaml>) >;
@@ -249,7 +249,7 @@ struct Entity_mgr::Impl {
     scatters.emplace_back(scatter);
   }
 
-  /// удаление объектов за экраном
+  // удаление объектов за экраном
   inline void bound_check() {
     for (nauto entity: entities) {
       if (entity->status.live && !entity->status.ignore_bound) {

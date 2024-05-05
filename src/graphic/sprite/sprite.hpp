@@ -8,7 +8,7 @@ class Image;
 class Sprite final: public Resource {
 protected:
   Shared<Image> _image {};
-  Shared<Image> _mask {}; /// маска прозрачности. white - 100% alpha
+  Shared<Image> _mask {}; // маска прозрачности. white - 100% alpha
 
 public:
   int X() const;

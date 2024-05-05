@@ -10,15 +10,15 @@
 
 struct Advanced_text_menu::Impl {
   Menu* m_base {};
-  utf32 m_title {}; /// название всего меню
+  utf32 m_title {}; // название всего меню
   Vec m_title_pos {};
-  Rect m_rect {}; /// основная рамка меню
-  Rect m_items_rect {}; /// область для отрисовки пунктов меню
-  Rect m_desc_rect {}; /// область для отрисовки описания пунктов
-  constx Pal8 m_bound_color {Pal8::white}; /// цвет рамок
-  constx double ITEMS_DESC_RATIO {1.0 / 3.5}; /// соотношение области пунктов и описания
-  constx real SCROLL_SPEED {8.0}; /// скорость прокрутки текста в меню
-  real m_items_h_offset {}; /// для плавной прокрутки по тексту
+  Rect m_rect {}; // основная рамка меню
+  Rect m_items_rect {}; // область для отрисовки пунктов меню
+  Rect m_desc_rect {}; // область для отрисовки описания пунктов
+  constx Pal8 m_bound_color {Pal8::white}; // цвет рамок
+  constx double ITEMS_DESC_RATIO {1.0 / 3.5}; // соотношение области пунктов и описания
+  constx real SCROLL_SPEED {8.0}; // скорость прокрутки текста в меню
+  real m_items_h_offset {}; // для плавной прокрутки по тексту
 
   inline explicit Impl(Menu* base, CN<utf32> title, const Rect rect)
   : m_base {base}

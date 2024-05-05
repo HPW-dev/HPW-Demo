@@ -20,7 +20,7 @@ inline bool use_zoom_x2 {false};
 inline bool use_draw_frames {false};
 inline Draw_frames_mode draw_frames_mode {Draw_frames_mode::sprite};
 inline Pool_ptr(Entity) entity {};
-inline Str anim_name {}; /// выбранная анимация из yml
-inline bool other_bg {false}; /// показывать более сложный фон
+inline Str anim_name {}; // выбранная анимация из yml
+inline bool other_bg {false}; // показывать более сложный фон
 
 } // editor ns

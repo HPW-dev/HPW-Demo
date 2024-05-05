@@ -20,7 +20,7 @@ inline std::unordered_map<spawner_t, Str> spawner_type_table {
 
 Strs spawner_type_names();
 
-/// настройки спавнера частиц
+// настройки спавнера частиц
 class Emit_wnd: public Window {
   spawner_t type {spawner_t::statical};
 

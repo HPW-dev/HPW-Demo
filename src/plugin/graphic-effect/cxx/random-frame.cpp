@@ -13,8 +13,8 @@
 NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED uint16_t g_w {}; // ширина растра
 NOT_EXPORTED uint16_t g_h {}; // высота растра
-NOT_EXPORTED int32_t g_length {25}; /// сколько кадров перемешивать
-NOT_EXPORTED int32_t g_old_length {}; /// чтобы определять изменение параметра
+NOT_EXPORTED int32_t g_length {25}; // сколько кадров перемешивать
+NOT_EXPORTED int32_t g_old_length {}; // чтобы определять изменение параметра
 using Buffer = Vector<Pal8>;
 NOT_EXPORTED Vector<Buffer> g_buffers {};
 NOT_EXPORTED std::size_t g_idx {0};

@@ -20,7 +20,7 @@ using Core_func_2d_opt = std::function<Pal8 (int, int, int)>;
 //#define desaturate_f desaturate_average
 #define desaturate_f desaturate_bt601
 
-/// генерит 1D таблицу
+// генерит 1D таблицу
 void gen_table_1d(CN<Str> table_name, Core_func_1d core) {
   static_assert(sizeof(Pal8::value_t) == sizeof(Bytes::value_type));
   Bytes data;
@@ -31,7 +31,7 @@ void gen_table_1d(CN<Str> table_name, Core_func_1d core) {
   std::cout << "complete \"" << table_name << "\"" << std::endl;
 }
 
-/// генерит 2D таблицу
+// генерит 2D таблицу
 void gen_table_2d(CN<Str> table_name, Core_func_2d core) {
   static_assert(sizeof(Pal8::value_t) == sizeof(Bytes::value_type));
   Bytes data;
@@ -43,7 +43,7 @@ void gen_table_2d(CN<Str> table_name, Core_func_2d core) {
   std::cout << "complete \"" << table_name << "\"" << std::endl;
 }
 
-/// генерит 2D таблицу с учётом опционального параметра
+// генерит 2D таблицу с учётом опционального параметра
 void gen_table_2d_opt(CN<Str> table_name, Core_func_2d_opt core) {
   static_assert(sizeof(Pal8::value_t) == sizeof(Bytes::value_type));
   Bytes data;

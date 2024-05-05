@@ -18,9 +18,9 @@ struct Vec;
 
 void load_animations();
 void load_resources();
-/// безопасное получение локализованной строки
+// безопасное получение локализованной строки
 CN<utf32> get_locale_str(CN<Str> key);
-/// сделать круг полностью перекрывающий все полигоны
+// сделать круг полностью перекрывающий все полигоны
 Circle cover_polygons(CN<Vector<Polygon>> polygons);
 
 #define init_store_sprite() hpw::store_sprite = new_shared<Store<Sprite>>();
@@ -38,14 +38,14 @@ CN<Shared<Anim>> make_light_mask(CN<Str> src, CN<Str> dst);
 Str get_random_replay_name();
 [[nodiscard]] Vec get_rand_pos_safe(const real sx, const real sy, const real ex, const real ey);
 [[nodiscard]] Vec get_rand_pos_graphic(const real sx, const real sy, const real ex, const real ey);
-/// рисует нажатые игровые клавиши
+// рисует нажатые игровые клавиши
 void draw_controls(Image& dst);
-/// вычисляет контрольные суммы по экзешнику и data.zip
+// вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
 void init_scene_mgr();
-/// перевести названия уровней сложности
+// перевести названия уровней сложности
 utf32 difficulty_to_str(const Difficulty difficulty);
-/// сохраняет все текстуры в папку в виде атласной текстуры
+// сохраняет все текстуры в папку в виде атласной текстуры
 void save_all_sprites(CN<Str> save_dir, const int MX=512, const int MY=512);
-/// размер всех спрайтов в банке
+// размер всех спрайтов в банке
 std::size_t sizeof_all_sprites();

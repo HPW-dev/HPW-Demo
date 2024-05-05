@@ -4,7 +4,7 @@
 
 class Yaml;
 
-/// Загрузчик пуль
+// Загрузчик пуль
 class Bullet_loader final: public Entity_loader {
   struct Impl;
   Unique<Impl> impl {};

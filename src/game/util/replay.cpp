@@ -173,7 +173,7 @@ struct Replay::Impl {
       read_header();
   } // c-tor
 
-  /// запись заголовка
+  // запись заголовка
   inline void write_header() {
     // версия реплея
     write_str(m_file, m_ver);
@@ -203,7 +203,7 @@ struct Replay::Impl {
     write_data(m_file, hpw::first_level_is_tutorial);
   } // write_header
 
-  /// чтение заголовка
+  // чтение заголовка
   inline void read_header() {
     #ifndef ECOMEM
     {
@@ -323,7 +323,7 @@ struct Replay::Impl {
     return read_key_packet(m_file);
   }
 
-  /// конвертирует дату и время из строки в удобный формат
+  // конвертирует дату и время из строки в удобный формат
   inline static Date to_date(CN<Str> date) {
     assert(!date.empty());
     // разделение на дату и время

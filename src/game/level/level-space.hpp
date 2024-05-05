@@ -3,7 +3,7 @@
 #include "level.hpp"
 #include "util/mem-types.hpp"
 
-/// Уровень в космосе
+// Уровень в космосе
 class Level_space final: public Level {
   nocopy(Level_space);
 

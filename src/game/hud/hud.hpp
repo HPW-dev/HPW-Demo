@@ -2,7 +2,7 @@
 
 class Image;
 
-/// База для интерфейса игрока
+// База для интерфейса игрока
 class Hud {
 public:
   Hud() = default;

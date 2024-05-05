@@ -4,10 +4,10 @@
 
 class Image;
 
-/// отображает эффект искажения воздуха
+// отображает эффект искажения воздуха
 class Heat_distort final {
-  real max_duration {}; /// начальная длительность эффекта
-  real cur_duration {}; /// текущая длительность эффекта
+  real max_duration {}; // начальная длительность эффекта
+  real cur_duration {}; // текущая длительность эффекта
 
 public:
   struct Flags {
@@ -16,18 +16,18 @@ public:
     bool random_block_size: 1 {};
     bool random_power: 1 {};
     bool infinity_duration: 1 {};
-    bool decrease_radius: 1 {}; /// уменьшать радиус эффекта с течением времени
-    bool invert_decrease_radius: 1 {}; /// увеличивать радиус со временем
+    bool decrease_radius: 1 {}; // уменьшать радиус эффекта с течением времени
+    bool invert_decrease_radius: 1 {}; // увеличивать радиус со временем
     bool decrease_power: 1 {};
     bool decrease_block_size: 1 {};
-    bool repeat: 1 {}; /// перезапускать таймер по завершению
+    bool repeat: 1 {}; // перезапускать таймер по завершению
   }; // Flags
 
   Flags flags {};
-  std::size_t radius {}; /// в радиус отображения эффекта
-  std::size_t block_size {}; /// размер искажаемого блока
-  real power {}; /// как далеко блок смещается
-  std::size_t block_count {}; /// сколько искажаемых блоков рисовать
+  std::size_t radius {}; // в радиус отображения эффекта
+  std::size_t block_size {}; // размер искажаемого блока
+  real power {}; // как далеко блок смещается
+  std::size_t block_count {}; // сколько искажаемых блоков рисовать
 
   Heat_distort() = default;
   ~Heat_distort() = default;

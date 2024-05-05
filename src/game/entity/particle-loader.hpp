@@ -4,7 +4,7 @@
 
 class Yaml;
 
-/// Загрузчик для частиц
+// Загрузчик для частиц
 class Particle_loader final: public Entity_loader {
   struct Impl;
   Unique<Impl> impl {};

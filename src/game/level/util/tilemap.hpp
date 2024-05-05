@@ -8,7 +8,7 @@ struct Vec;
 class Image;
 class Yaml;
 
-/// Рисует на экране тайловый фон
+// Рисует на экране тайловый фон
 class Tilemap final {
   struct Impl;
   Unique<Impl> impl {};

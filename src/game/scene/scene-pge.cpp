@@ -30,10 +30,10 @@
 
 struct Scene_pge::Impl {
   Unique<Advanced_text_menu> m_menu {};
-  Strs m_effects {}; /// список путей к файлам эффектов
+  Strs m_effects {}; // список путей к файлам эффектов
   std::size_t m_selected_effect {};
-  bool m_reinit_menu {}; /// вызовет повторную инициализацию меню
-  Image m_ball {}; /// скачет по экрану и нужен для оценки эффекта
+  bool m_reinit_menu {}; // вызовет повторную инициализацию меню
+  Image m_ball {}; // скачет по экрану и нужен для оценки эффекта
   Vec m_ball_pos {};
   constx real BALL_SPEED {2_pps};
   Vec m_ball_vel {BALL_SPEED, BALL_SPEED};

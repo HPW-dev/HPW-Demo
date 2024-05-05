@@ -4,5 +4,5 @@
 class Effect_mgr;
 
 namespace graphic {
-  inline Shared<Effect_mgr> post_effects {}; /// постэффекты
+  inline Shared<Effect_mgr> post_effects {}; // постэффекты
 }

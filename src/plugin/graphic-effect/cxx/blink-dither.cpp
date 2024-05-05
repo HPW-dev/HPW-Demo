@@ -54,9 +54,9 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
 extern "C" EXPORTED void PLUG_CALL plugin_finalize(void) {}
 
 NOT_EXPORTED inline constexpr const std::size_t line_sz = 256;
-/// black, white, red [black .. blink .. white]
+// black, white, red [black .. blink .. white]
 NOT_EXPORTED std::array<Pal8::value_t, line_sz * 2> table_0 {};
-/// black, white, red [black .. blink .. white] окно в 5 кадров мерцания
+// black, white, red [black .. blink .. white] окно в 5 кадров мерцания
 NOT_EXPORTED std::array<Pal8::value_t, line_sz * 6> table_1 {};
 
 NOT_EXPORTED void init_tables() {

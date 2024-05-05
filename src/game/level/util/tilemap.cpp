@@ -14,13 +14,13 @@
 #include "util/path.hpp"
 
 struct Tile {
-  Weak<Sprite> sprite {}; /// текстура с банка
+  Weak<Sprite> sprite {}; // текстура с банка
   Vec offset {};
 };
 
 struct Tilemap::Impl {
 
-  Str m_source_config {}; /// откуда тайл был загружен
+  Str m_source_config {}; // откуда тайл был загружен
   Vector<Tile> m_tiles {}; 
   int m_original_w {};
   int m_original_h {};

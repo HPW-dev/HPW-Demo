@@ -4,7 +4,7 @@
 
 class Yaml;
 
-/// менеджер локализованных строк
+// менеджер локализованных строк
 class Locale final: public Resource {
 public:
   utf32 str {};

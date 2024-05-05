@@ -1,5 +1,5 @@
 #pragma once
-/// @file template funcs
+// @file template funcs
 #include <cassert>
 #include <utility>
 #include <algorithm>
@@ -15,52 +15,52 @@
 
 extern Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src);
 
-/// нарисовать прямоуг-к
+// нарисовать прямоуг-к
 template <blend_pf bf = &blend_past>
 void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col);
 
-/// нарисовать залитый прямоуг-к
+// нарисовать залитый прямоуг-к
 template <blend_pf bf = &blend_past>
 void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col);
 
-/// нарисовать залитый круг
+// нарисовать залитый круг
 template <blend_pf bf = &blend_past>
 void draw_circle_filled(Image& dst, const Vec pos,
   int radius, const Pal8 col);
 
-/// копирует одну картинку в другую
+// копирует одну картинку в другую
 template <blend_pf bf = &blend_past>
 void insert(Image& dst, CN<Image> src, Vec pos={}, int optional=0);
 
-/// вставка с шахматным миганием
+// вставка с шахматным миганием
 template<blend_pf bf = &blend_past>
 void insert_blink(Image& dst, CN<Image> src, Vec pos={},
   int timer=0, int optional=0);
 
-/// вставка с черезстрочным миганием
+// вставка с черезстрочным миганием
 template<blend_pf bf = &blend_past>
 void insert_interlace(Image& dst, CN<Image> src, Vec pos={},
   int timer=0, int optional=0);
 
-/// отрисовка линии
+// отрисовка линии
 template<blend_pf bf = &blend_past>
 void draw_line(Image& dst, Vec p1, const Vec p2, Pal8 color);
 
-/// копирует спрайт в картинку (шаблонная версия)
+// копирует спрайт в картинку (шаблонная версия)
 template <blend_pf bf = &blend_past>
 void insert(Image& dst, CN<Sprite> src, Vec pos={}, int optional=0);
 
-/// круг без заливки
+// круг без заливки
 template <blend_pf bf = &blend_past>
 void draw_circle(Image& dst, const Vec pos, int radius,
   const Pal8 col);
 
-/// рисует крестик
+// рисует крестик
 template <blend_pf bf = &blend_past>
 void draw_cross(Image& dst, const Vec pos, const Pal8 col,
   uint size=3);
 
-/// рисует диагональный крестик
+// рисует диагональный крестик
 template <blend_pf bf = &blend_past>
 void draw_cross_diagonal(Image& dst, const Vec pos, const Pal8 col,
   uint size=3);

@@ -14,8 +14,8 @@ struct Camera::Impl {
   Vec screen_center {};
   constx double max_shake_time = 0.37;
   constx double shake_amplify = 1.0 / 3.0;
-  constx double shake_len = 9; /// на сколько сильное смещение при тряске
-  double m_shake_time {}; /// пока не кончится, камера будет трястись
+  constx double shake_len = 9; // на сколько сильное смещение при тряске
+  double m_shake_time {}; // пока не кончится, камера будет трястись
 
   inline Impl()
   : screen_center(graphic::width / 2.0, graphic::height / 2.0)

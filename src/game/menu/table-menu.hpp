@@ -4,7 +4,7 @@
 #include "util/str.hpp"
 #include "util/math/num-types.hpp"
 
-/// Более красивое текстовое меню с описанием
+// Более красивое текстовое меню с описанием
 class Table_menu: public Menu {
   struct Impl;
   Unique<Impl> impl {};

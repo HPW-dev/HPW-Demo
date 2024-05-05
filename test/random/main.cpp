@@ -52,7 +52,7 @@ void print_rnd_samples() {
   std::cout << "rndr_fast: " << rndr_fast() << std::endl;
 }
 
-/// визуальный тест равномерности - значения при определённых сидах
+// визуальный тест равномерности - значения при определённых сидах
 void test_1() {
   std::cout << "test 1" << std::endl;
   set_rnd_seed(std::time({}));
@@ -110,7 +110,7 @@ void print(CN<Answers> answers) {
   std::cout << "rndr:\t\t" << +answers.val_rndr << std::endl;
 } // print
 
-/// тест совпадения значений
+// тест совпадения значений
 void test_2() {
   std::cout << "\nreset seed test" << std::endl;
   set_rnd_seed(1703101347u);
@@ -133,7 +133,7 @@ void multicore_test(Answers& before, Answers& after) {
   after = gen();
 }
 
-/// проверяет совпадение начений при многопоточных вызовах
+// проверяет совпадение начений при многопоточных вызовах
 void test_3() {
   std::cout << "\nmultithread test" << std::endl;
   auto seed = time({});

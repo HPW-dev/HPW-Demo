@@ -3,7 +3,7 @@
 
 struct Vec;
 
-/// камера игры
+// камера игры
 class Camera final {
   struct Impl;
   Unique<Impl> impl {};
@@ -11,11 +11,11 @@ class Camera final {
 public:
   Camera();
   ~Camera();
-  Vec get_offset() const; /// узнать смещение для отрисовки
-  void add_shake(double intense); /// добавить тряску
+  Vec get_offset() const; // узнать смещение для отрисовки
+  void add_shake(double intense); // добавить тряску
   void update(double dt);
 };
 
 namespace graphic {
-inline Shared<Camera> camera {}; /// камера игрока
+inline Shared<Camera> camera {}; // камера игрока
 }

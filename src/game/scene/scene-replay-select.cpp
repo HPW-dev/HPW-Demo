@@ -96,7 +96,7 @@ struct Scene_replay_select::Impl {
     }
   } // load_replays
 
-  /// для сравнения времени создания реплея
+  // для сравнения времени создания реплея
   inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
     // год
     if (a.date.year < b.date.year) return false;

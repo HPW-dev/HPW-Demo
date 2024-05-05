@@ -8,7 +8,7 @@ static Pal8::value_t desr_BT601(int R, int G, int B)
 static Pal8::value_t desr_average(int R, int G, int B)
   { return (R + G + B) / 3; }
 
-/// преобразование в палитру hpw
+// преобразование в палитру hpw
 template <Pal8::value_t (*kernel)(int R, int G, int B)>
 Pal8 rgb_to_pal8(int R, int G, int B) {
   // если R оттенок сильнее G и B, то это красный цвет с палитры

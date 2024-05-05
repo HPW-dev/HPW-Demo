@@ -5,7 +5,7 @@
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 
-/// определяет размер файла в байтах
+// определяет размер файла в байтах
 inline auto file_size(auto &file) {
   file.seekg(0, std::ios::end);
   auto size {file.tellg()};

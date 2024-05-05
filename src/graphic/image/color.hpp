@@ -15,10 +15,10 @@ struct Rgb24 {
 struct Pal8 {
   using value_t = byte;
   constx value_t black {0};
-  constx value_t gray_end {221}; /// WHITE2
+  constx value_t gray_end {221}; // WHITE2
   constx value_t red_start {222};
-  constx value_t red {254}; /// red end
-  constx value_t white {255}; /// WHITE1
+  constx value_t red {254}; // red end
+  constx value_t white {255}; // WHITE1
   constx value_t red_black {red_start};
   constx value_t red_end {red};
   constx value_t red_mid {red_start + (red_end - red_start) / 2};
@@ -27,7 +27,7 @@ struct Pal8 {
   constx value_t gray {scast<int>(gray_end) / 2};
   constx value_t mask_visible {black};
   constx value_t mask_invisible {white};
-  constx value_t none {mask_invisible}; /// for image get bound func
+  constx value_t none {mask_invisible}; // for image get bound func
   value_t val {black};
 
   Pal8() = default;
@@ -69,9 +69,9 @@ struct Pal8 {
   Pal8 operator -(const Pal8 x) const;
   Pal8 operator *(const Pal8 x) const;
   Pal8 operator ~() const;
-  real to_real() const; /// преобразование цвета в число 0..1
+  real to_real() const; // преобразование цвета в число 0..1
   
-  /// создаёт цвет из числа в диапазоне 0..1
+  // создаёт цвет из числа в диапазоне 0..1
   inline static constexpr Pal8 from_real(real src, bool is_red = false);
 }; // Pal8
 

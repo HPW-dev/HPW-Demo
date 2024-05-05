@@ -1,7 +1,7 @@
 #pragma once
 #include "host-imgui.hpp"
 
-/// мейник для редактора
+// мейник для редактора
 class Editor final: public Host_imgui {
   nocopy(Editor);
 

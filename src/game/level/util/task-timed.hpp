@@ -3,7 +3,7 @@
 #include "level-tasks.hpp"
 #include "util/math/timer.hpp"
 
-/// задача с таймаутом
+// задача с таймаутом
 struct Timed_task {
   Level_task m_task {};
   Timer m_timer {};

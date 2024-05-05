@@ -7,15 +7,15 @@ class Image;
 class Menu_item;
 using Menu_items = Vector<Shared<Menu_item>>;
 
-/// база для реализаций менюшек
+// база для реализаций менюшек
 class Menu {
 protected:
-  Menu_items m_items {}; /// пункты меню
-  std::size_t m_cur_item {}; /// текущий выбранный элемент
+  Menu_items m_items {}; // пункты меню
+  std::size_t m_cur_item {}; // текущий выбранный элемент
   bool m_item_selected {false};
 
-  void next_item(); /// перейти к следующему элементу
-  void prev_item(); /// перейти к предыдущему элементу
+  void next_item(); // перейти к следующему элементу
+  void prev_item(); // перейти к предыдущему элементу
 
 public:
   Menu() = default;

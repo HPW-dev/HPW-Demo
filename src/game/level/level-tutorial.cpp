@@ -30,9 +30,9 @@
 struct Level_tutorial::Impl {
   Level_tutorial* master {};
   Level_tasks tasks {};
-  utf32 bg_text {}; /// текст, который показывается на фоне
+  utf32 bg_text {}; // текст, который показывается на фоне
   Vec bg_offset {};
-  bool enable_epilepsy_bg {}; /// пыточный фон для последней секции
+  bool enable_epilepsy_bg {}; // пыточный фон для последней секции
 
   inline explicit Impl(Level_tutorial* _master): master{_master}
     { restart(); }
@@ -146,7 +146,7 @@ struct Level_tutorial::Impl {
     graphic::font->draw(dst, pos, bg_text, &blend_alpha, text_brightness);
   }
 
-  /// Кнопки движения. Пропуск, когда всё нажато
+  // Кнопки движения. Пропуск, когда всё нажато
   struct Task_draw_motion_keys {
     Impl* master {};
     bool key_l {};
@@ -169,7 +169,7 @@ struct Level_tutorial::Impl {
     }
   }; // Task_draw_motion_keys
 
-  /// показать кнопки движения
+  // показать кнопки движения
   inline void draw_motion_keys() {
     bg_text = get_locale_str("scene.tutorial.text.move_keys");
     #define KEY_TEXT(key_name) { \
@@ -186,7 +186,7 @@ struct Level_tutorial::Impl {
     #undef KEY_TEXT
   } // draw_motion_keys
 
-  /// показать кнопку стрельбы
+  // показать кнопку стрельбы
   inline void draw_shoot_key() {
     bg_text = get_locale_str("scene.tutorial.text.shoot_key");
     const bool pressed = is_pressed(hpw::keycode::shoot);
@@ -196,7 +196,7 @@ struct Level_tutorial::Impl {
       scope_l + hpw::keys_info.find(hpw::keycode::shoot)->name + scope_r;
   }
 
-  /// выйти с уровня
+  // выйти с уровня
   inline static bool exit_from_level(double dt) {
     hpw::level_mgr->finalize_level();
     hpw::need_tutorial = false;
@@ -206,12 +206,12 @@ struct Level_tutorial::Impl {
   inline Entity* make_wave(const Vec pos)
     { return hpw::entity_mgr->make({}, "bullet.sphere.wave.tutorial", pos); }
 
-  /// спавнит пули по краям экрана, чтобы заставить игрока подвигаться
+  // спавнит пули по краям экрана, чтобы заставить игрока подвигаться
   struct Spawner_border_bullet {
     Impl* master {};
-    uint count {}; /// когда станет 0, завершить
-    Timer spwan_timer {}; /// скорость спавна пуль
-    real wave_speed = 1.4_pps; /// скорость пули
+    uint count {}; // когда станет 0, завершить
+    Timer spwan_timer {}; // скорость спавна пуль
+    real wave_speed = 1.4_pps; // скорость пули
 
     inline bool operator()(double dt) {
       master->draw_motion_keys();
@@ -268,19 +268,19 @@ struct Level_tutorial::Impl {
     }
   }; // Spawner_border_bullet
 
-  /// заставить игрока подвигаться вверх и вниз чтобы увидеть разницу в скорости
+  // заставить игрока подвигаться вверх и вниз чтобы увидеть разницу в скорости
   struct Up_speed_test {
-    constx real wave_speed_down {2.25_pps}; /// скорость пуль при движении волны вниз
-    constx real wave_speed_up {4.5_pps}; /// скорость пуль при движении волны вверх
-    constx real delay {2.2}; /// сколько подождать перед спавном следующей волны
-    constx real step {25}; /// шаг между пулями
-    constx real spawn_delay {0.1}; /// сколько ждать перед спавном следующей пули
+    constx real wave_speed_down {2.25_pps}; // скорость пуль при движении волны вниз
+    constx real wave_speed_up {4.5_pps}; // скорость пуль при движении волны вверх
+    constx real delay {2.2}; // сколько подождать перед спавном следующей волны
+    constx real step {25}; // шаг между пулями
+    constx real spawn_delay {0.1}; // сколько ждать перед спавном следующей пули
 
     Impl* master {};
-    uint repeats {3}; /// сколько раз спавнить волны
-    real spawn_height {}; /// высота спавна волны
-    bool reverse {true}; /// спавнить волны снизу вверх
-    real wave_speed {}; /// скорость пуль
+    uint repeats {3}; // сколько раз спавнить волны
+    real spawn_height {}; // высота спавна волны
+    bool reverse {true}; // спавнить волны снизу вверх
+    real wave_speed {}; // скорость пуль
     Timer spwan_timer {spawn_delay};
     Timer delay_timer {};
 
@@ -330,13 +330,13 @@ struct Level_tutorial::Impl {
     }
   }; // Up_speed_test
 
-  /// создаёт противников, которые не стреляют в игрока
+  // создаёт противников, которые не стреляют в игрока
   struct Spawner_enemy_noshoot {
     Impl* master {};
-    Timer spawn_timer {0.5}; /// через сколько спавнить противника
-    Timer lifetime {}; /// сколько времени будет работать спавнер
-    bool check_death {}; /// начать проверять, что все соспавненные объекты умерли
-    uint live_count {}; /// сколько объектов сейчас живы
+    Timer spawn_timer {0.5}; // через сколько спавнить противника
+    Timer lifetime {}; // сколько времени будет работать спавнер
+    bool check_death {}; // начать проверять, что все соспавненные объекты умерли
+    uint live_count {}; // сколько объектов сейчас живы
 
     explicit Spawner_enemy_noshoot(Impl* _master, const real _total_time=1.0)
     : master {_master}
@@ -361,7 +361,7 @@ struct Level_tutorial::Impl {
       return false;
     } // op ()
 
-    /// движение зигзагом для противника
+    // движение зигзагом для противника
     struct Zigzag_motion {
       real state {};
 
@@ -383,13 +383,13 @@ struct Level_tutorial::Impl {
     }
   }; // Spawner_enemy_noshoot
 
-  /// создаёт стреляющий противников по бокам
+  // создаёт стреляющий противников по бокам
   struct Spawner_enemy_shoot {
     Impl* master {};
-    Timer spawn_timer {0.8}; /// через сколько спавнить противника
-    Timer lifetime {}; /// сколько времени будет работать спавнер
-    bool check_death {}; /// начать проверять, что все соспавненные объекты умерли
-    uint live_count {}; /// сколько объектов сейчас живы
+    Timer spawn_timer {0.8}; // через сколько спавнить противника
+    Timer lifetime {}; // сколько времени будет работать спавнер
+    bool check_death {}; // начать проверять, что все соспавненные объекты умерли
+    uint live_count {}; // сколько объектов сейчас живы
 
     explicit Spawner_enemy_shoot(Impl* _master, const real _total_time=1.0)
     : master {_master}
@@ -416,7 +416,7 @@ struct Level_tutorial::Impl {
     Collidable* spawn(const Vec pos) {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
       enemy->phys.set_vel({0, 1_pps});
-      /// стрельба в игрока
+      // стрельба в игрока
       enemy->move_update_callback([](Entity& self, double dt)->void {
         if (rndu(1'500) == 0) {
           auto bullet = hpw::entity_mgr->make(&self, "enemy.tutorial.bullet",
@@ -432,16 +432,16 @@ struct Level_tutorial::Impl {
     }
   }; // Spawner_enemy_shoot
 
-  /// спавн волн противников, чтобы показать игроку как копить ману
+  // спавн волн противников, чтобы показать игроку как копить ману
   struct Energy_test {
     Impl* master {};
-    Timer spawn_delay {0.3666}; /// сколько ждать между спавном
-    constx uint WAVES {8}; /// сколько волн врагов в пачке
+    Timer spawn_delay {0.3666}; // сколько ждать между спавном
+    constx uint WAVES {8}; // сколько волн врагов в пачке
     constx real ENEMY_SPEED {2.5_pps};
     uint wave {WAVES};
-    bool delay_state {false}; /// не спавнить врагов, когда true
-    Timer wave_delay {3.0}; /// задержка перед волнами
-    uint repeats {4}; /// сколько повторять волны
+    bool delay_state {false}; // не спавнить врагов, когда true
+    Timer wave_delay {3.0}; // задержка перед волнами
+    uint repeats {4}; // сколько повторять волны
 
     inline explicit Energy_test(Impl* _master): master {_master} {}
 
@@ -475,7 +475,7 @@ struct Level_tutorial::Impl {
         delay_state = true;
     }
 
-    /// создаёт линию противников
+    // создаёт линию противников
     inline void spawn_line() {
       constexpr real STEP = 50;
       for (real x = 0; x < graphic::width; x += STEP) {
@@ -486,7 +486,7 @@ struct Level_tutorial::Impl {
     }
   }; // Energy_test
 
-  /// показать кнопку фокусировки
+  // показать кнопку фокусировки
   inline bool draw_focus_key() {
     bg_text = get_locale_str("scene.tutorial.text.focus_key");
     cauto key = hpw::keycode::focus;
@@ -497,16 +497,16 @@ struct Level_tutorial::Impl {
     return pressed;
   }
 
-  /// спавнит сетку сужающихся пуль чтобы научить игрока медленно двигаться
+  // спавнит сетку сужающихся пуль чтобы научить игрока медленно двигаться
   struct Focus_test {
     Impl* master {};
-    Timer lifetime_state_1 {18.5}; /// сколько продлится спавн пуль сверху
-    Timer lifetime_state_2 {18.5}; /// сколько продлится спавн пуль сбоку
-    Timer bullet_delay {0.23}; /// задержка перед спавном пули
+    Timer lifetime_state_1 {18.5}; // сколько продлится спавн пуль сверху
+    Timer lifetime_state_2 {18.5}; // сколько продлится спавн пуль сбоку
+    Timer bullet_delay {0.23}; // задержка перед спавном пули
     constx real BULLET_SPEED {1.5_pps};
-    constx real MAX_STEP {110}; /// максимальное расстояние между пулями на старте
-    constx real MIN_STEP {64}; /// конечное расстояние между пулями
-    constx real STEP_DECREASE {0.01717}; /// скорость изменения расстояния между пулями
+    constx real MAX_STEP {110}; // максимальное расстояние между пулями на старте
+    constx real MIN_STEP {64}; // конечное расстояние между пулями
+    constx real STEP_DECREASE {0.01717}; // скорость изменения расстояния между пулями
     real step_x {MAX_STEP};
     real step_y {MAX_STEP};
     bool complete_state_1 {};

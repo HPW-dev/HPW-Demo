@@ -46,13 +46,13 @@ typedef uint8_t pal8_t;
 typedef const char* cstr_t;
 typedef float real_t;
 
-/// name, description, value ref, speed step, min, max
+// name, description, value ref, speed step, min, max
 typedef void (*registrate_param_f32_ft)(cstr_t, cstr_t, real_t*,
   const real_t, const real_t, const real_t);
-/// name, description, value ref, speed step, min, max
+// name, description, value ref, speed step, min, max
 typedef void (*registrate_param_i32_ft)(cstr_t, cstr_t, int32_t*,
   const int32_t, const int32_t, const int32_t);
-/// name, description, value ref
+// name, description, value ref
 typedef void (*registrate_param_bool_ft)(cstr_t, cstr_t, bool*);
 
 struct rgb24_t {
@@ -61,7 +61,7 @@ struct rgb24_t {
   uint8_t b;
 };
 
-/// Передаёт данные в эффект
+// Передаёт данные в эффект
 struct context_t {
   pal8_t* dst;
   uint16_t w;
@@ -71,7 +71,7 @@ struct context_t {
   registrate_param_bool_ft registrate_param_bool;
 };
 
-/// для получения данных с эффекта
+// для получения данных с эффекта
 struct result_t {
   uint8_t version;
   cstr_t full_name;

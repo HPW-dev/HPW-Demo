@@ -3,9 +3,9 @@
 #include "util/mem-types.hpp"
 #include "util/vector-types.hpp"
 
-/// корневое окно редактора
+// корневое окно редактора
 class Root_wnd: public Window {
-  Vector<Shared<Window>> wnds {}; /// all windows
+  Vector<Shared<Window>> wnds {}; // all windows
   real other_bg_pos {};
 
   void init_root_wnd();

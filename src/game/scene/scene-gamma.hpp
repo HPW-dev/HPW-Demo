@@ -2,7 +2,7 @@
 #include "util/mem-types.hpp"
 #include "scene.hpp"
 
-/// настройки гаммы
+// настройки гаммы
 class Scene_gamma final: public Scene {
   struct Impl;
   Unique<Impl> impl {};

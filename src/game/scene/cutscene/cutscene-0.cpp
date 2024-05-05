@@ -10,19 +10,19 @@
 #include "util/math/circle.hpp"
 #include "util/math/random.hpp"
 
-/// рисует космос в рамочке
+// рисует космос в рамочке
 struct Space {
-  /// слои с разной яркостью
+  // слои с разной яркостью
   struct Layers {
-    Pal8 m_brightness {}; /// яркость фона
+    Pal8 m_brightness {}; // яркость фона
 
-    /// планетарные системы
+    // планетарные системы
     struct System {
       Circle star {};
       struct Planet {
-        real r {}; /// радиус планеты
-        real deg {}; /// по какому углу от солнца расположена
-        real range {}; /// на какое растояние от солнца удалена планета
+        real r {}; // радиус планеты
+        real deg {}; // по какому углу от солнца расположена
+        real range {}; // на какое растояние от солнца удалена планета
       };
       Vector<Planet> planets {};
 

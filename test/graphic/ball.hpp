@@ -5,7 +5,7 @@
 
 class Image;
 
-/// ball for graphic-test
+// ball for graphic-test
 class Ball final {
 public:
   Vec pos = {};

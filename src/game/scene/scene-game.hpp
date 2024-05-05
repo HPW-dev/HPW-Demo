@@ -5,7 +5,7 @@
 struct Vec;
 class Replay;
 
-/// сцена игрового процесса
+// сцена игрового процесса
 class Scene_game final: public Scene {
   Unique<Replay> replay {};
   bool m_start_tutorial {false};
@@ -17,8 +17,8 @@ class Scene_game final: public Scene {
   void replay_save_keys();
   void replay_load_keys();
   void post_draw(Image& dst) const;
-  void draw_border(Image& dst) const; /// рамка по краям экрана
-  Vec get_level_vel() const; /// безопасно получить сдвиг кординат уровня
+  void draw_border(Image& dst) const; // рамка по краям экрана
+  Vec get_level_vel() const; // безопасно получить сдвиг кординат уровня
   void save_named_replay();
 
 public:

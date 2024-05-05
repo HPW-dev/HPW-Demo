@@ -1,7 +1,7 @@
 #pragma once
 #include "host/host-glfw.hpp"
 
-/// Imgui рендерер с GLFW
+// Imgui рендерер с GLFW
 class Host_imgui: public Host_glfw {
   void init_color_theme();
   bool inited {false};

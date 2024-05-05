@@ -84,7 +84,7 @@ struct Hud_asci::Impl {
     return std::ceil(safe_div<double, double>(val, max) * size_bar);
   }
 
-  /// рисует прозрачный текст с чёрными контурами
+  // рисует прозрачный текст с чёрными контурами
   inline void draw_expanded_text(Image& dst, CN<utf32> txt, const Vec pos) const {
     // рендер в буфферы под текст
     Image hp_overlay(graphic::font->text_width(txt) + 2,

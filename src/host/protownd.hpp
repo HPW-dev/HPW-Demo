@@ -4,13 +4,13 @@
 #include "host.hpp"
 #include "resize.hpp"
 
-/// окно без рендерера
+// окно без рендерера
 class Protownd: public Host {
   nocopy(Protownd);
 
 protected:
   Vector<float> pal_rgb {};
-  int w_ = 0, h_ = 0; /// разрешение экрана
+  int w_ = 0, h_ = 0; // разрешение экрана
   Resize_ctx window_ctx_ {};
 
   void save_screenshot() const override;
