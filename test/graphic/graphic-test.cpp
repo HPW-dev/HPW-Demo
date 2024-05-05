@@ -12,8 +12,9 @@
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/common.hpp"
+#include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/game-archive.hpp"
@@ -30,8 +31,7 @@ Graphic_test::Graphic_test(int argc, char *argv[])
 void Graphic_test::init() {
   Host_glfw::init();
   graphic_tests();
-  hpw_log("\nGpragic test usage:\n"
-    "\tshoot back key - VSync\n");
+  hpw_log("Gpragic test usage: shoot back key - VSync\n");
   bg_tmr = new_shared<Timer>(5.0);
   board_2_tmr = new_shared<Timer>(0.5);
   // добавление фонов
@@ -70,11 +70,10 @@ void Graphic_test::update(double dt) {
   
   // переключает VSync
   static bool fps_lock = graphic::get_vsync();
-  if (is_pressed_once(hpw::keycode::focus)) {
+  if (is_pressed_once(hpw::keycode::shoot)) {
     fps_lock = !fps_lock;
     detailed_log("VSync:" << s2yn(fps_lock) << std::endl);
-    hpw::set_vsync(fps_lock);
-    graphic::set_target_fps(fps_lock ? 120 : 3'000);
+    graphic::set_disable_frame_limit(fps_lock);
     graphic::wait_frame = fps_lock;
   }
 

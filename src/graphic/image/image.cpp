@@ -70,18 +70,32 @@ void Image::init(CN<Image> img) noexcept {
   pix = img.pix;
 }
 
-const Pal8 Image::get(int i, Image_get mode) const {
+[[gnu::const]]
+const Pal8 Image::get(int i, Image_get mode, const Pal8 default_val) const noexcept {
   if (*this && index_bound(i, mode))
     return operator[](i);
-  static Pal8 none_color {Pal8::none};
-  return none_color;
+  return default_val;
 }
 
-const Pal8 Image::get(int x, int y, Image_get mode) const {
+[[gnu::const]]
+const Pal8 Image::get(int x, int y, Image_get mode, const Pal8 default_val) const noexcept {
   if (*this && index_bound(x, y, mode))
     return operator()(x, y);
-  static Pal8 none_color {Pal8::none};
-  return none_color;
+  return default_val;
+}
+
+[[gnu::const]]
+Pal8& Image::get(int i, Image_get mode, Pal8& out_of_bound_val) noexcept {
+  if (*this && index_bound(i, mode))
+    return operator[](i);
+  return out_of_bound_val;
+}
+
+[[gnu::const]]
+Pal8& Image::get(int x, int y, Image_get mode, Pal8& out_of_bound_val) noexcept {
+  if (*this && index_bound(x, y, mode))
+    return operator()(x, y);
+  return out_of_bound_val;
 }
 
 bool Image::index_bound(int& x, int& y, Image_get mode) const {
@@ -156,8 +170,10 @@ bool Image::index_bound(int& i, Image_get mode) const {
 } // index_bound i
 
 void Image::assign_resize(int x, int y) noexcept {
-  auto new_size = std::size_t(x * y);
-  return_if (new_size == 0);
+  const std::size_t new_size = x * y;
+  assert(new_size > 0);
+  assert(new_size <= 16'000 * 16'000);
+
   if (new_size <= pix.size()) {
     ccast<int&>(X) = x;
     ccast<int&>(Y) = y;
@@ -169,7 +185,7 @@ void Image::assign_resize(int x, int y) noexcept {
 }
 
 bool Image::size_check(int x, int y) const noexcept {
-  bool ret = x > 0 && x <= 4'048 && y > 0 && y <= 4'048;
+  const bool ret = x > 0 && x <= 4'048 && y > 0 && y <= 4'048;
   detailed_iflog( !ret, "warning: bad sizes for image init");
   return ret;
 }

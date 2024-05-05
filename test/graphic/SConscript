@@ -36,10 +36,10 @@ else: # windows
     thirdparty_dir + "include/_windows_only",
     thirdparty_dir + "include/_windows_only/GLEW"
   ])
-  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  used_libs.extend(["glfw3dll", "glew32", "opengl32"])
   lib_path.extend([
-    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
     thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
+    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
     thirdparty_dir + "lib/yaml-cpp/"
   ])
 
@@ -56,10 +56,12 @@ sources = [
   src_dir + "graphic/util/graphic-util.cpp",
   src_dir + "graphic/sprite/sprite.cpp",
 
-  src_dir + "game/game-sync.cpp",
   src_dir + "game/util/keybits.cpp",
   src_dir + "game/util/game-archive.cpp",
-  src_dir + "game/util/game-config.cpp",
+  src_dir + "game/util/config.cpp",
+  src_dir + "game/util/logo.cpp",
+  src_dir + "game/util/sync.cpp",
+  
 
   src_dir + "host/protownd.cpp",
   src_dir + "host/resize.cpp",

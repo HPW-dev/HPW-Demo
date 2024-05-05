@@ -35,21 +35,25 @@ public:
   void swap(Image& other) noexcept;
   void fill(const Pal8 col) noexcept;
 
-  inline Pal8& operator [](int i) { return pix[i]; }
+  inline Pal8& operator [](int i) noexcept { return pix[i]; }
   /// TODO в новом стандарте заменить на []
-  inline Pal8& operator ()(int x, int y) { return pix[y * X + x]; }
+  inline Pal8& operator ()(int x, int y) noexcept { return pix[y * X + x]; }
 
-  inline const Pal8 operator [](int i) const { return pix[i]; }
+  inline const Pal8 operator [](int i) const noexcept { return pix[i]; }
   /// TODO в новом стандарте заменить на []
-  inline const Pal8 operator ()(int x, int y) const { return pix[y * X + x]; }
+  inline const Pal8 operator ()(int x, int y) const noexcept { return pix[y * X + x]; }
 
-  inline auto begin() { return pix.begin(); }
-  inline auto begin() const { return pix.begin(); }
-  inline auto end() { return pix.end(); }
-  inline auto end() const { return pix.end(); }
+  [[gnu::const]] inline auto begin() noexcept { return pix.begin(); }
+  [[gnu::const]] inline auto begin() const noexcept { return pix.begin(); }
+  [[gnu::const]] inline auto end() noexcept { return pix.end(); }
+  [[gnu::const]] inline auto end() const noexcept { return pix.end(); }
+  [[gnu::const]] inline auto cbegin() const noexcept { return pix.cbegin(); }
+  [[gnu::const]] inline auto cend() const noexcept { return pix.cend(); }
 
-  const Pal8 get(int i, Image_get mode = {}) const;
-  const Pal8 get(int x, int y, Image_get mode = {}) const;
+  [[gnu::const]] const Pal8 get(int i, Image_get mode={}, const Pal8 default_val=Pal8::none) const noexcept;
+  [[gnu::const]] const Pal8 get(int x, int y, Image_get mode={}, const Pal8 default_val=Pal8::none) const noexcept;
+  [[gnu::const]] Pal8& get(int i, Image_get mode, Pal8& out_of_bound_val) noexcept;
+  [[gnu::const]] Pal8& get(int x, int y, Image_get mode, Pal8& out_of_bound_val) noexcept;
 
   /// меняет размер картинки, если уменьшается, значит буффер не перевыделяем
   void assign_resize(int x, int y) noexcept;
