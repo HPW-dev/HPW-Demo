@@ -73,6 +73,28 @@ void set_default() {
   graphic::enable_motion_interp = true;
 } // set_default
 
+void set_high_plus_stream() {
+  graphic::set_vsync(false);
+  graphic::set_disable_frame_limit(false);
+  graphic::set_target_fps(graphic::get_target_vsync_fps() + 15);
+  graphic::blink_motion_blur = false;
+  graphic::blink_particles = false;
+  graphic::blur_quality_mul = 0.5;
+  graphic::cpu_safe = false;
+  graphic::disable_heat_distort_while_lag = false;
+  graphic::wait_frame = false;
+  graphic::double_buffering = true;
+  graphic::enable_heat_distort = true;
+  graphic::enable_light = true;
+  graphic::enable_motion_blur = true;
+  graphic::light_quality = Light_quality::high;
+  graphic::motion_blur_quality_reduct = false;
+  graphic::frame_skip = 1;
+  graphic::auto_frame_skip = true;
+  graphic::enable_motion_interp = true;
+  hpw::set_resize_mode(graphic::default_resize_mode);
+} // set_high_plus_stream
+
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
   return new_shared<Menu_list_item>(
     get_locale_str("scene.graphic_menu.pressets.name"),
@@ -103,6 +125,11 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
           graphic::auto_frame_skip = true;
           graphic::enable_motion_interp = false;
         }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.pressets.high_quality_plus_stream"),
+        get_locale_str("scene.graphic_menu.description.pressets.high_quality_plus_stream"),
+        &set_high_plus_stream
       },
       Menu_list_item::Item {
         get_locale_str("scene.graphic_menu.pressets.high_quality"),
