@@ -95,6 +95,46 @@ void set_high_plus_stream() {
   hpw::set_resize_mode(graphic::default_resize_mode);
 } // set_high_plus_stream
 
+void set_low_pc() {
+  graphic::set_vsync(false);
+  graphic::set_disable_frame_limit(true);
+  hpw::set_resize_mode(graphic::default_resize_mode);
+  graphic::autoopt_timeout_max = 15;
+  graphic::blink_particles = true;
+  graphic::cpu_safe = false;
+  graphic::wait_frame = false;
+  graphic::double_buffering = true;
+  graphic::enable_heat_distort = false;
+  graphic::enable_light = false;
+  graphic::enable_motion_blur = false;
+  graphic::light_quality = Light_quality::low;
+  graphic::motion_blur_quality_reduct = true;
+  graphic::frame_skip = 5;
+  graphic::auto_frame_skip = true;
+  graphic::enable_motion_interp = false;
+} // set_low_pc
+
+void set_high_quality() {
+  graphic::set_vsync(true);
+  graphic::set_disable_frame_limit(false);
+  graphic::blink_motion_blur = false;
+  graphic::blink_particles = false;
+  graphic::blur_quality_mul = 0.5;
+  graphic::cpu_safe = true;
+  graphic::disable_heat_distort_while_lag = false;
+  graphic::wait_frame = true;
+  graphic::double_buffering = true;
+  graphic::enable_heat_distort = true;
+  graphic::enable_light = true;
+  graphic::enable_motion_blur = true;
+  graphic::light_quality = Light_quality::high;
+  graphic::motion_blur_quality_reduct = false;
+  graphic::frame_skip = 0;
+  graphic::auto_frame_skip = false;
+  graphic::enable_motion_interp = true;
+  hpw::set_resize_mode(graphic::default_resize_mode);
+} // set_high_quality
+
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
   return new_shared<Menu_list_item>(
     get_locale_str("scene.graphic_menu.pressets.name"),
@@ -107,24 +147,7 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
       Menu_list_item::Item {
         get_locale_str("scene.graphic_menu.pressets.low_pc"),
         get_locale_str("scene.graphic_menu.description.pressets.low_pc"),
-        []{
-          graphic::set_vsync(false);
-          graphic::set_disable_frame_limit(true);
-          hpw::set_resize_mode(graphic::default_resize_mode);
-          graphic::autoopt_timeout_max = 15;
-          graphic::blink_particles = true;
-          graphic::cpu_safe = false;
-          graphic::wait_frame = false;
-          graphic::double_buffering = true;
-          graphic::enable_heat_distort = false;
-          graphic::enable_light = false;
-          graphic::enable_motion_blur = false;
-          graphic::light_quality = Light_quality::low;
-          graphic::motion_blur_quality_reduct = true;
-          graphic::frame_skip = 5;
-          graphic::auto_frame_skip = true;
-          graphic::enable_motion_interp = false;
-        }
+        &set_low_pc
       },
       Menu_list_item::Item {
         get_locale_str("scene.graphic_menu.pressets.high_quality_plus_stream"),
@@ -134,28 +157,9 @@ Shared<Menu_list_item> Scene_graphic::get_preset_item() {
       Menu_list_item::Item {
         get_locale_str("scene.graphic_menu.pressets.high_quality"),
         get_locale_str("scene.graphic_menu.description.pressets.high_quality"),
-        []{
-          graphic::set_vsync(true);
-          graphic::set_disable_frame_limit(false);
-          graphic::blink_motion_blur = false;
-          graphic::blink_particles = false;
-          graphic::blur_quality_mul = 0.5;
-          graphic::cpu_safe = true;
-          graphic::disable_heat_distort_while_lag = false;
-          graphic::wait_frame = true;
-          graphic::double_buffering = true;
-          graphic::enable_heat_distort = true;
-          graphic::enable_light = true;
-          graphic::enable_motion_blur = true;
-          graphic::light_quality = Light_quality::high;
-          graphic::motion_blur_quality_reduct = false;
-          graphic::frame_skip = 0;
-          graphic::auto_frame_skip = false;
-          graphic::enable_motion_interp = true;
-          hpw::set_resize_mode(graphic::default_resize_mode);
-        }
+        &set_high_quality
       }
-    } // items
+    } // Menu list items
   );
 } // get_preset_item
 
