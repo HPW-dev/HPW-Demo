@@ -1,17 +1,14 @@
 #pragma once 
 #include "util/mem-types.hpp"
-#include "util/math/num-types.hpp"
+#include "util/macro.hpp"
+#include "util/str.hpp"
 #include "audio.hpp"
 
+// 3D координаты
 struct Vec3 {
   real x {}, y {}, z {};
-
   Vec3() = default;
-  inline explicit Vec3(const auto _x, const auto _y={}, const auto _z={})
-  : x(_x)
-  , y(_y)
-  , z(_z)
-  {}
+  inline explicit Vec3(const auto _x, const auto _y, const auto _z): x(_x) , y(_y) , z(_z) {}
 };
 
 // управляет воспроизведением звука
@@ -23,16 +20,24 @@ public:
   explicit Sound_mgr();
   ~Sound_mgr();
   // проиграть звук
-  Audio_ctx play(CN<Audio> sound, const bool repeat=true, const real amplify=1.0,
-    const Vec3 listener={}, const Vec3 pos={}, const Vec3 vel={});
+  Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
+    const real amplify=1.0, const bool repeat=true);
+  // утсановить положение слушателя
+  void set_listener_pos(const Vec3 listener_pos);
+  // утсановить направление слушателя
+  void set_listener_dir(const Vec3 listener_dir);
   // останавливает проигрывание звука
-  void stop(const Audio_ctx context);
+  void stop(const Audio_id sound_id);
   // настроить громкость звука
-  void set_amplify(const Audio_ctx context, const real amplify);
+  void set_amplify(const Audio_id sound_id, const real amplify);
   // настроить позицию источника звука
-  void set_position(const Audio_ctx context, const Vec3 new_pos);
+  void set_position(const Audio_id sound_id, const Vec3 new_pos);
   // настроить скорость источника звука
-  void set_velocity(const Audio_ctx context, const Vec3 new_vel);
+  void set_velocity(const Audio_id sound_id, const Vec3 new_vel);
   // проверить что трек запущет
-  bool is_playing(const Audio_ctx context) const;
+  bool is_playing(const Audio_id sound_id) const;
+  // загрузить звук
+  void add_audio(CN<Str> sound_name, CN<Audio> sound);
+  // загрузить звук через перемещение
+  void move_audio(CN<Str> sound_name, Audio&& sound);
 };
