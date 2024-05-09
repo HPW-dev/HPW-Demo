@@ -45,23 +45,30 @@ struct Sound_mgr::Impl {
     cauto oal_buffer = m_oal_buffers.at(buffer_id);
     alBufferData(oal_buffer, oal_format.oal_format, oal_sound_buffer.data(),
       oal_sound_buffer.size(), sound.frequency);
-    if (cauto error = alGetError(); error != AL_NO_ERROR)
-      error("alBufferData error: " + decode_oal_error(error));
+    check_oal_error("alBufferData");
     // привязать буффер к источнику
     cauto oal_source = m_oal_sources.at(source_id);
     alSourcei(oal_source, AL_BUFFER, oal_buffer);
-    if (cauto error = alGetError(); error != AL_NO_ERROR)
-      error("alSourcei error: " + decode_oal_error(error));
+    check_oal_error("alSourcei");
     // настроить свойства звука
-    alSourcef(oal_source, AL_PITCH, 1.0f);
     alSourcef(oal_source, AL_GAIN, amplify);
+    check_oal_error("alSourcef AL_GAIN");
     alSource3f(oal_source, AL_POSITION, source_position.x, source_position.y, source_position.z);
+    check_oal_error("alSource3f AL_POSITION");
     alSource3f(oal_source, AL_VELOCITY, source_velocity.x, source_velocity.y, source_velocity.z);
+    check_oal_error("alSource3f AL_VELOCITY");
     alSourcei(oal_source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+    check_oal_error("alSourcei AL_LOOPING");
     alSourcePlay(oal_source); // запуск звука
+    check_oal_error("alSourcePlay");
     auto id = make_id();
     bind_audio(id, oal_buffer, oal_source);
     return id;
+  }
+
+  static inline void check_oal_error(CN<Str> func_name) {
+    if (cauto error = alGetError(); error != AL_NO_ERROR)
+      error("error in OAL function: " + func_name + " - " + decode_oal_error(error));
   }
 
   inline void set_listener_pos(const Vec3 listener_pos) {
@@ -112,7 +119,11 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
-    // TODO
+    auto finded_audio_info = audio_infos.find(sound_id);
+    if (finded_audio_info != audio_infos.end()) {
+      alSource3f(finded_audio_info->second.oal_source_id, AL_POSITION, new_pos.x, new_pos.y, new_pos.z);
+      check_oal_error("alSource3f AL_POSITION");
+    }
   }
 
   inline void set_velocity(const Audio_id sound_id, const Vec3 new_vel) {
@@ -122,7 +133,11 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
-    // TODO
+    auto finded_audio_info = audio_infos.find(sound_id);
+    if (finded_audio_info != audio_infos.end()) {
+      alSource3f(finded_audio_info->second.oal_source_id, AL_VELOCITY, new_vel.x, new_vel.y, new_vel.z);
+      check_oal_error("alSource3f AL_VELOCITY");
+    }
   }
 
   inline void add_audio(CN<Str> sound_name, CN<Audio> sound) {
@@ -133,6 +148,19 @@ struct Sound_mgr::Impl {
   inline void move_audio(CN<Str> sound_name, Audio&& sound) {
     check_audio(sound);
     m_store[sound_name] = std::move(sound);
+  }
+
+  void set_pitch(const Audio_id sound_id, const float pitch) {
+    if ( !is_playing(sound_id)) {
+      detailed_log (
+        "попытка изменить тон звуку, который уже не играет (ID: "
+        << sound_id << ")\n");
+    }
+    auto finded_audio_info = audio_infos.find(sound_id);
+    if (finded_audio_info != audio_infos.end()) {
+      alSourcef(finded_audio_info->second.oal_source_id, AL_PITCH, pitch);
+      check_oal_error("alSourcef AL_PITCH");
+    }
   }
 
   inline Audio_id make_id() {
@@ -200,7 +228,7 @@ struct Sound_mgr::Impl {
     alcCloseDevice(oal_device); 
   }
 
-  inline Str decode_oal_error(const ALenum error_enum) const {
+  static inline Str decode_oal_error(const ALenum error_enum) {
     switch (error_enum) {
       default:
       case AL_NO_ERROR: return "OAL no errors"; break;
@@ -304,3 +332,4 @@ void Sound_mgr::stop(const Audio_id sound_id) { impl->stop(sound_id); }
 void Sound_mgr::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
 void Sound_mgr::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
 void Sound_mgr::update() { impl->update(); }
+void Sound_mgr::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }

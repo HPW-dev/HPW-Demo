@@ -34,6 +34,8 @@ public:
   void set_position(const Audio_id sound_id, const Vec3 new_pos);
   // настроить скорость источника звука
   void set_velocity(const Audio_id sound_id, const Vec3 new_vel);
+  // сменить тон звука
+  void set_pitch(const Audio_id sound_id, const float pitch);
   // проверить что трек запущет
   bool is_playing(const Audio_id sound_id) const;
   // загрузить звук
