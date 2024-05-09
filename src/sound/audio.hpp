@@ -8,15 +8,21 @@
 struct Audio: public Resource {
   // чем сжаты данные
   enum class Compression {
-    raw_pcm_f32,
-    raw_pcm_s16,
-    raw_pcm_u8,
+    raw, // без сжатия
     opus,
     flac,
     vorbis
-  } compression {};
+  };
+  enum class Format {
+    pcm_f32,
+    raw_pcm_s16,
+    raw_pcm_u8,
+  };
+  Compression compression {};
+  Format format {};
   uint channels {}; // число каналов звука
   uint samples {}; // сколько аудио выборок (без учёта стерео)
+  uint frequency {}; // частота звука
   Bytes data {};
 };
 

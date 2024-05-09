@@ -1,4 +1,6 @@
+#include <cstdint>
 #include <cassert>
+#include <functional>
 #include <utility>
 #include <unordered_map>
 #include <OpenAL-soft/AL/al.h>
@@ -8,11 +10,19 @@
 #include "util/error.hpp"
 
 struct Sound_mgr::Impl {
-  constx uint NUM_BUFFERS = 256; // сколько одновременно можно запускать звуков
+  constx uint NUM_BUFFERS = 64; // сколько одновременно можно запускать звуков
+  constx uint NUM_SOURCES = 64; // сколько будет источников звуков в системе
   Audio_id m_uid {}; // для генерации audio_id
   bool m_eax_2_0_compat {}; // совместимость с эффектами EAX 2.0
   std::unordered_map<Str, Audio> m_store {}; // хранит исходники звуков с привязкой по имени
-  Vector<ALuint> m_oal_buffers {}; // id oal буфферов
+  Vector<ALuint> m_oal_buffers {}; // id oal буфферов звука
+  Vector<ALuint> m_oal_sources {}; // id oal источников звука
+
+  struct Audio_info {
+    ALuint oal_buffer_id {};
+    ALuint oal_source_id {};
+  };
+  std::unordered_map<Audio_id, Audio_info> audio_infos {}; // контролирует статус воспроизведения
 
   inline explicit Impl() {
     init_openal();
@@ -25,8 +35,33 @@ struct Sound_mgr::Impl {
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
   const Vec3 source_velocity, const real amplify, const bool repeat) {
     cnauto sound = find_audio(sound_name);
-    // TODO
-    return BAD_AUDIO;
+    cauto oal_format = to_compatible_oal_format(sound);
+    cauto oal_sound_buffer = oal_format.converter(sound);
+
+    const ALuint buffer_id = 0; // TODO
+    const ALuint source_id = 0; // TODO
+
+    // перенести семплы в буффер
+    cauto oal_buffer = m_oal_buffers.at(buffer_id);
+    alBufferData(oal_buffer, oal_format.oal_format, oal_sound_buffer.data(),
+      oal_sound_buffer.size(), sound.frequency);
+    if (cauto error = alGetError(); error != AL_NO_ERROR)
+      error("alBufferData error: " + decode_oal_error(error));
+    // привязать буффер к источнику
+    cauto oal_source = m_oal_sources.at(source_id);
+    alSourcei(oal_source, AL_BUFFER, oal_buffer);
+    if (cauto error = alGetError(); error != AL_NO_ERROR)
+      error("alSourcei error: " + decode_oal_error(error));
+    // настроить свойства звука
+    alSourcef(oal_source, AL_PITCH, 1.0f);
+    alSourcef(oal_source, AL_GAIN, amplify);
+    alSource3f(oal_source, AL_POSITION, source_position.x, source_position.y, source_position.z);
+    alSource3f(oal_source, AL_VELOCITY, source_velocity.x, source_velocity.y, source_velocity.z);
+    alSourcei(oal_source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+    alSourcePlay(oal_source); // запуск звука
+    auto id = make_id();
+    bind_audio(id, oal_buffer, oal_source);
+    return id;
   }
 
   inline void set_listener_pos(const Vec3 listener_pos) {
@@ -39,7 +74,14 @@ struct Sound_mgr::Impl {
 
   inline bool is_playing(const Audio_id sound_id) const {
     check_audio_ctx(sound_id);
-    return false; // TODO
+    // узнать что звук есть
+    auto finded_audio_info = audio_infos.find(sound_id);
+    if (finded_audio_info == audio_infos.end())
+      return false;
+    // узнать у OAL что звук проигрывается
+    ALint state;
+    alGetSourcei(finded_audio_info->second.oal_source_id, AL_SOURCE_STATE, &state);
+    return state == AL_PLAYING;
   }
 
   inline void stop(const Audio_id sound_id) {
@@ -104,13 +146,12 @@ struct Sound_mgr::Impl {
   // проверить что звук корректно создан
   inline void check_audio(CN<Audio> sound) const {
     assert(sound.channels != 0);
-    assert(sound.compression != Audio::Compression::raw_pcm_u8); // need impl
-    assert(sound.compression != Audio::Compression::raw_pcm_s16); // need impl
     assert(sound.compression != Audio::Compression::opus); // need impl
     assert(sound.compression != Audio::Compression::flac); // need impl
     assert(sound.compression != Audio::Compression::vorbis); // need impl
     assert(!sound.data.empty());
     assert(sound.samples != 0);
+    assert(sound.frequency != 0);
   }
 
   inline CN<Audio> find_audio(CN<Str> sound_name) const {
@@ -130,7 +171,7 @@ struct Sound_mgr::Impl {
     auto oal_context = alcCreateContext(oal_device, {});
     alcMakeContextCurrent(oal_context);
     // Check for EAX 2.0 support
-    cauto m_eax_2_0_compat = alIsExtensionPresent("EAX2.0"); 
+    m_eax_2_0_compat = alIsExtensionPresent("EAX2.0"); 
     detailed_log("EAX 2.0 support: " << s2yn(m_eax_2_0_compat) << '\n');
     alGetError(); // clear error code 
 
@@ -140,8 +181,13 @@ struct Sound_mgr::Impl {
     alGenBuffers(NUM_BUFFERS, m_oal_buffers.data());
     if (cauto error = alGetError(); error != AL_NO_ERROR)
       error("alGenBuffers error: " + decode_oal_error(error));
-    
-    // TODO
+
+    // создать источники звуков
+    detailed_log("generate " << NUM_SOURCES << " OAL sources\n");
+    m_oal_sources.resize(NUM_SOURCES);
+    alGenSources(NUM_SOURCES, m_oal_sources.data());
+    if (cauto error = alGetError(); error != AL_NO_ERROR)
+      error("alGenSources error: " + decode_oal_error(error));
   } // init_openal
 
   inline void close_oal() {
@@ -154,7 +200,7 @@ struct Sound_mgr::Impl {
     alcCloseDevice(oal_device); 
   }
 
-  inline Str decode_oal_error(ALenum error_enum) const {
+  inline Str decode_oal_error(const ALenum error_enum) const {
     switch (error_enum) {
       default:
       case AL_NO_ERROR: return "OAL no errors"; break;
@@ -165,6 +211,81 @@ struct Sound_mgr::Impl {
       case AL_OUT_OF_MEMORY: return "OAL out of memory"; break;
     }
     return "unknown OAL error";
+  }
+
+  using Sound_buffer_converter = std::function<Bytes (CN<Audio>)>;
+
+  struct Format_game_to_oal {
+    uint channel {};
+    Audio::Format sound_format {};
+    ALenum oal_format {};
+    Sound_buffer_converter converter {};
+  };
+
+  inline static Bytes conv_mono_f32_to_s16(CN<Audio> src) {
+    using src_t = float;
+    using dst_t = std::int16_t;
+    cauto samples = src.samples;
+    Bytes ret(samples * sizeof(dst_t));
+    auto dst_p = rcast<dst_t*>(ret.data());
+    auto src_p = rcast<CP<src_t>>(src.data.data());
+    cfor (i, samples) {
+      *dst_p = *src_p * 0x7FFF;
+      ++dst_p;
+      ++src_p;
+    }
+    return ret;
+  }
+
+  inline static Bytes conv_mono_s16_to_s16(CN<Audio> src) { return src.data; }
+  inline static Bytes conv_mono_u8_to_u8(CN<Audio> src) { return src.data; }
+
+  inline static Bytes conv_stereo_f32_to_s16(CN<Audio> src) {
+    using src_t = float;
+    using dst_t = std::int16_t;
+    cauto samples = src.samples * 2;
+    Bytes ret(samples * sizeof(dst_t));
+    auto dst_p = rcast<dst_t*>(ret.data());
+    auto src_p = rcast<CP<src_t>>(src.data.data());
+    cfor (i, samples) {
+      *dst_p = *src_p * 0x7FFF;
+      ++dst_p;
+      ++src_p;
+    }
+    return ret;
+  }
+
+  inline static Bytes conv_stereo_s16_to_s16(CN<Audio> src) { return src.data; }
+  inline static Bytes conv_stereo_u8_to_u8(CN<Audio> src) { return src.data; }
+
+  inline CN<Format_game_to_oal> to_compatible_oal_format(CN<Audio> sound) const {
+    static const Vector<Format_game_to_oal> format_table {
+      {.channel = 1, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_f32_to_s16},
+      {.channel = 1, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_s16_to_s16},
+      {.channel = 1, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_MONO8,    .converter = &conv_mono_u8_to_u8},
+      {.channel = 2, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_f32_to_s16},
+      {.channel = 2, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_s16_to_s16},
+      {.channel = 2, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_STEREO8,  .converter = &conv_stereo_u8_to_u8},
+    };
+    for (cnauto format_info: format_table) {
+      if (sound.channels == format_info.channel && sound.format == format_info.sound_format)
+        return format_info;
+    }
+    error("not finded OAL format for sound \"" << sound.get_path() << "\"");
+    return *(Format_game_to_oal*)0;
+  }
+
+  // связать звуковой ID с реализацией OAL
+  inline void bind_audio(const Audio_id sound_id,
+  const ALuint oal_buffer_id, const ALuint oal_source_id) {
+    audio_infos[sound_id] = Audio_info {
+      .oal_buffer_id = oal_buffer_id,
+      .oal_source_id = oal_source_id
+    };
+  }
+
+  inline void update() {
+    // TODO
   }
 }; // Sound_mgr::Impl
 
@@ -182,3 +303,4 @@ void Sound_mgr::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { impl
 void Sound_mgr::stop(const Audio_id sound_id) { impl->stop(sound_id); }
 void Sound_mgr::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
 void Sound_mgr::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
+void Sound_mgr::update() { impl->update(); }

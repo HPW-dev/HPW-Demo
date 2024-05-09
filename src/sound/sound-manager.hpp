@@ -21,7 +21,7 @@ public:
   ~Sound_mgr();
   // проиграть звук
   Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
-    const real amplify=1.0, const bool repeat=true);
+    const real amplify=1.0, const bool repeat=false);
   // утсановить положение слушателя
   void set_listener_pos(const Vec3 listener_pos);
   // утсановить направление слушателя
@@ -40,4 +40,6 @@ public:
   void add_audio(CN<Str> sound_name, CN<Audio> sound);
   // загрузить звук через перемещение
   void move_audio(CN<Str> sound_name, Audio&& sound);
+  // обновить внутренее состояние
+  void update();
 };

@@ -14,18 +14,20 @@ void test_sine() {
   // сделать синусоиду
   Audio sine_wave;
   sine_wave.channels = 1;
-  sine_wave.compression = Audio::Compression::raw_pcm_f32;
+  sine_wave.compression = Audio::Compression::raw;
+  sine_wave.format = Audio::Format::pcm_f32;
   sine_wave.set_generated(true);
-  sine_wave.samples = 48'000 * 6;
+  sine_wave.frequency = 48'000;
+  sine_wave.samples = sine_wave.frequency * 5;
   Vector<float> f32_wave(sine_wave.samples);
-  constexpr float step_speed = 0.5; // влияет на частоту синусоиды
+  constexpr float step_speed = 0.02; // влияет на частоту синусоиды
   float step {};
   for (nauto sample: f32_wave) {
     sample = std::sin(step);
     step += step_speed;
   }
   sine_wave.data.resize(f32_wave.size() * sizeof(float));
-  std::memcpy(sine_wave.data.data(), sine_wave.data.data(), sine_wave.data.size());
+  std::memcpy(sine_wave.data.data(), f32_wave.data(), sine_wave.data.size());
   
   // добавить звук в базу
   Sound_mgr sound_mgr;
@@ -33,12 +35,11 @@ void test_sine() {
 
   // проиграть звук
   cauto audio_id = sound_mgr.play("sine wave");
-  iferror(audio_id == BAD_AUDIO, "Bad audio ID");
-  std::cout << "sine wave is ";
-  std::cout << (sound_mgr.is_playing(audio_id) ? "playing" : "stoped") << std::endl;
 
   // не закрывать прогу, пока трек играет
-  while (sound_mgr.is_playing(audio_id)) {
+  while (true) {
+    sound_mgr.update();
+    break_if (!sound_mgr.is_playing(audio_id));
     std::this_thread::yield();
   }
 } // test_sine
