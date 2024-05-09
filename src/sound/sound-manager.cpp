@@ -1,6 +1,8 @@
 #include <cassert>
 #include <utility>
 #include <unordered_map>
+#include <OpenAL-soft/AL/al.h>
+#include <OpenAL-soft/AL/alc.h>
 #include "sound-manager.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
@@ -9,7 +11,9 @@ struct Sound_mgr::Impl {
   Audio_id m_uid {}; // для генерации audio_id
   std::unordered_map<Str, Audio> m_store {}; // хранит исходники звуков с привязкой по имени
 
-  explicit Impl() = default;
+  inline explicit Impl() {
+    init_openal();
+  }
 
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
   const Vec3 source_velocity, const real amplify, const bool repeat) {
@@ -109,6 +113,31 @@ struct Sound_mgr::Impl {
       error("Sound \"" << sound_name << "\" not finded in Sound Manager");
     }
     return *(Audio*)0; // заглушка для анализатора
+  }
+
+  inline void init_openal() {
+    detailed_log("init OpenAL");
+    // открыть аудио устройство по умолчанию (TODO сделать выбор)
+    auto oal_device = alcOpenDevice({});
+    iferror(!oal_device, "alcOpenDevice error " + decode_oal_error());
+    auto oal_context = alcCreateContext(oal_device, {});
+    alcMakeContextCurrent(oal_context);
+    // Check for EAX 2.0 support
+    //cauto COMPAT_EAX_2_0 = alIsExtensionPresent("EAX2.0"); 
+    alGetError(); // clear error code 
+  }
+
+  inline Str decode_oal_error() const {
+    switch (alGetError()) {
+      default:
+      case AL_NO_ERROR: return "OAL no errors"; break;
+      case AL_INVALID_NAME: return "OAL invalid name"; break;
+      case AL_INVALID_ENUM: return "OAL invalid enum"; break;
+      case AL_INVALID_VALUE: return "OAL invalid value"; break;
+      case AL_INVALID_OPERATION: return "OAL invalid operation"; break;
+      case AL_OUT_OF_MEMORY: return "OAL out of memory"; break;
+    }
+    return "unknown OAL error";
   }
 }; // Sound_mgr::Impl
 

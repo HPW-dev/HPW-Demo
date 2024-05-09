@@ -29,7 +29,6 @@ cpp_flags = [
   pgo
 ]
 ld_flags = [
-  "-shared-libgcc",
   sanitize,
   pgo
 ]
@@ -39,6 +38,11 @@ arch_info = platform.architecture()
 is_64bit = sys.maxsize > 2**32
 is_linux = arch_info[1]  == "ELF"
 compiler = ARGUMENTS.get("compiler", "g++")
+
+if (compiler != "clang++"):
+  ld_flags.append("-shared-libgcc")
+else:
+  ld_flags.extend(["-static-libgcc", "-lstdc++.dll", "-pthread"])
 
 if bool(ARGUMENTS.get("detailed_log", 0)):
   defines.append("-DDETAILED_LOG")

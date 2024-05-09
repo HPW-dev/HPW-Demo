@@ -19,8 +19,10 @@ inc_path = [
   src_dir,
   thirdparty_dir + "include",
 ]
-lib_path = []
-used_libs = []
+lib_path = [
+  thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if is_64bit else "x32"),
+]
+used_libs = ["OpenAL32.dll"]
 sources = [
   Glob(src_dir + "sound/*.cpp"),
   src_dir + "util/error.cpp",
