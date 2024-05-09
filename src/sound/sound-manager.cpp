@@ -66,8 +66,8 @@ struct Sound_mgr::Impl {
     check_oal_error("alSourcei AL_LOOPING");
     alSourcePlay(oal_source); // запуск звука
     check_oal_error("alSourcePlay");
-    alDistanceModel(AL_EXPONENT_DISTANCE_CLAMPED);
-    check_oal_error("alDistanceModel AL_EXPONENT_DISTANCE_CLAMPED");
+    alDistanceModel(AL_INVERSE_DISTANCE);
+    check_oal_error("alDistanceModel");
 
     auto id = make_id();
     bind_audio(id, oal_buffer, oal_source);
