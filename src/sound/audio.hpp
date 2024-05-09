@@ -16,6 +16,7 @@ struct Audio: public Resource {
     vorbis
   } compression {};
   uint channels {}; // число каналов звука
+  uint samples {}; // сколько аудио выборок (без учёта стерео)
   Bytes data {};
 };
 

@@ -1,15 +1,19 @@
+#include <cassert>
 #include <utility>
+#include <unordered_map>
 #include "sound-manager.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 
 struct Sound_mgr::Impl {
   Audio_id m_uid {}; // для генерации audio_id
+  std::unordered_map<Str, Audio> m_store {}; // хранит исходники звуков с привязкой по имени
 
   explicit Impl() = default;
 
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
   const Vec3 source_velocity, const real amplify, const bool repeat) {
+    cnauto sound = find_audio(sound_name);
     // TODO
     return BAD_AUDIO;
   }
@@ -69,11 +73,13 @@ struct Sound_mgr::Impl {
   }
 
   inline void add_audio(CN<Str> sound_name, CN<Audio> sound) {
-    // TODO
+    check_audio(sound);
+    m_store[sound_name] = sound;
   }
 
   inline void move_audio(CN<Str> sound_name, Audio&& sound) {
-    // TODO
+    check_audio(sound);
+    m_store[sound_name] = std::move(sound);
   }
 
   inline Audio_id make_id() {
@@ -82,6 +88,27 @@ struct Sound_mgr::Impl {
     if (m_uid == BAD_AUDIO)
       ++m_uid;
     return m_uid;
+  }
+
+  // проверить что звук корректно создан
+  inline void check_audio(CN<Audio> sound) const {
+    assert(sound.channels != 0);
+    assert(sound.compression != Audio::Compression::raw_pcm_u8); // need impl
+    assert(sound.compression != Audio::Compression::raw_pcm_s16); // need impl
+    assert(sound.compression != Audio::Compression::opus); // need impl
+    assert(sound.compression != Audio::Compression::flac); // need impl
+    assert(sound.compression != Audio::Compression::vorbis); // need impl
+    assert(!sound.data.empty());
+    assert(sound.samples != 0);
+  }
+
+  inline CN<Audio> find_audio(CN<Str> sound_name) const {
+    try {
+      return m_store.at(sound_name);
+    } catch(...) {
+      error("Sound \"" << sound_name << "\" not finded in Sound Manager");
+    }
+    return *(Audio*)0; // заглушка для анализатора
   }
 }; // Sound_mgr::Impl
 
