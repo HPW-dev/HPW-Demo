@@ -4,6 +4,8 @@
 #include "util/error.hpp"
 
 struct Sound_mgr::Impl {
+  Audio_id m_uid {}; // для генерации audio_id
+
   explicit Impl() = default;
 
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
@@ -72,6 +74,14 @@ struct Sound_mgr::Impl {
 
   inline void move_audio(CN<Str> sound_name, Audio&& sound) {
     // TODO
+  }
+
+  inline Audio_id make_id() {
+    ++m_uid;
+    // скпинуть bad audio id
+    if (m_uid == BAD_AUDIO)
+      ++m_uid;
+    return m_uid;
   }
 }; // Sound_mgr::Impl
 
