@@ -61,10 +61,11 @@ struct Sound_mgr::Impl {
     check_oal_error("alSourcei AL_LOOPING");
     alSourcePlay(oal_source); // запуск звука
     check_oal_error("alSourcePlay");
+
     auto id = make_id();
     bind_audio(id, oal_buffer, oal_source);
     return id;
-  }
+  } // play
 
   static inline void check_oal_error(CN<Str> func_name) {
     if (cauto error = alGetError(); error != AL_NO_ERROR)
@@ -72,11 +73,14 @@ struct Sound_mgr::Impl {
   }
 
   inline void set_listener_pos(const Vec3 listener_pos) {
-    // TODO
+    alListener3f(AL_POSITION, listener_pos.x, listener_pos.y, listener_pos.z);
+    check_oal_error("alListener3f AL_POSITION");
   }
   
   inline void set_listener_dir(const Vec3 listener_dir) {
-    // TODO
+    const float ori [3] {listener_dir.x, listener_dir.y, listener_dir.z};
+    alListenerfv(AL_ORIENTATION, ori);
+    check_oal_error("alListener3f AL_ORIENTATION");
   }
 
   inline bool is_playing(const Audio_id sound_id) const {
@@ -207,15 +211,14 @@ struct Sound_mgr::Impl {
     detailed_log("generate " << NUM_BUFFERS << " OAL buffers\n");
     m_oal_buffers.resize(NUM_BUFFERS);
     alGenBuffers(NUM_BUFFERS, m_oal_buffers.data());
-    if (cauto error = alGetError(); error != AL_NO_ERROR)
-      error("alGenBuffers error: " + decode_oal_error(error));
+    check_oal_error("alGenBuffers");
 
     // создать источники звуков
     detailed_log("generate " << NUM_SOURCES << " OAL sources\n");
     m_oal_sources.resize(NUM_SOURCES);
     alGenSources(NUM_SOURCES, m_oal_sources.data());
-    if (cauto error = alGetError(); error != AL_NO_ERROR)
-      error("alGenSources error: " + decode_oal_error(error));
+    check_oal_error("alGenSources");
+    alDopplerFactor(15.0f); // настройка эффекта Допплера
   } // init_openal
 
   inline void close_oal() {
