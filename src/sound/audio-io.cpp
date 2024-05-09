@@ -5,5 +5,5 @@ Audio load_audio(CN<Bytes> mem) {
   return {}; // TODO
 }
 Audio load_audio(CN<Str> fname) {
-  return {}; // TODO
+  return {}; // TODO передаёт внутренности файла в load_audio(CN<Bytes> mem)
 }
