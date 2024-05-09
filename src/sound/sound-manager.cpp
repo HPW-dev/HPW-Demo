@@ -22,7 +22,7 @@ struct Sound_mgr::Impl {
     ALuint oal_buffer_id {};
     ALuint oal_source_id {};
   };
-  std::unordered_map<Audio_id, Audio_info> audio_infos {}; // контролирует статус воспроизведения
+  std::unordered_map<Audio_id, Audio_info> m_audio_infos {}; // контролирует статус воспроизведения
 
   inline explicit Impl() {
     init_openal();
@@ -38,18 +38,23 @@ struct Sound_mgr::Impl {
     cauto oal_format = to_compatible_oal_format(sound);
     cauto oal_sound_buffer = oal_format.converter(sound);
 
-    const ALuint buffer_id = 0; // TODO
-    const ALuint source_id = 0; // TODO
+    ALuint oal_buffer;
+    ALuint oal_source;
+    try {
+      oal_buffer = get_avaliable_oal_buffer();
+      oal_source = get_avaliable_oal_source();
+    } catch(...) {
+      detailed_log("no more OAL buffer/source\n");
+      return BAD_AUDIO;
+    }
 
     // перенести семплы в буффер
-    cauto oal_buffer = m_oal_buffers.at(buffer_id);
     alBufferData(oal_buffer, oal_format.oal_format, oal_sound_buffer.data(),
       oal_sound_buffer.size(), sound.frequency);
     check_oal_error("alBufferData");
     // привязать буффер к источнику
-    cauto oal_source = m_oal_sources.at(source_id);
     alSourcei(oal_source, AL_BUFFER, oal_buffer);
-    check_oal_error("alSourcei");
+    check_oal_error("alSourcei AL_BUFFER");
     // настроить свойства звука
     alSourcef(oal_source, AL_GAIN, amplify);
     check_oal_error("alSourcef AL_GAIN");
@@ -61,11 +66,47 @@ struct Sound_mgr::Impl {
     check_oal_error("alSourcei AL_LOOPING");
     alSourcePlay(oal_source); // запуск звука
     check_oal_error("alSourcePlay");
+    alDistanceModel(AL_EXPONENT_DISTANCE_CLAMPED);
+    check_oal_error("alDistanceModel AL_EXPONENT_DISTANCE_CLAMPED");
 
     auto id = make_id();
     bind_audio(id, oal_buffer, oal_source);
     return id;
   } // play
+
+  // найти свободный OAL аудио буфер
+  inline ALuint get_avaliable_oal_buffer() {
+    // перебрать все буфферы, пока не найдётся свободный
+    cfor (i, NUM_BUFFERS) {
+      bool good_index = true;
+      for (cauto audio_info: m_audio_infos)
+        if (audio_info.second.oal_buffer_id == m_oal_buffers.at(i)) {
+          good_index = false;
+          break;
+        }
+      if (good_index)
+        return m_oal_buffers.at(i);
+    }
+    error("no more OAL buffers\n");
+    return {};
+  }
+
+  // найти свободный OAL аудио источник
+  inline ALuint get_avaliable_oal_source() {
+    // перебрать все буфферы, пока не найдётся свободный
+    cfor (i, NUM_SOURCES) {
+      bool good_index = true;
+      for (cauto audio_info: m_audio_infos)
+        if (audio_info.second.oal_source_id == m_oal_sources.at(i)) {
+          good_index = false;
+          break;
+        }
+      if (good_index)
+        return m_oal_sources.at(i);
+    }
+    error("no more OAL sources\n");
+    return {};
+  }
 
   static inline void check_oal_error(CN<Str> func_name) {
     if (cauto error = alGetError(); error != AL_NO_ERROR)
@@ -75,6 +116,11 @@ struct Sound_mgr::Impl {
   inline void set_listener_pos(const Vec3 listener_pos) {
     alListener3f(AL_POSITION, listener_pos.x, listener_pos.y, listener_pos.z);
     check_oal_error("alListener3f AL_POSITION");
+  }
+
+  inline void set_master_gain(const float gain) {
+    alListenerf(AL_GAIN, gain);
+    check_oal_error("alListenerf AL_GAIN");
   }
   
   inline void set_listener_dir(const Vec3 listener_dir) {
@@ -86,8 +132,8 @@ struct Sound_mgr::Impl {
   inline bool is_playing(const Audio_id sound_id) const {
     check_audio_ctx(sound_id);
     // узнать что звук есть
-    auto finded_audio_info = audio_infos.find(sound_id);
-    if (finded_audio_info == audio_infos.end())
+    auto finded_audio_info = m_audio_infos.find(sound_id);
+    if (finded_audio_info == m_audio_infos.end())
       return false;
     // узнать у OAL что звук проигрывается
     ALint state;
@@ -123,8 +169,8 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
-    auto finded_audio_info = audio_infos.find(sound_id);
-    if (finded_audio_info != audio_infos.end()) {
+    auto finded_audio_info = m_audio_infos.find(sound_id);
+    if (finded_audio_info != m_audio_infos.end()) {
       alSource3f(finded_audio_info->second.oal_source_id, AL_POSITION, new_pos.x, new_pos.y, new_pos.z);
       check_oal_error("alSource3f AL_POSITION");
     }
@@ -137,8 +183,8 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
-    auto finded_audio_info = audio_infos.find(sound_id);
-    if (finded_audio_info != audio_infos.end()) {
+    auto finded_audio_info = m_audio_infos.find(sound_id);
+    if (finded_audio_info != m_audio_infos.end()) {
       alSource3f(finded_audio_info->second.oal_source_id, AL_VELOCITY, new_vel.x, new_vel.y, new_vel.z);
       check_oal_error("alSource3f AL_VELOCITY");
     }
@@ -160,8 +206,8 @@ struct Sound_mgr::Impl {
         "попытка изменить тон звуку, который уже не играет (ID: "
         << sound_id << ")\n");
     }
-    auto finded_audio_info = audio_infos.find(sound_id);
-    if (finded_audio_info != audio_infos.end()) {
+    auto finded_audio_info = m_audio_infos.find(sound_id);
+    if (finded_audio_info != m_audio_infos.end()) {
       alSourcef(finded_audio_info->second.oal_source_id, AL_PITCH, pitch);
       check_oal_error("alSourcef AL_PITCH");
     }
@@ -218,7 +264,6 @@ struct Sound_mgr::Impl {
     m_oal_sources.resize(NUM_SOURCES);
     alGenSources(NUM_SOURCES, m_oal_sources.data());
     check_oal_error("alGenSources");
-    alDopplerFactor(15.0f); // настройка эффекта Допплера
   } // init_openal
 
   inline void close_oal() {
@@ -309,10 +354,15 @@ struct Sound_mgr::Impl {
   // связать звуковой ID с реализацией OAL
   inline void bind_audio(const Audio_id sound_id,
   const ALuint oal_buffer_id, const ALuint oal_source_id) {
-    audio_infos[sound_id] = Audio_info {
+    m_audio_infos[sound_id] = Audio_info {
       .oal_buffer_id = oal_buffer_id,
       .oal_source_id = oal_source_id
     };
+  }
+
+  inline void set_doppler_factor(const float doppler_factor) {
+    alDopplerFactor(doppler_factor); // настройка эффекта Допплера
+    check_oal_error("alDopplerFactor");
   }
 
   inline void update() {
@@ -336,3 +386,5 @@ void Sound_mgr::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio
 void Sound_mgr::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
 void Sound_mgr::update() { impl->update(); }
 void Sound_mgr::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }
+void Sound_mgr::set_master_gain(const float gain) { impl->set_master_gain(gain); }
+void Sound_mgr::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }

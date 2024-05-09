@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include <cstdlib>
 #include <cstring>
 #include <utility>
@@ -9,29 +10,31 @@
 #include "util/error.hpp"
 #include "util/vector-types.hpp"
 
-void test_sine() {
-  std::cout << "\nAudio test: playing sine wave" << std::endl;
-
-  // сделать синусоиду
+Audio make_sin_wave(const float freq) {
   Audio sine_wave;
   sine_wave.channels = 1;
   sine_wave.compression = Audio::Compression::raw;
   sine_wave.format = Audio::Format::pcm_f32;
   sine_wave.set_generated(true);
   sine_wave.frequency = 48'000;
-  sine_wave.samples = sine_wave.frequency * 3;
-  Vector<float> f32_wave(sine_wave.samples);
-  constexpr float step_speed = 0.007; // влияет на частоту синусоиды
+  sine_wave.samples = sine_wave.frequency * 4;
+  Vector<float> f32_wave(sine_wave.samples * sine_wave.channels);
   float step {};
   for (nauto sample: f32_wave) {
     sample = std::sin(step);
-    step += step_speed;
+    step += freq;
   }
-  sine_wave.data.resize(f32_wave.size() * sizeof(float));
+  sine_wave.data.resize(sine_wave.samples * sizeof(float) * sine_wave.channels);
   std::memcpy(sine_wave.data.data(), f32_wave.data(), sine_wave.data.size());
-  
+  return sine_wave;
+}
+
+void test_sine() {
+  std::cout << "\nAudio test: playing sine wave" << std::endl;
+
   // добавить звук в базу
   Sound_mgr sound_mgr;
+  auto sine_wave = make_sin_wave(0.007);
   sound_mgr.move_audio("sine wave", std::move(sine_wave));
 
   // проиграть звук
@@ -48,29 +51,12 @@ void test_sine() {
 void test_motion_sine() {
   std::cout << "\nAudio test: motion sine wave" << std::endl;
 
-  // сделать синусоиду
-  Audio sine_wave;
-  sine_wave.channels = 1;
-  sine_wave.compression = Audio::Compression::raw;
-  sine_wave.format = Audio::Format::pcm_f32;
-  sine_wave.set_generated(true);
-  sine_wave.frequency = 48'000;
-  sine_wave.samples = sine_wave.frequency * 8;
-  Vector<float> f32_wave(sine_wave.samples);
-  constexpr float step_speed = 0.06; // влияет на частоту синусоиды
-  float step {};
-  for (nauto sample: f32_wave) {
-    sample = std::sin(step);
-    step += step_speed;
-  }
-  sine_wave.data.resize(f32_wave.size() * sizeof(float));
-  std::memcpy(sine_wave.data.data(), f32_wave.data(), sine_wave.data.size());
-  
   // добавить звук в базу
   Sound_mgr sound_mgr;
+  auto sine_wave = make_sin_wave(0.02);
   sound_mgr.move_audio("sine wave", std::move(sine_wave));
-  sound_mgr.set_listener_pos(Vec3(0, 5, 0));
-  //sound_mgr.set_listener_dir(Vec3(0, -1, 0));
+  sound_mgr.set_listener_pos(Vec3(0, 0, 1));
+  sound_mgr.set_doppler_factor(15);
 
   // проиграть звук
   Vec3 pos(-15, 0, 0);
@@ -78,7 +64,7 @@ void test_motion_sine() {
   cauto audio_id = sound_mgr.play("sine wave", pos, vel, 0.3);
 
   // не закрывать прогу, пока трек играет
-  constexpr float speed = 0.00002;
+  constexpr float speed = 0.000015;
   while (true) {
     pos.x += vel.x * speed;
     sound_mgr.set_velocity(audio_id, vel);
@@ -100,7 +86,7 @@ void test_noise() {
   noise.set_generated(true);
   noise.frequency = 22'100;
   noise.samples = noise.frequency * 3;
-  noise.data.resize(noise.samples * sizeof(std::int16_t));
+  noise.data.resize(noise.samples * sizeof(std::int16_t) * noise.channels);
   for (nauto sample: noise.data)
     sample = rand() % 256;
   
@@ -139,9 +125,29 @@ void test_file() {
   }
 } // test_file
 
+void test_mix() {
+  std::cout << "\nAudio test: mixing audio" << std::endl;
+
+  auto track_1 = make_sin_wave(0.01);
+  auto track_2 = make_sin_wave(0.02);
+  auto track_3 = make_sin_wave(0.04);
+  Sound_mgr sound_mgr;
+  sound_mgr.move_audio("sin 1", std::move(track_1));
+  sound_mgr.move_audio("sin 2", std::move(track_2));
+  sound_mgr.move_audio("sin 3", std::move(track_3));
+  using namespace std::chrono_literals;
+  sound_mgr.play("sin 1");
+  std::this_thread::sleep_for(1s);
+  sound_mgr.play("sin 2");
+  std::this_thread::sleep_for(1s);
+  sound_mgr.play("sin 3");
+  std::this_thread::sleep_for(1s);
+} // test_mix
+
 int main() {
-  //test_sine();
-  //test_noise();
+  test_sine();
+  test_noise();
   test_motion_sine();
+  test_mix();
   //test_file();
 }

@@ -44,4 +44,8 @@ public:
   void move_audio(CN<Str> sound_name, Audio&& sound);
   // обновить внутренее состояние
   void update();
+  // громкость всей системы
+  void set_master_gain(const float gain);
+  // изменить влияние вектора скорости на эффект Допплера
+  void set_doppler_factor(const float doppler_factor);
 };
