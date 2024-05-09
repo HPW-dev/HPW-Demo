@@ -8,11 +8,18 @@
 #include "util/error.hpp"
 
 struct Sound_mgr::Impl {
+  constx uint NUM_BUFFERS = 256; // сколько одновременно можно запускать звуков
   Audio_id m_uid {}; // для генерации audio_id
+  bool m_eax_2_0_compat {}; // совместимость с эффектами EAX 2.0
   std::unordered_map<Str, Audio> m_store {}; // хранит исходники звуков с привязкой по имени
+  Vector<ALuint> m_oal_buffers {}; // id oal буфферов
 
   inline explicit Impl() {
     init_openal();
+  }
+
+  inline ~Impl() {
+    close_oal();
   }
 
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
@@ -116,19 +123,39 @@ struct Sound_mgr::Impl {
   }
 
   inline void init_openal() {
-    detailed_log("init OpenAL");
+    detailed_log("init OpenAL\n");
     // открыть аудио устройство по умолчанию (TODO сделать выбор)
     auto oal_device = alcOpenDevice({});
-    iferror(!oal_device, "alcOpenDevice error " + decode_oal_error());
+    iferror(!oal_device, "alcOpenDevice error " + decode_oal_error(alGetError()));
     auto oal_context = alcCreateContext(oal_device, {});
     alcMakeContextCurrent(oal_context);
     // Check for EAX 2.0 support
-    //cauto COMPAT_EAX_2_0 = alIsExtensionPresent("EAX2.0"); 
+    cauto m_eax_2_0_compat = alIsExtensionPresent("EAX2.0"); 
+    detailed_log("EAX 2.0 support: " << s2yn(m_eax_2_0_compat) << '\n');
     alGetError(); // clear error code 
+
+    // создать буфферы
+    detailed_log("generate " << NUM_BUFFERS << " OAL buffers\n");
+    m_oal_buffers.resize(NUM_BUFFERS);
+    alGenBuffers(NUM_BUFFERS, m_oal_buffers.data());
+    if (cauto error = alGetError(); error != AL_NO_ERROR)
+      error("alGenBuffers error: " + decode_oal_error(error));
+    
+    // TODO
+  } // init_openal
+
+  inline void close_oal() {
+    detailed_log("disable OpenAL\n");
+    alDeleteBuffers(NUM_BUFFERS, m_oal_buffers.data());
+    auto oal_context = alcGetCurrentContext();
+    auto oal_device = alcGetContextsDevice(oal_context);
+    alcMakeContextCurrent({});
+    alcDestroyContext(oal_context);
+    alcCloseDevice(oal_device); 
   }
 
-  inline Str decode_oal_error() const {
-    switch (alGetError()) {
+  inline Str decode_oal_error(ALenum error_enum) const {
+    switch (error_enum) {
       default:
       case AL_NO_ERROR: return "OAL no errors"; break;
       case AL_INVALID_NAME: return "OAL invalid name"; break;
