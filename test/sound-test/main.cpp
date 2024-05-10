@@ -174,7 +174,7 @@ void test_overplay() {
 
   // добавить звук в базу
   Sound_mgr sound_mgr;
-  auto sine_wave = make_sin_wave(0.01);
+  auto sine_wave = make_sin_wave(2.0);
   sound_mgr.move_audio("sin", std::move(sine_wave));
   sound_mgr.set_listener_pos(Vec3(0, 0, 1));
 
@@ -185,18 +185,17 @@ void test_overplay() {
     Vec3 pos(rand_pos(), rand_pos(), rand_pos());
     sound_mgr.play("sin", pos, {}, 0.3);
     sound_mgr.update();
-    //std::this_thread::yield();
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(20ms);
   }
 } // test_overplay
 
 int main() {
-  //test_sine();
-  //test_noise();
-  //test_motion_sine();
-  //test_mix();
-  //test_play_after();
+  test_sine();
+  test_noise();
+  test_motion_sine();
+  test_mix();
+  test_play_after();
   test_overplay();
   //test_file();
 }
