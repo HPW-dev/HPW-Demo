@@ -46,4 +46,6 @@ public:
   void set_master_gain(const float gain);
   // изменить влияние вектора скорости на эффект Допплера
   void set_doppler_factor(const float doppler_factor);
+  // выключить определённый звук
+  void disable(const Audio_id sound_id);
 };

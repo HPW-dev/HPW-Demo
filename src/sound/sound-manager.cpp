@@ -13,10 +13,11 @@
 
 struct Sound_mgr::Impl {
   struct Audio_info {
-    ALuint oal_buffer_id {};
+    Vector<ALuint> oal_buffer_ids {};
     ALuint oal_source_id {};
   };
 
+  constx std::size_t MAX_BUFFERS = 4; // сколько будет буфферов звука
   constx uint MAX_SOUNDS = 100; // сколько звуков можно проиграть одновременно
   Audio_id m_uid {}; // для генерации audio_id
   bool m_eax_2_0_compat {}; // совместимость с эффектами EAX 2.0
@@ -24,6 +25,7 @@ struct Sound_mgr::Impl {
   std::unordered_map<Audio_id, Audio_info> m_audio_infos {}; // контролирует статус воспроизведения
   std::thread m_update_thread {}; // поток для обновления состояния и пакетного декода
   std::atomic_bool m_update_thread_live {}; // false - завершить m_update_thread
+  //mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
   mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
 
   inline explicit Impl() {
@@ -53,16 +55,16 @@ struct Sound_mgr::Impl {
     ALuint oal_source;
     alGenSources(1, &oal_source);
     check_oal_error("alGenSources");
-    ALuint oal_buffer;
-    alGenBuffers(1, &oal_buffer);
+    Vector<ALuint> oal_buffers(MAX_BUFFERS);
+    alGenBuffers(MAX_BUFFERS, oal_buffers.data());
     check_oal_error("alGenBuffers");
 
     // перенести семплы в буффер
-    alBufferData(oal_buffer, oal_format.oal_format, oal_sound_buffer.data(),
+    alBufferData(oal_buffers.at(0), oal_format.oal_format, oal_sound_buffer.data(),
       oal_sound_buffer.size(), sound.frequency);
     check_oal_error("alBufferData");
     // привязать буффер к источнику
-    alSourcei(oal_source, AL_BUFFER, oal_buffer);
+    alSourcei(oal_source, AL_BUFFER, oal_buffers.at(0));
     check_oal_error("alSourcei AL_BUFFER");
     // настроить свойства звука
     alSourcef(oal_source, AL_GAIN, amplify);
@@ -79,7 +81,7 @@ struct Sound_mgr::Impl {
     check_oal_error("alDistanceModel");
 
     auto id = make_id();
-    bind_audio(id, oal_buffer, oal_source);
+    bind_audio(id, oal_buffers, oal_source);
     return id;
   } // play
 
@@ -87,8 +89,9 @@ struct Sound_mgr::Impl {
     m_update_thread_live = true;
     m_update_thread = std::thread( [this] {
       detailed_log("Sound_mgr: start update thread\n");
-      while (m_update_thread_live) {
-        std::this_thread::yield();
+      while (m_update_thread_live.load(std::memory_order::relaxed)) {
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(50ms);
         std::lock_guard lock(m_mutex);
         update();
       }
@@ -179,6 +182,7 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
+    std::lock_guard lock(m_mutex);
     auto finded_audio_info = m_audio_infos.find(sound_id);
     if (finded_audio_info != m_audio_infos.end()) {
       alSource3f(finded_audio_info->second.oal_source_id, AL_VELOCITY, new_vel.x, new_vel.y, new_vel.z);
@@ -257,17 +261,31 @@ struct Sound_mgr::Impl {
 
   inline void close_oal() {
     detailed_log("disable OpenAL\n");
-    // выключить все треки
-    for (cauto audio_info: m_audio_infos) {
-      alSourceStop(audio_info.second.oal_source_id);
+    for (cnauto audio_info: m_audio_infos) {
+      disable(audio_info.first);
       alDeleteSources(1, &audio_info.second.oal_source_id);
-      alDeleteBuffers(1, &audio_info.second.oal_buffer_id);
+      alDeleteBuffers(MAX_BUFFERS, audio_info.second.oal_buffer_ids.data());
     }
     auto oal_context = alcGetCurrentContext();
     auto oal_device = alcGetContextsDevice(oal_context);
     alcMakeContextCurrent({});
     alcDestroyContext(oal_context);
     alcCloseDevice(oal_device); 
+  }
+
+  // выключить трек
+  inline void disable(const Audio_id sound_id) {
+    if (is_playing(sound_id)) {
+      std::lock_guard lock(m_mutex);
+      auto finded_audio_info = m_audio_infos.find(sound_id);
+      iferror(finded_audio_info == m_audio_infos.end(), "sound id " << sound_id << " not found");
+      alSourceStop(finded_audio_info->second.oal_source_id);
+      check_oal_error("alSourceStop");
+      alSourceRewind(finded_audio_info->second.oal_source_id);
+      check_oal_error("alSourceRewind");
+      alSourcei(finded_audio_info->second.oal_source_id, AL_BUFFER, 0);
+      check_oal_error("alSourcei AL_BUFFER set 0");
+    }
   }
 
   static inline Str decode_oal_error(const ALenum error_enum) {
@@ -347,9 +365,9 @@ struct Sound_mgr::Impl {
 
   // связать звуковой ID с реализацией OAL
   inline void bind_audio(const Audio_id sound_id,
-  const ALuint oal_buffer_id, const ALuint oal_source_id) {
+  const Vector<ALuint>& oal_buffer_ids, const ALuint oal_source_id) {
     m_audio_infos[sound_id] = Audio_info {
-      .oal_buffer_id = oal_buffer_id,
+      .oal_buffer_ids = oal_buffer_ids,
       .oal_source_id = oal_source_id
     };
   }
@@ -370,14 +388,14 @@ struct Sound_mgr::Impl {
         
         if (state != AL_PLAYING) {
           alDeleteSources(1, &audio_info.second.oal_source_id);
-          alDeleteBuffers(1, &audio_info.second.oal_buffer_id);
+          alDeleteBuffers(MAX_BUFFERS, audio_info.second.oal_buffer_ids.data());
           return true;
         }
         return false;
       }
     );
   }
-};
+}; // Impl
 
 Sound_mgr::Sound_mgr(): impl {new_unique<Impl>()} {}
 Sound_mgr::~Sound_mgr() {}
@@ -396,3 +414,4 @@ void Sound_mgr::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio
 void Sound_mgr::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }
 void Sound_mgr::set_master_gain(const float gain) { impl->set_master_gain(gain); }
 void Sound_mgr::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
+void Sound_mgr::disable(const Audio_id sound_id) { impl->disable(sound_id); }
