@@ -2,6 +2,8 @@
 #include "util/mem-types.hpp"
 #include "util/file/file.hpp"
 
+struct Audio;
+
 // Читает аудио файл блоками
 class Packet_decoder {
   nocopy(Packet_decoder);
@@ -17,7 +19,7 @@ class NAME: public Packet_decoder { \
   struct Impl; \
   Unique<Impl> impl {}; \
 public: \
-  explicit NAME(); \
+  explicit NAME(CN<Audio> sound); \
   ~NAME(); \
   Bytes decode(const uint needed_sz) override; \
 };

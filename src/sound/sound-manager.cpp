@@ -83,7 +83,7 @@ struct Sound_mgr::Impl {
     check_oal_error("alDistanceModel");
 
     auto id = make_id();
-    bind_audio(id, oal_buffers, oal_source);
+    bind_audio(id, oal_buffers, oal_source, make_packet_decoder(sound));
     return id;
   } // play
 
@@ -365,11 +365,14 @@ struct Sound_mgr::Impl {
   }
 
   // связать звуковой ID с реализацией OAL
-  inline void bind_audio(const Audio_id sound_id,
-  const Vector<ALuint>& oal_buffer_ids, const ALuint oal_source_id) {
+  inline void bind_audio(const Audio_id sound_id, const Vector<ALuint>& oal_buffer_ids,
+  const ALuint oal_source_id, CN<Shared<Packet_decoder>> packet_decoder) {
+    assert(packet_decoder);
+    assert(sound_id != BAD_AUDIO);
     m_audio_infos[sound_id] = Audio_info {
       .oal_buffer_ids = oal_buffer_ids,
-      .oal_source_id = oal_source_id
+      .oal_source_id = oal_source_id,
+      .packet_decoder = packet_decoder
     };
   }
 
@@ -395,6 +398,18 @@ struct Sound_mgr::Impl {
         return false;
       }
     );
+  }
+
+  static inline Shared<Packet_decoder> make_packet_decoder(CN<Audio> sound) {
+    switch (sound.compression) {
+      default:
+      case Audio::Compression::raw: return new_shared<Packet_decoder_raw>(sound); break;
+      case Audio::Compression::flac: return new_shared<Packet_decoder_flac>(sound); break;
+      case Audio::Compression::vorbis: return new_shared<Packet_decoder_vorbis>(sound); break;
+      case Audio::Compression::opus: return new_shared<Packet_decoder_opus>(sound); break;
+    }
+    error("packet decoder not created");
+    return {};
   }
 }; // Impl
 
