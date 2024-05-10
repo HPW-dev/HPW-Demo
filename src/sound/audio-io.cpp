@@ -1,11 +1,12 @@
 #include <filesystem>
 #include <fstream>
 #include <unordered_map>
+#include <stb/stb_vorbis.c>
 #include "audio-io.hpp"
 #include "audio.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
-#include "util/file/file.hpp"
+#include "util/log.hpp"
 
 Audio load_audio_from_archive(CN<Str> file_name) {
   return {}; // TODO
@@ -65,11 +66,31 @@ Audio load_opus(CN<Str> file_name) {
 }
 
 Audio load_vorbis(CN<Str> file_name) {
-  error("need impl for Vorbis loader");
+  // load Vorbis, &samplerate, &output);*/
+  int error;
+  auto mem = mem_from_file(file_name);
+  auto vorbis_file = stb_vorbis_open_memory(rcast<const unsigned char*>(mem.data()), 
+    mem.size(), &error, {});
+  cauto vorbis_info = stb_vorbis_get_info(vorbis_file);
+  cauto stream_length_in_samples = stb_vorbis_stream_length_in_samples(vorbis_file);
+  stb_vorbis_close(vorbis_file);
+
   Audio ret;
   ret.set_path(file_name);
+  ret.channels = vorbis_info.channels;
+  ret.compression = Audio::Compression::vorbis;
+  ret.format = Audio::Format::pcm_f32;
+  ret.frequency = vorbis_info.sample_rate;
+  ret.data = std::move(mem);
+  ret.samples = stream_length_in_samples;
+  detailed_log("channels: "    << ret.channels << '\n');
+  detailed_log("compression: " << scast<int>(ret.compression) << '\n');
+  detailed_log("format: "      << scast<int>(ret.format) << '\n');
+  detailed_log("frequency: "   << ret.frequency << '\n');
+  detailed_log("data.sz: "     << ret.data.size() << '\n');
+  detailed_log("samples: "     << ret.samples << '\n');
   return ret;
-}
+} // load_vorbis
 
 Audio load_audio(CN<Str> file_name) {
   cauto format = quess_format(file_name);

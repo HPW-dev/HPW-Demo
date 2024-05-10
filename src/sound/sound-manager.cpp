@@ -8,6 +8,7 @@
 #include <OpenAL-soft/AL/al.h>
 #include <OpenAL-soft/AL/alc.h>
 #include "sound-manager.hpp"
+#include "packet-decoder.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 
@@ -15,6 +16,7 @@ struct Sound_mgr::Impl {
   struct Audio_info {
     Vector<ALuint> oal_buffer_ids {};
     ALuint oal_source_id {};
+    Shared<Packet_decoder> packet_decoder {}; // выдаёт поблочно данные аудио файла
   };
 
   constx std::size_t MAX_BUFFERS = 4; // сколько будет буфферов звука
@@ -25,7 +27,6 @@ struct Sound_mgr::Impl {
   std::unordered_map<Audio_id, Audio_info> m_audio_infos {}; // контролирует статус воспроизведения
   std::thread m_update_thread {}; // поток для обновления состояния и пакетного декода
   std::atomic_bool m_update_thread_live {}; // false - завершить m_update_thread
-  //mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
   mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
 
   inline explicit Impl() {
@@ -49,7 +50,7 @@ struct Sound_mgr::Impl {
 
     cnauto sound = find_audio(sound_name);
     cauto oal_format = to_compatible_oal_format(sound);
-    cauto oal_sound_buffer = oal_format.converter(sound);
+    cauto oal_sound_buffer = oal_format.converter(sound); // TODO del
 
     std::lock_guard lock(m_mutex);
     ALuint oal_source;
@@ -59,6 +60,7 @@ struct Sound_mgr::Impl {
     alGenBuffers(MAX_BUFFERS, oal_buffers.data());
     check_oal_error("alGenBuffers");
 
+    // TODO перенести в update
     // перенести семплы в буффер
     alBufferData(oal_buffers.at(0), oal_format.oal_format, oal_sound_buffer.data(),
       oal_sound_buffer.size(), sound.frequency);
@@ -230,7 +232,6 @@ struct Sound_mgr::Impl {
     assert(sound.channels <= 8);
     assert(sound.compression != Audio::Compression::opus); // need impl
     assert(sound.compression != Audio::Compression::flac); // need impl
-    assert(sound.compression != Audio::Compression::vorbis); // need impl
     assert(!sound.data.empty());
     assert(sound.samples != 0);
     assert(sound.frequency != 0);
