@@ -55,10 +55,10 @@ void test_motion_sine() {
   auto sine_wave = make_sin_wave(0.02);
   sound_mgr.move_audio("sine wave", std::move(sine_wave));
   sound_mgr.set_listener_pos(Vec3(0, 0, 1));
-  sound_mgr.set_doppler_factor(15);
+  sound_mgr.set_doppler_factor(20);
 
   // проиграть звук
-  Vec3 pos(-15, 0, 0);
+  Vec3 pos(-25, 0, 0);
   Vec3 vel(1, 0, 0);
   cauto audio_id = sound_mgr.play("sine wave", pos, vel, 0.3);
 
