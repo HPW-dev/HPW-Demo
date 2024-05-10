@@ -1,3 +1,4 @@
+#include <atomic>
 #include <thread>
 #include <cstdint>
 #include <cassert>
@@ -21,12 +22,19 @@ struct Sound_mgr::Impl {
   bool m_eax_2_0_compat {}; // совместимость с эффектами EAX 2.0
   std::unordered_map<Str, Audio> m_store {}; // хранит исходники звуков с привязкой по имени
   std::unordered_map<Audio_id, Audio_info> m_audio_infos {}; // контролирует статус воспроизведения
+  std::thread m_update_thread {}; // поток для обновления состояния и пакетного декода
+  std::atomic_bool m_update_thread_live {}; // false - завершить m_update_thread
+  mutable std::recursive_mutex m_mutex {}; // блокирует доступ к внутренностям
 
   inline explicit Impl() {
     init_openal();
+    make_update_thread();
   }
 
   inline ~Impl() {
+    m_update_thread_live = false;
+    if (m_update_thread.joinable())
+      m_update_thread.join();
     close_oal();
   }
 
@@ -41,6 +49,7 @@ struct Sound_mgr::Impl {
     cauto oal_format = to_compatible_oal_format(sound);
     cauto oal_sound_buffer = oal_format.converter(sound);
 
+    std::lock_guard lock(m_mutex);
     ALuint oal_source;
     alGenSources(1, &oal_source);
     check_oal_error("alGenSources");
@@ -74,6 +83,18 @@ struct Sound_mgr::Impl {
     return id;
   } // play
 
+  inline void make_update_thread() {
+    m_update_thread_live = true;
+    m_update_thread = std::thread( [this] {
+      detailed_log("Sound_mgr: start update thread\n");
+      while (m_update_thread_live) {
+        std::this_thread::yield();
+        std::lock_guard lock(m_mutex);
+        update();
+      }
+      detailed_log("Sound_mgr: end of update thread\n");
+    } );
+  }
 
   static inline void check_oal_error(CN<Str> func_name) {
     if (cauto error = alGetError(); error != AL_NO_ERROR)
@@ -81,23 +102,27 @@ struct Sound_mgr::Impl {
   }
 
   inline void set_listener_pos(const Vec3 listener_pos) {
+    std::lock_guard lock(m_mutex);
     alListener3f(AL_POSITION, listener_pos.x, listener_pos.y, listener_pos.z);
     check_oal_error("alListener3f AL_POSITION");
   }
 
   inline void set_master_gain(const float gain) {
+    std::lock_guard lock(m_mutex);
     alListenerf(AL_GAIN, gain);
     check_oal_error("alListenerf AL_GAIN");
   }
   
   inline void set_listener_dir(const Vec3 listener_dir) {
     const float ori [3] {listener_dir.x, listener_dir.y, listener_dir.z};
+    std::lock_guard lock(m_mutex);
     alListenerfv(AL_ORIENTATION, ori);
     check_oal_error("alListener3f AL_ORIENTATION");
   }
 
   inline bool is_playing(const Audio_id sound_id) const {
     return_if (sound_id == BAD_AUDIO, false);
+    std::lock_guard lock(m_mutex);
     // узнать что звук есть
     auto finded_audio_info = m_audio_infos.find(sound_id);
     if (finded_audio_info == m_audio_infos.end())
@@ -114,6 +139,7 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
+    std::lock_guard lock(m_mutex);
     // TODO
   }
 
@@ -127,6 +153,7 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
+    std::lock_guard lock(m_mutex);
     // TODO
   }
 
@@ -137,6 +164,7 @@ struct Sound_mgr::Impl {
         << sound_id << ")\n");
       return;
     }
+    std::lock_guard lock(m_mutex);
     auto finded_audio_info = m_audio_infos.find(sound_id);
     if (finded_audio_info != m_audio_infos.end()) {
       alSource3f(finded_audio_info->second.oal_source_id, AL_POSITION, new_pos.x, new_pos.y, new_pos.z);
@@ -160,11 +188,13 @@ struct Sound_mgr::Impl {
 
   inline void add_audio(CN<Str> sound_name, CN<Audio> sound) {
     check_audio(sound);
+    std::lock_guard lock(m_mutex);
     m_store[sound_name] = sound;
   }
 
   inline void move_audio(CN<Str> sound_name, Audio&& sound) {
     check_audio(sound);
+    std::lock_guard lock(m_mutex);
     m_store[sound_name] = std::move(sound);
   }
 
@@ -174,6 +204,7 @@ struct Sound_mgr::Impl {
         "попытка изменить тон звуку, который уже не играет (ID: "
         << sound_id << ")\n");
     }
+    std::lock_guard lock(m_mutex);
     auto finded_audio_info = m_audio_infos.find(sound_id);
     if (finded_audio_info != m_audio_infos.end()) {
       alSourcef(finded_audio_info->second.oal_source_id, AL_PITCH, pitch);
@@ -203,6 +234,7 @@ struct Sound_mgr::Impl {
 
   inline CN<Audio> find_audio(CN<Str> sound_name) const {
     try {
+      std::lock_guard lock(m_mutex);
       return m_store.at(sound_name);
     } catch(...) {
       error("Sound \"" << sound_name << "\" not finded in Sound Manager");
@@ -323,6 +355,7 @@ struct Sound_mgr::Impl {
   }
 
   inline void set_doppler_factor(const float doppler_factor) {
+    std::lock_guard lock(m_mutex);
     alDopplerFactor(doppler_factor); // настройка эффекта Допплера
     check_oal_error("alDopplerFactor");
   }
@@ -360,7 +393,6 @@ void Sound_mgr::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { impl
 void Sound_mgr::stop(const Audio_id sound_id) { impl->stop(sound_id); }
 void Sound_mgr::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
 void Sound_mgr::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
-void Sound_mgr::update() { impl->update(); }
 void Sound_mgr::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }
 void Sound_mgr::set_master_gain(const float gain) { impl->set_master_gain(gain); }
 void Sound_mgr::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
