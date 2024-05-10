@@ -28,6 +28,7 @@ sources = [
   src_dir + "util/error.cpp",
   src_dir + "util/file/file.cpp",
   src_dir + "util/str-util.cpp",
+  thirdparty_dir + "include/stb/stb_vorbis.c",
   Glob("*.cpp"),
 ]
 inc_path.extend([thirdparty_dir + "include/_windows_only"])
