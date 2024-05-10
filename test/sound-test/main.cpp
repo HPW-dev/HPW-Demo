@@ -63,7 +63,7 @@ void test_motion_sine() {
   cauto audio_id = sound_mgr.play("sine wave", pos, vel, 0.3);
 
   // не закрывать прогу, пока трек играет
-  constexpr float speed = 0.000015;
+  constexpr float speed = 0.0000666;
   while (true) {
     pos.x += vel.x * speed;
     sound_mgr.set_velocity(audio_id, vel);

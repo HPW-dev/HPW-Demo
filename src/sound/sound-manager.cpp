@@ -24,7 +24,7 @@ struct Sound_mgr::Impl {
   std::unordered_map<Audio_id, Audio_info> m_audio_infos {}; // контролирует статус воспроизведения
   std::thread m_update_thread {}; // поток для обновления состояния и пакетного декода
   std::atomic_bool m_update_thread_live {}; // false - завершить m_update_thread
-  mutable std::recursive_mutex m_mutex {}; // блокирует доступ к внутренностям
+  mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
 
   inline explicit Impl() {
     init_openal();
