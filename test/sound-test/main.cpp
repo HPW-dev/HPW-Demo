@@ -127,14 +127,15 @@ void test_file() {
 
 void test_mix() {
   std::cout << "\nAudio test: mixing audio" << std::endl;
-
-  auto track_1 = make_sin_wave(0.01);
-  auto track_2 = make_sin_wave(0.02);
-  auto track_3 = make_sin_wave(0.04);
+  auto track_1 = make_sin_wave(0.007);
+  auto track_2 = make_sin_wave(0.01);
+  auto track_3 = make_sin_wave(0.05);
+  auto track_4 = make_sin_wave(0.1);
   Sound_mgr sound_mgr;
   sound_mgr.move_audio("sin 1", std::move(track_1));
   sound_mgr.move_audio("sin 2", std::move(track_2));
   sound_mgr.move_audio("sin 3", std::move(track_3));
+  sound_mgr.move_audio("sin 4", std::move(track_4));
   using namespace std::chrono_literals;
   sound_mgr.play("sin 1");
   std::this_thread::sleep_for(1s);
@@ -142,12 +143,60 @@ void test_mix() {
   std::this_thread::sleep_for(1s);
   sound_mgr.play("sin 3");
   std::this_thread::sleep_for(1s);
+  sound_mgr.play("sin 4");
+  std::this_thread::sleep_for(1s);
 } // test_mix
 
+void test_play_after() {
+  std::cout << "\nAudio test: playing after" << std::endl;
+  auto track_1 = make_sin_wave(0.007);
+  auto track_2 = make_sin_wave(0.014);
+
+  Sound_mgr sound_mgr;
+  sound_mgr.move_audio("sin 1", std::move(track_1));
+  sound_mgr.move_audio("sin 2", std::move(track_2));
+
+  Audio_id id_1 = sound_mgr.play("sin 1");
+  Audio_id id_2 = BAD_AUDIO;
+  while (true) {
+    if (!sound_mgr.is_playing(id_1) && id_2 == BAD_AUDIO) {
+      id_2 = sound_mgr.play("sin 2");
+      id_1 = BAD_AUDIO;
+    }
+    break_if (!sound_mgr.is_playing(id_2) && id_1 == BAD_AUDIO);
+    sound_mgr.update();
+    std::this_thread::yield();
+  }
+} // test_play_after
+
+void test_overplay() {
+  std::cout << "\nAudio test: overplay" << std::endl;
+
+  // добавить звук в базу
+  Sound_mgr sound_mgr;
+  auto sine_wave = make_sin_wave(0.01);
+  sound_mgr.move_audio("sin", std::move(sine_wave));
+  sound_mgr.set_listener_pos(Vec3(0, 0, 1));
+
+  // проиграть звук
+  cauto rand_pos = []->float {
+    return ((rand() / float(RAND_MAX)) * 2.0 - 1.0) * 15.0; };
+  cfor (i, 256) {
+    Vec3 pos(rand_pos(), rand_pos(), rand_pos());
+    sound_mgr.play("sin", pos, {}, 0.3);
+    sound_mgr.update();
+    //std::this_thread::yield();
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(20ms);
+  }
+} // test_overplay
+
 int main() {
-  test_sine();
-  test_noise();
-  test_motion_sine();
-  test_mix();
+  //test_sine();
+  //test_noise();
+  //test_motion_sine();
+  //test_mix();
+  //test_play_after();
+  test_overplay();
   //test_file();
 }
