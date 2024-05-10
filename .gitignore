@@ -19,6 +19,12 @@ pgo/
 **/*.hpw_replay
 **/*.lnk
 **/*.a
+**/*.opus
+**/*.flac
+**/*.ogg
+**/*.mp3
+**/*.mp4a
+**/*.mka
 **/*.bak
 **/*.svg
 **/*.o

@@ -8,16 +8,19 @@
 struct Audio: public Resource {
   // чем сжаты данные
   enum class Compression {
-    raw, // без сжатия
-    opus,
-    flac,
-    vorbis
+    raw,    // без сжатия
+    opus,   // libopus
+    flac,   //
+    vorbis, // stb_vorbis
   };
+
+  // формат звука
   enum class Format {
-    pcm_f32,
-    raw_pcm_s16,
-    raw_pcm_u8,
+    pcm_f32,     // fltp audio
+    raw_pcm_s16, // signed 16 bit audio
+    raw_pcm_u8,  // unsigned 8 bit audio
   };
+
   Compression compression {};
   Format format {};
   uint channels {}; // число каналов звука

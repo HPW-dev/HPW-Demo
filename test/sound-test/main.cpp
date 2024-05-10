@@ -158,7 +158,6 @@ void test_overplay() {
   cauto rand_pos = []->float {
     return ((rand() / float(RAND_MAX)) * 2.0 - 1.0) * 15.0; };
   cfor (i, 256) {
-    std::cout << "i: " << i << '\n';
     Vec3 pos(rand_pos(), rand_pos(), rand_pos());
     sound_mgr.play("sin", pos, {}, 0.3);
     using namespace std::chrono_literals;
@@ -187,11 +186,11 @@ void test_file() {
 } // test_file
 
 int main() {
-  //test_sine();
-  //test_noise();
-  //test_motion_sine();
-  //test_mix();
-  //test_play_after();
+  test_sine();
+  test_noise();
+  test_motion_sine();
+  test_mix();
+  test_play_after();
   test_overplay();
   //test_file();
 }
