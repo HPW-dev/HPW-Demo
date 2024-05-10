@@ -42,7 +42,6 @@ void test_sine() {
 
   // не закрывать прогу, пока трек играет
   while (true) {
-    sound_mgr.update();
     break_if (!sound_mgr.is_playing(audio_id));
     std::this_thread::yield();
   }
@@ -69,7 +68,6 @@ void test_motion_sine() {
     pos.x += vel.x * speed;
     sound_mgr.set_velocity(audio_id, vel);
     sound_mgr.set_position(audio_id, pos);
-    sound_mgr.update();
     break_if (!sound_mgr.is_playing(audio_id));
     std::this_thread::yield();
   }
@@ -99,31 +97,10 @@ void test_noise() {
 
   // не закрывать прогу, пока трек играет
   while (true) {
-    sound_mgr.update();
     break_if (!sound_mgr.is_playing(audio_id));
     std::this_thread::yield();
   }
 } // test_sine
-
-void test_file() {
-  std::cout << "\nAudio test: loading file" << std::endl;
-
-  // загрузить звук с диска
-  cauto track = load_audio("test.opus");
-  Sound_mgr sound_mgr;
-  sound_mgr.add_audio("test tack 1", track);
-  
-  // проиграть звук
-  cauto audio_id = sound_mgr.play("test tack 1");
-  iferror(audio_id == BAD_AUDIO, "Bad audio ID");
-  std::cout << "track \"" << track.get_path() << "\" is ";
-  std::cout << (sound_mgr.is_playing(audio_id) ? "playing" : "stoped") << std::endl;
-
-  // не закрывать прогу, пока трек играет
-  while (sound_mgr.is_playing(audio_id)) {
-    std::this_thread::yield();
-  }
-} // test_file
 
 void test_mix() {
   std::cout << "\nAudio test: mixing audio" << std::endl;
@@ -164,7 +141,6 @@ void test_play_after() {
       id_1 = BAD_AUDIO;
     }
     break_if (!sound_mgr.is_playing(id_2) && id_1 == BAD_AUDIO);
-    sound_mgr.update();
     std::this_thread::yield();
   }
 } // test_play_after
@@ -184,11 +160,30 @@ void test_overplay() {
   cfor (i, 256) {
     Vec3 pos(rand_pos(), rand_pos(), rand_pos());
     sound_mgr.play("sin", pos, {}, 0.3);
-    sound_mgr.update();
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(20ms);
   }
 } // test_overplay
+
+void test_file() {
+  std::cout << "\nAudio test: loading file" << std::endl;
+
+  // загрузить звук с диска
+  cauto track = load_audio("test.opus");
+  Sound_mgr sound_mgr;
+  sound_mgr.add_audio("test tack 1", track);
+  
+  // проиграть звук
+  cauto audio_id = sound_mgr.play("test tack 1");
+  iferror(audio_id == BAD_AUDIO, "Bad audio ID");
+  std::cout << "track \"" << track.get_path() << "\" is ";
+  std::cout << (sound_mgr.is_playing(audio_id) ? "playing" : "stoped") << std::endl;
+
+  // не закрывать прогу, пока трек играет
+  while (sound_mgr.is_playing(audio_id)) {
+    std::this_thread::yield();
+  }
+} // test_file
 
 int main() {
   test_sine();

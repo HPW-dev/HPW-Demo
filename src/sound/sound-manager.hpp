@@ -42,8 +42,6 @@ public:
   void add_audio(CN<Str> sound_name, CN<Audio> sound);
   // загрузить звук через перемещение
   void move_audio(CN<Str> sound_name, Audio&& sound);
-  // обновить внутренее состояние
-  void update();
   // громкость всей системы
   void set_master_gain(const float gain);
   // изменить влияние вектора скорости на эффект Допплера
