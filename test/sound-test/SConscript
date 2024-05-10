@@ -26,6 +26,8 @@ used_libs = ["OpenAL32.dll"]
 sources = [
   Glob(src_dir + "sound/*.cpp"),
   src_dir + "util/error.cpp",
+  src_dir + "util/file/file.cpp",
+  src_dir + "util/str-util.cpp",
   Glob("*.cpp"),
 ]
 inc_path.extend([thirdparty_dir + "include/_windows_only"])
