@@ -8,7 +8,7 @@
       "request": "launch",
       "name": "gdb x64",
       "program": "${workspaceRoot}/build/HPW.exe",
-      "cwd": ".",
+      "cwd": "${workspaceRoot}/",
     },
     {
       "type":"cppdbg",
