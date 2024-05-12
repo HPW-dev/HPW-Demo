@@ -320,5 +320,5 @@ void Scene_game::save_named_replay() {
 void Scene_game::init_sound_system() {
   // TODO применение настроек при создании
   hpw::sound_mgr = new_unique<Sound_mgr>();
-  // загрузка аудио ресурсов
+  load_sounds();
 }

@@ -16,10 +16,11 @@
 #include "game/core/user.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
-#include "game/scene/scene-manager.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/sounds.hpp"
+#include "game/scene/scene-manager.hpp"
 #include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
@@ -39,6 +40,8 @@
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
+#include "sound/sound-manager.hpp"
+#include "sound/audio-io.hpp"
 
 void load_resources() {
   detailed_log("loading resources...\n");
@@ -403,3 +406,43 @@ std::size_t sizeof_all_sprites() {
   }
   return ret;
 }
+
+void load_sounds() {
+  detailed_log("loading sounds...\n");
+  assert(hpw::sound_mgr);
+#ifdef EDITOR
+  auto names = all_names_in_dir(hpw::cur_dir);
+#else
+  auto names = hpw::archive->get_all_names();
+#endif
+  // фильтр пропускает только файлы в нужной папке и с нужным разрешением
+  auto name_filter = [](CN<Str> name) {
+    Str find_str = "resource/audio/";
+#ifdef EDITOR
+    conv_sep(find_str);
+#endif
+    return name.find(find_str) != str_npos &&
+      !std::filesystem::path(name).extension().empty() && // не директория
+      ( // подходит формат
+        std::filesystem::path(name).extension() == ".ogg" ||
+        std::filesystem::path(name).extension() == ".mp3" ||
+        std::filesystem::path(name).extension() == ".opus" ||
+        std::filesystem::path(name).extension() == ".flac"
+      );
+  };
+  Strs file_names;
+  to_vector(file_names, names | std::views::filter(name_filter));
+  iferror (file_names.empty(), "file_names пуст, возможно нет ресурсов в папках");
+  // загрузка в хранилище
+  for (auto &name: file_names) {
+#ifdef EDITOR
+    auto sound = load_audio(name);
+    delete_all(name, hpw::cur_dir);
+    conv_sep_for_archive(name);
+#else
+    auto sound = load_audio_from_memory(hpw::archive->get_file(name));
+#endif
+    delete_all(name, "resource/audio/");
+    hpw::sound_mgr->move_audio(name, std::move(sound));
+  }
+} // load_sounds

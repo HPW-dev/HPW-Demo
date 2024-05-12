@@ -10,11 +10,6 @@
 #define STB_VORBIS_HEADER_ONLY
 #include <stb/stb_vorbis.c>
 
-Audio load_audio_from_archive(CN<Str> file_name) {
-  error("need impl for load_audio_from_archive");
-  return {}; // TODO
-}
-
 // угадать формат файла по имени
 [[nodiscard]] Audio::Compression quess_format(CN<Str> file_name) {
   iferror(file_name.empty(), "empty audio file name");
@@ -39,22 +34,21 @@ Audio load_audio_from_archive(CN<Str> file_name) {
   return {};
 } // quess_format
 
-Audio load_raw(CN<Str> file_name) {
+Audio load_raw(CN<Bytes> mem, CN<Str> path) {
   Audio ret;
-  ret.set_path(file_name);
+  ret.set_path(path);
   // предположительные данные, потому что с RAW не идёт инфы о треке
   ret.channels = 1;
   ret.compression = Audio::Compression::raw;
   ret.frequency = 44'100;
   ret.format = Audio::Format::raw_pcm_u8;
-  ret.data = mem_from_file(file_name);
+  ret.data = mem;
   ret.samples = ret.data.size();
   return ret;
 }
 
-Audio load_flac(CN<Str> file_name) {
+Audio load_flac(CN<Bytes> mem, CN<Str> path) {
   // узнать инфу о FLAC файле
-  auto mem = mem_from_file(file_name);
   auto flac_info = drflac_open_memory(mem.data(), mem.size(), {});
   Audio ret;
   ret.channels = flac_info->channels;
@@ -66,7 +60,7 @@ Audio load_flac(CN<Str> file_name) {
     case 32: ret.format = Audio::Format::pcm_f32; break;
     default: error("Error while reading FLAC sample format");
   }
-  ret.set_path(file_name);
+  ret.set_path(path);
   ret.data = std::move(mem);
   ret.compression = Audio::Compression::flac;
   drflac_free(flac_info, {});
@@ -80,18 +74,16 @@ Audio load_flac(CN<Str> file_name) {
   return ret;
 }
 
-Audio load_opus(CN<Str> file_name) {
+Audio load_opus(CN<Bytes> mem, CN<Str> path) {
   // TODO
   error("need impl for Opus loader");
   Audio ret;
-  ret.set_path(file_name);
+  ret.set_path(path);
   return ret;
 }
 
-Audio load_vorbis(CN<Str> file_name) {
-  // load Vorbis, &samplerate, &output);*/
+Audio load_vorbis(CN<Bytes> mem, CN<Str> path) {
   int error;
-  auto mem = mem_from_file(file_name);
   auto vorbis_file = stb_vorbis_open_memory(rcast<const unsigned char*>(mem.data()), 
     mem.size(), &error, {});
   cauto vorbis_info = stb_vorbis_get_info(vorbis_file);
@@ -99,7 +91,7 @@ Audio load_vorbis(CN<Str> file_name) {
   stb_vorbis_close(vorbis_file);
 
   Audio ret;
-  ret.set_path(file_name);
+  ret.set_path(path);
   ret.channels = vorbis_info.channels;
   ret.compression = Audio::Compression::vorbis;
   ret.format = Audio::Format::pcm_f32;
@@ -115,14 +107,30 @@ Audio load_vorbis(CN<Str> file_name) {
   return ret;
 } // load_vorbis
 
+Audio load_audio_from_memory(CN<File> file) {
+  cauto path = file.get_path();
+  iferror(path.empty(), "load_audio_from_memory: file.path is empty");
+  cauto format = quess_format(path);
+  switch (format) {
+    case Audio::Compression::raw:    return load_raw(file.data, path);    break;
+    case Audio::Compression::flac:   return load_flac(file.data, path);   break;
+    case Audio::Compression::opus:   return load_opus(file.data, path);   break;
+    case Audio::Compression::vorbis: return load_vorbis(file.data, path); break;
+    default: error("unsupported audio compression format");
+  }
+  error("audio file \"" << path << "\" not loaded (from memory)");
+  return {};
+}
+
 Audio load_audio(CN<Str> file_name) {
   cauto format = quess_format(file_name);
+  cauto mem = mem_from_file(file_name);
   switch (format) {
-    default:
-    case Audio::Compression::raw:    return load_raw(file_name);    break;
-    case Audio::Compression::flac:   return load_flac(file_name);   break;
-    case Audio::Compression::opus:   return load_opus(file_name);   break;
-    case Audio::Compression::vorbis: return load_vorbis(file_name); break;
+    case Audio::Compression::raw:    return load_raw(mem, file_name);    break;
+    case Audio::Compression::flac:   return load_flac(mem, file_name);   break;
+    case Audio::Compression::opus:   return load_opus(mem, file_name);   break;
+    case Audio::Compression::vorbis: return load_vorbis(mem, file_name); break;
+    default: error("unsupported audio compression format");
   }
   error("audio file \"" << file_name << "\" not loaded");
   return {};

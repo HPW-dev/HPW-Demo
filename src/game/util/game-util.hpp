@@ -49,3 +49,5 @@ utf32 difficulty_to_str(const Difficulty difficulty);
 void save_all_sprites(CN<Str> save_dir, const int MX=512, const int MY=512);
 // размер всех спрайтов в банке
 std::size_t sizeof_all_sprites();
+// загрузить звуки в звуковую систему
+void load_sounds();
