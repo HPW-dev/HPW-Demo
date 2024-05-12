@@ -11,13 +11,20 @@ struct Vec3 {
   inline explicit Vec3(const auto _x, const auto _y, const auto _z): x(_x) , y(_y) , z(_z) {}
 };
 
+// для настройки менеджера звуков
+struct Sound_mgr_config {
+  std::size_t buffers = 4; // сколько будет сменяющихся буферов звукового потока
+  std::size_t buffer_sz = 1024 * 8; // размер буффера потока
+  uint sounds = 100; // сколько звуков можно проиграть одновременно
+};
+
 // управляет воспроизведением звука
 class Sound_mgr {
   struct Impl;
   Unique<Impl> impl {};
 
 public:
-  explicit Sound_mgr();
+  explicit Sound_mgr(CN<Sound_mgr_config> config={});
   ~Sound_mgr();
   // проиграть звук
   Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},

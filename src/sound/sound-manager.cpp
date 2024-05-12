@@ -13,9 +13,7 @@
 #include "util/error.hpp"
 
 struct Sound_mgr::Impl {
-  constx std::size_t MAX_BUFFERS = 3; // сколько будет сменяющихся буферов звукового потока
-  constx std::size_t MAX_BUFFER_SZ = 1024 * 8; // размер буффера потока
-  constx uint MAX_SOUNDS = 100; // сколько звуков можно проиграть одновременно
+  Sound_mgr_config m_config {};
 
   struct Audio_info {
     Vector<ALuint> oal_buffer_ids {};
@@ -26,7 +24,7 @@ struct Sound_mgr::Impl {
     inline void update(Impl* master) {
       assert(packet_decoder);
       assert(sound);
-      assert(oal_buffer_ids.size() >= MAX_BUFFERS);
+      assert(oal_buffer_ids.size() >= master->m_config.buffers);
 
       // узнать состояние буфферов
       ALint buffers_processed = 0;
@@ -35,31 +33,15 @@ struct Sound_mgr::Impl {
 
       cnauto format = master->to_compatible_oal_format(*sound);
 
-      // перенести семплы в буффер
-      /*
-      cfor (buffer_id, MAX_BUFFERS) {
-        // TODO data/samples from decoder
-        //cauto sound_buffer = format.converter(sound->data, sound->samples);
-        cauto decoded_buffer = packet_decoder->decode(MAX_BUFFER_SZ);
-        cauto sound_buffer = format.converter(decoded_buffer, decoded_buffer.size());
-        alBufferData(oal_buffer_ids.at(buffer_id), format.oal_format, sound_buffer.data(),
-          sound_buffer.size(), sound->frequency);
-        check_oal_error("alBufferData");
-        // привязать буффер к источнику
-        /alSourcei(oal_source_id, AL_BUFFER, oal_buffer_ids.at(0));
-        check_oal_error("alSourcei AL_BUFFER");/
-        alSourceQueueBuffers(oal_source_id, MAX_BUFFERS, oal_buffer_ids.data());
-        check_oal_error("alSourceQueueBuffers");
-      }*/
-
       while (buffers_processed > 0) {
         ALuint buffer_id;
         alSourceUnqueueBuffers(oal_source_id, 1, &buffer_id);
         check_oal_error("unqueue buffer");
 
-        cauto decoded_buffer = packet_decoder->decode(MAX_BUFFER_SZ);
-        cauto sound_buffer = format.converter(decoded_buffer, decoded_buffer.size());
-        alBufferData(oal_buffer_ids.at(buffer_id), format.oal_format, sound_buffer.data(),
+        cauto decoded_buffer = packet_decoder->decode(master->m_config.buffer_sz);
+        cauto sound_buffer = format.converter(decoded_buffer,
+          decoded_buffer.size() / format.bytes_per_sample);
+        alBufferData(buffer_id, format.oal_format, sound_buffer.data(),
           sound_buffer.size(), sound->frequency);
         check_oal_error("alBufferData");
         
@@ -68,7 +50,7 @@ struct Sound_mgr::Impl {
         
         --buffers_processed;
       }
-    }
+    } // update
   }; // Audio_info
 
   Audio_id m_uid {}; // для генерации audio_id
@@ -79,7 +61,10 @@ struct Sound_mgr::Impl {
   std::atomic_bool m_update_thread_live {}; // false - завершить m_update_thread
   mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
 
-  inline explicit Impl() {
+  inline explicit Impl(CN<Sound_mgr_config> config): m_config {config} {
+    assert(config.buffer_sz >= 1024 * 8);
+    assert(config.buffers > 2);
+    assert(config.sounds >= 8);
     init_openal();
     make_update_thread();
   }
@@ -93,7 +78,7 @@ struct Sound_mgr::Impl {
 
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
   const Vec3 source_velocity, const real amplify, const bool repeat) {
-    if (m_audio_infos.size() >= MAX_SOUNDS) {
+    if (m_audio_infos.size() >= m_config.sounds) {
       detailed_log("no more OAL buffer/source\n");
       return BAD_AUDIO;
     }
@@ -106,23 +91,22 @@ struct Sound_mgr::Impl {
     std::lock_guard lock(m_mutex);
     alGenSources(1, &audio_info.oal_source_id);
     check_oal_error("alGenSources");
-    audio_info.oal_buffer_ids.resize(MAX_BUFFERS);
-    alGenBuffers(MAX_BUFFERS, audio_info.oal_buffer_ids.data());
+    audio_info.oal_buffer_ids.resize(m_config.buffers);
+    alGenBuffers(m_config.buffers, audio_info.oal_buffer_ids.data());
     check_oal_error("alGenBuffers");
-
-    //audio_info.update(this);
 
     // перенести семплы в буферы
     cnauto format = to_compatible_oal_format(*audio_info.sound);
-    cfor (buffer_id, MAX_BUFFERS) {
-      cauto decoded_buffer = audio_info.packet_decoder->decode(MAX_BUFFER_SZ);
-      cauto sound_buffer = format.converter(decoded_buffer, decoded_buffer.size());
+    cfor (buffer_id, m_config.buffers) {
+      cauto decoded_buffer = audio_info.packet_decoder->decode(m_config.buffer_sz);
+      cauto sound_buffer = format.converter(decoded_buffer,
+        decoded_buffer.size() / format.bytes_per_sample);
       alBufferData(audio_info.oal_buffer_ids.at(buffer_id), format.oal_format,
         sound_buffer.data(), sound_buffer.size(), audio_info.sound->frequency);
       check_oal_error("alBufferData");
     }
     // привязать буферы к источнику
-    alSourceQueueBuffers(audio_info.oal_source_id, MAX_BUFFERS,
+    alSourceQueueBuffers(audio_info.oal_source_id, m_config.buffers,
       audio_info.oal_buffer_ids.data());
     check_oal_error("alSourceQueueBuffers");
 
@@ -327,7 +311,7 @@ struct Sound_mgr::Impl {
     for (cnauto audio_info: m_audio_infos) {
       disable(audio_info.first);
       alDeleteSources(1, &audio_info.second.oal_source_id);
-      alDeleteBuffers(MAX_BUFFERS, audio_info.second.oal_buffer_ids.data());
+      alDeleteBuffers(m_config.buffers, audio_info.second.oal_buffer_ids.data());
     }
     auto oal_context = alcGetCurrentContext();
     auto oal_device = alcGetContextsDevice(oal_context);
@@ -371,6 +355,7 @@ struct Sound_mgr::Impl {
     Audio::Format sound_format {};
     ALenum oal_format {};
     Sound_buffer_converter converter {};
+    uint bytes_per_sample {};
   };
 
   inline static Bytes conv_mono_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
@@ -379,11 +364,8 @@ struct Sound_mgr::Impl {
     Bytes ret(samples * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
     auto src_p = rcast<CP<src_t>>(src.data());
-    cfor (i, samples) {
-      *dst_p = *src_p * 0x7FFF;
-      ++dst_p;
-      ++src_p;
-    }
+    cfor (i, samples)
+      dst_p[i] = src_p[i] * 0x7FFF;
     return ret;
   }
 
@@ -393,14 +375,11 @@ struct Sound_mgr::Impl {
   inline static Bytes conv_stereo_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
     using src_t = float;
     using dst_t = std::int16_t;
-    Bytes ret(samples * sizeof(dst_t) * 2);
+    Bytes ret((samples * 2) / sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
     auto src_p = rcast<CP<src_t>>(src.data());
-    cfor (i, samples * 2) {
-      *dst_p = *src_p * 0x7FFF;
-      ++dst_p;
-      ++src_p;
-    }
+    cfor (i, samples * 2)
+      dst_p[i] = src_p[i] * 0x7FFF;
     return ret;
   }
 
@@ -409,12 +388,12 @@ struct Sound_mgr::Impl {
 
   inline CN<Format_game_to_oal> to_compatible_oal_format(CN<Audio> sound) const {
     static const Vector<Format_game_to_oal> format_table {
-      {.channel = 1, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_f32_to_s16},
-      {.channel = 1, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_s16_to_s16},
-      {.channel = 1, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_MONO8,    .converter = &conv_mono_u8_to_u8},
-      {.channel = 2, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_f32_to_s16},
-      {.channel = 2, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_s16_to_s16},
-      {.channel = 2, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_STEREO8,  .converter = &conv_stereo_u8_to_u8},
+      {.channel = 1, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_f32_to_s16,   .bytes_per_sample = 4},
+      {.channel = 1, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_s16_to_s16,   .bytes_per_sample = 2},
+      {.channel = 1, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_MONO8,    .converter = &conv_mono_u8_to_u8,     .bytes_per_sample = 1},
+      {.channel = 2, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_f32_to_s16, .bytes_per_sample = 4},
+      {.channel = 2, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_s16_to_s16, .bytes_per_sample = 2},
+      {.channel = 2, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_STEREO8,  .converter = &conv_stereo_u8_to_u8,   .bytes_per_sample = 1},
     };
     for (cnauto format_info: format_table) {
       if (sound.channels == format_info.channel && sound.format == format_info.sound_format)
@@ -443,13 +422,13 @@ struct Sound_mgr::Impl {
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
-      [](const decltype(m_audio_infos)::value_type audio_info)->bool {
+      [this](const decltype(m_audio_infos)::value_type audio_info)->bool {
         ALint state;
         alGetSourcei(audio_info.second.oal_source_id, AL_SOURCE_STATE, &state);
         
         if (state != AL_PLAYING) {
           alDeleteSources(1, &audio_info.second.oal_source_id);
-          alDeleteBuffers(MAX_BUFFERS, audio_info.second.oal_buffer_ids.data());
+          alDeleteBuffers(m_config.buffers, audio_info.second.oal_buffer_ids.data());
           return true;
         }
         return false;
@@ -470,7 +449,7 @@ struct Sound_mgr::Impl {
   }
 }; // Impl
 
-Sound_mgr::Sound_mgr(): impl {new_unique<Impl>()} {}
+Sound_mgr::Sound_mgr(CN<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
 Sound_mgr::~Sound_mgr() {}
 Audio_id Sound_mgr::play(CN<Str> sound_name, const Vec3 source_position, const Vec3 source_velocity,
 const real amplify, const bool repeat)
