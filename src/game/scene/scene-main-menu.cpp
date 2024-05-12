@@ -9,15 +9,16 @@
 #include "scene-game.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
-#include "game/core/canvas.hpp"
-#include "game/util/game-archive.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/sounds.hpp"
+#include "game/core/replays.hpp"
+#include "game/util/game-archive.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/version.hpp"
-#include "game/core/replays.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "graphic/image/image.hpp"
@@ -33,6 +34,7 @@
 #include "util/hpw-util.hpp"
 #include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
+#include "sound/sound-manager.hpp"
 
 Scene_main_menu::Scene_main_menu() {
   init_menu();
@@ -147,6 +149,12 @@ void Scene_main_menu::init_menu() {
     },
     Vec{140, 200}
   );
+  // звук при выборе пункта меню
+  menu->set_select_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/open.flac"); } );
+  // звук при перемещении по пунктам меню
+  menu->set_move_cursor_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/select 2.flac"); } );
 } // init_menu
 
 void Scene_main_menu::next_bg() {

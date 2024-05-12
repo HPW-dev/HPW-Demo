@@ -22,7 +22,6 @@
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"
-#include "game/core/sounds.hpp"
 #include "game/core/huds.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
@@ -58,7 +57,6 @@
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "sound/sound-manager.hpp"
 
 void Scene_game::init_levels() {
   if (m_start_tutorial) { // начать с туториала
@@ -102,7 +100,6 @@ Scene_game::Scene_game(const bool start_tutorial)
   // TODO выбор HUD с конфига
   graphic::hud = new_shared<Hud_asci>();
   hpw::save_last_replay = false;
-  init_sound_system();
 }
 
 Scene_game::~Scene_game() {
@@ -315,10 +312,4 @@ void Scene_game::save_named_replay() {
     // TODO окно с ошибкой
     hpw_log("ошибка при сохранении реплея\n");
   }
-}
-
-void Scene_game::init_sound_system() {
-  // TODO применение настроек при создании
-  hpw::sound_mgr = new_unique<Sound_mgr>();
-  load_sounds();
 }

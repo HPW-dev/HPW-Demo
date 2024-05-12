@@ -2,18 +2,19 @@
 #include <algorithm>
 #include "game-app.hpp"
 #include "host/command.hpp"
-#include "game/util/pge.hpp"
-#include "game/util/game-util.hpp"
-#include "game/core/scenes.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-manager.hpp"
+#include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/locales.hpp"
+#include "game/core/sounds.hpp"
+#include "game/util/pge.hpp"
+#include "game/util/game-util.hpp"
+#include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
@@ -22,15 +23,14 @@
 #include "graphic/font/unifont.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
+#include "sound/sound-manager.hpp"
 #include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 
-Game_app::Game_app(int argc, char *argv[])
-: Host_glfw(argc, argv)
-{
+Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
   #ifdef RELEASE
     init_validation_info();
   #endif
@@ -38,14 +38,20 @@ Game_app::Game_app(int argc, char *argv[])
   load_resources();
   load_locale();
   load_font();
-  
-  init_scene_mgr();
-  hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
 
   /* к этому моменту кеймапер будет инициализирован и
   управление можно будет переназначить с конфига */
   load_config();
   load_pge_from_config();
+
+  // звук
+  // TODO применение настроек при создании
+  hpw::sound_mgr = new_unique<Sound_mgr>();
+  load_sounds();
+
+  // управление сценами
+  init_scene_mgr();
+  hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
 } // c-tor
 
 Game_app::~Game_app() {

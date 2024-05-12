@@ -53,18 +53,28 @@ void Menu::update(double dt) {
 
   if (check_pressed_or_holded(hpw::keycode::enable, 60, 60)) {
     m_items[m_cur_item]->enable();
+    if (m_select_callback)
+      m_select_callback(*m_items[m_cur_item]);
     m_item_selected = true;
   } else {
     m_item_selected = false;
   }
+  
   if (check_pressed_or_holded(hpw::keycode::left, 50, 18))
     m_items[m_cur_item]->minus();
   if (check_pressed_or_holded(hpw::keycode::right, 50, 18))
     m_items[m_cur_item]->plus();
-  if (check_pressed_or_holded(hpw::keycode::down, 60, 30))
+
+  if (check_pressed_or_holded(hpw::keycode::down, 60, 30)) {
+    if (m_move_cursor_callback)
+      m_move_cursor_callback(*m_items[m_cur_item]);
     next_item();
-  if (check_pressed_or_holded(hpw::keycode::up, 60, 30))
+  }
+  if (check_pressed_or_holded(hpw::keycode::up, 60, 30)) {
+    if (m_move_cursor_callback)
+      m_move_cursor_callback(*m_items[m_cur_item]);
     prev_item();
+  }
 } // update
 
 void Menu::prev_item() {
@@ -91,3 +101,5 @@ std::size_t Menu::get_cur_item_id() const { return m_cur_item; }
 CN<decltype(Menu::m_items)::value_type> Menu::get_cur_item() const { return m_items.at(m_cur_item); }
 CN<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }
 bool Menu::item_selected() const { return m_item_selected; }
+void Menu::set_select_callback(CN<Menu_select_callback> callback) { m_select_callback = callback; }
+void Menu::set_move_cursor_callback(CN<Menu_select_callback> callback) { m_move_cursor_callback = callback; }
