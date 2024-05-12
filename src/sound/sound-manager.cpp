@@ -13,14 +13,34 @@
 #include "util/error.hpp"
 
 struct Sound_mgr::Impl {
+  constx std::size_t MAX_BUFFERS = 3; // сколько будет сменяющихся буферов звукового потока
+  constx std::size_t MAX_BUFFER_SZ = 1024 * 8; // размер буффера потока
+  constx uint MAX_SOUNDS = 100; // сколько звуков можно проиграть одновременно
+
   struct Audio_info {
     Vector<ALuint> oal_buffer_ids {};
     ALuint oal_source_id {};
     Shared<Packet_decoder> packet_decoder {}; // выдаёт поблочно данные аудио файла
-  };
+    CP<Audio> sound {}; // прикреплённый звук из банка
 
-  constx std::size_t MAX_BUFFERS = 4; // сколько будет буфферов звука
-  constx uint MAX_SOUNDS = 100; // сколько звуков можно проиграть одновременно
+    inline void update(Impl* master) {
+      assert(packet_decoder);
+      assert(sound);
+      assert(oal_buffer_ids.size() >= MAX_BUFFERS);
+
+      // перенести семплы в буффер
+      cnauto format = master->to_compatible_oal_format(*sound);
+      // TODO data/samples from decoder
+      cauto sound_buffer = format.converter(sound->data, sound->samples);
+      alBufferData(oal_buffer_ids.at(0), format.oal_format, sound_buffer.data(),
+        sound_buffer.size(), sound->frequency);
+      check_oal_error("alBufferData");
+      // привязать буффер к источнику
+      alSourcei(oal_source_id, AL_BUFFER, oal_buffer_ids.at(0));
+      check_oal_error("alSourcei AL_BUFFER");
+    }
+  }; // Audio_info
+
   Audio_id m_uid {}; // для генерации audio_id
   bool m_eax_2_0_compat {}; // совместимость с эффектами EAX 2.0
   std::unordered_map<Str, Audio> m_store {}; // хранит исходники звуков с привязкой по имени
@@ -49,41 +69,39 @@ struct Sound_mgr::Impl {
     }
 
     cnauto sound = find_audio(sound_name);
-    cauto oal_format = to_compatible_oal_format(sound);
-    cauto oal_sound_buffer = oal_format.converter(sound); // TODO del
+    Audio_info audio_info;
+    audio_info.packet_decoder = make_packet_decoder(sound);
+    audio_info.sound = &sound;
 
     std::lock_guard lock(m_mutex);
-    ALuint oal_source;
-    alGenSources(1, &oal_source);
+    alGenSources(1, &audio_info.oal_source_id);
     check_oal_error("alGenSources");
-    Vector<ALuint> oal_buffers(MAX_BUFFERS);
-    alGenBuffers(MAX_BUFFERS, oal_buffers.data());
+    audio_info.oal_buffer_ids.resize(MAX_BUFFERS);
+    alGenBuffers(MAX_BUFFERS, audio_info.oal_buffer_ids.data());
     check_oal_error("alGenBuffers");
 
-    // TODO перенести в update
-    // перенести семплы в буффер
-    alBufferData(oal_buffers.at(0), oal_format.oal_format, oal_sound_buffer.data(),
-      oal_sound_buffer.size(), sound.frequency);
-    check_oal_error("alBufferData");
-    // привязать буффер к источнику
-    alSourcei(oal_source, AL_BUFFER, oal_buffers.at(0));
-    check_oal_error("alSourcei AL_BUFFER");
+    audio_info.update(this);
+
     // настроить свойства звука
-    alSourcef(oal_source, AL_GAIN, amplify);
+    alSourcef(audio_info.oal_source_id, AL_GAIN, amplify);
     check_oal_error("alSourcef AL_GAIN");
-    alSource3f(oal_source, AL_POSITION, source_position.x, source_position.y, source_position.z);
+    alSource3f(audio_info.oal_source_id, AL_POSITION,
+      source_position.x, source_position.y, source_position.z);
     check_oal_error("alSource3f AL_POSITION");
-    alSource3f(oal_source, AL_VELOCITY, source_velocity.x, source_velocity.y, source_velocity.z);
+    alSource3f(audio_info.oal_source_id, AL_VELOCITY,
+      source_velocity.x, source_velocity.y, source_velocity.z);
     check_oal_error("alSource3f AL_VELOCITY");
-    alSourcei(oal_source, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
+    alSourcei(audio_info.oal_source_id, AL_LOOPING, repeat ? AL_TRUE : AL_FALSE);
     check_oal_error("alSourcei AL_LOOPING");
-    alSourcePlay(oal_source); // запуск звука
-    check_oal_error("alSourcePlay");
     alDistanceModel(AL_INVERSE_DISTANCE);
     check_oal_error("alDistanceModel");
 
+    // запуск звука
+    alSourcePlay(audio_info.oal_source_id);
+    check_oal_error("alSourcePlay");
+
     auto id = make_id();
-    bind_audio(id, oal_buffers, oal_source, make_packet_decoder(sound));
+    bind_audio(id, std::move(audio_info));
     return id;
   } // play
 
@@ -302,7 +320,7 @@ struct Sound_mgr::Impl {
     return "unknown OAL error";
   }
 
-  using Sound_buffer_converter = std::function<Bytes (CN<Audio>)>;
+  using Sound_buffer_converter = std::function<Bytes (CN<Bytes>, const std::size_t)>;
 
   struct Format_game_to_oal {
     uint channel {};
@@ -311,13 +329,12 @@ struct Sound_mgr::Impl {
     Sound_buffer_converter converter {};
   };
 
-  inline static Bytes conv_mono_f32_to_s16(CN<Audio> src) {
+  inline static Bytes conv_mono_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
     using src_t = float;
     using dst_t = std::int16_t;
-    cauto samples = src.samples;
     Bytes ret(samples * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
-    auto src_p = rcast<CP<src_t>>(src.data.data());
+    auto src_p = rcast<CP<src_t>>(src.data());
     cfor (i, samples) {
       *dst_p = *src_p * 0x7FFF;
       ++dst_p;
@@ -326,17 +343,16 @@ struct Sound_mgr::Impl {
     return ret;
   }
 
-  inline static Bytes conv_mono_s16_to_s16(CN<Audio> src) { return src.data; }
-  inline static Bytes conv_mono_u8_to_u8(CN<Audio> src) { return src.data; }
+  inline static Bytes conv_mono_s16_to_s16(CN<Bytes> src, const std::size_t samples) { return src; }
+  inline static Bytes conv_mono_u8_to_u8(CN<Bytes> src, const std::size_t samples) { return src; }
 
-  inline static Bytes conv_stereo_f32_to_s16(CN<Audio> src) {
+  inline static Bytes conv_stereo_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
     using src_t = float;
     using dst_t = std::int16_t;
-    cauto samples = src.samples * 2;
-    Bytes ret(samples * sizeof(dst_t));
+    Bytes ret(samples * sizeof(dst_t) * 2);
     auto dst_p = rcast<dst_t*>(ret.data());
-    auto src_p = rcast<CP<src_t>>(src.data.data());
-    cfor (i, samples) {
+    auto src_p = rcast<CP<src_t>>(src.data());
+    cfor (i, samples * 2) {
       *dst_p = *src_p * 0x7FFF;
       ++dst_p;
       ++src_p;
@@ -344,8 +360,8 @@ struct Sound_mgr::Impl {
     return ret;
   }
 
-  inline static Bytes conv_stereo_s16_to_s16(CN<Audio> src) { return src.data; }
-  inline static Bytes conv_stereo_u8_to_u8(CN<Audio> src) { return src.data; }
+  inline static Bytes conv_stereo_s16_to_s16(CN<Bytes> src, const std::size_t samples) { return src; }
+  inline static Bytes conv_stereo_u8_to_u8(CN<Bytes> src, const std::size_t samples) { return src; }
 
   inline CN<Format_game_to_oal> to_compatible_oal_format(CN<Audio> sound) const {
     static const Vector<Format_game_to_oal> format_table {
@@ -364,16 +380,10 @@ struct Sound_mgr::Impl {
     return *(Format_game_to_oal*)0;
   }
 
-  // связать звуковой ID с реализацией OAL
-  inline void bind_audio(const Audio_id sound_id, const Vector<ALuint>& oal_buffer_ids,
-  const ALuint oal_source_id, CN<Shared<Packet_decoder>> packet_decoder) {
-    assert(packet_decoder);
+  // записать звуковой источник в список проигрывания
+  inline void bind_audio(const Audio_id sound_id, Audio_info&& info) {
     assert(sound_id != BAD_AUDIO);
-    m_audio_infos[sound_id] = Audio_info {
-      .oal_buffer_ids = oal_buffer_ids,
-      .oal_source_id = oal_source_id,
-      .packet_decoder = packet_decoder
-    };
+    m_audio_infos[sound_id] = std::move(info);
   }
 
   inline void set_doppler_factor(const float doppler_factor) {
@@ -383,6 +393,9 @@ struct Sound_mgr::Impl {
   }
 
   inline void update() {
+    // обновить буферы
+    /*for (nauto audio_info: m_audio_infos)
+      audio_info.second.update(this);*/
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
@@ -398,7 +411,7 @@ struct Sound_mgr::Impl {
         return false;
       }
     );
-  }
+  } // update
 
   static inline Shared<Packet_decoder> make_packet_decoder(CN<Audio> sound) {
     switch (sound.compression) {
