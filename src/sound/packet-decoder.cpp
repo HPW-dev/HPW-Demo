@@ -40,7 +40,7 @@ struct Packet_decoder_raw::Impl {
     if (needed_bytes == 0)
       return {};
     // скопировать блок данных
-    Bytes ret(needed_bytes);
+    Bytes ret(needed_sz);
     memcpy(ret.data(), m_sound->data.data() + m_readed_bytes, needed_bytes);
     m_readed_bytes += needed_bytes;
     return ret;

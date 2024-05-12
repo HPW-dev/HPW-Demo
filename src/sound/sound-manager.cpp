@@ -28,16 +28,46 @@ struct Sound_mgr::Impl {
       assert(sound);
       assert(oal_buffer_ids.size() >= MAX_BUFFERS);
 
-      // перенести семплы в буффер
+      // узнать состояние буфферов
+      ALint buffers_processed = 0;
+      alGetSourcei(oal_source_id, AL_BUFFERS_PROCESSED, &buffers_processed);
+      check_oal_error("alGetSourcei AL_BUFFERS_PROCESSED");
+
       cnauto format = master->to_compatible_oal_format(*sound);
-      // TODO data/samples from decoder
-      cauto sound_buffer = format.converter(sound->data, sound->samples);
-      alBufferData(oal_buffer_ids.at(0), format.oal_format, sound_buffer.data(),
-        sound_buffer.size(), sound->frequency);
-      check_oal_error("alBufferData");
-      // привязать буффер к источнику
-      alSourcei(oal_source_id, AL_BUFFER, oal_buffer_ids.at(0));
-      check_oal_error("alSourcei AL_BUFFER");
+
+      // перенести семплы в буффер
+      /*
+      cfor (buffer_id, MAX_BUFFERS) {
+        // TODO data/samples from decoder
+        //cauto sound_buffer = format.converter(sound->data, sound->samples);
+        cauto decoded_buffer = packet_decoder->decode(MAX_BUFFER_SZ);
+        cauto sound_buffer = format.converter(decoded_buffer, decoded_buffer.size());
+        alBufferData(oal_buffer_ids.at(buffer_id), format.oal_format, sound_buffer.data(),
+          sound_buffer.size(), sound->frequency);
+        check_oal_error("alBufferData");
+        // привязать буффер к источнику
+        /alSourcei(oal_source_id, AL_BUFFER, oal_buffer_ids.at(0));
+        check_oal_error("alSourcei AL_BUFFER");/
+        alSourceQueueBuffers(oal_source_id, MAX_BUFFERS, oal_buffer_ids.data());
+        check_oal_error("alSourceQueueBuffers");
+      }*/
+
+      while (buffers_processed > 0) {
+        ALuint buffer_id;
+        alSourceUnqueueBuffers(oal_source_id, 1, &buffer_id);
+        check_oal_error("unqueue buffer");
+
+        cauto decoded_buffer = packet_decoder->decode(MAX_BUFFER_SZ);
+        cauto sound_buffer = format.converter(decoded_buffer, decoded_buffer.size());
+        alBufferData(oal_buffer_ids.at(buffer_id), format.oal_format, sound_buffer.data(),
+          sound_buffer.size(), sound->frequency);
+        check_oal_error("alBufferData");
+        
+        alSourceQueueBuffers(oal_source_id, 1, &buffer_id);
+        check_oal_error("re-enqueueing buffer to source");
+        
+        --buffers_processed;
+      }
     }
   }; // Audio_info
 
@@ -80,7 +110,21 @@ struct Sound_mgr::Impl {
     alGenBuffers(MAX_BUFFERS, audio_info.oal_buffer_ids.data());
     check_oal_error("alGenBuffers");
 
-    audio_info.update(this);
+    //audio_info.update(this);
+
+    // перенести семплы в буферы
+    cnauto format = to_compatible_oal_format(*audio_info.sound);
+    cfor (buffer_id, MAX_BUFFERS) {
+      cauto decoded_buffer = audio_info.packet_decoder->decode(MAX_BUFFER_SZ);
+      cauto sound_buffer = format.converter(decoded_buffer, decoded_buffer.size());
+      alBufferData(audio_info.oal_buffer_ids.at(buffer_id), format.oal_format,
+        sound_buffer.data(), sound_buffer.size(), audio_info.sound->frequency);
+      check_oal_error("alBufferData");
+    }
+    // привязать буферы к источнику
+    alSourceQueueBuffers(audio_info.oal_source_id, MAX_BUFFERS,
+      audio_info.oal_buffer_ids.data());
+    check_oal_error("alSourceQueueBuffers");
 
     // настроить свойства звука
     alSourcef(audio_info.oal_source_id, AL_GAIN, amplify);
@@ -394,8 +438,8 @@ struct Sound_mgr::Impl {
 
   inline void update() {
     // обновить буферы
-    /*for (nauto audio_info: m_audio_infos)
-      audio_info.second.update(this);*/
+    for (nauto audio_info: m_audio_infos)
+      audio_info.second.update(this);
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
