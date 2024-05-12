@@ -177,11 +177,11 @@ void test_file() {
 } // test_file
 
 int main() {
-  //test_sine();
-  //test_noise();
-  //test_motion_sine();
-  //test_mix();
-  //test_play_after();
-  //test_overplay();
+  test_sine();
+  test_noise();
+  test_motion_sine();
+  test_mix();
+  test_play_after();
+  test_overplay();
   test_file();
 }
