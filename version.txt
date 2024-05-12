@@ -8,6 +8,8 @@ robin-hood-hashing: v3.11.5
 stb_truetype: v1.26
 stb_image_write: v1.16
 stb_image: v2.28
+dr_flac: v0.12.42
+dr_mp3: v0.6.39
 YAML-cpp: v0.8.0
 Miniz: v1.15
 hash_sha256: (30 mar. 2023)
