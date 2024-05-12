@@ -1,3 +1,4 @@
+#include "dr_libs/dr_flac.h"
 #include <filesystem>
 #include <fstream>
 #include <unordered_map>
@@ -52,10 +53,30 @@ Audio load_raw(CN<Str> file_name) {
 }
 
 Audio load_flac(CN<Str> file_name) {
-  // TODO
-  error("need impl for FLAC loader");
+  // узнать инфу о FLAC файле
+  auto mem = mem_from_file(file_name);
+  auto flac_info = drflac_open_memory(mem.data(), mem.size(), {});
   Audio ret;
+  ret.channels = flac_info->channels;
+  ret.frequency = flac_info->sampleRate;
+  ret.samples = flac_info->totalPCMFrameCount;
+  switch (flac_info->bitsPerSample) {
+    case 8: ret.format = Audio::Format::raw_pcm_u8; break;
+    case 16: ret.format = Audio::Format::raw_pcm_s16; break;
+    case 32: ret.format = Audio::Format::pcm_f32; break;
+    default: error("Error while reading FLAC sample format");
+  }
   ret.set_path(file_name);
+  ret.data = std::move(mem);
+  ret.compression = Audio::Compression::flac;
+  drflac_free(flac_info, {});
+
+  detailed_log("channels: "    << ret.channels << '\n');
+  detailed_log("compression: " << scast<int>(ret.compression) << '\n');
+  detailed_log("format: "      << scast<int>(ret.format) << '\n');
+  detailed_log("frequency: "   << ret.frequency << '\n');
+  detailed_log("data.sz: "     << ret.data.size() << '\n');
+  detailed_log("samples: "     << ret.samples << '\n');
   return ret;
 }
 

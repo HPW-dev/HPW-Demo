@@ -10,7 +10,8 @@ struct Audio: public Resource {
   enum class Compression {
     raw,    // без сжатия
     opus,   // libopus
-    flac,   //
+    mp3,    // dr_mp3
+    flac,   // dr_flac
     vorbis, // stb_vorbis
   };
 

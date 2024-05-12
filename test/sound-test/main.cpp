@@ -165,15 +165,16 @@ void test_overplay() {
   }
 } // test_overplay
 
-void test_file() {
-  std::cout << "\nAudio test: loading file" << std::endl;
-  cauto track = load_audio("music test.ogg");
+void test_file(CN<Str> fname) {
+  std::cout << "\nAudio test: loading file \"" << fname << "\"" << std::endl;
+  cauto track = load_audio(fname);
   Sound_mgr sound_mgr;
   sound_mgr.add_audio("music test", track);
   cauto audio_id = sound_mgr.play("music test");
   iferror(audio_id == BAD_AUDIO, "Bad audio ID");
-  while (sound_mgr.is_playing(audio_id))
-    std::this_thread::yield();
+  using namespace std::chrono_literals;
+  std::this_thread::sleep_for(12s);
+  sound_mgr.stop(audio_id);
 } // test_file
 
 int main() {
@@ -183,5 +184,6 @@ int main() {
   test_mix();
   test_play_after();
   test_overplay();
-  test_file();
+  test_file("music test.ogg");
+  test_file("music test.flac");
 }

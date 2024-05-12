@@ -277,7 +277,7 @@ struct Sound_mgr::Impl {
     assert(sound.channels != 0);
     assert(sound.channels <= 8);
     assert(sound.compression != Audio::Compression::opus); // need impl
-    assert(sound.compression != Audio::Compression::flac); // need impl
+    assert(sound.compression != Audio::Compression::mp3); // need impl
     assert(!sound.data.empty());
     assert(sound.samples != 0);
     assert(sound.frequency != 0);
@@ -445,6 +445,7 @@ struct Sound_mgr::Impl {
       case Audio::Compression::flac: return new_shared<Packet_decoder_flac>(sound); break;
       case Audio::Compression::vorbis: return new_shared<Packet_decoder_vorbis>(sound); break;
       case Audio::Compression::opus: return new_shared<Packet_decoder_opus>(sound); break;
+      case Audio::Compression::mp3: error("need impl for mp3 decoder"); break;
     }
     error("packet decoder not created");
     return {};
