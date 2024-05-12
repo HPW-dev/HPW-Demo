@@ -359,6 +359,7 @@ struct Sound_mgr::Impl {
   };
 
   inline static Bytes conv_mono_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
+    return_if (samples == 0, {});
     using src_t = float;
     using dst_t = std::int16_t;
     Bytes ret(samples * sizeof(dst_t));
@@ -373,9 +374,10 @@ struct Sound_mgr::Impl {
   inline static Bytes conv_mono_u8_to_u8(CN<Bytes> src, const std::size_t samples) { return src; }
 
   inline static Bytes conv_stereo_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
+    return_if (samples == 0, {});
     using src_t = float;
     using dst_t = std::int16_t;
-    Bytes ret((samples * 2) / sizeof(dst_t));
+    Bytes ret(samples * 2 * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
     auto src_p = rcast<CP<src_t>>(src.data());
     cfor (i, samples * 2)

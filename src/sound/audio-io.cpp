@@ -1,13 +1,13 @@
 #include <filesystem>
 #include <fstream>
 #include <unordered_map>
-#define STB_VORBIS_HEADER_ONLY
-#include <stb/stb_vorbis.c>
 #include "audio-io.hpp"
 #include "audio.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
+#define STB_VORBIS_HEADER_ONLY
+#include <stb/stb_vorbis.c>
 
 Audio load_audio_from_archive(CN<Str> file_name) {
   error("need impl for load_audio_from_archive");
