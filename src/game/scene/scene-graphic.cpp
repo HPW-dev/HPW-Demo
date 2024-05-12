@@ -11,6 +11,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/sounds.hpp"
 #include "game/util/pge.hpp"
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
@@ -26,6 +27,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
+#include "sound/sound-manager.hpp"
 #include "util/error.hpp"
 
 Scene_graphic::Scene_graphic() {
@@ -334,6 +336,12 @@ void Scene_graphic::init_simple_menu() {
     },
     Rect{0, 0, graphic::width, graphic::height}
   );
+  // звук при выборе пункта меню
+  simple_menu->set_select_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/close.flac"); } );
+  // звук при перемещении по пунктам меню
+  simple_menu->set_move_cursor_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/select 2.flac"); } );
 } // init_simple_menu
 
 void Scene_graphic::init_detailed_menu() {
@@ -420,6 +428,12 @@ void Scene_graphic::init_detailed_menu() {
     },
     Rect{0, 0, graphic::width, graphic::height}
   );
+  // звук при выборе пункта меню
+  detailed_menu->set_select_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/close.flac"); } );
+  // звук при перемещении по пунктам меню
+  detailed_menu->set_move_cursor_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/select 2.flac"); } );
 } // init_detailed_menu
 
 void Scene_graphic::init_preset_menu() {
@@ -435,4 +449,10 @@ void Scene_graphic::init_preset_menu() {
     },
     Rect{0, 0, graphic::width, graphic::height}
   );
+  // звук при выборе пункта меню
+  preset_menu->set_select_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/close.flac"); } );
+  // звук при перемещении по пунктам меню
+  preset_menu->set_move_cursor_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/select 2.flac"); } );
 }

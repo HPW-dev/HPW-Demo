@@ -151,7 +151,7 @@ void Scene_main_menu::init_menu() {
   );
   // звук при выборе пункта меню
   menu->set_select_callback( [](Menu_item& item) {
-    hpw::sound_mgr->play("sfx/UI/open.flac"); } );
+    hpw::sound_mgr->play("sfx/UI/close.flac"); } );
   // звук при перемещении по пунктам меню
   menu->set_move_cursor_callback( [](Menu_item& item) {
     hpw::sound_mgr->play("sfx/UI/select 2.flac"); } );
