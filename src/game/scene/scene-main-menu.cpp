@@ -154,7 +154,21 @@ void Scene_main_menu::init_menu() {
     hpw::sound_mgr->play("sfx/UI/close.flac"); } );
   // звук при перемещении по пунктам меню
   menu->set_move_cursor_callback( [](Menu_item& item) {
-    hpw::sound_mgr->play("sfx/UI/select 2.flac"); } );
+    static const Vector<Str> names {
+      "sfx/UI/Milpon guitar/1.flac",
+      "sfx/UI/Milpon guitar/2.flac",
+      "sfx/UI/Milpon guitar/3.flac",
+      "sfx/UI/Milpon guitar/4.flac",
+      "sfx/UI/Milpon guitar/5.flac",
+      "sfx/UI/Milpon guitar/6.flac",
+      "sfx/UI/Milpon guitar/7.flac",
+      "sfx/UI/Milpon guitar/8.flac",
+      "sfx/UI/Milpon guitar/9.flac",
+      "sfx/UI/Milpon guitar/10.flac",
+      "sfx/UI/Milpon guitar/11.flac",
+    };
+    hpw::sound_mgr->play(names.at(rndu_fast(names.size() - 1)), {}, {}, 0.5);
+  } );
 } // init_menu
 
 void Scene_main_menu::next_bg() {
