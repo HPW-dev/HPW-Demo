@@ -1,3 +1,5 @@
+#include <OpenAL-soft/AL/al.h>
+#include <OpenAL-soft/AL/alc.h>
 #include <atomic>
 #include <thread>
 #include <cstdint>
@@ -5,8 +7,6 @@
 #include <functional>
 #include <utility>
 #include <unordered_map>
-#include <OpenAL-soft/AL/al.h>
-#include <OpenAL-soft/AL/alc.h>
 #include "sound-manager.hpp"
 #include "packet-decoder.hpp"
 #include "util/log.hpp"
