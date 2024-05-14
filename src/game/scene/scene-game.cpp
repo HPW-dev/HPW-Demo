@@ -11,9 +11,11 @@
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
+#include "sound/sound-manager.hpp"
 #include "game/core/shop.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
+#include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
@@ -100,9 +102,11 @@ Scene_game::Scene_game(const bool start_tutorial)
   // TODO выбор HUD с конфига
   graphic::hud = new_shared<Hud_asci>();
   hpw::save_last_replay = false;
-}
+  hpw::sound_mgr->shutup();
+} // c-tor
 
 Scene_game::~Scene_game() {
+  hpw::sound_mgr->shutup();
   if (graphic::get_fast_forward())
     graphic::set_fast_forward(false);
   graphic::post_effects = {};
