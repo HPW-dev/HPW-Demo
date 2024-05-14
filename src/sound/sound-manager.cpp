@@ -11,6 +11,7 @@
 #include "packet-decoder.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "game/entity/entity.hpp"
 
 struct Sound_mgr::Impl {
   Sound_mgr_config m_config {};
@@ -20,6 +21,8 @@ struct Sound_mgr::Impl {
     ALuint oal_source_id {};
     Shared<Packet_decoder> packet_decoder {}; // выдаёт поблочно данные аудио файла
     CP<Audio> sound {}; // прикреплённый звук из банка
+    CP<Entity> entity {}; // привязанный объект
+    Audio_id audio_id {BAD_AUDIO}; // ID для управления звуком
 
     inline void update(Impl* master) {
       assert(packet_decoder);
@@ -30,6 +33,14 @@ struct Sound_mgr::Impl {
       ALint buffers_processed = 0;
       alGetSourcei(oal_source_id, AL_BUFFERS_PROCESSED, &buffers_processed);
       check_oal_error("alGetSourcei AL_BUFFERS_PROCESSED");
+
+      // пока объект жив, настраивать его позицию звука
+      if (entity && entity->status.live && !entity->status.no_sound) {
+        cauto pos = entity->phys.get_pos();
+        master->set_position(audio_id, Vec3(pos.x, pos.y, 0));
+        cauto vel = entity->phys.get_vel();
+        master->set_velocity(audio_id, Vec3(vel.x, vel.y, 0));
+      }
 
       cnauto format = master->to_compatible_oal_format(*sound);
 
@@ -129,9 +140,18 @@ struct Sound_mgr::Impl {
     check_oal_error("alSourcePlay");
 
     auto id = make_id();
+    audio_info.audio_id = id;
     bind_audio(id, std::move(audio_info));
     return id;
   } // play
+
+  inline Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
+  const real amplify, const bool repeat) {
+    assert(entity);
+    cauto pos = entity->phys.get_pos();
+    cauto vel = entity->phys.get_vel();
+    return play(sound_name, Vec3(pos.x, pos.y, 0), Vec3(vel.x, vel.y, 0), amplify, repeat);
+  }
 
   inline void make_update_thread() {
     m_update_thread_live = true;
@@ -424,15 +444,18 @@ struct Sound_mgr::Impl {
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
-      [this](const decltype(m_audio_infos)::value_type audio_info)->bool {
+      [this](CN<decltype(m_audio_infos)::value_type> audio_info_pair)->bool {
+        cnauto audio_info = audio_info_pair.second; // allias
         ALint state;
-        alGetSourcei(audio_info.second.oal_source_id, AL_SOURCE_STATE, &state);
+        alGetSourcei(audio_info.oal_source_id, AL_SOURCE_STATE, &state);
         
         if (state != AL_PLAYING) {
-          alDeleteSources(1, &audio_info.second.oal_source_id);
-          alDeleteBuffers(m_config.buffers, audio_info.second.oal_buffer_ids.data());
+          alDeleteSources(1, &audio_info.oal_source_id);
+          alDeleteBuffers(m_config.buffers, audio_info.oal_buffer_ids.data());
           return true;
         }
+        // мёртвый объект тоже удалить
+        return_if (audio_info.entity && !audio_info.entity->status.live, true);
         return false;
       }
     );
@@ -471,3 +494,5 @@ void Sound_mgr::set_master_gain(const float gain) { impl->set_master_gain(gain);
 void Sound_mgr::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
 void Sound_mgr::disable(const Audio_id sound_id) { impl->disable(sound_id); }
 CN<Audio> Sound_mgr::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
+Audio_id Sound_mgr::attach_and_play(CN<Str> sound_name, CP<Entity> entity, const real amplify, const bool repeat)
+  { return impl->attach_and_play(sound_name, entity, amplify, repeat); }

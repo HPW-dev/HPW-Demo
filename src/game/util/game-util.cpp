@@ -411,6 +411,7 @@ std::size_t sizeof_all_sprites() {
 // связывание звуков с банком
 inline void init_stote_sound() {
   assert(hpw::store_sound);
+  // TODO
 }
 
 void load_sounds() {

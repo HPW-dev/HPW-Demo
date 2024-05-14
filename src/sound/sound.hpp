@@ -5,5 +5,5 @@
 struct Sound final: public Resource  {
   /* Пути к звукам из архива.
   Несколько звуков можно прикреплять к одному имени */ 
-  Strs path {}; 
+  Strs paths {}; 
 };

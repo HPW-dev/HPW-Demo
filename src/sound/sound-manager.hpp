@@ -4,11 +4,14 @@
 #include "util/str.hpp"
 #include "audio.hpp"
 
+class Entity;
+
 // 3D координаты
 struct Vec3 {
   real x {}, y {}, z {};
   Vec3() = default;
-  inline explicit Vec3(const auto _x, const auto _y, const auto _z): x(_x) , y(_y) , z(_z) {}
+  inline explicit Vec3(const auto _x, const auto _y, const auto _z):
+     x(_x), y(_y), z(_z) {}
 };
 
 // для настройки менеджера звуков
@@ -28,6 +31,9 @@ public:
   ~Sound_mgr();
   // проиграть звук
   Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
+    const real amplify=1.0, const bool repeat=false);
+  // проиграть звук с привязкой к объекту
+  Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
     const real amplify=1.0, const bool repeat=false);
   // утсановить положение слушателя
   void set_listener_pos(const Vec3 listener_pos);
