@@ -13,8 +13,8 @@ struct Vec3 {
 
 // для настройки менеджера звуков
 struct Sound_mgr_config {
-  std::size_t buffers = 3; // число сменяющихся буферов потока
-  std::size_t buffer_sz = 1024 * 8; // размер одного буфера потока в байтах
+  std::size_t buffers = 4; // число сменяющихся буферов потока
+  std::size_t buffer_sz = 1024 * 16; // размер одного буфера потока в байтах
   uint sounds = 100; // сколько звуков можно проиграть одновременно
 };
 
@@ -55,4 +55,6 @@ public:
   void set_doppler_factor(const float doppler_factor);
   // выключить определённый звук
   void disable(const Audio_id sound_id);
-};
+  // найти загруженный звук по имени
+  CN<Audio> find_audio(CN<Str> sound_name) const;
+}; // Sound_mgr

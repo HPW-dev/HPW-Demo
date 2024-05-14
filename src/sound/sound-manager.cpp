@@ -470,3 +470,4 @@ void Sound_mgr::set_pitch(const Audio_id sound_id, const float pitch) { impl->se
 void Sound_mgr::set_master_gain(const float gain) { impl->set_master_gain(gain); }
 void Sound_mgr::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
 void Sound_mgr::disable(const Audio_id sound_id) { impl->disable(sound_id); }
+CN<Audio> Sound_mgr::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
