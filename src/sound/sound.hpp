@@ -1,7 +1,9 @@
 #pragma once
-#include "util/resource.hpp"
+#include "util/str.hpp"
 
 // связывает имена треков и пути к трекам из архива
 struct Sound final: public Resource  {
-  Str path {}; // путь к звуку из архива
+  /* Пути к звукам из архива.
+  Несколько звуков можно прикреплять к одному имени */ 
+  Strs path {}; 
 };
