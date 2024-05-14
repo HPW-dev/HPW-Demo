@@ -64,42 +64,43 @@ void Phys::set_vel(const Vec val) {
 }
 
 void Phys::update(double dt) {
+  cauto fdt = dt;
   m_old_pos = get_pos();
 
   // применение вращения
-  m_rotate_speed += m_rotate_accel * dt * 0.5;
-  m_rotate_speed = std::max<real>(0, m_rotate_speed - m_rotate_force * dt * 0.5);
-  set_deg(m_deg + m_rotate_speed * dt * (m_invert_rotation ? -1.0 : 1.0));
+  m_rotate_speed += m_rotate_accel * fdt * 0.5f;
+  m_rotate_speed = std::max<real>(0.0f, m_rotate_speed - m_rotate_force * fdt * 0.5f);
+  set_deg(m_deg + m_rotate_speed * fdt * (m_invert_rotation ? -1.0f : 1.0f));
 
   auto vel = get_vel();
   auto direct = get_direction();
   auto _force = get_force();
 
   // движение с ускорением корректным для dt
-  vel += direct * m_accel * dt * 0.5;
+  vel += direct * m_accel * fdt * 0.5f;
   set_vel(vel);
 
   auto _speed = get_speed();
-  _speed -= _force * dt * 0.5;
-  set_speed(std::max<decltype(_speed)>(0, _speed));
+  _speed -= _force * fdt * 0.5f;
+  set_speed(std::max<real>(0.0f, _speed));
 
-  set_pos( get_pos() + (vel * dt) );
+  set_pos( get_pos() + (vel * fdt) );
 
   // докручиваем чтоб было ровно по интегралу
-  m_rotate_speed += m_rotate_accel * dt * 0.5;
-  m_rotate_speed = std::max<real>(0, m_rotate_speed - m_rotate_force * dt * 0.5);
-  set_deg(m_deg + m_rotate_speed * dt * (m_invert_rotation ? -1.0 : 1.0));
+  m_rotate_speed += m_rotate_accel * fdt * 0.5f;
+  m_rotate_speed = std::max<real>(0.0f, m_rotate_speed - m_rotate_force * fdt * 0.5f);
+  set_deg(m_deg + m_rotate_speed * fdt * (m_invert_rotation ? -1.0f : 1.0f));
 
   vel = get_vel();
   direct = get_direction();
-  vel += direct * m_accel * dt * 0.5;
+  vel += direct * m_accel * fdt * 0.5f;
   set_vel(vel);
 
   _speed = get_speed();
-  _speed -= _force * dt * 0.5;
-  set_speed(std::max<decltype(_speed)>(0, _speed));
+  _speed -= _force * fdt * 0.5f;
+  set_speed(std::max<real>(0.0f, _speed));
 
-  assert(vel >= 0); // может ли случиться иначе?
-  assert(get_deg() >= 0 && get_deg() <= 360);
+  assert(vel >= 0.0f); // может ли случиться иначе?
+  assert(get_deg() >= 0.0f && get_deg() <= 360);
   set_vel(vel);
 } // update
