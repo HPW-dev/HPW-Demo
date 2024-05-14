@@ -47,6 +47,7 @@ Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
   // звук
   // TODO применение настроек при создании
   hpw::sound_mgr = new_unique<Sound_mgr>();
+  hpw::store_sound = new_unique<Store<Sound>>();
   load_sounds();
 
   // управление сценами

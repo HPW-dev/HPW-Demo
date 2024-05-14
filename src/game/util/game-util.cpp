@@ -42,6 +42,7 @@
 #include "graphic/animation/frame.hpp"
 #include "sound/sound-manager.hpp"
 #include "sound/audio-io.hpp"
+#include "sound/sound.hpp"
 
 void load_resources() {
   detailed_log("loading resources...\n");
@@ -407,6 +408,11 @@ std::size_t sizeof_all_sprites() {
   return ret;
 }
 
+// связывание звуков с банком
+inline void init_stote_sound() {
+  assert(hpw::store_sound);
+}
+
 void load_sounds() {
   detailed_log("loading sounds...\n");
   assert(hpw::sound_mgr);
@@ -445,4 +451,6 @@ void load_sounds() {
     delete_all(name, "resource/audio/");
     hpw::sound_mgr->move_audio(name, std::move(sound));
   }
+
+  init_stote_sound();
 } // load_sounds
