@@ -473,6 +473,19 @@ struct Sound_mgr::Impl {
     error("packet decoder not created");
     return {};
   }
+
+  inline void shutup() {
+    Vector<Audio_id> ids_for_shutup {};
+    // буфферизировать идентификаторы управления
+    {
+      std::lock_guard lock(m_mutex);
+      for (cnauto audio_info: m_audio_infos)
+        ids_for_shutup.push_back(audio_info.first);
+    }
+    // выключить все звуки
+    for (cauto id: ids_for_shutup)
+      disable(id);
+  }
 }; // Impl
 
 Sound_mgr::Sound_mgr(CN<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
@@ -496,3 +509,4 @@ void Sound_mgr::disable(const Audio_id sound_id) { impl->disable(sound_id); }
 CN<Audio> Sound_mgr::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
 Audio_id Sound_mgr::attach_and_play(CN<Str> sound_name, CP<Entity> entity, const real amplify, const bool repeat)
   { return impl->attach_and_play(sound_name, entity, amplify, repeat); }
+void Sound_mgr::shutup() { impl->shutup(); }

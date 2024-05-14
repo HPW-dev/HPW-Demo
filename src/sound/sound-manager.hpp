@@ -63,4 +63,6 @@ public:
   void disable(const Audio_id sound_id);
   // найти загруженный звук по имени
   CN<Audio> find_audio(CN<Str> sound_name) const;
+  // заткнуть все звуки
+  void shutup();
 }; // Sound_mgr
