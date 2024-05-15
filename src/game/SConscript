@@ -33,7 +33,7 @@ used_libs = [
 ]
 
 if is_linux:
-  used_libs.extend(["GL", "GLEW", "glfw"])
+  used_libs.extend(["GL", "GLEW", "glfw", "openal"])
 else: # windows
   inc_path.extend([
     thirdparty_dir + "include/_windows_only",
