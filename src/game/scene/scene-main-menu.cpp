@@ -167,7 +167,7 @@ void Scene_main_menu::init_menu() {
       "sfx/UI/Milpon guitar/10.flac",
       "sfx/UI/Milpon guitar/11.flac",
     };
-    hpw::sound_mgr->play(names.at(rndu_fast(names.size() - 1)), {}, {}, 0.5);
+    hpw::sound_mgr->play(names.at(rndu_fast(names.size() - 1)), {}, {}, 0.3);
   } );
 } // init_menu
 

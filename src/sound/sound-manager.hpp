@@ -21,6 +21,15 @@ struct Sound_mgr_config {
   uint sounds = 100; // сколько звуков можно проиграть одновременно
 };
 
+struct Device_name {
+  constx uint BAD_ID = 0xFFFFu;
+  std::size_t id {BAD_ID};
+  Str name {};
+};
+
+// узнать какие звуковые устройства доступны
+[[nodiscard]] Vector<Device_name> get_audio_devices();
+
 // управляет воспроизведением звука
 class Sound_mgr {
   struct Impl;

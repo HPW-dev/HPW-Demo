@@ -3,6 +3,7 @@
 #include <atomic>
 #include <thread>
 #include <cstdint>
+#include <cstring>
 #include <cassert>
 #include <functional>
 #include <utility>
@@ -12,6 +13,24 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "game/entity/entity.hpp"
+
+inline Str decode_oal_error(const ALenum error_enum) {
+  switch (error_enum) {
+    default:
+    case AL_NO_ERROR: return "OAL no errors"; break;
+    case AL_INVALID_NAME: return "OAL invalid name"; break;
+    case AL_INVALID_ENUM: return "OAL invalid enum"; break;
+    case AL_INVALID_VALUE: return "OAL invalid value"; break;
+    case AL_INVALID_OPERATION: return "OAL invalid operation"; break;
+    case AL_OUT_OF_MEMORY: return "OAL out of memory"; break;
+  }
+  return "unknown OAL error";
+}
+
+inline void check_oal_error(CN<Str> func_name) {
+  if (cauto error = alGetError(); error != AL_NO_ERROR)
+    error("error in OAL function: " + func_name + " - " + decode_oal_error(error));
+}
 
 struct Sound_mgr::Impl {
   Sound_mgr_config m_config {};
@@ -165,11 +184,6 @@ struct Sound_mgr::Impl {
       }
       detailed_log("Sound_mgr: end of update thread\n");
     } );
-  }
-
-  static inline void check_oal_error(CN<Str> func_name) {
-    if (cauto error = alGetError(); error != AL_NO_ERROR)
-      error("error in OAL function: " + func_name + " - " + decode_oal_error(error));
   }
 
   inline void set_listener_pos(const Vec3 listener_pos) {
@@ -355,19 +369,6 @@ struct Sound_mgr::Impl {
     }
   }
 
-  static inline Str decode_oal_error(const ALenum error_enum) {
-    switch (error_enum) {
-      default:
-      case AL_NO_ERROR: return "OAL no errors"; break;
-      case AL_INVALID_NAME: return "OAL invalid name"; break;
-      case AL_INVALID_ENUM: return "OAL invalid enum"; break;
-      case AL_INVALID_VALUE: return "OAL invalid value"; break;
-      case AL_INVALID_OPERATION: return "OAL invalid operation"; break;
-      case AL_OUT_OF_MEMORY: return "OAL out of memory"; break;
-    }
-    return "unknown OAL error";
-  }
-
   using Sound_buffer_converter = std::function<Bytes (CN<Bytes>, const std::size_t)>;
 
   struct Format_game_to_oal {
@@ -487,6 +488,41 @@ struct Sound_mgr::Impl {
       disable(id);
   }
 }; // Impl
+
+Strs parse_raw_list(Cstr raw_list) {
+  Strs ret;
+  while (raw_list[0] != '\0') {
+    const auto len = std::strlen(raw_list);
+    ret.push_back(std::string(raw_list, raw_list + len));
+    raw_list += len + 1;
+  }
+  return ret;
+}
+
+[[nodiscard]] Vector<Device_name> get_audio_devices() {
+  try {
+    Vector<Device_name> ret;
+    cauto enumeration = alcIsExtensionPresent({}, "ALC_ENUMERATION_EXT");
+    check_oal_error("alcIsExtensionPresent ALC_ENUMERATION_EXT");
+    if (enumeration == AL_FALSE) {
+      error("OAL device enumeration not supported");
+    } else {
+      Cstr device_list_raw;
+      if (alcIsExtensionPresent({}, "ALC_enumerate_all_EXT") == AL_FALSE)
+        device_list_raw = rcast<Cstr>( alcGetString({}, ALC_DEVICE_SPECIFIER) );
+      else
+        device_list_raw = rcast<Cstr>( alcGetString({}, ALC_ALL_DEVICES_SPECIFIER) );
+      cauto device_list = parse_raw_list(device_list_raw);
+      cfor (i, device_list.size()) {
+        ret.emplace_back( Device_name{.id=i, .name=device_list[i]} );
+      }
+    }
+    return ret;
+  } catch (...) {
+    hpw_log("audio devices not finded");
+  }
+  return {};
+} // get_audio_devices
 
 Sound_mgr::Sound_mgr(CN<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
 Sound_mgr::~Sound_mgr() {}

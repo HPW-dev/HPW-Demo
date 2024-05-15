@@ -409,14 +409,16 @@ std::size_t sizeof_all_sprites() {
 }
 
 // связывание звуков с банком
-inline void init_stote_sound() {
-  assert(hpw::store_sound);
+inline void init_store_sound() {
+  hpw::store_sound = new_unique<Store<Sound>>();
   // TODO
 }
 
 void load_sounds() {
   detailed_log("loading sounds...\n");
-  assert(hpw::sound_mgr);
+  // TODO применение настроек при создании
+  hpw::sound_mgr = new_unique<Sound_mgr>();
+  
 #ifdef EDITOR
   auto names = all_names_in_dir(hpw::cur_dir);
 #else
@@ -453,5 +455,5 @@ void load_sounds() {
     hpw::sound_mgr->move_audio(name, std::move(sound));
   }
 
-  init_stote_sound();
+  init_store_sound();
 } // load_sounds

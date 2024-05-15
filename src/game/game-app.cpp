@@ -43,11 +43,6 @@ Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
   управление можно будет переназначить с конфига */
   load_config();
   load_pge_from_config();
-
-  // звук
-  // TODO применение настроек при создании
-  hpw::sound_mgr = new_unique<Sound_mgr>();
-  hpw::store_sound = new_unique<Store<Sound>>();
   load_sounds();
 
   // управление сценами
