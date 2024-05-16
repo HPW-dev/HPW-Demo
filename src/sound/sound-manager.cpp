@@ -108,6 +108,9 @@ struct Sound_mgr_oal::Impl {
 
   inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
   const Vec3 source_velocity, const real amplify, const bool repeat) {
+    // звуки с нулевой громкостью не запускать
+    return_if (amplify <= 0, BAD_AUDIO);
+
     if (m_audio_infos.size() >= m_config.sounds) {
       detailed_log("no more OAL buffer/source\n");
       return BAD_AUDIO;
