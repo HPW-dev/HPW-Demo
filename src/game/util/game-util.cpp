@@ -1,4 +1,4 @@
-#include <ranges>
+#include <iostream>
 #include <ranges>
 #include <ctime>
 #include <algorithm>
@@ -26,6 +26,7 @@
 #include "util/path.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
+#include "util/error.hpp"
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/vec-util.hpp"
@@ -416,8 +417,14 @@ inline void init_store_sound() {
 
 void load_sounds() {
   detailed_log("loading sounds...\n");
-  // TODO применение настроек при создании
-  hpw::sound_mgr = new_unique<Sound_mgr>();
+  try {
+    // TODO применение настроек при создании
+    hpw::sound_mgr = new_unique<Sound_mgr_oal>();
+  } catch (CN<hpw::Error> err) {
+    hpw_log("Error while initialize OpenAL sound system. Sound disabled\n");
+    std::cerr << err.what() << std::endl;
+    hpw::sound_mgr = new_unique<Sound_mgr_nosound>();
+  }
   
 #ifdef EDITOR
   auto names = all_names_in_dir(hpw::cur_dir);

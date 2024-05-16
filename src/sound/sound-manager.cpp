@@ -32,7 +32,7 @@ inline void check_oal_error(CN<Str> func_name) {
     error("error in OAL function: " + func_name + " - " + decode_oal_error(error));
 }
 
-struct Sound_mgr::Impl {
+struct Sound_mgr_oal::Impl {
   Sound_mgr_config m_config {};
 
   struct Audio_info {
@@ -175,14 +175,14 @@ struct Sound_mgr::Impl {
   inline void make_update_thread() {
     m_update_thread_live = true;
     m_update_thread = std::thread( [this] {
-      detailed_log("Sound_mgr: start update thread\n");
+      detailed_log("Sound_mgr_oal: start update thread\n");
       while (m_update_thread_live.load(std::memory_order::relaxed)) {
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(50ms);
         std::lock_guard lock(m_mutex);
         update();
       }
-      detailed_log("Sound_mgr: end of update thread\n");
+      detailed_log("Sound_mgr_oal: end of update thread\n");
     } );
   }
 
@@ -524,25 +524,30 @@ Strs parse_raw_list(Cstr raw_list) {
   return {};
 } // get_audio_devices
 
-Sound_mgr::Sound_mgr(CN<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
-Sound_mgr::~Sound_mgr() {}
-Audio_id Sound_mgr::play(CN<Str> sound_name, const Vec3 source_position, const Vec3 source_velocity,
+Sound_mgr_oal::Sound_mgr_oal(CN<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
+Sound_mgr_oal::~Sound_mgr_oal() {}
+Audio_id Sound_mgr_oal::play(CN<Str> sound_name, const Vec3 source_position, const Vec3 source_velocity,
 const real amplify, const bool repeat)
   { return impl->play(sound_name, source_position, source_velocity, amplify, repeat); }
-void Sound_mgr::set_listener_pos(const Vec3 listener_pos) { impl->set_listener_pos(listener_pos); }
-void Sound_mgr::set_listener_dir(const Vec3 listener_dir) { impl->set_listener_dir(listener_dir); }
-bool Sound_mgr::is_playing(const Audio_id sound_id) const { return impl->is_playing(sound_id); }
-void Sound_mgr::set_amplify(const Audio_id sound_id, const real amplify) { impl->set_amplify(sound_id, amplify); }
-void Sound_mgr::set_position(const Audio_id sound_id, const Vec3 new_pos) { impl->set_position(sound_id, new_pos); }
-void Sound_mgr::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { impl->set_velocity(sound_id, new_vel); }
-void Sound_mgr::stop(const Audio_id sound_id) { impl->stop(sound_id); }
-void Sound_mgr::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
-void Sound_mgr::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
-void Sound_mgr::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }
-void Sound_mgr::set_master_gain(const float gain) { impl->set_master_gain(gain); }
-void Sound_mgr::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
-void Sound_mgr::disable(const Audio_id sound_id) { impl->disable(sound_id); }
-CN<Audio> Sound_mgr::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
-Audio_id Sound_mgr::attach_and_play(CN<Str> sound_name, CP<Entity> entity, const real amplify, const bool repeat)
+void Sound_mgr_oal::set_listener_pos(const Vec3 listener_pos) { impl->set_listener_pos(listener_pos); }
+void Sound_mgr_oal::set_listener_dir(const Vec3 listener_dir) { impl->set_listener_dir(listener_dir); }
+bool Sound_mgr_oal::is_playing(const Audio_id sound_id) const { return impl->is_playing(sound_id); }
+void Sound_mgr_oal::set_amplify(const Audio_id sound_id, const real amplify) { impl->set_amplify(sound_id, amplify); }
+void Sound_mgr_oal::set_position(const Audio_id sound_id, const Vec3 new_pos) { impl->set_position(sound_id, new_pos); }
+void Sound_mgr_oal::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { impl->set_velocity(sound_id, new_vel); }
+void Sound_mgr_oal::stop(const Audio_id sound_id) { impl->stop(sound_id); }
+void Sound_mgr_oal::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
+void Sound_mgr_oal::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
+void Sound_mgr_oal::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }
+void Sound_mgr_oal::set_master_gain(const float gain) { impl->set_master_gain(gain); }
+void Sound_mgr_oal::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
+void Sound_mgr_oal::disable(const Audio_id sound_id) { impl->disable(sound_id); }
+CN<Audio> Sound_mgr_oal::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
+Audio_id Sound_mgr_oal::attach_and_play(CN<Str> sound_name, CP<Entity> entity, const real amplify, const bool repeat)
   { return impl->attach_and_play(sound_name, entity, amplify, repeat); }
-void Sound_mgr::shutup() { impl->shutup(); }
+void Sound_mgr_oal::shutup() { impl->shutup(); }
+
+CN<Audio> Sound_mgr_nosound::find_audio(CN<Str> sound_name) const {
+  error("called find_audio in nosound mode");
+  return *(Audio*)0; // заглушка для анализатора
+}

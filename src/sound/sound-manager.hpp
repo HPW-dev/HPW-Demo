@@ -30,48 +30,106 @@ struct Device_name {
 // узнать какие звуковые устройства доступны
 [[nodiscard]] Vector<Device_name> get_audio_devices();
 
-// управляет воспроизведением звука
+// управляет воспроизведением звука (база для реализаций)
 class Sound_mgr {
-  struct Impl;
-  Unique<Impl> impl {};
+  nocopy(Sound_mgr);
 
 public:
-  explicit Sound_mgr(CN<Sound_mgr_config> config={});
-  ~Sound_mgr();
+  explicit Sound_mgr() = default;
+  virtual ~Sound_mgr() = default;
   // проиграть звук
-  Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
-    const real amplify=1.0, const bool repeat=false);
+  virtual Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
+    const real amplify=1.0, const bool repeat=false) = 0;
   // проиграть звук с привязкой к объекту
-  Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
-    const real amplify=1.0, const bool repeat=false);
+  virtual Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
+    const real amplify=1.0, const bool repeat=false) = 0;
   // утсановить положение слушателя
-  void set_listener_pos(const Vec3 listener_pos);
+  virtual void set_listener_pos(const Vec3 listener_pos) = 0;
   // утсановить направление слушателя
-  void set_listener_dir(const Vec3 listener_dir);
+  virtual void set_listener_dir(const Vec3 listener_dir) = 0;
   // останавливает проигрывание звука
-  void stop(const Audio_id sound_id);
+  virtual void stop(const Audio_id sound_id) = 0;
   // настроить громкость звука
-  void set_amplify(const Audio_id sound_id, const real amplify);
+  virtual void set_amplify(const Audio_id sound_id, const real amplify) = 0;
   // настроить позицию источника звука
-  void set_position(const Audio_id sound_id, const Vec3 new_pos);
+  virtual void set_position(const Audio_id sound_id, const Vec3 new_pos) = 0;
   // настроить скорость источника звука
-  void set_velocity(const Audio_id sound_id, const Vec3 new_vel);
+  virtual void set_velocity(const Audio_id sound_id, const Vec3 new_vel) = 0;
   // сменить тон звука
-  void set_pitch(const Audio_id sound_id, const float pitch);
+  virtual void set_pitch(const Audio_id sound_id, const float pitch) = 0;
   // проверить что трек запущет
-  bool is_playing(const Audio_id sound_id) const;
+  virtual bool is_playing(const Audio_id sound_id) const = 0;
   // загрузить звук
-  void add_audio(CN<Str> sound_name, CN<Audio> sound);
+  virtual void add_audio(CN<Str> sound_name, CN<Audio> sound) = 0;
   // загрузить звук через перемещение
-  void move_audio(CN<Str> sound_name, Audio&& sound);
+  virtual void move_audio(CN<Str> sound_name, Audio&& sound) = 0;
   // громкость всей системы
-  void set_master_gain(const float gain);
+  virtual void set_master_gain(const float gain) = 0;
   // изменить влияние вектора скорости на эффект Допплера
-  void set_doppler_factor(const float doppler_factor);
+  virtual void set_doppler_factor(const float doppler_factor) = 0;
   // выключить определённый звук
-  void disable(const Audio_id sound_id);
+  virtual void disable(const Audio_id sound_id) = 0;
   // найти загруженный звук по имени
-  CN<Audio> find_audio(CN<Str> sound_name) const;
+  virtual CN<Audio> find_audio(CN<Str> sound_name) const = 0;
   // заткнуть все звуки
-  void shutup();
+  virtual void shutup() = 0;
 }; // Sound_mgr
+
+// реализация звука через OpenAL
+class Sound_mgr_oal final: public Sound_mgr {
+  struct Impl;
+  Unique<Impl> impl {};
+  nocopy(Sound_mgr_oal);
+
+public:
+  explicit Sound_mgr_oal(CN<Sound_mgr_config> config={});
+  ~Sound_mgr_oal();
+  Audio_id play(CN<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
+    const real amplify=1.0, const bool repeat=false) override;
+  Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
+    const real amplify=1.0, const bool repeat=false) override;
+  void set_listener_pos(const Vec3 listener_pos) override;
+  void set_listener_dir(const Vec3 listener_dir) override;
+  void stop(const Audio_id sound_id) override;
+  void set_amplify(const Audio_id sound_id, const real amplify) override;
+  void set_position(const Audio_id sound_id, const Vec3 new_pos) override;
+  void set_velocity(const Audio_id sound_id, const Vec3 new_vel) override;
+  void set_pitch(const Audio_id sound_id, const float pitch) override;
+  bool is_playing(const Audio_id sound_id) const override;
+  void add_audio(CN<Str> sound_name, CN<Audio> sound) override;
+  void move_audio(CN<Str> sound_name, Audio&& sound) override;
+  void set_master_gain(const float gain) override;
+  void set_doppler_factor(const float doppler_factor) override;
+  void disable(const Audio_id sound_id) override;
+  CN<Audio> find_audio(CN<Str> sound_name) const override;
+  void shutup();
+}; // Sound_mgr_oal
+
+// Беззвучная заглушка
+class Sound_mgr_nosound final: public Sound_mgr {
+  nocopy(Sound_mgr_nosound);
+
+public:
+  inline explicit Sound_mgr_nosound() = default;
+  inline ~Sound_mgr_nosound() = default;
+  inline Audio_id play(CN<Str> sound_name, const Vec3 source_position={},
+    const Vec3 source_velocity={}, const real amplify=1.0,
+    const bool repeat=false) override { return BAD_AUDIO; }
+  inline Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
+    const real amplify=1.0, const bool repeat=false) override { return BAD_AUDIO; }
+  inline void set_listener_pos(const Vec3 listener_pos) override {}
+  inline void set_listener_dir(const Vec3 listener_dir) override {}
+  inline void stop(const Audio_id sound_id) override {}
+  inline void set_amplify(const Audio_id sound_id, const real amplify) override {}
+  inline void set_position(const Audio_id sound_id, const Vec3 new_pos) override {}
+  inline void set_velocity(const Audio_id sound_id, const Vec3 new_vel) override {}
+  inline void set_pitch(const Audio_id sound_id, const float pitch) override {}
+  inline bool is_playing(const Audio_id sound_id) const override { return false; }
+  inline void add_audio(CN<Str> sound_name, CN<Audio> sound) override {}
+  inline void move_audio(CN<Str> sound_name, Audio&& sound) override {}
+  inline void set_master_gain(const float gain) override {}
+  inline void set_doppler_factor(const float doppler_factor) override {}
+  inline void disable(const Audio_id sound_id) override {}
+  CN<Audio> find_audio(CN<Str> sound_name) const override;
+  inline void shutup() {}
+}; // Sound_mgr_nosound
