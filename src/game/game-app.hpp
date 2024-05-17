@@ -13,6 +13,7 @@ class Game_app: public Host_glfw {
   // полноэкранная рамка
   void draw_border(Image& dst) const;
   void draw_game_frame() override;
+  void check_errors();
 
 public:
   explicit Game_app(int argc, char *argv[]);

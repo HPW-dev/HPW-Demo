@@ -67,7 +67,7 @@ struct Msgbox_enter::Impl {
 
     cauto text_pos = center_point(Vec(m_bg.X, m_bg.Y), graphic::font->text_size(m_msg));
     graphic::font->draw(m_bg, window.pos + Vec(6, 6), m_title, &blend_avr);
-    graphic::font->draw(m_bg, text_pos, m_msg);
+    graphic::font->draw(m_bg, text_pos + Vec(0, 12), m_msg);
   } // make_bg
 }; // Impl
 

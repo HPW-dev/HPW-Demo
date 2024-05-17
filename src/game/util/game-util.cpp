@@ -423,6 +423,7 @@ void load_sounds() {
   } catch (CN<hpw::Error> err) {
     hpw_log("Error while initialize OpenAL sound system. Sound disabled\n");
     std::cerr << err.what() << std::endl;
+    hpw::sound_mgr_init_error = true;
     hpw::sound_mgr = new_unique<Sound_mgr_nosound>();
   }
   

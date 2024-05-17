@@ -4,6 +4,7 @@
 #include "host/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-manager.hpp"
+#include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
 #include "game/core/fonts.hpp"
@@ -12,6 +13,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/locales.hpp"
 #include "game/core/sounds.hpp"
+#include "game/core/common.hpp"
 #include "game/util/pge.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/sync.hpp"
@@ -67,6 +69,7 @@ void Game_app::update(double dt) {
     detailed_log("scenes are over, call soft_exit\n");
     hpw::soft_exit();
   }
+  check_errors();
   hpw::update_time_unsafe = get_time() - st;
 } // update
 
@@ -103,4 +106,14 @@ void Game_app::update_graphic_autoopt(double dt) {
   graphic::autoopt_timeout = std::max(graphic::autoopt_timeout - dt, timeout_t(0));
   if (graphic::autoopt_timeout == timeout_t(0))
     graphic::render_lag = false;
+}
+
+void Game_app::check_errors() {
+  if (hpw::sound_mgr_init_error) {
+    hpw::sound_mgr_init_error = false;
+    hpw::scene_mgr->add(new_shared<Msgbox_enter>(
+      get_locale_str("scene.sound_settings.device_init_error"),
+      get_locale_str("common.error")
+    ));
+  }
 }
