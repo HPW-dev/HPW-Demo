@@ -21,7 +21,7 @@ void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col);
 
 // нарисовать залитый прямоуг-к
 template <blend_pf bf = &blend_past>
-void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col);
+void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col, const int optional=0);
 
 // нарисовать залитый круг
 template <blend_pf bf = &blend_past>
@@ -92,15 +92,15 @@ void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col) {
 } // draw_rect
 
 template <blend_pf bf>
-void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col) {
+void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col, const int optional) {
   return_if( !dst);
   return_if (rect.size.x < 1 || rect.size.y < 1);
   cauto ex = rect.pos.x + rect.size.x;
   cauto ey = rect.pos.y + rect.size.y;
   for (int y = rect.pos.y; y < ey; ++y)
   for (int x = rect.pos.x; x < ex; ++x)
-    dst.set<bf>(x, y, col);
-} // draw_rect_filled
+    dst.set<bf>(x, y, col, optional);
+}
 
 template <blend_pf bf>
 void draw_circle_filled(Image& dst, const Vec pos,

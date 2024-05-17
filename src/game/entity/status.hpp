@@ -23,7 +23,7 @@ struct Enity_status {
   bool ignore_self_type: 1 {}; // не сталкиваться с объектами своего типа
   bool ignore_bound: 1 {};     // не удалять объект, если он вышел за края экрана
   bool fixed_deg: 1 {};        // будет искать в anim_ctx default_deg и поворачивать только на него
-  bool return_back: 1 {};      // включит флаг goto_prev_frame в кноце анимации
+  bool return_back: 1 {};      // включит флаг goto_prev_frame в конце анимации
   bool goto_prev_frame: 1 {};  // отображает кадры в обратном порядке (дойдя до 0, выключается)
   bool no_motion_interp: 1 {}; // выключает интерполяцию при движении
   bool ignore_scatter: 1 {};   // игнор взрывных волн

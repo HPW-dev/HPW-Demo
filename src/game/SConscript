@@ -69,6 +69,7 @@ sources = [
   Glob(src_dir + "game/menu/item/*.cpp"),
   Glob(src_dir + "game/scene/*.cpp"),
   Glob(src_dir + "game/scene/cutscene/*.cpp"),
+  Glob(src_dir + "game/scene/msgbox/*.cpp"),
   Glob(src_dir + "game/level/*.cpp"),
   Glob(src_dir + "game/level/util/*.cpp"),
   Glob(src_dir + "graphic/animation/*.cpp"),
