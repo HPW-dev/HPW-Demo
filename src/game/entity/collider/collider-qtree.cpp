@@ -212,12 +212,17 @@ void Collider_qtree::operator()(CN<Entitys> entities, double dt) {
   auto filtered_entitys = update_qtree(entities);
   update_pairs(filtered_entitys);
 
-  // перегонка unordered_set в vector, чтобы через omp можно было распараллелить:
-  Vector<Collision_pair> tmp_pairs(collision_pairs.begin(), collision_pairs.end());
-  #pragma omp parallel for schedule(dynamic, 4)
-  cfor (i, tmp_pairs.size()) {
-    cnauto pair = tmp_pairs[i];
-    test_collide_pair(*pair.first, *pair.second);
+  if (collision_pairs.size() >= 50) {
+    // перегонка unordered_set в vector, чтобы через omp можно было распараллелить:
+    Vector<Collision_pair> tmp_pairs(collision_pairs.begin(), collision_pairs.end());
+    #pragma omp parallel for schedule(dynamic, 4)
+    cfor (i, tmp_pairs.size()) {
+      cnauto pair = tmp_pairs[i];
+      test_collide_pair(*pair.first, *pair.second);
+    }
+  } else {
+    for (cnauto pair: collision_pairs)
+      test_collide_pair(*pair.first, *pair.second);
   }
 }
 
@@ -271,99 +276,96 @@ Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
 void Collider_qtree::update_pairs(CN<Entitys> entities) {
   collision_pairs.clear();
 
-#ifdef _OPENMP
-  // узнать сколько потоков сделал OpenMP
-  auto th_max = omp_get_max_threads();
-  assert(th_max > 0);
-  // для хранения локальных списков в потоках
-  static Vector<decltype(collision_pairs)> list_table;
-  static Vector< Vector<Entity*> > lists;
-  list_table.resize(th_max);
-  for (nauto table: list_table)
-    table.clear();
-  lists.resize(th_max);
+  if (entities.size() >= 400) {
+    // узнать сколько потоков сделал OpenMP
+    auto th_max = omp_get_max_threads();
+    assert(th_max > 0);
+    // для хранения локальных списков в потоках
+    static Vector<decltype(collision_pairs)> list_table;
+    static Vector< Vector<Entity*> > lists;
+    list_table.resize(th_max);
+    for (nauto table: list_table)
+      table.clear();
+    lists.resize(th_max);
 
-  /* проверить области вокруг каждой точки и закинуть в пару
-  коллизии соседние ноды входящие в область */
-  #pragma omp parallel for \
-    schedule(dynamic) \
-    shared(root, list_table)
-  for (nauto entity: entities) {
-    auto hitbox = entity->get_hitbox();
-    cont_if(!hitbox);
-    // узнать какой сейчас поток
-    cauto th_idx = omp_get_thread_num();
-    lists[th_idx].clear();
-    // искать соседей вокруг хитбокса объекта
-    cauto pos = entity->phys.get_pos();
-    const Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
-    // найти соседей к этой точке
-    root->find(area, lists[th_idx]);
+    /* проверить области вокруг каждой точки и закинуть в пару
+    коллизии соседние ноды входящие в область */
+    #pragma omp parallel for \
+      schedule(dynamic) \
+      shared(root, list_table)
+    for (nauto entity: entities) {
+      auto hitbox = entity->get_hitbox();
+      cont_if(!hitbox);
+      // узнать какой сейчас поток
+      cauto th_idx = omp_get_thread_num();
+      lists[th_idx].clear();
+      // искать соседей вокруг хитбокса объекта
+      cauto pos = entity->phys.get_pos();
+      const Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
+      // найти соседей к этой точке
+      root->find(area, lists[th_idx]);
 
-    // добавить этих соседей в пары на проверки
-    for (nauto other: lists[th_idx]) {
-      auto addr_a = entity.get();
-      auto addr_b = other;
-      // сами себя не проверяем
-      cont_if (addr_a == addr_b);
-      // проверить на возможность сталкиваться по флагам
-      cont_if (!cld_flag_compat(*addr_a, *addr_b));
-      // эта перестановка сократит число одинаsковых пар
-      if (addr_b > addr_a)
-        std::swap(addr_a, addr_b);
-      // unordered_set сам уберёт повторы
-      list_table.at(th_idx).emplace(addr_a, addr_b);
-    } // for list
-  } // for entities
+      // добавить этих соседей в пары на проверки
+      for (nauto other: lists[th_idx]) {
+        auto addr_a = entity.get();
+        auto addr_b = other;
+        // сами себя не проверяем
+        cont_if (addr_a == addr_b);
+        // проверить на возможность сталкиваться по флагам
+        cont_if (!cld_flag_compat(*addr_a, *addr_b));
+        // эта перестановка сократит число одинаsковых пар
+        if (addr_b > addr_a)
+          std::swap(addr_a, addr_b);
+        // unordered_set сам уберёт повторы
+        list_table.at(th_idx).emplace(addr_a, addr_b);
+      } // for list
+    } // for entities
 
-  // объединение листов с потоков в релизный collision_pairs
-  for (cnauto table: list_table) {
-    for (nauto it: table) {
-      auto addr_a = it.first;
-      auto addr_b = it.second;
-      // сами себя не проверяем
-      cont_if (addr_a == addr_b);
-      // проверить на возможность сталкиваться по флагам
-      cont_if (!cld_flag_compat(*addr_a, *addr_b));
-      // эта перестановка сократит число одинаковых пар
-      if (addr_b > addr_a)
-        std::swap(addr_a, addr_b);
-      // unordered_set сам уберёт повторы
-      collision_pairs.emplace( std::move(it) );
-    } // for table
-  } // for list_table
+    // объединение листов с потоков в релизный collision_pairs
+    for (cnauto table: list_table) {
+      for (nauto it: table) {
+        auto addr_a = it.first;
+        auto addr_b = it.second;
+        // сами себя не проверяем
+        cont_if (addr_a == addr_b);
+        // проверить на возможность сталкиваться по флагам
+        cont_if (!cld_flag_compat(*addr_a, *addr_b));
+        // эта перестановка сократит число одинаковых пар
+        if (addr_b > addr_a)
+          std::swap(addr_a, addr_b);
+        // unordered_set сам уберёт повторы
+        collision_pairs.emplace( std::move(it) );
+      } // for table
+    } // for list_table
+  } else { // вариант без многопотока
+    /* проверить области вокруг каждой точки и закинуть в пару
+    коллизии соседние ноды входящие в область */
+    for (nauto entity: entities) {
+      auto hitbox = entity->get_hitbox();
+      cont_if(!hitbox);
+      auto pos = entity->phys.get_pos();
 
-#else // вариант без многопотока
+      // искать соседей вокруг хитбокса объекта
+      Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
+      
+      // найти соседей к этой точке
+      Vector<Entity*> list;
+      root->find(area, list);
 
-  /* проверить области вокруг каждой точки и закинуть в пару
-  коллизии соседние ноды входящие в область */
-  for (nauto entity: entities) {
-    auto hitbox = entity->get_hitbox();
-    cont_if(!hitbox);
-    auto pos = entity->phys.get_pos();
-
-    // искать соседей вокруг хитбокса объекта
-    Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
-    
-    // найти соседей к этой точке
-    Vector<Entity*> list;
-    root->find(area, list);
-
-    // добавить этих соседей в пары на проверки
-    for (nauto other: list) {
-      auto addr_a = entity.get();
-      auto addr_b = other;
-      // сами себя не проверяем
-      cont_if (addr_a == addr_b);
-      // проверить на возможность сталкиваться по флагам
-      cont_if (!cld_flag_compat(*addr_a, *addr_b));
-      // эта перестановка сократит число одинаковых пар
-      if (addr_b > addr_a)
-        std::swap(addr_a, addr_b);
-      // unordered_set сам уберёт повторы
-      collision_pairs.emplace(addr_a, addr_b);
-    } // for list
-  } // for entities
-
-#endif
+      // добавить этих соседей в пары на проверки
+      for (nauto other: list) {
+        auto addr_a = entity.get();
+        auto addr_b = other;
+        // сами себя не проверяем
+        cont_if (addr_a == addr_b);
+        // проверить на возможность сталкиваться по флагам
+        cont_if (!cld_flag_compat(*addr_a, *addr_b));
+        // эта перестановка сократит число одинаковых пар
+        if (addr_b > addr_a)
+          std::swap(addr_a, addr_b);
+        // unordered_set сам уберёт повторы
+        collision_pairs.emplace(addr_a, addr_b);
+      } // for list
+    } // for entities
+  }
 } // update_pairs
