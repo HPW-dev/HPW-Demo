@@ -292,7 +292,7 @@ Shared<Menu_text_item> Scene_graphic::get_epilepsy_item() {
     #ifdef WINDOWS
       load_pge(hpw::cur_dir + "plugin/effect/epilepsy.dll");
     #else
-      load_pge(hpw::cur_dir + "plugin/effect/epilepsy.so");
+      load_pge(hpw::cur_dir + "plugin/effect/libepilepsy.so");
     #endif
   }, []->utf32 { return {}; },
   get_locale_str("scene.graphic_menu.description.epilepsy") );
