@@ -186,7 +186,7 @@ void Image::assign_resize(int x, int y) noexcept {
 
 bool Image::size_check(int x, int y) const noexcept {
   const bool ret = x > 0 && x <= 4'048 && y > 0 && y <= 4'048;
-  detailed_iflog( !ret, "warning: bad sizes for image init");
+  detailed_iflog( !ret, "warning: bad sizes for image init\n");
   return ret;
 }
 
