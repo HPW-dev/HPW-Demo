@@ -12,6 +12,7 @@ enum class Ability {
   direct_shoot, // все атаки становятся прямыми
   speedup_shoot, // все атаки ускоряются и ускоряется реген EN, но повышается стоимость атак
   home, // похищение через крышу домика
+  fullscreen_shoot, // стрельба на весь экран, враги тоже будут стрелять на весь экран
 };
 
 class Player: public Collidable {

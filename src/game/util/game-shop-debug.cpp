@@ -42,6 +42,7 @@ struct Shop_debug::Impl {
       Ability_elem {.abil = Ability::direct_shoot, .name = U"Все атаки прямые", .desc = U"TODO DESC"},
       Ability_elem {.abil = Ability::speedup_shoot, .name = U"Ускорение атак", .desc = U"TODO DESC"},
       Ability_elem {.abil = Ability::home, .name = U"Похищение противника", .desc = U"TODO DESC"},
+      Ability_elem {.abil = Ability::fullscreen_shoot, .name = U"Стрельба на весь экран", .desc = U"TODO DESC"},
     };
 
     // TODO отображение описания способности

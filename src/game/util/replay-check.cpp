@@ -87,6 +87,7 @@ void player_log() {
   std::clog << std::boolalpha << "  speedup_shoot: " << player->check_capability(Ability.speedup_shoot) << "\n";
   std::clog << std::boolalpha << "  stillness_en_regen: " << player->check_capability(Ability.stillness_en_regen) << "\n";
   std::clog << std::boolalpha << "  home: " << player->check_capability(Ability.home) << "\n";
+  std::clog << std::boolalpha << "  fullscreen_shoot: " << player->check_capability(Ability.fullscreen_shoot) << "\n";
   
   std::clog << "energy: " << player->energy << "\n";
   std::clog << "hp: " << player->get_hp() << "\n";
