@@ -1,7 +1,6 @@
 #include <iomanip>
 #include "protownd.hpp"
 #include "command.hpp"
-#include "game/core/appjob.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
@@ -93,16 +92,13 @@ void Protownd::set_window_pos(int x, int y) {
 }
 
 void Protownd::_set_resize_mode(Resize_mode mode) {
+  graphic::resize_mode = mode;
+  window_ctx_.mode = mode;
+  reshape(graphic::width, graphic::height);
   /* если фулскрин был включён, то сначала выключить его,
   иначе на линуксе экран погаснет */
-  cauto need_fullscreen_on_off = graphic::fullscreen;
-  if (need_fullscreen_on_off)
-    hpw::app_job.push_back([](const double dt){ hpw::set_fullscreen(false); });
-  hpw::app_job.push_back([this, mode](const double dt) {
-    graphic::resize_mode = mode;
-    window_ctx_.mode = mode;
-    reshape(graphic::width, graphic::height);
-  });
-  if (need_fullscreen_on_off)
-    hpw::app_job.push_back([](const double dt){ hpw::set_fullscreen(true); });
+  if (graphic::fullscreen) {
+    hpw::set_fullscreen(false);
+    hpw::set_fullscreen(true);
+  }
 }

@@ -13,7 +13,6 @@
 #include "util/math/mat.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
-#include "game/core/appjob.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
@@ -432,13 +431,7 @@ void Host_glfw::_set_mouse_cursour_mode(bool enable) {
     enable ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
-void Host_glfw::update(double dt) {
-  // выполнить все задачи по порядку
-  if (!hpw::app_job.empty()) {
-    hpw::app_job.front()(dt);
-    hpw::app_job.pop_front();
-  }
-}
+void Host_glfw::update(double dt) {}
 
 void Host_glfw::check_frame_skip() {
   graphic::skip_cur_frame = false;
