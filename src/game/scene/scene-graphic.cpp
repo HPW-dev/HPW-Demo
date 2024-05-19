@@ -56,7 +56,6 @@ void set_default() {
   graphic::set_vsync(false);
   graphic::set_disable_frame_limit(false);
   graphic::set_target_fps(graphic::get_target_vsync_fps());
-  hpw::set_resize_mode(graphic::default_resize_mode);
   graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
   graphic::blink_motion_blur = true;
   graphic::blink_particles = true;
@@ -94,13 +93,11 @@ void set_high_plus_stream() {
   graphic::frame_skip = 1;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = true;
-  hpw::set_resize_mode(graphic::default_resize_mode);
 } // set_high_plus_stream
 
 void set_low_pc() {
   graphic::set_vsync(false);
   graphic::set_disable_frame_limit(true);
-  hpw::set_resize_mode(graphic::default_resize_mode);
   graphic::autoopt_timeout_max = 15;
   graphic::blink_particles = true;
   graphic::cpu_safe = false;
@@ -134,7 +131,6 @@ void set_high_quality() {
   graphic::frame_skip = 0;
   graphic::auto_frame_skip = false;
   graphic::enable_motion_interp = true;
-  hpw::set_resize_mode(graphic::default_resize_mode);
 } // set_high_quality
 
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
