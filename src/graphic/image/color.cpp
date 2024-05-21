@@ -1,5 +1,10 @@
 #include <algorithm>
 #include "color.hpp"
+
+#ifdef ECOMEM
+#define NOUSE_TABLE
+#endif
+
 #ifndef NOUSE_TABLE
 #include "color-table.hpp"
 #endif

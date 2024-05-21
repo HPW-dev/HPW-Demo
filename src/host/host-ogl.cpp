@@ -24,7 +24,9 @@ Host_ogl::Host_ogl(int argc, char *argv[])
 : Protownd(argc, argv) {
   pixels_ = scast<decltype(pixels_)>(graphic::canvas->data());
   init_archive(); // из архива понадобятся шейдеры
-  load_color_tables();
+  #ifndef ECOMEM
+    load_color_tables();
+  #endif
 }
 
 void Host_ogl::draw() { ogl_draw(); }

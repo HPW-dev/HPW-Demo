@@ -1,3 +1,5 @@
+#ifndef ECOMEM
+
 #include <cassert>
 #include <cmath>
 #include "color-blend.hpp"
@@ -25,3 +27,5 @@ inline double get_state(const Pal8 src, int optional, double speed) {
 
 [[nodiscard, gnu::const]] Pal8 blend_rotate_x16_safe(const Pal8 in, const Pal8 bg, int optional)
   { return Pal8::from_real(std::fmod(get_state(in, optional, 16), 1.0), in.is_red()); }
+
+#endif

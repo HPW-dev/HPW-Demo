@@ -36,7 +36,9 @@ Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
   #ifdef RELEASE
     init_validation_info();
   #endif
-  check_color_tables();
+  #ifndef ECOMEM
+    check_color_tables();
+  #endif
   load_resources();
   load_locale();
   load_font();
