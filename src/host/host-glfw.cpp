@@ -152,7 +152,8 @@ void Host_glfw::run() {
 } // run
 
 void Host_glfw::reshape(int w, int h) {
-  glfwSetWindowSize(window, w, h);
+  if (!graphic::fullscreen)
+    glfwSetWindowSize(window, w, h);
   Host_ogl::reshape(w, h);
 }
 
