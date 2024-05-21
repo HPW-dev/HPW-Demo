@@ -13,8 +13,8 @@ struct Level_debug_bullets::Impl {
   Timer shoot_timer {0.5};
 
   inline Impl() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(6, 1,
-      graphic::canvas->X, graphic::canvas->Y));
+    hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
+      7, 1, graphic::canvas->X, graphic::canvas->Y));
   }
 
   inline void update(const Vec vel, double dt) {

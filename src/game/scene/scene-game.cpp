@@ -43,7 +43,7 @@
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
 #ifdef DEBUG
-#include "game/level/level-collision-test.hpp"
+//#include "game/level/level-collision-test.hpp"
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
 //#include "game/level/level-debug-3.hpp"
@@ -67,7 +67,7 @@ void Scene_game::init_levels() {
     });
   } else {
     hpw::level_mgr = new_shared<Level_mgr>( Level_mgr::Makers{
-      //[] { return new_shared<Level_space>(); },
+      [] { return new_shared<Level_space>(); },
       //[] { return new_shared<Level_1>(); },
       #ifdef DEBUG
       //[] { return new_shared<Level_debug_bullets>(); },
@@ -75,7 +75,7 @@ void Scene_game::init_levels() {
       //[] { return new_shared<Level_debug_2>(); },
       //[] { return new_shared<Level_debug_3>(); },
       //[] { return new_shared<Level_debug_4>(); },
-      [] { return new_shared<Level_collision_test>(); },
+      //[] { return new_shared<Level_collision_test>(); },
       #endif
     }); // init level order
   }

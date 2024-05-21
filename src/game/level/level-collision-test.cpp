@@ -24,14 +24,17 @@
 Level_collision_test::Level_collision_test() {
   hitbox_test();
   //hpw::entity_mgr->set_collider(  new_shared<Collider_simple>() );
-  hpw::entity_mgr->set_collider( new_shared<Collider_qtree>(5, 4, graphic::canvas->X, graphic::canvas->Y) );
+  hpw::entity_mgr->set_collider( new_shared<Collider_qtree>(7, 1, graphic::canvas->X, graphic::canvas->Y) );
   set_rnd_seed(97997);
 
   // сделать рандомные объекты
   //cfor (_, 7'000) {
   //cfor (_, 2'000) {
   cfor (_, 1'000) {
-  //cfor (_, 100) {
+  //cfor (_, 700) {
+  //cfor (_, 500) {
+  //cfor (_, 200) {
+  //cfor (_, 50) {
     auto entity = hpw::entity_mgr->allocate<Collidable>();
 
     // позиция объекта
@@ -47,7 +50,7 @@ Level_collision_test::Level_collision_test() {
     entity->set_hp(100);
     entity->set_dmg(0);
 
-    #if 1
+    #if 0
       // двигаться
       entity->phys.set_vel( Vec(
         rndr(-2*60, 2*60),

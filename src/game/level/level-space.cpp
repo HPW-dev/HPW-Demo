@@ -98,8 +98,8 @@ struct Level_space::Impl {
   }
 
   inline void init_collider() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(6, 1,
-      graphic::width, graphic::height));
+    hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
+      7, 1, graphic::width, graphic::height));
   }
 
   // наполнение уровня тригерами

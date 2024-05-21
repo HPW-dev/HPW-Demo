@@ -72,7 +72,7 @@ Level_debug_3::Level_debug_3()
   make_player();
   make_dummy();
   impl->make_bg();
-  hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(6, 1, graphic::canvas->X, graphic::canvas->Y));
+  hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(7, 1, graphic::canvas->X, graphic::canvas->Y));
   //hpw::entity_mgr->set_collider(new_shared<Collider_simple>());
 } // c-tor
 

@@ -19,6 +19,10 @@
 
 // память под ветви
 static Mem_pool qtree_mempool;
+// сколько нужно игровых объектов чтобы запустить многопоточный поиск в QTree
+constexpr std::size_t MAX_ENTS_FOR_MULTY_TEST_PAIRS = 300;
+// сколько нужно игровых объектов чтобы запустить многопоточный просчёт столкновений
+constexpr std::size_t MAX_ENTS_FOR_MULTY_UPDATE = 75;
 
 // quad-tree односвязное дерево
 class Qtree final {
@@ -212,7 +216,7 @@ void Collider_qtree::operator()(CN<Entitys> entities, double dt) {
   auto filtered_entitys = update_qtree(entities);
   update_pairs(filtered_entitys);
 
-  if (collision_pairs.size() >= 50) {
+  if (collision_pairs.size() >= MAX_ENTS_FOR_MULTY_TEST_PAIRS) {
     // перегонка unordered_set в vector, чтобы через omp можно было распараллелить:
     Vector<Collision_pair> tmp_pairs(collision_pairs.begin(), collision_pairs.end());
     #pragma omp parallel for schedule(dynamic, 4)
@@ -276,7 +280,7 @@ Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
 void Collider_qtree::update_pairs(CN<Entitys> entities) {
   collision_pairs.clear();
 
-  if (entities.size() >= 400) {
+  if (entities.size() >= MAX_ENTS_FOR_MULTY_UPDATE) {
     // узнать сколько потоков сделал OpenMP
     auto th_max = omp_get_max_threads();
     assert(th_max > 0);
