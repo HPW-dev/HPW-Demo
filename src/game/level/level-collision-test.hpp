@@ -3,15 +3,16 @@
 #include "util/math/num-types.hpp"
 
 // уровень для теста нагрузки системы коллизий
-class Level_debug final: public Level {
-  nocopy(Level_debug);
+class Level_collision_test final: public Level {
+  nocopy(Level_collision_test);
   real brightness {};
 
   static void hitbox_test(); // тестирование функционала хитбоксов
 
 public:
-  Level_debug();
-  ~Level_debug() = default;
+  Level_collision_test();
+  ~Level_collision_test() = default;
   void update(const Vec vel, double dt);
   void draw(Image& dst) const;
-}; // Level_debug
+  Str level_name() const override;
+}; // Level_collision_test

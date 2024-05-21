@@ -1,6 +1,6 @@
 #include <omp.h>
 #include <cassert>
-#include "level-debug.hpp"
+#include "level-collision-test.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/animation/animation-manager.hpp"
@@ -21,10 +21,10 @@
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"
 
-Level_debug::Level_debug() {
+Level_collision_test::Level_collision_test() {
   hitbox_test();
   //hpw::entity_mgr->set_collider(  new_shared<Collider_simple>() );
-  hpw::entity_mgr->set_collider( new_shared<Collider_qtree>(6, 1, graphic::canvas->X, graphic::canvas->Y) );
+  hpw::entity_mgr->set_collider( new_shared<Collider_qtree>(5, 4, graphic::canvas->X, graphic::canvas->Y) );
   set_rnd_seed(97997);
 
   // сделать рандомные объекты
@@ -57,12 +57,12 @@ Level_debug::Level_debug() {
   } // for objects
 } // c-tor
 
-void Level_debug::update(const Vec vel, double dt) {
+void Level_collision_test::update(const Vec vel, double dt) {
   Level::update(vel, dt);
   brightness += 20 * dt;
 } // update
 
-void Level_debug::draw(Image& dst) const {
+void Level_collision_test::draw(Image& dst) const {
   #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
@@ -73,7 +73,7 @@ void Level_debug::draw(Image& dst) const {
   }
 } // draw
 
-void Level_debug::hitbox_test() {
+void Level_collision_test::hitbox_test() {
   #ifdef DEBUG
   hpw_log("старт тестов хитбоксов\n");
 
@@ -164,3 +164,5 @@ void Level_debug::hitbox_test() {
   hpw_log("все тесты хитбоксов пройдены\n");
   #endif
 } // hitbox_test
+
+Str Level_collision_test::level_name() const { return "Level: Collision test"; }
