@@ -14,13 +14,15 @@ struct Table_menu::Impl {
   utf32 m_title {}; // название всего меню
   Rows m_rows {};
   uint m_row_height {};
+  utf32 m_elems_empty_txt {}; // табличка, которую покажут при отсутсвтии элементов списка
 
   inline explicit Impl(Menu* base, CN<utf32> title, CN<Rows> rows,
-  const uint row_height)
+  const uint row_height, CN<utf32> elems_empty_txt)
   : m_base {base}
   , m_title {title}
   , m_rows {rows}
   , m_row_height {row_height}
+  , m_elems_empty_txt {elems_empty_txt}
   {
     assert(m_base);
     assert(m_row_height > 0);
@@ -60,11 +62,11 @@ struct Table_menu::Impl {
 
     pos.y += m_row_height - 1; // отступ от хедера
 
-    // если реплеев нет, то надпись
+    // если элементов нет, то надпись
     cauto items = m_base->get_items();
-    if (items.empty()) {
+    if (items.empty() && !m_elems_empty_txt.empty()) {
       pos.x = 0;
-      graphic::font->draw(dst, pos + text_offset, get_locale_str("scene.replay.no_replay"));
+      graphic::font->draw(dst, pos + text_offset, m_elems_empty_txt);
       return;
     }
 
@@ -111,9 +113,9 @@ struct Table_menu::Impl {
 }; // impl
 
 Table_menu::Table_menu(CN<utf32> title, CN<Rows> rows, const uint row_height,
-CN<Menu_items> items)
+CN<Menu_items> items, CN<utf32> elems_empty_txt)
 : Menu {items}
-, impl {new_unique<Impl>(this, title, rows, row_height)}
+, impl {new_unique<Impl>(this, title, rows, row_height, elems_empty_txt)}
 {}
 
 void Table_menu::draw(Image& dst) const { impl->draw(dst); }
