@@ -6,7 +6,6 @@
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/util/scatter.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/info/anim-info.hpp"
@@ -23,61 +22,13 @@
 
 Player_dark::Player_dark(): Player() {}
 
-// спавнит мелкие пульки в след за мощным выстрелом
-void spawn_small_bullets(Entity& master, double dt) {
-  // TODO all vals by config
-
-  // TODO by dt timer
-  if ((hpw::game_updates_safe % 5) == 0) {
-    auto it = hpw::entity_mgr->make(&master, "bullet.player.small",
-      master.phys.get_pos());
-    // замедлить эти пули
-    it->phys.set_speed(it->phys.get_speed() * rndr(0.5, 1));
-    // чтобы пули разлетались во все стороны
-    it->phys.set_deg(it->phys.get_deg() + rndr(-45, 45));
-    it->phys.set_force( 7.5_pps );
-    it->move_update_callback( Kill_by_timeout(rndr(0.1, 0.7)) );
-    it->status.layer_up = false;
-  } // if timer
-}
-
 void Player_dark::shoot(double dt) {
   // стрелять менее часто, при нехватке энергии
   if (energy <= m_energy_level_for_decrease_shoot_speed)
     dt *= m_decrease_shoot_speed_ratio;
-
-  // усиленый выстрел TODO
-  /*if (energy >= m_energy_for_power_shoot && check_capability(Ability::power_shoot)) {
-    sub_en(m_power_shoot_price);
-    power_shoot(dt);
-  } else { // обычные выстрелы*/
-    sub_en(m_shoot_price);
-    default_shoot(dt);
-  //}
-} // shoot
-
-void Player_dark::power_shoot(double dt) {
-  cfor (_, 30) { // TODO конфиг
-    cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0); // TODO конфиг
-    auto bullet = hpw::entity_mgr->make(this, "bullet.player.mid", spawn_pos);
-    // пуля смотрит вверх в шмап моде
-    bullet->phys.set_deg(270);
-    // передача импульса для шмап мода
-    bullet->phys.set_speed( pps(rndr(13, 17)) ); // TODO конфиг
-    bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
-    // разброс
-    bullet->phys.set_deg(bullet->phys.get_deg() + rndr(-75, 75)); // TODO конфиг
-    bullet->move_update_callback(&spawn_small_bullets);
-    bullet->status.layer_up = true;
-  }
-
-  // отдача
-  hpw::entity_mgr->add_scatter(Scatter {
-    .pos{ phys.get_pos() + Vec(0, -10) }, // создаёт источник взрыва перед ноосом
-    .range{ 50 }, // TODO конфиг
-    .power{ pps(60) }, // TODO конфиг
-  });
-} // power_shoot
+  sub_en(m_shoot_price);
+  default_shoot(dt);
+}
 
 void Player_dark::default_shoot(double dt) {
   cfor (_, m_shoot_timer.update(dt)) {
@@ -99,7 +50,6 @@ void Player_dark::default_shoot(double dt) {
   } // for m_shoot_timer
 } // default_shoot
 
-void Player_dark::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }
 void Player_dark::energy_regen() { energy = std::min<hp_t>(energy_max, energy + m_energy_regen); }
 
 void Player_dark::draw(Image& dst, const Vec offset) const {
@@ -264,8 +214,6 @@ struct Player_dark::Loader::Impl {
   hp_t m_shoot_price {};
   hp_t m_energy_regen {};
   hp_t m_energy_max {};
-  real m_percent_for_power_shoot {};
-  real m_percent_for_power_shoot_price {};
   real m_percent_for_decrease_shoot_speed {};
   real m_decrease_shoot_speed_ratio {};
   real m_deg_spread_shoot {};
@@ -300,8 +248,6 @@ struct Player_dark::Loader::Impl {
     m_shoot_timer  = shoot_node.get_real("shoot_timer");
     m_shoot_price  = shoot_node.get_int ("shoot_price");
     m_energy_regen = shoot_node.get_int ("energy_regen");
-    m_percent_for_power_shoot = shoot_node.get_real("percent_for_power_shoot");
-    m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
     m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
     m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
     m_default_shoot_count = shoot_node.get_int("default_shoot_count");
@@ -317,9 +263,6 @@ struct Player_dark::Loader::Impl {
     assert(m_fuel > 0);
     assert(m_energy_regen > 0);
     assert(m_energy_max > 0);
-    assert(m_percent_for_power_shoot > 0 && m_percent_for_power_shoot <= 100);
-    assert(m_percent_for_power_shoot_price > 0 &&
-      m_percent_for_power_shoot_price <= 100);
     assert(m_percent_for_decrease_shoot_speed > 0 &&
       m_percent_for_decrease_shoot_speed < 100);
     assert(m_decrease_shoot_speed_ratio > 0);
@@ -349,8 +292,6 @@ struct Player_dark::Loader::Impl {
     it.m_fuel = it.m_fuel_max = m_fuel;
     it.m_shoot_price = m_shoot_price;
     it.m_energy_regen = m_energy_regen;
-    it.m_energy_for_power_shoot = it.energy_max * (m_percent_for_power_shoot / 100.0);
-    it.m_power_shoot_price = it.energy_max * (m_percent_for_power_shoot_price / 100.0);
     it.m_energy_level_for_decrease_shoot_speed = it.energy_max * (m_percent_for_decrease_shoot_speed / 100.0);
     it.m_decrease_shoot_speed_ratio = m_decrease_shoot_speed_ratio;
     it.m_default_shoot_count = m_default_shoot_count;

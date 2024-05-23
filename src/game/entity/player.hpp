@@ -23,4 +23,5 @@ public:
   void update(double dt) override;
   void draw(Image& dst, const Vec offset) const override;
   void kill() override;
+  virtual void sub_en(hp_t val);
 }; // Player

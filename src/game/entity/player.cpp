@@ -1,3 +1,4 @@
+#include <algorithm>
 #include "player.hpp"
 #include "util/error.hpp"
 #include "game/entity/entity-manager.hpp"
@@ -48,3 +49,5 @@ void Player::kill() {
   // тряхнуть камерой при смерти
   graphic::camera->add_shake(999);
 }
+
+void Player::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }

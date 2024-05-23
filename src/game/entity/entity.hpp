@@ -18,12 +18,14 @@ struct Vec;
 
 // игровая сущность
 class Entity {
-  nocopy(Entity);
-
+public:
   // <self ptr, dt>
   using Update_callback = std::function<void (Entity&, double)>;
   // <self ptr>
   using Kill_callback = std::function<void (Entity&)>;
+
+private:
+  nocopy(Entity);
   Vector<Update_callback> update_callbacks {}; // внешние колбэки на обработку апдейта
   Vector<Kill_callback> kill_callbacks {}; // внешние колбэки на обработку смерти
 
