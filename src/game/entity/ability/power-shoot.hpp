@@ -10,7 +10,7 @@ class Ability_power_shoot final: public Ability {
   Unique<Impl> impl {};
 
 public:
-  Ability_power_shoot();
+  explicit Ability_power_shoot(CN<Player> player);
   ~Ability_power_shoot();
   void update(Player& player, const double dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}

@@ -8,7 +8,7 @@ struct Ability_speedup::Impl {
   nocopy(Impl);
   uint m_power {};
 
-  inline explicit Impl() {}
+  inline explicit Impl(CN<Player> player) {}
   inline void update(Player& player, const double dt) {}
   inline void powerup() {}
   inline utf32 name() const { return get_locale_str("plyaer.ability.speedup.name"); }
@@ -22,9 +22,9 @@ struct Ability_speedup::Impl {
   }
 }; // Impl
 
-Ability_speedup::Ability_speedup()
+Ability_speedup::Ability_speedup(CN<Player> player)
   : Ability {typeid(Ability_speedup).hash_code()}
-  , impl {new_unique<Impl>()} {}
+  , impl {new_unique<Impl>(player)} {}
 Ability_speedup::~Ability_speedup() {}
 void Ability_speedup::update(Player& player, const double dt) { impl->update(player, dt); }
 void Ability_speedup::powerup() { impl->powerup(); }

@@ -8,7 +8,7 @@ struct Ability_invise::Impl {
   nocopy(Impl);
   uint m_power {};
 
-  inline explicit Impl() {}
+  inline explicit Impl(CN<Player> player) {}
   inline void update(Player& player, const double dt) {}
   inline void powerup() {}
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
@@ -24,9 +24,9 @@ struct Ability_invise::Impl {
   }
 }; // Impl
 
-Ability_invise::Ability_invise()
+Ability_invise::Ability_invise(CN<Player> player)
   : Ability {typeid(Ability_invise).hash_code()}
-  , impl {new_unique<Impl>()} {}
+  , impl {new_unique<Impl>(player)} {}
 Ability_invise::~Ability_invise() {}
 void Ability_invise::update(Player& player, const double dt) { impl->update(player, dt); }
 void Ability_invise::powerup() { impl->powerup(); }

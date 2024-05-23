@@ -10,7 +10,7 @@ class Ability_invise final: public Ability {
   Unique<Impl> impl {};
 
 public:
-  Ability_invise();
+  explicit Ability_invise(CN<Player> player);
   ~Ability_invise();
   void update(Player& player, const double dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}

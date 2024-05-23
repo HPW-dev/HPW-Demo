@@ -10,7 +10,7 @@ class Ability_fullscreen_shoot final: public Ability {
   Unique<Impl> impl {};
 
 public:
-  Ability_fullscreen_shoot();
+  explicit Ability_fullscreen_shoot(CN<Player> player);
   ~Ability_fullscreen_shoot();
   void update(Player& player, const double dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}

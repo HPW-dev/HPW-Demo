@@ -8,7 +8,7 @@ struct Ability_home::Impl {
   nocopy(Impl);
   uint m_power {};
 
-  inline explicit Impl() {}
+  inline explicit Impl(CN<Player> player) {}
   inline void update(Player& player, const double dt) {}
   inline void powerup() {}
   inline utf32 name() const { return get_locale_str("plyaer.ability.home.name"); }
@@ -23,9 +23,9 @@ struct Ability_home::Impl {
   }
 }; // Impl
 
-Ability_home::Ability_home()
+Ability_home::Ability_home(CN<Player> player)
   : Ability {typeid(Ability_home).hash_code()}
-  , impl {new_unique<Impl>()} {}
+  , impl {new_unique<Impl>(player)} {}
 Ability_home::~Ability_home() {}
 void Ability_home::update(Player& player, const double dt) { impl->update(player, dt); }
 void Ability_home::powerup() { impl->powerup(); }

@@ -10,7 +10,7 @@ class Ability_home final: public Ability {
   Unique<Impl> impl {};
 
 public:
-  Ability_home();
+  explicit Ability_home(CN<Player> player);
   ~Ability_home();
   void update(Player& player, const double dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}
