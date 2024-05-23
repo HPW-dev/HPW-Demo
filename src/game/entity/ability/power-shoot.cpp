@@ -11,7 +11,6 @@
 #include "game/util/game-util.hpp"
 #include "util/math/random.hpp"
 #include "util/hpw-util.hpp"
-#include "util/error.hpp"
 
 struct Ability_power_shoot::Impl {
   nocopy(Impl);
@@ -89,10 +88,10 @@ struct Ability_power_shoot::Impl {
     switch (m_power) {
       case 0: return get_locale_str("plyaer.ability.power_shoot.desc_0"); break;
       case 1: return get_locale_str("plyaer.ability.power_shoot.desc_1"); break;
-      default:
       case 2: return get_locale_str("plyaer.ability.power_shoot.desc_2"); break;
+      default:
+      case 3: return get_locale_str("plyaer.ability.power_shoot.desc_3"); break;
     }
-    error("WTF?");
     return {};
   }
 }; // Impl

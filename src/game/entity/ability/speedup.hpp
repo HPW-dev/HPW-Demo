@@ -1,0 +1,20 @@
+#pragma once
+#include "ability.hpp"
+#include "util/macro.hpp"
+#include "util/mem-types.hpp"
+
+// повышение скорости за счёт энергии
+class Ability_speedup final: public Ability {
+  nocopy(Ability_speedup);
+  struct Impl;
+  Unique<Impl> impl {};
+
+public:
+  Ability_speedup();
+  ~Ability_speedup();
+  void update(Player& player, const double dt) override;
+  inline void draw(Image& dst, const Vec offset) const override {}
+  void powerup() override;
+  utf32 name() const override;
+  utf32 desc() const override;
+};
