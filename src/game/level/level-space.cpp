@@ -65,7 +65,7 @@ struct Level_space::Impl {
     graphic::post_effects->move_to_back (
       new_shared<Blink_text>(6, U"слабая гравитация") );
     
-    hpw::shop = new_unique<Shop_debug>(); // TODO это дебажный выбор способностей
+    //hpw::shop = new_unique<Shop_debug>(); // TODO это дебажный выбор способностей
   }
 
   inline void update(const Vec vel, double dt) {

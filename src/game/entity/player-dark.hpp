@@ -16,7 +16,7 @@ class Player_dark final: public Player {
   void energy_regen();
   void blink_contour() const; // мерцание контура
   void draw_stars(Image& dst) const; // звёздочки на окошках игрока
-  void power_shoot(double dt);
+  void power_shoot(double dt); // TODO del
   void default_shoot(double dt);
   void move(double dt);
 

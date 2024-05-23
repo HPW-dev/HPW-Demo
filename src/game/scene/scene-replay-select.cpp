@@ -47,7 +47,8 @@ struct Scene_replay_select::Impl {
         Table_menu::Row {.name = get_locale_str("scene.replay.table.score")},
       },
       25,
-      generate_rows()
+      generate_rows(),
+      get_locale_str("scene.replay.no_replay")
     );
   } // init_menu
 

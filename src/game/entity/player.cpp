@@ -15,11 +15,6 @@ Player::~Player() {
     hpw::entity_mgr->set_player({});
 }
 
-bool Player::check_capability(const Ability ability) const {
-  cauto it = std::find(capabilities.begin(), capabilities.end(), ability);
-  return it != capabilities.end();
-}
-
 void Player::update(double dt) {
   Collidable::update(dt);
   // трясти камеру при столкновениях

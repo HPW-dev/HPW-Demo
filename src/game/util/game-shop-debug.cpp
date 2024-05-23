@@ -18,21 +18,21 @@ struct Shop_debug::Impl {
         Table_menu::Row {.name = U"СПОСОБНОСТЬ", .sz = scast<uint>((graphic::width / 3.0) * 2)},
         Table_menu::Row {.name = U"ЦЕНА", .sz = 0},
       },
-      24, gen_menu_rows()
+      24, gen_menu_rows(), U"нет способностей"
     );
   }
 
   inline ~Impl() {}
 
-  struct Ability_elem {
+  /*struct Ability_elem {
     Ability abil {}; // ability
     utf32 name {};
     utf32 desc {}; // description
-  };
+  };*/
 
   inline Menu_items gen_menu_rows() {
     // TODO locale
-    const Vector<Ability_elem> ability_table {
+    /*const Vector<Ability_elem> ability_table {
       Ability_elem {.abil = Ability::power_shoot, .name = U"Мощный выстрел", .desc = U"TODO DESC"},
       Ability_elem {.abil = Ability::invisible, .name = U"Невидимость", .desc = U"TODO DESC"},
       Ability_elem {.abil = Ability::graze_en_regen, .name = U"Реген маны за грейз", .desc = U"TODO DESC"},
@@ -62,7 +62,8 @@ struct Shop_debug::Impl {
         )
       );
     }
-    return ret;
+    return ret;*/
+    return {}; // TODO
   }
 
   inline void draw(Image& dst) const {
