@@ -11,6 +11,7 @@
 #include "game/util/game-util.hpp"
 #include "util/math/random.hpp"
 #include "util/hpw-util.hpp"
+#include "util/error.hpp"
 
 struct Ability_power_shoot::Impl {
   nocopy(Impl);
@@ -18,10 +19,9 @@ struct Ability_power_shoot::Impl {
   real m_percent_power_shoot_price {};
   hp_t m_power_shoot_price {}; // цена мощного выстрела
   hp_t m_energy_for_power_shoot {}; // сколько должно быть энергии для мощного выстрела
+  uint m_power {};
 
   inline explicit Impl() {
-    assert(m_power_shoot_price > 0);
-    assert(m_energy_for_power_shoot > 0);
     /*
     m_percent_for_power_shoot = shoot_node.get_real("percent_for_power_shoot");
     m_percent_for_power_shoot_price = shoot_node.get_real("percent_for_power_shoot_price");
@@ -32,6 +32,8 @@ struct Ability_power_shoot::Impl {
     it.m_energy_for_power_shoot = it.energy_max * (m_percent_power_shoot / 100.0);
     it.m_power_shoot_price = it.energy_max * (m_percent_power_shoot_price / 100.0);
     */
+    assert(m_power_shoot_price > 0);
+    assert(m_energy_for_power_shoot > 0);
   }
 
   inline void update(Player& player, const double dt) {
@@ -82,7 +84,17 @@ struct Ability_power_shoot::Impl {
   inline void powerup() {}
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.power_shoot.name"); }
-  inline utf32 desc() const { return get_locale_str("plyaer.ability.power_shoot.desc"); }
+
+  inline utf32 desc() const {
+    switch (m_power) {
+      case 0: return get_locale_str("plyaer.ability.power_shoot.desc_0"); break;
+      case 1: return get_locale_str("plyaer.ability.power_shoot.desc_1"); break;
+      default:
+      case 2: return get_locale_str("plyaer.ability.power_shoot.desc_2"); break;
+    }
+    error("WTF?");
+    return {};
+  }
 }; // Impl
 
 Ability_power_shoot::Ability_power_shoot()
