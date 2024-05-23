@@ -18,7 +18,9 @@ public:
 
   Player();
   ~Player();
-  void update(double dt) override;
   // добавить игроку новую способность
   void move_ability(Shared<Ability>&& ability);
+  void update(double dt) override;
+  void draw(Image& dst, const Vec offset) const override;
+  void kill() override;
 }; // Player

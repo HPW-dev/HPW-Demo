@@ -1,6 +1,7 @@
 #pragma once
-#include <util/str.hpp>
-#include <util/unicode.hpp>
+#include "util/str.hpp"
+#include "util/unicode.hpp"
+#include "util/math/vec.hpp"
 
 class Player;
 class Image;
@@ -16,7 +17,7 @@ public:
 
   inline std::size_t type_id() const { return m_type_id; }
   inline virtual void update(Player& player, const double dt) = 0;
-  inline virtual void draw(Image& dst) const = 0;
+  inline virtual void draw(Image& dst, const Vec offset) const = 0;
   inline virtual void powerup() = 0;
   // название способности
   inline virtual utf32 name() const = 0;
