@@ -21,3 +21,7 @@ void Player::update(double dt) {
   if (this->status.collided)
     graphic::camera->add_shake(999);
 }
+
+void Player::move_ability(Shared<Ability>&& ability) {
+  // TODO
+}

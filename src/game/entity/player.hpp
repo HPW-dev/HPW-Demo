@@ -20,5 +20,5 @@ public:
   ~Player();
   void update(double dt) override;
   // добавить игроку новую способность
-  void move_ability(Ability&& ability);
+  void move_ability(Shared<Ability>&& ability);
 }; // Player
