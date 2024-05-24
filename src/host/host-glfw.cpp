@@ -18,6 +18,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/user.hpp"
 extern "C" {
   #include "ogl.hpp"
   #ifdef WINDOWS
@@ -80,6 +81,12 @@ static void error_callback(int error, Cstr description) {
 
 static void reshape_callback(GLFWwindow* /*window*/, int w, int h)
 { instance.load()->reshape(w, h); }
+
+// utf32 text input callback
+static void utf32_text_input_cb(GLFWwindow* /*window*/, std::uint32_t codepoint) {
+  if (hpw::text_input_mode)
+    hpw::text_input += scast<decltype(hpw::text_input)::value_type>(codepoint);
+}
 
 Host_glfw::Host_glfw(int argc, char *argv[])
 : Host_ogl (argc, argv)
@@ -279,6 +286,8 @@ void Host_glfw::init_window() {
 
   // ивенты клавы
   glfwSetKeyCallback(window, &key_callback);
+  // для чтения юникод текста при вводе
+  glfwSetCharCallback(window, &utf32_text_input_cb);
   // режим показа курсора мыши
   _set_mouse_cursour_mode(graphic::show_mouse_cursour);
 } // init_window
