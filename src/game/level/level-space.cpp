@@ -96,7 +96,10 @@ struct Level_space::Impl {
     assert(player);
     player->default_force *= 0.004;
     player->focus_force *= 0.02;
-    player->move_ability( new_shared<Ability_power_shoot>(*player) ); // TODO test
+
+    // TODO test
+    auto ability = player->move_ability (
+      new_shared<Ability_power_shoot>(*player) );
   }
 
   inline void init_collider() {

@@ -16,13 +16,14 @@
 #include "util/file/archive.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/vec-util.hpp"
+#include "util/math/mat.hpp"
 
 template <typename T>
 struct Minmax { T min {}, max {}; };
 
 struct Ability_power_shoot::Impl {
   nocopy(Impl);
-  uint m_power {};
+  uint m_power {1}; // сила эффекта
   hp_t m_price {}; // цена мощного выстрела
   hp_t m_energy_needed {}; // сколько должно быть энергии для мощного выстрела
   Str m_big_bullet {}; // ведущий снаряд
@@ -52,17 +53,20 @@ struct Ability_power_shoot::Impl {
     }
   }
 
-  inline void powerup() {}
+  inline void powerup() {
+    ++m_power;
+    // TODO заменять обычные осколки на взрывающиеся
+  }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.power_shoot.name"); }
 
   inline utf32 desc() const {
     switch (m_power) {
-      case 0: return get_locale_str("plyaer.ability.power_shoot.desc_0"); break;
-      case 1: return get_locale_str("plyaer.ability.power_shoot.desc_1"); break;
-      case 2: return get_locale_str("plyaer.ability.power_shoot.desc_2"); break;
+      case 1: return get_locale_str("plyaer.ability.power_shoot.desc_0"); break;
+      case 2: return get_locale_str("plyaer.ability.power_shoot.desc_1"); break;
+      case 3: return get_locale_str("plyaer.ability.power_shoot.desc_2"); break;
       default:
-      case 3: return get_locale_str("plyaer.ability.power_shoot.desc_3"); break;
+      case 4: return get_locale_str("plyaer.ability.power_shoot.desc_3"); break;
     }
     return {};
   }
@@ -141,7 +145,9 @@ struct Ability_power_shoot::Impl {
 
   // запустить ведущие снаряды
   inline void make_bullets(Player& player) {
-    cauto big_bullets = rnd(m_big_bullet_count.min, m_big_bullet_count.max);
+    cauto big_bullets = rnd (
+      (m_big_bullet_count.min * pow2(m_power)),
+      m_big_bullet_count.max * pow2(m_power) );
     cfor (_, big_bullets) {
       cauto spawn_pos = player.phys.get_pos() + Vec(rndr(-7, 7), 0);
       auto bullet = hpw::entity_mgr->make(&player, m_big_bullet, spawn_pos);
@@ -162,8 +168,8 @@ struct Ability_power_shoot::Impl {
   inline void make_scatter(Player& player) {
     hpw::entity_mgr->add_scatter(Scatter {
       .pos{ player.phys.get_pos() + Vec(0, -10) }, // создаёт источник взрыва перед ноосом
-      .range {m_scatter_range},
-      .power {pps(m_scatter_power)},
+      .range = m_scatter_range * m_power,
+      .power = pps(m_scatter_power) * m_power,
     });
   }
 
@@ -187,8 +193,8 @@ struct Ability_power_shoot::Impl {
           m_master->m_small_bullet_angle );
         // сохранить импульс игрока
         cauto speed = rndr (
-          m_master->m_small_bullet_speed.min,
-          m_master->m_small_bullet_speed.max );
+          m_master->m_small_bullet_speed.min * pow2(m_master->m_power),
+          m_master->m_small_bullet_speed.max * pow2(m_master->m_power) );
         Vec vel = deg_to_vec(angle) * speed;
         it->phys.set_vel(it->phys.get_vel() + vel);
         it->phys.set_force(m_master->m_small_bullet_force);
@@ -198,7 +204,6 @@ struct Ability_power_shoot::Impl {
         );
         it->move_update_callback( Kill_by_timeout(kill_timeout) );
         it->status.layer_up = false;
-        //it->status.ignore_scatter = true;
       }
     } // op ()
   }; // Spawner_small_bullets

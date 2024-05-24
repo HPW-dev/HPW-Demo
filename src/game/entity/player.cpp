@@ -27,15 +27,27 @@ void Player::update(double dt) {
     it->update(*this, dt);
 }
 
-void Player::move_ability(Shared<Ability>&& ability) {
+Ability* Player::move_ability(Shared<Ability>&& ability) {
   // если такая способность уже есть у игрока, то апнуть её
   for (cnauto it: capabilities)
     if (it->type_id() == ability->type_id()) {
       it->powerup();
-      return;
+      return it.get();
     }
   // если способности нет у игрока, то добавить её в список
-  capabilities.emplace_back( std::move(ability) );
+  auto ret = capabilities.emplace_back( std::move(ability) );
+  return ret.get();
+}
+
+Ability* Player::find_ability(const std::size_t type_id) const {
+  cnauto it = std::find_if (
+    capabilities.begin(), capabilities.end(),
+    [type_id](CN<decltype(capabilities)::value_type> ability)
+      { return ability->type_id() == type_id; }
+  );
+  if (it != capabilities.end())
+    it->get();
+  return {};
 }
 
 void Player::draw(Image& dst, const Vec offset) const {

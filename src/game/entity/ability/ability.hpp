@@ -8,9 +8,6 @@ class Image;
 
 // базовый класс для способностей игрока
 class Ability {
-  nocopy(Ability);
-  std::size_t m_type_id {}; // идентификатор типа для сравенения
-
 public:
   inline explicit Ability(const std::size_t _type_id): m_type_id {_type_id} {}
   virtual ~Ability() = default;
@@ -23,4 +20,8 @@ public:
   inline virtual utf32 name() const = 0;
   // описание способности
   inline virtual utf32 desc() const = 0;
+
+private:
+  nocopy(Ability);
+  std::size_t m_type_id {}; // идентификатор типа для сравенения
 };

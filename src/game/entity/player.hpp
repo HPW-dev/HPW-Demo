@@ -19,7 +19,9 @@ public:
   Player();
   ~Player();
   // добавить игроку новую способность
-  void move_ability(Shared<Ability>&& ability);
+  Ability* move_ability(Shared<Ability>&& ability);
+  // проверить что есть способность нужного типа
+  Ability* find_ability(const std::size_t type_id) const;
   void update(double dt) override;
   void draw(Image& dst, const Vec offset) const override;
   void kill() override;
