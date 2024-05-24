@@ -23,7 +23,6 @@
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/entity/ability/power-shoot.hpp" // TODO del
 #include "util/hpw-util.hpp"
 #include "util/math/random.hpp"
 #include "graphic/image/image.hpp"
@@ -96,10 +95,6 @@ struct Level_space::Impl {
     assert(player);
     player->default_force *= 0.004;
     player->focus_force *= 0.02;
-
-    // TODO test
-    auto ability = player->move_ability (
-      new_shared<Ability_power_shoot>(*player) );
   }
 
   inline void init_collider() {
