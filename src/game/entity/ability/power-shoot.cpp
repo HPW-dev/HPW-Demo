@@ -14,6 +14,8 @@
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/file/archive.hpp"
+#include "util/math/timer.hpp"
+#include "util/math/vec-util.hpp"
 
 template <typename T>
 struct Minmax { T min {}, max {}; };
@@ -29,11 +31,13 @@ struct Ability_power_shoot::Impl {
   Minmax<real> m_small_bullet_speed {};
   Minmax<int> m_big_bullet_count {};
   Minmax<int> m_small_bullet_count {};
-  real m_small_bullet_delay {};
+  Minmax<real> m_small_bullet_lifetime {}; // время существования осколков
+  real m_small_bullet_delay {}; // с какой задержкой спавнить осколки ведущего снаряда
   real m_scatter_range {};
   real m_scatter_power {};
-  real m_big_bullet_angle {}; // уго разброса ведущих пуль
-  real m_small_bullet_angle {}; // уго разброса ведущих пуль
+  real m_big_bullet_angle {}; // угол разброса ведущих пуль
+  real m_small_bullet_angle {}; // угол разброса ведущих пуль
+  real m_small_bullet_force {};
 
   inline explicit Impl(CN<Player> player) {
     load_config(player);
@@ -46,7 +50,7 @@ struct Ability_power_shoot::Impl {
       make_bullets(player);
       make_scatter(player);
     }
-  } // update
+  }
 
   inline void powerup() {}
 
@@ -104,8 +108,14 @@ struct Ability_power_shoot::Impl {
       .min = small_bullet_count.at(0),
       .max = small_bullet_count.at(1)
     };
+    cauto small_bullet_lifetime = small_bullet_node.get_v_real("lifetime");
+    m_small_bullet_lifetime = {
+      .min = small_bullet_lifetime.at(0),
+      .max = small_bullet_lifetime.at(1)
+    };
     m_small_bullet_delay = small_bullet_node.get_real("delay");
     m_small_bullet_angle = small_bullet_node.get_real("angle");
+    m_small_bullet_force = pps( small_bullet_node.get_real("force") );
 
     // конфиг отдачи
     cauto scatter_node = root["scatter"];
@@ -116,12 +126,14 @@ struct Ability_power_shoot::Impl {
   inline void test_config() const {
     assert(m_price > 0);
     assert(m_energy_needed > 0);
+    assert(m_small_bullet_force > 0);
     assert(!m_big_bullet.empty());
     assert(!m_small_bullet.empty());
     assert(m_big_bullet_speed.max >= m_big_bullet_speed.min);
     assert(m_small_bullet_speed.max >= m_small_bullet_speed.min);
     assert(m_big_bullet_count.max >= m_big_bullet_count.min);
     assert(m_small_bullet_count.max >= m_small_bullet_count.min);
+    assert(m_small_bullet_lifetime.max >= m_small_bullet_lifetime.min);
     assert(m_small_bullet_delay > 0 && m_small_bullet_delay < 10);
     assert(m_scatter_range > 0 && m_scatter_range < 100'000);
     assert(m_scatter_power > 0 && m_scatter_power < 1'000'000);
@@ -141,10 +153,10 @@ struct Ability_power_shoot::Impl {
       // разброс
       cauto angle = rndr(-m_big_bullet_angle, m_big_bullet_angle);
       bullet->phys.set_deg(bullet->phys.get_deg() + angle);
-      bullet->move_update_callback(get_spawner_small_bullets());
+      bullet->move_update_callback(Spawner_small_bullets(this));
       bullet->status.ignore_scatter = true;
     }
-  }
+  } // make_bullets
 
   // отдача от выстрела
   inline void make_scatter(Player& player) {
@@ -155,24 +167,41 @@ struct Ability_power_shoot::Impl {
     });
   }
 
-  // спавнит мелкие пульки в след за мощным выстрелом
-  inline Entity::Update_callback get_spawner_small_bullets() const {
-    return [this](Entity& master, double dt)->void {
-      /*// TODO all vals by config
-      // TODO by dt timer
-      if ((hpw::game_updates_safe % 5) == 0) { // TODO game_updates_safe убрать
-        auto it = hpw::entity_mgr->make(&master, "bullet.player.small",
-          master.phys.get_pos());
-        // замедлить эти пули
-        it->phys.set_speed(it->phys.get_speed() * rndr(0.5, 1));
-        // чтобы пули разлетались во все стороны
-        it->phys.set_deg(it->phys.get_deg() + rndr(-45, 45));
-        it->phys.set_force( 7.5_pps );
-        it->move_update_callback( Kill_by_timeout(rndr(0.1, 0.7)) );
+  // спавнер осколков для ведущего снаряда
+  struct Spawner_small_bullets final {
+    CP<Impl> m_master {};
+    Timer m_delay {}; // задержка спавна
+
+    inline explicit Spawner_small_bullets(CP<Impl> master): m_master {master} {
+      m_delay = Timer(m_master->m_small_bullet_delay);
+      m_delay.randomize_stable();
+    }
+
+    inline void operator()(Entity& entity, double dt) {
+      cfor (_, m_delay.update(dt)) {
+        auto it = hpw::entity_mgr->make(&entity, m_master->m_small_bullet,
+          entity.phys.get_pos());
+        // угол разброса
+        cauto angle = rndr (
+          -m_master->m_small_bullet_angle,
+          m_master->m_small_bullet_angle );
+        // сохранить импульс игрока
+        cauto speed = rndr (
+          m_master->m_small_bullet_speed.min,
+          m_master->m_small_bullet_speed.max );
+        Vec vel = deg_to_vec(angle) * speed;
+        it->phys.set_vel(it->phys.get_vel() + vel);
+        it->phys.set_force(m_master->m_small_bullet_force);
+        cauto kill_timeout = rndr (
+          m_master->m_small_bullet_lifetime.min,
+          m_master->m_small_bullet_lifetime.max
+        );
+        it->move_update_callback( Kill_by_timeout(kill_timeout) );
         it->status.layer_up = false;
-      } // if timer*/
-    }; // ret lambda
-  } // spawn_small_bullets
+        //it->status.ignore_scatter = true;
+      }
+    } // op ()
+  }; // Spawner_small_bullets
 }; // Impl
 
 Ability_power_shoot::Ability_power_shoot(CN<Player> player)

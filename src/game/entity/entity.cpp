@@ -129,6 +129,8 @@ void Entity::move_update_callback(Update_callback&& callback) {
     update_callbacks.emplace_back(std::move(callback));
 }
 
+void Entity::add_update_callback(CN<Update_callback> callback) { update_callbacks.push_back(callback); }
+
 void Entity::move_kill_callback(Kill_callback&& callback) {
   if (callback)
     kill_callbacks.emplace_back(std::move(callback));

@@ -52,6 +52,7 @@ public:
   virtual void update(double dt);
   virtual void kill();
   void set_pos(const Vec pos);
+  void add_update_callback(CN<Update_callback> callback);
   void move_update_callback(Update_callback&& callback);
   void move_kill_callback(Kill_callback&& callback);
   void accept_kill_callbacks();
