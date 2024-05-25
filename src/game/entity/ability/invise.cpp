@@ -25,7 +25,7 @@ struct Ability_invise::Impl {
       // чёрный экран
       default:
       case 3: {
-        error("impl: добавь выключение игрового экрана");
+        error("TODO: добавь выключение игрового экрана");
         break;
       }
 
@@ -40,18 +40,22 @@ struct Ability_invise::Impl {
         nauto entities = hpw::entity_mgr->get_entities();
         for (nauto entity: entities) {
           if (entity->status.live && entity->status.is_enemy) {
-            if (entity->status.collided)
+            if (entity->status.collided) {
               entity->move_update_callback( Timed_visible(0.25) );
-            else // если с врагом столкнулись, то подсветить его
+            } else { // если с врагом столкнулись, то подсветить его
               entity->status.disable_render = true;
+              player.status.no_motion_interp = true;
+            }
           }
         }
-      }
+      } // lvl 1
 
       // инвиз только игрока
       case 0: {
         // когда игрок стреляет, его видно
-        player.status.disable_render = !is_pressed(hpw::keycode::shoot);
+        cauto attack = is_pressed(hpw::keycode::shoot);
+        player.status.disable_render = !attack;
+        player.status.no_motion_interp = !attack;
         break;
       }
     } // switch power
@@ -59,7 +63,7 @@ struct Ability_invise::Impl {
 
   inline void powerup() {
     ++m_power;
-    // TODO множитель очков + 0.3 * m_power
+    error("TODO множитель очков + 0.3 * m_power");
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }

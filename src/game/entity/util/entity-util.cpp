@@ -226,5 +226,8 @@ void Timed_visible::operator()(Entity& entity, double dt) {
   if (m_timeout > 0) {
     m_timeout -= dt;
     entity.status.disable_render = false;
+  } else {
+    entity.status.disable_render = true;
+    entity.status.no_motion_interp = true;
   }
 }
