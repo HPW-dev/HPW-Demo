@@ -6,12 +6,27 @@
 
 struct Ability_invise::Impl {
   nocopy(Impl);
+  /* уровни способности:
+  0 - невидимость игрока
+  1 - невидимость всех
+  2 - невидимость всех и пуль
+  3 - чёрный экран */
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {}
-  inline void update(Player& player, const double dt) {}
-  inline void powerup() {}
+  inline explicit Impl(CN<Player> player) {
+    
+  }
+
+  inline void update(Player& player, const double dt) {
+
+  }
+
+  inline void powerup() {
+
+  }
+
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
+
   inline utf32 desc() const {
     switch (m_power) {
       case 0: return get_locale_str("plyaer.ability.invise.desc_0"); break;
