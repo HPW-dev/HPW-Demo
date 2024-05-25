@@ -4,6 +4,7 @@
 #include "game/core/entities.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/entity-manager.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "util/error.hpp"
@@ -38,8 +39,12 @@ struct Ability_invise::Impl {
       case 1: {
         nauto entities = hpw::entity_mgr->get_entities();
         for (nauto entity: entities) {
-          if (entity->status.live && entity->status.is_enemy)
-            entity->status.disable_render = true;
+          if (entity->status.live && entity->status.is_enemy) {
+            if (entity->status.collided)
+              entity->move_update_callback( Timed_visible(0.25) );
+            else // если с врагом столкнулись, то подсветить его
+              entity->status.disable_render = true;
+          }
         }
       }
 

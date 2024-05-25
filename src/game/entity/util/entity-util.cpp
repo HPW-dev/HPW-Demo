@@ -216,3 +216,15 @@ Vec predict(CN<Entity> self_, CN<Entity> target_, double dt) {
   // узнать где будет цель за это же время
   return target.get_pos() + normalize_stable(target.get_vel()) * target.get_speed() * t;
 }
+
+Timed_visible::Timed_visible(const double timeout) {
+  assert(timeout > 0 && timeout < 100);
+  m_timeout = timeout;
+}
+
+void Timed_visible::operator()(Entity& entity, double dt) {
+  if (m_timeout > 0) {
+    m_timeout -= dt;
+    entity.status.disable_render = false;
+  }
+}

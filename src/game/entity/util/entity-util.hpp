@@ -71,6 +71,14 @@ public:
   void operator()(Entity& entity, double dt);
 };
 
+// Не делать объект невидимым, пока не закончится таймер
+class Timed_visible final {
+  double m_timeout {};
+public:
+  explicit Timed_visible(const double timeout);
+  void operator()(Entity& entity, double dt);
+};
+
 // на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
 real need_deg_to_target(CN<Entity> self, CN<Entity> target);
 // надо ли поворачивать вправо, чтобы моделька смотрела на target?
