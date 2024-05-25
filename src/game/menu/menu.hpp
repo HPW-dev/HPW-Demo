@@ -22,7 +22,6 @@ protected:
   void prev_item(); // перейти к предыдущему элементу
 
 public:
-  Menu() = default;
   explicit Menu(CN<Menu_items> items);
   virtual ~Menu() = default;
   virtual void draw(Image& dst) const = 0;

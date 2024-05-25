@@ -5,16 +5,18 @@
 #include "game/scene/scene-manager.hpp"
 #include "graphic/font/font.hpp"
 
+// сколько апдейтов надо подождать, чтоы зажатие сработало
+static uint updates_threshold = 60;
+static auto last_pressed_keycode = hpw::keycode::error;
+static uint hold_count = 0;
+
 // учитывает одиночное нажатие или зажатие клавиши
 bool check_pressed_or_holded (
 const hpw::keycode keycode,
 const uint UPDATES_THRESHOLD = 60,
 const uint FAST_UPDATES_THRESHOLD = 17
 ) {
-  // сколько апдейтов надо подождать, чтоы зажатие сработало
-  static uint updates_threshold = UPDATES_THRESHOLD;
-  static auto last_pressed_keycode = hpw::keycode::error;
-  static uint hold_count = 0;
+  updates_threshold = UPDATES_THRESHOLD;
   bool ret = false;
 
   if (is_pressed_once(keycode)) {
@@ -46,7 +48,12 @@ const uint FAST_UPDATES_THRESHOLD = 17
 
 Menu::Menu(CN<Menu_items> items)
 : m_items(items)
-{ iflog(m_items.empty(), "m_items empty\n"); }
+{ 
+  iflog(m_items.empty(), "m_items empty\n");
+  // сброс зажатых кнопок
+  last_pressed_keycode = hpw::keycode::error;
+  hold_count = 0;
+}
 
 void Menu::update(double dt) {
   return_if(m_items.empty());
