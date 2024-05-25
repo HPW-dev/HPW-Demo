@@ -36,6 +36,7 @@ public:
   void update(const double dt);
   void clear();
   void debug_draw(Image& dst) const;
+  void set_visible(const bool mode); // mode=false выключает видимость игровых объектов
 
   // задать обработчик столкновений
   void set_collider(CN<Shared<Collider>> new_collider);

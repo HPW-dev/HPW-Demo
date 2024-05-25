@@ -46,6 +46,7 @@ struct Entity_mgr::Impl {
   Entitys registrate_list {};
   // текущая ссылка на игрока, чтобы враги могли брать его в таргет
   Player* m_player {};
+  bool m_visible {true}; // видимость игровых объектов
 
   inline Impl() {
     #ifndef ECOMEM
@@ -61,6 +62,7 @@ struct Entity_mgr::Impl {
     { collision_resolver = new_collider; }
 
   inline void draw(Image& dst, const Vec offset) const {
+    return_if(!m_visible);
     // нарисовать нижний слой
     for (cnauto entity: entities)
       if (entity->status.live && !entity->status.layer_up)
@@ -289,6 +291,8 @@ struct Entity_mgr::Impl {
     // если игрока не нашли, стрелять куда попало
     return get_rand_pos_safe(0, 0, graphic::width, graphic::height);
   }
+
+  inline void set_visible(const bool mode) { m_visible = mode; }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>()} {}
@@ -310,3 +314,4 @@ Entity* Entity_mgr::find_avaliable_entity(const Entity_type type) { return impl-
 Player* Entity_mgr::get_player() const { return impl->get_player(); }
 void Entity_mgr::set_player(Player* player) { impl->set_player(player); }
 Vec Entity_mgr::target_for_enemy() const { return impl->target_for_enemy(); }
+void Entity_mgr::set_visible(const bool mode) { return impl->set_visible(mode); }

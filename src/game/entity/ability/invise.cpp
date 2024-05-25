@@ -1,8 +1,12 @@
 #include <cassert>
 #include <typeinfo>
 #include "invise.hpp"
+#include "game/core/entities.hpp"
 #include "game/entity/player.hpp"
+#include "game/entity/entity-manager.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/keybits.hpp"
+#include "util/error.hpp"
 
 struct Ability_invise::Impl {
   nocopy(Impl);
@@ -13,16 +17,44 @@ struct Ability_invise::Impl {
   3 - чёрный экран */
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {
-    
-  }
+  inline explicit Impl(CN<Player> player) {}
 
   inline void update(Player& player, const double dt) {
+    switch (m_power) {
+      // чёрный экран
+      default:
+      case 3: {
+        error("impl: добавь выключение игрового экрана");
+        break;
+      }
 
-  }
+      // инвиз всего
+      case 2: {
+        hpw::entity_mgr->set_visible(false);
+        break;
+      }
+
+      // инвиз врагов и игрока
+      case 1: {
+        nauto entities = hpw::entity_mgr->get_entities();
+        for (nauto entity: entities) {
+          if (entity->status.live && entity->status.is_enemy)
+            entity->status.disable_render = true;
+        }
+      }
+
+      // инвиз только игрока
+      case 0: {
+        // когда игрок стреляет, его видно
+        player.status.disable_render = !is_pressed(hpw::keycode::shoot);
+        break;
+      }
+    } // switch power
+  } // update
 
   inline void powerup() {
-
+    ++m_power;
+    // TODO множитель очков + 0.3 * m_power
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }

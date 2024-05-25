@@ -10,6 +10,7 @@ Player::Player(): Collidable(GET_SELF_TYPE) {
   hpw::entity_mgr->set_player(this);
   status.layer_up = true; // игрок всегда сверху
   status.ignore_bound = true; // не убивать игрока, когда он за экраном
+  status.is_player = true;
 }
 
 Player::~Player() {

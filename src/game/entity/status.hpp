@@ -10,6 +10,7 @@ struct Enity_status {
   bool kill_by_timeout: 1 {};  // убить объект концом времени жизни
   bool is_bullet: 1 {};        // объект является пулей
   bool is_enemy: 1 {};         // объект является врагом
+  bool is_player: 1 {};        // объект является игроком
   bool end_anim: 1 {};         // анимация проигралась до конца
   bool end_frame: 1 {};        // кадр проигрался до конца
   bool layer_up: 1 {};         // рисовать объект на верхнем уровне

@@ -42,24 +42,26 @@ void Entity::accept_kill_callbacks() {
 }
 
 void Entity::draw(Image& dst, const Vec offset) const {
-  // отрисовка игрового объекта
-  if (graphic::draw_entitys)
-    anim_ctx.draw(dst, *this, offset);
+  if (!status.disable_render) {
+    // отрисовка игрового объекта
+    if (graphic::draw_entitys)
+      anim_ctx.draw(dst, *this, offset);
 
-  // вспышка
-  if (light && graphic::enable_light && !status.disable_light)
-    light->draw(dst, phys.get_pos() + offset);
-    
-  // искажение воздуха
-  if (
-    graphic::enable_heat_distort &&
-    heat_distort &&
-    !status.disable_heat_distort &&
-    !(graphic::render_lag && graphic::disable_heat_distort_while_lag)
-  ) {
-    heat_distort->draw(dst, phys.get_pos() + offset);
-  }
-  
+    // вспышка
+    if (light && graphic::enable_light && !status.disable_light)
+      light->draw(dst, phys.get_pos() + offset);
+      
+    // искажение воздуха
+    if (
+      graphic::enable_heat_distort &&
+      heat_distort &&
+      !status.disable_heat_distort &&
+      !(graphic::render_lag && graphic::disable_heat_distort_while_lag)
+    ) {
+      heat_distort->draw(dst, phys.get_pos() + offset);
+    }
+  } // if !disable_render
+
   debug_draw(dst, offset);
 } // draw
 

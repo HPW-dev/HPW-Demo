@@ -54,6 +54,8 @@ void Player_dark::energy_regen() { energy = std::min<hp_t>(energy_max, energy + 
 
 void Player_dark::draw(Image& dst, const Vec offset) const {
   Collidable::draw(dst, offset);
+  
+  return_if(status.disable_render);
   blink_contour();
   draw_stars(dst);
 }
