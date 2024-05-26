@@ -20,6 +20,10 @@ struct Ability_speedup::Impl {
     }
     return {};
   }
+
+  inline CP<Sprite> icon() const {
+    return {}; // TODO
+  }
 }; // Impl
 
 Ability_speedup::Ability_speedup(CN<Player> player)
@@ -30,3 +34,4 @@ void Ability_speedup::update(Player& player, const double dt) { impl->update(pla
 void Ability_speedup::power_up() { impl->power_up(); }
 utf32 Ability_speedup::name() const { return impl->name(); }
 utf32 Ability_speedup::desc() const { return impl->desc(); }
+CP<Sprite> Ability_speedup::icon() const { return impl->icon(); }

@@ -207,6 +207,10 @@ struct Ability_power_shoot::Impl {
       }
     } // op ()
   }; // Spawner_small_bullets
+
+  inline CP<Sprite> icon() const {
+    return {}; // TODO
+  }
 }; // Impl
 
 Ability_power_shoot::Ability_power_shoot(CN<Player> player)
@@ -217,3 +221,4 @@ void Ability_power_shoot::update(Player& player, const double dt) { impl->update
 void Ability_power_shoot::power_up() { impl->power_up(); }
 utf32 Ability_power_shoot::name() const { return impl->name(); }
 utf32 Ability_power_shoot::desc() const { return impl->desc(); }
+CP<Sprite> Ability_power_shoot::icon() const { return impl->icon(); }

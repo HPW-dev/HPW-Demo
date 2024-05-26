@@ -21,6 +21,10 @@ struct Ability_home::Impl {
     }
     return {};
   }
+
+  inline CP<Sprite> icon() const {
+    return {}; // TODO
+  }
 }; // Impl
 
 Ability_home::Ability_home(CN<Player> player)
@@ -31,3 +35,4 @@ void Ability_home::update(Player& player, const double dt) { impl->update(player
 void Ability_home::power_up() { impl->power_up(); }
 utf32 Ability_home::name() const { return impl->name(); }
 utf32 Ability_home::desc() const { return impl->desc(); }
+CP<Sprite> Ability_home::icon() const { return impl->icon(); }

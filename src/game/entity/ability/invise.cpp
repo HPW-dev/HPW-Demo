@@ -96,6 +96,10 @@ struct Ability_invise::Impl {
     }
     return {};
   }
+
+  inline CP<Sprite> icon() const {
+    return {}; // TODO
+  }
 }; // Impl
 
 Ability_invise::Ability_invise(CN<Player> player)
@@ -106,3 +110,4 @@ void Ability_invise::update(Player& player, const double dt) { impl->update(play
 void Ability_invise::power_up() { impl->power_up(); }
 utf32 Ability_invise::name() const { return impl->name(); }
 utf32 Ability_invise::desc() const { return impl->desc(); }
+CP<Sprite> Ability_invise::icon() const { return impl->icon(); }

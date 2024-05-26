@@ -5,6 +5,7 @@
 
 class Player;
 class Image;
+class Sprite;
 
 // базовый класс для способностей игрока
 class Ability {
@@ -20,6 +21,8 @@ public:
   inline virtual utf32 name() const = 0;
   // описание способности
   inline virtual utf32 desc() const = 0;
+  // значок со способностью (берётся из банка)
+  inline virtual CP<Sprite> icon() const = 0;
 
 private:
   nocopy(Ability);

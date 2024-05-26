@@ -17,4 +17,5 @@ public:
   void power_up() override;
   utf32 name() const override;
   utf32 desc() const override;
+  CP<Sprite> icon() const override;
 };

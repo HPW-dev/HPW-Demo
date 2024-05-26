@@ -22,6 +22,10 @@ struct Ability_fullscreen_shoot::Impl {
     }
     return {};
   }
+
+  inline CP<Sprite> icon() const {
+    return {}; // TODO
+  }
 }; // Impl
 
 Ability_fullscreen_shoot::Ability_fullscreen_shoot(CN<Player> player)
@@ -32,3 +36,4 @@ void Ability_fullscreen_shoot::update(Player& player, const double dt) { impl->u
 void Ability_fullscreen_shoot::power_up() { impl->power_up(); }
 utf32 Ability_fullscreen_shoot::name() const { return impl->name(); }
 utf32 Ability_fullscreen_shoot::desc() const { return impl->desc(); }
+CP<Sprite> Ability_fullscreen_shoot::icon() const { return impl->icon(); }

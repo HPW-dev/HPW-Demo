@@ -100,10 +100,6 @@ struct Level_space::Impl {
     player->focus_force *= 0.02;
 
     auto ability = player->move_ability(new_shared<Ability_invise>(*player));
-    ability->power_up();
-    ability->power_up();
-    ability->power_up();
-    ability->power_up();
   }
 
   inline void init_collider() {
