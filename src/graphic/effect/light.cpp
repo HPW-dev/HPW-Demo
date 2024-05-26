@@ -1,4 +1,5 @@
 #include <omp.h>
+#include <algorithm>
 #include <unordered_map>
 #include <utility>
 #include <cmath>
@@ -54,7 +55,10 @@ void draw_cached_sphere(Image& dst, const real R, const Vec pos, blend_pf bf) {
   // сгенерить пререндеры, если их нету
   cache_light_spheres();
 
-  cnauto sphere = cached_spheres.at(R / cache_spheres_steps);
+  assert(cache_spheres_steps > 0);
+  int index = R / cache_spheres_steps;
+  index = std::clamp<int>(index, 0, cached_spheres.size() - 1);
+  cnauto sphere = cached_spheres.at(index);
   cauto offset = pos - center_point(sphere);
   insert(dst, sphere, offset, bf);
 }

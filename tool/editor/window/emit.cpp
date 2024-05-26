@@ -194,7 +194,7 @@ void Emit_wnd::heat_distort_edit() {
     heat_distort.block_count = block_count;
   ImGui::SliderFloat("power", &heat_distort.power, 0, 30);
   float duration = heat_distort.get_max_duration();
-  if (ImGui::SliderFloat("duration", &duration, 0, 10))
+  if (ImGui::SliderFloat("duration", &duration, 0.001, 10))
     heat_distort.set_duration(duration);
   // показать сколько прошло времени эффекта
   ImGui::ProgressBar(heat_distort.get_cur_duration() /
@@ -249,7 +249,7 @@ void Emit_wnd::light_edit() {
   Light& light = *editor::entity->light;
 
   float duration = light.get_max_duration();
-  if (ImGui::SliderFloat("duration", &duration, 0, 10))
+  if (ImGui::SliderFloat("duration", &duration, 0.001, 10))
     light.set_duration(duration);
   
   int radius = light.radius;
