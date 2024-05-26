@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include "input.hpp"
 #include "util/hpw-util.hpp"
+#include "game/core/scenes.hpp"
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-manager.hpp"
 

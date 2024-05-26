@@ -33,38 +33,56 @@ cpp_flags.extend(["-fopenmp"])
 defines.extend(["-DEDITOR"])
 
 if is_linux:
-  used_libs.extend(["GL", "GLEW", "glfw"])
+  used_libs.extend(["GL", "GLEW", "glfw", "openal"])
 else: # windows
   inc_path.extend([
     thirdparty_dir + "include/_windows_only",
     thirdparty_dir + "include/_windows_only/GLEW"
   ])
-  used_libs.extend(["glfw3", "glew32", "opengl32"])
+  used_libs.extend(["glfw3dll", "glew32", "opengl32", "OpenAL32.dll"])
   lib_path.extend([
     thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
     thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/yaml-cpp/"
+    thirdparty_dir + "lib/yaml-cpp/",
+    thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if is_64bit else "x32"),
   ])
 
 sources = [
   Glob(thirdparty_dir + "include/zip/*.c"),
+  thirdparty_dir + "include/stb/stb_vorbis.c",
   Glob(src_dir + "util/file/archive/*.cpp"),
+  Glob(src_dir + "util/file/yaml/*.cpp"),
   Glob(src_dir + "util/file/*.cpp"),
   Glob(src_dir + "util/math/*.cpp"),
   Glob(src_dir + "util/math/*.c"),
+  Glob(src_dir + "util/*.cpp"),
+  Glob(src_dir + "game/menu/*.cpp"),
+  Glob(src_dir + "game/menu/item/*.cpp"),
+  Glob(src_dir + "game/util/*.cpp"),
+  Glob(src_dir + "game/entity/enemy/*.cpp"),
+  Glob(src_dir + "game/entity/util/info/*.cpp"),
+  Glob(src_dir + "graphic/animation/*.cpp"),
+  Glob(src_dir + "graphic/image/*.cpp"),
+  Glob(src_dir + "graphic/sprite/*.cpp"),
+  Glob(src_dir + "graphic/font/*.cpp"),
+  Glob(src_dir + "graphic/util/*.cpp"),
+  Glob(src_dir + "graphic/effect/*.cpp"),
+  Glob(src_dir + "hpw/*.cpp"),
+  Glob(src_dir + "sound/*.cpp"),
+  Glob(imgui_dir + "imgui*.cpp"),
+  Glob("scene/*.cpp"),
+  Glob("window/*.cpp"),
+  Glob("*.cpp"),
   src_dir + "host/resize.cpp",
-  src_dir + "host/host-util.cpp",
-  src_dir + "host/host.cpp",
   src_dir + "host/windows-keycodes.cpp",
   src_dir + "host/protownd.cpp",
+  src_dir + "host/host-util.cpp",
+  src_dir + "host/host.cpp",
   src_dir + "host/host-ogl.cpp",
   src_dir + "host/host-glfw.cpp",
   src_dir + "host/host-glfw-keymap.cpp",
-  Glob(src_dir + "game/util/*.cpp"),
-  src_dir + "game/game-sync.cpp",
   src_dir + "game/scene/scene.cpp",
   src_dir + "game/scene/scene-manager.cpp",
-  Glob(src_dir + "game/entity/enemy/*.cpp"),
   src_dir + "game/entity/entity.cpp",
   src_dir + "game/entity/entity-loader.cpp",
   src_dir + "game/entity/player.cpp",
@@ -81,32 +99,9 @@ sources = [
   src_dir + "game/entity/util/entity-util.cpp",
   src_dir + "game/entity/util/phys.cpp",
   src_dir + "game/entity/util/anim-ctx.cpp",
-  Glob(src_dir + "game/entity/util/info/*.cpp"),
-  Glob(src_dir + "util/file/yaml/*.cpp"),
-  Glob(src_dir + "util/*.cpp"),
-  Glob(src_dir + "graphic/animation/*.cpp"),
-  Glob(src_dir + "graphic/image/*.cpp"),
-  Glob(src_dir + "graphic/sprite/*.cpp"),
-  Glob(src_dir + "graphic/font/*.cpp"),
-  Glob(src_dir + "graphic/util/*.cpp"),
-  Glob(src_dir + "graphic/effect/*.cpp"),
-  Glob(src_dir + "hpw/*.cpp"),
-  Glob(imgui_dir + "imgui*.cpp"),
   imgui_dir + "backends/imgui_impl_opengl3.cpp",
   imgui_dir + "backends/imgui_impl_glfw.cpp",
-  Glob("scene/*.cpp"),
-  Glob("window/*.cpp"),
-  Glob("*.cpp"),
 ]
-if is_linux:
-  used_libs.extend(["GL", "GLEW", "glfw"])
-else: # windows
-  inc_path.extend([thirdparty_dir + "include/_windows_only"])
-  used_libs.extend(["glfw3", "glew32", "opengl32"])
-  lib_path.extend([
-    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/GLEW",
-  ])
 
 if not is_debug and not is_linux:
   ld_flags.append("-mwindows")

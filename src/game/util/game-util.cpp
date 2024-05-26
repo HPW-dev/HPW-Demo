@@ -47,7 +47,7 @@
 
 void load_resources() {
   detailed_log("loading resources...\n");
-  init_store_sprite();
+  hpw::store_sprite = new_shared<Store<Sprite>>();
 #ifdef EDITOR
   auto names = all_names_in_dir(hpw::cur_dir);
 #else
@@ -85,7 +85,7 @@ void load_resources() {
 } // load_resources
 
 void load_animations() {
-  init_anim_mgr();
+  hpw::anim_mgr = new_shared<Anim_mgr>();
   Shared<Yaml> anim_yml;
 #ifdef EDITOR
   anim_yml = new_shared<Yaml>(hpw::cur_dir + "config/animation.yml");

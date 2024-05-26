@@ -22,10 +22,6 @@ void load_resources();
 CN<utf32> get_locale_str(CN<Str> key);
 // сделать круг полностью перекрывающий все полигоны
 Circle cover_polygons(CN<Vector<Polygon>> polygons);
-
-#define init_store_sprite() hpw::store_sprite = new_shared<Store<Sprite>>();
-#define init_enity_mgr() hpw::entity_mgr = new_shared<Entity_mgr>();
-#define init_anim_mgr() hpw::anim_mgr = new_shared<Anim_mgr>();
 Vec get_screen_center();
 
 /** создаёт осветлённую обводку для контуров спрайта

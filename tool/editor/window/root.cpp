@@ -13,10 +13,13 @@
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/animation/animation-manager.hpp"
-#include "game/core/canvas.hpp"
 #include "game/util/sync.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/entities.hpp"
+#include "game/core/canvas.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/camera.hpp"
 #include "game/entity/entity-manager.hpp"
@@ -30,8 +33,8 @@ void Root_wnd::init_root_wnd() {
   graphic::camera = new_shared<Camera>();
   editor::anim_name = {};
   hpw::hitbox_layer = new_shared<Image>(graphic::canvas->X, graphic::canvas->Y);
-  init_enity_mgr();
-  init_anim_mgr();
+  hpw::entity_mgr = new_shared<Entity_mgr>();
+  hpw::anim_mgr = new_shared<Anim_mgr>();
   load_resources();
   load_animations();
   wnds.clear();

@@ -21,6 +21,7 @@
 #include "game/core/time-scale.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/common.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/enemy/cosmic-hunter.hpp"

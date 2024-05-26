@@ -3,6 +3,7 @@
 #include "util/hpw-util.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/util/keybits.hpp"
+#include "game/core/scenes.hpp"
 #include "editor-util.hpp"
 
 Yes_no_scene::Yes_no_scene(CN<utf8> msg,
