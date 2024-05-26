@@ -8,6 +8,7 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/score-table.hpp"
 #include "game/level/level-manager.hpp"
 
 struct Ability_invise::Impl {
@@ -79,7 +80,8 @@ struct Ability_invise::Impl {
 
   inline void power_up() {
     ++m_power;
-    //error("TODO множитель очков + 0.3 * m_power");
+    cauto scale = hpw::get_score_scale();
+    hpw::set_score_scale(scale + 0.3 * m_power);
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
