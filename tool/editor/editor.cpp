@@ -3,7 +3,9 @@
 #include "game/scene/scene-manager.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/sync.hpp"
+#include "game/util/config.hpp"
 #include "game/core/core.hpp"
+#include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "graphic/image/image.hpp"
@@ -15,15 +17,10 @@ Editor::Editor(int argc, char *argv[])
 
 void Editor::init() {
   Host_imgui::init();
+  load_config(); // refresh config
   init_scene_mgr();
+  init_graphic();
   hpw::scene_mgr->add(new_shared<Editor_scene>());
-  // hpw setup
-  hpw::set_double_buffering(true);
-  graphic::wait_frame = false;
-  graphic::set_disable_frame_limit(true);
-  hpw::set_vsync(true);
-  hpw::set_fullscreen(false);
-  hpw::set_resize_mode(Resize_mode::by_height);
   // при старте редактор сам растягивается и перетаскивается на нужное место
   set_window_pos(200, 25);
   reshape(1024, 720);
@@ -52,4 +49,15 @@ void Editor::imgui_exec() {
   auto editor_scene {dcast<Editor_scene_base*>(scene)};
   assert(editor_scene);
   editor_scene->imgui_exec();
+}
+
+void Editor::init_graphic() {
+  hpw::set_double_buffering(true);
+  graphic::wait_frame = false;
+  graphic::cpu_safe = false;
+  hpw::set_vsync(false);
+  graphic::set_disable_frame_limit(false);
+  graphic::set_target_fps(60);
+  hpw::set_fullscreen(false);
+  hpw::set_resize_mode(graphic::default_resize_mode);
 }

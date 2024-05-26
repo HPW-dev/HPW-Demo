@@ -10,6 +10,7 @@ protected:
   void draw() override;
   void imgui_exec() override;
   void init() override;
+  void init_graphic();
 
 public:
   Editor(int argc, char *argv[]);
