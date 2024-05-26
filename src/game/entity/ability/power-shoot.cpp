@@ -53,7 +53,7 @@ struct Ability_power_shoot::Impl {
     }
   }
 
-  inline void powerup() {
+  inline void power_up() {
     ++m_power;
     // TODO заменять обычные осколки на взрывающиеся
   }
@@ -214,6 +214,6 @@ Ability_power_shoot::Ability_power_shoot(CN<Player> player)
   , impl {new_unique<Impl>(player)} {}
 Ability_power_shoot::~Ability_power_shoot() {}
 void Ability_power_shoot::update(Player& player, const double dt) { impl->update(player, dt); }
-void Ability_power_shoot::powerup() { impl->powerup(); }
+void Ability_power_shoot::power_up() { impl->power_up(); }
 utf32 Ability_power_shoot::name() const { return impl->name(); }
 utf32 Ability_power_shoot::desc() const { return impl->desc(); }

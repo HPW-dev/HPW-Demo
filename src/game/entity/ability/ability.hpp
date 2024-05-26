@@ -15,7 +15,7 @@ public:
   inline std::size_t type_id() const { return m_type_id; }
   inline virtual void update(Player& player, const double dt) = 0;
   inline virtual void draw(Image& dst, const Vec offset) const = 0;
-  inline virtual void powerup() = 0;
+  inline virtual void power_up() = 0;
   // название способности
   inline virtual utf32 name() const = 0;
   // описание способности

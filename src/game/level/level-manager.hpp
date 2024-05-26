@@ -34,11 +34,14 @@ public:
   void set_player_pos_from_prev_level(const Vec pos);
   // узнать название уровня
   Str level_name() const;
+  // управляет видимостью фона
+  void set_visible(bool mode);
 
 private:
   nocopy(Level_mgr);
   Makers makers {}; // конструкторы уровней
   Shared<Level> level {}; // текущий уровень
+  bool m_visible {true}; // if false - disable redraw bg
 
   void accept_maker();
 }; // Level_mgr

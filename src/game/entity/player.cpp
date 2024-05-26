@@ -32,7 +32,7 @@ Ability* Player::move_ability(Shared<Ability>&& ability) {
   // если такая способность уже есть у игрока, то апнуть её
   for (cnauto it: capabilities)
     if (it->type_id() == ability->type_id()) {
-      it->powerup();
+      it->power_up();
       return it.get();
     }
   // если способности нет у игрока, то добавить её в список

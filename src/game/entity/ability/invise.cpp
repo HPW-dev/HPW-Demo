@@ -2,12 +2,13 @@
 #include <typeinfo>
 #include "invise.hpp"
 #include "game/core/entities.hpp"
+#include "game/core/levels.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
-#include "util/error.hpp"
+#include "game/level/level-manager.hpp"
 
 struct Ability_invise::Impl {
   nocopy(Impl);
@@ -25,13 +26,28 @@ struct Ability_invise::Impl {
       // чёрный экран
       default:
       case 3: {
-        error("TODO: добавь выключение игрового экрана");
-        break;
+        hpw::level_mgr->set_visible(false);
+        // break тут не нужен
       }
 
       // инвиз всего
       case 2: {
-        hpw::entity_mgr->set_visible(false);
+        nauto entities = hpw::entity_mgr->get_entities();
+        for (nauto entity: entities) {
+          if (
+            // нужны живые объекты
+            entity->status.live &&
+            // учитываются только игрок, противники и пули
+            (
+              entity->status.is_enemy ||
+              entity->status.is_player ||
+              entity->status.is_bullet
+            )
+          ) {
+            entity->status.disable_render = true;
+            entity->status.no_motion_interp = true;
+          }
+        }
         break;
       }
 
@@ -44,26 +60,26 @@ struct Ability_invise::Impl {
               entity->move_update_callback( Timed_visible(0.25) );
             } else { // если с врагом столкнулись, то подсветить его
               entity->status.disable_render = true;
-              player.status.no_motion_interp = true;
+              entity->status.no_motion_interp = true;
             }
           }
         }
+        // break тут не нужен
       } // lvl 1
 
       // инвиз только игрока
       case 0: {
         // когда игрок стреляет, его видно
-        cauto attack = is_pressed(hpw::keycode::shoot);
-        player.status.disable_render = !attack;
-        player.status.no_motion_interp = !attack;
+        player.status.disable_render = !is_pressed(hpw::keycode::shoot);
+        player.status.no_motion_interp = true;
         break;
       }
     } // switch power
   } // update
 
-  inline void powerup() {
+  inline void power_up() {
     ++m_power;
-    error("TODO множитель очков + 0.3 * m_power");
+    //error("TODO множитель очков + 0.3 * m_power");
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
@@ -85,6 +101,6 @@ Ability_invise::Ability_invise(CN<Player> player)
   , impl {new_unique<Impl>(player)} {}
 Ability_invise::~Ability_invise() {}
 void Ability_invise::update(Player& player, const double dt) { impl->update(player, dt); }
-void Ability_invise::powerup() { impl->powerup(); }
+void Ability_invise::power_up() { impl->power_up(); }
 utf32 Ability_invise::name() const { return impl->name(); }
 utf32 Ability_invise::desc() const { return impl->desc(); }

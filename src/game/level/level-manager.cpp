@@ -39,6 +39,8 @@ void Level_mgr::update(const Vec vel, double dt) {
 } // update
 
 void Level_mgr::draw(Image& dst) const {
+  return_if(!m_visible);
+
   if (level) {
     // показать уровень, иначе залить фон
     if (graphic::draw_level)
@@ -89,3 +91,5 @@ Str Level_mgr::level_name() const {
   detailed_log("empty level\n");
   return {};
 }
+
+void Level_mgr::set_visible(bool mode) { m_visible = mode; }

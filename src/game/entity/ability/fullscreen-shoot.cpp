@@ -10,7 +10,7 @@ struct Ability_fullscreen_shoot::Impl {
 
   inline explicit Impl(CN<Player> player) {}
   inline void update(Player& player, const double dt) {}
-  inline void powerup() {}
+  inline void power_up() {}
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
   inline utf32 desc() const {
     switch (m_power) {
@@ -29,6 +29,6 @@ Ability_fullscreen_shoot::Ability_fullscreen_shoot(CN<Player> player)
   , impl {new_unique<Impl>(player)} {}
 Ability_fullscreen_shoot::~Ability_fullscreen_shoot() {}
 void Ability_fullscreen_shoot::update(Player& player, const double dt) { impl->update(player, dt); }
-void Ability_fullscreen_shoot::powerup() { impl->powerup(); }
+void Ability_fullscreen_shoot::power_up() { impl->power_up(); }
 utf32 Ability_fullscreen_shoot::name() const { return impl->name(); }
 utf32 Ability_fullscreen_shoot::desc() const { return impl->desc(); }

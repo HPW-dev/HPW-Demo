@@ -14,7 +14,7 @@ public:
   ~Ability_home();
   void update(Player& player, const double dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}
-  void powerup() override;
+  void power_up() override;
   utf32 name() const override;
   utf32 desc() const override;
 };
