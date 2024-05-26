@@ -10,6 +10,7 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/score-table.hpp"
 #include "util/math/random.hpp"
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
@@ -23,6 +24,13 @@ struct Minmax { T min {}, max {}; };
 
 struct Ability_power_shoot::Impl {
   nocopy(Impl);
+  /* Уровни прокачки
+  1 - обычный
+  2 - больше пуль и осколков
+  3 - осколки превращаются во взрывчатку
+  4 - проваливание за место оттакливания
+  5.. - увеличение пуль
+  */
   uint m_power {1}; // сила эффекта
   hp_t m_price {}; // цена мощного выстрела
   hp_t m_energy_needed {}; // сколько должно быть энергии для мощного выстрела
@@ -56,6 +64,12 @@ struct Ability_power_shoot::Impl {
   inline void power_up() {
     ++m_power;
     // TODO заменять обычные осколки на взрывающиеся
+
+    // на первых уровнях уменьшать множитель
+    if (m_power < 3)
+      hpw::set_score_scale(hpw::get_score_scale() - 0.2);
+    else
+      hpw::set_score_scale(hpw::get_score_scale() + 0.15);
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.power_shoot.name"); }
