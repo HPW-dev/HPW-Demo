@@ -12,6 +12,10 @@ protected:
   int argc {};
   char** argv {};
   std::atomic_bool is_run {true};
+
+  #ifdef WINDOWS
+  void* m_app_mutex {};
+  #endif
   
   virtual void exit();
   virtual void _set_fullscreen(bool enable) = 0;
@@ -23,6 +27,8 @@ protected:
   // получить текущее время в секундах
   virtual double get_time() const = 0;
   inline virtual void draw_game_frame() {}
+  void init_app_mutex();
+  void free_app_mutex();
 
 public:
   explicit Host(int _argc, char** _argv);

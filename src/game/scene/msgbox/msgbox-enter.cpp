@@ -11,7 +11,7 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/blur.hpp"
 
-struct Msgbox_enter::Impl {
+struct Scene_msgbox_enter::Impl {
   constx int WND_X = 375;
   constx int WND_Y = 110;
   utf32 m_msg {};
@@ -71,8 +71,8 @@ struct Msgbox_enter::Impl {
   } // make_bg
 }; // Impl
 
-Msgbox_enter::Msgbox_enter(CN<utf32> msg, CN<utf32> title, CN<Action> action)
+Scene_msgbox_enter::Scene_msgbox_enter(CN<utf32> msg, CN<utf32> title, CN<Action> action)
   : impl {new_unique<Impl>(msg, title, action)} {}
-Msgbox_enter::~Msgbox_enter() {}
-void Msgbox_enter::update(double dt) { impl->update(dt); }
-void Msgbox_enter::draw(Image& dst) const { impl->draw(dst); }
+Scene_msgbox_enter::~Scene_msgbox_enter() {}
+void Scene_msgbox_enter::update(double dt) { impl->update(dt); }
+void Scene_msgbox_enter::draw(Image& dst) const { impl->draw(dst); }

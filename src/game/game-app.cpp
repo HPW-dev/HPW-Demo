@@ -111,11 +111,21 @@ void Game_app::update_graphic_autoopt(double dt) {
 }
 
 void Game_app::check_errors() {
+  // ошибка при загрузке звуковой системы
   if (hpw::sound_mgr_init_error) {
     hpw::sound_mgr_init_error = false;
-    hpw::scene_mgr->add(new_shared<Msgbox_enter>(
+    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(
       get_locale_str("scene.sound_settings.device_init_error"),
       get_locale_str("common.error")
     ));
   }
-}
+
+  // ошибка при мультиоконном запуске
+  if (hpw::multiple_apps) {
+    hpw::multiple_apps = false;
+    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(
+      get_locale_str("common.multiapp_warning"),
+      get_locale_str("common.warning")
+    ));
+  }
+} // check_errors

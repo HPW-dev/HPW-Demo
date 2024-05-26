@@ -14,5 +14,6 @@ inline Str data_sha256 {}; // чексумма для данных игры
 inline bool need_tutorial {true}; // играя первый раз, предлагать туториал первым в списке
 inline bool save_last_replay {}; // сохранить последний реплей в именной файл?
 inline bool sound_mgr_init_error {}; // true, если не удалось инициализировать звуковую систему
+inline bool multiple_apps {}; // true - два и более окна с игрой запущено
 
 } // hpw ns

@@ -25,6 +25,7 @@ Host::Host(int _argc, char** _argv)
 {
   hpw::argc = _argc;
   hpw::argv = _argv;
+  init_app_mutex();
 
 #ifdef WINDOWS
   // переключить консоль винды в UTF8
@@ -53,6 +54,7 @@ Host::Host(int _argc, char** _argv)
 
 Host::~Host() {
   save_config();
+  free_app_mutex();
   std::cout << "Корректное завершение H.P.W" << std::endl;
 }
 
@@ -68,4 +70,21 @@ void Host::callbacks_init() {
   hpw::make_screenshot = [this] { this->save_screenshot(); };
   hpw::set_resize_mode = [this](Resize_mode mode) { this->_set_resize_mode(mode); };
   hpw::set_mouse_cursour_mode = [this](bool enable) { this->_set_mouse_cursour_mode(enable); };
+}
+
+void Host::init_app_mutex() {
+#ifdef WINDOWS
+  m_app_mutex = CreateMutex(NULL, TRUE, "HPW: Double window mutex");
+  if (ERROR_ALREADY_EXISTS == GetLastError()) {
+    hpw::multiple_apps = true;
+    CloseHandle(m_app_mutex);
+  }
+#else
+  #pragma message("need impl for other_game_started() on Linux")
+#endif
+}
+
+void Host::free_app_mutex() {
+  ReleaseMutex(m_app_mutex);
+  CloseHandle(m_app_mutex);
 }
