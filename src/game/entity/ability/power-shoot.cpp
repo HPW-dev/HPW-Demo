@@ -243,6 +243,9 @@ struct Ability_power_shoot::Impl {
     entity->status.ignore_scatter = true;
     entity->status.disable_motion = true;
     entity->heat_distort = new_shared<Heat_distort>(m_heat_distort);
+    entity->heat_distort->radius *= m_power;
+    entity->heat_distort->power *= m_power;
+    entity->heat_distort->block_count *= m_power * 1.25;
   }
 }; // Impl
 
