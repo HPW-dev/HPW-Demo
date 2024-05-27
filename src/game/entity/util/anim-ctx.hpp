@@ -45,7 +45,7 @@ public:
   void set_contour(CP<Anim> val);
   inline CP<Anim> get_contour() const { return contour; }
   void randomize_cur_frame_safe();
-  void randomize_cur_frame_graphic();
+  //void randomize_cur_frame_graphic();
   void set_speed_scale(real new_scale);
 
   CP<Frame> get_cur_frame() const;

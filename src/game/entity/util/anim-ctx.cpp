@@ -165,10 +165,10 @@ void Anim_ctx::randomize_cur_frame_safe() {
   frame_idx = rndu(anim->frame_count() - 1);
 }
 
-void Anim_ctx::randomize_cur_frame_graphic() {
+/*void Anim_ctx::randomize_cur_frame_graphic() {
   prev_frame_idx = frame_idx;
   frame_idx = rndu_fast(anim->frame_count() - 1);
-}
+}*/
 
 real Anim_ctx::get_degree_with_flags(real src, CN<Entity> entity) const {
   auto status = entity.status;

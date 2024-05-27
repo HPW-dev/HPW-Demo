@@ -19,6 +19,8 @@ struct Anim_info {
   bool return_back {}; // проиграть обратно при конце анимации
   bool rand_cur_frame {}; // начальный фрейм будет случайным
   Vector<real> speed_scale_minmax {}; // если задан, то укажет диапазон скоростей анимации
+  bool ignore_scatter {};
+  bool disable_motion {};
 
   void load(CN<Yaml> node);
   void accept(Entity& dst);

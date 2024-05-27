@@ -239,9 +239,6 @@ struct Ability_power_shoot::Impl {
   // создаёт пустой объект с контекстами вспышки и волны
   inline void make_effects(Player& player) {
     auto entity = hpw::entity_mgr->make(&player, "particle.void", player.phys.get_pos());
-    entity->status.layer_up = true;
-    entity->status.ignore_scatter = true;
-    entity->status.disable_motion = true;
     entity->heat_distort = new_shared<Heat_distort>(m_heat_distort);
     entity->heat_distort->radius *= m_power;
     entity->heat_distort->power *= m_power;

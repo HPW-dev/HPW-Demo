@@ -12,7 +12,6 @@ void Collidable_info::load(CN<Yaml> node) {
   ignore_bullet = node.get_bool("ignore_bullet");
   ignore_self_type = node.get_bool("ignore_self_type");
   ignore_master = node.get_bool("ignore_master", true);
-  ignore_scatter = node.get_bool("ignore_scatter");
   ignore_player = node.get_bool("ignore_player");
 }
 
@@ -24,7 +23,6 @@ void Collidable_info::accept(Collidable& dst) {
   dst.status.ignore_bullet = ignore_bullet;
   dst.status.ignore_self_type = ignore_self_type;
   dst.status.ignore_master = ignore_master;
-  dst.status.ignore_scatter = ignore_scatter;
   dst.status.ignore_player = ignore_player;
 }
 

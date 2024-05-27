@@ -14,7 +14,6 @@ struct Collidable_info {
   bool ignore_bullet {};
   bool ignore_self_type {};
   bool ignore_master {};
-  bool ignore_scatter {};
   bool ignore_player {};
 
   void load(CN<Yaml> node);
