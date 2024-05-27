@@ -35,6 +35,7 @@ struct Enity_status {
   bool no_restart_anim: 1 {};  // не перезапускать анимацию после окончания проигрывания
   bool disable_render: 1 {};   // выключает отображение объекта и проигрывание анимации
   bool no_sound: 1 {};         // выключить звук объекта
+  bool disable_motion: 1 {};   // запрет на перемещение
 }; // Enity_status
 
 inline constexpr auto ENITY_STATUS_BYTES {sizeof(Enity_status)};

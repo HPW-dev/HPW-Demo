@@ -18,6 +18,9 @@
 #include "util/math/timer.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
+#include "graphic/effect/heat-distort.hpp"
+#include "graphic/effect/heat-distort-util.hpp"
+#include "graphic/effect/light.hpp"
 
 template <typename T>
 struct Minmax { T min {}, max {}; };
@@ -46,6 +49,8 @@ struct Ability_power_shoot::Impl {
   real m_big_bullet_angle {}; // угол разброса ведущих пуль
   real m_small_bullet_angle {}; // угол разброса ведущих пуль
   real m_small_bullet_force {};
+  Heat_distort m_heat_distort {};
+  Light m_light {};
 
   inline explicit Impl(CN<Player> player) {
     load_config(player);
@@ -57,6 +62,7 @@ struct Ability_power_shoot::Impl {
       player.sub_en(m_price);
       make_bullets(player);
       make_scatter(player);
+      make_effects(player);
     }
   }
 
@@ -97,7 +103,6 @@ struct Ability_power_shoot::Impl {
 
     // опции ведущего снаряда
     cauto big_bullet_node = root["big_bullet"];
-    assert(big_bullet_node.check());
     m_big_bullet = big_bullet_node.get_str("name");
     cauto big_bullet_speed = big_bullet_node.get_v_real("speed");
     m_big_bullet_speed = {
@@ -113,7 +118,6 @@ struct Ability_power_shoot::Impl {
 
     // опции осколков
     cauto small_bullet_node = root["small_bullet"];
-    assert(small_bullet_node.check());
     m_small_bullet = small_bullet_node.get_str("name");
     cauto small_bullet_speed = small_bullet_node.get_v_real("speed");
     m_small_bullet_speed = {
@@ -138,6 +142,13 @@ struct Ability_power_shoot::Impl {
     cauto scatter_node = root["scatter"];
     m_scatter_range = scatter_node.get_real("range");
     m_scatter_power = scatter_node.get_real("power");
+
+    // загрузка эффекта волны
+    cauto heat_distort_node = root["heat_distort"];
+    m_heat_distort = load_heat_distort(heat_distort_node);
+
+    // загрузка эффекта вспышки
+    // TODO
   } // load_config
 
   inline void test_config() const {
@@ -223,6 +234,15 @@ struct Ability_power_shoot::Impl {
 
   inline CP<Sprite> icon() const {
     return {}; // TODO
+  }
+
+  // создаёт пустой объект с контекстами вспышки и волны
+  inline void make_effects(Player& player) {
+    auto entity = hpw::entity_mgr->make(&player, "particle.void", player.phys.get_pos());
+    entity->status.layer_up = true;
+    entity->status.ignore_scatter = true;
+    entity->status.disable_motion = true;
+    entity->heat_distort = new_shared<Heat_distort>(m_heat_distort);
   }
 }; // Impl
 

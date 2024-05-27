@@ -68,7 +68,9 @@ void Entity::draw(Image& dst, const Vec offset) const {
 } // draw
 
 void Entity::update(double dt) {
-  move_it(dt);
+  if (!status.disable_motion)
+    move_it(dt);
+    
   anim_ctx.update(dt, *this);
 
   // применить внешние колбэки
