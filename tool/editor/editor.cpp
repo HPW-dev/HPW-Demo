@@ -60,4 +60,7 @@ void Editor::init_graphic() {
   graphic::set_target_fps(60);
   hpw::set_fullscreen(false);
   hpw::set_resize_mode(graphic::default_resize_mode);
+  graphic::enable_heat_distort = true;
+  graphic::enable_motion_blur = true;
+  graphic::enable_light = true;
 }

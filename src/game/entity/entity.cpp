@@ -44,7 +44,9 @@ void Entity::accept_kill_callbacks() {
 void Entity::draw(Image& dst, const Vec offset) const {
   if (!status.disable_render) {
     // отрисовка игрового объекта
+    #ifdef DEBUG
     if (graphic::draw_entitys)
+    #endif
       anim_ctx.draw(dst, *this, offset);
 
     // вспышка
