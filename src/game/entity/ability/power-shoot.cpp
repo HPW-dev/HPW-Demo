@@ -149,6 +149,8 @@ struct Ability_power_shoot::Impl {
 
     // загрузка эффекта вспышки
     // TODO
+    m_light.set_duration(0.83);
+    m_light.radius = 150;
   } // load_config
 
   inline void test_config() const {
@@ -243,6 +245,9 @@ struct Ability_power_shoot::Impl {
     entity->heat_distort->radius *= m_power;
     entity->heat_distort->power *= m_power;
     entity->heat_distort->block_count *= m_power * 1.25;
+    entity->light = new_shared<Light>(m_light);
+    entity->light->radius *= m_power * 1.5;
+    entity->light->set_duration(entity->light->get_max_duration() * m_power * 0.1717);
   }
 }; // Impl
 
