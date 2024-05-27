@@ -11,7 +11,11 @@ using Menu_select_callback = std::function<void (Menu_item&)>;
 
 // база для реализаций менюшек
 class Menu {
+  struct Sticking;
+  Unique<Sticking> m_sticking {}; // действия при зажатии кнопок
+
 protected:
+
   Menu_items m_items {}; // пункты меню
   std::size_t m_cur_item {}; // текущий выбранный элемент
   bool m_item_selected {false};
@@ -23,7 +27,7 @@ protected:
 
 public:
   explicit Menu(CN<Menu_items> items);
-  virtual ~Menu() = default;
+  virtual ~Menu();
   virtual void draw(Image& dst) const = 0;
   virtual void update(double dt);
   std::size_t get_cur_item_id() const;

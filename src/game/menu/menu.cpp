@@ -5,6 +5,10 @@
 #include "game/scene/scene-manager.hpp"
 #include "graphic/font/font.hpp"
 
+struct Menu::Sticking {
+
+};
+
 // сколько апдейтов надо подождать, чтоы зажатие сработало
 static uint updates_threshold = 60;
 static auto last_pressed_keycode = hpw::keycode::error;
@@ -47,7 +51,8 @@ const uint FAST_UPDATES_THRESHOLD = 17
 } // check_pressed_or_holded
 
 Menu::Menu(CN<Menu_items> items)
-: m_items(items)
+: m_sticking {new_unique<Sticking>()}
+, m_items(items)
 { 
   iflog(m_items.empty(), "m_items empty\n");
   // сброс зажатых кнопок
@@ -104,6 +109,7 @@ void Menu::next_item() {
     m_cur_item = 0;
 }
 
+Menu::~Menu() {}
 std::size_t Menu::get_cur_item_id() const { return m_cur_item; }
 CN<decltype(Menu::m_items)::value_type> Menu::get_cur_item() const { return m_items.at(m_cur_item); }
 CN<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }
