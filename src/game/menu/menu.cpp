@@ -1,3 +1,4 @@
+#include <cassert>
 #include "menu.hpp"
 #include "item/item.hpp"
 #include "util/log.hpp"
@@ -6,64 +7,70 @@
 #include "graphic/font/font.hpp"
 
 struct Menu::Sticking {
+  hpw::keycode last_pressed_key {hpw::keycode::error};
+  bool use_sticking {}; // начать подавать нажатия импульсами
+  uint hold_count {}; // сколько апдейтов зажимали клавишу
 
-};
+  /** true если кнопка нажата 1 раза или зажата.
+  При зажатии результат будет импульсами
+  @param keycode какую кнопку проверить
+  @param updates_for_fast сколько апдейстов надо зажимать чтобы запустить быстрые нажатия
+  @param fast_delay с какими интервалами учитывать зажатие клавиши */
+  inline bool check(const hpw::keycode keycode,
+  const uint updates_for_fast = 60, const uint fast_delay = 17) {
+    assert(updates_for_fast > 0);
+    assert(fast_delay > 0);
 
-// сколько апдейтов надо подождать, чтоы зажатие сработало
-static uint updates_threshold = 60;
-static auto last_pressed_keycode = hpw::keycode::error;
-static uint hold_count = 0;
-
-// учитывает одиночное нажатие или зажатие клавиши
-bool check_pressed_or_holded (
-const hpw::keycode keycode,
-const uint UPDATES_THRESHOLD = 60,
-const uint FAST_UPDATES_THRESHOLD = 17
-) {
-  updates_threshold = UPDATES_THRESHOLD;
-  bool ret = false;
-
-  if (is_pressed_once(keycode)) {
-    ret = true;
-    last_pressed_keycode = keycode;
-    hold_count = 0;
-    // вернуть обратно число тиков, для применения автонажатия
-    updates_threshold = UPDATES_THRESHOLD;
-  } else {
-    if (is_pressed(keycode)) {
-      if (last_pressed_keycode == keycode)
-        ++hold_count;
-      else {
-        hold_count = 0;
-        // вернуть обратно число тиков, для применения автонажатия
-        updates_threshold = UPDATES_THRESHOLD;
-      }
-      last_pressed_keycode = keycode;
+    // когда кнопку зажимали 1 раз, не засчитать зажатие
+    if (is_pressed_once(keycode)) {
+      reset();
+      return true;
     }
+
+    // когда на кнопку продолжают жать
+    if (is_pressed(keycode)) {
+      // и кнопка та же самая
+      if (last_pressed_key == keycode) {
+        ++hold_count;
+
+        // если зажали достаточное количество времени
+        use_sticking = hold_count >= updates_for_fast;
+
+        // генерировать нажатия импульсами
+        if (use_sticking)
+          return (hold_count % fast_delay) == 0;
+      } else { // когда жмут на другую кнопку
+        reset();
+      }
+
+      last_pressed_key = keycode;
+    } // if pressed keycode
+
+    return false;
+  } // check
+
+  inline void update() {
+    if (!is_any_key_pressed())
+      reset();
   }
-  if (hold_count >= updates_threshold) {
+
+  inline void reset() {
+    use_sticking = false;
     hold_count = 0;
-    ret = true;
-    // ускорить автонажатие
-    updates_threshold = FAST_UPDATES_THRESHOLD;
+    last_pressed_key = hpw::keycode::error;
   }
-  return ret;
-} // check_pressed_or_holded
+}; // Sticking
 
 Menu::Menu(CN<Menu_items> items)
 : m_sticking {new_unique<Sticking>()}
 , m_items(items)
-{ 
-  iflog(m_items.empty(), "m_items empty\n");
-  // сброс зажатых кнопок
-  last_pressed_keycode = hpw::keycode::error;
-  hold_count = 0;
-}
+{ iflog(m_items.empty(), "m_items empty\n"); }
 
 void Menu::update(double dt) {
   return_if(m_items.empty());
+  m_sticking->update();
 
-  if (check_pressed_or_holded(hpw::keycode::enable, 60, 60)) {
+  if (m_sticking->check(hpw::keycode::enable, 60, 60)) {
     m_items[m_cur_item]->enable();
     if (m_select_callback)
       m_select_callback(*m_items[m_cur_item]);
@@ -72,17 +79,17 @@ void Menu::update(double dt) {
     m_item_selected = false;
   }
   
-  if (check_pressed_or_holded(hpw::keycode::left, 50, 18))
+  if (m_sticking->check(hpw::keycode::left, 50, 18))
     m_items[m_cur_item]->minus();
-  if (check_pressed_or_holded(hpw::keycode::right, 50, 18))
+  if (m_sticking->check(hpw::keycode::right, 50, 18))
     m_items[m_cur_item]->plus();
 
-  if (check_pressed_or_holded(hpw::keycode::down, 60, 30)) {
+  if (m_sticking->check(hpw::keycode::down, 60, 30)) {
     if (m_move_cursor_callback)
       m_move_cursor_callback(*m_items[m_cur_item]);
     next_item();
   }
-  if (check_pressed_or_holded(hpw::keycode::up, 60, 30)) {
+  if (m_sticking->check(hpw::keycode::up, 60, 30)) {
     if (m_move_cursor_callback)
       m_move_cursor_callback(*m_items[m_cur_item]);
     prev_item();
