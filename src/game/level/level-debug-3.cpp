@@ -152,7 +152,7 @@ void Level_debug_3::draw_bg(Image& dst) const {
 void Level_debug_3::make_player() {
   auto player_pos_from_prev_level = hpw::level_mgr->get_player_pos_from_prev_level();
   // если игрок где-то стоял до этого, то поставить его туда же, иначе в центр экрана
-  auto pos = player_pos_from_prev_level ? player_pos_from_prev_level : get_screen_center();
+  auto pos = player_pos_from_prev_level.not_zero() ? player_pos_from_prev_level : get_screen_center();
   hpw::entity_mgr->make({}, "player.boo.dark", pos);
 }
 

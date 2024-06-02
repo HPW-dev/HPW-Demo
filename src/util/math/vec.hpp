@@ -1,9 +1,7 @@
 #pragma once
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
-
-template <class T>
-concept have_xy = requires { T::x; T::y; };
+#include "util/hpw-concept.hpp"
 
 // 2D вектор
 struct Vec {
@@ -22,12 +20,18 @@ struct Vec {
   inline constexpr bool operator !=(const Vec in) const { return x != in.x || y != in.y; }
 
   inline constexpr Vec operator -() const { return Vec(x * -1, y * -1); }
-  inline constexpr operator bool () const { return x != 0 || y != 0; }
+  inline constexpr bool not_zero() const { return x != 0 || y != 0; }
+  inline constexpr bool is_zero() const { return x == 0 && y == 0; }
 
   inline constexpr void operator +=(cnauto other);
   inline constexpr void operator -=(cnauto other);
   inline constexpr void operator *=(cnauto other);
   inline constexpr void operator /=(cnauto other);
+  
+  inline constexpr bool operator > (cnauto other) const;
+  inline constexpr bool operator >= (cnauto other) const;
+  inline constexpr bool operator < (cnauto other) const;
+  inline constexpr bool operator <= (cnauto other) const;
 }; // Vec
 
 inline constexpr void Vec::operator +=(cnauto other) {
@@ -99,5 +103,34 @@ inline constexpr Vec operator / (const Vec a, cnauto b) {
     return Vec(a.x / b.x, a.y / b.y);
   } else {
     return Vec(a.x / b, a.y / b);
+  }
+}
+
+inline constexpr bool Vec::operator > (cnauto other) const {
+  if constexpr (requires { other.x; other.y; }) {
+    return x > other.x && y > other.y;
+  } else {
+    return x > other && y > other;
+  }
+}
+inline constexpr bool Vec::operator >= (cnauto other) const {
+  if constexpr (requires { other.x; other.y; }) {
+    return x >= other.x && y >= other.y;
+  } else {
+    return x >= other && y >= other;
+  }
+}
+inline constexpr bool Vec::operator < (cnauto other) const {
+  if constexpr (requires { other.x; other.y; }) {
+    return x < other.x && y < other.y;
+  } else {
+    return x < other && y < other;
+  }
+}
+inline constexpr bool Vec::operator <= (cnauto other) const {
+  if constexpr (requires { other.x; other.y; }) {
+    return x <= other.x && y <= other.y;
+  } else {
+    return x <= other && y <= other;
   }
 }

@@ -54,11 +54,11 @@ bool Polygon::operator !=(CN<Polygon> other) const
   { return !( operator==(other) ); }
 
 Polygon::operator bool() const { 
-  if (offset)
+  if (offset.not_zero())
     return true;
 
   for (cnauto point: points)
-    if (point)
+    if (point.not_zero())
       return true;
 
   return false;

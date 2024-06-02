@@ -19,7 +19,7 @@ real ring_deg(real deg);
 real get_sign(real val);
 
 // безопасное деление
-auto safe_div(auto a, auto b) -> decltype(a / b)
+inline constexpr auto safe_div(auto a, auto b) -> decltype(a / b)
   { return (b == 0 ? 0 : a / b); }
 
 inline constexpr auto pow2(auto x) { return x * x; }

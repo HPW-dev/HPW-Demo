@@ -24,7 +24,7 @@ bool Circle::operator !=(CN<Circle> other) const {
 }
 
 Circle::operator bool() const {
-  return r != 0 || offset;
+  return r != 0 || offset.not_zero();
 }
 
 bool Circle::is_collided(const Vec this_pos, const Vec other_pos, CN<Circle> other) const {    

@@ -31,7 +31,7 @@ inline void save_hitbox(CP<Anim> anim, Yaml& root) {
     cont_if( !polygon);
 
     auto cur_poly_node = polygons_node.make_node("poly_" + n2s(poly_idx));
-    if (polygon.offset)
+    if (polygon.offset.not_zero())
       cur_poly_node.set_v_real("offset", {polygon.offset.x, polygon.offset.y});
 
     // сохранить точки полигона
@@ -188,7 +188,7 @@ void save_anims(Yaml& dst) {
       if (frame->source_ctx.cgp != Color_get_pattern{})
         cur_frame_node.set_str("cgp", convert(frame->source_ctx.cgp));
       // для точной подгонки артефактов при повороте
-      if (frame->source_ctx.rotate_offset) {
+      if (frame->source_ctx.rotate_offset.not_zero()) {
         cur_frame_node.set_v_real("rotate offset", Vector<real>{
           frame->source_ctx.rotate_offset.x,
           frame->source_ctx.rotate_offset.y
@@ -200,7 +200,7 @@ void save_anims(Yaml& dst) {
         if (auto sprite_lock = sprite.lock(); !sprite_lock->get_path().empty())
           cur_frame_node.set_str("sprite path", sprite_lock->get_path());
         // смещение отрисовки относительно центра спрайта
-        if (frame->source_ctx.direct_0.offset) {
+        if (frame->source_ctx.direct_0.offset.not_zero()) {
           cur_frame_node.set_v_real("sprite offset", Vector<real>{
             frame->source_ctx.direct_0.offset.x,
             frame->source_ctx.direct_0.offset.y

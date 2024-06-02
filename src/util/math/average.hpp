@@ -2,32 +2,58 @@
 #include <algorithm>
 #include <numeric>
 #include <deque>
+#include <type_traits>
 #include "util/macro.hpp"
 
-// Для получения среднего значения или медианы нескольких значений
-template <class T, std::size_t size>
-class Average final {
+// заполняется значениями, когда их больше MAX_SAMPLES, заполняется по кругу
+template <class T, std::size_t MAX_SAMPLES>
+struct Ring_buffer {
   std::deque<T> samples {};
 
-public:
-  inline Average(T filler = {})
-  : samples(size) {
-    std::fill(samples.begin(), samples.end(), filler);
+  inline explicit Ring_buffer() {
+    static_assert(std::is_arithmetic_v<T> == true);
   }
 
   // добавить значение
-  inline void push(CN<T> x) {
-    samples.pop_front();
-    samples.push_back(x);
+  inline void move(T&& x) {
+    // вставлять значение по кругу
+    if (samples.size() >= MAX_SAMPLES) {
+      samples.pop_front();
+      samples.emplace_back(x);
+    } else { // добавлять новое значение
+      samples.emplace_back(x);
+    }
+  }
+}; // Average_base
+
+// поиск среднего значения
+template <class T, std::size_t MAX_SAMPLES>
+class Average final {
+ private:
+  Ring_buffer<T, MAX_SAMPLES> core {};
+
+ public:
+  inline T operator()() const {
+    return_if (core.samples.empty(), {});
+    return std::accumulate(core.samples.begin(), core.samples.end(), T{0}) / core.samples.size();
   }
 
-  inline T get_average() const {
-    return std::accumulate(samples.begin(), samples.end(), T(0)) / T(size);
+  inline void move(T&& x) { core.move(std::move(x)); }
+};
+
+// поиск медианного значения
+template <class T, std::size_t MAX_SAMPLES>
+class Median final {
+ private:
+  Ring_buffer<T, MAX_SAMPLES> core {};
+
+ public:
+  inline T operator()() {
+    return_if (core.samples.empty(), {});
+    return_if (core.samples.size() <= 2, core.samples[0]);
+    std::sort(core.samples.begin(), core.samples.end());
+    return core.samples.at(core.samples.size() / 2);
   }
 
-  inline T get_median() const {
-    decltype(samples) copy = samples;
-    std::sort(copy.begin(), copy.end());
-    return copy.at(copy.size() / 2);
-  }
-}; // Average
+  inline void move(T&& x) { core.move(std::move(x)); }
+};

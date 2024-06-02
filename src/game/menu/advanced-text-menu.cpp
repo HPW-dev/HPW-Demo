@@ -25,7 +25,7 @@ struct Advanced_text_menu::Impl {
   , m_title {title}
   , m_rect {rect}
   {
-    assert(m_rect.size);
+    assert(m_rect.size.not_zero());
     assert(m_base);
     assert( !m_title.empty());
     assert( !base->get_items().empty());

@@ -94,7 +94,7 @@ void Player_dark::move(double dt) {
   if ( is_pressed(hpw::keycode::left) && !is_pressed(hpw::keycode::right)) dir += Vec(-1, 0);
   if (!is_pressed(hpw::keycode::left) &&  is_pressed(hpw::keycode::right)) dir += Vec(+1, 0);
   // сложение векторов
-  if (dir) {
+  if (dir.not_zero()) {
     auto motion = normalize_stable(dir) * spd;
     phys.set_vel(phys.get_vel() + motion);
     // не превышать скорость движения игрока

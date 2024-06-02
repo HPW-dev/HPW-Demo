@@ -57,7 +57,7 @@ void Phys::set_speed( CN<decltype(m_speed)> val) {
 void Phys::set_vel(const Vec val) {
   auto speed = length(val);
   // если вектор движения 0, то не менять угол разворота
-  auto deg = val ? vec_to_deg(val) : get_deg();
+  auto deg = val.not_zero() ? vec_to_deg(val) : get_deg();
 
   set_speed(speed);
   set_deg(deg);
@@ -100,7 +100,6 @@ void Phys::update(double dt) {
   _speed -= _force * fdt * 0.5f;
   set_speed(std::max<real>(0.0f, _speed));
 
-  assert(vel >= 0.0f); // может ли случиться иначе?
   assert(get_deg() >= 0.0f && get_deg() <= 360);
   set_vel(vel);
 } // update

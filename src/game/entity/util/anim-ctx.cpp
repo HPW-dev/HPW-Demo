@@ -107,7 +107,7 @@ void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
   /* если old_draw_pos нулевой, то с высокой вероятностью отрисовка
   происходит в первый раз, поэтому нужно задать хоть какое-то значение,
   иначе вся анимация размажется по экрану */
-  if (!old_draw_pos)
+  if (!old_draw_pos.not_zero())
     old_draw_pos = draw_pos;
 
   // рендер без интерполяции
@@ -119,7 +119,7 @@ void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
     auto interpolated_pos = get_interpolated_pos();
     contour_pos = interpolated_pos;
     // то же, что и с old_draw_pos (см.выше)
-    if (!old_interpolated_pos)
+    if (old_interpolated_pos.is_zero())
       old_interpolated_pos = interpolated_pos;
 
     if (graphic::enable_motion_blur) { // рендер с размытием

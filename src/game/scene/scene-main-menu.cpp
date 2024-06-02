@@ -188,7 +188,7 @@ void bg_copy_1(Image& dst, const int state) {
     rnd_fast(-1, 1),
     rnd_fast(-1, 1)
   };
-  return_if( !pos);
+  return_if(pos.is_zero());
   static Image buffer(dst.X, dst.Y);
   assert(buffer.size == dst.size);
   insert_fast(buffer, dst);
@@ -200,7 +200,7 @@ void bg_copy_2(Image& dst, const int state) {
     rnd_fast(-1, 1),
     rnd_fast(-1, 1)
   };
-  return_if( !pos);
+  return_if(pos.is_zero());
   static Image buffer(dst.X, dst.Y);
   assert(buffer.size == dst.size);
   insert_fast(buffer, dst);
@@ -216,7 +216,7 @@ void bg_copy_3(Image& dst, const int state) {
     std::cos(scast<double>(state) * 0.01) * 3.0,
     std::sin(scast<double>(state) * 0.01) * 3.0
   );
-  return_if( !pos);
+  return_if(pos.is_zero());
   static Image buffer(dst.X, dst.Y);
   assert(buffer.size == dst.size);
   insert_fast(buffer, dst);
@@ -229,7 +229,7 @@ void bg_copy_4(Image& dst, const int state) {
     std::cos(scast<double>(state) * 0.01) * speed,
     std::sin(scast<double>(state) * 0.01) * speed
   );
-  return_if( !pos);
+  return_if(pos.is_zero());
   static Image buffer(dst.X, dst.Y);
   assert(buffer.size == dst.size);
   insert_fast(buffer, dst);

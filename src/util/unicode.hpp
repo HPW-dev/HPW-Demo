@@ -8,19 +8,14 @@
 #include <cstring>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
+#include "util/hpw-concept.hpp"
 
 using utf8 = std::u8string;
 using utf32 = std::u32string;
 
-template <class T>
-concept have_begin_and_end = requires(T x) {
-  {x.begin()};
-  {x.end()};
-};
-
 // string convert
-template <class OUT, class IN>
-OUT sconv(CN<IN> src) requires have_begin_and_end<IN>
+template <class OUT, have_begin_end IN>
+OUT sconv(CN<IN> src)
   { return OUT(src.begin(), src.end()); }
 
 // other c-string style convert
