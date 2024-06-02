@@ -10,6 +10,6 @@ class Scene_pge final: public Scene {
 public:
   Scene_pge();
   ~Scene_pge();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

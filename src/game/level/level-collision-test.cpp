@@ -60,7 +60,7 @@ Level_collision_test::Level_collision_test() {
   } // for objects
 } // c-tor
 
-void Level_collision_test::update(const Vec vel, double dt) {
+void Level_collision_test::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   brightness += 20 * dt;
 } // update

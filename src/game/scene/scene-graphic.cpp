@@ -37,7 +37,7 @@ Scene_graphic::Scene_graphic() {
   cur_menu = simple_menu;
 }
 
-void Scene_graphic::update(double dt) {
+void Scene_graphic::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape)) {
     hpw::scene_mgr->back();
     save_config();

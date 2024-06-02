@@ -16,7 +16,7 @@ void Heat_distort::restart() {
   cur_duration = max_duration;
 }
 
-void Heat_distort::update(double dt) {
+void Heat_distort::update(const Delta_time dt) {
   return_if (dt <= 0);
   return_if (dt >= 10);
   return_if(flags.infinity_duration);

@@ -118,7 +118,7 @@ Scene_game::~Scene_game() {
     save_named_replay();
 } // d-tor
 
-void Scene_game::update(double dt) {
+void Scene_game::update(const Delta_time dt) {
   assert(dt == hpw::target_update_time);
 
   // input:

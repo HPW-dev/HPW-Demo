@@ -169,7 +169,7 @@ void Host_glfw::set_window_pos(int x, int y) {
   Host_ogl::set_window_pos(x, y);
 }
 
-void Host_glfw::game_set_dt(double gameloop_time) {
+void Host_glfw::game_set_dt(const Delta_time gameloop_time) {
   hpw::real_dt = gameloop_time;
   hpw::safe_dt = std::clamp(gameloop_time, 0.000001, 1.0 / (60 * 0.9));
   graphic::effect_state = std::fmod(graphic::effect_state + hpw::real_dt, 1.0);
@@ -292,9 +292,9 @@ void Host_glfw::init_window() {
   _set_mouse_cursour_mode(graphic::show_mouse_cursour);
 } // init_window
 
-double Host_glfw::get_time() const { return glfwGetTime(); }
+Delta_time Host_glfw::get_time() const { return glfwGetTime(); }
 
-void Host_glfw::game_set_fps_info(double gameloop_time) {
+void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
   second_timer += gameloop_time;
   if (second_timer > 1) {
     graphic::cur_fps = safe_div(fps, second_timer);
@@ -308,7 +308,7 @@ void Host_glfw::game_set_fps_info(double gameloop_time) {
 
 bool Host_glfw::is_ran() const { return is_run && !glfwWindowShouldClose(window); }
 
-void Host_glfw::game_frame(double dt) {
+void Host_glfw::game_frame(const Delta_time dt) {
   return_if (dt <= 0 || dt >= 10);
 
   frame_time += dt;
@@ -340,7 +340,7 @@ void Host_glfw::game_frame(double dt) {
   }
 } // game_frame
 
-void Host_glfw::game_update(double dt) {
+void Host_glfw::game_update(const Delta_time dt) {
   set_update_time(dt);
   return_if (dt <= 0 || dt >= 10);
 
@@ -406,7 +406,7 @@ void Host_glfw::calc_lerp_alpha() {
   // для интеропляции движения 
   graphic::lerp_alpha = safe_div(start_draw_time, hpw::target_update_time);
   // лимит значения чтобы при тормозах окна объекты не растягивались
-  graphic::lerp_alpha = std::clamp<double>(graphic::lerp_alpha, 0, 1);
+  graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
 }
 
 void Host_glfw::calc_upf() {
@@ -414,7 +414,7 @@ void Host_glfw::calc_upf() {
   upf = 0;
 }
 
-void Host_glfw::set_update_time(double dt) {
+void Host_glfw::set_update_time(const Delta_time dt) {
   if (
     // ждать конца кадра
     graphic::wait_frame &&
@@ -441,7 +441,7 @@ void Host_glfw::_set_mouse_cursour_mode(bool enable) {
     enable ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
-void Host_glfw::update(double dt) {}
+void Host_glfw::update(const Delta_time dt) {}
 
 void Host_glfw::check_frame_skip() {
   graphic::skip_cur_frame = false;
@@ -467,7 +467,7 @@ void Host_glfw::check_frame_skip() {
 void Host_glfw::frame_wait() {
   // ожидание для v-sync
   auto delay = graphic::get_target_frame_time() - frame_time - update_time;
-  constx double delay_timeout = 1.0 / 10.0;
-  delay = std::clamp<double>(delay, 0, delay_timeout);
+  constx Delta_time delay_timeout = 1.0 / 10.0;
+  delay = std::clamp<Delta_time>(delay, 0, delay_timeout);
   glfwWaitEventsTimeout(delay);
 }

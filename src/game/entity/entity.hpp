@@ -20,7 +20,7 @@ struct Vec;
 class Entity {
 public:
   // <self ptr, dt>
-  using Update_callback = std::function<void (Entity&, double)>;
+  using Update_callback = std::function<void (Entity&, const Delta_time)>;
   // <self ptr>
   using Kill_callback = std::function<void (Entity&)>;
 
@@ -29,7 +29,7 @@ private:
   Vector<Update_callback> update_callbacks {}; // внешние колбэки на обработку апдейта
   Vector<Kill_callback> kill_callbacks {}; // внешние колбэки на обработку смерти
 
-  void move_it(double dt);
+  void move_it(const Delta_time dt);
   void draw_pos(Image& dst, const Vec offset) const;
   void debug_draw(Image& dst, const Vec offset) const;
 
@@ -49,7 +49,7 @@ public:
   virtual ~Entity() = default;
 
   virtual void draw(Image& dst, const Vec offset) const;
-  virtual void update(double dt);
+  virtual void update(const Delta_time dt);
   virtual void kill();
   void set_pos(const Vec pos);
   void add_update_callback(CN<Update_callback> callback);

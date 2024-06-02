@@ -9,13 +9,13 @@ struct rgb24_t pal8_to_rgb24(const pal8_t src) {
     return ret;
   }
   if ( !(src > 222 && src <= 254) ) {
-    const double GRAY_MUL = 255.0 / 222.0;
+    const real GRAY_MUL = 255.0f / 222.0f;
     ret.r = ret.g = ret.b = round(src * GRAY_MUL);
     return ret;
   }
 
   ret.g = ret.b = 0;
-  const double RED_MUL = 255.0 / 32.0;
+  const real RED_MUL = 255.0f / 32.0f;
   ret.r = round((src - 222) * RED_MUL);
   return ret;
 }
@@ -24,15 +24,15 @@ NOT_EXPORTED
 pal8_t rgb24_to_pal8(const struct rgb24_t src) {
   // если R оттенок сильнее G и B, то это красный цвет с палитры
   if (src.r > 10 + ((src.g + src.b) >> 1)) {
-    const double RED_MUL = 32.0 / 255.0;
+    const real RED_MUL = 32.0f / 255.0f;
     return 222 + round(src.r * RED_MUL);
   } else if ((src.g & src.b & src.r & 0xFFu) == 0xFFu) { // полностью белый
     return 255u; // white
   }
 
   // всё остальное, это серый
-  const double GRAY_MUL = 222.0 / 255.0;
-  const double gray = src.r * 0.299 + src.g * 0.587 + src.b * 0.114;
+  const real GRAY_MUL = 222.0f / 255.0f;
+  const real gray = src.r * 0.299f + src.g * 0.587f + src.b * 0.114f;
   return round(gray * GRAY_MUL);
 }
 

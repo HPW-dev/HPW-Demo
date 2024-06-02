@@ -41,6 +41,6 @@ public:
   Emit_wnd();
   ~Emit_wnd() = default;
   inline void draw(Image& dst) const override {}
-  inline void update(double dt) override {}
+  inline void update(const Delta_time dt) override {}
   void imgui_exec() override;
 };

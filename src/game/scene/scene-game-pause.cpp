@@ -18,7 +18,7 @@ Scene_game_pause::Scene_game_pause() {
   init_menu();
 }
 
-void Scene_game_pause::update(double dt) {
+void Scene_game_pause::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back(); // возврат в игру
   menu->update(dt);

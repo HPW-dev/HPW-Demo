@@ -18,7 +18,7 @@ Player::~Player() {
     hpw::entity_mgr->set_player({});
 }
 
-void Player::update(double dt) {
+void Player::update(const Delta_time dt) {
   Collidable::update(dt);
   // трясти камеру при столкновениях
   if (this->status.collided)

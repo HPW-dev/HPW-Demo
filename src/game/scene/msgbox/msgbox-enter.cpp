@@ -25,7 +25,7 @@ struct Scene_msgbox_enter::Impl {
   , m_action {action}
   { make_bg(); }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::enable)
     || is_pressed_once(hpw::keycode::escape)) {
       if (m_action)
@@ -74,5 +74,5 @@ struct Scene_msgbox_enter::Impl {
 Scene_msgbox_enter::Scene_msgbox_enter(CN<utf32> msg, CN<utf32> title, CN<Action> action)
   : impl {new_unique<Impl>(msg, title, action)} {}
 Scene_msgbox_enter::~Scene_msgbox_enter() {}
-void Scene_msgbox_enter::update(double dt) { impl->update(dt); }
+void Scene_msgbox_enter::update(const Delta_time dt) { impl->update(dt); }
 void Scene_msgbox_enter::draw(Image& dst) const { impl->draw(dst); }

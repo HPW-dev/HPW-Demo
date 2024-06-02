@@ -21,7 +21,7 @@ Sprite_select::Sprite_select(decltype(callback) new_callback)
   _list = hpw::store_sprite->list(true);
 }
 
-void Sprite_select::update(double dt) {
+void Sprite_select::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back();
   if (is_pressed_once(hpw::keycode::enable))

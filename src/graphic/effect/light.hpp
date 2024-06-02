@@ -47,7 +47,7 @@ public:
   Light() = default;
   ~Light() = default;
   void reset();
-  bool update(double dt); // ret 0 if end of effect
+  bool update(const Delta_time dt); // ret 0 if end of effect
   void draw(Image& dst, const Vec pos) const;
   void set_duration(real new_duration);
   inline real& get_cur_duration() { return cur_duration; }

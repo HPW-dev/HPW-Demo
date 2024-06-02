@@ -24,6 +24,6 @@ class Scene_game final: public Scene {
 public:
   explicit Scene_game(const bool start_tutorial=false);
   ~Scene_game();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

@@ -8,7 +8,7 @@
 #include "game/core/debug.hpp"
 #endif
 
-inline double fast_distance(const Vec pos_a, CN<Circle> a,
+inline real fast_distance(const Vec pos_a, CN<Circle> a,
 const Vec pos_b, CN<Circle> b) {
   return
     pow2((pos_a.x + a.offset.x) - (pos_b.x + b.offset.x)) +

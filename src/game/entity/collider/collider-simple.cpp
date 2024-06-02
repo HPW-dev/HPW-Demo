@@ -28,7 +28,7 @@ void Collider_simple::test_collide(Entity& a, Entity& b) {
   }
 } // test_collide
 
-void Collider_simple::operator()(CN<Entitys> entities, double dt) {
+void Collider_simple::operator()(CN<Entitys> entities, Delta_time dt) {
   cauto entitys_sz = entities.size();
 
   // проверить столкновения пар объектов (без повторений)

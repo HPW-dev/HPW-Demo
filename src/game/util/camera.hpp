@@ -1,5 +1,6 @@
 #pragma once
 #include "util/mem-types.hpp"
+#include "util/math/num-types.hpp"
 
 struct Vec;
 
@@ -12,8 +13,8 @@ public:
   Camera();
   ~Camera();
   Vec get_offset() const; // узнать смещение для отрисовки
-  void add_shake(double intense); // добавить тряску
-  void update(double dt);
+  void add_shake(real intense); // добавить тряску
+  void update(const Delta_time dt);
 };
 
 namespace graphic {

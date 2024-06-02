@@ -49,7 +49,7 @@ struct Level_tutorial::Impl {
     master->on_player_death_action = [this] { restart(); };
   }
 
-  inline void update(const Vec vel, double dt) {
+  inline void update(const Vec vel, Delta_time dt) {
     bg_offset = vel;
     execute_tasks(tasks, dt);
   }
@@ -76,26 +76,26 @@ struct Level_tutorial::Impl {
 
       Timed_task(9.0, Task_draw_motion_keys(this)),
       Spawner_border_bullet(this, 40, 0.6),
-      Timed_task(4.5, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      Timed_task(4.5, [this](Delta_time dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
       Up_speed_test(this),
-      Timed_task(6, [this](double dt) { draw_shoot_key(); return false; }),
+      Timed_task(6, [this](Delta_time dt) { draw_shoot_key(); return false; }),
       Spawner_enemy_noshoot(this, 4.0),
-      Timed_task(2.5, [this](double dt) { bg_text = {}; return false; }),
+      Timed_task(2.5, [this](Delta_time dt) { bg_text = {}; return false; }),
       Spawner_enemy_shoot(this, 8.0),
-      Timed_task(5.0, [this](double dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
+      Timed_task(5.0, [this](Delta_time dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
       Energy_test(this),
-      Timed_task(5.0, [this](double dt) { return draw_focus_key(); }),
+      Timed_task(5.0, [this](Delta_time dt) { return draw_focus_key(); }),
       Focus_test(this),
       Timed_task(1.5),
 
       // проверить что игрок дожил до конца
-      [](double dt) {
+      [](Delta_time dt) {
         cauto player = hpw::entity_mgr->get_player();
         if (player)
           return player->status.live;
         return false;
       },
-      Timed_task(7.0, [this](double dt) {
+      Timed_task(7.0, [this](Delta_time dt) {
         enable_epilepsy_bg = false;
         bg_text = get_locale_str("scene.tutorial.text.end");
         return false;
@@ -157,7 +157,7 @@ struct Level_tutorial::Impl {
     inline explicit Task_draw_motion_keys (Impl* _master)
     : master {_master} {}
 
-    inline bool operator()(double dt) {
+    inline bool operator()(Delta_time dt) {
       assert(master);
       master->draw_motion_keys();
       key_u |= is_pressed(hpw::keycode::up);
@@ -197,7 +197,7 @@ struct Level_tutorial::Impl {
   }
 
   // выйти с уровня
-  inline static bool exit_from_level(double dt) {
+  inline static bool exit_from_level(const Delta_time dt) {
     hpw::level_mgr->finalize_level();
     hpw::need_tutorial = false;
     return true;
@@ -213,7 +213,7 @@ struct Level_tutorial::Impl {
     Timer spwan_timer {}; // скорость спавна пуль
     real wave_speed = 1.4_pps; // скорость пули
 
-    inline bool operator()(double dt) {
+    inline bool operator()(Delta_time dt) {
       master->draw_motion_keys();
       // надпись об уклонении
       master->bg_text += U"\n\n" + get_locale_str("scene.tutorial.text.wave_warning");
@@ -288,7 +288,7 @@ struct Level_tutorial::Impl {
       spawn_height = graphic::height + 20;
     }
 
-    inline bool operator ()(double dt) {
+    inline bool operator ()(Delta_time dt) {
       // при перерыве между волнами ничего не делать
       if (delay_timer.update(dt)) {
         delay_timer = {};
@@ -345,7 +345,7 @@ struct Level_tutorial::Impl {
       assert(_total_time > 0 && _total_time < 60);
     }
 
-    inline bool operator()(const double dt) {
+    inline bool operator()(const Delta_time dt) {
       master->draw_shoot_key();
 
       if (!check_death) {
@@ -365,7 +365,7 @@ struct Level_tutorial::Impl {
     struct Zigzag_motion {
       real state {};
 
-      inline void operator()(Entity& self, double dt) {
+      inline void operator()(Entity& self, Delta_time dt) {
         state += dt;
         constexpr real SPEED = 0.666_pps;
         Vec vel(std::cos(state * 2.0) * SPEED * 2.5, SPEED);
@@ -398,7 +398,7 @@ struct Level_tutorial::Impl {
       assert(_total_time > 0 && _total_time < 60);
     }
 
-    inline bool operator()(const double dt) {
+    inline bool operator()(const Delta_time dt) {
       if (!check_death) {
         cfor (_, spawn_timer.update(dt)) {
           spawn({+20, -20});
@@ -417,7 +417,7 @@ struct Level_tutorial::Impl {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
       enemy->phys.set_vel({0, 1_pps});
       // стрельба в игрока
-      enemy->move_update_callback([](Entity& self, double dt)->void {
+      enemy->move_update_callback([](Entity& self, Delta_time dt)->void {
         if (rndu(1'500) == 0) {
           auto bullet = hpw::entity_mgr->make(&self, "enemy.tutorial.bullet",
             self.phys.get_pos());
@@ -445,7 +445,7 @@ struct Level_tutorial::Impl {
 
     inline explicit Energy_test(Impl* _master): master {_master} {}
 
-    inline bool operator()(const double dt) {
+    inline bool operator()(const Delta_time dt) {
       if (delay_state)
         accept_wave_delay(dt);
       else
@@ -457,7 +457,7 @@ struct Level_tutorial::Impl {
     } // op ()
 
     // пауза между волнами
-    inline void accept_wave_delay(const double dt) {
+    inline void accept_wave_delay(const Delta_time dt) {
       cfor (_, wave_delay.update(dt)) {
         delay_state = false;
         wave = WAVES;
@@ -466,7 +466,7 @@ struct Level_tutorial::Impl {
     }
 
     // спавнить волны врагов
-    inline void wave_spawn(const double dt) {
+    inline void wave_spawn(const Delta_time dt) {
       cfor (_, spawn_delay.update(dt)) {
         spawn_line();
         --wave;
@@ -514,7 +514,7 @@ struct Level_tutorial::Impl {
 
     inline explicit Focus_test(Impl* _master): master {_master} {}
 
-    inline bool operator()(const double dt) {
+    inline bool operator()(const Delta_time dt) {
       master->enable_epilepsy_bg = true;
       // убрать табличку через время
       if (step_x != MIN_STEP)
@@ -538,7 +538,7 @@ struct Level_tutorial::Impl {
     } // op ()
 
     // создаёт сетку пуль
-    inline void spwan_hatch(const double dt) {
+    inline void spwan_hatch(const Delta_time dt) {
       // пули сверху
       for (real x = 25; x < graphic::width; x += step_x) {
         const Vec pos(x, -20);
@@ -561,7 +561,7 @@ struct Level_tutorial::Impl {
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(this)} {}
 Level_tutorial::~Level_tutorial() {}
-void Level_tutorial::update(const Vec vel, double dt) {
+void Level_tutorial::update(const Vec vel, Delta_time dt) {
   cauto camera_offset = graphic::camera->get_offset();
   Level::update(vel + camera_offset, dt);
   if (impl->enable_epilepsy_bg)

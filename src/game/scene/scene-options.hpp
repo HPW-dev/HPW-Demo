@@ -12,6 +12,6 @@ class Scene_options final: public Scene {
   
 public:
   Scene_options();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

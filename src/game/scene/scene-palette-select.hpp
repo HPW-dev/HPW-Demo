@@ -10,6 +10,6 @@ class Scene_palette_select final: public Scene {
 public:
   Scene_palette_select();
   ~Scene_palette_select();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

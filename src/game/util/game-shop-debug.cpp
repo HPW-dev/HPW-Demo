@@ -70,7 +70,7 @@ struct Shop_debug::Impl {
     item_table->draw(dst);
   }
 
-  inline bool update(const double dt) {
+  inline bool update(const Delta_time dt) {
     item_table->update(dt);
     return !item_table->item_selected();
   }
@@ -79,4 +79,4 @@ struct Shop_debug::Impl {
 Shop_debug::Shop_debug(): impl {new_unique<Impl>()} {}
 Shop_debug::~Shop_debug() {}
 void Shop_debug::draw(Image& dst) const { impl->draw(dst); }
-bool Shop_debug::update(const double dt) { return impl->update(dt); }
+bool Shop_debug::update(const Delta_time dt) { return impl->update(dt); }

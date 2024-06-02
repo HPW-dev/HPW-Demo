@@ -21,7 +21,7 @@ class Sprite_select: public Editor_scene_base {
 
 public:
   explicit Sprite_select(decltype(callback) new_callback={});
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
   void imgui_exec() override;
 }; // Sprite_select

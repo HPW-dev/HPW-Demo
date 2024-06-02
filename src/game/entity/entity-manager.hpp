@@ -33,7 +33,7 @@ public:
   ~Entity_mgr();
 
   void draw(Image& dst, const Vec offset) const;
-  void update(const double dt);
+  void update(const Delta_time dt);
   void clear();
   void debug_draw(Image& dst) const;
   void set_visible(const bool mode); // mode=false выключает видимость игровых объектов

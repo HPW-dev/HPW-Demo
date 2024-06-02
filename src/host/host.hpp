@@ -1,6 +1,7 @@
 #pragma once
 #include <atomic>
 #include "util/macro.hpp"
+#include "util/math/num-types.hpp"
 #include "resize.hpp"
 #include "command.hpp"
 
@@ -25,7 +26,7 @@ protected:
   virtual void _set_mouse_cursour_mode(bool mode) = 0;
   virtual void set_gamma(const double gamma) = 0;
   // получить текущее время в секундах
-  virtual double get_time() const = 0;
+  virtual Delta_time get_time() const = 0;
   inline virtual void draw_game_frame() {}
   void init_app_mutex();
   void free_app_mutex();

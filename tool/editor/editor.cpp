@@ -26,7 +26,7 @@ void Editor::init() {
   reshape(1024, 720);
 }
 
-void Editor::update(double dt) {
+void Editor::update(const Delta_time dt) {
   Host_imgui::update(dt);
   auto st = Editor::get_time();
   if ( !hpw::scene_mgr->update(dt) ) {

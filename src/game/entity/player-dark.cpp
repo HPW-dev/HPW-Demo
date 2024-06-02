@@ -22,15 +22,16 @@
 
 Player_dark::Player_dark(): Player() {}
 
-void Player_dark::shoot(double dt) {
+void Player_dark::shoot(const Delta_time dt) {
   // стрелять менее часто, при нехватке энергии
+  auto local_dt = dt;
   if (energy <= m_energy_level_for_decrease_shoot_speed)
-    dt *= m_decrease_shoot_speed_ratio;
+    local_dt *= m_decrease_shoot_speed_ratio;
   sub_en(m_shoot_price);
-  default_shoot(dt);
+  default_shoot(local_dt);
 }
 
-void Player_dark::default_shoot(double dt) {
+void Player_dark::default_shoot(const Delta_time dt) {
   cfor (_, m_shoot_timer.update(dt)) {
     cfor (bullet_count, m_default_shoot_count) { // несколько за раз
       cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0); // смещение пули при спавне
@@ -60,7 +61,7 @@ void Player_dark::draw(Image& dst, const Vec offset) const {
   draw_stars(dst);
 }
 
-void Player_dark::update(double dt) {
+void Player_dark::update(const Delta_time dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
 
   energy_regen();
@@ -69,7 +70,7 @@ void Player_dark::update(double dt) {
   check_input(dt);
 }
 
-void Player_dark::check_input(double dt) {
+void Player_dark::check_input(const Delta_time dt) {
   move(dt);
 
   // стрельба
@@ -77,7 +78,7 @@ void Player_dark::check_input(double dt) {
     shoot(dt);
 } // check_input
 
-void Player_dark::move(double dt) {
+void Player_dark::move(const Delta_time dt) {
   real spd = m_max_speed;
   phys.set_force(default_force);
 
@@ -186,7 +187,7 @@ struct Bound_off_screen {
     );
   } // c-tor
 
-  inline void operator()(Entity& dst, double dt) {
+  inline void operator()(Entity& dst, const Delta_time dt) {
     auto pos = dst.phys.get_pos();
     bool decrease_speed {false};
     if (pos.x < screen_lu.x)

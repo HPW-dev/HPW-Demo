@@ -19,7 +19,7 @@ struct Scene_gameover::Impl {
 
   inline explicit Impl() { init_menu(); }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (hpw::replay_read_mode) {
       hpw::scene_mgr->back(); // to gameover
       hpw::scene_mgr->back(); // to replay-select
@@ -72,5 +72,5 @@ struct Scene_gameover::Impl {
 
 Scene_gameover::Scene_gameover(): impl {new_unique<Impl>()} {}
 Scene_gameover::~Scene_gameover() {}
-void Scene_gameover::update(double dt) { impl->update(dt); }
+void Scene_gameover::update(const Delta_time dt) { impl->update(dt); }
 void Scene_gameover::draw(Image& dst) const { impl->draw(dst); }

@@ -1,4 +1,5 @@
 #pragma once
+#include <GL/glew.h>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 #include "host.hpp"
@@ -9,7 +10,7 @@ class Protownd: public Host {
   nocopy(Protownd);
 
 protected:
-  Vector<float> pal_rgb {};
+  Vector<GLfloat> pal_rgb {};
   int w_ = 0, h_ = 0; // разрешение экрана
   Resize_ctx window_ctx_ {};
 

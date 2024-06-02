@@ -26,7 +26,7 @@ void Collidable::draw(Image& dst, const Vec offset) const {
     draw_hitbox(dst, offset);
 }
 
-void Collidable::update(double dt) {
+void Collidable::update(const Delta_time dt) {
   Entity::update(dt);
 
   // когда заканчивается обработка столкновений, флаг выключается

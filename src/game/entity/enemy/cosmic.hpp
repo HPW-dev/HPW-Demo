@@ -33,7 +33,7 @@ class Cosmic final: public Proto_enemy {
   bool m_eyes_open_complete {false};
 
   // накидывает частиц, чтобы показать влияние гравитации
-  void make_particles(double dt);
+  void make_particles(const Delta_time dt);
   // примагничивание всего вокруг
   void update_magnet();
 
@@ -44,7 +44,7 @@ public:
   ~Cosmic() = default;
 
   void draw(Image& dst, const Vec offset) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 }; // Cosmic
 
 // Загрузчик

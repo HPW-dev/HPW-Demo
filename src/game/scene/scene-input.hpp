@@ -12,6 +12,6 @@ class Scene_input final: public Scene {
 
 public:
   Scene_input();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

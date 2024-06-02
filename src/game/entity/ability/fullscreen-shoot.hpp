@@ -12,7 +12,7 @@ class Ability_fullscreen_shoot final: public Ability {
 public:
   explicit Ability_fullscreen_shoot(CN<Player> player);
   ~Ability_fullscreen_shoot();
-  void update(Player& player, const double dt) override;
+  void update(Player& player, const Delta_time dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}
   void power_up() override;
   utf32 name() const override;

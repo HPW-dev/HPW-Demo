@@ -15,7 +15,7 @@ public:
   
   Level_space();
   ~Level_space();
-  void update(const Vec vel, double dt) override;
+  void update(const Vec vel, Delta_time dt) override;
   void draw(Image& dst) const override;
   Str level_name() const override;
 };

@@ -15,7 +15,7 @@ public:
   class Loader;
   Enemy_tutorial();
   ~Enemy_tutorial() = default;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 }; // Enemy_tutorial
 
 // Загрузчик

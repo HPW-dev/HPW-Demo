@@ -10,6 +10,6 @@ class Scene_gameover final: public Scene {
 public:
   Scene_gameover();
   ~Scene_gameover();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

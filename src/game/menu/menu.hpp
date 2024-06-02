@@ -3,6 +3,7 @@
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
+#include "util/math/num-types.hpp"
 
 class Image;
 class Menu_item;
@@ -29,7 +30,7 @@ public:
   explicit Menu(CN<Menu_items> items);
   virtual ~Menu();
   virtual void draw(Image& dst) const = 0;
-  virtual void update(double dt);
+  virtual void update(const Delta_time dt);
   std::size_t get_cur_item_id() const;
   CN<decltype(m_items)::value_type> get_cur_item() const;
   CN<decltype(m_items)> get_items() const;

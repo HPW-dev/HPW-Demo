@@ -12,7 +12,7 @@
 
 Level_debug_2::Level_debug_2() {}
 
-void Level_debug_2::update(const Vec vel, double dt) {
+void Level_debug_2::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
 
   pos_old = pos;

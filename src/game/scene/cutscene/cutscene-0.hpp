@@ -9,6 +9,6 @@ class Cutscene_0 final: public Scene {
 public:
   Cutscene_0();
   ~Cutscene_0();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 }; // Cutscene_0

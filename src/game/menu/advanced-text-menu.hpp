@@ -14,5 +14,5 @@ public:
   ~Advanced_text_menu();
   explicit Advanced_text_menu(CN<utf32> title, CN<Menu_items> items, const Rect rect);
   void draw(Image& dst) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 };

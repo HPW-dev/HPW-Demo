@@ -195,14 +195,14 @@ struct Sound_mgr_oal::Impl {
     check_oal_error("alListener3f AL_POSITION");
   }
 
-  inline void set_master_gain(const float gain) {
+  inline void set_master_gain(const real gain) {
     std::lock_guard lock(m_mutex);
     alListenerf(AL_GAIN, gain);
     check_oal_error("alListenerf AL_GAIN");
   }
   
   inline void set_listener_dir(const Vec3 listener_dir) {
-    const float ori [3] {listener_dir.x, listener_dir.y, listener_dir.z};
+    const ALfloat ori [3] {listener_dir.x, listener_dir.y, listener_dir.z};
     std::lock_guard lock(m_mutex);
     alListenerfv(AL_ORIENTATION, ori);
     check_oal_error("alListener3f AL_ORIENTATION");
@@ -287,7 +287,7 @@ struct Sound_mgr_oal::Impl {
     m_store[sound_name] = std::move(sound);
   }
 
-  void set_pitch(const Audio_id sound_id, const float pitch) {
+  void set_pitch(const Audio_id sound_id, const real pitch) {
     if ( !is_playing(sound_id)) {
       detailed_log (
         "попытка изменить тон звуку, который уже не играет (ID: "
@@ -435,7 +435,7 @@ struct Sound_mgr_oal::Impl {
     m_audio_infos[sound_id] = std::move(info);
   }
 
-  inline void set_doppler_factor(const float doppler_factor) {
+  inline void set_doppler_factor(const real doppler_factor) {
     std::lock_guard lock(m_mutex);
     alDopplerFactor(doppler_factor); // настройка эффекта Допплера
     check_oal_error("alDopplerFactor");
@@ -541,9 +541,9 @@ void Sound_mgr_oal::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { 
 void Sound_mgr_oal::stop(const Audio_id sound_id) { impl->stop(sound_id); }
 void Sound_mgr_oal::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
 void Sound_mgr_oal::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
-void Sound_mgr_oal::set_pitch(const Audio_id sound_id, const float pitch) { impl->set_pitch(sound_id, pitch); }
-void Sound_mgr_oal::set_master_gain(const float gain) { impl->set_master_gain(gain); }
-void Sound_mgr_oal::set_doppler_factor(const float doppler_factor) { impl->set_doppler_factor(doppler_factor); }
+void Sound_mgr_oal::set_pitch(const Audio_id sound_id, const real pitch) { impl->set_pitch(sound_id, pitch); }
+void Sound_mgr_oal::set_master_gain(const real gain) { impl->set_master_gain(gain); }
+void Sound_mgr_oal::set_doppler_factor(const real doppler_factor) { impl->set_doppler_factor(doppler_factor); }
 void Sound_mgr_oal::disable(const Audio_id sound_id) { impl->disable(sound_id); }
 CN<Audio> Sound_mgr_oal::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
 Audio_id Sound_mgr_oal::attach_and_play(CN<Str> sound_name, CP<Entity> entity, const real amplify, const bool repeat)

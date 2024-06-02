@@ -9,7 +9,7 @@ Input_scene::Input_scene(CN<Str> new_title, CN<callback_t> new_callback)
 : title{new_title}, callback{new_callback}
 { charbuf[0] = '\0'; }
 
-void Input_scene::update(double dt) {
+void Input_scene::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back();
   if (is_pressed_once(hpw::keycode::enable)) {

@@ -27,7 +27,7 @@ void Cosmic::draw(Image& dst, const Vec offset) const {
   Proto_enemy::draw(dst, offset);
 }
 
-void Cosmic::update(double dt) {
+void Cosmic::update(const Delta_time dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
 
   // останавливает первую анимацию после завершения
@@ -95,11 +95,11 @@ void Cosmic::update(double dt) {
 
 void Cosmic::update_magnet() {
   // плавное нарастание притяжения
-  cauto magnet_power_ratio = (m_fade_in_complete && m_eyes_open_complete)
-    ? 1.0
+  const real magnet_power_ratio = (m_fade_in_complete && m_eyes_open_complete)
+    ? 1.0f
     // учесть время появления из стемноты и время открытия глаз
-    : 1.0 - (m_info.eyes_open_timeout.ratio() + m_info.fade_in_timer.ratio()) * 0.5;
-  cauto magnet_power = std::lerp(0, m_info.magnet_power, magnet_power_ratio);
+    : 1.0f - (m_info.eyes_open_timeout.ratio() + m_info.fade_in_timer.ratio()) * 0.5f;
+  cauto magnet_power = std::lerp(0.0f, m_info.magnet_power, magnet_power_ratio);
   // притяжение
   hpw::entity_mgr->add_scatter( Scatter {
     .pos {phys.get_pos()},
@@ -110,7 +110,7 @@ void Cosmic::update_magnet() {
   } );
 }
 
-void Cosmic::make_particles(double dt) {
+void Cosmic::make_particles(const Delta_time dt) {
   cauto w = graphic::width;
   cauto h = graphic::height;
   const int X = 12;

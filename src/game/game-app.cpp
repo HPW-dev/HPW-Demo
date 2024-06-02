@@ -59,7 +59,7 @@ Game_app::~Game_app() {
   hpw::scene_mgr = {};
 }
 
-void Game_app::update(double dt) {
+void Game_app::update(const Delta_time dt) {
   ALLOW_STABLE_RAND
   assert(dt == hpw::target_update_time);
   update_graphic_autoopt(dt);
@@ -102,7 +102,7 @@ void Game_app::load_font() {
   graphic::font = new_shared<Unifont>(mem, 16, true);
 }
 
-void Game_app::update_graphic_autoopt(double dt) {
+void Game_app::update_graphic_autoopt(const Delta_time dt) {
   using timeout_t = decltype(graphic::autoopt_timeout);
   // если рендер не будет лагать, то после таймера - тригер автооптимизации сбросится
   graphic::autoopt_timeout = std::max(graphic::autoopt_timeout - dt, timeout_t(0));

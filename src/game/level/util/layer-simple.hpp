@@ -15,6 +15,6 @@ struct Layer_simple {
   explicit Layer_simple(CN<Str> tilemap_archive_name, const Vec _pos,
     real _motion_ratio, blend_pf _bf=&blend_past);
   Layer_simple(Layer_simple&& other);
-  void update(const Vec vel, double dt);
+  void update(const Vec vel, Delta_time dt);
   void draw(Image& dst, int optional=0) const;
 };

@@ -19,6 +19,6 @@ void Scene_test::init(int argc, char *argv[]) {
   hpw::scene_mgr->add(new_shared<Scene_info>());
 } // init
 
-void Scene_test::update(double dt) { hpw::scene_mgr->update(dt); }
+void Scene_test::update(const Delta_time dt) { hpw::scene_mgr->update(dt); }
 
 void Scene_test::draw() const { hpw::scene_mgr->draw(*graphic::canvas); }

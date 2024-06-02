@@ -21,7 +21,7 @@ Anim_ctx::Anim_ctx(CN<decltype(anim)> new_anim)
 : anim {new_anim}
 { assert(anim); }
 
-void Anim_ctx::update(double dt, Entity &entity) {
+void Anim_ctx::update(const Delta_time dt, Entity &entity) {
   // если нет анимации, выйти
   if ( !anim) {
     entity.status.end_anim = true;
@@ -141,8 +141,8 @@ void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
 
 Vec Anim_ctx::get_interpolated_pos() const {
   return Vec (
-    std::lerp<double>(old_draw_pos.x, draw_pos.x, graphic::lerp_alpha),
-    std::lerp<double>(old_draw_pos.y, draw_pos.y, graphic::lerp_alpha)
+    std::lerp<Delta_time>(old_draw_pos.x, draw_pos.x, graphic::lerp_alpha),
+    std::lerp<Delta_time>(old_draw_pos.y, draw_pos.y, graphic::lerp_alpha)
   );
 }
 

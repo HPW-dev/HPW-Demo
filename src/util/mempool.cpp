@@ -59,7 +59,7 @@ void Mem_pool::print_used_bytes() {
 #ifndef ECOMEM
 #ifdef DETAILED_LOG
   detailed_log("max mem usage in pool: " << mem_pool_max_bytes_used << " (" <<
-    n2s(scast<double>(mem_pool_max_bytes_used) / (1024*1024), 3)
+    n2s(scast<real>(mem_pool_max_bytes_used) / (1024*1024), 3)
     << " mb)\n");
 #endif
 #endif

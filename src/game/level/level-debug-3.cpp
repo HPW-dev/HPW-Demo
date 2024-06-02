@@ -78,7 +78,7 @@ Level_debug_3::Level_debug_3()
 
 Level_debug_3::~Level_debug_3() {}
 
-void Level_debug_3::update(const Vec vel, double dt) {
+void Level_debug_3::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
 
   // спавн волн пуль
@@ -217,7 +217,7 @@ void Level_debug_3::make_dummy() {
   
 } // make_dummy
 
-void Level_debug_3::spawn_bullets(double dt) {
+void Level_debug_3::spawn_bullets(const Delta_time dt) {
   cfor (_, impl->spawn_tmr.update(dt)) {
     real spawn_offset = rndr(-20, 20);
     for (int i = -6; i < 5; ++i) {

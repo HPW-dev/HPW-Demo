@@ -35,7 +35,7 @@ Collidable* to_collidable(Entity& src) {
   return ptr2ptr<Collidable*>(&src);
 }
 
-void bounce_off_screen(Entity& entity, double dt) {
+void bounce_off_screen(Entity& entity, Delta_time dt) {
   auto pos = entity.phys.get_pos();
   auto vel = entity.phys.get_vel();
   if (pos.x < 0) {
@@ -58,17 +58,17 @@ void bounce_off_screen(Entity& entity, double dt) {
   entity.phys.set_vel(vel);
 } // bounce_off_screen
 
-Anim_speed_slowdown::Anim_speed_slowdown(double slowndown)
+Anim_speed_slowdown::Anim_speed_slowdown(const Delta_time slowndown)
 : m_slowndown{slowndown} { assert(m_slowndown > 0); }
 
-void Anim_speed_slowdown::operator()(Entity& entity, double dt) {
+void Anim_speed_slowdown::operator()(Entity& entity, const Delta_time dt) {
   auto scale = entity.anim_ctx.get_speed_scale();
-  scale = std::max<double>(0, scale - m_slowndown * dt);
+  scale = std::max<Delta_time>(0, scale - m_slowndown * dt);
   entity.anim_ctx.set_speed_scale(scale);
 }
 
-Anim_speed_addiction::Anim_speed_addiction(double target_speed,
-double min_ratio, double max_ratio)
+Anim_speed_addiction::Anim_speed_addiction(Delta_time target_speed,
+Delta_time min_ratio, Delta_time max_ratio)
 : m_target_speed {target_speed}
 , m_min_ratio {min_ratio}
 , m_max_ratio {max_ratio}
@@ -78,16 +78,16 @@ double min_ratio, double max_ratio)
   assert(m_target_speed > 0);
 }
 
-void Anim_speed_addiction::operator()(Entity& entity, double dt) {
+void Anim_speed_addiction::operator()(Entity& entity, Delta_time dt) {
   /* определить на сколько объект быстрее чем m_max_speed и
   эту разницу применить к скорости воспроизведения анимации */
   auto speed = entity.phys.get_speed();
   auto ratio = speed / m_target_speed;
-  entity.anim_ctx.set_speed_scale( std::clamp<double>(ratio, m_min_ratio, m_max_ratio) );
+  entity.anim_ctx.set_speed_scale( std::clamp<Delta_time>(ratio, m_min_ratio, m_max_ratio) );
 }
 
-Rotate_speed_addiction::Rotate_speed_addiction(double target_speed,
-double min_ratio, double max_ratio, double speed_scale, bool rot_right)
+Rotate_speed_addiction::Rotate_speed_addiction(Delta_time target_speed,
+Delta_time min_ratio, Delta_time max_ratio, Delta_time speed_scale, bool rot_right)
 : m_target_speed {target_speed}
 , m_min_ratio {min_ratio}
 , m_max_ratio {max_ratio}
@@ -100,12 +100,12 @@ double min_ratio, double max_ratio, double speed_scale, bool rot_right)
   assert(m_speed_scale > 0);
 }
 
-void Rotate_speed_addiction::operator()(Entity& entity, double dt) {
+void Rotate_speed_addiction::operator()(Entity& entity, Delta_time dt) {
   /* определить на сколько объект быстрее чем m_max_speed и
   эту разницу применить к скорости вращения */
   auto speed = entity.phys.get_speed();
   auto ratio = speed / m_target_speed;
-  ratio = std::clamp<double>(ratio, m_min_ratio, m_max_ratio);
+  ratio = std::clamp<Delta_time>(ratio, m_min_ratio, m_max_ratio);
   auto new_deg = entity.anim_ctx.get_default_deg() + ratio * m_speed_scale
     * (m_rot_right ? 1 : -1);
   new_deg = ring_deg(new_deg);
@@ -113,11 +113,11 @@ void Rotate_speed_addiction::operator()(Entity& entity, double dt) {
   entity.status.fixed_deg = true;
 }
 
-Kill_by_timeout::Kill_by_timeout(double timeout)
+Kill_by_timeout::Kill_by_timeout(const Delta_time timeout)
 : m_timeout {timeout}
 { assert(timeout >= 0); }
 
-void Kill_by_timeout::operator()(Entity& entity, double dt) {
+void Kill_by_timeout::operator()(Entity& entity, Delta_time dt) {
   if (m_timeout <= 0) {
     entity.kill();
     return;
@@ -202,7 +202,7 @@ real deg_to_target(CN<Entity> self, const Vec target)
 real deg_to_target(CN<Entity> self, CN<Entity> target)
   { return deg_to_target(self, target.phys.get_pos()); }
 
-Vec predict(CN<Entity> self_, CN<Entity> target_, double dt) {
+Vec predict(CN<Entity> self_, CN<Entity> target_, Delta_time dt) {
   cnauto self = self_.phys;
   cnauto target = target_.phys;
 
@@ -217,12 +217,12 @@ Vec predict(CN<Entity> self_, CN<Entity> target_, double dt) {
   return target.get_pos() + normalize_stable(target.get_vel()) * target.get_speed() * t;
 }
 
-Timed_visible::Timed_visible(const double timeout) {
+Timed_visible::Timed_visible(const Delta_time timeout) {
   assert(timeout > 0 && timeout < 100);
   m_timeout = timeout;
 }
 
-void Timed_visible::operator()(Entity& entity, double dt) {
+void Timed_visible::operator()(Entity& entity, Delta_time dt) {
   entity.status.no_motion_interp = true;
   
   if (m_timeout > 0) {

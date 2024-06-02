@@ -49,7 +49,7 @@ public:
   * @param Y высота пространства */
   explicit Collider_qtree(uint depth, uint entity_limit, std::size_t X, std::size_t Y);
   ~Collider_qtree();
-  void operator()(CN<Entitys> entities, double dt) override;
+  void operator()(CN<Entitys> entities, Delta_time dt) override;
   // рисует сетку разделений для дебага
   void debug_draw(Image& dst, const Vec camera_offset) override;
 }; // Collider_qtree

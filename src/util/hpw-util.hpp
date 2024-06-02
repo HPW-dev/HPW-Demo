@@ -1,5 +1,5 @@
 #pragma once
-#include <cstdint>
+#include "math/num-types.hpp"
 
 // вызывает функцию при деструкторе и конструкторе (для областей видимости)
 class Scope final {
@@ -24,4 +24,4 @@ inline constexpr long double operator""_pps(long double in) { return in * 60.0l;
 #endif
 
 // x -> время ожидания в кадрах
-inline constexpr double to_fps(double x) { return (1.0 / 60.0) * x; }
+inline constexpr Delta_time to_fps(Delta_time x) { return (1.0 / 60.0) * x; }

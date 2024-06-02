@@ -16,6 +16,6 @@ class Level_debug_2 final: public Level {
 public:
   Level_debug_2();
   ~Level_debug_2() = default;
-  void update(const Vec vel, double dt);
+  void update(const Vec vel, Delta_time dt);
   void draw(Image& dst) const;
 }; // Level_debug_2

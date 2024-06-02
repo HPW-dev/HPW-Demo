@@ -4,6 +4,7 @@
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
+#include "util/math/num-types.hpp"
 
 class Scene;
 class Image;
@@ -32,7 +33,7 @@ public:
   Scene_mgr() = default;
   ~Scene_mgr() = default;
   // @return false если сцены кончились
-  bool update(double dt);
+  bool update(const Delta_time dt);
   void draw(Image& dst) const;
   Scene* get_current() const;
   void add(CN<Shared<Scene>> scene); // добавить новую сцену

@@ -22,7 +22,7 @@ public:
   ~Cosmic_hunter() = default;
 
   void draw(Image& dst, const Vec offset) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 }; // Cosmic_hunter
 
 // Загрузчик

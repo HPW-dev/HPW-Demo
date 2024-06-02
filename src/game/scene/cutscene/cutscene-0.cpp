@@ -88,7 +88,7 @@ struct Space {
     layers.emplace_back( Pal8::from_real(1), w, h );
   }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     // motion
   }
 
@@ -107,7 +107,7 @@ struct Cutscene_0::Impl {
 
   inline Impl(): space(192, 256) {}
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr->back();
 
@@ -122,5 +122,5 @@ struct Cutscene_0::Impl {
 
 Cutscene_0::Cutscene_0(): impl{new_unique<Impl>()} {}
 Cutscene_0::~Cutscene_0() {}
-void Cutscene_0::update(double dt) { impl->update(dt); }
+void Cutscene_0::update(const Delta_time dt) { impl->update(dt); }
 void Cutscene_0::draw(Image& dst) const { impl->draw(dst); }

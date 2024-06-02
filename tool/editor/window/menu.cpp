@@ -23,7 +23,7 @@ inline void save_all_anims() {
   save_anims(file);
 }
 
-void Menu_wnd::update(double dt) {
+void Menu_wnd::update(const Delta_time dt) {
   using namespace ImGui;
   
   if (is_pressed_once(hpw::keycode::escape))

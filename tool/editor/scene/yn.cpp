@@ -10,7 +10,7 @@ Yes_no_scene::Yes_no_scene(CN<utf8> msg,
 CN<decltype(callback)> new_callback)
 : msg_(msg), callback(new_callback) {}
 
-void Yes_no_scene::update(double dt) {
+void Yes_no_scene::update(const Delta_time dt) {
   using namespace ImGui;
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back();

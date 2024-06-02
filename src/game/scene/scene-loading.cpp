@@ -25,7 +25,7 @@ Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
   assert(bg);
 }
 
-void Scene_loading::update(double dt) {
+void Scene_loading::update(const Delta_time dt) {
   // если сцена отработала, можно вернутся обратно
   if (used) {
     if (time_out-- <= 0) // защита на всякий случай

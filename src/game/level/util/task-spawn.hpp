@@ -13,8 +13,8 @@ public:
   using Death_list = Vector<Entity*>;
   using spawn_pf = std::function<Death_list ()>;
 
-  explicit Spwan_and_wait_for_death(spawn_pf&& spawn_f, double timeout);
-  bool operator()(double dt);
+  explicit Spwan_and_wait_for_death(spawn_pf&& spawn_f, const Delta_time timeout);
+  bool operator()(Delta_time dt);
 
 private:
   bool m_once_call {true};

@@ -44,7 +44,7 @@ struct Scene_pge::Impl {
     init_ball();
   } // impl
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape)) {
       save_pge_to_config();
       hpw::scene_mgr->back();
@@ -217,7 +217,7 @@ struct Scene_pge::Impl {
     insert<&blend_diff>(dst, m_ball, m_ball_pos);
   }
 
-  inline void update_ball(const double dt) {
+  inline void update_ball(const Delta_time dt) {
     m_ball_pos.x += m_ball_vel.x * dt;
     m_ball_pos.y += m_ball_vel.y * dt;
     if (m_ball_pos.x >= graphic::width - m_ball.X) {
@@ -241,5 +241,5 @@ struct Scene_pge::Impl {
 
 Scene_pge::Scene_pge(): impl {new_unique<Impl>()} {}
 Scene_pge::~Scene_pge() {}
-void Scene_pge::update(double dt) { impl->update(dt); }
+void Scene_pge::update(const Delta_time dt) { impl->update(dt); }
 void Scene_pge::draw(Image& dst) const { impl->draw(dst); }

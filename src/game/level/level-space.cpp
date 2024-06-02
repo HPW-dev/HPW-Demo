@@ -72,7 +72,7 @@ struct Level_space::Impl {
     //hpw::shop = new_unique<Shop_debug>(); // TODO это дебажный выбор способностей
   }
 
-  inline void update(const Vec vel, double dt) {
+  inline void update(const Vec vel, Delta_time dt) {
     auto vel_inverted = vel * -1.0;
     execute_tasks(tasks, dt);
 
@@ -154,7 +154,7 @@ struct Level_space::Impl {
       Bg_blink(fill_bg_black, 6.0),
       
       // включить показ фона из тени
-      [this](double dt)->bool {
+      [this](Delta_time dt)->bool {
         enable_bg_layer = true;
         bg_brightness_sub = 1;
         // поставить фон в центр
@@ -166,7 +166,7 @@ struct Level_space::Impl {
       },
 
       // включить показ первой галактики
-      [this](double dt)->bool {
+      [this](Delta_time dt)->bool {
         enable_galaxy_1_layer = true;
         // галактика сверху слева
         m_galaxy_1.pos = -Vec(100, 300);
@@ -230,7 +230,7 @@ struct Level_space::Impl {
       }, 60),
 
       // включить показ второй галактики
-      [this](double dt)->bool {
+      [this](Delta_time dt)->bool {
         enable_galaxy_3_layer = true;
         // галактика сверху слева
         m_galaxy_3.pos = -Vec(-250, 190);
@@ -272,7 +272,7 @@ struct Level_space::Impl {
       // TODO большая волна слабых противников
 
       // включить показ фоновой большой галактики
-      [this](double dt)->bool {
+      [this](Delta_time dt)->bool {
         enable_galaxy_2_layer = true;
         galaxy_2_brightness_sub = 1;
         // галактика в центре сверху
@@ -335,7 +335,7 @@ struct Level_space::Impl {
       }, 120),
 
       // TODO табличка что уровень закончился
-      [this](double dt)->bool {
+      [this](Delta_time dt)->bool {
         graphic::post_effects->move_to_back (
           new_shared<Blink_text>(10, U"дальше уровень недоделан, ничего не будет") );
         return true;
@@ -381,14 +381,14 @@ struct Level_space::Impl {
     m_galaxy_3.draw(dst);
   }
 
-  inline void update_layers(const Vec vel, double dt) {
+  inline void update_layers(const Vec vel, Delta_time dt) {
     update_bg_layer(vel, dt);
     update_galaxy_1_layer(vel, dt);
     update_galaxy_2_layer(vel, dt);
     update_galaxy_3_layer(vel, dt);
   }
 
-  inline void update_bg_layer(const Vec vel, double dt) {
+  inline void update_bg_layer(const Vec vel, Delta_time dt) {
     // фон постепенно появляется из тени
     if (enable_bg_layer) {
       if (bg_brightness_sub > 0)
@@ -408,12 +408,12 @@ struct Level_space::Impl {
     m_bg.pos.y = std::clamp<real>(m_bg.pos.y, -h, 0);
   }
 
-  inline void update_galaxy_1_layer(const Vec vel, double dt) {
+  inline void update_galaxy_1_layer(const Vec vel, Delta_time dt) {
     return_if ( !enable_galaxy_1_layer);
     m_galaxy_1.update(Vec(vel.x * layer_speed_scale, layer_h_speed), dt);
   }
 
-  inline void update_galaxy_2_layer(const Vec vel, double dt) {
+  inline void update_galaxy_2_layer(const Vec vel, Delta_time dt) {
     if (enable_galaxy_2_layer && galaxy_2_brightness_sub > 0)
       galaxy_2_brightness_sub -= dt * 0.0055; // скорость появления фона
     m_galaxy_2.update(Vec(vel.x * layer_speed_scale, layer_h_speed), dt);
@@ -423,7 +423,7 @@ struct Level_space::Impl {
     m_galaxy_2.pos.x = std::clamp<real>(m_galaxy_2.pos.x, -w, 0);
   }
 
-  inline void update_galaxy_3_layer(const Vec vel, double dt) {
+  inline void update_galaxy_3_layer(const Vec vel, Delta_time dt) {
     return_if ( !enable_galaxy_3_layer);
     m_galaxy_3.update(Vec(vel.x * layer_speed_scale, layer_h_speed), dt);
   }
@@ -431,7 +431,7 @@ struct Level_space::Impl {
 
 Level_space::Level_space(): impl {new_unique<Impl>()} {}
 Level_space::~Level_space() {}
-void Level_space::update(const Vec vel, double dt) {
+void Level_space::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   impl->update(vel, dt);
 }

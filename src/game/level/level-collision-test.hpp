@@ -12,7 +12,7 @@ class Level_collision_test final: public Level {
 public:
   Level_collision_test();
   ~Level_collision_test() = default;
-  void update(const Vec vel, double dt);
+  void update(const Vec vel, Delta_time dt);
   void draw(Image& dst) const;
   Str level_name() const override;
 }; // Level_collision_test

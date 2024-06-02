@@ -35,7 +35,7 @@ struct Hud_asci::Impl {
     pts_rect_old = pts_rect;
   }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     return_if (hpw::difficulty == Difficulty::easy);
     
     auto player = hpw::entity_mgr->get_player();
@@ -80,8 +80,8 @@ struct Hud_asci::Impl {
       debug_draw();
   } // draw
 
-  inline int load_bar_sz(double val, double max, int size_bar) const {
-    return std::ceil(safe_div<double, double>(val, max) * size_bar);
+  inline int load_bar_sz(real val, real max, int size_bar) const {
+    return std::ceil(safe_div<real, real>(val, max) * size_bar);
   }
 
   // рисует прозрачный текст с чёрными контурами
@@ -174,6 +174,6 @@ struct Hud_asci::Impl {
 }; // Impl
 
 void Hud_asci::draw(Image& dst) const { impl->draw(dst); }
-void Hud_asci::update(double dt) { impl->update(dt); }
+void Hud_asci::update(const Delta_time dt) { impl->update(dt); }
 Hud_asci::Hud_asci(): impl{new_unique<Impl>()} {}
 Hud_asci::~Hud_asci() {}

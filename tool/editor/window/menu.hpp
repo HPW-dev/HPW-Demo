@@ -9,6 +9,6 @@ public:
   Menu_wnd() = default;
   ~Menu_wnd() = default;
   inline void draw(Image& dst) const override {}
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void imgui_exec() override;
 };

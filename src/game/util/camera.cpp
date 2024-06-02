@@ -12,10 +12,10 @@
 
 struct Camera::Impl {
   Vec screen_center {};
-  constx double max_shake_time = 0.37;
-  constx double shake_amplify = 1.0 / 3.0;
-  constx double shake_len = 9; // на сколько сильное смещение при тряске
-  double m_shake_time {}; // пока не кончится, камера будет трястись
+  constx Delta_time max_shake_time = 0.37;
+  constx real shake_amplify = 1.0 / 3.0;
+  constx real shake_len = 9; // на сколько сильное смещение при тряске
+  Delta_time m_shake_time {}; // пока не кончится, камера будет трястись
 
   inline Impl()
   : screen_center(graphic::width / 2.0, graphic::height / 2.0)
@@ -39,18 +39,18 @@ struct Camera::Impl {
     return rand_normalized_graphic() * shake_power;
   }
 
-  inline void add_shake(double intense) {
-    m_shake_time = std::clamp<double>(
+  inline void add_shake(real intense) {
+    m_shake_time = std::clamp<real>(
       m_shake_time + intense * shake_amplify, 0, max_shake_time);
   }
 
-  inline void update(double dt) {
-    m_shake_time = std::max<double>(0, m_shake_time - dt);
+  inline void update(const Delta_time dt) {
+    m_shake_time = std::max<Delta_time>(0, m_shake_time - dt);
   }
 }; // Impl
 
 Camera::Camera(): impl {new_unique<Impl>()} {}
 Camera::~Camera() {}
 Vec Camera::get_offset() const { return impl->get_offset(); }
-void Camera::add_shake(double intense) { return impl->add_shake(intense); }
-void Camera::update(double dt) { return impl->update(dt); }
+void Camera::add_shake(real intense) { return impl->add_shake(intense); }
+void Camera::update(const Delta_time dt) { return impl->update(dt); }

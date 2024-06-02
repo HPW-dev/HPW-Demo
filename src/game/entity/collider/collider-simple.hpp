@@ -11,5 +11,5 @@ class Collider_simple final: public Collider {
 public:
   Collider_simple() = default;
   ~Collider_simple() = default;
-  void operator()(CN<Entitys> entities, double dt) override;
+  void operator()(CN<Entitys> entities, Delta_time dt) override;
 }; // Collider_simple

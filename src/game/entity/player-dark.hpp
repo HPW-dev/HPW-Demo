@@ -10,13 +10,13 @@ class Anim;
 // Стартовый самолёт игрока
 class Player_dark final: public Player {
   nocopy(Player_dark);
-  void check_input(double dt);
-  void shoot(double dt);
+  void check_input(const Delta_time dt);
+  void shoot(const Delta_time dt);
   void energy_regen();
   void blink_contour() const; // мерцание контура
   void draw_stars(Image& dst) const; // звёздочки на окошках игрока
-  void default_shoot(double dt);
-  void move(double dt);
+  void default_shoot(const Delta_time dt);
+  void move(const Delta_time dt);
 
 public:
   // Загрузчик для игрока
@@ -41,7 +41,7 @@ public:
   Player_dark();
   ~Player_dark() = default;
   void draw(Image& dst, const Vec offset) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 }; // Player_dark
 
 class Player_dark::Loader final: public Entity_loader {

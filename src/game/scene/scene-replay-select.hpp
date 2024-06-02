@@ -10,6 +10,6 @@ class Scene_replay_select final: public Scene {
 public:
   Scene_replay_select();
   ~Scene_replay_select();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

@@ -3,22 +3,22 @@
 #include "util/macro.hpp"
 #include "util/math/random.hpp"
 
-void Timer::set_timer(double new_timer) {
+void Timer::set_timer(const Delta_time new_timer) {
   assert(new_timer >= 0);
   assert(new_timer < 100'000);
   m_timer_max = m_timer = new_timer;
 }
 
-Timer::Timer(double new_timer, unsigned new_loop_limit)
+Timer::Timer(const Delta_time new_timer, const uint new_loop_limit)
 : m_loop_limit (new_loop_limit)
 {
   assert(m_loop_limit > 0);
   set_timer(new_timer);
 }
 
-double Timer::ratio() const { return m_timer / m_timer_max; }
+Delta_time Timer::ratio() const { return m_timer / m_timer_max; }
 
-unsigned Timer::update(double dt) {
+unsigned Timer::update(const Delta_time dt) {
   assert(m_timer_max >= 0);
   if (m_timer_max == 0)
     return 1;

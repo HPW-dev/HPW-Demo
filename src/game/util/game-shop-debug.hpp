@@ -1,6 +1,7 @@
 #pragma once
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
+#include "util/math/num-types.hpp"
 
 class Image;
 
@@ -15,6 +16,6 @@ public:
   ~Shop_debug();
   void draw(Image& dst) const;
   // @return false - выбор в меню сделан, его можно отключить
-  bool update(const double dt);
+  bool update(const Delta_time dt);
 }; // Shop_debug
 

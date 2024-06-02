@@ -23,7 +23,7 @@ public:
     Vec{50, 50} );
   }
   ~Nested_scene() = default;
-  void update(double dt) override { menu->update(dt); }
+  void update(const Delta_time dt) override { menu->update(dt); }
   void draw(Image& dst) const override { menu->draw(dst); }
 }; // Nested_scene
 
@@ -42,7 +42,7 @@ public:
     Vec{30, 30} );
   }
   ~Test_scene() = default;
-  void update(double dt) override { menu->update(dt); }
+  void update(const Delta_time dt) override { menu->update(dt); }
   void draw(Image& dst) const override { menu->draw(dst); }
 }; // Test_scene
 
@@ -59,5 +59,5 @@ void Menu_test::init(int argc, char *argv[]) {
 
 Menu_test::~Menu_test() {}
 
-void Menu_test::update(double dt) { hpw::scene_mgr->update(dt); }
+void Menu_test::update(const Delta_time dt) { hpw::scene_mgr->update(dt); }
 void Menu_test::draw() const { hpw::scene_mgr->draw(*graphic::canvas); }

@@ -11,6 +11,6 @@ class Level_debug_bullets final: public Level {
 public:
   Level_debug_bullets();
   ~Level_debug_bullets();
-  void update(const Vec vel, double dt) override;
+  void update(const Vec vel, Delta_time dt) override;
   void draw(Image& dst) const override;
 }; // Level_debug_bullets

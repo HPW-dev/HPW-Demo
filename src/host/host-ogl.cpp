@@ -118,7 +118,7 @@ void Host_ogl::ogl_post_init() {
 
 void Host_ogl::init_screen_poly() {
   // квадрат из треугольников
-  Vector<float> vertices{
+  Vector<GLfloat> vertices{
     -1,  1, 0, 0,
     -1, -1, 0, 1,
      1,  1, 1, 0,
@@ -126,14 +126,14 @@ void Host_ogl::init_screen_poly() {
   };
   glGenBuffers(1, &vbo_);
   glBindBuffer(GL_ARRAY_BUFFER, vbo_);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(float) * vertices.size(),
+  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(),
     vertices.data(), GL_STATIC_DRAW);
 
   // Vertex layout
   glGenVertexArrays(1, &vao_);
   glBindVertexArray(vao_);
   glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float) * 4, {});
+  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, {});
 
   glBindVertexArray(0); // unbind vao_
   glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind vbo_

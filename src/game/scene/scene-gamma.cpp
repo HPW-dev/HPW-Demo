@@ -43,7 +43,7 @@ struct Scene_gamma::Impl {
     hpw::init_palette_from_archive(palette_bak);
   }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr->back();
     m_menu->update(dt);
@@ -78,5 +78,5 @@ struct Scene_gamma::Impl {
 
 Scene_gamma::Scene_gamma(): impl {new_unique<Impl>()} {}
 Scene_gamma::~Scene_gamma() {}
-void Scene_gamma::update(double dt) { impl->update(dt); }
+void Scene_gamma::update(const Delta_time dt) { impl->update(dt); }
 void Scene_gamma::draw(Image& dst) const { impl->draw(dst); }

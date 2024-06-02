@@ -12,6 +12,6 @@ class Scene_debug final: public Scene {
 
 public:
   Scene_debug();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

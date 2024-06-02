@@ -10,6 +10,6 @@ class Scene_gamma final: public Scene {
 public:
   Scene_gamma();
   ~Scene_gamma();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

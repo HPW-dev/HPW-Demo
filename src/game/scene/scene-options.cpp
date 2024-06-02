@@ -16,7 +16,7 @@ Scene_options::Scene_options() {
   init_menu();
 }
 
-void Scene_options::update(double dt) {
+void Scene_options::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back();
   menu->update(dt);

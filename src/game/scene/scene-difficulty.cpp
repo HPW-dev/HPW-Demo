@@ -23,7 +23,7 @@ Scene_difficulty::Scene_difficulty() {
   init_menu();
 }
 
-void Scene_difficulty::update(double dt) {
+void Scene_difficulty::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back();
   menu->update(dt);

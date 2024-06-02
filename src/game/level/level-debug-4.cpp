@@ -30,7 +30,7 @@ struct Level_debug_4::Impl {
       7, 1, graphic::canvas->X, graphic::canvas->Y));
   }
 
-  inline void update(const Vec vel, double dt) {
+  inline void update(const Vec vel, Delta_time dt) {
     cauto player = hpw::entity_mgr->get_player();
     return_if( !player);
   }
@@ -49,7 +49,7 @@ struct Level_debug_4::Impl {
 
 Level_debug_4::Level_debug_4(): impl {new_unique<Impl>()} {}
 Level_debug_4::~Level_debug_4() {}
-void Level_debug_4::update(const Vec vel, double dt) {
+void Level_debug_4::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   impl->update(vel, dt);
 }

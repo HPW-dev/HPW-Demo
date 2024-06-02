@@ -21,19 +21,19 @@ class Illaen final: public Proto_enemy {
     State state {State::fade_in};
   } m_info {};
 
-  void fade_in(double dt);
-  void attack(double dt);
-  void fade_out(double dt);
-  void teleport(double dt);
-  void update_magnet(double dt);
-  void make_particles(double dt);
+  void fade_in(const Delta_time dt);
+  void attack(const Delta_time dt);
+  void fade_out(const Delta_time dt);
+  void teleport(const Delta_time dt);
+  void update_magnet(const Delta_time dt);
+  void make_particles(const Delta_time dt);
 
 public:
   class Loader;
   Illaen();
   ~Illaen() = default;
   void draw(Image& dst, const Vec offset) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 }; // Illaen
 
 // Загрузчик

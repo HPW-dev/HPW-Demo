@@ -2,7 +2,7 @@
 #include "scene-manager.hpp"
 #include "scene.hpp"
 
-bool Scene_mgr::update(double dt) {
+bool Scene_mgr::update(const Delta_time dt) {
   status = {}; // флаги сбрасываются каждый апдейт
   lazy_scene_update();
 

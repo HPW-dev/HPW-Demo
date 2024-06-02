@@ -5,8 +5,8 @@
 #include "color-blend.hpp"
 #include "game/core/graphic.hpp"
 
-inline double get_state(const Pal8 src, int optional, double speed) {
-  double state = src.to_real() + graphic::effect_state * speed;
+inline Delta_time get_state(const Pal8 src, int optional, const Delta_time speed) {
+  Delta_time state = src.to_real() + graphic::effect_state * speed;
   return state + optional * 0.137;
 }
 

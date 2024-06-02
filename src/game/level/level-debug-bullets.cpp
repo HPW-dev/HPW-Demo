@@ -17,7 +17,7 @@ struct Level_debug_bullets::Impl {
       7, 1, graphic::canvas->X, graphic::canvas->Y));
   }
 
-  inline void update(const Vec vel, double dt) {
+  inline void update(const Vec vel, Delta_time dt) {
     cfor(_, shoot_timer.update(dt)) {
       auto a = hpw::entity_mgr->make({}, "bullet.placeholder.1", Vec(300, -30));
       auto b = hpw::entity_mgr->make({}, "bullet.placeholder.1", Vec(-30, 300));
@@ -43,7 +43,7 @@ struct Level_debug_bullets::Impl {
 
 Level_debug_bullets::Level_debug_bullets(): impl {new_unique<Impl>()} {}
 Level_debug_bullets::~Level_debug_bullets() {}
-void Level_debug_bullets::update(const Vec vel, double dt) {
+void Level_debug_bullets::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   impl->update(vel, dt);
 }

@@ -32,9 +32,9 @@
 
 struct Entity_mgr::Impl {
   // за пределами этого расстояние пули за экраном умирают в шмап-моде
-  constx double shmup_bound_for_bullet = 34;
+  constx real shmup_bound_for_bullet = 34;
   // за пределами этого расстояние объект за экраном умирает в шмап-моде
-  constx double shmup_bound = 250;
+  constx real shmup_bound = 250;
 
   Entitys entities {}; // массив всех игровых объектов
   Shared<Collider> collision_resolver {}; // обработчик столкновений
@@ -74,7 +74,7 @@ struct Entity_mgr::Impl {
         entity->draw(dst, offset);
   }
 
-  inline void update(const double dt) {
+  inline void update(const Delta_time dt) {
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
@@ -120,7 +120,7 @@ struct Entity_mgr::Impl {
     hitbox_pool.release();
   }
 
-  inline void update_entitys(double dt) {
+  inline void update_entitys(const Delta_time dt) {
     assert(hpw::time_scale > 0);
 
     for (nauto entity: entities) {
@@ -299,7 +299,7 @@ struct Entity_mgr::Impl {
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>()} {}
 Entity_mgr::~Entity_mgr() { impl->clear(); }
 void Entity_mgr::draw(Image& dst, const Vec offset) const { impl->draw(dst, offset); }
-void Entity_mgr::update(const double dt) { impl->update(dt); }
+void Entity_mgr::update(const Delta_time dt) { impl->update(dt); }
 void Entity_mgr::clear() { impl->clear(); }
 void Entity_mgr::set_collider(CN<Shared<Collider>> new_collider) { impl->set_collider(new_collider); }
 void Entity_mgr::register_types() { impl->register_types(); }

@@ -62,7 +62,7 @@ void Graphic_test::init() {
   graphic::font = new_shared<Unifont>(font_mem, 16, false);
 } // init
 
-void Graphic_test::update(double dt) {
+void Graphic_test::update(const Delta_time dt) {
   tmr += dt;
   // опрос клавы
   if (is_pressed_once(hpw::keycode::escape))

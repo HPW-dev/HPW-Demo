@@ -22,7 +22,7 @@ Level_mgr::Level_mgr(CN<Makers> _makers)
   iflog(makers.empty(), "Генераторы уровней не заданы\n");
 }
 
-void Level_mgr::update(const Vec vel, double dt) {
+void Level_mgr::update(const Vec vel, Delta_time dt) {
   if (level) {
     level->update(vel, dt);
     if (level->m_complete)

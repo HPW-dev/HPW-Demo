@@ -6,7 +6,7 @@ class Editor final: public Host_imgui {
   nocopy(Editor);
 
 protected:
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw() override;
   void imgui_exec() override;
   void init() override;

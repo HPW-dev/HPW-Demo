@@ -10,7 +10,7 @@ public:
   ~Cosmic_waiter() = default;
 
   void draw(Image& dst, const Vec offset) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 
   // Загрузчик
   class Loader final: public Proto_enemy::Loader {

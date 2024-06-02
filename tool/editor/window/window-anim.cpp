@@ -38,7 +38,7 @@ void Anim_wnd::imgui_exec() {
   draw_frame_num();
 } // imgui_exec
 
-void Anim_wnd::update(double dt) {
+void Anim_wnd::update(const Delta_time dt) {
   editor::entity->status.stop_anim = editor::is_pause;
 }
 

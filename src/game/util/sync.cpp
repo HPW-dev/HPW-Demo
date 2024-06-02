@@ -10,10 +10,10 @@ static bool m_disable_frame_limit {false};
 static bool m_fast_forward {false}; // ускорение игры
 static int m_target_fps = 360;
 static int m_target_vsync_fps = 60;
-static double m_target_frame_time = 1.0 / m_target_fps;
-static double m_target_vsync_frame_time = m_target_frame_time;
-static double m_bad_fps = 60 * 0.9; // значение, ниже которго включается оптимизация
-static double m_draw_time_autoopt_limit = 1.0 / (60 * 0.9); // лимит рендер тайма, для автооптимизации
+static Delta_time m_target_frame_time = 1.0 / m_target_fps;
+static Delta_time m_target_vsync_frame_time = m_target_frame_time;
+static Delta_time m_bad_fps = 60 * 0.9; // значение, ниже которго включается оптимизация
+static Delta_time m_draw_time_autoopt_limit = 1.0 / (60 * 0.9); // лимит рендер тайма, для автооптимизации
 
 namespace graphic {
 
@@ -95,25 +95,25 @@ void set_target_vsync_fps(int val) {
   set_target_vsync_frame_time(1.0 / val);
 }
 
-void set_target_frame_time(double val) {
+void set_target_frame_time(const Delta_time val) {
   assert(val > 0);
   assert(val <= 10);
   m_target_frame_time = val;
 }
 
-void set_target_vsync_frame_time(double val) {
+void set_target_vsync_frame_time(const Delta_time val) {
   assert(val > 0);
   assert(val < 10);
   m_target_vsync_frame_time = val;
 }
 
-void set_bad_fps(double val) {
+void set_bad_fps(const Delta_time val) {
   assert(val >= 0);
   m_bad_fps = val;
   set_draw_time_autoopt_limit(1.0 / get_bad_fps());
 }
 
-void set_draw_time_autoopt_limit(double val) {
+void set_draw_time_autoopt_limit(const Delta_time val) {
   assert(val >= 0);
   assert(val < 10);
   m_draw_time_autoopt_limit = val;
@@ -138,9 +138,9 @@ bool get_disable_frame_limit() { return m_disable_frame_limit; }
 bool get_fast_forward() { return m_fast_forward; }
 int get_target_fps() { return m_target_fps; }
 int get_target_vsync_fps() { return m_target_vsync_fps; }
-double get_target_frame_time() { return m_target_frame_time; }
-double get_target_vsync_frame_time() { return m_target_vsync_frame_time; }
-double get_bad_fps() { return m_bad_fps; }
-double get_draw_time_autoopt_limit() { return m_draw_time_autoopt_limit; }
+Delta_time get_target_frame_time() { return m_target_frame_time; }
+Delta_time get_target_vsync_frame_time() { return m_target_vsync_frame_time; }
+Delta_time get_bad_fps() { return m_bad_fps; }
+Delta_time get_draw_time_autoopt_limit() { return m_draw_time_autoopt_limit; }
 
 } // graphic ns

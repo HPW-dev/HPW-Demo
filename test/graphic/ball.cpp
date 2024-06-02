@@ -18,7 +18,7 @@ void Ball::random_init() {
   dir.y = (rndb() & 1) ? -1 : 1;
 }
 
-void Ball::move(double dt) {
+void Ball::move(const Delta_time dt) {
   pos.x += dir.x * speed * dt;
   if (pos.x < 0) {
     dir.x *= -1;

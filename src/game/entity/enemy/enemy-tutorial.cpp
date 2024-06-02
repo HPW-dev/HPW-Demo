@@ -15,7 +15,7 @@
 
 Enemy_tutorial::Enemy_tutorial(): Proto_enemy(GET_SELF_TYPE) {}
 
-void Enemy_tutorial::update(double dt) {
+void Enemy_tutorial::update(const Delta_time dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
   Proto_enemy::update(dt);
 } // update

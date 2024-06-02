@@ -15,6 +15,6 @@ public:
 
   explicit Ball(real speed_=0, const Pal8 color_=Pal8::red);
   void random_init();
-  void move(double dt);
+  void move(const Delta_time dt);
   void draw(Image& dst) const;
 };

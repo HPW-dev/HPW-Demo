@@ -7,6 +7,6 @@ class Level_1 final: public Level {
 public:
   Level_1() = default;
   ~Level_1() = default;
-  void update(const Vec vel, double dt);
+  void update(const Vec vel, Delta_time dt);
   void draw(Image& dst) const;
 }; // Level_1

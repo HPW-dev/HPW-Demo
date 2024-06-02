@@ -1,7 +1,7 @@
 #include <utility>
 #include "layer-simple.hpp"
 
-void Layer_simple::update(const Vec vel, double dt)
+void Layer_simple::update(const Vec vel, Delta_time dt)
   { pos += vel * motion_ratio * dt; }
 
 void Layer_simple::draw(Image& dst, int optional) const {

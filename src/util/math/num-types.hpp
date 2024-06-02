@@ -3,6 +3,7 @@
 
 using ldouble = long double;
 using real = float;
+using Delta_time = double;
 using uint = unsigned;
 using byte = std::uint8_t;
 using i64_t = std::int64_t;

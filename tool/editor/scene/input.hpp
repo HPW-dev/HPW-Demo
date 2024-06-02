@@ -15,6 +15,6 @@ class Input_scene: public Editor_scene_base {
 
 public:
   Input_scene(CN<Str> new_title, CN<callback_t> new_callback);
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void imgui_exec() override;
 }; // Input_scene

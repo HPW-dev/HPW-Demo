@@ -9,12 +9,12 @@ Particle::Particle()
 , lifetime {}
 {}
 
-void Particle::update(double dt) {
+void Particle::update(const Delta_time dt) {
   Entity::update(dt);
   lifetime_update(dt);
 }
 
-void Particle::lifetime_update(double dt) {
+void Particle::lifetime_update(const Delta_time dt) {
   // уменьшить время жизни, если уже на нуле - умереть
   if (lifetime > 0) {
     lifetime -= dt;
@@ -24,7 +24,7 @@ void Particle::lifetime_update(double dt) {
   }
 }
 
-void Particle::set_lifetime(double new_lifetime, bool enable_flag) {
+void Particle::set_lifetime(Delta_time new_lifetime, bool enable_flag) {
   assert(new_lifetime > 0);
   assert(new_lifetime < 9999);
   lifetime = new_lifetime;

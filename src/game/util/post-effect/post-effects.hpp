@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include "util/mem-types.hpp"
+#include "util/math/num-types.hpp"
 
 class Image;
 
@@ -15,7 +16,7 @@ public:
   public:
     Effect() = default;
     ~Effect() = default;
-    inline virtual bool update(double dt) { return true; }
+    inline virtual bool update(const Delta_time dt) { return true; }
     inline virtual void draw(Image& dst) const {}
   };
 
@@ -23,6 +24,6 @@ public:
   ~Effect_mgr();
   void move_to_front(Shared<Effect>&& effect); // вставить эффект первым
   void move_to_back(Shared<Effect>&& effect); // вставить эффект последним
-  void update(double dt);
+  void update(const Delta_time dt);
   void draw(Image& dst) const;
 };

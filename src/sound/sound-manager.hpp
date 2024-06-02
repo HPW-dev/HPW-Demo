@@ -56,7 +56,7 @@ public:
   // настроить скорость источника звука
   virtual void set_velocity(const Audio_id sound_id, const Vec3 new_vel) = 0;
   // сменить тон звука
-  virtual void set_pitch(const Audio_id sound_id, const float pitch) = 0;
+  virtual void set_pitch(const Audio_id sound_id, const real pitch) = 0;
   // проверить что трек запущет
   virtual bool is_playing(const Audio_id sound_id) const = 0;
   // загрузить звук
@@ -64,9 +64,9 @@ public:
   // загрузить звук через перемещение
   virtual void move_audio(CN<Str> sound_name, Audio&& sound) = 0;
   // громкость всей системы
-  virtual void set_master_gain(const float gain) = 0;
+  virtual void set_master_gain(const real gain) = 0;
   // изменить влияние вектора скорости на эффект Допплера
-  virtual void set_doppler_factor(const float doppler_factor) = 0;
+  virtual void set_doppler_factor(const real doppler_factor) = 0;
   // выключить определённый звук
   virtual void disable(const Audio_id sound_id) = 0;
   // найти загруженный звук по имени
@@ -94,12 +94,12 @@ public:
   void set_amplify(const Audio_id sound_id, const real amplify) override;
   void set_position(const Audio_id sound_id, const Vec3 new_pos) override;
   void set_velocity(const Audio_id sound_id, const Vec3 new_vel) override;
-  void set_pitch(const Audio_id sound_id, const float pitch) override;
+  void set_pitch(const Audio_id sound_id, const real pitch) override;
   bool is_playing(const Audio_id sound_id) const override;
   void add_audio(CN<Str> sound_name, CN<Audio> sound) override;
   void move_audio(CN<Str> sound_name, Audio&& sound) override;
-  void set_master_gain(const float gain) override;
-  void set_doppler_factor(const float doppler_factor) override;
+  void set_master_gain(const real gain) override;
+  void set_doppler_factor(const real doppler_factor) override;
   void disable(const Audio_id sound_id) override;
   CN<Audio> find_audio(CN<Str> sound_name) const override;
   void shutup();
@@ -123,12 +123,12 @@ public:
   inline void set_amplify(const Audio_id sound_id, const real amplify) override {}
   inline void set_position(const Audio_id sound_id, const Vec3 new_pos) override {}
   inline void set_velocity(const Audio_id sound_id, const Vec3 new_vel) override {}
-  inline void set_pitch(const Audio_id sound_id, const float pitch) override {}
+  inline void set_pitch(const Audio_id sound_id, const real pitch) override {}
   inline bool is_playing(const Audio_id sound_id) const override { return false; }
   inline void add_audio(CN<Str> sound_name, CN<Audio> sound) override {}
   inline void move_audio(CN<Str> sound_name, Audio&& sound) override {}
-  inline void set_master_gain(const float gain) override {}
-  inline void set_doppler_factor(const float doppler_factor) override {}
+  inline void set_master_gain(const real gain) override {}
+  inline void set_doppler_factor(const real doppler_factor) override {}
   inline void disable(const Audio_id sound_id) override {}
   CN<Audio> find_audio(CN<Str> sound_name) const override;
   inline void shutup() {}

@@ -20,24 +20,24 @@ public:
 protected:
   int wnd_x {}, wnd_y {}; // позиция окна на рабочем столе
   GLFWwindow* window {};
-  double second_timer {}; // для высчитывания фпс
+  Delta_time second_timer {}; // для высчитывания фпс
   uint fps {};
   uint ups {};
   uint upf {};
   uint ips {};
-  double frame_time {};
-  double update_time {};
-  double start_update_time {}; // нужен для интерполяции движения
+  Delta_time frame_time {};
+  Delta_time update_time {};
+  Delta_time start_update_time {}; // нужен для интерполяции движения
   bool frame_drawn {false}; // для плавного апдейта игры
 
-  void game_set_dt(double gameloop_time);
-  void game_set_fps_info(double gameloop_time);
-  void game_frame(double dt);
-  void game_update(double dt);
+  void game_set_dt(const Delta_time gameloop_time);
+  void game_set_fps_info(const Delta_time gameloop_time);
+  void game_frame(const Delta_time dt);
+  void game_update(const Delta_time dt);
   bool is_ran() const;
   void calc_lerp_alpha();
   void calc_upf();
-  void set_update_time(double dt); // контроль плавности апдейта
+  void set_update_time(const Delta_time dt); // контроль плавности апдейта
   void apply_render_delay();
   void apply_update_delay();
 
@@ -47,9 +47,9 @@ protected:
   void set_gamma(const double gamma) override;
   virtual void init_window();
   void init_commands();
-  virtual void update(double dt);
+  virtual void update(const Delta_time dt);
   virtual void init();
-  double get_time() const override;
+  Delta_time get_time() const override;
   // определить какой кадр надо скипать
   void check_frame_skip();
   void frame_wait();

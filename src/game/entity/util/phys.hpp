@@ -42,5 +42,5 @@ public:
   void set_rot_fc( CN<decltype(m_rotate_force)> val); // set rotation m_force
   void set_invert_rotation( CN<decltype(m_invert_rotation)> val);
 
-  void update(double dt);
+  void update(const Delta_time dt);
 }; // Phys

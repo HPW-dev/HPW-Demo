@@ -42,7 +42,7 @@ Scene_main_menu::Scene_main_menu() {
   init_bg();
 }
 
-void Scene_main_menu::update(double dt) {
+void Scene_main_menu::update(const Delta_time dt) {
 #ifdef DEBUG
   if (is_pressed_once(hpw::keycode::escape))
     hpw::scene_mgr->back();
@@ -213,8 +213,8 @@ void bg_copy_3(Image& dst, const int state) {
     rnd_fast(-3, 3)
   };
   pos += Vec(
-    std::cos(scast<double>(state) * 0.01) * 3.0,
-    std::sin(scast<double>(state) * 0.01) * 3.0
+    std::cos(scast<real>(state) * 0.01) * 3.0,
+    std::sin(scast<real>(state) * 0.01) * 3.0
   );
   return_if(pos.is_zero());
   static Image buffer(dst.X, dst.Y);
@@ -226,8 +226,8 @@ void bg_copy_3(Image& dst, const int state) {
 void bg_copy_4(Image& dst, const int state) {
   cauto speed = rndr_fast(0, 4);
   const Vec pos(
-    std::cos(scast<double>(state) * 0.01) * speed,
-    std::sin(scast<double>(state) * 0.01) * speed
+    std::cos(scast<real>(state) * 0.01) * speed,
+    std::sin(scast<real>(state) * 0.01) * speed
   );
   return_if(pos.is_zero());
   static Image buffer(dst.X, dst.Y);

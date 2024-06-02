@@ -42,7 +42,7 @@ class Graphic_test final: public Host_glfw {
   void overdraw(Image& dst) const; // рисует по углам вне пределах канваса
   void draw_fps(Image& dst) const;
   void init() override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
 
 public:
   explicit Graphic_test(int argc, char *argv[]);

@@ -11,7 +11,7 @@
 #include "graphic/util/convert.hpp"
 #include "graphic/image/color.hpp"
 
-static Vector<float> m_ogl_palette {};
+static Vector<GLfloat> m_ogl_palette {};
 
 void set_target_ups(int new_ups) {
   assert(new_ups > 0);
@@ -19,7 +19,7 @@ void set_target_ups(int new_ups) {
   hpw::target_update_time = 1.0 / hpw::target_ups;
 }
 
-Vector<float> load_ogl_palette(CN<Str> fname) {
+Vector<GLfloat> load_ogl_palette(CN<Str> fname) {
   // загрузка png
   int x, y;
   int comp; // сколько цветовых каналов
@@ -31,7 +31,7 @@ Vector<float> load_ogl_palette(CN<Str> fname) {
   iferror(x < 256, "ширина картинки должна быть не меньше 256");
 
   // rgb -> palette array
-  Vector<float> ogl_pal;
+  Vector<GLfloat> ogl_pal;
   int rgb_index = 0;
   for (int i = 0; i < x * y; ++i) {
     constexpr auto mul = (1.0 / 255.0);

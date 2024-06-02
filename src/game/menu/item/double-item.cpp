@@ -5,7 +5,7 @@
 #include "util/str-util.hpp"
 
 Menu_double_item::Menu_double_item(CN<utf32> new_name, Get_value _get_value,
-Set_value _set_value, double _speed_step, CN<utf32> desc)
+Set_value _set_value, const Delta_time _speed_step, CN<utf32> desc)
 : name(new_name)
 , m_desc{desc}
 , get_value_f(_get_value)

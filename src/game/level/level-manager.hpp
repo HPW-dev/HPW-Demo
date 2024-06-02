@@ -24,7 +24,7 @@ public:
   // завершить текущий уровень
   void finalize_level();
   // @param vel смещение фона уровня (внутри dt на него не влияет)
-  void update(const Vec vel, double dt);
+  void update(const Vec vel, Delta_time dt);
   // отрисовка нижнего слоя уровня
   void draw(Image& dst) const;
   // отрисовка вехрнего слоя уровня

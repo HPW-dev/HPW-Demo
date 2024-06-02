@@ -63,7 +63,7 @@ void Phys::set_vel(const Vec val) {
   set_deg(deg);
 }
 
-void Phys::update(double dt) {
+void Phys::update(const Delta_time dt) {
   cauto fdt = dt;
   m_old_pos = get_pos();
 

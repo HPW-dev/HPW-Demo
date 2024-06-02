@@ -212,7 +212,7 @@ std::size_t X, std::size_t Y)
   0, max_depth, entity_limit) }
 {}
 
-void Collider_qtree::operator()(CN<Entitys> entities, double dt) {
+void Collider_qtree::operator()(CN<Entitys> entities, Delta_time dt) {
   auto filtered_entitys = update_qtree(entities);
   update_pairs(filtered_entitys);
 

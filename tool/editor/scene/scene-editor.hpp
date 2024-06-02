@@ -12,7 +12,7 @@ class Editor_scene: public Editor_scene_base {
 public:
   Editor_scene();
   ~Editor_scene() = default;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
   void imgui_exec() override;
 }; // Editor_scene

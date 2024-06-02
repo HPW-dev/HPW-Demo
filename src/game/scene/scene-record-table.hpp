@@ -12,6 +12,6 @@ class Scene_record_table final: public Scene {
 
 public:
   Scene_record_table();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

@@ -64,7 +64,7 @@ void Root_wnd::draw(Image& dst) const {
     draw_frames(editor::entity, dst, {15, 15});
 } // draw
 
-void Root_wnd::update(double dt) { 
+void Root_wnd::update(const Delta_time dt) { 
   if (editor::is_reset) {
     init_root_wnd();
     editor::is_reset = false;

@@ -70,7 +70,7 @@ void draw_entity_mem_map(Image& dst, const Vec pos) {
   utf32 txt;
   cauto allocated = hpw::entity_mgr->get_entity_pool().allocated();
   txt += U"Allocated: " + n2s<utf32>(allocated) + U" Byte ("
-   + n2s<utf32>(scast<double>(allocated) / (1024 * 1024), 2) + U" Mb)\n";
+   + n2s<utf32>(scast<real>(allocated) / (1024 * 1024), 2) + U" Mb)\n";
    txt += U"Lived: " + n2s<utf32>(lived) + U" / " + n2s<utf32>(entities.size()) + U"\n";
 
   const Vec txt_offset(10, window.size.y - 42);

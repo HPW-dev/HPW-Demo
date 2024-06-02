@@ -445,7 +445,7 @@ blend_pf find_blend_f(CN<Str> name) {
   return {};
 } // insert_blured
 
-void apply_contrast(Image& dst, double contrast) {
+void apply_contrast(Image& dst, real contrast) {
   assert(contrast >= 0);
 
   for (nauto pix: dst) {

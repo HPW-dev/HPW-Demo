@@ -13,7 +13,7 @@ struct Cutscene_1::Impl {
 
   }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr->back();
   }
@@ -26,5 +26,5 @@ struct Cutscene_1::Impl {
 
 Cutscene_1::Cutscene_1(): impl{new_unique<Impl>()} {}
 Cutscene_1::~Cutscene_1() {}
-void Cutscene_1::update(double dt) { impl->update(dt); }
+void Cutscene_1::update(const Delta_time dt) { impl->update(dt); }
 void Cutscene_1::draw(Image& dst) const { impl->draw(dst); }

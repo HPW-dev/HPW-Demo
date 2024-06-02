@@ -26,7 +26,7 @@ void Illaen::draw(Image& dst, const Vec offset) const {
   Proto_enemy::draw(dst, offset);
 }
 
-void Illaen::update(double dt) {
+void Illaen::update(const Delta_time dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
   Proto_enemy::update(dt);
   
@@ -39,27 +39,27 @@ void Illaen::update(double dt) {
   }
 } // update
 
-void Illaen::fade_in(double dt) {
+void Illaen::fade_in(const Delta_time dt) {
   // TODO
 }
 
-void Illaen::attack(double dt) {
+void Illaen::attack(const Delta_time dt) {
   // TODO
 }
 
-void Illaen::fade_out(double dt) {
+void Illaen::fade_out(const Delta_time dt) {
   // TODO
 }
 
-void Illaen::teleport(double dt) {
+void Illaen::teleport(const Delta_time dt) {
   // TODO
 }
 
-void Illaen::update_magnet(double dt) {
+void Illaen::update_magnet(const Delta_time dt) {
   // TODO
 }
 
-void Illaen::make_particles(double dt) {
+void Illaen::make_particles(const Delta_time dt) {
   // TODO
 }
 

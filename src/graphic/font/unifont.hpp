@@ -14,7 +14,7 @@ class Sprite;
 class Unifont final: public hpw::Font {
   bool mono_ {};
   mutable std::map<char32_t, Shared<Glyph>> glyph_table {}; // кэш символов
-  float scale_ {};
+  real scale_ {};
   Shared<stbtt_fontinfo> info_ {};
   Bytes font_file_mem_ {};
 

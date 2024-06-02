@@ -67,7 +67,7 @@ void Entity::draw(Image& dst, const Vec offset) const {
   debug_draw(dst, offset);
 } // draw
 
-void Entity::update(double dt) {
+void Entity::update(const Delta_time dt) {
   if (!status.disable_motion)
     move_it(dt);
     
@@ -88,7 +88,7 @@ void Entity::set_master(Master_p new_master) {
   master = new_master;
 }
 
-void Entity::move_it(double dt) {
+void Entity::move_it(const Delta_time dt) {
   phys.update(dt);
 }
 

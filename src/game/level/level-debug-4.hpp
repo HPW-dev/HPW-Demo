@@ -11,7 +11,7 @@ class Level_debug_4 final: public Level {
 public:
   Level_debug_4();
   ~Level_debug_4();
-  void update(const Vec vel, double dt) override;
+  void update(const Vec vel, Delta_time dt) override;
   void draw(Image& dst) const override;
   Str level_name() const override;
 }; // Level_debug_4

@@ -25,7 +25,7 @@ Scene_debug::Scene_debug() {
   init_menu();
 }
 
-void Scene_debug::update(double dt) {
+void Scene_debug::update(const Delta_time dt) {
   // выйти из дебага по ESC или по той же кнопке
   if (is_pressed_once(hpw::keycode::escape) || is_pressed_once(hpw::keycode::debug))
     hpw::scene_mgr->back();

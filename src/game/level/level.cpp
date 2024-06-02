@@ -24,7 +24,7 @@ struct Level::Impl {
   explicit Impl(Level* _master): master {_master} {}
   ~Impl() = default;
 
-  inline void update(const Vec vel, double dt) {
+  inline void update(const Vec vel, Delta_time dt) {
     #ifdef CLD_DEBUG
     if (cld_debug_timer.update(dt))
       print_collision_info();
@@ -46,7 +46,7 @@ struct Level::Impl {
     #endif
   }
 
-  inline void on_player_death(const double dt) {
+  inline void on_player_death(const Delta_time dt) {
     return_if (!master->on_player_death_action);
 
     // перезапуск уровня, если игрок умер
@@ -57,8 +57,8 @@ struct Level::Impl {
   }
 }; // Impl
 
-void Level::update(const Vec vel, double dt) { impl->update(vel, dt); }
-void Level::on_player_death(const double dt) { impl->on_player_death(dt); }
+void Level::update(const Vec vel, Delta_time dt) { impl->update(vel, dt); }
+void Level::on_player_death(const Delta_time dt) { impl->on_player_death(dt); }
 Level::~Level() {}
 
 Level::Level(): impl {new_unique<Impl>(this)} {

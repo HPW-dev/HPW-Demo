@@ -25,7 +25,7 @@ struct Scene_replay_select::Impl {
     init_menu();
   }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr->back();
     menu->update(dt);
@@ -121,5 +121,5 @@ struct Scene_replay_select::Impl {
 
 Scene_replay_select::Scene_replay_select(): impl {new_unique<Impl>()} {}
 Scene_replay_select::~Scene_replay_select() {}
-void Scene_replay_select::update(double dt) { impl->update(dt); }
+void Scene_replay_select::update(const Delta_time dt) { impl->update(dt); }
 void Scene_replay_select::draw(Image& dst) const { impl->draw(dst); }

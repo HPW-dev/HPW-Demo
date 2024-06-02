@@ -3,7 +3,8 @@
 #include "util/macro.hpp"
 #include "game/entity/entity.hpp"
 
-Spwan_and_wait_for_death::Spwan_and_wait_for_death(spawn_pf&& spawn_f, double timeout)
+Spwan_and_wait_for_death::Spwan_and_wait_for_death(
+spawn_pf&& spawn_f, const Delta_time timeout)
 : m_spawn_f {std::move(spawn_f)}
 , m_timeout(timeout)
 {
@@ -11,7 +12,7 @@ Spwan_and_wait_for_death::Spwan_and_wait_for_death(spawn_pf&& spawn_f, double ti
   assert(timeout > 0);
 }
 
-bool Spwan_and_wait_for_death::operator()(double dt) {
+bool Spwan_and_wait_for_death::operator()(Delta_time dt) {
   // при первом вызове наспавнить противников и получить на них ссылки
   if (m_once_call) {
     m_death_list = m_spawn_f();

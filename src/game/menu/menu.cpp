@@ -66,7 +66,7 @@ Menu::Menu(CN<Menu_items> items)
 , m_items(items)
 { iflog(m_items.empty(), "m_items empty\n"); }
 
-void Menu::update(double dt) {
+void Menu::update(const Delta_time dt) {
   return_if(m_items.empty());
   m_sticking->update();
 

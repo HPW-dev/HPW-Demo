@@ -57,7 +57,7 @@ struct Ability_power_shoot::Impl {
     test_config();
   }
 
-  inline void update(Player& player, const double dt) {
+  inline void update(Player& player, const Delta_time dt) {
     if (is_pressed(hpw::keycode::shoot) && player.energy >= m_energy_needed) {
       player.sub_en(m_price);
       make_bullets(player);
@@ -209,7 +209,7 @@ struct Ability_power_shoot::Impl {
       m_delay.randomize_stable();
     }
 
-    inline void operator()(Entity& entity, double dt) {
+    inline void operator()(Entity& entity, Delta_time dt) {
       cfor (_, m_delay.update(dt)) {
         auto it = hpw::entity_mgr->make(&entity, m_master->m_small_bullet,
           entity.phys.get_pos());
@@ -255,7 +255,7 @@ Ability_power_shoot::Ability_power_shoot(CN<Player> player)
   : Ability {typeid(Ability_power_shoot).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_power_shoot::~Ability_power_shoot() {}
-void Ability_power_shoot::update(Player& player, const double dt) { impl->update(player, dt); }
+void Ability_power_shoot::update(Player& player, const Delta_time dt) { impl->update(player, dt); }
 void Ability_power_shoot::power_up() { impl->power_up(); }
 utf32 Ability_power_shoot::name() const { return impl->name(); }
 utf32 Ability_power_shoot::desc() const { return impl->desc(); }

@@ -9,7 +9,7 @@ Editor_scene::Editor_scene()
 : root(new_shared<Root_wnd>())
 {}
 
-void Editor_scene::update(double dt) {
+void Editor_scene::update(const Delta_time dt) {
   root->update(dt);
 }
 

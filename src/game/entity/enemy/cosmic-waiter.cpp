@@ -14,7 +14,7 @@ void Cosmic_waiter::draw(Image& dst, const Vec offset) const {
   Proto_enemy::draw(dst, offset);
 }
 
-void Cosmic_waiter::update(double dt) {
+void Cosmic_waiter::update(const Delta_time dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
   Proto_enemy::update(dt);
 } // update

@@ -75,7 +75,7 @@ Level_debug_1::Level_debug_1() {
   }
 } // c-tor
 
-void Level_debug_1::update(const Vec vel, double dt) {
+void Level_debug_1::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   
   for (nauto obj: objs) {

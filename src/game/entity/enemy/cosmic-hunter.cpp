@@ -17,7 +17,7 @@ void Cosmic_hunter::draw(Image& dst, const Vec offset) const {
   Proto_enemy::draw(dst, offset);
 }
 
-void Cosmic_hunter::update(double dt) {
+void Cosmic_hunter::update(const Delta_time dt) {
   assert(hpw::shmup_mode); // вне шмап-мода этот класс не юзать
   cauto player = hpw::entity_mgr->get_player();
   return_if( !player);

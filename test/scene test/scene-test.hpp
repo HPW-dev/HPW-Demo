@@ -9,6 +9,6 @@ public:
   Scene_test() = default;
   ~Scene_test() = default;
   void init(int argc, char *argv[]) override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw() const override;
 }; // Scene_test

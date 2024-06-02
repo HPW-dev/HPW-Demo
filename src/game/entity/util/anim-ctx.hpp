@@ -37,7 +37,7 @@ public:
   Anim_ctx();
   Anim_ctx(CN<decltype(anim)> new_anim);
   ~Anim_ctx() = default;
-  void update(double dt, Entity &entity);
+  void update(const Delta_time dt, Entity &entity);
   void draw(Image& dst, CN<Entity> entity, const Vec offset);
   void set_cur_frame(std::size_t num);
   void set_last_frame();

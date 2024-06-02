@@ -16,7 +16,7 @@ struct Advanced_text_menu::Impl {
   Rect m_items_rect {}; // область для отрисовки пунктов меню
   Rect m_desc_rect {}; // область для отрисовки описания пунктов
   constx Pal8 m_bound_color {Pal8::white}; // цвет рамок
-  constx double ITEMS_DESC_RATIO {1.0 / 3.5}; // соотношение области пунктов и описания
+  constx real ITEMS_DESC_RATIO {1.0 / 3.5}; // соотношение области пунктов и описания
   constx real SCROLL_SPEED {8.0}; // скорость прокрутки текста в меню
   real m_items_h_offset {}; // для плавной прокрутки по тексту
 
@@ -52,7 +52,7 @@ struct Advanced_text_menu::Impl {
     draw_decription(dst);
   }
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     m_items_h_offset = update_items_h_offset(dt);
   }
 
@@ -100,7 +100,7 @@ struct Advanced_text_menu::Impl {
   }
   
   // скроллинг по тексту пунктов
-  inline real update_items_h_offset(double dt) {
+  inline real update_items_h_offset(const Delta_time dt) {
     cauto item_h = (graphic::font->h() + 2);
     const real items_h = item_h * m_base->get_items().size();
     const real menu_h = m_items_rect.size.y;
@@ -125,7 +125,7 @@ const Rect rect)
 
 void Advanced_text_menu::draw(Image& dst) const { impl->draw(dst); }
 
-void Advanced_text_menu::update(double dt) {
+void Advanced_text_menu::update(const Delta_time dt) {
   Menu::update(dt);
   impl->update(dt);
 }

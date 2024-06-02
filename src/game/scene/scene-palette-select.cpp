@@ -56,7 +56,7 @@ struct Scene_palette_select::Impl {
     }
   } // impl
 
-  inline void update(double dt) {
+  inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr->back();
     menu->update(dt);
@@ -135,5 +135,5 @@ struct Scene_palette_select::Impl {
 
 Scene_palette_select::Scene_palette_select(): impl {new_unique<Impl>()} {}
 Scene_palette_select::~Scene_palette_select() {}
-void Scene_palette_select::update(double dt) { impl->update(dt); }
+void Scene_palette_select::update(const Delta_time dt) { impl->update(dt); }
 void Scene_palette_select::draw(Image& dst) const { impl->draw(dst); }

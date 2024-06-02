@@ -22,7 +22,7 @@ struct Ability_invise::Impl {
 
   inline explicit Impl(CN<Player> player) {}
 
-  inline void update(Player& player, const double dt) {
+  inline void update(Player& player, const Delta_time dt) {
     switch (m_power) {
       // чёрный экран
       default:
@@ -106,7 +106,7 @@ Ability_invise::Ability_invise(CN<Player> player)
   : Ability {typeid(Ability_invise).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_invise::~Ability_invise() {}
-void Ability_invise::update(Player& player, const double dt) { impl->update(player, dt); }
+void Ability_invise::update(Player& player, const Delta_time dt) { impl->update(player, dt); }
 void Ability_invise::power_up() { impl->power_up(); }
 utf32 Ability_invise::name() const { return impl->name(); }
 utf32 Ability_invise::desc() const { return impl->desc(); }

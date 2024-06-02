@@ -20,6 +20,6 @@ public:
   Root_wnd();
   ~Root_wnd() = default;
   void draw(Image& dst) const override;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void imgui_exec() override;
 };

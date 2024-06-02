@@ -22,7 +22,7 @@ public:
   Ability* move_ability(Shared<Ability>&& ability);
   // проверить что есть способность нужного типа
   Ability* find_ability(const std::size_t type_id) const;
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst, const Vec offset) const override;
   void kill() override;
   virtual void sub_en(hp_t val);

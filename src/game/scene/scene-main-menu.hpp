@@ -17,7 +17,7 @@ class Scene_main_menu final: public Scene {
   Vec logo_pos {};
   Strs m_logo_names {}; // пути к картинкам для лого
   std::once_flag m_logo_load_once {};
-  double bg_state {}; // чтобы менять узор на фоне
+  Delta_time bg_state {}; // чтобы менять узор на фоне
   // функция рисующая фон
   std::function<void (Image& dst, const int bg_state)> bg_pattern_pf {};
   Timer change_bg_timer {12}; // таймер сменяющий фон
@@ -34,6 +34,6 @@ class Scene_main_menu final: public Scene {
   
 public:
   Scene_main_menu();
-  void update(double dt) override;
+  void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

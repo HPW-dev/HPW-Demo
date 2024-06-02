@@ -12,8 +12,8 @@ struct Scatter {
   };
 
   Vec pos {};
-  double range {}; // дальность действия эффекта
-  double power {}; // сила откидывания (pps)
+  real range {}; // дальность действия эффекта
+  real power {}; // сила откидывания (pps)
   Type type {};
   bool disable_shake {false}; // выключает тряску
 
