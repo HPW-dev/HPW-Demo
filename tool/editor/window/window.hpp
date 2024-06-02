@@ -1,4 +1,5 @@
 #pragma once
+#include "util/math/num-types.hpp"
 
 class Image;
 

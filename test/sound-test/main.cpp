@@ -33,7 +33,7 @@ void test_sine() {
   std::cout << "\nAudio test: playing sine wave" << std::endl;
 
   // добавить звук в базу
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   auto sine_wave = make_sin_wave(0.007);
   sound_mgr.move_audio("sine wave", std::move(sine_wave));
 
@@ -51,7 +51,7 @@ void test_motion_sine() {
   std::cout << "\nAudio test: motion sine wave" << std::endl;
 
   // добавить звук в базу
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   auto sine_wave = make_sin_wave(0.02);
   sound_mgr.move_audio("sine wave", std::move(sine_wave));
   sound_mgr.set_listener_pos(Vec3(0, 0, 1));
@@ -89,7 +89,7 @@ void test_noise() {
     sample = rand() % 256;
   
   // добавить звук в базу
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   sound_mgr.move_audio("noise", std::move(noise));
 
   // проиграть звук
@@ -108,7 +108,7 @@ void test_mix() {
   auto track_2 = make_sin_wave(0.01);
   auto track_3 = make_sin_wave(0.05);
   auto track_4 = make_sin_wave(0.1);
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   sound_mgr.move_audio("sin 1", std::move(track_1));
   sound_mgr.move_audio("sin 2", std::move(track_2));
   sound_mgr.move_audio("sin 3", std::move(track_3));
@@ -129,7 +129,7 @@ void test_play_after() {
   auto track_1 = make_sin_wave(0.007);
   auto track_2 = make_sin_wave(0.014);
 
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   sound_mgr.move_audio("sin 1", std::move(track_1));
   sound_mgr.move_audio("sin 2", std::move(track_2));
 
@@ -149,7 +149,7 @@ void test_overplay() {
   std::cout << "\nAudio test: overplay" << std::endl;
 
   // добавить звук в базу
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   auto sine_wave = make_sin_wave(2.0);
   sound_mgr.move_audio("sin", std::move(sine_wave));
   sound_mgr.set_listener_pos(Vec3(0, 0, 1));
@@ -168,7 +168,7 @@ void test_overplay() {
 void test_file(CN<Str> fname) {
   std::cout << "\nAudio test: loading file \"" << fname << "\"" << std::endl;
   cauto track = load_audio(fname);
-  Sound_mgr sound_mgr;
+  Sound_mgr_oal sound_mgr;
   sound_mgr.add_audio("music test", track);
   cauto audio_id = sound_mgr.play("music test");
   iferror(audio_id == BAD_AUDIO, "Bad audio ID");

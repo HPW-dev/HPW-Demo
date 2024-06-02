@@ -1,7 +1,3 @@
-#include <GLFW/glfw3.h>
-#include <imgui.h>
-#include <imgui_impl_glfw.h>
-#include <imgui_impl_opengl3.h>
 #include <cassert>
 #include "editor.hpp"
 #include "host-imgui.hpp"
@@ -12,6 +8,10 @@
 #include "util/file/file.hpp"
 #include "util/file/archive.hpp"
 #include "game/util/game-util.hpp"
+#include <GLFW/glfw3.h>
+#include <imgui.h>
+#include <imgui_impl_glfw.h>
+#include <imgui_impl_opengl3.h>
 
 Host_imgui::Host_imgui(int argc_, char *argv_[])
 : Host_glfw(argc_, argv_) {
