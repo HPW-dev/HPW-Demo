@@ -79,7 +79,7 @@ void Level_mgr::finalize_level() {
     level->m_complete = true;
 }
 
-Vec Level_mgr::get_player_pos_from_prev_level() const
+Vec Level_mgr::player_prev_lvl_pos() const
   { return m_player_pos_from_prev_level; }
 
 void Level_mgr::set_player_pos_from_prev_level(const Vec pos)

@@ -30,7 +30,7 @@ public:
   // отрисовка вехрнего слоя уровня
   void draw_upper_layer(Image& dst) const;
   // позиция игрока с предыдущего уровня
-  Vec get_player_pos_from_prev_level() const;
+  Vec player_prev_lvl_pos() const;
   void set_player_pos_from_prev_level(const Vec pos);
   // узнать название уровня
   Str level_name() const;

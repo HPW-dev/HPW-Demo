@@ -88,7 +88,7 @@ struct Level_space::Impl {
   }
 
   inline void make_player() {
-    auto player_pos_from_prev_level = hpw::level_mgr->get_player_pos_from_prev_level();
+    auto player_pos_from_prev_level = hpw::level_mgr->player_prev_lvl_pos();
 
     cauto pos = player_pos_from_prev_level.not_zero()
       ? player_pos_from_prev_level
