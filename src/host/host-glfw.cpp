@@ -481,7 +481,6 @@ void Host_glfw::frame_wait() {
 void Host_glfw::init_icon() {
   GLFWimage icon;
   icon.pixels = nullptr;
-  using namespace std::string_literals;
 
   try {
     // случайно выбрать ярлык окна
