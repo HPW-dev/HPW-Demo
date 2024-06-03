@@ -53,4 +53,5 @@ protected:
   // определить какой кадр надо скипать
   void check_frame_skip();
   void frame_wait();
+  void init_icon();
 }; // Host_glfw

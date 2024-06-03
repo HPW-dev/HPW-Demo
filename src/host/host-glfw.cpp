@@ -4,6 +4,7 @@
 #include <mutex>
 #include <algorithm>
 #include <ctime>
+#include "stb/stb_image.h"
 #include "host-util.hpp"
 #include "host-glfw.hpp"
 #include "host-glfw-keymap.hpp"
@@ -11,8 +12,11 @@
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/math/mat.hpp"
+#include "util/math/random.hpp"
+#include "util/file/archive.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
+#include "game/util/game-archive.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
@@ -290,6 +294,8 @@ void Host_glfw::init_window() {
   glfwSetCharCallback(window, &utf32_text_input_cb);
   // режим показа курсора мыши
   _set_mouse_cursour_mode(graphic::show_mouse_cursour);
+  // поставить иконку окну
+  init_icon();
 } // init_window
 
 Delta_time Host_glfw::get_time() const { return glfwGetTime(); }
@@ -471,3 +477,35 @@ void Host_glfw::frame_wait() {
   delay = std::clamp<Delta_time>(delay, 0, delay_timeout);
   glfwWaitEventsTimeout(delay);
 }
+
+void Host_glfw::init_icon() {
+  GLFWimage icon;
+  icon.pixels = nullptr;
+  using namespace std::string_literals;
+
+  try {
+    // случайно выбрать ярлык окна
+    sconst Strs icon_names {
+      "resource/image/icon/16x16/Alles.png",
+      "resource/image/icon/16x16/boo.png",
+      "resource/image/icon/16x16/pattern 1.png",
+      "resource/image/icon/16x16/pattern 2.png",
+      "resource/image/icon/16x16/pattern 3.png",
+    };
+    cauto icon_name = icon_names.at(rndu_fast(icon_names.size() - 1));
+    cauto icon_file = hpw::archive->get_file(icon_name);
+    int channels;
+    icon.pixels = stbi_load_from_memory (
+      rcast<CP<stbi_uc>>(icon_file.data.data()), icon_file.data.size(),
+      &icon.width, &icon.height, &channels, 4
+    );
+    iferror(channels != 4, "цветовых каналов в изображении " << n2s(channels) << ", а нужно 4");
+    glfwSetWindowIcon(window, 1, &icon); 
+  } catch (CN<hpw::Error> err) {
+    hpw_log("не удалось установить иконку для окна.\nОшибка: " << err.what() << "\n");
+  } catch (...) {
+    hpw_log("не удалось установить иконку для окна. Неизвестная ошибка\n");
+  }
+
+  stbi_image_free(icon.pixels);
+} // init_icon
