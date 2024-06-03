@@ -245,7 +245,7 @@ void Host_glfw::init_window() {
       : GL_FALSE
   ); 
   detailed_log("make window\n");
-  window = glfwCreateWindow(w_, h_, "H.P.W", nullptr, nullptr);
+  window = glfwCreateWindow(w_, h_, window_name().c_str(), nullptr, nullptr);
   iferror(!window, "bad init GLFW window");
   glfwSetWindowPos(window, wnd_x, wnd_y);
   glfwMakeContextCurrent(window);
@@ -486,11 +486,11 @@ void Host_glfw::init_icon() {
   try {
     // случайно выбрать ярлык окна
     sconst Strs icon_names {
-      "resource/image/icon/16x16/Alles.png",
-      "resource/image/icon/16x16/boo.png",
-      "resource/image/icon/16x16/pattern 1.png",
-      "resource/image/icon/16x16/pattern 2.png",
-      "resource/image/icon/16x16/pattern 3.png",
+      "resource/image/icon/128x128/Alles.png",
+      "resource/image/icon/128x128/boo.png",
+      "resource/image/icon/128x128/pattern 1.png",
+      "resource/image/icon/128x128/pattern 2.png",
+      "resource/image/icon/128x128/pattern 3.png",
     };
     cauto icon_name = icon_names.at(rndu_fast(icon_names.size() - 1));
     cauto icon_file = hpw::archive->get_file(icon_name);
@@ -509,3 +509,39 @@ void Host_glfw::init_icon() {
 
   stbi_image_free(icon.pixels);
 } // init_icon
+
+Str Host_glfw::window_name() const {
+#if 0
+  return "H.P.W";
+#else
+  sconst Strs window_names {
+    "HPW",
+    "H.P.W",
+    "h p w",
+    "ХПВ",
+    "}{ |\"| \\/\\/",
+    "АшПэВэ",
+    "ХеПеВе",
+    "Игра про бумеранг",
+    "Game about UFO",
+    "|-| |' \\/\\/",
+    "hhhpppwww",
+    "HHH PPP WWW",
+    ">",
+    "V",
+    "^",
+    "<",
+    "\\/",
+    "/\\",
+    "> > > > > > >",
+    ":.",
+    ".:",
+    "стрелялка",
+    "ИГРYШKA",
+    "Окно с игрой",
+    "26.83.130.14",
+    "int main() { return main(); }",
+  }; // window_names
+  return window_names.at(rndu_fast(window_names.size() - 1));
+#endif
+} // window_name

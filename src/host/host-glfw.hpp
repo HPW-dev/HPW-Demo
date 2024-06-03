@@ -54,4 +54,5 @@ protected:
   void check_frame_skip();
   void frame_wait();
   void init_icon();
+  Str window_name() const;
 }; // Host_glfw
