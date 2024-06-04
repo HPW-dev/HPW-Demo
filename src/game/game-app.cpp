@@ -21,7 +21,6 @@
 #include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/game-archive.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"

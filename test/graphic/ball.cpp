@@ -1,7 +1,6 @@
 #include "ball.hpp"
 #include "game/core/canvas.hpp"
 #include "util/math/random.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 

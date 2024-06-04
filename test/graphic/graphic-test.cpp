@@ -3,7 +3,6 @@
 #include "graphic-test.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"
 #include "graphic/font/unifont.hpp"
 #include "util/error.hpp"

@@ -55,7 +55,6 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/collider/collider.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"

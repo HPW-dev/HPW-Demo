@@ -7,7 +7,6 @@
 #include "game/core/common.hpp"
 #include "game/util/config.hpp"
 #include "game/util/keybits.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"
 #include "util/math/random.hpp"
 #include "util/str-util.hpp"
@@ -17,7 +16,7 @@
 #include "util/file/yaml.hpp"
 
 Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {
-  graphic::canvas = new_shared<Image>(graphic::width, graphic::height);
+  graphic::canvas = new_unique<Image>(graphic::width, graphic::height);
   iferror(graphic::canvas->size == 0 || graphic::canvas->size >= 1024*720,
     "canvas bad size: " + n2s(graphic::canvas->size));
   w_ = graphic::canvas->X;
