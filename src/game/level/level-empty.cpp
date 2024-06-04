@@ -28,8 +28,21 @@ struct Level_empty::Impl {
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
       7, 1, graphic::canvas->X, graphic::canvas->Y));
     
-    Message message;
-    hpw::message_mgr->move(std::move(message));
+    // TODO del
+    hpw::message_mgr->move(Message {
+      .text = U"test message 1"
+    });
+    hpw::message_mgr->move(Message {
+      .text = U"test message 2"
+    });
+    hpw::message_mgr->move(Message {
+      .text = U"blink fast",
+      .blink_delay = 2
+    });
+    hpw::message_mgr->move(Message {
+      .text = U"blink slow",
+      .blink_delay = 10
+    });
   }
 
   inline void update(const Vec vel, Delta_time dt) {
