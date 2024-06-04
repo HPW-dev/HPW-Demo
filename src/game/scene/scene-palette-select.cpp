@@ -2,7 +2,6 @@
 #include "scene-palette-select.hpp"
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"

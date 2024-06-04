@@ -6,7 +6,6 @@
 #include "scene-pge.hpp"
 #include "scene-manager.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "game/core/common.hpp"

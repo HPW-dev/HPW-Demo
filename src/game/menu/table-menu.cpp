@@ -4,7 +4,6 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "graphic/font/font.hpp"
 #include "item/table-row-item.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/game-util.hpp"

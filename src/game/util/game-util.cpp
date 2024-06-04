@@ -36,7 +36,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/sprite/sprite-io.hpp"
 #include "graphic/sprite/sprite.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"

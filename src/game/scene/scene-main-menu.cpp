@@ -26,7 +26,6 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/blur.hpp"
 #include "graphic/util/resize.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/effect/bg-pattern.hpp"
 #include "util/math/random.hpp"
 #include "util/str-util.hpp"

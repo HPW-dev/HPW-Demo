@@ -3,7 +3,6 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "graphic/font/font.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/player-dark.hpp"
 #include "game/entity/entity-manager.hpp"
