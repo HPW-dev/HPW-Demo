@@ -4,8 +4,9 @@
 #include "message.hpp"
 #include "util/log.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/core.hpp"
+#include "game/util/sync.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
 
 struct Message_mgr::Impl {
@@ -18,15 +19,21 @@ struct Message_mgr::Impl {
   }
 
   inline void update(const Delta_time dt) {
+    assert(dt == hpw::target_update_time);
+
     // обновить таймер жизни сообщений и удалить истёкшие
     std::erase_if(m_messages, [dt](nauto msg) {
       bool ret = msg.lifetime <= 0;
       msg.lifetime -= dt;
+      if (ret && msg.on_end_action)
+        msg.on_end_action();
       return ret;
     });
   }
 
   inline void draw(Image& dst) const {
+    return_if(!m_visible);
+
     // определить какую область занимают все сообщения
     utf32 concated;
     for (cnauto msg: m_messages) {
@@ -35,16 +42,29 @@ struct Message_mgr::Impl {
         concated += msg.text_gen();
       concated += U'\n';
     }
-    const Vec pos = center_point(
+    Vec pos = center_point(
       {dst.X, dst.Y}, graphic::font->text_size(concated));
 
-    graphic::font->draw(dst, pos, concated, &blend_diff);
-  }
+    // нарисовать каждую строку со своими настройками
+    for (cnauto msg: m_messages) {
+      auto text = msg.text;
+      if (msg.text_gen)
+        text += msg.text_gen();
+      // определить мигать текстом, или нет
+      bool draw_text = msg.blink_delay == 0;
+      if (msg.blink_delay > 1)
+        draw_text = (graphic::frame_count % msg.blink_delay) >= (msg.blink_delay / 2);
+      if (draw_text)
+        graphic::font->draw(dst, pos, text, msg.bf, graphic::frame_count);
+      pos.y += graphic::font->text_height(text);
+    }
+  } // draw
 
   // проверяет сообщение на валидность
   inline void test_message(CN<Message> msg) const {
     assert(!msg.text.empty() || msg.text_gen);
-    assert(msg.blink_delay >= 0 && msg.blink_delay < 1000u);
+    assert(msg.blink_delay < 1000u);
+    assert(msg.blink_delay == 0 || msg.blink_delay > 1);
     assert(msg.lifetime > 0);
     iflog(msg.color != Pal8::white, "Message_mgr: need impl for other colors\n");
   }
