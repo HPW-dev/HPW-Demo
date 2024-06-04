@@ -23,6 +23,7 @@
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/messages.hpp"
 #include "game/core/huds.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
@@ -70,7 +71,7 @@ void Scene_game::init_levels() {
       //[] { return new_shared<Level_debug_1>(); },
       //[] { return new_shared<Level_debug_2>(); },
       //[] { return new_shared<Level_debug_3>(); },
-      [] { return new_shared<Level_empty>(); },
+      //[] { return new_shared<Level_empty>(); },
       //[] { return new_shared<Level_collision_test>(); },
       #endif
     }); // init level order
@@ -99,6 +100,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   graphic::hud = new_shared<Hud_asci>();
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
+  hpw::message_mgr = new_unique<Message_mgr>();
 } // c-tor
 
 Scene_game::~Scene_game() {
@@ -145,6 +147,7 @@ void Scene_game::update(const Delta_time dt) {
   hpw::entity_mgr->update(dt);
   graphic::camera->update(dt);
   graphic::post_effects->update(dt);
+  hpw::message_mgr->update(dt);
   
   ++hpw::game_updates_safe;
 
@@ -158,6 +161,7 @@ void Scene_game::update(const Delta_time dt) {
 
 void Scene_game::draw(Image& dst) const {
   hpw::level_mgr->draw(dst);
+  hpw::message_mgr->draw(dst);
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
   graphic::post_effects->draw(dst);
