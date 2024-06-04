@@ -13,7 +13,7 @@ public:
   explicit Ability_home(CN<Player> player);
   ~Ability_home();
   void update(Player& player, const Delta_time dt) override;
-  inline void draw(Image& dst, const Vec offset) const override {}
+  void draw(Image& dst, const Vec offset) const override;
   void power_up() override;
   utf32 name() const override;
   utf32 desc() const override;

@@ -8,9 +8,23 @@ struct Ability_home::Impl {
   nocopy(Impl);
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {}
-  inline void update(Player& player, const Delta_time dt) {}
-  inline void power_up() {}
+  inline explicit Impl(CN<Player> player) {
+    // TODO
+  }
+
+  inline void update(Player& player, const Delta_time dt) {
+    // TODO
+  }
+
+  inline void draw(Image& dst, const Vec offset) const {
+    // TODO
+  }
+
+  inline void power_up() {
+    ++m_power;
+    // TODO
+  }
+
   inline utf32 name() const { return get_locale_str("plyaer.ability.home.name"); }
   inline utf32 desc() const {
     switch (m_power) {
@@ -36,3 +50,4 @@ void Ability_home::power_up() { impl->power_up(); }
 utf32 Ability_home::name() const { return impl->name(); }
 utf32 Ability_home::desc() const { return impl->desc(); }
 CP<Sprite> Ability_home::icon() const { return impl->icon(); }
+void Ability_home::draw(Image& dst, const Vec offset) const { impl->draw(dst, offset); }
