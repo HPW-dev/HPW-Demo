@@ -11,7 +11,6 @@
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/messages.hpp"
-#include "game/util/message.hpp"
 #include "game/util/game-util.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
@@ -28,7 +27,9 @@ struct Level_empty::Impl {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
       7, 1, graphic::canvas->X, graphic::canvas->Y));
-    //hpw::message_mgr->
+    
+    Message message;
+    hpw::message_mgr->move(std::move(message));
   }
 
   inline void update(const Vec vel, Delta_time dt) {

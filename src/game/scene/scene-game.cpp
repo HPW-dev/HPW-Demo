@@ -29,7 +29,6 @@
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
-#include "game/util/message.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
 #include "game/util/post-effect/post-effects.hpp"
