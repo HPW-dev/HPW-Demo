@@ -25,6 +25,7 @@ struct Message {
 class Message_mgr {
   struct Impl;
   Unique<Impl> impl {};
+  using Messages = Vector<Message>;
 
 public:
   Message_mgr();
@@ -33,6 +34,8 @@ public:
   void move(Message&& msg);
   void update(const Delta_time dt);
   void draw(Image& dst) const;
+  // получить все сообщения
+  CN<Messages> messages() const;
   // удалить все сообщения
   void clear();
   // управление видимостью сообщений

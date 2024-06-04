@@ -30,16 +30,20 @@ struct Level_empty::Impl {
     
     // TODO del
     hpw::message_mgr->move(Message {
+      .lifetime = 2,
       .text = U"test message 1"
     });
     hpw::message_mgr->move(Message {
+      .lifetime = 4,
       .text = U"test message 2"
     });
     hpw::message_mgr->move(Message {
+      .lifetime = 10,
       .text = U"blink fast",
       .blink_delay = 2
     });
     hpw::message_mgr->move(Message {
+      .lifetime = 10,
       .text = U"blink slow",
       .blink_delay = 10
     });

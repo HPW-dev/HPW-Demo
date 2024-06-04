@@ -8,19 +8,12 @@
 #include "graphic/image/image.hpp"
 
 struct Message_mgr::Impl {
-  struct Message_ctx {
-    Message msg {};
-    Delta_time lifetime {};
-  };
-  Vector<Message_ctx> m_messages {};
+  Messages m_messages {};
   bool m_visible {true};
 
   inline void move(Message&& msg) {
     test_message(msg);
-    m_messages.emplace_back( Message_ctx {
-      .msg = std::move(msg),
-      .lifetime = msg.lifetime
-    } );
+    m_messages.emplace_back( std::move(msg) );
   }
 
   inline void update(const Delta_time dt) {
@@ -34,10 +27,10 @@ struct Message_mgr::Impl {
 
   inline void draw(Image& dst) const {
     utf32 concated;
-    for (cnauto ctx: m_messages) {
-      concated += ctx.msg.text;
-      if (ctx.msg.text_gen)
-        concated += ctx.msg.text_gen();
+    for (cnauto msg: m_messages) {
+      concated += msg.text;
+      if (msg.text_gen)
+        concated += msg.text_gen();
       concated += U'\n';
     }
     graphic::font->draw(dst, {5, 5}, concated, &blend_diff);
@@ -53,6 +46,7 @@ struct Message_mgr::Impl {
 
   inline void clear() { m_messages.clear(); }
   inline void set_visible(const bool enable) { m_visible = enable; }
+  inline CN<Messages> messages() const { return m_messages; }
 }; // Impl
 
 Message_mgr::Message_mgr(): impl{new_unique<Impl>()} {}
@@ -62,3 +56,4 @@ void Message_mgr::update(const Delta_time dt) { impl->update(dt); }
 void Message_mgr::draw(Image& dst) const { impl->draw(dst); }
 void Message_mgr::clear() { impl->clear(); }
 void Message_mgr::set_visible(const bool enable) { impl->set_visible(enable); }
+CN<Message_mgr::Messages> Message_mgr::messages() const { return impl->messages(); }
