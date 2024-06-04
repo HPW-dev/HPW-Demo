@@ -3,7 +3,6 @@
 #include "game/util/keybits.hpp"
 #include "game/core/scenes.hpp"
 #include "game/scene/scene-manager.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
 
 Scene_info::Scene_info() {}

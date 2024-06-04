@@ -1,6 +1,5 @@
 #include "text-menu.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "item/item.hpp"
 #include "game/core/fonts.hpp"
 

@@ -2,7 +2,6 @@
 #include "game/util/keybits.hpp"
 #include "game/core/scenes.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/core/fonts.hpp"
 

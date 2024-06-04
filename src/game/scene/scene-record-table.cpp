@@ -6,7 +6,6 @@
 #include "game/util/score-table.hpp"
 #include "game/util/game-util.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "util/log.hpp"

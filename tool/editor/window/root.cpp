@@ -10,7 +10,6 @@
 #include "window-global.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "graphic/font/font.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/anims.hpp"

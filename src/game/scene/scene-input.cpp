@@ -10,7 +10,6 @@
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 
 Scene_input::Scene_input() {
   init_menu();

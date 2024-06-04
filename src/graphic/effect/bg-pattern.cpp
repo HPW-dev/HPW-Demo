@@ -11,7 +11,6 @@
 #include "graphic/util/resize.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/effect/light.hpp"
-#include "graphic/font/font.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/vec.hpp"

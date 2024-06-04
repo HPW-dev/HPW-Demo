@@ -22,7 +22,6 @@
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/effect/bg-pattern.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
