@@ -1,4 +1,4 @@
-#include "level-debug-4.hpp"
+#include "level-empty.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/timer.hpp"
@@ -21,7 +21,7 @@
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/level/level-manager.hpp"
 
-struct Level_debug_4::Impl {
+struct Level_empty::Impl {
   inline explicit Impl() {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
@@ -45,11 +45,11 @@ struct Level_debug_4::Impl {
   }
 }; // Impl
 
-Level_debug_4::Level_debug_4(): impl {new_unique<Impl>()} {}
-Level_debug_4::~Level_debug_4() {}
-void Level_debug_4::update(const Vec vel, Delta_time dt) {
+Level_empty::Level_empty(): impl {new_unique<Impl>()} {}
+Level_empty::~Level_empty() {}
+void Level_empty::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   impl->update(vel, dt);
 }
-void Level_debug_4::draw(Image& dst) const { impl->draw(dst); }
-Str Level_debug_4::level_name() const { return "Test level 4"; }
+void Level_empty::draw(Image& dst) const { impl->draw(dst); }
+Str Level_empty::level_name() const { return "Test level 4"; }

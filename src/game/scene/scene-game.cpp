@@ -47,7 +47,7 @@
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
 //#include "game/level/level-debug-3.hpp"
-//#include "game/level/level-debug-4.hpp"
+#include "game/level/level-empty.hpp"
 //#include "game/level/level-debug-bullets.hpp"
 #endif
 #include "game/entity/entity-manager.hpp"
@@ -73,7 +73,7 @@ void Scene_game::init_levels() {
       //[] { return new_shared<Level_debug_1>(); },
       //[] { return new_shared<Level_debug_2>(); },
       //[] { return new_shared<Level_debug_3>(); },
-      //[] { return new_shared<Level_debug_4>(); },
+      [] { return new_shared<Level_empty>(); },
       //[] { return new_shared<Level_collision_test>(); },
       #endif
     }); // init level order
