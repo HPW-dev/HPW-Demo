@@ -12,7 +12,6 @@
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
 #include "sound/sound-manager.hpp"
-#include "game/core/shop.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/sounds.hpp"
@@ -34,7 +33,6 @@
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
-#include "game/util/game-shop-debug.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
@@ -135,12 +133,6 @@ void Scene_game::update(const Delta_time dt) {
   else if (hpw::enable_replay)
     replay_save_keys();
 
-  if (hpw::shop) {
-    if (!hpw::shop->update(dt))
-      hpw::shop = {};
-    return;
-  }
-
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
     hpw::scene_mgr->back(); // exit to loading screen
@@ -166,11 +158,6 @@ void Scene_game::update(const Delta_time dt) {
 } // update
 
 void Scene_game::draw(Image& dst) const {
-  if (hpw::shop) {
-    hpw::shop->draw(dst);
-    return;
-  }
-
   hpw::level_mgr->draw(dst);
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
