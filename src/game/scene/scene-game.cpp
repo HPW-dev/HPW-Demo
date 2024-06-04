@@ -162,9 +162,9 @@ void Scene_game::update(const Delta_time dt) {
 
 void Scene_game::draw(Image& dst) const {
   hpw::level_mgr->draw(dst);
+  hpw::message_mgr->draw(dst);
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
-  hpw::message_mgr->draw(dst);
   graphic::post_effects->draw(dst);
   if (graphic::hud)
     graphic::hud->draw(dst);
