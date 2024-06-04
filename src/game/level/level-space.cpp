@@ -2,7 +2,6 @@
 #include "level-space.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
-#include "game/util/game-shop-debug.hpp"
 #include "game/util/post-effect/post-effects.hpp"
 #include "game/util/post-effect/blink-text.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
@@ -10,7 +9,6 @@
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
-#include "game/core/shop.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
 #include "game/level/util/level-tasks.hpp"
@@ -68,8 +66,6 @@ struct Level_space::Impl {
     // TODO locale
     graphic::post_effects->move_to_back (
       new_shared<Blink_text>(6, U"слабая гравитация") );
-    
-    //hpw::shop = new_unique<Shop_debug>(); // TODO это дебажный выбор способностей
   }
 
   inline void update(const Vec vel, Delta_time dt) {

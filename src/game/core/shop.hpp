@@ -1,7 +1,5 @@
 #pragma once
-#include "util/mem-types.hpp"
-
-class Shop_debug;
+#include "game/util/game-shop-debug.hpp"
 
 namespace hpw {
 inline Unique<Shop_debug> shop {};
