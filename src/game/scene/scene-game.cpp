@@ -24,10 +24,12 @@
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/messages.hpp"
 #include "game/core/huds.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/message.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
 #include "game/util/post-effect/post-effects.hpp"
@@ -47,7 +49,7 @@
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
 //#include "game/level/level-debug-3.hpp"
-//#include "game/level/level-debug-4.hpp"
+#include "game/level/level-debug-4.hpp"
 //#include "game/level/level-debug-bullets.hpp"
 #endif
 #include "game/entity/entity-manager.hpp"
@@ -67,14 +69,14 @@ void Scene_game::init_levels() {
     });
   } else {
     hpw::level_mgr = new_shared<Level_mgr>( Level_mgr::Makers{
-      [] { return new_shared<Level_space>(); },
+      //[] { return new_shared<Level_space>(); },
       //[] { return new_shared<Level_1>(); },
       #ifdef DEBUG
       //[] { return new_shared<Level_debug_bullets>(); },
       //[] { return new_shared<Level_debug_1>(); },
       //[] { return new_shared<Level_debug_2>(); },
       //[] { return new_shared<Level_debug_3>(); },
-      //[] { return new_shared<Level_debug_4>(); },
+      [] { return new_shared<Level_debug_4>(); },
       //[] { return new_shared<Level_collision_test>(); },
       #endif
     }); // init level order
@@ -103,6 +105,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   graphic::hud = new_shared<Hud_asci>();
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
+  hpw::message_mgr = new_unique<Message_mgr>();
 } // c-tor
 
 Scene_game::~Scene_game() {
