@@ -4,9 +4,11 @@
 #include "fullscreen-shoot.hpp"
 #include "game/entity/player.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/game-archive.hpp"
 #include "game/core/entities.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/random.hpp"
+#include "util/file/yaml.hpp"
 #include "util/hpw-util.hpp"
 
 struct Ability_fullscreen_shoot::Impl {
@@ -18,10 +20,13 @@ struct Ability_fullscreen_shoot::Impl {
   real m_high_speed_threshold {30_pps};
   // если пуль станет много на экране, то они все уничтожатся
   uint m_max_bullets {1'000};
+  real m_mul_max_bullets {0.6}; // как менять m_max_bullets при паверапе
   bool m_need_clear {}; // true - уничтожить все пули
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {}
+  inline explicit Impl(CN<Player> player) {
+    load_config();
+  }
 
   inline void update(Player& player, const Delta_time dt) {
     uint bullets = 0;
@@ -50,6 +55,7 @@ struct Ability_fullscreen_shoot::Impl {
   inline void power_up() {
     ++m_power;
     m_clone_chance *= m_mul_clone_chance;
+    m_max_bullets *= m_mul_max_bullets;
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
@@ -94,6 +100,27 @@ struct Ability_fullscreen_shoot::Impl {
         entity->kill();
       }
     }
+  }
+
+  inline void load_config() {
+    assert(hpw::archive);
+    cauto config_file = hpw::archive->get_file("config/ability.yml");
+    cauto config = Yaml(config_file);
+    cauto root = config["fullscreen_shoot"];
+    m_clone_chance         = root.get_real("clone_chance");
+    m_mul_clone_chance     = root.get_real("mul_clone_chance");
+    m_split_deg            = root.get_real("split_deg");
+    m_high_speed_threshold = pps( root.get_real("high_speed_threshold") );
+    m_max_bullets          = root.get_int("max_bullets");
+    m_mul_max_bullets      = root.get_real("mul_max_bullets");
+    test_params();
+  }
+
+  inline void test_params() {
+    assert(m_clone_chance >= 0 && m_clone_chance <= 1);
+    assert(m_split_deg >= 0 && m_split_deg <= 360);
+    assert(m_high_speed_threshold >= 0 && m_high_speed_threshold <= 100'000_pps);
+    assert(m_max_bullets >= 100 && m_max_bullets <= 4'000'000);
   }
 }; // Impl
 

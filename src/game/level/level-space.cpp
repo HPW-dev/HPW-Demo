@@ -101,7 +101,6 @@ struct Level_space::Impl {
     //ability = player->move_ability(new_shared<Ability_invise>(*player));
     ability = player->move_ability(new_shared<Ability_power_shoot>(*player));
     ability = player->move_ability(new_shared<Ability_fullscreen_shoot>(*player));
-    ability->power_up();
   }
 
   inline void init_collider() {

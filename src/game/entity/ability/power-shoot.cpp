@@ -95,7 +95,6 @@ struct Ability_power_shoot::Impl {
     cauto config_file = hpw::archive->get_file("config/ability.yml");
     cauto config = Yaml(config_file);
     cauto root = config["power_shoot"];
-    assert(root.check());
 
     assert(player.energy_max);
     m_energy_needed = player.energy_max * (root.get_real("percent_energy_needed") / 100.0);
