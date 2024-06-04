@@ -12,6 +12,7 @@
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
+#include "game/core/anims.hpp"
 #include "game/core/locales.hpp"
 #include "game/core/user.hpp"
 #include "game/core/scenes.hpp"
@@ -37,7 +38,6 @@
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
@@ -85,12 +85,12 @@ void load_resources() {
 } // load_resources
 
 void load_animations() {
-  hpw::anim_mgr = new_shared<Anim_mgr>();
-  Shared<Yaml> anim_yml;
+  hpw::anim_mgr = new_unique<Anim_mgr>();
+  Unique<Yaml> anim_yml;
 #ifdef EDITOR
-  anim_yml = new_shared<Yaml>(hpw::cur_dir + "config/animation.yml");
+  anim_yml = new_unique<Yaml>(hpw::cur_dir + "config/animation.yml");
 #else
-  anim_yml = new_shared<Yaml>(hpw::archive->get_file("config/animation.yml"));
+  anim_yml = new_unique<Yaml>(hpw::archive->get_file("config/animation.yml"));
 #endif
   read_anims(*anim_yml);
 } // load_animations

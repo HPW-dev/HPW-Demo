@@ -14,7 +14,6 @@
 #include "game/core/anims.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/entity-manager.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "util/log.hpp"
 

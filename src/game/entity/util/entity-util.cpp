@@ -3,7 +3,6 @@
 #include "entity-util.hpp"
 #include "phys.hpp"
 #include "anim-ctx.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "game/core/anims.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/player.hpp"

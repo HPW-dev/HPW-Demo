@@ -8,7 +8,6 @@
 #include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
-#include "graphic/image/image.hpp"
 #include "host/command.hpp"
 #include "scene/scene-editor.hpp"
 

@@ -7,7 +7,6 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "graphic/font/unifont.hpp"
-#include "graphic/image/image.hpp"
 #include "util/file/archive.hpp"
 
 // вложенная тестовая сцена
