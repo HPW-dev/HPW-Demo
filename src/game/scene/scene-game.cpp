@@ -173,7 +173,7 @@ void Scene_game::draw(Image& dst) const {
 void Scene_game::init_entitys() {
   // для показа хитбоксов
   hpw::hitbox_layer = new_shared<Image>(graphic::canvas->X, graphic::canvas->Y);
-  hpw::entity_mgr = new_shared<Entity_mgr>();
+  hpw::entity_mgr = new_unique<Entity_mgr>();
 }
 
 void Scene_game::post_draw(Image& dst) const {

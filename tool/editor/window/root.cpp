@@ -31,7 +31,7 @@ void Root_wnd::init_root_wnd() {
   graphic::camera = new_shared<Camera>();
   editor::anim_name = {};
   hpw::hitbox_layer = new_shared<Image>(graphic::canvas->X, graphic::canvas->Y);
-  hpw::entity_mgr = new_shared<Entity_mgr>();
+  hpw::entity_mgr = new_unique<Entity_mgr>();
   hpw::anim_mgr = new_unique<Anim_mgr>();
   load_resources();
   load_animations();
