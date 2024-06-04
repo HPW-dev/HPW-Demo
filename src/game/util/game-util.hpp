@@ -1,6 +1,5 @@
 #pragma once
 #include "game/core/sprites.hpp"
-#include "game/core/anims.hpp"
 #include "game/core/difficulty.hpp"
 #include "util/unicode.hpp"
 #include "util/str.hpp"

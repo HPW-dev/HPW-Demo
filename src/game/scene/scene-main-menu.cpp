@@ -21,7 +21,6 @@
 #include "game/util/version.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"

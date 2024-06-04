@@ -4,7 +4,6 @@
 #include "game/entity/util/phys.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
-#include "graphic/image/image.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/timer.hpp"
 #include "util/hpw-util.hpp"

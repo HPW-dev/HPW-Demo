@@ -1,7 +1,6 @@
 #include <omp.h>
 #include <cmath>
 #include "level-debug-2.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/graphic.hpp"

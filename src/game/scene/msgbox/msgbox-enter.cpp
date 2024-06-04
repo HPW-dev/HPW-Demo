@@ -6,7 +6,6 @@
 #include "game/scene/scene-manager.hpp"
 #include "game/util/keybits.hpp"
 #include "graphic/font/font.hpp"
-#include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/blur.hpp"

@@ -13,7 +13,6 @@
 #include "game/util/game-archive.hpp"
 #include "game/core/palette.hpp"
 #include "graphic/image/color.hpp"
-#include "graphic/image/image.hpp"
 
 // --------- [!] ---------
 // не переносить вверх!

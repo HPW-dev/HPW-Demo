@@ -9,7 +9,6 @@
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/core/debug.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "host/command.hpp"
 #include "util/math/rect.hpp"
 #include "util/mempool.hpp"

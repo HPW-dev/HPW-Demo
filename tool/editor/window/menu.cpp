@@ -15,7 +15,6 @@
 #include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
 #include "graphic/animation/anim-io.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "scene/yn.hpp"
 
 inline void save_all_anims() {

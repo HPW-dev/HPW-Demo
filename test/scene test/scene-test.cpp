@@ -5,7 +5,6 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "graphic/font/unifont.hpp"
-#include "graphic/image/image.hpp"
 #include "util/file/archive.hpp"
 
 void Scene_test::init(int argc, char *argv[]) {
