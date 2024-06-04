@@ -1,5 +1,6 @@
 #include <cassert>
 #include <typeinfo>
+#include <algorithm>
 #include "fullscreen-shoot.hpp"
 #include "game/entity/player.hpp"
 #include "game/util/game-util.hpp"
@@ -14,16 +15,8 @@ struct Ability_fullscreen_shoot::Impl {
   real m_split_deg {17}; // в пределах какого угла будет расщепление пуль
   // если пуля близка к этой скорости, то шанс расщепления выше
   real m_high_speed_threshold {15_pps};
-
   // если пуль станет много на экране, то они все уничтожатся
-  uint m_max_bullets {
-    #ifdef DEBUG
-      600
-    #else
-      2'000
-    #endif
-  };
-
+  uint m_max_bullets {1'200};
   bool m_need_clear {}; // true - уничтожить все пули
   uint m_power {};
 
@@ -38,10 +31,8 @@ struct Ability_fullscreen_shoot::Impl {
       assert(entity);
       cont_if( !(entity->status.live && entity->status.is_bullet) );
       ++bullets; // учесть пулю, которая уже была
-
-      cont_if(rndr() >= m_clone_chance);
-      // чем медленее объект, тем меньше шанс спавна
-      cont_if(check_bullet_speed(*entity));
+      
+      cont_if(check_bullet_chance(*entity));
       clone_bullet(*entity);
       ++bullets; // добавить клонированную пулю
 
@@ -82,9 +73,10 @@ struct Ability_fullscreen_shoot::Impl {
   }
 
   // чем медленнее объект, тем чаще будет выпадать true 
-  inline bool check_bullet_speed(CN<Entity> bullet) const {
-    cauto speed_ratio = bullet.phys.get_speed() / m_high_speed_threshold;
-    return rndr() >= speed_ratio;
+  inline bool check_bullet_chance(CN<Entity> bullet) const {
+    cauto speed_ratio = std::min<real>(
+      bullet.phys.get_speed() / m_high_speed_threshold, 1);
+    return rndr() >= m_clone_chance * speed_ratio;
   }
 
   inline void test_bullet_limit() {
