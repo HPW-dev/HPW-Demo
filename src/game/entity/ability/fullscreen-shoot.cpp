@@ -11,12 +11,13 @@
 
 struct Ability_fullscreen_shoot::Impl {
   nocopy(Impl);
-  real m_clone_chance {0.025}; // вероятность, с которой будет создан клон пули
+  real m_clone_chance {0.05}; // вероятность, с которой будет создан клон пули
+  real m_mul_clone_chance {2.333}; // на сколько усилить к m_clone_chance при паверапе
   real m_split_deg {17}; // в пределах какого угла будет расщепление пуль
   // если пуля близка к этой скорости, то шанс расщепления выше
-  real m_high_speed_threshold {15_pps};
+  real m_high_speed_threshold {30_pps};
   // если пуль станет много на экране, то они все уничтожатся
-  uint m_max_bullets {1'200};
+  uint m_max_bullets {1'000};
   bool m_need_clear {}; // true - уничтожить все пули
   uint m_power {};
 
@@ -46,7 +47,10 @@ struct Ability_fullscreen_shoot::Impl {
     test_bullet_limit();
   } // update
 
-  inline void power_up() { ++m_power; }
+  inline void power_up() {
+    ++m_power;
+    m_clone_chance *= m_mul_clone_chance;
+  }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.invise.name"); }
   inline utf32 desc() const {
