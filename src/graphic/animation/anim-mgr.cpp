@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <exception>
 #include <utility>
-#include "animation-manager.hpp"
+#include "anim-mgr.hpp"
 #include "anim.hpp"
 #include "frame.hpp"
 #include "util/str-util.hpp"

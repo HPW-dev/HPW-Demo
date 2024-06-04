@@ -12,9 +12,9 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/anims.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/debug.hpp"
@@ -34,7 +34,7 @@ void Root_wnd::init_root_wnd() {
   editor::anim_name = {};
   hpw::hitbox_layer = new_shared<Image>(graphic::canvas->X, graphic::canvas->Y);
   hpw::entity_mgr = new_shared<Entity_mgr>();
-  hpw::anim_mgr = new_shared<Anim_mgr>();
+  hpw::anim_mgr = new_unique<Anim_mgr>();
   load_resources();
   load_animations();
   wnds.clear();

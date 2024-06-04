@@ -1,8 +1,6 @@
 #pragma once
-#include "util/mem-types.hpp"
-
-class Anim_mgr;
+#include "graphic/animation/anim-mgr.hpp"
 
 namespace hpw {
-inline Shared<Anim_mgr> anim_mgr {}; // управление анимациями
+inline Unique<Anim_mgr> anim_mgr {}; // управление анимациями
 }

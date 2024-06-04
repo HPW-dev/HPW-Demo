@@ -1,9 +1,9 @@
 #include <cassert>
 #include "anim-info.hpp"
+#include "game/core/anims.hpp"
 #include "game/util/game-util.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"

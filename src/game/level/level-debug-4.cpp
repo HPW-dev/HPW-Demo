@@ -6,7 +6,6 @@
 #include "graphic/font/font.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "graphic/animation/animation-manager.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
