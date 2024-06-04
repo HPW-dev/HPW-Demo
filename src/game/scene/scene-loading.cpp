@@ -5,7 +5,6 @@
 #include "game/core/sprites.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/util/game-util.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"

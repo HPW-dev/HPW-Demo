@@ -10,7 +10,6 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 
 Scene_options::Scene_options() {
   init_menu();

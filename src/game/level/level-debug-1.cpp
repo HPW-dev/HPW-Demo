@@ -1,6 +1,5 @@
 #include "level-debug-1.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"

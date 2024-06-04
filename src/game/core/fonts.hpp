@@ -1,8 +1,7 @@
 #pragma once
+#include "graphic/font/font.hpp"
 #include "util/mem-types.hpp"
 
-namespace hpw { class Font; }
-
 namespace graphic {
-inline Shared<hpw::Font> font; // обычный шрифт игры
+inline Unique<hpw::Font> font; // обычный шрифт игры
 }

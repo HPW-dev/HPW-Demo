@@ -11,7 +11,6 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/scene/scene-options.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/font/font.hpp"
 #include "host/command.hpp"
 
 Scene_game_pause::Scene_game_pause() {

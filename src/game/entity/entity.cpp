@@ -5,7 +5,6 @@
 #include "util/error.hpp"
 #include "graphic/effect/heat-distort.hpp"
 #include "graphic/effect/light.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"

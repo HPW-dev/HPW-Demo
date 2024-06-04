@@ -2,7 +2,6 @@
 #include "blink-text.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/rect.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"

@@ -5,7 +5,6 @@
 #include "util/hpw-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/timer.hpp"
-#include "graphic/font/font.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/canvas.hpp"
