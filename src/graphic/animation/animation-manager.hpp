@@ -1,5 +1,4 @@
 #pragma once
-#include <unordered_map>
 #include "util/str.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
@@ -11,11 +10,12 @@ using Anims = Vector<Shared<Anim>>;
 
 // доступ к анимации
 class Anim_mgr final {
-  std::unordered_map<Str, Shared<Anim>> table {};
+  struct Impl;
+  Unique<Impl> impl {};
 
 public:
-  Anim_mgr() = default;
-  ~Anim_mgr() = default;
+  Anim_mgr();
+  ~Anim_mgr();
   void add_anim(CN<Str> str, CN<Shared<Anim>> new_anim);
   void remove_anim(CN<Str> str);
   // получить анимацию по её имени
@@ -31,6 +31,5 @@ public:
   bool exist(CN<Str> str) const;
   Anims get_anims() const;
   void clear();
-
-  inline std::size_t anim_count() const { return table.size(); }
+  std::size_t anim_count() const;
 }; // Anim_mgr
