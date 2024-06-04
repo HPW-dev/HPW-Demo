@@ -6,6 +6,7 @@
 #include "util/math/num-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/mempool.hpp"
+#include "util/str.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 
@@ -28,6 +29,7 @@ private:
   nocopy(Entity);
   Vector<Update_callback> update_callbacks {}; // внешние колбэки на обработку апдейта
   Vector<Kill_callback> kill_callbacks {}; // внешние колбэки на обработку смерти
+  Str m_name {}; // имя, через которое соспавнили объект
 
   void move_it(const Delta_time dt);
   void draw_pos(Image& dst, const Vec offset) const;
@@ -63,5 +65,6 @@ public:
   inline virtual CP<Hitbox> get_hitbox() const { return {}; }
   // безопасно получить свою анимацию
   CP<Anim> get_anim() const;
-
+  inline CN<Str> name() const { return m_name; }
+  inline void set_name(CN<Str> new_name) { m_name = new_name; }
 }; // Entity

@@ -227,7 +227,10 @@ struct Entity_mgr::Impl {
     try {
       auto entity_loader = entity_loaders.at(name);
       assert(entity_loader);
-      return (*entity_loader)(master, pos);
+      auto ret = (*entity_loader)(master, pos);
+      if (ret)
+        ret->set_name(name);
+      return ret;
     } catch (CN<std::out_of_range> ex) {
       #ifdef ECOMEM
         return load_unknown_entity(master, name, pos);
