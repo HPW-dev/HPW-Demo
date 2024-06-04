@@ -6,6 +6,8 @@
 #include "game/core/fonts.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 
 struct Message_mgr::Impl {
   Messages m_messages {};
@@ -26,6 +28,7 @@ struct Message_mgr::Impl {
   }
 
   inline void draw(Image& dst) const {
+    // определить какую область занимают все сообщения
     utf32 concated;
     for (cnauto msg: m_messages) {
       concated += msg.text;
@@ -33,7 +36,10 @@ struct Message_mgr::Impl {
         concated += msg.text_gen();
       concated += U'\n';
     }
-    graphic::font->draw(dst, {5, 5}, concated, &blend_diff);
+    const Vec pos = center_point(
+      {dst.X, dst.Y}, graphic::font->text_size(concated));
+
+    graphic::font->draw(dst, pos, concated, &blend_diff);
   }
 
   // проверяет сообщение на валидность
