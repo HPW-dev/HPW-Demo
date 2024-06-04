@@ -30,10 +30,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/effect/dither.hpp"
 
-// TODO del
-#include "game/entity/ability/invise.hpp"
-#include "game/entity/ability/power-shoot.hpp"
-
 struct Level_space::Impl {
   constx real layer_speed_scale {0.03333}; // влияет на скорость движния фона по горизонтали
   constx real layer_h_speed {1.25_pps}; // скорость движния фона по вертикали
@@ -99,10 +95,6 @@ struct Level_space::Impl {
     assert(player);
     player->default_force *= 0.004;
     player->focus_force *= 0.02;
-
-    //auto ability = player->move_ability(new_shared<Ability_invise>(*player));
-    auto ability = player->move_ability(new_shared<Ability_power_shoot>(*player));
-    //ability->power_up();
   }
 
   inline void init_collider() {
