@@ -10,7 +10,6 @@
 #include "game/core/core.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
-#include "game/core/messages.hpp"
 #include "game/util/game-util.hpp"
 #include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
@@ -27,46 +26,6 @@ struct Level_empty::Impl {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
       7, 1, graphic::canvas->X, graphic::canvas->Y));
-    
-    // TODO del
-    hpw::message_mgr->move(Message {
-      .lifetime = 2,
-      .text = U"test message 1"
-    });
-    hpw::message_mgr->move(Message {
-      .lifetime = 4,
-      .text = U"test message 2"
-    });
-    hpw::message_mgr->move(Message {
-      .lifetime = 10,
-      .text = U"blink fast",
-      .blink_delay = 2
-    });
-    hpw::message_mgr->move(Message {
-      .lifetime = 10,
-      .text = U"blink slow",
-      .blink_delay = 30
-    });
-    cfor (i, 50)
-      hpw::message_mgr->move(Message {
-        .lifetime = (i+1) / 43.333,
-        .text = U"loop str: " + n2s<utf32>(i),
-      });
-    hpw::message_mgr->move(Message {
-      .lifetime = 13,
-      .text = U"pixel blending: average",
-      .bf = &blend_avr
-    });
-    hpw::message_mgr->move(Message {
-      .lifetime = 13,
-      .text = U"text from callback (Dt): ",
-      .text_gen = []{ return n2s<utf32>(hpw::safe_dt, 15); }
-    });
-    hpw::message_mgr->move(Message {
-      .lifetime = 16,
-      .text = U"wait for log message from callback...",
-      .on_end_action = []{ hpw_log("callback while end is work!\n"); }
-    });
   }
 
   inline void update(const Vec vel, Delta_time dt) {
