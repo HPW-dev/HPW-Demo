@@ -143,7 +143,6 @@ Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute c
 }
 
 Image pixel_upscale_x3(CN<Image> src) {
-// scale 3x algorithm
   Image dst(src.X * 3, src.Y * 3);
   Pal8 P1, P2, P3;
   Pal8 P4, P5, P6;
@@ -174,18 +173,15 @@ Image pixel_upscale_x3(CN<Image> src) {
       P4 = E; P5 = E; P6 = E;
       P7 = E; P8 = E; P9 = E;
     }
-    #pragma omp critical (pixel_upscale_x3_dst)
-    { 
-      dst.fast_set(x * 3 + 0, y * 3 + 0, P1, {});
-      dst.fast_set(x * 3 + 1, y * 3 + 0, P2, {});
-      dst.fast_set(x * 3 + 2, y * 3 + 0, P3, {});
-      dst.fast_set(x * 3 + 0, y * 3 + 1, P4, {});
-      dst.fast_set(x * 3 + 1, y * 3 + 1, P5, {});
-      dst.fast_set(x * 3 + 2, y * 3 + 1, P6, {});
-      dst.fast_set(x * 3 + 0, y * 3 + 2, P7, {});
-      dst.fast_set(x * 3 + 1, y * 3 + 2, P8, {});
-      dst.fast_set(x * 3 + 2, y * 3 + 2, P9, {});
-    }
+    dst.fast_set(x * 3 + 0, y * 3 + 0, P1, {});
+    dst.fast_set(x * 3 + 1, y * 3 + 0, P2, {});
+    dst.fast_set(x * 3 + 2, y * 3 + 0, P3, {});
+    dst.fast_set(x * 3 + 0, y * 3 + 1, P4, {});
+    dst.fast_set(x * 3 + 1, y * 3 + 1, P5, {});
+    dst.fast_set(x * 3 + 2, y * 3 + 1, P6, {});
+    dst.fast_set(x * 3 + 0, y * 3 + 2, P7, {});
+    dst.fast_set(x * 3 + 1, y * 3 + 2, P8, {});
+    dst.fast_set(x * 3 + 2, y * 3 + 2, P9, {});
   }
   return dst;
 } // pixel_upscale_x3
