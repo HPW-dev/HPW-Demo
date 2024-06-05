@@ -175,20 +175,20 @@ inline void sprite_check() {
   hpw_assert(dummy.X() == 3);
   hpw_assert(dummy.Y() == 5);
   // тест размера маски и картинки
-  auto* mask = dummy.get_mask();
-  auto* image = dummy.get_image();
+  cnauto mask = dummy.mask();
+  cnauto image = dummy.image();
   hpw_assert(mask);
-  hpw_assert(mask->X == 3);
-  hpw_assert(mask->Y == 5);
+  hpw_assert(mask.X == 3);
+  hpw_assert(mask.Y == 5);
   hpw_assert(image);
-  hpw_assert(image->X == 3);
-  hpw_assert(image->Y == 5);
+  hpw_assert(image.X == 3);
+  hpw_assert(image.Y == 5);
   // тест вставки. По середине спрайта красный, снизу справа белый
   dummy = Sprite(3, 3);
-  dummy.get_image()->set(1, 1, Pal8::red, {});
-  dummy.get_mask()->set(1, 1, Pal8::mask_visible, {});
-  dummy.get_image()->set(2, 2, Pal8::white, {});
-  dummy.get_mask()->set(2, 2, Pal8::mask_visible, {});
+  dummy.image().set(1, 1, Pal8::red, {});
+  dummy.mask().set(1, 1, Pal8::mask_visible, {});
+  dummy.image().set(2, 2, Pal8::white, {});
+  dummy.mask().set(2, 2, Pal8::mask_visible, {});
   Image for_insert(5, 5, Pal8::gray);
   insert(for_insert, dummy, {1,1});
   hpw_assert(for_insert.get(0,0) == Pal8::gray);
