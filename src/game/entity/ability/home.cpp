@@ -35,7 +35,7 @@ struct Ability_home::Impl {
   inline void power_up() {
     ++m_power;
     error("need impl for other levels");
-    // TODO
+    // TODO либо станем уже и длиннее, либо больше, шире и медленее
   }
 
   inline utf32 name() const { return get_locale_str("plyaer.ability.home.name"); }

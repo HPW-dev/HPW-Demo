@@ -13,10 +13,10 @@ Sprite rotate_and_optimize(CN<Sprite> src, real degree, Vec& offset,
 const Vec rotation_offset, Color_get_pattern cgp, Color_compute ccf) {
   assert(src);
   // выйти, если ничего не поворачивается
-  if (degree == 0)
-    return optimize_size(src, offset);
+  return_if (degree == 0, optimize_size(src, offset));
   // аккуратный поворот пиксель-арта
-  auto scaled = pixel_upscale_x3(src);
+  static Sprite scaled;
+  scaled = pixel_upscale_x3(src);
   offset *= 3; // и смещение тоже апскейлится
   // чтобы повёрнутая картинка уместилась
   real max_size = std::max(scaled.X(), scaled.Y());

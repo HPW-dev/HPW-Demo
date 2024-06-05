@@ -248,8 +248,8 @@ const Pal8 color, Sprite& dst) {
   // нарисовать толстую линию
   constexpr int line_bold = 20; // ширина линии
   for (int i = -line_bold; i < line_bold; i += 3) {
-    draw_line(*dst.get_image(), a + (offset * i), b + (offset * i), color);
-    draw_line(*dst.get_mask(), a + (offset * i), b + (offset * i), Pal8::mask_visible);
+    draw_line(dst.image(), a + (offset * i), b + (offset * i), color);
+    draw_line(dst.mask(), a + (offset * i), b + (offset * i), Pal8::mask_visible);
   }
 }
 
@@ -260,8 +260,8 @@ void bgp_rotated_lines(Image& dst, const int bg_state) {
 
   // нарисовать несколько отрезков в буффере
   Sprite lines(dst.X, dst.Y);
-  lines.get_image()->fill(Pal8::black);
-  lines.get_mask()->fill(Pal8::mask_invisible);
+  lines.image().fill(Pal8::black);
+  lines.mask().fill(Pal8::mask_invisible);
   constexpr uint max_lines = 5;
   #pragma omp parallel for
   cfor (line_id, max_lines) {
@@ -275,7 +275,7 @@ void bgp_rotated_lines(Image& dst, const int bg_state) {
   }
 
   // вставить отрезки с буффера со скроллингом и тенью
-  auto& mask = *lines.get_mask();
+  auto& mask = lines.mask();
   cauto mask_bak = Image(mask);
   cauto shadow_len = 8;
   #pragma omp parallel for simd collapse(2)

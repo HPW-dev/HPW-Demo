@@ -39,14 +39,14 @@ void Scene_loading::update(const Delta_time dt) {
 
 void Scene_loading::draw(Image& dst) const {
   //return_if(used);
-  cauto bg_image = bg->get_image();
+  cnauto bg_image = bg->image();
   assert(bg_image);
-  assert(dst.size == bg_image->size);
+  assert(dst.size == bg_image.size);
 
   drawed = true;
 
   // нарисовать фон
-  insert_fast(dst, *bg_image);
+  insert_fast(dst, bg_image);
   fast_dither_bayer16x16_4bit(dst);
 
   // нарисовать надпись с затенением

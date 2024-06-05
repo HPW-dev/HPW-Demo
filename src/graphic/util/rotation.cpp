@@ -7,6 +7,7 @@
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "util/math/mat.hpp"
+#include "util/log.hpp"
 
 Image mirror_h(CN<Image> src) {
   assert(src);
@@ -29,16 +30,16 @@ Image mirror_v(CN<Image> src) {
 Sprite mirror_h(CN<Sprite> src) {
   assert(src);
   Sprite ret;
-  ret.move_image(std::move( mirror_h(*src.get_image()) ));
-  ret.move_mask(std::move( mirror_h(*src.get_mask()) ));
+  ret.move_image(std::move( mirror_h(src.image()) ));
+  ret.move_mask(std::move( mirror_h(src.mask()) ));
   return ret;
 }
 
 Sprite mirror_v(CN<Sprite> src) {
   assert(src);
   Sprite ret;
-  ret.move_image(std::move( mirror_v(*src.get_image()) ));
-  ret.move_mask(std::move( mirror_v(*src.get_mask()) ));
+  ret.move_image(std::move( mirror_v(src.image()) ));
+  ret.move_mask(std::move( mirror_v(src.mask()) ));
   return ret;
 }
 
@@ -59,9 +60,11 @@ Image rotate_270(CN<Image> src) {
 }
 
 Image rotate_90(CN<Image> src, uint pass) {
-  assert(src);
+  if (!src) {
+    hpw_log("WARNING: rotate_90 src is empty\n");
+    return {};
+  }
 
-  //return_if (pass == 0, src);
   switch (pass % 4) {
     default:
     case 0: return src; break; // 0 deg
@@ -78,9 +81,13 @@ Image rotate_90(CN<Image> src, uint pass) {
 }
 
 Sprite rotate_90(CN<Sprite> src, uint pass) {
+  if (!src) {
+    hpw_log("WARNING: rotate_90 src is empty\n");
+    return {};
+  }
   Sprite dst;
-  dst.move_image(std::move( rotate_90(*src.get_image(), pass) ));
-  dst.move_mask(std::move( rotate_90(*src.get_mask(), pass) ));
+  dst.move_image(std::move( rotate_90(src.image(), pass) ));
+  dst.move_mask(std::move( rotate_90(src.mask(), pass) ));
   return dst;
 }
 
@@ -113,6 +120,10 @@ const Vec offset, real degree) {
 
 void rotate(CN<Sprite> src, Sprite &dst, const Vec center,
 const Vec offset, real degree) {
-  rotate(*src.get_image(), *dst.get_image(), center, offset, degree);
-  rotate(*src.get_mask(), *dst.get_mask(), center, offset, degree);
+  if (!src || !dst) {
+    hpw_log("WARNING: rotate_90 src or dst is empty\n");
+    return;
+  }
+  rotate(src.image(), dst.image(), center, offset, degree);
+  rotate(src.mask(), dst.mask(), center, offset, degree);
 }

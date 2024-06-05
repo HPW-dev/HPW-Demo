@@ -68,7 +68,7 @@ public:
   // fast set without cheks
   template <blend_pf bf = &blend_past>
   void fast_set(int x, int y, const Pal8 col, int optional) {
-    auto &dst_pix {pix[y * X + x]};
+    auto& dst_pix = pix[y * X + x];
     dst_pix = bf(col, dst_pix, optional);
   }
   

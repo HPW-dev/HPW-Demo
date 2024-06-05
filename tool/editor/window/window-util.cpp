@@ -44,8 +44,8 @@ void draw_frames(Pool_ptr(Entity) entity, Image& dst, const Vec pos) {
       }
       if (editor::use_draw_cross && (graphic::frame_count & 0b100))
         draw_cross<&blend_diff>(dst, pos2 - direct.offset, Pal8::white, 3);
-      pos2.x += sprite.lock()->X() + 2;
-      max_frame_y = std::max(sprite.lock()->Y(), max_frame_y);
+      pos2.x += sprite.lock().X() + 2;
+      max_frame_y = std::max(sprite.lock().Y(), max_frame_y);
     } // for directs
     pos2.y += max_frame_y + 2;
     pos2.x = pos.x;

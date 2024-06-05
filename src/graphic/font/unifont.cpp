@@ -96,7 +96,7 @@ bool Unifont::_load_glyph(char32_t ch) const {
     glyph_table[ch] = new_shared<Glyph>();
     auto& glyph = glyph_table.at(ch);
     glyph->image.init(ax * scale_, 1);
-    glyph->image.get_image()->fill(Pal8::black);
+    glyph->image.image().fill(Pal8::black);
     glyph->yoff = -1;
     return true;
   }
@@ -110,22 +110,22 @@ bool Unifont::_load_glyph(char32_t ch) const {
   glyph_table[ch] = new_shared<Glyph>();
   auto& glyph = glyph_table.at(ch);
   glyph->image.init(bitmap_w, bitmap_h);
-  glyph->image.get_image()->fill(Pal8::black);
+  glyph->image.image().fill(Pal8::black);
   glyph->xoff = 0; // мне не нравится с bitmap_xoff
   glyph->yoff = bitmap_yoff;
   if (mono_) {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
       cnauto pix = bitmap[y * bitmap_w + x];
-      glyph->image.get_image()->fast_set(x, y, pix > 127 ? Pal8::white : Pal8::black, {});
-      glyph->image.get_mask()->fast_set(x, y, pix > 127 ? Pal8::mask_visible : Pal8::mask_invisible, {});
+      glyph->image.image().fast_set(x, y, pix > 127 ? Pal8::white : Pal8::black, {});
+      glyph->image.mask().fast_set(x, y, pix > 127 ? Pal8::mask_visible : Pal8::mask_invisible, {});
     }
   } else {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
       cnauto pix = bitmap[y * bitmap_w + x];
-      glyph->image.get_image()->fast_set(x, y, Pal8::get_gray(pix), {});
-      glyph->image.get_mask()->fast_set(x, y, Pal8::mask_visible, {});
+      glyph->image.image().fast_set(x, y, Pal8::get_gray(pix), {});
+      glyph->image.mask().fast_set(x, y, Pal8::mask_visible, {});
     }
   }
   free(bitmap);

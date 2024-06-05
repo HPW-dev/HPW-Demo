@@ -25,8 +25,8 @@ void zoom_x2(Image& dst) {
 
 void zoom_x2(Sprite& dst) {
   assert(dst);
-  zoom_x2(*dst.get_image());
-  zoom_x2(*dst.get_mask());
+  zoom_x2(dst.image());
+  zoom_x2(dst.mask());
 }
 
 void zoom_x8(Image& dst) {
@@ -85,19 +85,18 @@ void zoom_x4(Image& dst) {
 
 void zoom_x4(Sprite& dst) {
   assert(dst);
-  zoom_x4(*dst.get_image());
-  zoom_x4(*dst.get_mask());
+  zoom_x4(dst.image());
+  zoom_x4(dst.mask());
 }
 
 void zoom_x8(Sprite& dst) {
   assert(dst);
-  zoom_x8(*dst.get_image());
-  zoom_x8(*dst.get_mask());
+  zoom_x8(dst.image());
+  zoom_x8(dst.mask());
 }
 
 Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf) {
-  if (!src)
-    return src;
+  return_if (!src, src);
   sconst std::unordered_map<Color_get_pattern, decltype(color_get_cross)*> cgp_table {
     {Color_get_pattern::cross, &color_get_cross},
     {Color_get_pattern::box, &color_get_box},
@@ -109,7 +108,9 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
     {Color_compute::average, &average_col},
   };
 
-  auto dst = Image(src.X / 3, src.Y / 3);
+  static Image dst;
+  dst.assign_resize(src.X / 3, src.Y / 3);
+  
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
@@ -125,9 +126,9 @@ Sprite pixel_upscale_x3(CN<Sprite> src) {
     hpw_log("WARNING: pixel_upscale_x3 empty src\n")
     return src;
   }
-  Sprite dst;
-  dst.move_image(std::move( pixel_upscale_x3(*src.get_image()) ));
-  dst.move_mask(std::move( pixel_upscale_x3(*src.get_mask()) ));
+  static Sprite dst;
+  dst.move_image(std::move( pixel_upscale_x3(src.image()) ));
+  dst.move_mask(std::move( pixel_upscale_x3(src.mask()) ));
   return dst;
 }
 
@@ -136,18 +137,20 @@ Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute c
     hpw_log("WARNING: pixel_downscale_x3 empty src\n")
     return src;
   }
-  Sprite dst;
-  dst.move_image(std::move( pixel_downscale_x3(*src.get_image(), cgp, ccf) ));
-  dst.move_mask(std::move( pixel_downscale_x3(*src.get_mask(), cgp, ccf) ));
+  static Sprite dst;
+  dst.move_image(std::move( pixel_downscale_x3(src.image(), cgp, ccf) ));
+  dst.move_mask(std::move( pixel_downscale_x3(src.mask(), cgp, ccf) ));
   return dst;
 }
 
 Image pixel_upscale_x3(CN<Image> src) {
-  Image dst(src.X * 3, src.Y * 3);
+  static Image dst;
+  dst.assign_resize(src.X * 3, src.Y * 3);
   Pal8 P1, P2, P3;
   Pal8 P4, P5, P6;
   Pal8 P7, P8, P9;
 
+  #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, src.Y)
   cfor (x, src.X) {
     auto A {src.get(x - 1, y - 1, Image_get::COPY)};

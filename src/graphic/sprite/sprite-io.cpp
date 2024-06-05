@@ -95,8 +95,8 @@ void save(CN<Sprite> src, Str file_name) {
   constexpr uint comp = 4;
   Vector<uint8_t> rgba_p(src.size() * comp);
   cfor (i, src.size()) {
-    cauto col = to_palette_rgb24( (*src.get_image())[i] );
-    cauto mask = (*src.get_mask())[i];
+    cauto col = to_palette_rgb24( (src.image())[i] );
+    cauto mask = (src.mask())[i];
     cauto rgba_index = i * comp;
     rgba_p[rgba_index + 0] = col.r;
     rgba_p[rgba_index + 1] = col.g;

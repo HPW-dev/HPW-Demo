@@ -133,10 +133,14 @@ Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0
 
 // создаёт спрайт только с белыми контурами по исходному спрайту
 Sprite extract_contour(CN<Sprite> src) {
+  if (!src) {
+    hpw_log("WARNING: extract_contour src is empty\n");
+    return {};
+  }
   // расширение спрайта во все стороны на 1 пиксель (нужна только маска)
   Image ext_mask(src.X() + 2, src.Y() + 2, Pal8::mask_invisible);
   // вставить целевой спрайт в центр расширенного
-  insert(ext_mask, *src.get_mask(), Vec(1, 1));
+  insert(ext_mask, src.mask(), Vec(1, 1));
 
   Sprite ret (ext_mask.X, ext_mask.Y);
   // определить контуры
@@ -146,8 +150,8 @@ Sprite extract_contour(CN<Sprite> src) {
     cont_if (mask_pix == Pal8::mask_invisible);
 
     #define set_white(x0, y0) if (ext_mask(x0, y0) == Pal8::mask_invisible) { \
-      ret.get_image()->fast_set(x0, y0, Pal8::white, {}); \
-      ret.get_mask()->fast_set(x0, y0, Pal8::mask_visible, {}); \
+      ret.image().fast_set(x0, y0, Pal8::white, {}); \
+      ret.mask().fast_set(x0, y0, Pal8::mask_visible, {}); \
     }
     set_white(x+1, y+0);
     set_white(x-1, y+0);
@@ -333,8 +337,8 @@ std::size_t& idx, Sprite& buffer) {
       idx = std::max<int>(idx - 1, 0); // отменить смену спрайта
       break;
     }
-    insert(*buffer.get_image(), *sprite->get_image(), Vec(pos_x, pos_y));
-    insert(*buffer.get_mask(), *sprite->get_mask(), Vec(pos_x, pos_y));
+    insert(buffer.image(), sprite->image(), Vec(pos_x, pos_y));
+    insert(buffer.mask(), sprite->mask(), Vec(pos_x, pos_y));
     pos_x += sprite->X();
   }
   return idx < sprite_list.size();

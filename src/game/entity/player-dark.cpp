@@ -173,7 +173,7 @@ struct Bound_off_screen {
     assert(direct);
     auto sprite = direct->sprite.lock();
     assert(sprite);
-    auto image = *sprite->get_image();
+    auto image = sprite->image();
     Vec player_sz(image.X, image.Y);
     screen_lu = Vec(
       -1 * direct->offset.x,
