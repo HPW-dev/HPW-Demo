@@ -29,10 +29,10 @@
 #include "graphic/effect/dither.hpp"
 
 // TODO del
-#include "game/entity/ability/invise.hpp"
-#include "game/entity/ability/power-shoot.hpp"
-#include "game/entity/ability/fullscreen-shoot.hpp"
-#include "game/entity/ability/home.hpp"
+//#include "game/entity/ability/invise.hpp"
+//#include "game/entity/ability/power-shoot.hpp"
+//#include "game/entity/ability/fullscreen-shoot.hpp"
+//#include "game/entity/ability/home.hpp"
 
 struct Level_space::Impl {
   constx real layer_speed_scale {0.03333}; // влияет на скорость движния фона по горизонтали
@@ -98,11 +98,11 @@ struct Level_space::Impl {
     player->default_force *= 0.004;
     player->focus_force *= 0.02;
 
-    Ability* ability;
+    //Ability* ability;
     //ability = player->move_ability(new_shared<Ability_invise>(*player));
     //ability = player->move_ability(new_shared<Ability_power_shoot>(*player));
     //ability = player->move_ability(new_shared<Ability_fullscreen_shoot>(*player));
-    ability = player->move_ability(new_shared<Ability_home>(*player));
+    //ability = player->move_ability(new_shared<Ability_home>(*player));
   }
 
   inline void init_collider() {
