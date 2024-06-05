@@ -85,6 +85,10 @@ void Host::init_app_mutex() {
 }
 
 void Host::free_app_mutex() {
+#ifdef WINDOWS
   ReleaseMutex(m_app_mutex);
   CloseHandle(m_app_mutex);
+#else
+  #pragma message("need impl for free_app_mutex() on Linux")
+#endif
 }
