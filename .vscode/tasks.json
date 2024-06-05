@@ -42,6 +42,12 @@
       "args": ["script/build-editor.py"]
     },
     {
+      "label": "build editor (release)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-editor-release.py"]
+    },
+    {
       "label": "build game (debug)",
       "type": "shell",
       "command": "python",
