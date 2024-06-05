@@ -2,6 +2,7 @@
 #include "menu.hpp"
 #include "item/item.hpp"
 #include "util/log.hpp"
+#include "game/core/common.hpp"
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "graphic/font/font.hpp"
@@ -20,6 +21,12 @@ struct Menu::Sticking {
   const uint updates_for_fast = 60, const uint fast_delay = 17) {
     assert(updates_for_fast > 0);
     assert(fast_delay > 0);
+
+    // если ничё не жмём, выход
+    if (!hpw::any_key_pressed) {
+      reset();
+      return false;
+    }
 
     // когда кнопку зажимали 1 раз, не засчитать зажатие
     if (is_pressed_once(keycode)) {
