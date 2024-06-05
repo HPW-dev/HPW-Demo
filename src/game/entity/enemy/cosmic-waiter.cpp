@@ -6,7 +6,6 @@
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/util/phys.hpp"
-#include "game/entity/entity-manager.hpp"
 
 Cosmic_waiter::Cosmic_waiter(): Proto_enemy(GET_SELF_TYPE) {}
 

@@ -7,7 +7,6 @@
 #include "game/core/debug.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/player.hpp"
 #include "game/util/game-util.hpp"

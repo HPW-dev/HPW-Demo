@@ -49,7 +49,6 @@
 #include "game/level/level-empty.hpp"
 //#include "game/level/level-debug-bullets.hpp"
 #endif
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/player-dark.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/phys.hpp"

@@ -6,7 +6,6 @@
 #include "game/core/canvas.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/player.hpp"
-#include "game/entity/entity-manager.hpp"
 
 struct Shop_debug::Impl {
   Unique<Table_menu> item_table {};

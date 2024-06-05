@@ -18,7 +18,6 @@
 #include "game/level/util/task-spawn.hpp"
 #include "game/level/level-manager.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"

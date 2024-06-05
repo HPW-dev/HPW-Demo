@@ -3,7 +3,6 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/player.hpp"

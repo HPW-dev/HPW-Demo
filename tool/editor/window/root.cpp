@@ -20,7 +20,6 @@
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/camera.hpp"
-#include "game/entity/entity-manager.hpp"
 
 Root_wnd::Root_wnd() {
   init_root_wnd();

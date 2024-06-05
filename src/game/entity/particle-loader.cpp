@@ -1,7 +1,6 @@
 #include "particle-loader.hpp"
 #include "particle.hpp"
 #include "util/entity-util.hpp"
-#include "entity-manager.hpp"
 #include "util/phys.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/util/info/anim-info.hpp"

@@ -5,7 +5,6 @@
 #include "graphic/util/graphic-util.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/player-dark.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/util/score-table.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"

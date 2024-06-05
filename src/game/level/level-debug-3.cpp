@@ -13,7 +13,6 @@
 #include "game/core/entities.hpp"
 #include "game/util/game-util.hpp"
 #include "game/core/levels.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/player-dark.hpp"

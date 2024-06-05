@@ -10,7 +10,6 @@
 #include "graphic/animation/anim.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/particle.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/info/anim-info.hpp"

@@ -6,7 +6,6 @@
 #include "util/anim-ctx.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "graphic/image/image.hpp"
 
 Collidable::Collidable()

@@ -5,7 +5,6 @@
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
 #include "game/entity/collidable.hpp"
-#include "game/entity/entity-manager.hpp"
 
 struct Bullet_loader::Impl {
   Collidable_info m_collidable_info {};

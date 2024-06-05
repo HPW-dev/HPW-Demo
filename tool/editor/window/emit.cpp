@@ -12,7 +12,6 @@
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/phys.hpp"

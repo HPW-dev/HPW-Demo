@@ -5,7 +5,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "game/core/canvas.hpp"
 #include "game/util/sync.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/util/phys.hpp"

@@ -1,7 +1,6 @@
 #include <cassert>
 #include "scatter.hpp"
 #include "game/entity/entity.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/util/camera.hpp"
 #include "game/core/entities.hpp"

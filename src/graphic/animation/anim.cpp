@@ -7,7 +7,6 @@
 #include "util/error.hpp"
 #include "util/math/mat.hpp"
 #include "util/mempool.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/util/game-util.hpp"
 #include "game/core/entities.hpp"

@@ -15,7 +15,6 @@
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/hitbox.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/util/store.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"

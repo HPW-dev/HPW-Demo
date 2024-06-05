@@ -8,7 +8,6 @@
 #include "game/entity/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "util/math/random.hpp"
 
 Cosmic_hunter::Cosmic_hunter(): Proto_enemy(GET_SELF_TYPE) {}

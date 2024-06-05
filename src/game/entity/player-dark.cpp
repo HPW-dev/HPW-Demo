@@ -6,7 +6,6 @@
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/entity-manager.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
