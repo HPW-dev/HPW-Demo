@@ -30,7 +30,8 @@ const Vec rotation_offset, Color_get_pattern cgp, Color_compute ccf) {
   offset.y -= (for_rotate.Y() - scaled.Y()) / 2.0;
   offset = rotate_deg(
     -Vec(for_rotate.X() / 2.0, for_rotate.Y() / 2.0) + rotation_offset,
-    offset, degree );
+    offset, degree
+  );
   // даунскейл смещения
   offset /= 3.0;
   return optimize_size(pixel_downscale_x3(for_rotate, cgp, ccf), offset);

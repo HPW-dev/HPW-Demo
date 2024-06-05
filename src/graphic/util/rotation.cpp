@@ -44,7 +44,7 @@ Sprite mirror_v(CN<Sprite> src) {
 }
 
 Image rotate_180(CN<Image> src) {
-  Image dst{src.Y, src.X};
+  Image dst{src.X, src.Y};
   cfor(y, dst.Y)
   cfor(x, dst.X)
     dst(x, y) = src(dst.X - x - 1, dst.Y - y - 1);
