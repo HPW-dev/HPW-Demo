@@ -331,7 +331,7 @@ void bgp_labyrinth_1(Image& dst, const int bg_state) {
       block(x, block.Y / 2) = Pal8::white;
     blocks.push_back(block);
     // вернтикальная прямая
-    blocks.push_back( rotate90(block) );
+    blocks.push_back( rotate_90(block) );
     // крест
     block.fill(Pal8::black);
     cfor (i, block_sz) {
@@ -347,9 +347,9 @@ void bgp_labyrinth_1(Image& dst, const int bg_state) {
     }
     blocks.push_back(block);
     // повороты углов
-    blocks.push_back( rotate90(block, 1) );
-    blocks.push_back( rotate90(block, 2) );
-    blocks.push_back( rotate90(block, 3) );
+    blocks.push_back( rotate_90(block, 1) );
+    blocks.push_back( rotate_90(block, 2) );
+    blocks.push_back( rotate_90(block, 3) );
   } // block gen
 
   // генерация узора
@@ -386,9 +386,9 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
     }
     blocks.push_back(block);
     // повороты углов
-    blocks.push_back( rotate90(block, 1) );
-    blocks.push_back( rotate90(block, 2) );
-    blocks.push_back( rotate90(block, 3) );
+    blocks.push_back( rotate_90(block, 1) );
+    blocks.push_back( rotate_90(block, 2) );
+    blocks.push_back( rotate_90(block, 3) );
   } // block gen
 
   // генерация узора

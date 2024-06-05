@@ -147,6 +147,7 @@ Image pixel_upscale_x3(CN<Image> src) {
   Pal8 P1, P2, P3;
   Pal8 P4, P5, P6;
   Pal8 P7, P8, P9;
+
   cfor (y, src.Y)
   cfor (x, src.X) {
     auto A {src.get(x - 1, y - 1, Image_get::COPY)};

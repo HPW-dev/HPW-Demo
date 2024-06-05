@@ -1,4 +1,3 @@
-#include <omp.h>
 #include <cassert>
 #include <stdexcept>
 #include <utility>
@@ -55,18 +54,13 @@ void Frame::reinit_directions_by_source() {
   cfor (i, source_ctx.max_directions) {
     Direct direct;
     direct.offset = source_ctx.direct_0.offset;
-    auto new_path = source_ctx.direct_0.sprite.lock()->get_path() + "." + n2s(i);
+    cauto new_path = source_ctx.direct_0.sprite.lock()->get_path() + "." + n2s(i);
     auto new_sprite = new_shared<Sprite>(
       rotate_and_optimize(*source_ctx.direct_0.sprite.lock(), degree_frag * i,
       direct.offset, source_ctx.rotate_offset, source_ctx.cgp, source_ctx.ccf)
     );
     new_sprite->set_generated(true);
-    
-    #pragma omp critical (store_sprite)
-    {
-      auto from_store = hpw::store_sprite->push(new_path, new_sprite);
-      direct.sprite = from_store;
-    }
+    direct.sprite = hpw::store_sprite->move(new_path, std::move(new_sprite));
     directions.emplace_back(direct);
   }
 } // init_directions
@@ -80,7 +74,7 @@ void Frame::init_once() {
 
 void Frame::init_quarters() {
   // degree_frag уже задан в init_directions
-// сгенерировать только одну четверть поворотов
+  // сгенерировать только одну четверть поворотов
   auto max_quarter = source_ctx.max_directions / 4;
   // I
   cfor (i, max_quarter) {
@@ -91,36 +85,29 @@ void Frame::init_quarters() {
         direct.offset, source_ctx.rotate_offset, source_ctx.cgp, source_ctx.ccf)
     );
     new_sprite->set_generated(true);
-    auto new_path = source_ctx.direct_0.sprite.lock()->get_path() + "." + n2s(i);
-    #pragma omp critical (store_sprite)
-    {
-      auto from_store = hpw::store_sprite->push(new_path, new_sprite);
-      direct.sprite = from_store;
-    }
-    directions.emplace_back(std::move(direct));
+    cauto new_path = source_ctx.direct_0.sprite.lock()->get_path() + "." + n2s(i);
+    direct.sprite = hpw::store_sprite->move(new_path, std::move(new_sprite));
+    directions.emplace_back( std::move(direct) );
   }
-// оставшиеся четверти дополнить
+  // оставшиеся четверти дополнить
   cfor (quarter, 3) {
     cfor (i, max_quarter) {
       Direct direct;
       // берётся разворот с предыдущей четверти
-      auto idx = i + max_quarter * quarter;
-      auto src_direction = directions.at(idx);
+      cauto idx = i + max_quarter * quarter;
+      cauto src_direction = directions.at(idx);
+
       if (!src_direction.sprite.expired()) {
-        auto new_sprite = new_shared<Sprite>(rotate90(*src_direction.sprite.lock()));
+        auto new_sprite = new_shared<Sprite>(rotate_90(*src_direction.sprite.lock()));
         new_sprite->set_generated(true);
-        auto new_path = src_direction.sprite.lock()->get_path()
+        cauto new_path = src_direction.sprite.lock()->get_path()
           + "." + n2s(max_quarter + quarter * i);
-        #pragma omp critical (store_sprite)
-        {
-          auto from_store = hpw::store_sprite->push(new_path, new_sprite);
-          direct.sprite = from_store;
-        }
+        direct.sprite = hpw::store_sprite->move(new_path, std::move(new_sprite));
         direct.offset = rotate_deg({}, src_direction.offset, 90);
         // коррекция повёрнутого оффсета
         direct.offset.x -= direct.sprite.lock()->X() - 1;
       }
-      directions.emplace_back(std::move(direct));
+      directions.emplace_back( std::move(direct) );
     }
   }
 }  // init_quarters

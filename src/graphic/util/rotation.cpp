@@ -42,22 +42,45 @@ Sprite mirror_v(CN<Sprite> src) {
   return ret;
 }
 
-Image rotate90(CN<Image> src, uint pass) {
+Image rotate_180(CN<Image> src) {
+  Image dst{src.Y, src.X};
+  cfor(y, dst.Y)
+  cfor(x, dst.X)
+    dst(x, y) = src(dst.X - x - 1, dst.Y - y - 1);
+  return dst;
+}
+
+Image rotate_270(CN<Image> src) {
+  Image dst{src.Y, src.X};
+  cfor(y, dst.Y)
+  cfor(x, dst.X)
+    dst(x, y) = src(dst.Y - y - 1, x);
+  return dst;
+}
+
+Image rotate_90(CN<Image> src, uint pass) {
   assert(src);
-  if (pass == 0)
-    return Image(src);
+
+  //return_if (pass == 0, src);
+  switch (pass % 4) {
+    default:
+    case 0: return src; break; // 0 deg
+    case 1: break; // 90 deg
+    case 2: return rotate_180(src); break; // 180 deg
+    case 3: return rotate_270(src); break; // 270 deg
+  }
+
   Image dst{src.Y, src.X};
   cfor(y, dst.Y)
   cfor(x, dst.X)
     dst(x, y) = src(y, dst.X - x - 1);
-  if (pass > 1) return rotate90(dst, pass - 1);
   return dst;
 }
 
-Sprite rotate90(CN<Sprite> src, uint pass) {
+Sprite rotate_90(CN<Sprite> src, uint pass) {
   Sprite dst;
-  dst.move_image(std::move( rotate90(*src.get_image(), pass) ));
-  dst.move_mask(std::move( rotate90(*src.get_mask(), pass) ));
+  dst.move_image(std::move( rotate_90(*src.get_image(), pass) ));
+  dst.move_mask(std::move( rotate_90(*src.get_mask(), pass) ));
   return dst;
 }
 

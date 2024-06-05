@@ -211,7 +211,7 @@ inline void util_check() {
     hpw_assert(dummy(0, dummy.Y-1) == Pal8::white);
     hpw_assert(dummy(dummy.X-1, dummy.Y-1) == Pal8::white);
     // 90 deg
-    auto dummy90 = rotate90(dummy);
+    auto dummy90 = rotate_90(dummy);
     hpw_assert(dummy90.X == dummy.Y);
     hpw_assert(dummy90.Y == dummy.X);
     hpw_assert(dummy90(0, 0) == Pal8::white);
@@ -219,7 +219,7 @@ inline void util_check() {
     hpw_assert(dummy90(0, dummy90.Y-1) == Pal8::white);
     hpw_assert(dummy90(dummy90.X-1, dummy90.Y-1) == Pal8::white);
     // 180 deg
-    auto dummy180 = rotate90(dummy, 2);
+    auto dummy180 = rotate_90(dummy, 2);
     hpw_assert(dummy180.X == dummy.X);
     hpw_assert(dummy180.Y == dummy.Y);
     hpw_assert(dummy180(0, 0) == Pal8::white);
@@ -227,7 +227,7 @@ inline void util_check() {
     hpw_assert(dummy180(0, dummy180.Y-1) == Pal8::white);
     hpw_assert(dummy180(dummy180.X-1, dummy180.Y-1) == Pal8::red);
     // 270 deg
-    auto dummy270 = rotate90(dummy, 3);
+    auto dummy270 = rotate_90(dummy, 3);
     hpw_assert(dummy270.X == dummy.Y);
     hpw_assert(dummy270.Y == dummy.X);
     hpw_assert(dummy270(0, 0) == Pal8::white);
