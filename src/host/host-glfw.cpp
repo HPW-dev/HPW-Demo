@@ -13,7 +13,6 @@
 #include "util/error.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
-#include "util/file/archive.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"

@@ -6,7 +6,6 @@
 #include "graphic/font/unifont.hpp"
 #include "util/error.hpp"
 #include "util/file/file.hpp"
-#include "util/file/archive.hpp"
 #include "game/util/game-util.hpp"
 #include <GLFW/glfw3.h>
 #include <imgui.h>

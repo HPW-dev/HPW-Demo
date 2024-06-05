@@ -5,7 +5,6 @@
 #include "command.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
-#include "util/file/archive.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"

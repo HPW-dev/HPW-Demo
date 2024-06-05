@@ -15,7 +15,6 @@
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/file/yaml.hpp"
-#include "util/file/archive.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/game-util.hpp"
 #include "game/core/time-scale.hpp"

@@ -1,6 +1,5 @@
 #include <cassert>
 #include "color-table.hpp"
-#include "util/file/archive.hpp"
 #include "game/util/game-archive.hpp"
 
 void load_color_tables() {

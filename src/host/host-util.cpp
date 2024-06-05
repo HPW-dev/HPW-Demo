@@ -6,7 +6,6 @@
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
 #include "util/str-util.hpp"
-#include "util/file/archive.hpp"
 #include "util/error.hpp"
 #include "graphic/util/convert.hpp"
 #include "graphic/image/color.hpp"

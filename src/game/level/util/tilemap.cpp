@@ -10,7 +10,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "game/core/sprites.hpp"
 #include "game/util/game-archive.hpp"
-#include "util/file/archive.hpp"
 #include "util/path.hpp"
 
 struct Tile {

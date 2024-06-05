@@ -21,7 +21,6 @@
 #include "host/host-util.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/random.hpp"
-#include "util/file/archive.hpp"
 #include "ball.hpp"
 
 Graphic_test::Graphic_test(int argc, char *argv[])

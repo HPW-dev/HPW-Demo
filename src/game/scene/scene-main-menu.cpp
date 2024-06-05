@@ -30,7 +30,6 @@
 #include "util/math/random.hpp"
 #include "util/str-util.hpp"
 #include "util/hpw-util.hpp"
-#include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
 #include "sound/sound-manager.hpp"
 

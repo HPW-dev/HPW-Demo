@@ -25,7 +25,6 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
 #include "sound/sound-manager.hpp"
-#include "util/file/archive.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/hpw-util.hpp"
