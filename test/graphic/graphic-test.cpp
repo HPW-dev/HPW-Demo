@@ -57,7 +57,7 @@ void Graphic_test::init() {
     U"Symbols: 🍓+-/\\=:;.,|*&^%$#@!?\n"
     U"Nums: 0123456789\n";
   auto font_mem {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
-  graphic::font = new_shared<Unifont>(font_mem, 16, false);
+  graphic::font = new_unique<Unifont>(font_mem, 16, false);
 } // init
 
 void Graphic_test::update(const Delta_time dt) {
