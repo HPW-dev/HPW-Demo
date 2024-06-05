@@ -1,15 +1,27 @@
 #include <cassert>
 #include <typeinfo>
 #include "home.hpp"
+#include "game/core/entities.hpp"
 #include "game/entity/player.hpp"
 #include "game/util/game-util.hpp"
+#include "util/error.hpp"
+#include "util/math/timer.hpp"
 
 struct Ability_home::Impl {
   nocopy(Impl);
+  Entity* m_area {}; // прокси-объект означающий область похищения
+  Entity* m_ally {}; // захваченный союзник
+  Entity* m_possible_ally {}; // кого сейчас пытаемся захватить
+  Timer m_aduction_delay {1.5}; // время на похищение
+  /* Улучшения:
+  0 - похищение с задержкой
+  1 - мгновенное похищение, бумер удлинняется, движение ускоряется
+  2 - бумер становится палкой, никого нельзя похитить
+  3 - игрок становится длинно в экран */
   uint m_power {};
 
   inline explicit Impl(CN<Player> player) {
-    // TODO
+    //hpw::entity_mgr->make("")
   }
 
   inline void update(Player& player, const Delta_time dt) {
@@ -22,6 +34,7 @@ struct Ability_home::Impl {
 
   inline void power_up() {
     ++m_power;
+    error("need impl for other levels");
     // TODO
   }
 
