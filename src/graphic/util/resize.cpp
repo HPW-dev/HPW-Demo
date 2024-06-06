@@ -113,11 +113,10 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
   dst.assign_resize(src.X / 3, src.Y / 3);
   cauto selected_cgp = cgp_table.at(cgp);
   cauto selected_ccf = ccf_table.at(ccf);
-  const bool omp_needed = dst.size >= 24 * 24;
   assert(dst.X > 2);
   assert(dst.Y > 2);
 
-  #pragma omp parallel for simd collapse(2) if(omp_needed)
+  #pragma omp parallel for simd collapse(2) schedule(static, 32)
   for (int y = 1; y < dst.Y - 1; ++y)
   for (int x = 1; x < dst.X - 1; ++x) {
     cauto colors = selected_cgp(src, x * 3, y * 3);
