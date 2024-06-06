@@ -114,10 +114,12 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
   cauto selected_cgp = cgp_table.at(cgp);
   cauto selected_ccf = ccf_table.at(ccf);
   const bool omp_needed = dst.size >= 24 * 24;
+  assert(dst.X > 2);
+  assert(dst.Y > 2);
 
   #pragma omp parallel for simd collapse(2) if(omp_needed)
-  cfor (y, dst.Y)
-  cfor (x, dst.X) {
+  for (int y = 1; y < dst.Y - 1; ++y)
+  for (int x = 1; x < dst.X - 1; ++x) {
     cauto colors = selected_cgp(src, x * 3, y * 3);
     cauto pix = selected_ccf(colors);
     dst.fast_set(x, y, pix, {});
@@ -232,29 +234,27 @@ Pal8 average_col(CN<Vector<Pal8>> colors) {
 }
 
 Vector<Pal8> color_get_cross(CN<Image> src, int x, int y) {
-  Vector<Pal8> ret(5);
-  auto mode = Image_get::MIRROR;
-  ret[0] = src.get(x + 0, y - 1, mode);
-  ret[1] = src.get(x - 1, y + 0, mode);
-  ret[2] =     src(x + 0, y + 0);
-  ret[3] = src.get(x + 1, y + 0, mode);
-  ret[4] = src.get(x + 0, y + 1, mode);
-  return ret;
+  Pal8 ret[5];
+  ret[0] = src(x + 0, y - 1);
+  ret[1] = src(x - 1, y + 0);
+  ret[2] = src(x + 0, y + 0);
+  ret[3] = src(x + 1, y + 0);
+  ret[4] = src(x + 0, y + 1);
+  return Vector<Pal8>(ret, ret + 5);
 }
 
 Vector<Pal8> color_get_box(CN<Image> src, int x, int y) {
-  Vector<Pal8> ret(9);
-  auto mode = Image_get::MIRROR;
-  ret[0] = src.get(x - 1, y - 1, mode);
-  ret[1] = src.get(x + 0, y - 1, mode);
-  ret[2] = src.get(x + 1, y - 1, mode);
-  ret[3] = src.get(x - 1, y + 0, mode);
-  ret[4] =     src(x + 0, y + 0);
-  ret[5] = src.get(x + 1, y + 0, mode);
-  ret[6] = src.get(x - 1, y + 1, mode);
-  ret[7] = src.get(x + 0, y + 1, mode);
-  ret[8] = src.get(x + 1, y + 1, mode);
-  return ret;
+  Pal8 ret[9];
+  ret[0] = src(x - 1, y - 1);
+  ret[1] = src(x + 0, y - 1);
+  ret[2] = src(x + 1, y - 1);
+  ret[3] = src(x - 1, y + 0);
+  ret[4] = src(x + 0, y + 0);
+  ret[5] = src(x + 1, y + 0);
+  ret[6] = src(x - 1, y + 1);
+  ret[7] = src(x + 0, y + 1);
+  ret[8] = src(x + 1, y + 1);
+  return Vector<Pal8>(ret, ret + 9);
 }
 
 Str convert(Color_compute ccf) {
