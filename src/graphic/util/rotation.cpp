@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <cassert>
 #include <cmath>
 #include <utility>
@@ -100,9 +101,11 @@ const Vec offset, real degree) {
     return;
   }
   
-  auto radian {deg_to_rad(-degree)};
-  real mul_x {std::cos(radian)};
-  real mul_y {std::sin(radian)};
+  cauto radian {deg_to_rad(-degree)};
+  const real mul_x {std::cos(radian)};
+  const real mul_y {std::sin(radian)};
+
+  #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
     auto fx {x - offset.x};
