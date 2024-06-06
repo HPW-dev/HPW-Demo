@@ -36,5 +36,6 @@ const Vec rotation_offset, Color_get_pattern cgp, Color_compute ccf) {
   );
   // даунскейл смещения
   offset /= 3.0;
-  return optimize_size(pixel_downscale_x3(for_rotate, cgp, ccf), offset);
+  cauto downscaled = pixel_downscale_x3(for_rotate, cgp, ccf);
+  return optimize_size(downscaled, offset);
 } // rotate_and_optimize
