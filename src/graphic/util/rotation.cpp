@@ -104,18 +104,23 @@ const Vec offset, real degree) {
   cauto radian {deg_to_rad(-degree)};
   const real mul_x {std::cos(radian)};
   const real mul_y {std::sin(radian)};
+  cauto offset_x = offset.x;
+  cauto offset_y = offset.y;
+  cauto center_x = center.x;
+  cauto center_y = center.y;
 
   #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    auto fx {x - offset.x};
-    auto fy {y - offset.y};
-    auto rot_x {(mul_x * fx) - (mul_y * fy) + center.x};
+    cauto fx = x - offset_x;
+    cauto fy = y - offset_y;
+    cauto rot_x = (mul_x * fx) - (mul_y * fy) + center_x;
+    cauto rot_y = (mul_y * fx) + (mul_x * fy) + center_y;
+
     int i_x = std::floor(rot_x);
-    auto rot_y {(mul_y * fx) + (mul_x * fy) + center.y};
     int i_y = std::floor(rot_y);
     if (src.index_bound(i_x, i_y, Image_get::NONE)) {
-      auto pix = src(i_x, i_y);
+      cauto pix = src(i_x, i_y);
       dst.set(x, y, pix);
     }
   } // for y, x
