@@ -52,7 +52,7 @@ void Sprite_select::draw(Image& dst) const {
       dst,
       Vec (
         center_point(dst).x - graphic::font->text_width(text) / 2,
-        center.y + sprite->get_image()->Y + 5
+        center.y + sprite->image().Y + 5
       ),
       text,
       &blend_max
