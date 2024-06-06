@@ -62,7 +62,7 @@ void Scene_main_menu::update(const Delta_time dt) {
 
 void Scene_main_menu::draw_bg(Image& dst) const {
   bg_pattern_pf(dst, std::floor(pps(bg_state)));
-} // draw_bg
+}
 
 void Scene_main_menu::init_logo() {
   std::call_once(m_logo_load_once, [this]{ cache_logo_names(); });
