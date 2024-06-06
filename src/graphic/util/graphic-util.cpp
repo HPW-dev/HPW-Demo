@@ -10,6 +10,7 @@
 #include "util/math/random.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/mat.hpp"
+#include "util/log.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
 
@@ -81,17 +82,22 @@ Pal8 rand_color_graphic(bool red) {
 Vec center_point(CN<Image> src)
   { return Vec(src.X / 2.0, src.Y / 2.0); }
 
-Vec center_point(CN<Sprite> src)
-  { return Vec{src.get_image()->X / 2.0, src.get_image()->Y / 2.0}; }
+Vec center_point(CN<Sprite> src) {
+  if (!src) {
+    hpw_log("WARNING: center_point src is empty\n");
+    return {};
+  }
+  return Vec{src.X() / 2.0, src.Y() / 2.0};
+}
 
 Vec center_point(CN<Image> src, CN<Image> dst)
   { return Vec(src.X / 2.0 - dst.X / 2.0, src.Y / 2.0 - dst.Y / 2.0); }
 
 Vec center_point(CN<Image> src, CN<Sprite> dst) {
-  if ( !dst.get_image())
+  if (!dst)
     return Vec(src.X / 2.0, src.Y / 2.0);
-  return Vec(src.X / 2.0 - dst.get_image()->X / 2.0,
-    src.Y / 2.0 - dst.get_image()->Y / 2.0);
+  return Vec(src.X / 2.0 - dst.X() / 2.0,
+    src.Y / 2.0 - dst.Y() / 2.0);
 }
 
 Vec center_point(const Vec src, const Vec dst)
@@ -99,7 +105,8 @@ Vec center_point(const Vec src, const Vec dst)
 
 Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
   assert(src);
-  Image dst(mx, my);
+  static Image dst; // prebuf opt
+  dst.assign_resize(mx, my);
   cauto ex {sx + mx};
   cauto ey {sy + my};
   for (auto y {sy}; y < ey; ++y)
@@ -110,8 +117,7 @@ Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
 
 Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
   assert(src);
-  if (rect_.size.x <= 0 || rect_.size.y <= 0)
-    return {};
+  return_if (rect_.size.x <= 0 || rect_.size.y <= 0, {});
 
   auto rect = rect_;
   rect.size = floor(rect.size);
@@ -127,15 +133,17 @@ Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
 }
 
 Sprite optimize_size(CN<Sprite> src, Vec& offset) {
-  assert(src);
-  cnauto mask = *src.get_mask();
+  return_if (!src, Sprite{});
+  
+  cnauto mask = src.mask();
   int sx {mask.X - 1};
   int ex {-1};
   int sy {mask.Y - 1};
   int ey {-1};
-// по наличию непрозрачного пикселя в маске определяется область для вырезания
+
+  // по наличию непрозрачного пикселя в маске определяется область для вырезания
   cfor (y, mask.Y)
-  cfor (x, mask.X)
+  cfor (x, mask.X) {
     if (mask(x, y) != Pal8::mask_invisible) {
       if (x < sx)
         sx = x;
@@ -146,19 +154,23 @@ Sprite optimize_size(CN<Sprite> src, Vec& offset) {
       if (y > ey)
         ey = y;
     }
-  Sprite ret;
+  }
+
   // оффсет тоже обновляется
   offset.x += sx;
   offset.y += sy;
-  ret.move_image(std::move( fast_cut(*src.get_image(), sx, sy,
-    ex - sx + 1, ey - sy + 1) ));
-  ret.move_mask(std::move( fast_cut(mask,  sx, sy,
-    ex - sx + 1, ey - sy + 1) ));
+
+  static Sprite ret; // prebuf opt
+  ret.image() = fast_cut(src.image(), sx, sy, ex - sx + 1, ey - sy + 1);
+  ret.mask()  = fast_cut(mask,        sx, sy, ex - sx + 1, ey - sy + 1);
   return ret;
 } // optimize_size
 
 void insert_x2(Image& dst, CN<Image> src, Vec pos) {
-  return_if( !dst || !src);
+  if (!dst || !src) {
+    hpw_log("WARNING: insert_x2 dst or src is empty\n");
+    return;
+  }
   
   // увеличенный пребуфер
   auto srx_x_x2 {src.X * 2};
@@ -207,13 +219,15 @@ Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src) {
 } // insert_bound
 
 void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf, int optional) {
-  assert(dst);
-  assert(src);
-  auto src_image {src.get_image()};
-  auto src_mask {src.get_mask()};
+  if (!src || !dst) {
+    hpw_log("WARNING: center_point src or dst is empty\n");
+    return;
+  }
+  cnauto src_image = src.image();
+  cnauto src_mask = src.mask();
 
   pos = floor(pos);
-  auto bound = get_insertion_bound(dst, pos, *src_image);
+  auto bound = get_insertion_bound(dst, pos, src_image);
   return_if (bound.size.x == 0 || bound.size.y == 0);
 
   auto sy = scast<int>(bound.pos.y);
@@ -221,16 +235,16 @@ void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf, int optional) {
   auto ey = scast<int>(bound.pos.y + bound.size.y);
   auto ex = scast<int>(bound.pos.x + bound.size.x);
   auto dst_p = dst.data();
-  auto src_p = src_image->data();
-  auto mask_p = src_mask->data();
+  auto src_p = src_image.data();
+  auto mask_p = src_mask.data();
   int dst_front_poch = std::max<real>(0, pos.x);
   int dst_back_porch = (dst.X - (ex - sx)) - std::max<real>(0, pos.x);
   int src_front_poch = bound.pos.x;
-  int src_back_porch = src_image->X - (bound.pos.x + bound.size.x);
+  int src_back_porch = src_image.X - (bound.pos.x + bound.size.x);
 
   // начальное смещение src по y
-  src_p += sy * src_image->X;
-  mask_p += sy * src_image->X;
+  src_p += sy * src_image.X;
+  mask_p += sy * src_image.X;
   // начальное смещение dst по y с оффсетом
   dst_p += (sy + scast<int>(pos.y)) * dst.X;
 
@@ -287,8 +301,8 @@ void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha, blend_pf bf, i
     insert(dst, src, pos, bf, optional);
     return;
   }
-  auto &mask = *src.get_mask();
-  auto &image = *src.get_image();
+  auto &mask = src.mask();
+  auto &image = src.image();
   cfor (y, src.Y())
   cfor (x, src.X()) {
     Pal8 a = dst.get(x + pos.x, y + pos.y);

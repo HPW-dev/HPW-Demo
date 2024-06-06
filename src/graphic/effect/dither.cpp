@@ -110,8 +110,8 @@ Dither type, blend_pf bf) {
     insert(dst, src, pos, bf);
     return;
   }
-  auto &mask = *src.get_mask();
-  auto &image = *src.get_image();
+  auto &mask = src.mask();
+  auto &image = src.image();
   cfor (y, src.Y())
   cfor (x, src.X()) {
     // вырезание по маске

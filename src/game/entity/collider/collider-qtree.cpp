@@ -281,7 +281,11 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
 
   if (entities.size() >= MAX_ENTS_FOR_MULTY_UPDATE) {
     // узнать сколько потоков сделал OpenMP
-    auto th_max = omp_get_max_threads();
+    #ifdef _OPENMP
+      auto th_max = omp_get_max_threads();
+    #else
+      constexpr const auto th_max = 1;
+    #endif
     assert(th_max > 0);
     // для хранения локальных списков в потоках
     static Vector<decltype(collision_pairs)> list_table;
@@ -300,7 +304,11 @@ void Collider_qtree::update_pairs(CN<Entitys> entities) {
       auto hitbox = entity->get_hitbox();
       cont_if(!hitbox);
       // узнать какой сейчас поток
-      cauto th_idx = omp_get_thread_num();
+      #ifdef _OPENMP
+        cauto th_idx = omp_get_thread_num();
+      #else
+        constexpr const auto th_idx = 0;
+      #endif
       lists[th_idx].clear();
       // искать соседей вокруг хитбокса объекта
       cauto pos = entity->phys.get_pos();

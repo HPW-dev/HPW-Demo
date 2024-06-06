@@ -1,27 +1,28 @@
 #pragma once
+#include <utility>
 #include "game/util/resource.hpp"
 #include "util/math/vec.hpp"
-#include "util/mem-types.hpp"
+#include "graphic/image/image.hpp"
 
 class Image;
 
 class Sprite final: public Resource {
 protected:
-  Shared<Image> _image {};
-  Shared<Image> _mask {}; // маска прозрачности. white - 100% alpha
+  Image m_image {};
+  Image m_mask {}; // маска прозрачности. white - 100% alpha
 
 public:
-  int X() const;
-  int Y() const;
-  int size() const;
-  inline Image* get_image() { return _image.get(); }
-  inline Image* get_mask() { return _mask.get(); }
-  inline CP<Image> get_image() const { return _image.get(); }
-  inline CP<Image> get_mask() const { return _mask.get(); }
-  void set_image(CN<Image> image) noexcept;
-  void set_mask(CN<Image> mask) noexcept;
-  void move_image(Image&& image) noexcept;
-  void move_mask(Image&& mask) noexcept;
+  inline int X() const { return m_image.X; }
+  inline int Y() const { return m_image.Y; }
+  inline int size() const { return m_image.size; }
+  inline CN<Image> image() const { return m_image; }
+  inline CN<Image> mask() const { return m_mask; }
+  inline Image& image() { return m_image; }
+  inline Image& mask() { return m_mask; }
+  inline void set_image(CN<Image> image) noexcept { m_image = image; }
+  inline void set_mask(CN<Image> mask) noexcept { m_mask = mask; }
+  inline void move_image(Image&& image) noexcept { m_image = std::move(image); }
+  inline void move_mask(Image&& mask) noexcept { m_mask = std::move(mask); }
   void init(CN<Sprite> other) noexcept;
   void init(int new_x, int new_y) noexcept;
   operator bool() const;

@@ -13,6 +13,7 @@ public:
   Store() = default;
   ~Store() = default;
   Shared<T>& push(CN<Str> name, CN<Shared<T>> res);
+  Shared<T>& move(CN<Str> name, Shared<T>&& res);
   CN<Shared<T>> find(CN<Str> name) const;
   // узнать названия всех ресурсов
   Strs list(bool without_generated=false) const;
@@ -42,6 +43,16 @@ Shared<T>& Store<T>::push(CN<Str> name, CN<Shared<T>> res) {
   if (table.count(name) != 0)
     detailed_log("Store.push: reinit resource (это может стать причиной ошибки access free-object error)\n");
   table[name] = res;
+  return table.at(name);
+}
+
+template <class T>
+Shared<T>& Store<T>::move(CN<Str> name, Shared<T>&& res) {
+  detailed_log("Store.move: " << name << "\n");
+  res->set_path(name);
+  if (table.count(name) != 0)
+    detailed_log("Store.move: reinit resource (это может стать причиной ошибки access free-object error)\n");
+  table[name] = std::move(res);
   return table.at(name);
 }
 

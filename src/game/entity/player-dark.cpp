@@ -53,9 +53,8 @@ void Player_dark::default_shoot(const Delta_time dt) {
 void Player_dark::energy_regen() { energy = std::min<hp_t>(energy_max, energy + m_energy_regen); }
 
 void Player_dark::draw(Image& dst, const Vec offset) const {
-  Collidable::draw(dst, offset);
-  
   return_if(status.disable_render);
+  Player::draw(dst, offset);
   blink_contour();
   draw_stars(dst);
 }
@@ -174,7 +173,7 @@ struct Bound_off_screen {
     assert(direct);
     auto sprite = direct->sprite.lock();
     assert(sprite);
-    auto image = *sprite->get_image();
+    auto image = sprite->image();
     Vec player_sz(image.X, image.Y);
     screen_lu = Vec(
       -1 * direct->offset.x,

@@ -1,4 +1,3 @@
-#include <omp.h>
 #include <cassert>
 #include <algorithm>
 #include <cmath>
@@ -49,9 +48,7 @@ inline void save_hitbox(CP<Anim> anim, Yaml& root) {
 inline void load_hitbox(Anim& anim, CN<Yaml> hitbox_node) {
   return_if( !hitbox_node.check());
   assert(hpw::entity_mgr);
-  Pool_ptr(Hitbox) hitbox_source;
-  #pragma omp critical (make_hitbox)
-  { hitbox_source = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>(); }
+  auto hitbox_source = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>();
 
   // загрузить полигоны хитбокса
   auto polygons_node = hitbox_node["polygons"];
@@ -88,19 +85,15 @@ void read_anims(CN<Yaml> src) {
   auto anim_names = animations_node.root_tags();
   std::sort(anim_names.begin(), anim_names.end());
 
-  #pragma omp parallel for schedule(dynamic)
   cfor (i, anim_names.size()) {
     cnauto anim_name {anim_names[i]};
     // анимация будет сохранена в Anim_mgr
     Shared<Anim> anim;
-    #pragma omp critical (make_anim)
-    { anim = new_shared<Anim>(); }
+    anim = new_shared<Anim>();
     auto anim_node = animations_node[anim_name];
 
     // загрузка хитбокса
-    auto hitbox_node = anim_node["hitbox"];
-    //#pragma omp critical (load_hitbox)
-    load_hitbox(*anim, hitbox_node);
+    load_hitbox(*anim, anim_node["hitbox"]);
 
     // нода с кадрами
     auto frames_node = anim_node["frames"];
@@ -141,13 +134,11 @@ void read_anims(CN<Yaml> src) {
       }
       // TODO hitbox
 
-      //#pragma omp critical (reinit_directions_by_source)
       frame->reinit_directions_by_source();
       anim->add_frame(frame);
     } // for frames_node tags
 
-    #pragma omp critical (anim_mgr_add_anim)
-    { hpw::anim_mgr->add_anim(anim_name, anim); }
+    hpw::anim_mgr->add_anim(anim_name, anim);
   } // root tags
 } // read_anims
 

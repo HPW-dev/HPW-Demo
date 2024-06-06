@@ -1,4 +1,5 @@
 #include <thread>
+//#include <chrono>
 #include <iostream>
 #include <cassert>
 #include <mutex>
@@ -297,7 +298,13 @@ void Host_glfw::init_window() {
   init_icon();
 } // init_window
 
-Delta_time Host_glfw::get_time() const { return glfwGetTime(); }
+Delta_time Host_glfw::get_time() const {
+  return glfwGetTime();
+  /*static cauto _st = std::chrono::steady_clock::now();
+  cauto _ed = std::chrono::steady_clock::now();
+  using Seconds = std::chrono::duration<Delta_time, std::ratio<1, 1>>;
+  return std::chrono::duration_cast<Seconds>(_ed - _st).count();*/
+}
 
 void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
   second_timer += gameloop_time;

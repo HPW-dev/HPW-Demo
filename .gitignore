@@ -1,4 +1,5 @@
 ﻿build/config.yml
+build/editor
 build/plugin
 ignore me.lnk
 imgui.ini

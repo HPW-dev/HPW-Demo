@@ -31,8 +31,8 @@ public:
 
   void init(int nx=0, int ny=0, std::optional<Pal8> col={}) noexcept;
   void init(CN<Image> img) noexcept;
+  void init(Image&& img) noexcept;
   void free() noexcept;
-  void swap(Image& other) noexcept;
   void fill(const Pal8 col) noexcept;
 
   inline Pal8& operator [](int i) noexcept { return pix[i]; }
@@ -68,7 +68,7 @@ public:
   // fast set without cheks
   template <blend_pf bf = &blend_past>
   void fast_set(int x, int y, const Pal8 col, int optional) {
-    auto &dst_pix {pix[y * X + x]};
+    auto& dst_pix = pix[y * X + x];
     dst_pix = bf(col, dst_pix, optional);
   }
   

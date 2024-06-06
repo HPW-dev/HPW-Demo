@@ -175,20 +175,20 @@ inline void sprite_check() {
   hpw_assert(dummy.X() == 3);
   hpw_assert(dummy.Y() == 5);
   // тест размера маски и картинки
-  auto* mask = dummy.get_mask();
-  auto* image = dummy.get_image();
+  cnauto mask = dummy.mask();
+  cnauto image = dummy.image();
   hpw_assert(mask);
-  hpw_assert(mask->X == 3);
-  hpw_assert(mask->Y == 5);
+  hpw_assert(mask.X == 3);
+  hpw_assert(mask.Y == 5);
   hpw_assert(image);
-  hpw_assert(image->X == 3);
-  hpw_assert(image->Y == 5);
+  hpw_assert(image.X == 3);
+  hpw_assert(image.Y == 5);
   // тест вставки. По середине спрайта красный, снизу справа белый
   dummy = Sprite(3, 3);
-  dummy.get_image()->set(1, 1, Pal8::red, {});
-  dummy.get_mask()->set(1, 1, Pal8::mask_visible, {});
-  dummy.get_image()->set(2, 2, Pal8::white, {});
-  dummy.get_mask()->set(2, 2, Pal8::mask_visible, {});
+  dummy.image().set(1, 1, Pal8::red, {});
+  dummy.mask().set(1, 1, Pal8::mask_visible, {});
+  dummy.image().set(2, 2, Pal8::white, {});
+  dummy.mask().set(2, 2, Pal8::mask_visible, {});
   Image for_insert(5, 5, Pal8::gray);
   insert(for_insert, dummy, {1,1});
   hpw_assert(for_insert.get(0,0) == Pal8::gray);
@@ -211,7 +211,7 @@ inline void util_check() {
     hpw_assert(dummy(0, dummy.Y-1) == Pal8::white);
     hpw_assert(dummy(dummy.X-1, dummy.Y-1) == Pal8::white);
     // 90 deg
-    auto dummy90 = rotate90(dummy);
+    auto dummy90 = rotate_90(dummy);
     hpw_assert(dummy90.X == dummy.Y);
     hpw_assert(dummy90.Y == dummy.X);
     hpw_assert(dummy90(0, 0) == Pal8::white);
@@ -219,7 +219,7 @@ inline void util_check() {
     hpw_assert(dummy90(0, dummy90.Y-1) == Pal8::white);
     hpw_assert(dummy90(dummy90.X-1, dummy90.Y-1) == Pal8::white);
     // 180 deg
-    auto dummy180 = rotate90(dummy, 2);
+    auto dummy180 = rotate_90(dummy, 2);
     hpw_assert(dummy180.X == dummy.X);
     hpw_assert(dummy180.Y == dummy.Y);
     hpw_assert(dummy180(0, 0) == Pal8::white);
@@ -227,7 +227,7 @@ inline void util_check() {
     hpw_assert(dummy180(0, dummy180.Y-1) == Pal8::white);
     hpw_assert(dummy180(dummy180.X-1, dummy180.Y-1) == Pal8::red);
     // 270 deg
-    auto dummy270 = rotate90(dummy, 3);
+    auto dummy270 = rotate_90(dummy, 3);
     hpw_assert(dummy270.X == dummy.Y);
     hpw_assert(dummy270.Y == dummy.X);
     hpw_assert(dummy270(0, 0) == Pal8::white);

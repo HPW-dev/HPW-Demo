@@ -25,8 +25,8 @@ void zoom_x2(Image& dst) {
 
 void zoom_x2(Sprite& dst) {
   assert(dst);
-  zoom_x2(*dst.get_image());
-  zoom_x2(*dst.get_mask());
+  zoom_x2(dst.image());
+  zoom_x2(dst.mask());
 }
 
 void zoom_x8(Image& dst) {
@@ -85,19 +85,19 @@ void zoom_x4(Image& dst) {
 
 void zoom_x4(Sprite& dst) {
   assert(dst);
-  zoom_x4(*dst.get_image());
-  zoom_x4(*dst.get_mask());
+  zoom_x4(dst.image());
+  zoom_x4(dst.mask());
 }
 
 void zoom_x8(Sprite& dst) {
   assert(dst);
-  zoom_x8(*dst.get_image());
-  zoom_x8(*dst.get_mask());
+  zoom_x8(dst.image());
+  zoom_x8(dst.mask());
 }
 
 Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf) {
-  if (!src)
-    return src;
+  return_if (!src, src);
+
   sconst std::unordered_map<Color_get_pattern, decltype(color_get_cross)*> cgp_table {
     {Color_get_pattern::cross, &color_get_cross},
     {Color_get_pattern::box, &color_get_box},
@@ -109,12 +109,18 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
     {Color_compute::average, &average_col},
   };
 
-  auto dst = Image(src.X / 3, src.Y / 3);
-  #pragma omp parallel for simd schedule(static, 4) collapse(2)
-  cfor (y, dst.Y)
-  cfor (x, dst.X) {
-    auto colors = cgp_table.at(cgp) (src, x * 3, y * 3);
-    auto pix = ccf_table.at(ccf) (colors);
+  static Image dst; // prebuf opt
+  dst.assign_resize(src.X / 3, src.Y / 3);
+  cauto selected_cgp = cgp_table.at(cgp);
+  cauto selected_ccf = ccf_table.at(ccf);
+  assert(dst.X > 2);
+  assert(dst.Y > 2);
+
+  #pragma omp parallel for simd collapse(2) schedule(static, 32)
+  for (int y = 1; y < dst.Y - 1; ++y)
+  for (int x = 1; x < dst.X - 1; ++x) {
+    cauto colors = selected_cgp(src, x * 3, y * 3);
+    cauto pix = selected_ccf(colors);
     dst.fast_set(x, y, pix, {});
   }
   return dst;
@@ -126,8 +132,8 @@ Sprite pixel_upscale_x3(CN<Sprite> src) {
     return src;
   }
   Sprite dst;
-  dst.move_image(std::move( pixel_upscale_x3(*src.get_image()) ));
-  dst.move_mask(std::move( pixel_upscale_x3(*src.get_mask()) ));
+  dst.move_image(std::move( pixel_upscale_x3(src.image()) ));
+  dst.move_mask(std::move( pixel_upscale_x3(src.mask()) ));
   return dst;
 }
 
@@ -137,17 +143,19 @@ Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute c
     return src;
   }
   Sprite dst;
-  dst.move_image(std::move( pixel_downscale_x3(*src.get_image(), cgp, ccf) ));
-  dst.move_mask(std::move( pixel_downscale_x3(*src.get_mask(), cgp, ccf) ));
+  dst.move_image(std::move( pixel_downscale_x3(src.image(), cgp, ccf) ));
+  dst.move_mask(std::move( pixel_downscale_x3(src.mask(), cgp, ccf) ));
   return dst;
 }
 
 Image pixel_upscale_x3(CN<Image> src) {
-// scale 3x algorithm
-  Image dst(src.X * 3, src.Y * 3);
+  static Image dst; // prebuf opt
+  dst.assign_resize(src.X * 3, src.Y * 3);
   Pal8 P1, P2, P3;
   Pal8 P4, P5, P6;
   Pal8 P7, P8, P9;
+
+  #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, src.Y)
   cfor (x, src.X) {
     auto A {src.get(x - 1, y - 1, Image_get::COPY)};
@@ -174,82 +182,81 @@ Image pixel_upscale_x3(CN<Image> src) {
       P4 = E; P5 = E; P6 = E;
       P7 = E; P8 = E; P9 = E;
     }
-    #pragma omp critical (pixel_upscale_x3_dst)
-    { 
-      dst.fast_set(x * 3 + 0, y * 3 + 0, P1, {});
-      dst.fast_set(x * 3 + 1, y * 3 + 0, P2, {});
-      dst.fast_set(x * 3 + 2, y * 3 + 0, P3, {});
-      dst.fast_set(x * 3 + 0, y * 3 + 1, P4, {});
-      dst.fast_set(x * 3 + 1, y * 3 + 1, P5, {});
-      dst.fast_set(x * 3 + 2, y * 3 + 1, P6, {});
-      dst.fast_set(x * 3 + 0, y * 3 + 2, P7, {});
-      dst.fast_set(x * 3 + 1, y * 3 + 2, P8, {});
-      dst.fast_set(x * 3 + 2, y * 3 + 2, P9, {});
-    }
+    dst.fast_set(x * 3 + 0, y * 3 + 0, P1, {});
+    dst.fast_set(x * 3 + 1, y * 3 + 0, P2, {});
+    dst.fast_set(x * 3 + 2, y * 3 + 0, P3, {});
+    dst.fast_set(x * 3 + 0, y * 3 + 1, P4, {});
+    dst.fast_set(x * 3 + 1, y * 3 + 1, P5, {});
+    dst.fast_set(x * 3 + 2, y * 3 + 1, P6, {});
+    dst.fast_set(x * 3 + 0, y * 3 + 2, P7, {});
+    dst.fast_set(x * 3 + 1, y * 3 + 2, P8, {});
+    dst.fast_set(x * 3 + 2, y * 3 + 2, P9, {});
   }
   return dst;
 } // pixel_upscale_x3
 
-Pal8 most_common_col(CN<Vector<Pal8>> colors) {
+Pal8 most_common_col(const Pack9 colors) {
   std::size_t max_count {};
-  CP<Pal8> ret {};
+  Pal8 ret {};
+  cauto colors_sz = colors.size;
 
-  for (cnauto a: colors) {
+  cfor (ai, colors_sz) {
     std::size_t count {};
-    for (cnauto b: colors)
-      if (a == b)
+    cfor (bi, colors_sz)
+      if (colors.data[ai] == colors.data[bi])
         ++count;
 
     if (count > max_count) {
       max_count = count;
-      ret = &a;
+      ret = colors.data[ai];
     }
-  } // for a: colors
+  } // for ai -> colors_sz
 
-  return *ret;
+  return ret;
 } // most_common_col
 
-Pal8 max_col(CN<Vector<Pal8>> colors) {
-  return *std::max_element(colors.begin(), colors.end());
-}
+Pal8 max_col(const Pack9 colors)
+  { return *std::max_element(colors.data, colors.data + colors.size); }
 
-Pal8 min_col(CN<Vector<Pal8>> colors) {
-  return *std::min_element(colors.begin(), colors.end());
-}
+Pal8 min_col(const Pack9 colors)
+  { return *std::min_element(colors.data, colors.data + colors.size); }
 
-Pal8 average_col(CN<Vector<Pal8>> colors) {
+Pal8 average_col(const Pack9 colors) {
   real ret = 0;
   bool is_red = false;
-  for (cnauto color: colors) {
+  cauto colors_sz = colors.size;
+
+  cfor (i, colors_sz) {
+    cauto color = colors.data[i];
     is_red |= color.is_red();
     ret += color.to_real();
   }
-  return Pal8::from_real(ret / colors.size(), is_red);
+  return Pal8::from_real(ret / colors_sz, is_red);
 }
 
-Vector<Pal8> color_get_cross(CN<Image> src, int x, int y) {
-  Vector<Pal8> ret(5);
-  auto mode = Image_get::MIRROR;
-  ret[0] = src.get(x + 0, y - 1, mode);
-  ret[1] = src.get(x - 1, y + 0, mode);
-  ret[2] =     src(x + 0, y + 0);
-  ret[3] = src.get(x + 1, y + 0, mode);
-  ret[4] = src.get(x + 0, y + 1, mode);
+Pack9 color_get_cross(CN<Image> src, int x, int y) {
+  Pack9 ret;
+  ret.size = 5;
+  ret.data[0] = src(x + 0, y - 1);
+  ret.data[1] = src(x - 1, y + 0);
+  ret.data[2] = src(x + 0, y + 0);
+  ret.data[3] = src(x + 1, y + 0);
+  ret.data[4] = src(x + 0, y + 1);
   return ret;
 }
 
-Vector<Pal8> color_get_box(CN<Image> src, int x, int y) {
-  Vector<Pal8> ret(9);
-  auto mode = Image_get::MIRROR;
-  ret[0] = src.get(x - 1, y - 1, mode);
-  ret[1] = src.get(x + 0, y - 1, mode);
-  ret[2] = src.get(x + 1, y - 1, mode);
-  ret[3] = src.get(x - 1, y + 0, mode);
-  ret[4] =     src(x + 0, y + 0);
-  ret[5] = src.get(x + 1, y + 0, mode);
-  ret[6] = src.get(x - 1, y + 1, mode);
-  ret[7] = src.get(x + 0, y + 1, mode);
-  ret[8] = src.get(x + 1, y + 1, mode);
+Pack9 color_get_box(CN<Image> src, int x, int y) {
+  Pack9 ret;
+  ret.size = 9;
+  ret.data[0] = src(x - 1, y - 1);
+  ret.data[1] = src(x + 0, y - 1);
+  ret.data[2] = src(x + 1, y - 1);
+  ret.data[3] = src(x - 1, y + 0);
+  ret.data[4] = src(x + 0, y + 0);
+  ret.data[5] = src(x + 1, y + 0);
+  ret.data[6] = src(x - 1, y + 1);
+  ret.data[7] = src(x + 0, y + 1);
+  ret.data[8] = src(x + 1, y + 1);
   return ret;
 }
 

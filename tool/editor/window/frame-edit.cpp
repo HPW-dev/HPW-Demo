@@ -67,8 +67,8 @@ void Frame_wnd::draw_info(CN<Frame> frame) {
   // эти ифы для проверки что есть фрейм у анимации
   if (auto direct = frame.get_direct(editor::entity->phys.get_deg()); direct) {
     if (auto sprite = direct->sprite; !sprite.expired()) {
-      if (auto image = sprite.lock()->get_image(); image)
-        res = Vec(image->X, image->Y);
+      cnauto image = sprite.lock()->image();
+      res = Vec(image.X, image.Y);
     }
   }
   Str resolution = "resolution: " + n2s(res.x, 0) + "x" + n2s(res.y, 0);
