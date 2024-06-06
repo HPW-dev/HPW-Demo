@@ -31,8 +31,8 @@ public:
 
   void init(int nx=0, int ny=0, std::optional<Pal8> col={}) noexcept;
   void init(CN<Image> img) noexcept;
+  void init(Image&& img) noexcept;
   void free() noexcept;
-  void swap(Image& other) noexcept;
   void fill(const Pal8 col) noexcept;
 
   inline Pal8& operator [](int i) noexcept { return pix[i]; }

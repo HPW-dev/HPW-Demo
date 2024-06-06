@@ -22,7 +22,9 @@ const Vec rotation_offset, Color_get_pattern cgp, Color_compute ccf) {
   real max_size = std::max(scaled.X(), scaled.Y());
   max_size = std::ceil( real(max_size * 1.3) );
 
-  Sprite for_rotate(max_size, max_size);
+  static Sprite for_rotate;
+  for_rotate.image().assign_resize(max_size, max_size);
+  for_rotate.mask().assign_resize(max_size, max_size);
   rotate(scaled, for_rotate, center_point(scaled) + rotation_offset,
     center_point(for_rotate), degree);
   // смена оффсета, с учётом картинки для поворота и вращение смещения

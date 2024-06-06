@@ -20,9 +20,11 @@ void rotate(CN<Image> src, Image& dst, const Vec center,
 void rotate(CN<Sprite> src, Sprite &dst, const Vec center,
   const Vec offset, real degree);
 
-// поворот картинки на 90 градусов вправо @param pass число повторейний поворота
+/** поворот картинки на 90 градусов вправо
+* @param pass число повторейний поворота */
 [[nodiscard]] Image rotate_90(CN<Image> src, uint pass=1);
 [[nodiscard]] Image rotate_180(CN<Image> src);
 [[nodiscard]] Image rotate_270(CN<Image> src);
-// поворот спрайта на 90 градусов вправо @param pass число повторейний поворота
+/** поворот спрайта на 90 градусов вправо
+* @param pass число повторейний поворота */
 [[nodiscard]] Sprite rotate_90(CN<Sprite> src, uint pass=1);

@@ -114,8 +114,8 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    auto colors = cgp_table.at(cgp) (src, x * 3, y * 3);
-    auto pix = ccf_table.at(ccf) (colors);
+    cauto colors = cgp_table.at(cgp) (src, x * 3, y * 3);
+    cauto pix = ccf_table.at(ccf) (colors);
     dst.fast_set(x, y, pix, {});
   }
   return dst;

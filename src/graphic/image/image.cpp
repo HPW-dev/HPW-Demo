@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cstring>
+#include <utility>
 #include <algorithm>
 #include "image.hpp"
 #include "util/macro.hpp"
@@ -9,24 +10,22 @@ Image::Image(CN<Image> img) noexcept { init(img); }
 Image::Image(Image&& other) noexcept { *this = std::move(other); }
 
 Image& Image::operator = (Image&& other) noexcept {
-  if (this != std::addressof(other)) {
-    other.swap(*this);
-    other.free();
-  }
+  return_if (this == std::addressof(other), *this);
+  pix = std::move(other.pix);
+  ccast<int&>(X) = other.X;
+  ccast<int&>(Y) = other.Y;
+  ccast<int&>(size) = other.size;
+  other.free();
   return *this;
 }
 
 Image& Image::operator = (CN<Image> other) noexcept {
-  if (this != std::addressof(other))
-    Image(other).swap(*this);
+  return_if (this == std::addressof(other), *this);
+  pix = other.pix;
+  ccast<int&>(X) = other.X;
+  ccast<int&>(Y) = other.Y;
+  ccast<int&>(size) = other.size;
   return *this;
-}
-
-void Image::swap(Image& other) noexcept {
-  std::swap(other.pix, pix);
-  std::swap(ccast<int&>(other.X), ccast<int&>(X));
-  std::swap(ccast<int&>(other.Y), ccast<int&>(Y));
-  std::swap(ccast<int&>(other.size), ccast<int&>(size));
 }
 
 Image::Image(int nx, int ny, std::optional<Pal8> col) noexcept
@@ -68,6 +67,15 @@ void Image::init(CN<Image> img) noexcept {
   return_if (this == std::addressof(img));
   init(img.X, img.Y);
   pix = img.pix;
+}
+
+void Image::init(Image&& img) noexcept {
+  return_if (this == std::addressof(img));
+  pix = std::move(img.pix);
+  ccast<int&>(X) = img.X;
+  ccast<int&>(Y) = img.Y;
+  ccast<int&>(size) = img.size;
+  img.free();
 }
 
 [[gnu::const]]
