@@ -105,7 +105,8 @@ Vec center_point(const Vec src, const Vec dst)
 
 Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
   assert(src);
-  Image dst(mx, my);
+  static Image dst; // prebuf opt
+  dst.assign_resize(mx, my);
   cauto ex {sx + mx};
   cauto ey {sy + my};
   for (auto y {sy}; y < ey; ++y)
@@ -116,8 +117,7 @@ Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
 
 Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
   assert(src);
-  if (rect_.size.x <= 0 || rect_.size.y <= 0)
-    return {};
+  return_if (rect_.size.x <= 0 || rect_.size.y <= 0, {});
 
   auto rect = rect_;
   rect.size = floor(rect.size);
@@ -134,14 +134,16 @@ Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
 
 Sprite optimize_size(CN<Sprite> src, Vec& offset) {
   return_if (!src, Sprite{});
+  
   cnauto mask = src.mask();
   int sx {mask.X - 1};
   int ex {-1};
   int sy {mask.Y - 1};
   int ey {-1};
-// по наличию непрозрачного пикселя в маске определяется область для вырезания
+
+  // по наличию непрозрачного пикселя в маске определяется область для вырезания
   cfor (y, mask.Y)
-  cfor (x, mask.X)
+  cfor (x, mask.X) {
     if (mask(x, y) != Pal8::mask_invisible) {
       if (x < sx)
         sx = x;
@@ -152,14 +154,15 @@ Sprite optimize_size(CN<Sprite> src, Vec& offset) {
       if (y > ey)
         ey = y;
     }
-  Sprite ret;
+  }
+
   // оффсет тоже обновляется
   offset.x += sx;
   offset.y += sy;
-  ret.move_image(std::move( fast_cut(src.image(), sx, sy,
-    ex - sx + 1, ey - sy + 1) ));
-  ret.move_mask(std::move( fast_cut(mask,  sx, sy,
-    ex - sx + 1, ey - sy + 1) ));
+
+  static Sprite ret; // prebuf opt
+  ret.image() = fast_cut(src.image(), sx, sy, ex - sx + 1, ey - sy + 1);
+  ret.mask()  = fast_cut(mask,        sx, sy, ex - sx + 1, ey - sy + 1);
   return ret;
 } // optimize_size
 
