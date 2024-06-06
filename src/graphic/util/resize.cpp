@@ -195,65 +195,69 @@ Image pixel_upscale_x3(CN<Image> src) {
   return dst;
 } // pixel_upscale_x3
 
-Pal8 most_common_col(CN<Vector<Pal8>> colors) {
+Pal8 most_common_col(const Pack9 colors) {
   std::size_t max_count {};
-  CP<Pal8> ret {};
+  Pal8 ret {};
+  cauto colors_sz = colors.size;
 
-  for (cnauto a: colors) {
+  cfor (ai, colors_sz) {
     std::size_t count {};
-    for (cnauto b: colors)
-      if (a == b)
+    cfor (bi, colors_sz)
+      if (colors.data[ai] == colors.data[bi])
         ++count;
 
     if (count > max_count) {
       max_count = count;
-      ret = &a;
+      ret = colors.data[ai];
     }
-  } // for a: colors
+  } // for ai -> colors_sz
 
-  return *ret;
+  return ret;
 } // most_common_col
 
-Pal8 max_col(CN<Vector<Pal8>> colors) {
-  return *std::max_element(colors.begin(), colors.end());
-}
+Pal8 max_col(const Pack9 colors)
+  { return *std::max_element(colors.data, colors.data + colors.size); }
 
-Pal8 min_col(CN<Vector<Pal8>> colors) {
-  return *std::min_element(colors.begin(), colors.end());
-}
+Pal8 min_col(const Pack9 colors)
+  { return *std::min_element(colors.data, colors.data + colors.size); }
 
-Pal8 average_col(CN<Vector<Pal8>> colors) {
+Pal8 average_col(const Pack9 colors) {
   real ret = 0;
   bool is_red = false;
-  for (cnauto color: colors) {
+  cauto colors_sz = colors.size;
+
+  cfor (i, colors_sz) {
+    cauto color = colors.data[i];
     is_red |= color.is_red();
     ret += color.to_real();
   }
-  return Pal8::from_real(ret / colors.size(), is_red);
+  return Pal8::from_real(ret / colors_sz, is_red);
 }
 
-Vector<Pal8> color_get_cross(CN<Image> src, int x, int y) {
-  Pal8 ret[5];
-  ret[0] = src(x + 0, y - 1);
-  ret[1] = src(x - 1, y + 0);
-  ret[2] = src(x + 0, y + 0);
-  ret[3] = src(x + 1, y + 0);
-  ret[4] = src(x + 0, y + 1);
-  return Vector<Pal8>(ret, ret + 5);
+Pack9 color_get_cross(CN<Image> src, int x, int y) {
+  Pack9 ret;
+  ret.size = 5;
+  ret.data[0] = src(x + 0, y - 1);
+  ret.data[1] = src(x - 1, y + 0);
+  ret.data[2] = src(x + 0, y + 0);
+  ret.data[3] = src(x + 1, y + 0);
+  ret.data[4] = src(x + 0, y + 1);
+  return ret;
 }
 
-Vector<Pal8> color_get_box(CN<Image> src, int x, int y) {
-  Pal8 ret[9];
-  ret[0] = src(x - 1, y - 1);
-  ret[1] = src(x + 0, y - 1);
-  ret[2] = src(x + 1, y - 1);
-  ret[3] = src(x - 1, y + 0);
-  ret[4] = src(x + 0, y + 0);
-  ret[5] = src(x + 1, y + 0);
-  ret[6] = src(x - 1, y + 1);
-  ret[7] = src(x + 0, y + 1);
-  ret[8] = src(x + 1, y + 1);
-  return Vector<Pal8>(ret, ret + 9);
+Pack9 color_get_box(CN<Image> src, int x, int y) {
+  Pack9 ret;
+  ret.size = 9;
+  ret.data[0] = src(x - 1, y - 1);
+  ret.data[1] = src(x + 0, y - 1);
+  ret.data[2] = src(x + 1, y - 1);
+  ret.data[3] = src(x - 1, y + 0);
+  ret.data[4] = src(x + 0, y + 0);
+  ret.data[5] = src(x + 1, y + 0);
+  ret.data[6] = src(x - 1, y + 1);
+  ret.data[7] = src(x + 0, y + 1);
+  ret.data[8] = src(x + 1, y + 1);
+  return ret;
 }
 
 Str convert(Color_compute ccf) {
