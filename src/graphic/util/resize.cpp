@@ -95,8 +95,49 @@ void zoom_x8(Sprite& dst) {
   zoom_x8(dst.mask());
 }
 
+// ускоренная версия для box + must_common
+inline Image pixel_downscale_x3_box_mc(CN<Image> src) {
+  static Image dst; // prebuf opt
+  dst.assign_resize(src.X / 3, src.Y / 3);
+  constexpr const uint max_c = 9;
+  Pal8 c[max_c];
+  
+  #pragma omp parallel for simd schedule(static, 4) collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    // box
+    c[0] = src.get(x*3 - 1, y*3 - 1, Image_get::MIRROR);
+    c[1] = src.get(x*3 + 0, y*3 - 1, Image_get::MIRROR);
+    c[2] = src.get(x*3 + 1, y*3 - 1, Image_get::MIRROR);
+    c[3] = src.get(x*3 - 1, y*3 + 0, Image_get::MIRROR);
+    c[4] =     src(x*3 + 0, y*3 + 0);
+    c[5] = src.get(x*3 + 1, y*3 + 0, Image_get::MIRROR);
+    c[6] = src.get(x*3 - 1, y*3 + 1, Image_get::MIRROR);
+    c[7] = src.get(x*3 + 0, y*3 + 1, Image_get::MIRROR);
+    c[8] = src.get(x*3 + 1, y*3 + 1, Image_get::MIRROR);
+
+    // must common
+    std::size_t max_count {};
+    Pal8 pix;
+    cfor (ai, max_c) {
+      std::size_t count {};
+      cfor (bi, max_c)
+        if (c[ai] == c[bi])
+          ++count;
+      if (count > max_count) {
+        max_count = count;
+        pix = c[ai];
+      }
+    } // for ai
+
+    dst.fast_set(x, y, pix, {});
+  }
+  return dst;
+} // pixel_downscale_x3_box_mc
+
 Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf) {
   return_if (!src, src);
+
   sconst std::unordered_map<Color_get_pattern, decltype(color_get_cross)*> cgp_table {
     {Color_get_pattern::cross, &color_get_cross},
     {Color_get_pattern::box, &color_get_box},
@@ -108,7 +149,10 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
     {Color_compute::average, &average_col},
   };
 
-  static Image dst;
+  if (cgp == Color_get_pattern::box && ccf == Color_compute::most_common)
+    return pixel_downscale_x3_box_mc(src);
+
+  static Image dst; // prebuf opt
   dst.assign_resize(src.X / 3, src.Y / 3);
   
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
@@ -126,7 +170,7 @@ Sprite pixel_upscale_x3(CN<Sprite> src) {
     hpw_log("WARNING: pixel_upscale_x3 empty src\n")
     return src;
   }
-  static Sprite dst;
+  Sprite dst;
   dst.move_image(std::move( pixel_upscale_x3(src.image()) ));
   dst.move_mask(std::move( pixel_upscale_x3(src.mask()) ));
   return dst;
@@ -137,14 +181,14 @@ Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute c
     hpw_log("WARNING: pixel_downscale_x3 empty src\n")
     return src;
   }
-  static Sprite dst;
+  Sprite dst;
   dst.move_image(std::move( pixel_downscale_x3(src.image(), cgp, ccf) ));
   dst.move_mask(std::move( pixel_downscale_x3(src.mask(), cgp, ccf) ));
   return dst;
 }
 
 Image pixel_upscale_x3(CN<Image> src) {
-  static Image dst;
+  static Image dst; // prebuf opt
   dst.assign_resize(src.X * 3, src.Y * 3);
   Pal8 P1, P2, P3;
   Pal8 P4, P5, P6;
