@@ -52,9 +52,7 @@ void Heat_distort::draw(Image& dst, const Vec offset) {
   auto local_block_count = flags.random_block_count
     ? rndr_fast(0, block_count)
     : block_count;
-  // оптимизация пребуфера
-  static Image cuted_block;
-  cuted_block.init(0, 0);
+  Image cuted_block;
 
   // в радиусе эффекта клонировать кусочки и сдвигать их немного от исходника
   cfor (block_idx, local_block_count) {

@@ -105,10 +105,10 @@ Vec center_point(const Vec src, const Vec dst)
 
 Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
   assert(src);
-  static Image dst; // prebuf opt
-  dst.assign_resize(mx, my);
+  Image dst(mx, my);
   cauto ex {sx + mx};
   cauto ey {sy + my};
+
   for (auto y {sy}; y < ey; ++y)
   for (auto x {sx}; x < ex; ++x)
     dst.fast_set(x - sx, y - sy, src(x, y), {});
@@ -160,7 +160,7 @@ Sprite optimize_size(CN<Sprite> src, Vec& offset) {
   offset.x += sx;
   offset.y += sy;
 
-  static Sprite ret; // prebuf opt
+  Sprite ret;
   ret.image() = fast_cut(src.image(), sx, sy, ex - sx + 1, ey - sy + 1);
   ret.mask()  = fast_cut(mask,        sx, sy, ex - sx + 1, ey - sy + 1);
   return ret;
@@ -175,10 +175,7 @@ void insert_x2(Image& dst, CN<Image> src, Vec pos) {
   // увеличенный пребуфер
   auto srx_x_x2 {src.X * 2};
   auto srx_y_x2 {src.Y * 2};
-  static Image insert_x2_buf {};
-  if (insert_x2_buf.size < srx_x_x2 * srx_y_x2)
-    insert_x2_buf.init(srx_x_x2, srx_y_x2);
-  insert_x2_buf.assign_resize(srx_x_x2, srx_y_x2);
+  Image insert_x2_buf(srx_x_x2, srx_y_x2);
 
   cfor (y, src.Y)
   cfor (x, src.X) {
@@ -349,8 +346,7 @@ void to_red(Image& dst) {
 }
 
 void expand_color_4(Image& dst, const Pal8 color) {
-  static Image buffer; // prebuf opt
-  buffer.init(dst);
+  Image buffer(dst);
 
   cfor (y, dst.Y)
   cfor (x, dst.X) {
@@ -364,8 +360,7 @@ void expand_color_4(Image& dst, const Pal8 color) {
 } // expand_color_4
 
 void expand_color_8(Image& dst, const Pal8 color) {
-  static Image buffer; // prebuf opt
-  buffer.init(dst);
+  Image buffer(dst);
 
   cfor (y, dst.Y)
   cfor (x, dst.X) {
