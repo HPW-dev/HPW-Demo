@@ -151,22 +151,24 @@ Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute c
 Image pixel_upscale_x3(CN<Image> src) {
   static Image dst; // prebuf opt
   dst.assign_resize(src.X * 3, src.Y * 3);
-  Pal8 P1, P2, P3;
-  Pal8 P4, P5, P6;
-  Pal8 P7, P8, P9;
 
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, src.Y)
   cfor (x, src.X) {
-    auto A {src.get(x - 1, y - 1, Image_get::COPY)};
-    auto B {src.get(x + 0, y - 1, Image_get::COPY)};
-    auto C {src.get(x + 1, y - 1, Image_get::COPY)};
-    auto D {src.get(x - 1, y + 0, Image_get::COPY)};
-    auto E {src(x, y)};
-    auto F {src.get(x + 1, y + 0, Image_get::COPY)};
-    auto G {src.get(x - 1, y + 1, Image_get::COPY)};
-    auto H {src.get(x + 0, y + 1, Image_get::COPY)};
-    auto I {src.get(x + 1, y + 1, Image_get::COPY)};
+    cauto A {src.get(x - 1, y - 1, Image_get::COPY)};
+    cauto B {src.get(x + 0, y - 1, Image_get::COPY)};
+    cauto C {src.get(x + 1, y - 1, Image_get::COPY)};
+    cauto D {src.get(x - 1, y + 0, Image_get::COPY)};
+    cauto E {src(x, y)};
+    cauto F {src.get(x + 1, y + 0, Image_get::COPY)};
+    cauto G {src.get(x - 1, y + 1, Image_get::COPY)};
+    cauto H {src.get(x + 0, y + 1, Image_get::COPY)};
+    cauto I {src.get(x + 1, y + 1, Image_get::COPY)};
+
+    Pal8 P1, P2, P3;
+    Pal8 P4, P5, P6;
+    Pal8 P7, P8, P9;
+
     if (B != H && D != F) {
       P1 = D == B ? D : E;
       P2 = (D == B && E != C) || (B == F && E != A) ? B : E;
