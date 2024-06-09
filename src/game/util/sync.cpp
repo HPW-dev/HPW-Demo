@@ -4,6 +4,7 @@
 #include "game/core/core.hpp"
 #include "host/command.hpp"
 #include "util/log.hpp"
+#include "util/platform.hpp"
 
 static bool m_vsync {false};
 static bool m_disable_frame_limit {false};
@@ -93,6 +94,7 @@ void set_target_vsync_fps(int val) {
   assert(val > 0);
   m_target_vsync_fps = val;
   set_target_vsync_frame_time(1.0 / val);
+  calibrate_delay(1.0 / val);
 }
 
 void set_target_frame_time(const Delta_time val) {
