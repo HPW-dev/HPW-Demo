@@ -29,7 +29,8 @@
 #endif
 
 using Seconds = double;
-void delay(const Seconds seconds);
+// подождать секунды
+void delay_sec(const Seconds seconds);
 
 // подгонка задержки для повышения точности
 void calibrate_delay(const Seconds target);

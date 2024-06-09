@@ -58,7 +58,7 @@ using Delay_pf = void (*)(const Seconds seconds);
 Delay_pf g_delay_pf = &std_delay_nop; // текущая функция для задержки
 Str g_timer_name {"std_delay_nop"};
 
-void delay(const Seconds seconds) {
+void delay_sec(const Seconds seconds) {
   cauto local_delay = seconds - g_delay_error;
   return_if(local_delay <= 0);
   return_if(local_delay >= 3 * 60);

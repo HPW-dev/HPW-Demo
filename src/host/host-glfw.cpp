@@ -479,9 +479,10 @@ void Host_glfw::check_frame_skip() {
 void Host_glfw::frame_wait() {
   // ожидание для v-sync
   auto delay = graphic::get_target_frame_time() - frame_time - update_time;
-  constx Delta_time delay_timeout = 1.0 / 10.0;
-  delay = std::clamp<Delta_time>(delay, 0, delay_timeout);
-  glfwWaitEventsTimeout(delay);
+  /*constx Delta_time delay_timeout = 1.0 / 10.0;
+  delay = std::clamp<Delta_time>(delay, 0, delay_timeout);*/
+  delay = std::clamp<Delta_time>(delay, 0, 1);
+  delay_sec(delay);
 }
 
 void Host_glfw::init_icon() {
