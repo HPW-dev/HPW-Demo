@@ -53,7 +53,7 @@ static void key_callback(GLFWwindow* m_window, int key, int scancode, int action
       key_mapper.bind(g_key_for_rebind, scancode);
       hpw::keys_info = key_mapper.get_info();
       g_rebind_key_mode = false;
-      return; // чтобы нажатие не применилось на игре
+      return; // чтобы нажатие не применилось в игровой логике
     }
   }
 
