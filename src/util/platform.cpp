@@ -118,8 +118,7 @@ void calibrate_delay(const Seconds target) {
   set_timer(best_timer->name);
   g_delay_error = best_timer->delay_error;
   
-  hpw_log("выбран таймер: " << g_timer_name << '\n');
-  hpw_log("коррекция: " << n2s(g_delay_error, 14) << " сек.\n");
+  hpw_log("коррекция таймера: " << n2s(g_delay_error, 14) << " сек.\n");
 } // calibrate_delay
 
 void set_timer(CN<Str> name) {
