@@ -43,7 +43,7 @@ void Host_imgui::init_window() {
     16.0f, &font_cfg, io.Fonts->GetGlyphRangesCyrillic());
   check_p(font);
 // Setup Platform/Renderer bindings
-  ImGui_ImplGlfw_InitForOpenGL(window, true);
+  ImGui_ImplGlfw_InitForOpenGL(m_window, true);
   ImGui_ImplOpenGL3_Init();
 // Setup Dear ImGui style
   init_color_theme();

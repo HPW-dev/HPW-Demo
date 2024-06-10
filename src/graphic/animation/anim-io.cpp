@@ -12,6 +12,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/anims.hpp"
+#include "game/core/common.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "util/log.hpp"
