@@ -47,9 +47,35 @@ inline void win_htimer(const Seconds seconds) {
   ::CloseHandle(timer);
 }
 
+inline void win_bussy_loop(const Seconds seconds, const double scale) {
+  auto st = std::chrono::steady_clock::now();
+  win_htimer(seconds * scale);
+  while (std::chrono::steady_clock::now() - st <= std_seconds(seconds)) {
+    asm volatile ("");
+  }
+}
+
+// спать 70% времени, остальное ожидать в цикле
+inline void win_bussy_loop_70(const Seconds seconds) { return win_bussy_loop(seconds, 0.7); }
+// спать 92% времени, остальное ожидать в цикле
+inline void win_bussy_loop_92(const Seconds seconds) { return win_bussy_loop(seconds, 0.92); }
+
 #else //LINUX
 
 inline void lin_usleep(const Seconds seconds) { usleep(seconds * 1'000'000.0); }
+
+inline void lin_bussy_loop(const Seconds seconds, const double scale) {
+  auto st = std::chrono::steady_clock::now();
+  lin_usleep(seconds * scale);
+  while (std::chrono::steady_clock::now() - st <= std_seconds(seconds)) {
+    asm volatile ("");
+  }
+}
+
+// спать 70% времени, остальное ожидать в цикле
+inline void lin_bussy_loop_70(const Seconds seconds) { return lin_bussy_loop(seconds, 0.7); }
+// спать 92% времени, остальное ожидать в цикле
+inline void lin_bussy_loop_92(const Seconds seconds) { return lin_bussy_loop(seconds, 0.92); }
 
 #endif
 
@@ -57,11 +83,11 @@ Seconds g_delay_error {0}; // средний оверхед задержки
 using Delay_pf = void (*)(const Seconds seconds);
 
 #ifdef WINDOWS
-Delay_pf g_delay_pf = &std_delay_nop; // текущая функция для задержки
-Str g_timer_name {"std_delay_nop"};
+Delay_pf g_delay_pf = &win_bussy_loop_92; // текущая функция для задержки
+Str g_timer_name {"win_bussy_loop_92"};
 #else // LINUX
-Delay_pf g_delay_pf = &lin_usleep; // текущая функция для задержки
-Str g_timer_name {"lin_usleep"};
+Delay_pf g_delay_pf = &lin_bussy_loop_92; // текущая функция для задержки
+Str g_timer_name {"lin_bussy_loop_92"};
 #endif
 
 void delay_sec(const Seconds seconds) {
@@ -90,8 +116,12 @@ void calibrate_delay(const Seconds target) {
     #ifdef WINDOWS
     Timer_stat {.name="win_sleep", .delay_pf = &win_sleep},
     Timer_stat {.name="win_htimer", .delay_pf = &win_htimer},
+    Timer_stat {.name="win_bussy_loop_70", .delay_pf = &win_bussy_loop_70},
+    Timer_stat {.name="win_bussy_loop_92", .delay_pf = &win_bussy_loop_92},
     #else // LINUX
     Timer_stat {.name="lin_usleep", .delay_pf = &lin_usleep},
+    Timer_stat {.name="lin_bussy_loop_70", .delay_pf = &lin_bussy_loop_70},
+    Timer_stat {.name="lin_bussy_loop_92", .delay_pf = &lin_bussy_loop_92},
     #endif
   };
 
