@@ -145,19 +145,20 @@ void Host_glfw::init() {
 void Host_glfw::run() {
   Host_ogl::run();
   init();
+  auto last_loop_time = get_time();
   
   while (is_ran()) {
-    auto gameloop_time_point_start = get_time();
-
     glfwPollEvents();
     game_update(hpw::safe_dt);
     game_frame(hpw::safe_dt);
 
-    auto gameloop_time_point_end = get_time();
-    auto gameloop_time = gameloop_time_point_end - gameloop_time_point_start;
-    game_set_dt(gameloop_time);
-    game_set_fps_info(gameloop_time);
-  } // while is_ran
+    // вычисление Delta Time
+    cauto loop_time = get_time();
+    cauto dt = loop_time - last_loop_time;
+    last_loop_time = loop_time;
+    game_set_dt(dt);
+    game_set_fps_info(dt);
+  }
 
   is_run = false;
 } // run
@@ -175,6 +176,7 @@ void Host_glfw::set_window_pos(int x, int y) {
 
 void Host_glfw::game_set_dt(const Delta_time gameloop_time) {
   hpw::real_dt = gameloop_time;
+  // ограничение чтобы игра фризила, а не обновлялась рывками
   hpw::safe_dt = std::clamp(gameloop_time, 0.000001, 1.0 / (60 * 0.9));
   graphic::effect_state = std::fmod(graphic::effect_state + hpw::real_dt, 1.0);
 }
@@ -324,12 +326,12 @@ void Host_glfw::game_frame(const Delta_time dt) {
   return_if (dt <= 0 || dt >= 10);
 
   frame_time += dt;
+  static auto last_frame_time = get_time();
 
   if (
     frame_time >= graphic::get_target_frame_time() ||
     graphic::get_disable_frame_limit()
   ) {
-    auto frame_draw_start = get_time();
     frame_time = 0;
     check_frame_skip();
     calc_upf();
@@ -345,8 +347,10 @@ void Host_glfw::game_frame(const Delta_time dt) {
     }
     ++graphic::frame_count;
 
-    auto frame_draw_end = get_time();
-    graphic::hard_draw_time = frame_draw_end - frame_draw_start;
+    // вычислить сколько длился рендер игры и хоста
+    cauto new_frame_time = get_time();
+    graphic::hard_draw_time = new_frame_time - last_frame_time;
+    last_frame_time = new_frame_time;
   } else if (graphic::cpu_safe && !graphic::get_fast_forward()) {
     frame_wait();
   }
