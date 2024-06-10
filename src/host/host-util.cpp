@@ -7,6 +7,7 @@
 #include "game/util/game-archive.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
+#include "util/math/random.hpp"
 #include "graphic/util/convert.hpp"
 #include "graphic/image/color.hpp"
 
@@ -53,3 +54,39 @@ Rgb24 to_palette_rgb24(const Pal8 x) {
     };
   return to_rgb24(x);
 }
+
+Str rnd_window_name() {
+#if 0
+  return "H.P.W";
+#else
+  sconst Strs window_names {
+    "HPW",
+    "H.P.W",
+    "h p w",
+    "ХПВ",
+    "}{ |\"| \\/\\/",
+    "АшПэВэ",
+    "ХеПеВе",
+    "Игра про бумеранг",
+    "Game about UFO",
+    "|-| |' \\/\\/",
+    "hhhpppwww",
+    "HHH PPP WWW",
+    ">",
+    "V",
+    "^",
+    "<",
+    "\\/",
+    "/\\",
+    "> > > > > > >",
+    ":.",
+    ".:",
+    "стрелялка",
+    "ИГРYШKA",
+    "Окно с игрой",
+    "26.83.130.14",
+    "int main() { return main(); }",
+  }; // window_names
+  return window_names.at(rndu_fast(window_names.size() - 1));
+#endif
+} // rnd_window_name

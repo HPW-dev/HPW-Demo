@@ -247,7 +247,7 @@ void Host_glfw::init_window() {
       : GL_FALSE
   ); 
   detailed_log("make m_window\n");
-  m_window = glfwCreateWindow(m_w, m_h, window_name().c_str(), nullptr, nullptr);
+  m_window = glfwCreateWindow(m_w, m_h, rnd_window_name().c_str(), nullptr, nullptr);
   iferror(!m_window, "bad init GLFW m_window");
   glfwSetWindowPos(m_window, m_wnd_x, m_wnd_y);
   glfwMakeContextCurrent(m_window);
@@ -519,39 +519,3 @@ void Host_glfw::init_icon() {
 
   stbi_image_free(icon.pixels);
 } // init_icon
-
-Str Host_glfw::window_name() const {
-#if 0
-  return "H.P.W";
-#else
-  sconst Strs window_names {
-    "HPW",
-    "H.P.W",
-    "h p w",
-    "ХПВ",
-    "}{ |\"| \\/\\/",
-    "АшПэВэ",
-    "ХеПеВе",
-    "Игра про бумеранг",
-    "Game about UFO",
-    "|-| |' \\/\\/",
-    "hhhpppwww",
-    "HHH PPP WWW",
-    ">",
-    "V",
-    "^",
-    "<",
-    "\\/",
-    "/\\",
-    "> > > > > > >",
-    ":.",
-    ".:",
-    "стрелялка",
-    "ИГРYШKA",
-    "Окно с игрой",
-    "26.83.130.14",
-    "int main() { return main(); }",
-  }; // window_names
-  return window_names.at(rndu_fast(window_names.size() - 1));
-#endif
-} // window_name
