@@ -55,8 +55,14 @@ inline void lin_usleep(const Seconds seconds) { usleep(seconds * 1'000'000.0); }
 
 Seconds g_delay_error {0}; // средний оверхед задержки
 using Delay_pf = void (*)(const Seconds seconds);
+
+#ifdef WINDOWS
 Delay_pf g_delay_pf = &std_delay_nop; // текущая функция для задержки
 Str g_timer_name {"std_delay_nop"};
+#else // LINUX
+Delay_pf g_delay_pf = &lin_usleep; // текущая функция для задержки
+Str g_timer_name {"lin_usleep"};
+#endif
 
 void delay_sec(const Seconds seconds) {
   cauto local_delay = seconds - g_delay_error;
