@@ -84,14 +84,12 @@ void load_resources() {
 
 void load_animations() {
   hpw::anim_mgr = new_unique<Anim_mgr>();
-  Unique<Yaml> anim_yml;
-#ifdef EDITOR
-  anim_yml = new_unique<Yaml>(hpw::cur_dir + "config/animation.yml");
-#else
-  anim_yml = new_unique<Yaml>(hpw::archive->get_file("config/animation.yml"));
-#endif
-  read_anims(*anim_yml);
-} // load_animations
+
+  if (!hpw::lazy_load_anim) {
+    cauto anim_yml = get_anim_config();
+    read_anims(anim_yml);
+  }
+}
 
 CN<utf32> get_locale_str(CN<Str> key) {
   assert(hpw::store_locale);
