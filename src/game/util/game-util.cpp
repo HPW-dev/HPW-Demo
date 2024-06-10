@@ -85,6 +85,11 @@ void load_resources() {
 void load_animations() {
   hpw::anim_mgr = new_unique<Anim_mgr>();
 
+  // редактору нужно загрузить все анимации
+  #ifdef EDITOR
+  hpw::lazy_load_anim = false;
+  #endif
+
   if (!hpw::lazy_load_anim) {
     cauto anim_yml = get_anim_config();
     read_anims(anim_yml);
