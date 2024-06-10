@@ -1,4 +1,6 @@
 #pragma once
+#include "util/str.hpp"
+#include "util/macro.hpp"
 
 // разделители файловых систем:
 #ifdef WINDOWS
@@ -25,3 +27,16 @@
   #define COMPILER_MSC
   #pragma GCC diagnostic warning "not tested on MSC!"
 #endif
+
+using Seconds = double;
+// подождать секунды
+void delay_sec(const Seconds seconds);
+
+// подгонка задержки для повышения точности
+void calibrate_delay(const Seconds target);
+
+// выбрать таймер по имени
+void set_timer(CN<Str> name);
+
+// унать какой таймер используется сейчас
+Str get_timer();

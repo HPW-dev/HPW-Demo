@@ -13,3 +13,5 @@ void set_target_ups(int new_ups);
 Vector<GLfloat> load_ogl_palette(CN<Str> fname);
 // преобразует палитровый цвет в RGB24 с учётом текущей палитры
 Rgb24 to_palette_rgb24(const Pal8 x);
+// случайное название для окна игры
+Str rnd_window_name();

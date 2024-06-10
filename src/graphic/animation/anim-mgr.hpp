@@ -19,7 +19,7 @@ public:
   void add_anim(CN<Str> str, CN<Shared<Anim>> new_anim);
   void remove_anim(CN<Str> str);
   // получить анимацию по её имени
-  CN<Shared<Anim>> find_anim(CN<Str> name) const;
+  CN<Shared<Anim>> find_anim(CN<Str> name);
   // узнать id анимации по её имени
   std::size_t get_id(CN<Str> name) const;
   // узнать что есть объект с таким именем (true если есть)

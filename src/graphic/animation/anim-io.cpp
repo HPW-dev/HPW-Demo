@@ -8,6 +8,7 @@
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
 #include "game/util/store.hpp"
+#include "game/util/game-archive.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/anims.hpp"
@@ -87,60 +88,65 @@ void read_anims(CN<Yaml> src) {
 
   cfor (i, anim_names.size()) {
     cnauto anim_name {anim_names[i]};
-    // анимация будет сохранена в Anim_mgr
-    Shared<Anim> anim;
-    anim = new_shared<Anim>();
-    auto anim_node = animations_node[anim_name];
-
-    // загрузка хитбокса
-    load_hitbox(*anim, anim_node["hitbox"]);
-
-    // нода с кадрами
-    auto frames_node = anim_node["frames"];
-
-    // прочитать все кадры
-    for (cnauto frame_name: frames_node.root_tags()) {
-      auto frame = new_shared<Frame>();
-      // нода этого кадра
-      auto cur_frame_node = frames_node[frame_name];
-      // прочитать длительность кадра
-      frame->duration = cur_frame_node.get_real("duration");
-      // прочитать число разворотов
-      frame->source_ctx.max_directions = cur_frame_node.get_int("directions");
-      // прочитать коррекцию артефактов
-      auto ccf_name = cur_frame_node.get_str("ccf");
-      if (!ccf_name.empty())
-        frame->source_ctx.ccf = convert_to_ccf(ccf_name);
-      auto cgp_name = cur_frame_node.get_str("cgp");
-      if (!cgp_name.empty())
-        frame->source_ctx.cgp = convert_to_cgp(cgp_name);
-      auto rotate_offset_v = cur_frame_node.get_v_real("rotate offset");
-      if (!rotate_offset_v.empty()) {
-        frame->source_ctx.rotate_offset.x = rotate_offset_v.at(0);
-        frame->source_ctx.rotate_offset.y = rotate_offset_v.at(1);
-      }
-      // прочитать источник кадра
-      auto sprite_path = cur_frame_node.get_str("sprite path");
-      if (!sprite_path.empty()) {
-        auto finded_sprite = hpw::store_sprite->find(sprite_path);
-        if (finded_sprite)
-          frame->source_ctx.direct_0.sprite = finded_sprite;
-      }
-      // смещение отрисовки относительно центра спрайта
-      auto sprite_offset_v = cur_frame_node.get_v_real("sprite offset");
-      if (!sprite_offset_v.empty()) {
-        frame->source_ctx.direct_0.offset.x = sprite_offset_v.at(0);
-        frame->source_ctx.direct_0.offset.y = sprite_offset_v.at(1);
-      }
-      // TODO hitbox
-
-      frame->reinit_directions_by_source();
-      anim->add_frame(frame);
-    } // for frames_node tags
-
+    cauto anim_node = animations_node[anim_name];
+    cauto anim = read_anim(anim_node);
     hpw::anim_mgr->add_anim(anim_name, anim);
   } // root tags
 } // read_anims
+
+Shared<Anim> read_anim(CN<Yaml> anim_node) {
+  // анимация будет сохранена в Anim_mgr
+  Shared<Anim> anim;
+  anim = new_shared<Anim>();
+
+  // загрузка хитбокса
+  load_hitbox(*anim, anim_node["hitbox"]);
+
+  // нода с кадрами
+  cauto frames_node = anim_node["frames"];
+
+  // прочитать все кадры
+  for (cnauto frame_name: frames_node.root_tags()) {
+    auto frame = new_shared<Frame>();
+    // нода этого кадра
+    auto cur_frame_node = frames_node[frame_name];
+    // прочитать длительность кадра
+    frame->duration = cur_frame_node.get_real("duration");
+    // прочитать число разворотов
+    frame->source_ctx.max_directions = cur_frame_node.get_int("directions");
+    // прочитать коррекцию артефактов
+    auto ccf_name = cur_frame_node.get_str("ccf");
+    if (!ccf_name.empty())
+      frame->source_ctx.ccf = convert_to_ccf(ccf_name);
+    auto cgp_name = cur_frame_node.get_str("cgp");
+    if (!cgp_name.empty())
+      frame->source_ctx.cgp = convert_to_cgp(cgp_name);
+    auto rotate_offset_v = cur_frame_node.get_v_real("rotate offset");
+    if (!rotate_offset_v.empty()) {
+      frame->source_ctx.rotate_offset.x = rotate_offset_v.at(0);
+      frame->source_ctx.rotate_offset.y = rotate_offset_v.at(1);
+    }
+    // прочитать источник кадра
+    auto sprite_path = cur_frame_node.get_str("sprite path");
+    if (!sprite_path.empty()) {
+      auto finded_sprite = hpw::store_sprite->find(sprite_path);
+      if (finded_sprite)
+        frame->source_ctx.direct_0.sprite = finded_sprite;
+    }
+    // смещение отрисовки относительно центра спрайта
+    auto sprite_offset_v = cur_frame_node.get_v_real("sprite offset");
+    if (!sprite_offset_v.empty()) {
+      frame->source_ctx.direct_0.offset.x = sprite_offset_v.at(0);
+      frame->source_ctx.direct_0.offset.y = sprite_offset_v.at(1);
+    }
+    // TODO hitbox
+
+    frame->reinit_directions_by_source();
+    anim->add_frame(frame);
+  } // for frames_node tags
+
+  return anim;
+} // read_anim
 
 void save_anims(Yaml& dst) {
   assert (hpw::anim_mgr);
@@ -202,3 +208,11 @@ void save_anims(Yaml& dst) {
 
   dst.save(dst.get_path());
 } // save_anims
+
+Yaml get_anim_config() {
+#ifdef EDITOR
+  return Yaml(hpw::cur_dir + "config/animation.yml");
+#else
+  return Yaml(hpw::archive->get_file("config/animation.yml"));
+#endif
+}

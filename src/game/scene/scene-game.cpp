@@ -1,4 +1,3 @@
-#include <chrono>
 #include <utility>
 #include <fstream>
 #include <algorithm>
@@ -88,13 +87,7 @@ Scene_game::Scene_game(const bool start_tutorial)
 
   graphic::post_effects = new_shared<Effect_mgr>();
   init_entitys();
-
-  cauto _st = std::chrono::steady_clock::now();
   load_animations();
-  cauto _ed = std::chrono::steady_clock::now();
-  using Seconds = std::chrono::duration<long double, std::ratio<1, 1>>;
-  cauto seconds = std::chrono::duration_cast<Seconds>(_ed - _st);
-  hpw_log("load_animations time: " << seconds << '\n');
 
   hpw::entity_mgr->register_types();
   init_levels();

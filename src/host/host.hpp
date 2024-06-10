@@ -10,9 +10,9 @@ class Host {
   void callbacks_init(); // задать колбэки для общих команд
 
 protected:
-  int argc {};
-  char** argv {};
-  std::atomic_bool is_run {true};
+  int m_argc {};
+  char** m_argv {};
+  std::atomic_bool m_is_ran {true};
 
   #ifdef WINDOWS
   void* m_app_mutex {};
@@ -32,7 +32,7 @@ protected:
   void free_app_mutex();
 
 public:
-  explicit Host(int _argc, char** _argv);
+  explicit Host(int argc, char** argv);
   ~Host();
   inline virtual void run() {}
 }; // Host

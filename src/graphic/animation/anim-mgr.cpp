@@ -5,9 +5,11 @@
 #include "anim-mgr.hpp"
 #include "anim.hpp"
 #include "frame.hpp"
+#include "anim-io.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
+#include "game/core/anims.hpp"
 
 struct Anim_mgr::Impl {
   std::unordered_map<Str, Shared<Anim>> table {};
@@ -21,15 +23,26 @@ struct Anim_mgr::Impl {
     table[str_low] = new_anim; 
   }
 
-  inline CN<Shared<Anim>> find_anim(CN<Str> name) const {
+  inline CN<Shared<Anim>> find_anim(CN<Str> name) {
     try {
       return table.at(str_tolower(name));
     } catch (...) {
-      auto msg = "Anim_mgr.find_anim: animation \"" +
-        name + "\" not found\n";
-      error(msg);
+      if (hpw::lazy_load_anim) {
+        detailed_log("анимация \"" << name <<
+          "\" не загружена.\nзагрузка \"" << name << "\"\n");
+
+        try {
+          add_anim(name, load_from_config(name));
+          return table.at(str_tolower(name));
+        } catch (...) {
+          error("не удалось загрузить");
+        }
+      } else {
+        error("Anim_mgr.find_anim: animation \"" <<
+          name << "\" not found");
+      }
     }
-  }
+  } // find_anim
 
   inline CP<Direct> get_direct(CN<Str> str,
   uint frame_num, real degree) {
@@ -90,13 +103,20 @@ struct Anim_mgr::Impl {
     auto [anims, finded] = find_helper(*this, name);
     return finded != anims.end();
   }
+
+  // грузит одну анимацию из конфига
+  inline Shared<Anim> load_from_config(CN<Str> name) const {
+    cauto anim_yml = get_anim_config();
+    cauto animations_node = anim_yml["animations"];
+    return read_anim(animations_node[name]);
+  }
 }; // impl
 
 Anim_mgr::Anim_mgr(): impl {new_unique<Impl>()} {}
 Anim_mgr::~Anim_mgr() {}
 void Anim_mgr::add_anim(CN<Str> str, CN<Shared<Anim>> new_anim) { impl->add_anim(str, new_anim); }
 void Anim_mgr::remove_anim(CN<Str> str) { impl->remove_anim(str); }
-CN<Shared<Anim>> Anim_mgr::find_anim(CN<Str> name) const { return impl->find_anim(name); }
+CN<Shared<Anim>> Anim_mgr::find_anim(CN<Str> name) { return impl->find_anim(name); }
 std::size_t Anim_mgr::get_id(CN<Str> name) const { return impl->get_id(name); }
 bool Anim_mgr::name_exist(CN<Str> name) const { return impl->name_exist(name); }
 CP<Direct> Anim_mgr::get_direct(CN<Str> str, uint frame_num, real degree) { return impl->get_direct(str, frame_num, degree); }
