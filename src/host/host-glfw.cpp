@@ -33,9 +33,9 @@ extern "C" {
   #include <GLFW/glfw3.h>
 }
 
-inline std::atomic<Host_glfw*> instance {};
-inline bool rebind_key_mode {false};
-inline hpw::keycode key_for_rebind; // появится при hpw::rebind_key
+inline std::atomic<Host_glfw*> g_instance {};
+inline bool g_rebind_key_mode {false};
+inline hpw::keycode g_key_for_rebind; // появится при hpw::rebind_key
 
 static void host_glfw_set_vsync(bool enable) {
   detailed_log("vsync: " << enable << '\n');
@@ -44,15 +44,15 @@ static void host_glfw_set_vsync(bool enable) {
 
 static void key_callback(GLFWwindow* m_window, int key, int scancode, int action, int mods) {
   hpw::any_key_pressed = true;
-  nauto key_mapper = *(instance.load()->m_key_mapper.get());
+  nauto key_mapper = *(g_instance.load()->m_key_mapper.get());
   nauto keymap_table = key_mapper.get_table();
 
   // режим ребинда клавиши
-  if (rebind_key_mode) {
+  if (g_rebind_key_mode) {
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      key_mapper.bind(key_for_rebind, scancode);
+      key_mapper.bind(g_key_for_rebind, scancode);
       hpw::keys_info = key_mapper.get_info();
-      rebind_key_mode = false;
+      g_rebind_key_mode = false;
       return; // чтобы нажатие не применилось на игре
     }
   }
@@ -84,7 +84,7 @@ static void error_callback(int error, Cstr description) {
 }
 
 static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h)
-{ instance.load()->reshape(w, h); }
+{ g_instance.load()->reshape(w, h); }
 
 // utf32 text input callback
 static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoint) {
@@ -96,8 +96,8 @@ Host_glfw::Host_glfw(int argc, char *argv[])
 : Host_ogl (argc, argv)
 , m_wnd_x (480), m_wnd_y (40)
 {
-  iferror(instance, "no use two GLFW hosts");
-  instance.store(this);
+  iferror(g_instance, "no use two GLFW hosts");
+  g_instance.store(this);
 
   hpw::set_vsync = &host_glfw_set_vsync;
   glfwSetErrorCallback(error_callback);
@@ -114,13 +114,13 @@ Host_glfw::Host_glfw(int argc, char *argv[])
 Host_glfw::~Host_glfw() {
   glfwDestroyWindow(m_window);
   glfwTerminate();
-  instance = {};
+  g_instance = {};
 }
 
 void Host_glfw::init_commands() {
   hpw::rebind_key = [](hpw::keycode hpw_key){
-    rebind_key_mode = true;
-    key_for_rebind = hpw_key;
+    g_rebind_key_mode = true;
+    g_key_for_rebind = hpw_key;
   };
   hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode){
     return_if( !m_key_mapper);
