@@ -329,7 +329,9 @@ void Host_glfw::game_frame(const Delta_time dt) {
   static auto last_frame_time = get_time();
 
   if (
+    // риосвать кадр если пришло время для него
     m_frame_time >= graphic::get_target_frame_time() ||
+    // или если нет лимита кадров
     graphic::get_disable_frame_limit()
   ) {
     m_frame_time = 0;
