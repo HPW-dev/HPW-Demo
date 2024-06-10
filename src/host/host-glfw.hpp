@@ -9,7 +9,7 @@ class Key_mapper;
 // рендерер от GLFW
 class Host_glfw: public Host_ogl {
 public:
-  Shared<Key_mapper> key_mapper {};
+  Shared<Key_mapper> m_key_mapper {};
   
   explicit Host_glfw(int argc, char *argv[]);
   ~Host_glfw();
@@ -18,17 +18,17 @@ public:
   void run() override;
 
 protected:
-  int wnd_x {}, wnd_y {}; // позиция окна на рабочем столе
-  GLFWwindow* window {};
-  Delta_time second_timer {}; // для высчитывания фпс
-  uint fps {};
-  uint ups {};
-  uint upf {};
-  uint ips {};
-  Delta_time frame_time {};
-  Delta_time update_time {};
-  Delta_time start_update_time {}; // нужен для интерполяции движения
-  bool frame_drawn {false}; // для плавного апдейта игры
+  int m_wnd_x {}, m_wnd_y {}; // позиция окна на рабочем столе
+  GLFWwindow* m_window {};
+  Delta_time m_fps_timer {}; // для высчитывания фпс
+  uint m_fps {};
+  uint m_ups {};
+  uint m_upf {};
+  uint m_ips {};
+  Delta_time m_frame_time {};
+  Delta_time m_update_time {};
+  Delta_time m_start_update_time {}; // нужен для интерполяции движения
+  bool m_frame_drawn {false}; // для плавного апдейта игры
 
   void game_set_dt(const Delta_time gameloop_time);
   void game_set_fps_info(const Delta_time gameloop_time);

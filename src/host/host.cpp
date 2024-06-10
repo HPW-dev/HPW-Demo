@@ -19,12 +19,12 @@
 #include <windows.h>
 #endif
 
-Host::Host(int _argc, char** _argv)
-: argc(_argc)
-, argv(_argv)
+Host::Host(int argc, char** argv)
+: m_argc(argc)
+, m_argv(argv)
 {
-  hpw::argc = _argc;
-  hpw::argv = _argv;
+  hpw::argc = m_argc;
+  hpw::argv = m_argv;
   init_app_mutex();
 
 #ifdef WINDOWS
@@ -60,7 +60,7 @@ Host::~Host() {
 
 void Host::exit() {
   detailed_log("Host.exit\n");
-  is_run = false;
+  m_is_ran = false;
 }
  
 void Host::callbacks_init() {

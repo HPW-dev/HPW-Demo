@@ -15,11 +15,11 @@ protected:
   virtual void draw(); // draw от main_f внутри execute
 
 private:
-  uint screen_tex_ = 0; // OpenGL текстура экрана
-  uint vao_ = 0, vbo_ = 0;
-  uint shader_prog_ = 0, vert_shader_ = 0, frag_shader_ = 0;
-  uint pal_tex_ = 0;
-  CP<void> pixels_ {}; // данные для копирования в текстуру
+  uint m_screen_tex = 0; // OpenGL текстура экрана
+  uint m_vao = 0, m_vbo = 0;
+  uint m_shader_prog = 0, m_vert_shader = 0, m_frag_shader = 0;
+  uint m_pal_tex = 0;
+  CP<void> m_pixels {}; // данные для копирования в текстуру
 
   // растягивает OpenGL полотно
   void ogl_resize(int w, int h) override;

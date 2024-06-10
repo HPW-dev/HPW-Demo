@@ -10,9 +10,9 @@ class Protownd: public Host {
   nocopy(Protownd);
 
 protected:
-  Vector<GLfloat> pal_rgb {};
-  int w_ = 0, h_ = 0; // разрешение экрана
-  Resize_ctx window_ctx_ {};
+  Vector<GLfloat> m_pal_rgb {};
+  int m_w = 0, m_h = 0; // разрешение экрана
+  Resize_ctx m_window_ctx {};
 
   void save_screenshot() const override;
   void _gen_palette();
