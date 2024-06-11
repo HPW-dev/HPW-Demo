@@ -21,6 +21,7 @@ struct Menu::Sticking {
   const uint updates_for_fast = 60, const uint fast_delay = 17) {
     assert(updates_for_fast > 0);
     assert(fast_delay > 0);
+    return_if (keycode == hpw::keycode::error, false);
 
     // если ничё не жмём, выход
     if (!hpw::any_key_pressed) {
@@ -28,30 +29,26 @@ struct Menu::Sticking {
       return false;
     }
 
-    // когда кнопку зажимали 1 раз, не засчитать зажатие
-    if (is_pressed_once(keycode)) {
-      reset();
-      return true;
-    }
-
     // когда на кнопку продолжают жать
-    if (is_pressed(keycode)) {
+    if (is_pressed_once(keycode)) {
+      last_pressed_key = keycode;
+      hold_count = 1;
+      use_sticking = false;
+      return true;
+    } else if (is_pressed(keycode)) {
       // и кнопка та же самая
       if (last_pressed_key == keycode) {
         ++hold_count;
-
         // если зажали достаточное количество времени
         use_sticking = hold_count >= updates_for_fast;
-
         // генерировать нажатия импульсами
         if (use_sticking)
           return (hold_count % fast_delay) == 0;
       } else { // когда жмут на другую кнопку
         reset();
       }
-
       last_pressed_key = keycode;
-    } // if pressed keycode
+    } // elif pressed keycode
 
     return false;
   } // check
@@ -130,3 +127,4 @@ CN<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }
 bool Menu::item_selected() const { return m_item_selected; }
 void Menu::set_select_callback(CN<Menu_select_callback> callback) { m_select_callback = callback; }
 void Menu::set_move_cursor_callback(CN<Menu_select_callback> callback) { m_move_cursor_callback = callback; }
+void Menu::reset_sticking() { m_sticking->reset(); }

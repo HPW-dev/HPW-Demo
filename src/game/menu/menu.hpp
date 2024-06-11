@@ -37,4 +37,5 @@ public:
   bool item_selected() const; // проверить что был выбран один из пунктов меню
   void set_select_callback(CN<Menu_select_callback> callback);
   void set_move_cursor_callback(CN<Menu_select_callback> callback);
+  void reset_sticking(); // сброс залипания выбора
 }; // Menu
