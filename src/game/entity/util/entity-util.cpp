@@ -231,3 +231,11 @@ void Timed_visible::operator()(Entity& entity, Delta_time dt) {
     entity.status.disable_render = true;
   }
 }
+
+void kill_if_master_death(Entity& entity, Delta_time dt) {
+  if (!entity.master) { // если нет инфы о создателе
+    entity.kill();
+  } else if (!entity.master->status.live) { // если создатель умер
+    entity.kill();
+  }
+}

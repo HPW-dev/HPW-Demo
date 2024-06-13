@@ -30,6 +30,7 @@ struct Proto_enemy::Loader::Impl {
     m_collidable_info.accept(*it);
     it->status.ignore_scatter = true;
     it->status.ignore_self_type = true;
+    it->status.ignore_enemy = true;
     return parent;
   } // op ()
 
