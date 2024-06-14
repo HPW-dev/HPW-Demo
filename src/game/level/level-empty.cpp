@@ -25,6 +25,9 @@ struct Level_empty::Impl {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
       7, 1, graphic::canvas->X, graphic::canvas->Y));
+    
+    // TODO del:
+    hpw::entity_mgr->make({}, "enemy.snake.head", get_screen_center() - Vec(0, 150));
   }
 
   inline void update(const Vec vel, Delta_time dt) {
