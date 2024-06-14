@@ -34,6 +34,7 @@
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
+#include "game/util/cmd.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
@@ -85,6 +86,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
 
+  hpw::cmd = new_unique<Cmd>();
   graphic::post_effects = new_shared<Effect_mgr>();
   init_entitys();
   load_animations();

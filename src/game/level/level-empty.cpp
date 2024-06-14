@@ -11,6 +11,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/cmd.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/player-dark.hpp"
@@ -27,7 +28,11 @@ struct Level_empty::Impl {
       7, 1, graphic::canvas->X, graphic::canvas->Y));
     
     // TODO del:
-    hpw::entity_mgr->make({}, "enemy.snake.head", get_screen_center() - Vec(0, 150));
+    //hpw::entity_mgr->make({}, "enemy.snake.head", get_screen_center() - Vec(0, 150));
+    hpw::cmd->exec("help");
+    //hpw::cmd->exec("spawn enemy.snake.head 512 10");
+    //hpw::cmd->exec("spawn enemy.snake.head 0 10");
+    //hpw::cmd->exec("spawn enemy.snake.head 256 10");
   }
 
   inline void update(const Vec vel, Delta_time dt) {
