@@ -79,6 +79,9 @@ public:
   void operator()(Entity& entity, Delta_time dt);
 };
 
+// Убить объект, если создатель объекта мёртв
+void kill_if_master_death(Entity& entity, Delta_time dt);
+
 // на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
 real need_deg_to_target(CN<Entity> self, CN<Entity> target);
 // надо ли поворачивать вправо, чтобы моделька смотрела на target?

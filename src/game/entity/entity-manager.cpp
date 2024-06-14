@@ -27,7 +27,9 @@
 #include "game/entity/enemy/cosmic-waiter.hpp"
 #include "game/entity/enemy/cosmic.hpp"
 #include "game/entity/enemy/illaen.hpp"
+#include "game/entity/enemy/snake.hpp"
 #include "game/entity/enemy/enemy-tutorial.hpp"
+#include "game/entity/ability/invise.hpp"
 
 struct Entity_mgr::Impl {
   // за пределами этого расстояние пули за экраном умирают в шмап-моде
@@ -175,6 +177,8 @@ struct Entity_mgr::Impl {
       {"enemy.cosmic.waiter", [](CN<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
       {"enemy.cosmic", [](CN<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
       {"enemy.tutorial", [](CN<Yaml> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
+      {"enemy.snake.head", [](CN<Yaml> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
+      {"enemy.snake.tail", [](CN<Yaml> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
       {"player.boo.dark", [](CN<Yaml> config){ return new_shared<Player_dark::Loader>(config); } },
     };
 
@@ -288,9 +292,13 @@ struct Entity_mgr::Impl {
   inline void set_player(Player* player) { m_player = player; }
 
   Vec target_for_enemy() const {
-    cauto player = get_player();
-    if (player)
-      return player->phys.get_pos();
+    // если игрок есть
+    if (cauto player = get_player(); player) {
+      // если игрок не невидимый
+      if (!player->find_ability(Ability_invise(*player).type_id())) {
+        return player->phys.get_pos();
+      }
+    }
     // если игрока не нашли, стрелять куда попало
     return get_rand_pos_safe(0, 0, graphic::width, graphic::height);
   }
