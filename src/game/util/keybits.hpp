@@ -23,6 +23,7 @@ enum class keycode {
   fast_forward,// быстрая перемотка
   debug,       // режим отладки
   console,     // открыть командную консоль
+  text_delete, // для стирания текстового ввода
   fps,         // показ фпс
   fulscrn,     // открыть на весь экран
   screenshot,  // сделать скриншот

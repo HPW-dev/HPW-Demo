@@ -69,7 +69,7 @@ struct Cmd::Impl {
       s2n<real>(args.at(3))
     };
     cauto ret = hpw::entity_mgr->make({}, entity_name, pos);
-    print(U"spawned \"" + sconv<utf32>(ret->name()) +
+    print(U"spawned \"" + sconv<utf32>(entity_name) +
       U"\" at {" + n2s<utf32>(pos.x, 2) + U", " + n2s<utf32>(pos.y, 2) + U"}");
   }
 
