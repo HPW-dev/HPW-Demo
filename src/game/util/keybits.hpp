@@ -22,6 +22,7 @@ enum class keycode {
   reset,       // дебажный перезапуск
   fast_forward,// быстрая перемотка
   debug,       // режим отладки
+  console,     // открыть командную консоль
   fps,         // показ фпс
   fulscrn,     // открыть на весь экран
   screenshot,  // сделать скриншот

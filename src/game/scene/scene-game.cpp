@@ -5,7 +5,6 @@
 #include <ctime>
 #include "scene-game.hpp"
 #include "scene-loading.hpp"
-#include "scene-debug.hpp"
 #include "scene-manager.hpp"
 #include "host/command.hpp"
 #include "util/str-util.hpp"
@@ -43,6 +42,8 @@
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
 #ifdef DEBUG
+#include "scene-debug.hpp"
+#include "scene-cmd.hpp"
 //#include "game/level/level-collision-test.hpp"
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
@@ -127,6 +128,8 @@ void Scene_game::update(const Delta_time dt) {
   #ifdef DEBUG
   if (is_pressed_once(hpw::keycode::debug))
     hpw::scene_mgr->add(new_shared<Scene_debug>());
+  if (is_pressed_once(hpw::keycode::console))
+    hpw::scene_mgr->add(new_shared<Scene_cmd>());
   if (is_pressed_once(hpw::keycode::fast_forward))
     graphic::set_fast_forward( !graphic::get_fast_forward() );
   #endif

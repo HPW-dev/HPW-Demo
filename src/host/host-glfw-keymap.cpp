@@ -55,6 +55,7 @@ void Key_mapper::reset() {
   bind(hpw::keycode::reset,        glfwGetKeyScancode(GLFW_KEY_F5));
   bind(hpw::keycode::fast_forward, glfwGetKeyScancode(GLFW_KEY_F4));
   bind(hpw::keycode::debug,        glfwGetKeyScancode(GLFW_KEY_F3));
+  bind(hpw::keycode::console,      glfwGetKeyScancode(GLFW_KEY_GRAVE_ACCENT));
   bind(hpw::keycode::fps,          glfwGetKeyScancode(GLFW_KEY_F1));
   bind(hpw::keycode::fulscrn,      glfwGetKeyScancode(GLFW_KEY_F11));
   bind(hpw::keycode::screenshot,   glfwGetKeyScancode(GLFW_KEY_F2));
