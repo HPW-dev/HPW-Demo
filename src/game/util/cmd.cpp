@@ -6,6 +6,8 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/file/yaml.hpp"
+#include "game-archive.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/entities.hpp"
 
@@ -20,25 +22,7 @@ struct Cmd::Impl {
   Vector<Command> m_commands {};
 
   inline Impl() {
-    m_commands = Vector<Command> {
-      Command {
-        .name = "help",
-        .description = U"print this help",
-        .action = [this](CN<Strs> args) { help(args); }
-      },
-      Command {
-        .name = "spawn",
-        .description =
-          U"spawn <entity name> <pos x> <pos y>\n"
-          U"example: spawn enemy.snake.head 256 10",
-        .action = &spawn
-      },
-      Command {
-        .name = "print",
-        .description = U"print <text>",
-        .action = &echo
-      },
-    }; // init commands
+    init_commands();
   } // c-tor
 
   inline void exec(CN<Str> command_str) {
@@ -108,6 +92,41 @@ struct Cmd::Impl {
       text += sconv<utf32>(args.at(i)) + U' ';
     print(text);
   }
+
+  inline static void print_entities_list(CN<Strs> args) {
+    const Yaml config(hpw::archive->get_file("config/entities.yml"));
+    utf32 text = U"Avaliable entities:\n";
+    for (cnauto tag: config.root_tags())
+      text += sconv<utf32>(tag) + U'\n';
+    print(text);
+  }
+
+  inline void init_commands() {
+    m_commands = Vector<Command> {
+      Command {
+        .name = "help",
+        .description = U"print this help",
+        .action = [this](CN<Strs> args) { help(args); }
+      },
+      Command {
+        .name = "spawn",
+        .description =
+          U"spawn <entity name> <pos x> <pos y>\n"
+          U"example: spawn enemy.snake.head 256 10",
+        .action = &spawn
+      },
+      Command {
+        .name = "print",
+        .description = U"print <text>",
+        .action = &echo
+      },
+      Command {
+        .name = "entities",
+        .description = U"print list of all avaliable entities for spawn",
+        .action = &print_entities_list
+      },
+    };
+  } // init_commands
 }; // Impl
 
 Cmd::Cmd(): impl{new_unique<Impl>()} {}
