@@ -62,13 +62,13 @@ struct Cmd::Impl {
 
   // спавнит сущность
   inline static void spawn(CN<Strs> args) {
-    iferror(args.size() < 4, "мало параметров в функции spawn");
+    iferror(args.size() < 4, "need more params in spawn");
     cauto entity_name = args.at(1);
     const Vec pos {
       s2n<real>(args.at(2)),
       s2n<real>(args.at(3))
     };
-    cauto ret = hpw::entity_mgr->make({}, entity_name, pos);
+    hpw::entity_mgr->make({}, entity_name, pos);
     print(U"spawned \"" + sconv<utf32>(entity_name) +
       U"\" at {" + n2s<utf32>(pos.x, 2) + U", " + n2s<utf32>(pos.y, 2) + U"}");
   }
@@ -80,13 +80,13 @@ struct Cmd::Impl {
     // вывести на экран игры
     Message msg;
     msg.text = text;
-    msg.lifetime = 4;
+    msg.lifetime = 3.5;
     hpw::message_mgr->move(std::move(msg));
   }
 
   // пишет текст в консоль и на экран
   inline static void echo(CN<Strs> args) {
-    iferror(args.size() < 2, "мало параметров в функции print (echo)");
+    iferror(args.size() < 2, "need more params in print (echo)");
     utf32 text = U"сообщение: ";
     for (uint i = 1; i < args.size(); ++i)
       text += sconv<utf32>(args.at(i)) + U' ';

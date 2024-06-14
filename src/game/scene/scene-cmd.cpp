@@ -24,6 +24,7 @@ struct Scene_cmd::Impl {
 
   inline Impl() {
     hpw::text_input_mode = true;
+    hpw::text_input.clear();
     // фон - предыдущий кадр
     bg = *graphic::canvas;
   }
