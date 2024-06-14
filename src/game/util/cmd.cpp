@@ -20,12 +20,14 @@ struct Cmd::Impl {
   };
 
   Vector<Command> m_commands {};
+  Str m_last_cmd {}; // предыдущая команда
 
   inline Impl() {
     init_commands();
   } // c-tor
 
   inline void exec(CN<Str> command_str) {
+    m_last_cmd = command_str;
     try {
       cauto splited = split_str(command_str, ' ');
       cnauto command = find_command(splited.at(0));
@@ -127,8 +129,11 @@ struct Cmd::Impl {
       },
     };
   } // init_commands
+
+  inline Str last_command() const { return m_last_cmd; }
 }; // Impl
 
 Cmd::Cmd(): impl{new_unique<Impl>()} {}
 Cmd::~Cmd() {}
 void Cmd::exec(CN<Str> command) { impl->exec(command); }
+Str Cmd::last_command() const { return impl->last_command(); }
