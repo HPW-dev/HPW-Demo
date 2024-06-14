@@ -177,8 +177,8 @@ struct Entity_mgr::Impl {
       {"enemy.cosmic.waiter", [](CN<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
       {"enemy.cosmic", [](CN<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
       {"enemy.tutorial", [](CN<Yaml> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
-      {"enemy.snake.head", [](CN<Yaml> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
-      {"enemy.snake.tail", [](CN<Yaml> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
+      {"snake.head", [](CN<Yaml> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
+      {"snake.tail", [](CN<Yaml> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
       {"player.boo.dark", [](CN<Yaml> config){ return new_shared<Player_dark::Loader>(config); } },
     };
 
