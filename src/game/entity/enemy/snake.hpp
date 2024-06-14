@@ -11,6 +11,8 @@ class Enemy_snake_head final: public Proto_enemy {
     Str tail_name {}; // имя объектов из которых состоит хвост змеи
     uint tail_count {};
     real speed {};
+    real kill_delay {}; // через какое время уничтожить хвосты после смерти головы
+    bool enable_scatter_if_head_death {}; // if true - разлетаться по сторонам после смерти головы
   } m_info {};
 public:
   class Loader;

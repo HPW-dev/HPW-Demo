@@ -79,6 +79,15 @@ public:
   void operator()(Entity& entity, Delta_time dt);
 };
 
+// умереть с задержкой, если объект родитель умер
+class Timed_kill_if_master_death final {
+  Delta_time m_delay {};
+  bool m_master_death {};
+public:
+  explicit Timed_kill_if_master_death(const Delta_time delay);
+  void operator()(Entity& entity, Delta_time dt);
+};
+
 // Убить объект, если создатель объекта мёртв
 void kill_if_master_death(Entity& entity, Delta_time dt);
 
