@@ -239,3 +239,16 @@ void kill_if_master_death(Entity& entity, Delta_time dt) {
     entity.kill();
   }
 }
+Timed_kill_if_master_death::Timed_kill_if_master_death(
+const Delta_time delay): m_delay {delay} {}
+
+void Timed_kill_if_master_death::operator()
+(Entity& entity, Delta_time dt) {
+  if (m_master_death) {
+    if ((m_delay -= dt) <= 0)
+      entity.kill();
+  }
+
+  return_if(entity.master && entity.master->status.live);
+  m_master_death = true;
+}

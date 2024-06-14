@@ -5,7 +5,6 @@
 #include <ctime>
 #include "scene-game.hpp"
 #include "scene-loading.hpp"
-#include "scene-debug.hpp"
 #include "scene-manager.hpp"
 #include "host/command.hpp"
 #include "util/str-util.hpp"
@@ -34,6 +33,7 @@
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
+#include "game/util/cmd.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
@@ -42,6 +42,8 @@
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
 #ifdef DEBUG
+#include "scene-debug.hpp"
+#include "scene-cmd.hpp"
 //#include "game/level/level-collision-test.hpp"
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
@@ -85,6 +87,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
 
+  hpw::cmd = new_unique<Cmd>();
   graphic::post_effects = new_shared<Effect_mgr>();
   init_entitys();
   load_animations();
@@ -125,6 +128,8 @@ void Scene_game::update(const Delta_time dt) {
   #ifdef DEBUG
   if (is_pressed_once(hpw::keycode::debug))
     hpw::scene_mgr->add(new_shared<Scene_debug>());
+  if (is_pressed_once(hpw::keycode::console))
+    hpw::scene_mgr->add(new_shared<Scene_cmd>());
   if (is_pressed_once(hpw::keycode::fast_forward))
     graphic::set_fast_forward( !graphic::get_fast_forward() );
   #endif

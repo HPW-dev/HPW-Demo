@@ -289,7 +289,7 @@ void init_validation_info() {
 } // init_validation_info
 
 void init_scene_mgr() {
-  hpw::scene_mgr = new_shared<Scene_mgr>();
+  hpw::scene_mgr = new_unique<Scene_mgr>();
 }
 
 utf32 difficulty_to_str(const Difficulty difficulty) {

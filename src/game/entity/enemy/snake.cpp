@@ -31,17 +31,18 @@ void Enemy_snake_head::update(const Delta_time dt) {
 void Enemy_snake_tail::update(const Delta_time dt) {
   Proto_enemy::update(dt);
 
-  // хвост следуюет за создателем
+  // хвост следует за создателем
   return_if(!master);
   return_if(!master->status.live);
+  return_if(!status.ignore_scatter);
 
-  // если стоим в пределах головы, то не двигаться
+  // стоит ли хвост в пределах головы
   if (distance(this->phys.get_pos(), master->phys.get_pos())
   > m_info.start_motion_radius) {
     // взять скорость головы
     phys.set_speed( master->phys.get_speed() );
     phys.set_deg( deg_to_target(*this, *master) );
-  } else {
+  } else { // если стоим в пределах головы, то не двигаться
     phys.set_speed(0);
   }
 }
@@ -55,10 +56,13 @@ struct Enemy_snake_head::Loader::Impl {
     cauto tail_node = config["tail"];
     m_info.tail_name = tail_node.get_str("name");
     m_info.tail_count = tail_node.get_int("count");
+    m_info.kill_delay = tail_node.get_real("kill_delay", 0);
+    m_info.enable_scatter_if_head_death = tail_node.get_bool("enable_scatter_if_head_death", false);
 
     assert( !m_info.tail_name.empty());
     assert(m_info.tail_count > 0 && m_info.tail_count < 100'000);
     assert(m_info.speed > 0);
+    assert(m_info.kill_delay >= 0 && m_info.kill_delay <= 100'000);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -92,15 +96,29 @@ Entity* Enemy_snake_head::Loader::operator()
   auto ret = hpw::entity_mgr->allocate<Enemy_snake_head>();
   Proto_enemy::Loader::operator()(master, pos, ret);
   impl->operator()(master, pos, ret);
+
   // понаделать хвостиков связанных по цепочке с головой
   Entity* last_tail = ret;
   cfor (i, ret->m_info.tail_count) {
     last_tail = hpw::entity_mgr->make(last_tail,
       ret->m_info.tail_name, ret->phys.get_pos());
-    last_tail->add_update_callback(&kill_if_master_death);
+    // разлетается ли змейка при смерти
+    if (ret->m_info.enable_scatter_if_head_death) {
+      last_tail->add_update_callback([ret](Entity& it, const Delta_time dt) {
+        return_if (ret && ret->status.live);
+        it.status.ignore_scatter = false;
+      }); 
+    }
+    // как должна умирать змейка
+    if (ret->m_info.kill_delay) {
+      last_tail->move_update_callback(
+        std::move(Timed_kill_if_master_death(ret->m_info.kill_delay)) );
+    } else {
+      last_tail->add_update_callback(&kill_if_master_death);
+    }
   }
   return ret;
-}
+} // Enemy_snake_head::Loader::op()
 
 Entity* Enemy_snake_tail::Loader::operator()
 (Entity* master, const Vec pos, Entity* parent) {
