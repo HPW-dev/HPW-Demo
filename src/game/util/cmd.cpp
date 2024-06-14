@@ -33,6 +33,11 @@ struct Cmd::Impl {
           U"example: spawn enemy.snake.head 256 10",
         .action = &spawn
       },
+      Command {
+        .name = "print",
+        .description = U"print <text>",
+        .action = &echo
+      },
     }; // init commands
   } // c-tor
 
@@ -93,6 +98,15 @@ struct Cmd::Impl {
     msg.text = text;
     msg.lifetime = 4;
     hpw::message_mgr->move(std::move(msg));
+  }
+
+  // пишет текст в консоль и на экран
+  inline static void echo(CN<Strs> args) {
+    iferror(args.size() < 2, "мало параметров в функции print (echo)");
+    utf32 text = U"сообщение: ";
+    for (uint i = 1; i < args.size(); ++i)
+      text += sconv<utf32>(args.at(i)) + U' ';
+    print(text);
   }
 }; // Impl
 

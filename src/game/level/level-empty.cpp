@@ -30,7 +30,7 @@ struct Level_empty::Impl {
     // TODO del:
     //hpw::entity_mgr->make({}, "enemy.snake.head", get_screen_center() - Vec(0, 150));
     //hpw::cmd->exec("help");
-    hpw::cmd->exec("suka blyat");
+    hpw::cmd->exec("print suka blyat");
     //hpw::cmd->exec("spawn enemy.snake.head 512 10");
     //hpw::cmd->exec("spawn enemy.snake.head 0 10");
     //hpw::cmd->exec("spawn enemy.snake.head 256 10");
