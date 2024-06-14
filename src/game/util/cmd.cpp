@@ -13,7 +13,7 @@ struct Cmd::Impl {
   struct Command {
     using Action = std::function<void (CN<Strs> args)>;
     Str name {};
-    Str description {};
+    utf32 description {};
     Action action {};
   };
 
@@ -23,23 +23,31 @@ struct Cmd::Impl {
     m_commands = Vector<Command> {
       Command {
         .name = "help",
-        .description = "print this help",
+        .description = U"print this help",
         .action = [this](CN<Strs> args) { help(args); }
       },
       Command {
         .name = "spawn",
         .description =
-          "spawn <entity name> <pos x> <pos y>\n"
-          "example: spawn enemy.snake.head 256 10",
+          U"spawn <entity name> <pos x> <pos y>\n"
+          U"example: spawn enemy.snake.head 256 10",
         .action = &spawn
       },
     }; // init commands
   } // c-tor
 
   inline void exec(CN<Str> command_str) {
-    cauto splited = split_str(command_str, ' ');
-    cnauto command = find_command(splited.at(0));
-    command.action(splited);
+    try {
+      cauto splited = split_str(command_str, ' ');
+      cnauto command = find_command(splited.at(0));
+      command.action(splited);
+    } catch (CN<hpw::Error> err) {
+      print(U"ошибка при выполнении команды \"" +
+        sconv<utf32>(command_str) + U"\":\n" + sconv<utf32>(err.what()));
+    } catch (...) {
+      print(U"неизвестная ошибка при выполнении команды \"" +
+        sconv<utf32>(command_str) + U"\"");
+    }
   }
 
   inline CN<Command> find_command(CN<Str> name) const {
@@ -54,11 +62,11 @@ struct Cmd::Impl {
 
   // справка о всех командах
   inline void help(CN<Strs> args) {
-    Str text = "List commands:\n";
+    utf32 text = U"List commands:\n";
     for (cnauto command: m_commands) {
-      text += "* " + command.name + " - ";
+      text += U"* " + sconv<utf32>(command.name) + U" - ";
       text += command.description;
-      text += ";\n";
+      text += U";\n";
     }
     print(text);
   }
@@ -72,16 +80,17 @@ struct Cmd::Impl {
       s2n<real>(args.at(3))
     };
     cauto ret = hpw::entity_mgr->make({}, entity_name, pos);
-    print("spawned \"" + ret->name() + "\" at {" + n2s(pos.x, 2) + ", " + n2s(pos.y, 2) + "}");
+    print(U"spawned \"" + sconv<utf32>(ret->name()) +
+      U"\" at {" + n2s<utf32>(pos.x, 2) + U", " + n2s<utf32>(pos.y, 2) + U"}");
   }
 
   // пишет текст в консоль и на экран
-  inline static void print(CN<Str> text) {
+  inline static void print(CN<utf32> text) {
     // вывести в консоль
-    hpw_log(text << '\n');
+    hpw_log(sconv<Str>(text) << '\n');
     // вывести на экран игры
     Message msg;
-    msg.text = sconv<utf32>(text);
+    msg.text = text;
     msg.lifetime = 4;
     hpw::message_mgr->move(std::move(msg));
   }
