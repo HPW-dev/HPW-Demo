@@ -15,6 +15,8 @@ public:
   void exec(CN<Str> command);
   // получить прыдыдущую команду
   Str last_command() const;
+  // найти совпадающие имена команд (для автодополнения)
+  Strs command_matches(CN<Str> command) const;
 }; // Cmd
 
 namespace hpw {

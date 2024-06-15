@@ -1,4 +1,6 @@
+#include <filesystem>
 #include <utility>
+#include <ranges>
 #include <algorithm>
 #include <functional>
 #include "cmd.hpp"
@@ -130,6 +132,26 @@ struct Cmd::Impl {
     };
   } // init_commands
 
+  inline Strs command_matches(CN<Str> command) const {
+    Strs ret;
+
+    // если нет параметров, показать все команды и выйти
+    if (command.empty()) {
+      for (cnauto command: m_commands)
+        ret.push_back(command.name);
+      return ret;
+    }
+
+    cauto args = split(command, ' ');
+    cauto cmd_name = str_tolower( args.at(0) );
+    // найти совпадающие команды по их названию
+    auto command_match = [&](CN<Command> arg)->bool
+      { return arg.name.find(cmd_name) == 0; };
+    for (cnauto founded: m_commands | std::views::filter(command_match))
+      ret.push_back(founded.name);
+    return ret;
+  }
+
   inline Str last_command() const { return m_last_cmd; }
 }; // Impl
 
@@ -137,3 +159,4 @@ Cmd::Cmd(): impl{new_unique<Impl>()} {}
 Cmd::~Cmd() {}
 void Cmd::exec(CN<Str> command) { impl->exec(command); }
 Str Cmd::last_command() const { return impl->last_command(); }
+Strs Cmd::command_matches(CN<Str> command) const { return impl->command_matches(command); }

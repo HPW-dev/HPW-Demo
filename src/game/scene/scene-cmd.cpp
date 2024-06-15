@@ -1,5 +1,4 @@
 #include <cassert>
-#include <filesystem>
 #include <utility>
 #include <functional>
 #include "scene-cmd.hpp"
@@ -56,6 +55,7 @@ struct Scene_cmd::Impl {
     hpw::message_mgr->draw(dst);
     sub_brightness(dst, 110);
     print_input(dst);
+    print_autocompletion(dst);
   }
 
   inline void print_input(Image& dst) const {
@@ -64,6 +64,17 @@ struct Scene_cmd::Impl {
     // мигающий курсор
     if ((graphic::frame_count % 30) >= 15)
       text += U'<';
+    graphic::font->draw(dst, pos, text);
+  }
+
+  // показывает автодополнение команд
+  inline void print_autocompletion(Image& dst) const {
+    const Vec pos (15, 30);
+    cauto input = sconv<Str>(hpw::text_input);
+    cauto matches = hpw::cmd->command_matches(input);
+    utf32 text = U"________________\n";
+    for (cnauto match: matches)
+      text += sconv<utf32>(match) + U'\n';
     graphic::font->draw(dst, pos, text);
   }
 }; // impl
