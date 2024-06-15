@@ -159,9 +159,10 @@ struct Cmd::Impl {
 
     cauto args = split(command, ' ');
     cauto cmd_name = str_tolower( args.at(0) );
-    // найти совпадающие команды по их названию
+    // учитывать совпадения в начале слова
     auto command_match = [&](CN<Command> arg)->bool
       { return arg.name.find(cmd_name) == 0; };
+    // найти совпадающие команды по их названию
     for (cnauto founded: m_commands | std::views::filter(command_match))
       ret.push_back(founded.name);
     
@@ -169,10 +170,11 @@ struct Cmd::Impl {
     if (cmd_name == "spawn") {
       cauto entities = get_entities_list();
 
+      // если в слове есть часть введёной строки
       cauto entity_name_filter = [&](CN<Str> name)->bool {
         if (args.size() > 1) {
           cauto entity_name = args.at(1);
-          return name.find(entity_name) == 0;
+          return name.find(entity_name) != Str::npos;
         }
         // если имени для спавна ещё нет, пропускать любое имя из списка
         return true;

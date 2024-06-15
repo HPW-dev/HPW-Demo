@@ -18,7 +18,7 @@
 
 struct Scene_cmd::Impl {
   // сколько апдейтов надо зажимать удаление текста, чтобы он начал удаляться
-  constx auto TEXT_DELETE_TIMEOUT = 120;
+  constx auto TEXT_DELETE_TIMEOUT = 120u;
   Image bg {};
   uint m_text_delete_timer {};
 
@@ -45,7 +45,7 @@ struct Scene_cmd::Impl {
     if (is_pressed(hpw::keycode::text_delete)) {
       ++m_text_delete_timer;
       if (m_text_delete_timer >= TEXT_DELETE_TIMEOUT) {
-        if (!hpw::text_input.empty() && ((m_text_delete_timer % 6) == 0))
+        if (!hpw::text_input.empty() && ((m_text_delete_timer % 6u) == 0u))
           hpw::text_input.resize(hpw::text_input.size() - 1);
       }
     } else {
@@ -92,7 +92,7 @@ struct Scene_cmd::Impl {
     const Vec pos (15, 30);
     cauto input = sconv<Str>(hpw::text_input);
     cauto matches = hpw::cmd->command_matches(input);
-    utf32 text = U"________________\n";
+    utf32 text = U"________________________________\n";
     for (cnauto match: matches)
       text += sconv<utf32>(match) + U'\n';
     graphic::font->draw(dst, pos, text);
