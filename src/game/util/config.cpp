@@ -26,6 +26,7 @@ int get_scancode(const hpw::keycode keycode) {
 
 void save_config() {
   auto& config = *hpw::config;
+  config.set_bool("easy_debug", hpw::easy_debug);
   config.set_bool("enable_replay", hpw::enable_replay);
   config.set_bool("need_tutorial", hpw::need_tutorial);
 
