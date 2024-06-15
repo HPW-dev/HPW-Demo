@@ -161,19 +161,19 @@ struct Cmd::Impl {
     // дополнить команду spawn вариантами entity
     if (cmd_name == "spawn") {
       cauto entities = get_entities_list();
-      ret.clear();
 
-      // если есть имена для сравнения
-      if (args.size() > 1) {
-        cauto entity_name = args.at(1);
-        auto entity_name_filter = [&](CN<Str> name)->bool
-          { return name.find(entity_name) == 0; };
-        for (cnauto name: entities | std::views::filter(entity_name_filter))
-          ret.push_back(cmd_name + " " + name);
-      } else { // вывести со всеми доступными именами
-        for (cnauto name: entities)
-          ret.push_back(cmd_name + " " + name);
-      }
+      cauto entity_name_filter = [&](CN<Str> name)->bool {
+        if (args.size() > 1) {
+          cauto entity_name = args.at(1);
+          return name.find(entity_name) == 0;
+        }
+        // если имени для спавна ещё нет, пропускать любое имя из списка
+        return true;
+      }; // entity_name_filter
+
+      ret.clear();
+      for (cnauto name: entities | std::views::filter(entity_name_filter))
+        ret.push_back(cmd_name + " " + name);
     }
 
     return ret;
