@@ -12,6 +12,7 @@
 #include "game-archive.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/entities.hpp"
+#include "game/core/canvas.hpp"
 
 struct Cmd::Impl {
   struct Command {
@@ -112,6 +113,18 @@ struct Cmd::Impl {
     return ret;
   }
 
+  // меняет разрешение игры
+  inline static void set_resolution(CN<Strs> args) {
+    iferror(args.size() < 3, "need more params in res command");
+    cauto width = s2n<uint>( args.at(1) );
+    cauto height = s2n<uint>( args.at(2) );
+    iferror(width >= 16'000u, "canvas width >= 16K");
+    iferror(height >= 16'000u, "canvas height >= 16K");
+    graphic::width = width;
+    graphic::height = height;
+    graphic::canvas = new_unique<Image>(graphic::width, graphic::height);
+  }
+
   inline static void print_entities_list(CN<Strs> args) {
     cauto list = get_entities_list();
     utf32 text = U"Avaliable entities:\n";
@@ -143,6 +156,13 @@ struct Cmd::Impl {
         .name = "entities",
         .description = U"print list of all avaliable entities for spawn",
         .action = &print_entities_list
+      },
+      Command {
+        .name = "res",
+        .description =
+          U"set game canvas resolution\n"
+          U"params: res <width> <height>",
+        .action = &set_resolution
       },
     };
   } // init_commands
