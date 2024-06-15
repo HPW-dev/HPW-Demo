@@ -61,7 +61,6 @@ sources = [
   src_dir + "game/util/config.cpp",
   src_dir + "game/util/logo.cpp",
   src_dir + "game/util/sync.cpp",
-  
 
   src_dir + "host/protownd.cpp",
   src_dir + "host/resize.cpp",
@@ -72,6 +71,7 @@ sources = [
   src_dir + "host/host-glfw-keymap.cpp",
   src_dir + "host/windows-keycodes.cpp",
 
+  src_dir + "util/platform.cpp",
   src_dir + "util/file/archive.cpp",
   src_dir + "util/file/file.cpp",
   src_dir + "util/file/yaml.cpp",
