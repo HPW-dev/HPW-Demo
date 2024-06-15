@@ -97,11 +97,19 @@ struct Cmd::Impl {
     print(text);
   }
 
-  inline static void print_entities_list(CN<Strs> args) {
+  inline static Strs get_entities_list() {
     const Yaml config(hpw::archive->get_file("config/entities.yml"));
-    utf32 text = U"Avaliable entities:\n";
+    Strs ret;
     for (cnauto tag: config.root_tags())
-      text += sconv<utf32>(tag) + U'\n';
+      ret.push_back(tag);
+    return ret;
+  }
+
+  inline static void print_entities_list(CN<Strs> args) {
+    cauto list = get_entities_list();
+    utf32 text = U"Avaliable entities:\n";
+    for (cnauto name: list)
+      text += sconv<utf32>(name) + U'\n';
     print(text);
   }
 
@@ -149,8 +157,27 @@ struct Cmd::Impl {
       { return arg.name.find(cmd_name) == 0; };
     for (cnauto founded: m_commands | std::views::filter(command_match))
       ret.push_back(founded.name);
+    
+    // дополнить команду spawn вариантами entity
+    if (cmd_name == "spawn") {
+      cauto entities = get_entities_list();
+      ret.clear();
+
+      // если есть имена для сравнения
+      if (args.size() > 1) {
+        cauto entity_name = args.at(1);
+        auto entity_name_filter = [&](CN<Str> name)->bool
+          { return name.find(entity_name) == 0; };
+        for (cnauto name: entities | std::views::filter(entity_name_filter))
+          ret.push_back(cmd_name + " " + name);
+      } else { // вывести со всеми доступными именами
+        for (cnauto name: entities)
+          ret.push_back(cmd_name + " " + name);
+      }
+    }
+
     return ret;
-  }
+  } // command_matches
 
   inline Str last_command() const { return m_last_cmd; }
 }; // Impl
