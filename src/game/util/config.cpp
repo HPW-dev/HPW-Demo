@@ -5,10 +5,11 @@
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
+#include "game/core/debug.hpp"
 #include "game/core/palette.hpp"
+#include "game/core/replays.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
-#include "game/core/replays.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 #include "util/safecall.hpp"
@@ -81,6 +82,7 @@ void load_config() {
   hpw::config = new_shared<Yaml>(hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;
+  hpw::easy_debug    = config.get_bool("easy_debug", false);
   hpw::enable_replay = config.get_bool("enable_replay", true);
   hpw::need_tutorial = config.get_bool("need_tutorial", true);
 

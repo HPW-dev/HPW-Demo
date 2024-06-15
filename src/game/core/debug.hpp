@@ -21,6 +21,7 @@ inline bool show_entity_mem_map {false};
 @details нужен чтобы выявить места, где нельзя вызывать такие рандомы */
 inline bool allow_random_stable {false};
 inline bool allow_random_stable_bak {false};
+inline bool easy_debug {false}; // включает быстрый запуск уровня для отладки
 } // hpw ns
 
 namespace graphic {
