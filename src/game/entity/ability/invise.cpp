@@ -8,7 +8,6 @@
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
-#include "game/level/level-manager.hpp"
 
 struct Ability_invise::Impl {
   nocopy(Impl);

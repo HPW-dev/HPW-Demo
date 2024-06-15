@@ -62,7 +62,7 @@ void set_default() {
   graphic::blur_quality_mul = 1.0;
   graphic::cpu_safe = false;
   graphic::disable_heat_distort_while_lag = true;
-  graphic::wait_frame = true;
+  graphic::wait_frame_bak = graphic::wait_frame = true;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = false;
   graphic::enable_light = true;
@@ -83,7 +83,7 @@ void set_high_plus_stream() {
   graphic::blur_quality_mul = 0.5;
   graphic::cpu_safe = false;
   graphic::disable_heat_distort_while_lag = false;
-  graphic::wait_frame = false;
+  graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = true;
   graphic::enable_light = true;
@@ -101,7 +101,7 @@ void set_low_pc() {
   graphic::autoopt_timeout_max = 15;
   graphic::blink_particles = true;
   graphic::cpu_safe = false;
-  graphic::wait_frame = false;
+  graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = false;
   graphic::enable_light = false;
@@ -121,7 +121,7 @@ void set_high_quality() {
   graphic::blur_quality_mul = 0.5;
   graphic::cpu_safe = true;
   graphic::disable_heat_distort_while_lag = false;
-  graphic::wait_frame = true;
+  graphic::wait_frame_bak = graphic::wait_frame = true;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = true;
   graphic::enable_light = true;
@@ -368,7 +368,7 @@ void Scene_graphic::init_detailed_menu() {
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.wait_frame"),
         []{ return graphic::wait_frame; },
-        [](bool new_val) { graphic::wait_frame = new_val; },
+        [](bool new_val) { graphic::wait_frame_bak = graphic::wait_frame = new_val; },
         get_locale_str("scene.graphic_menu.description.wait_frame")
       ),
       new_shared<Menu_bool_item>(

@@ -20,7 +20,6 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/particle.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
-#include "game/level/level-manager.hpp"
 //#include "game/entity/collider/collider-simple.hpp"
 
 struct Level_debug_3::Impl {

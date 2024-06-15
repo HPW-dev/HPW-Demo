@@ -1,5 +1,4 @@
 #include <cassert>
-#include <filesystem>
 #include <utility>
 #include <functional>
 #include "scene-cmd.hpp"
@@ -18,7 +17,10 @@
 #include "game/util/game-util.hpp"
 
 struct Scene_cmd::Impl {
+  // сколько апдейтов надо зажимать удаление текста, чтобы он начал удаляться
+  constx auto TEXT_DELETE_TIMEOUT = 120u;
   Image bg {};
+  uint m_text_delete_timer {};
 
   inline ~Impl() { hpw::text_input_mode = false; }
 
@@ -39,6 +41,16 @@ struct Scene_cmd::Impl {
     if (is_pressed_once(hpw::keycode::text_delete))
       if (!hpw::text_input.empty())
         hpw::text_input.resize(hpw::text_input.size() - 1);
+    // если зажали кнопку удаления текста
+    if (is_pressed(hpw::keycode::text_delete)) {
+      ++m_text_delete_timer;
+      if (m_text_delete_timer >= TEXT_DELETE_TIMEOUT) {
+        if (!hpw::text_input.empty() && ((m_text_delete_timer % 6u) == 0u))
+          hpw::text_input.resize(hpw::text_input.size() - 1);
+      }
+    } else {
+      m_text_delete_timer = 0;
+    }
     // выполнить команду
     if (is_pressed_once(hpw::keycode::enable)) {
       hpw::message_mgr->clear(); // убрать предыдущее сообщение
@@ -48,6 +60,13 @@ struct Scene_cmd::Impl {
     // загрузить предыдущую команду
     if (is_pressed_once(hpw::keycode::up))
       hpw::text_input = sconv<utf32>(hpw::cmd->last_command());
+    // дописать команду из предлагаемых при автодописывании
+    if (is_pressed_once(hpw::keycode::right)) {
+      cauto input = sconv<Str>(hpw::text_input);
+      cauto matches = hpw::cmd->command_matches(input);
+      if (!matches.empty())
+        hpw::text_input = sconv<utf32>( matches.at(0) );
+    }
   } // update
 
   inline void draw(Image& dst) const {
@@ -56,6 +75,7 @@ struct Scene_cmd::Impl {
     hpw::message_mgr->draw(dst);
     sub_brightness(dst, 110);
     print_input(dst);
+    print_autocompletion(dst);
   }
 
   inline void print_input(Image& dst) const {
@@ -64,6 +84,17 @@ struct Scene_cmd::Impl {
     // мигающий курсор
     if ((graphic::frame_count % 30) >= 15)
       text += U'<';
+    graphic::font->draw(dst, pos, text);
+  }
+
+  // показывает автодополнение команд
+  inline void print_autocompletion(Image& dst) const {
+    const Vec pos (15, 30);
+    cauto input = sconv<Str>(hpw::text_input);
+    cauto matches = hpw::cmd->command_matches(input);
+    utf32 text = U"________________________________\n";
+    for (cnauto match: matches)
+      text += sconv<utf32>(match) + U'\n';
     graphic::font->draw(dst, pos, text);
   }
 }; // impl

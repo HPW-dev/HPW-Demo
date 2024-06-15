@@ -87,7 +87,7 @@ void set_target_fps(int val) {
   set_bad_fps( 0.9 * (get_vsync() ? get_target_vsync_fps() : val) );
   // при таком низком фпс, ожидание кадра просто заставляет всё лагать
   if (val < 30)
-    graphic::wait_frame = false;
+    graphic::wait_frame_bak = graphic::wait_frame = false;
 }
 
 void set_target_vsync_fps(int val) {
@@ -125,15 +125,14 @@ void set_draw_time_autoopt_limit(const Delta_time val) {
 
 void check_autoopt() {
   cauto autoopt_trigger = hpw::real_dt >= graphic::get_draw_time_autoopt_limit();
-  static auto wait_frame_bak = graphic::wait_frame;
 
   if (autoopt_trigger) {
     graphic::render_lag = true;
-    wait_frame_bak = graphic::wait_frame;
+    graphic::wait_frame_bak = graphic::wait_frame;
     graphic::wait_frame = false;
     graphic::autoopt_timeout = graphic::autoopt_timeout_max;
   } else {
-    graphic::wait_frame = wait_frame_bak;
+    graphic::wait_frame = graphic::wait_frame_bak;
   }
 }
 
