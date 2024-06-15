@@ -16,7 +16,6 @@
 #include "game/level/util/tilemap.hpp"
 #include "game/level/util/layer-simple.hpp"
 #include "game/level/util/task-spawn.hpp"
-#include "game/level/level-manager.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/entity/player.hpp"
 #include "game/entity/util/entity-util.hpp"

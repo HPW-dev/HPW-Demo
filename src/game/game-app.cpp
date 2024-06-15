@@ -4,6 +4,7 @@
 #include "host/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-game.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
@@ -49,7 +50,15 @@ Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
 
   // управление сценами
   init_scene_mgr();
-  hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
+  #ifndef DEBUG
+  hpw::easy_debug = false;
+  #endif
+  if (hpw::easy_debug) {
+    hpw_log("start debug level...\n");
+    hpw::scene_mgr->add( new_shared<Scene_game>() );
+  } else {
+    hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
+  }
 } // c-tor
 
 Game_app::~Game_app() {

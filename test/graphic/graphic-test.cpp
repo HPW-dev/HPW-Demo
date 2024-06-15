@@ -72,7 +72,7 @@ void Graphic_test::update(const Delta_time dt) {
     fps_lock = !fps_lock;
     detailed_log("VSync:" << s2yn(fps_lock) << std::endl);
     graphic::set_disable_frame_limit(fps_lock);
-    graphic::wait_frame = fps_lock;
+    graphic::wait_frame_bak = graphic::wait_frame = fps_lock;
   }
 
   if (is_pressed_once(hpw::keycode::left)) {

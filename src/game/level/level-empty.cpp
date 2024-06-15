@@ -19,7 +19,6 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/particle.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
-#include "game/level/level-manager.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {

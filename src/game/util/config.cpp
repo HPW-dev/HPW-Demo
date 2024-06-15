@@ -5,10 +5,11 @@
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
+#include "game/core/debug.hpp"
 #include "game/core/palette.hpp"
+#include "game/core/replays.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
-#include "game/core/replays.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 #include "util/safecall.hpp"
@@ -25,6 +26,7 @@ int get_scancode(const hpw::keycode keycode) {
 
 void save_config() {
   auto& config = *hpw::config;
+  config.set_bool("easy_debug", hpw::easy_debug);
   config.set_bool("enable_replay", hpw::enable_replay);
   config.set_bool("need_tutorial", hpw::need_tutorial);
 
@@ -81,6 +83,7 @@ void load_config() {
   hpw::config = new_shared<Yaml>(hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;
+  hpw::easy_debug    = config.get_bool("easy_debug", false);
   hpw::enable_replay = config.get_bool("enable_replay", true);
   hpw::need_tutorial = config.get_bool("need_tutorial", true);
 
@@ -123,7 +126,7 @@ void load_config() {
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
-  graphic::wait_frame = sync_node.get_bool("wait_frame", graphic::wait_frame);
+  graphic::wait_frame_bak = graphic::wait_frame = sync_node.get_bool("wait_frame", graphic::wait_frame);
   graphic::set_disable_frame_limit( sync_node.get_bool("disable_frame_limit", graphic::get_disable_frame_limit()) );
   graphic::set_target_fps( sync_node.get_int("target_fps", graphic::get_target_vsync_fps()) );
   graphic::cpu_safe = sync_node.get_bool("cpu_safe", graphic::cpu_safe);

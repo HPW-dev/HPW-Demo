@@ -1,5 +1,4 @@
 #include <cassert>
-#include "level-manager.hpp"
 #include "level.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
