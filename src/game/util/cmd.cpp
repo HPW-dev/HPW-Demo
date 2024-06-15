@@ -66,12 +66,19 @@ struct Cmd::Impl {
 
   // спавнит сущность
   inline static void spawn(CN<Strs> args) {
-    iferror(args.size() < 4, "need more params in spawn");
+    iferror(args.size() < 2, "need more params in spawn command");
     cauto entity_name = args.at(1);
-    const Vec pos {
-      s2n<real>(args.at(2)),
-      s2n<real>(args.at(3))
-    };
+
+    Vec pos;
+    if (args.size() >= 4) {
+      pos = {
+        s2n<real>(args.at(2)),
+        s2n<real>(args.at(3))
+      };
+    } else { // если корды не заданы, создать объект сверху по середине
+      pos = {256, 50};
+    }
+
     hpw::entity_mgr->make({}, entity_name, pos);
     print(U"spawned \"" + sconv<utf32>(entity_name) +
       U"\" at {" + n2s<utf32>(pos.x, 2) + U", " + n2s<utf32>(pos.y, 2) + U"}");
