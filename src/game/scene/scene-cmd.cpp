@@ -47,6 +47,13 @@ struct Scene_cmd::Impl {
     // загрузить предыдущую команду
     if (is_pressed_once(hpw::keycode::up))
       hpw::text_input = sconv<utf32>(hpw::cmd->last_command());
+    // дописать команду из предлагаемых при автодописывании
+    if (is_pressed_once(hpw::keycode::right)) {
+      cauto input = sconv<Str>(hpw::text_input);
+      cauto matches = hpw::cmd->command_matches(input);
+      if (!matches.empty())
+        hpw::text_input = sconv<utf32>( matches.at(0) );
+    }
   } // update
 
   inline void draw(Image& dst) const {
