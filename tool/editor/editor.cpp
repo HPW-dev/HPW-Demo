@@ -52,7 +52,7 @@ void Editor::imgui_exec() {
 
 void Editor::init_graphic() {
   hpw::set_double_buffering(true);
-  graphic::wait_frame = false;
+  graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::cpu_safe = false;
   hpw::set_vsync(false);
   graphic::set_disable_frame_limit(false);
