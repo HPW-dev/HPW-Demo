@@ -63,3 +63,4 @@ void Player::kill() {
 }
 
 void Player::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }
+void Player::remove_abilities() { capabilities.clear(); }

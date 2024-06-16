@@ -204,6 +204,16 @@ struct Cmd::Impl {
         .description = U"add ability to player (powerup ability if repeated)",
         .action = &add_ability
       },
+      Command {
+        .name = "remove_abilities",
+        .description = U"remove all player abilities",
+        .action = [](CN<Strs> args) {
+          auto player = hpw::entity_mgr->get_player();
+          return_if(!player);
+          player->remove_abilities();
+          print(U"all player abilities removed");
+        }
+      },
     };
   } // init_commands
 
