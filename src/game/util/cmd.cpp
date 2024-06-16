@@ -9,6 +9,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/file/yaml.hpp"
+#include "host/command.hpp"
 #include "game-archive.hpp"
 #include "game/entity/ability/home.hpp"
 #include "game/entity/ability/fullscreen-shoot.hpp"
@@ -218,6 +219,11 @@ struct Cmd::Impl {
         .name = "cls",
         .description = U"clear all messages in game screen",
         .action = [](CN<Strs> args) { hpw::message_mgr->clear(); }
+      },
+      Command {
+        .name = "exit",
+        .description = U"shutdown game",
+        .action = [](CN<Strs> args) { hpw::soft_exit(); }
       },
     }; // init m_commands
   } // init_commands
