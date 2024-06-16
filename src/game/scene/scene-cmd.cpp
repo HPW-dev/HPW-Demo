@@ -53,7 +53,6 @@ struct Scene_cmd::Impl {
     }
     // выполнить команду
     if (is_pressed_once(hpw::keycode::enable)) {
-      hpw::message_mgr->clear(); // убрать предыдущее сообщение
       hpw::cmd->exec( sconv<Str>(hpw::text_input) );
       hpw::text_input.clear();
     }

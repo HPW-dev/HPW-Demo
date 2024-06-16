@@ -214,7 +214,12 @@ struct Cmd::Impl {
           print(U"all player abilities removed");
         }
       },
-    };
+      Command {
+        .name = "cls",
+        .description = U"clear all messages in game screen",
+        .action = [](CN<Strs> args) { hpw::message_mgr->clear(); }
+      },
+    }; // init m_commands
   } // init_commands
 
   inline Strs command_matches(CN<Str> command) const {
