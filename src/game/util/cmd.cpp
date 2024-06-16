@@ -226,6 +226,10 @@ struct Cmd::Impl {
         .action = [](CN<Strs> args) { hpw::soft_exit(); }
       },
     }; // init m_commands
+    // отсортировать команды по именам
+    cauto name_sorter = [](CN<Command> a, CN<Command> b)->bool
+      { return a.name < b.name; };
+    std::sort(m_commands.begin(), m_commands.end(), name_sorter);
   } // init_commands
 
   inline Strs command_matches(CN<Str> command) const {
