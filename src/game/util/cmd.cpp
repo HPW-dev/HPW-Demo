@@ -17,6 +17,7 @@
 #include "game/entity/ability/speedup.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/entities.hpp"
+#include "game/entity/player.hpp"
 
 struct Cmd::Impl {
   struct Command {
@@ -151,6 +152,24 @@ struct Cmd::Impl {
     print(text);
   }
 
+  // назначает способность игроку
+  inline static void add_ability(CN<Strs> args) {
+    iferror(args.size() < 2, "need more params in add_ability command");
+    auto player = hpw::entity_mgr->get_player();
+    return_if(!player);
+    
+    // найти абилку из списка
+    cnauto ability_name = args.at(1);
+    cnauto abilities = get_abilities();
+    auto it = std::find_if( abilities.begin(), abilities.end(),
+      [&](CN<Ability_info> info) { return info.name == ability_name; } );
+    iferror(it == abilities.end(), "not finded ability \"" << ability_name << "\"");
+
+    // дать абилку игроку
+    player->move_ability(std::move( it->maker(*player) ));
+    print(U"ability \"" + sconv<utf32>(ability_name) + U"\" added to player");
+  } // add_ability
+
   inline void init_commands() {
     m_commands = Vector<Command> {
       Command {
@@ -179,6 +198,11 @@ struct Cmd::Impl {
         .name = "abilities",
         .description = U"print list of all avaliable player abilities",
         .action = &print_abilities
+      },
+      Command {
+        .name = "add_ability",
+        .description = U"add ability to player (powerup ability if repeated)",
+        .action = &add_ability
       },
     };
   } // init_commands
@@ -219,7 +243,26 @@ struct Cmd::Impl {
       ret.clear();
       for (cnauto name: entities | std::views::filter(entity_name_filter))
         ret.push_back(cmd_name + " " + name);
-    }
+    } // cmd_name == spawn
+
+    // дополнить команду add_ability вариантами абилок
+    if (cmd_name == "add_ability") {
+      cauto abilities = get_abilities();
+
+      // если в слове есть часть введёной строки
+      cauto ability_name_filter = [&](CN<Ability_info> it)->bool {
+        if (args.size() > 1) {
+          cauto ability_name = args.at(1);
+          return it.name.find(ability_name) != Str::npos;
+        }
+        // если имени для спавна ещё нет, пропускать любое имя из списка
+        return true;
+      }; // ability_name_filter
+
+      ret.clear();
+      for (cnauto it: abilities | std::views::filter(ability_name_filter))
+        ret.push_back(cmd_name + " " + it.name);
+    } // cmd_name == add_ability
 
     return ret;
   } // command_matches
