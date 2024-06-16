@@ -10,6 +10,11 @@
 #include "util/error.hpp"
 #include "util/file/yaml.hpp"
 #include "game-archive.hpp"
+#include "game/entity/ability/home.hpp"
+#include "game/entity/ability/fullscreen-shoot.hpp"
+#include "game/entity/ability/invise.hpp"
+#include "game/entity/ability/power-shoot.hpp"
+#include "game/entity/ability/speedup.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/entities.hpp"
 
@@ -111,12 +116,38 @@ struct Cmd::Impl {
       ret.push_back(tag);
     return ret;
   }
+  
+  struct Ability_info {
+    Str name {};
+    using Maker = std::function< Shared<Ability> (CN<Player> player) >;
+    Maker maker {};
+  };
+  using Ability_infos = Vector<Ability_info>;
+
+  inline static CN<Ability_infos> get_abilities() {
+    sconst Ability_infos ret {
+      {.name="home", .maker=[](CN<Player> player){ return new_shared<Ability_home>(player); }},
+      {.name="fullscreen_shoot", .maker=[](CN<Player> player){ return new_shared<Ability_fullscreen_shoot>(player); }},
+      {.name="invise", .maker=[](CN<Player> player){ return new_shared<Ability_invise>(player); }},
+      {.name="power_shoot", .maker=[](CN<Player> player){ return new_shared<Ability_power_shoot>(player); }},
+      {.name="speedup", .maker=[](CN<Player> player){ return new_shared<Ability_speedup>(player); }},
+    };
+    return ret;
+  }
 
   inline static void print_entities_list(CN<Strs> args) {
     cauto list = get_entities_list();
     utf32 text = U"Avaliable entities:\n";
     for (cnauto name: list)
-      text += sconv<utf32>(name) + U'\n';
+      text +=  U"- " + sconv<utf32>(name) + U'\n';
+    print(text);
+  }
+  
+  inline static void print_abilities(CN<Strs> args) {
+    cauto list = get_abilities();
+    utf32 text = U"Avaliable abilities:\n";
+    for (cnauto it: list)
+      text += U"- " + sconv<utf32>(it.name) + U'\n';
     print(text);
   }
 
@@ -143,6 +174,11 @@ struct Cmd::Impl {
         .name = "entities",
         .description = U"print list of all avaliable entities for spawn",
         .action = &print_entities_list
+      },
+      Command {
+        .name = "abilities",
+        .description = U"print list of all avaliable player abilities",
+        .action = &print_abilities
       },
     };
   } // init_commands
