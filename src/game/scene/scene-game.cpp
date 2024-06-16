@@ -72,23 +72,7 @@ void Scene_game::init_levels() {
     hpw::level_mgr = new_unique<Level_mgr>( Level_mgr::Makers{
       [] { return new_shared<Level_tutorial>(); }
     });
-<<<<<<< HEAD
-  } else {
-    hpw::level_mgr = new_shared<Level_mgr>( Level_mgr::Makers{
-      //[] { return new_shared<Level_space>(); },
-      //[] { return new_shared<Level_1>(); },
-      #ifdef DEBUG
-      //[] { return new_shared<Level_debug_bullets>(); },
-      //[] { return new_shared<Level_debug_1>(); },
-      //[] { return new_shared<Level_debug_2>(); },
-      //[] { return new_shared<Level_debug_3>(); },
-      [] { return new_shared<Level_empty>(); },
-      //[] { return new_shared<Level_collision_test>(); },
-      #endif
-    }); // init level order
-=======
     return;
->>>>>>> dev
   }
 
   // стандартный порядок уровней
