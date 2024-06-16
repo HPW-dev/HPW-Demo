@@ -1,6 +1,7 @@
 ﻿build/config.yml
 build/editor
 build/plugin
+build/debug.txt
 ignore me.lnk
 imgui.ini
 memleaks.txt
