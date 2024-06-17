@@ -21,6 +21,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/entity/player.hpp"
+#include "game/util/game-util.hpp"
 
 struct Cmd::Impl {
   struct Command {
@@ -36,6 +37,175 @@ struct Cmd::Impl {
   inline Impl() {
     init_commands();
   } // c-tor
+
+  inline void init_commands() {
+    m_commands = Vector<Command> {
+      Command {
+        .name = "help",
+        .description = U"print this help",
+        .action = [this](CN<Strs> args) { help(args); }
+      },
+      Command {
+        .name = "spawn",
+        .description =
+          U"spawn <entity name> <pos x> <pos y>\n"
+          U"example: spawn enemy.snake.head 256 10"
+          U"example random pos: spawn enemy.snake.head R R",
+        .action = &spawn
+      },
+      Command {
+        .name = "print",
+        .description = U"print <text>",
+        .action = &echo
+      },
+      Command {
+        .name = "entities",
+        .description = U"print list of all avaliable entities for spawn",
+        .action = &print_entities_list
+      },
+      Command {
+        .name = "abilities",
+        .description = U"print list of all avaliable player abilities",
+        .action = &print_abilities
+      },
+      Command {
+        .name = "add_ability",
+        .description = U"add ability to player (powerup ability if repeated)",
+        .action = &add_ability
+      },
+      Command {
+        .name = "remove_abilities",
+        .description = U"remove all player abilities",
+        .action = [](CN<Strs> args) {
+          auto player = hpw::entity_mgr->get_player();
+          return_if(!player);
+          player->remove_abilities();
+          print(U"all player abilities removed");
+        }
+      },
+      Command {
+        .name = "cls",
+        .description = U"clear all messages in game screen",
+        .action = [](CN<Strs> args) { hpw::message_mgr->clear(); }
+      },
+      Command {
+        .name = "exit",
+        .description = U"shutdown game",
+        .action = [](CN<Strs> args) { hpw::soft_exit(); }
+      },
+      Command {
+        .name = "rep",
+        .description =
+          U"repeats the command <count> times\n"
+          U"example: rep <count> command args...",
+        .action = [this](CN<Strs> args) { repeat(args); }
+      },
+      Command {
+        .name = "kill",
+        .description = U"kill player",
+        .action = [this](CN<Strs> args) {
+          auto player = hpw::entity_mgr->get_player();
+          // не убивать уже мёртвого игрока
+          return_if( !(player && player->status.live) );
+          player->kill();
+          print(U"player killed");
+        }
+      },
+      Command {
+        .name = "resurect",
+        .description = U"resurrects player",
+        .action = [this](CN<Strs> args) {
+          auto player = hpw::entity_mgr->get_player();
+          // не воксрешать игрока, если он и так живой
+          return_if(player && player->status.live);
+          hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
+          print(U"player resurected");
+        }
+      },
+    }; // init m_commands
+    // отсортировать команды по именам
+    cauto name_sorter = [](CN<Command> a, CN<Command> b)->bool
+      { return a.name < b.name; };
+    std::sort(m_commands.begin(), m_commands.end(), name_sorter);
+  } // init_commands
+
+  inline Strs command_matches(CN<Str> command) const {
+    Strs ret;
+
+    // если нет параметров, показать все команды и выйти
+    if (command.empty()) {
+      for (cnauto command: m_commands)
+        ret.push_back(command.name);
+      return ret;
+    }
+
+    cauto args = split(command, ' ');
+    cauto cmd_name = str_tolower( args.at(0) );
+    // учитывать совпадения в начале слова
+    auto command_match = [&](CN<Command> arg)->bool
+      { return arg.name.find(cmd_name) == 0; };
+    // найти совпадающие команды по их названию
+    for (cnauto founded: m_commands | std::views::filter(command_match))
+      ret.push_back(founded.name);
+    
+    // проигнорить команду rep и её аргумент
+    if (cmd_name == "rep" && args.size() >= 2) {
+      Strs ret;
+      if (args.size() == 2) {
+        ret = command_matches({});
+      } else {
+        // убрать rep из текста команды
+        Str croped_command;
+        for (uint i = 2; i < args.size(); ++i)
+          croped_command += args[i] + ' ';
+        ret = command_matches(croped_command);
+      }
+      // добавить подсказываемые команды после rep
+      for (nauto it: ret)
+        it = args.at(0) + ' ' + args.at(1) + ' ' + it;
+      return ret;
+    }
+
+    // дополнить команду spawn вариантами entity
+    if (cmd_name == "spawn") {
+      cauto entities = get_entities_list();
+
+      // если в слове есть часть введёной строки
+      cauto entity_name_filter = [&](CN<Str> name)->bool {
+        if (args.size() > 1) {
+          cauto entity_name = args.at(1);
+          return name.find(entity_name) != Str::npos;
+        }
+        // если имени для спавна ещё нет, пропускать любое имя из списка
+        return true;
+      }; // entity_name_filter
+
+      ret.clear();
+      for (cnauto name: entities | std::views::filter(entity_name_filter))
+        ret.push_back(cmd_name + " " + name);
+    } // cmd_name == spawn
+
+    // дополнить команду add_ability вариантами абилок
+    if (cmd_name == "add_ability") {
+      cauto abilities = get_abilities();
+
+      // если в слове есть часть введёной строки
+      cauto ability_name_filter = [&](CN<Ability_info> it)->bool {
+        if (args.size() > 1) {
+          cauto ability_name = args.at(1);
+          return it.name.find(ability_name) != Str::npos;
+        }
+        // если имени для спавна ещё нет, пропускать любое имя из списка
+        return true;
+      }; // ability_name_filter
+
+      ret.clear();
+      for (cnauto it: abilities | std::views::filter(ability_name_filter))
+        ret.push_back(cmd_name + " " + it.name);
+    } // cmd_name == add_ability
+
+    return ret;
+  } // command_matches
 
   inline void exec(CN<Str> command_str) {
     m_last_cmd = command_str;
@@ -195,153 +365,6 @@ struct Cmd::Impl {
     player->move_ability(std::move( it->maker(*player) ));
     print(U"ability \"" + sconv<utf32>(ability_name) + U"\" added to player");
   } // add_ability
-
-  inline void init_commands() {
-    m_commands = Vector<Command> {
-      Command {
-        .name = "help",
-        .description = U"print this help",
-        .action = [this](CN<Strs> args) { help(args); }
-      },
-      Command {
-        .name = "spawn",
-        .description =
-          U"spawn <entity name> <pos x> <pos y>\n"
-          U"example: spawn enemy.snake.head 256 10"
-          U"example random pos: spawn enemy.snake.head R R",
-        .action = &spawn
-      },
-      Command {
-        .name = "print",
-        .description = U"print <text>",
-        .action = &echo
-      },
-      Command {
-        .name = "entities",
-        .description = U"print list of all avaliable entities for spawn",
-        .action = &print_entities_list
-      },
-      Command {
-        .name = "abilities",
-        .description = U"print list of all avaliable player abilities",
-        .action = &print_abilities
-      },
-      Command {
-        .name = "add_ability",
-        .description = U"add ability to player (powerup ability if repeated)",
-        .action = &add_ability
-      },
-      Command {
-        .name = "remove_abilities",
-        .description = U"remove all player abilities",
-        .action = [](CN<Strs> args) {
-          auto player = hpw::entity_mgr->get_player();
-          return_if(!player);
-          player->remove_abilities();
-          print(U"all player abilities removed");
-        }
-      },
-      Command {
-        .name = "cls",
-        .description = U"clear all messages in game screen",
-        .action = [](CN<Strs> args) { hpw::message_mgr->clear(); }
-      },
-      Command {
-        .name = "exit",
-        .description = U"shutdown game",
-        .action = [](CN<Strs> args) { hpw::soft_exit(); }
-      },
-      Command {
-        .name = "rep",
-        .description =
-          U"repeats the command <count> times\n"
-          U"example: rep <count> command args...",
-        .action = [this](CN<Strs> args) { repeat(args); }
-      },
-    }; // init m_commands
-    // отсортировать команды по именам
-    cauto name_sorter = [](CN<Command> a, CN<Command> b)->bool
-      { return a.name < b.name; };
-    std::sort(m_commands.begin(), m_commands.end(), name_sorter);
-  } // init_commands
-
-  inline Strs command_matches(CN<Str> command) const {
-    Strs ret;
-
-    // если нет параметров, показать все команды и выйти
-    if (command.empty()) {
-      for (cnauto command: m_commands)
-        ret.push_back(command.name);
-      return ret;
-    }
-
-    cauto args = split(command, ' ');
-    cauto cmd_name = str_tolower( args.at(0) );
-    // учитывать совпадения в начале слова
-    auto command_match = [&](CN<Command> arg)->bool
-      { return arg.name.find(cmd_name) == 0; };
-    // найти совпадающие команды по их названию
-    for (cnauto founded: m_commands | std::views::filter(command_match))
-      ret.push_back(founded.name);
-    
-    // проигнорить команду rep и её аргумент
-    if (cmd_name == "rep" && args.size() >= 2) {
-      Strs ret;
-      if (args.size() == 2) {
-        ret = command_matches({});
-      } else {
-        // убрать rep из текста команды
-        Str croped_command;
-        for (uint i = 2; i < args.size(); ++i)
-          croped_command += args[i] + ' ';
-        ret = command_matches(croped_command);
-      }
-      // добавить подсказываемые команды после rep
-      for (nauto it: ret)
-        it = args.at(0) + ' ' + args.at(1) + ' ' + it;
-      return ret;
-    }
-
-    // дополнить команду spawn вариантами entity
-    if (cmd_name == "spawn") {
-      cauto entities = get_entities_list();
-
-      // если в слове есть часть введёной строки
-      cauto entity_name_filter = [&](CN<Str> name)->bool {
-        if (args.size() > 1) {
-          cauto entity_name = args.at(1);
-          return name.find(entity_name) != Str::npos;
-        }
-        // если имени для спавна ещё нет, пропускать любое имя из списка
-        return true;
-      }; // entity_name_filter
-
-      ret.clear();
-      for (cnauto name: entities | std::views::filter(entity_name_filter))
-        ret.push_back(cmd_name + " " + name);
-    } // cmd_name == spawn
-
-    // дополнить команду add_ability вариантами абилок
-    if (cmd_name == "add_ability") {
-      cauto abilities = get_abilities();
-
-      // если в слове есть часть введёной строки
-      cauto ability_name_filter = [&](CN<Ability_info> it)->bool {
-        if (args.size() > 1) {
-          cauto ability_name = args.at(1);
-          return it.name.find(ability_name) != Str::npos;
-        }
-        // если имени для спавна ещё нет, пропускать любое имя из списка
-        return true;
-      }; // ability_name_filter
-
-      ret.clear();
-      for (cnauto it: abilities | std::views::filter(ability_name_filter))
-        ret.push_back(cmd_name + " " + it.name);
-    } // cmd_name == add_ability
-
-    return ret;
-  } // command_matches
 
   inline Str last_command() const { return m_last_cmd; }
 }; // Impl
