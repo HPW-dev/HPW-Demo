@@ -97,7 +97,7 @@ struct Cmd::Impl {
     hpw::entity_mgr->make({}, entity_name, pos);
     print(U"spawned \"" + sconv<utf32>(entity_name) +
       U"\" at {" + n2s<utf32>(pos.x, 2) + U", " + n2s<utf32>(pos.y, 2) + U"}");
-  }
+  } // spawn
 
   // пишет текст в консоль и на экран
   inline static void print(CN<utf32> text) {
@@ -159,6 +159,23 @@ struct Cmd::Impl {
     for (cnauto it: list)
       text += U"- " + sconv<utf32>(it.name) + U'\n';
     print(text);
+  }
+
+  // повторяет команды
+  inline void repeat(CN<Strs> args) {
+    iferror(args.size() < 3, "need more params in rep command");
+    // узнать сколько раз повторять команду
+    cauto count = s2n<int>(args.at(1));
+    return_if(count <= 0);
+    // восстановить из аргументов команду и её параметры
+    Str command_str;
+    for (uint i = 2; i < args.size(); ++i)
+      command_str += args[i] + ' ';
+    /*print(U"repeat command \"" + sconv<utf32>(command_str) +
+      U"\" " + n2s<utf32>(count) + U" times...");*/
+    // выполнить команду нужное количество раз
+    cfor (i, count)
+      this->exec(command_str);
   }
 
   // назначает способность игроку
@@ -233,6 +250,13 @@ struct Cmd::Impl {
         .name = "exit",
         .description = U"shutdown game",
         .action = [](CN<Strs> args) { hpw::soft_exit(); }
+      },
+      Command {
+        .name = "rep",
+        .description =
+          U"repeats the command <count> times\n"
+          U"example: rep <count> command args...",
+        .action = [this](CN<Strs> args) { repeat(args); }
       },
     }; // init m_commands
     // отсортировать команды по именам
