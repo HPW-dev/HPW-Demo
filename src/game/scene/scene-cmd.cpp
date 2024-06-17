@@ -79,7 +79,7 @@ struct Scene_cmd::Impl {
         0, hpw::text_input.size());
     }
     // дописать команду из предлагаемых при автодописывании
-    if (is_pressed_once(hpw::keycode::focus)) {
+    if (is_pressed_once(hpw::keycode::down)) {
       cauto input = sconv<Str>(hpw::text_input);
       cauto matches = hpw::cmd->command_matches(input);
       if (!matches.empty()) {
