@@ -82,8 +82,13 @@ struct Cmd::Impl {
     if (args.size() >= 4) {
       cauto pos_x_str = str_tolower(args.at(2));
       cauto pos_y_str = str_tolower(args.at(3));
-      const real pos_x = pos_x_str == "r" ? rndr(0, graphic::width) : s2n<real>(pos_x_str);
-      const real pos_y = pos_y_str == "r" ? rndr(0, graphic::height) : s2n<real>(pos_y_str);
+      // если R за место кордов, то взять рандомную позицию с экрана
+      const real pos_x = pos_x_str == "r"
+        ? rndr(0, graphic::width)
+        : s2n<real>(pos_x_str);
+      const real pos_y = pos_y_str == "r"
+        ? rndr(0, graphic::height)
+        : s2n<real>(pos_y_str);
       pos = {pos_x, pos_y};
     } else { // если корды не заданы, создать объект сверху посередине
       pos = {256, 50};
