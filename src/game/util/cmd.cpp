@@ -9,6 +9,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/file/yaml.hpp"
+#include "util/math/random.hpp"
 #include "host/command.hpp"
 #include "game-archive.hpp"
 #include "game/entity/ability/home.hpp"
@@ -18,6 +19,7 @@
 #include "game/entity/ability/speedup.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/entities.hpp"
+#include "game/core/canvas.hpp"
 #include "game/entity/player.hpp"
 
 struct Cmd::Impl {
@@ -78,10 +80,11 @@ struct Cmd::Impl {
 
     Vec pos;
     if (args.size() >= 4) {
-      pos = {
-        s2n<real>(args.at(2)),
-        s2n<real>(args.at(3))
-      };
+      cauto pos_x_str = str_tolower(args.at(2));
+      cauto pos_y_str = str_tolower(args.at(3));
+      const real pos_x = pos_x_str == "r" ? rndr(0, graphic::width) : s2n<real>(pos_x_str);
+      const real pos_y = pos_y_str == "r" ? rndr(0, graphic::height) : s2n<real>(pos_y_str);
+      pos = {pos_x, pos_y};
     } else { // если корды не заданы, создать объект сверху посередине
       pos = {256, 50};
     }
@@ -182,7 +185,8 @@ struct Cmd::Impl {
         .name = "spawn",
         .description =
           U"spawn <entity name> <pos x> <pos y>\n"
-          U"example: spawn enemy.snake.head 256 10",
+          U"example: spawn enemy.snake.head 256 10"
+          U"example random pos: spawn enemy.snake.head R R",
         .action = &spawn
       },
       Command {
