@@ -50,8 +50,15 @@ class Median final {
  public:
   inline T operator()() {
     return_if (core.samples.empty(), {});
-    return_if (core.samples.size() <= 2, core.samples[0]);
+    return_if (core.samples.size() == 1, core.samples[0]);
+    return_if (core.samples.size() == 2, (core.samples[0] + core.samples[1]) * 0.5);
     std::sort(core.samples.begin(), core.samples.end());
+    if (core.samples.size() % 2 == 0) {
+      return 0.5 * (
+        core.samples.at((core.samples.size() / 2) - 1) +
+        core.samples.at(core.samples.size() / 2)
+      );
+    }
     return core.samples.at(core.samples.size() / 2);
   }
 
