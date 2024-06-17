@@ -88,8 +88,12 @@ static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h)
 
 // utf32 text input callback
 static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoint) {
-  if (hpw::text_input_mode)
-    hpw::text_input += scast<decltype(hpw::text_input)::value_type>(codepoint);
+  if (hpw::text_input_mode) {
+    hpw::text_input.insert(hpw::text_input_pos, 1,
+      scast<decltype(hpw::text_input)::value_type>(codepoint));
+    hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos + 1,
+      0, hpw::text_input.size());
+  }
 }
 
 Host_glfw::Host_glfw(int argc, char *argv[])

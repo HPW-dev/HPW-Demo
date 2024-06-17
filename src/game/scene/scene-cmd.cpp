@@ -38,15 +38,22 @@ struct Scene_cmd::Impl {
     if (is_pressed_once(hpw::keycode::console))
       hpw::scene_mgr->back();
     // стирание текста
-    if (is_pressed_once(hpw::keycode::text_delete))
-      if (!hpw::text_input.empty())
-        hpw::text_input.resize(hpw::text_input.size() - 1);
+    if (is_pressed_once(hpw::keycode::text_delete)) {
+      if (!hpw::text_input.empty()) {
+        hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos - 1,
+          0, hpw::text_input.size());
+        hpw::text_input.erase(hpw::text_input_pos, 1);
+      }
+    }
     // если зажали кнопку удаления текста
     if (is_pressed(hpw::keycode::text_delete)) {
       ++m_text_delete_timer;
       if (m_text_delete_timer >= TEXT_DELETE_TIMEOUT) {
-        if (!hpw::text_input.empty() && ((m_text_delete_timer % 6u) == 0u))
-          hpw::text_input.resize(hpw::text_input.size() - 1);
+        if (!hpw::text_input.empty() && ((m_text_delete_timer % 6u) == 0u)) {
+          hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos - 1,
+            0, hpw::text_input.size());
+          hpw::text_input.erase(hpw::text_input_pos, 1);
+        }
       }
     } else {
       m_text_delete_timer = 0;
@@ -57,14 +64,28 @@ struct Scene_cmd::Impl {
       hpw::text_input.clear();
     }
     // загрузить предыдущую команду
-    if (is_pressed_once(hpw::keycode::up))
+    if (is_pressed_once(hpw::keycode::up)) {
       hpw::text_input = sconv<utf32>(hpw::cmd->last_command());
-    // дописать команду из предлагаемых при автодописывании
+      hpw::text_input_pos = hpw::text_input.size();
+    }
+    // перемещение текстового курсора ввода влево
+    if (is_pressed_once(hpw::keycode::left)) {
+      hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos - 1,
+        0, hpw::text_input.size());
+    }
+    // перемещение текстового курсора ввода вправо
     if (is_pressed_once(hpw::keycode::right)) {
+      hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos + 1,
+        0, hpw::text_input.size());
+    }
+    // дописать команду из предлагаемых при автодописывании
+    if (is_pressed_once(hpw::keycode::focus)) {
       cauto input = sconv<Str>(hpw::text_input);
       cauto matches = hpw::cmd->command_matches(input);
-      if (!matches.empty())
+      if (!matches.empty()) {
         hpw::text_input = sconv<utf32>( matches.at(0) );
+        hpw::text_input_pos = hpw::text_input.size();
+      }
     }
   } // update
 
@@ -79,11 +100,13 @@ struct Scene_cmd::Impl {
 
   inline void print_input(Image& dst) const {
     const Vec pos(15, 15);
-    utf32 text = U"Команда: " + hpw::text_input;
+    utf32 text = hpw::text_input;
     // мигающий курсор
-    if ((graphic::frame_count % 30) >= 15)
-      text += U'<';
-    graphic::font->draw(dst, pos, text);
+    if ((graphic::frame_count % 30) >= 15) {
+      hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos, 0, text.size());
+      text.insert(hpw::text_input_pos, 1, U'<');
+    }
+    graphic::font->draw(dst, pos, U"Команда: " + text);
   }
 
   // показывает автодополнение команд
