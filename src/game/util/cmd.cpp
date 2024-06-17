@@ -60,12 +60,12 @@ struct Cmd::Impl {
       },
       Command {
         .name = "entities",
-        .description = U"print list of all avaliable entities for spawn",
+        .description = U"print list of entities for spawn command",
         .action = &print_entities_list
       },
       Command {
         .name = "abilities",
-        .description = U"print list of all avaliable player abilities",
+        .description = U"print list of player abilities for add_ability command",
         .action = &print_abilities
       },
       Command {
@@ -85,7 +85,7 @@ struct Cmd::Impl {
       },
       Command {
         .name = "cls",
-        .description = U"clear all messages in game screen",
+        .description = U"clear the game screen from messages",
         .action = [](CN<Strs> args) { hpw::message_mgr->clear(); }
       },
       Command {
@@ -97,7 +97,7 @@ struct Cmd::Impl {
         .name = "rep",
         .description =
           U"repeats the command <count> times\n"
-          U"example: rep <count> command args...",
+          U"example: rep 7 print bruh",
         .action = [this](CN<Strs> args) { repeat(args); }
       },
       Command {
