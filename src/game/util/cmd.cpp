@@ -170,11 +170,12 @@ struct Cmd::Impl {
     if (cmd_name == "spawn") {
       cauto entities = get_entities_list();
 
-      // если в слове есть часть введёной строки
+      // фильтр введёной строки
       cauto entity_name_filter = [&](CN<Str> name)->bool {
         if (args.size() > 1) {
           cauto entity_name = args.at(1);
-          return name.find(entity_name) != Str::npos;
+          //return name.find(entity_name) != Str::npos; // найти любое упоминание
+          return name.find(entity_name) == 0; // найти совпадения в начале
         }
         // если имени для спавна ещё нет, пропускать любое имя из списка
         return true;
@@ -208,7 +209,6 @@ struct Cmd::Impl {
   } // command_matches
 
   inline void exec(CN<Str> command_str) {
-    m_last_cmd = command_str;
     try {
       cauto splited = split_str(command_str, ' ');
       cnauto command = find_command(splited.at(0));
@@ -220,6 +220,7 @@ struct Cmd::Impl {
       print(U"неизвестная ошибка при выполнении команды \"" +
         sconv<utf32>(command_str) + U"\"");
     }
+    m_last_cmd = command_str;
   }
 
   inline CN<Command> find_command(CN<Str> name) const {
