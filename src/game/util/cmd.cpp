@@ -49,7 +49,7 @@ struct Cmd::Impl {
         .name = "spawn",
         .description =
           U"spawn <entity name> <pos x> <pos y>\n"
-          U"example: spawn enemy.snake.head 256 10"
+          U"example: spawn enemy.snake.head 256 10\n"
           U"example random pos: spawn enemy.snake.head R R",
         .action = &spawn
       },
