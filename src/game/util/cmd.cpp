@@ -284,6 +284,24 @@ struct Cmd::Impl {
     for (cnauto founded: m_commands | std::views::filter(command_match))
       ret.push_back(founded.name);
     
+    // проигнорить команду rep и её аргумент
+    if (cmd_name == "rep" && args.size() >= 2) {
+      Strs ret;
+      if (args.size() == 2) {
+        ret = command_matches({});
+      } else {
+        // убрать rep из текста команды
+        Str croped_command;
+        for (uint i = 2; i < args.size(); ++i)
+          croped_command += args[i] + ' ';
+        ret = command_matches(croped_command);
+      }
+      // добавить подсказываемые команды после rep
+      for (nauto it: ret)
+        it = args.at(0) + ' ' + args.at(1) + ' ' + it;
+      return ret;
+    }
+
     // дополнить команду spawn вариантами entity
     if (cmd_name == "spawn") {
       cauto entities = get_entities_list();
