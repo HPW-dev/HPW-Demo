@@ -21,7 +21,7 @@ public:
   Str name() const override { return "set_level"; }
   inline utf32 description() const override {
     return U"select level by level name (seed levels command output)\n"
-      "  example: set_level \"empty\"";
+      "  example: set_level tutorial";
   }
   void exec(CN<Strs> cmd_and_args) override;
   Strs command_matches(CN<Strs> cmd_and_args) override;

@@ -15,33 +15,33 @@
 #include "util/math/vec.hpp"
 
 Level_mgr::Level_mgr(CN<Makers> _makers)
-: makers(_makers) {
-  iflog(makers.empty(), "Генераторы уровней не заданы\n");
+: m_makers(_makers) {
+  iflog(m_makers.empty(), "Генераторы уровней не заданы\n");
 }
 
 void Level_mgr::update(const Vec vel, Delta_time dt) {
-  if (level) {
-    level->update(vel, dt);
-    if (level->m_complete)
-      level = {};
+  if (m_level) {
+    m_level->update(vel, dt);
+    if (m_level->m_complete)
+      m_level = {};
   } 
   // смена уровня
-  if (!level) {
+  if (!m_level) {
     hpw::entity_mgr->clear();
     accept_maker();
     
     if (cauto _level_name = level_name(); !_level_name.empty())
       detailed_log("выбран уровень: \"" << _level_name << "\"\n");
-  } // if !level
+  } // if !m_level
 } // update
 
 void Level_mgr::draw(Image& dst) const {
   return_if(!m_visible);
 
-  if (level) {
+  if (m_level) {
     // показать уровень, иначе залить фон
     if (graphic::draw_level)
-      level->draw(dst);
+      m_level->draw(dst);
     else
       dst.fill({}); // TODO для красивого эффекта это можно вырубить
   } else {
@@ -52,41 +52,42 @@ void Level_mgr::draw(Image& dst) const {
 
 void Level_mgr::draw_upper_layer(Image& dst) const {
   // показать уровень, иначе залить фон
-  if (graphic::draw_level && level)
-    level->draw_upper_layer(dst);
+  if (graphic::draw_level && m_level)
+    m_level->draw_upper_layer(dst);
 }
 
 void Level_mgr::accept_maker() {
-  if (makers.empty()) {
+  if (m_makers.empty()) {
     end_of_levels = true;
   } else {
     // взять следующий уровень и убрать его из списка на создание
-    auto maker = makers.front();
-    level = maker();
-    makers.pop_front();
+    auto maker = m_makers.front();
+    m_level = maker();
+    m_makers.pop_front();
   }
 }
 
 void Level_mgr::finalize_level() {
   auto player = hpw::entity_mgr->get_player();
   assert(player);
-  set_player_pos_from_prev_level(player->phys.get_pos());
+  set_player_prev_pos(player->phys.get_pos());
   
-  if (level)
-    level->m_complete = true;
+  if (m_level)
+    m_level->m_complete = true;
 }
 
 Vec Level_mgr::player_prev_lvl_pos() const
   { return m_player_pos_from_prev_level; }
 
-void Level_mgr::set_player_pos_from_prev_level(const Vec pos)
+void Level_mgr::set_player_prev_pos(const Vec pos)
   { m_player_pos_from_prev_level = pos; }
 
 Str Level_mgr::level_name() const {
-  if (level)
-    return level->level_name();
-  detailed_log("empty level\n");
+  if (m_level)
+    return m_level->level_name();
+  detailed_log("empty m_level\n");
   return {};
 }
 
 void Level_mgr::set_visible(bool mode) { m_visible = mode; }
+void Level_mgr::set(CN<Shared<Level>> level) { m_level = level; }

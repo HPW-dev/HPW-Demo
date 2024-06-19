@@ -12,7 +12,7 @@ class Image;
 // Управление уровнями
 class Level_mgr final {
 public:
-  using Maker = std::function<Shared<Level> ()>;
+  using Maker = std::function< Shared<Level> () >;
   using Makers = std::deque<Maker>;
 
   bool end_of_levels {false}; // так можно проверить что игра кончилась
@@ -31,16 +31,18 @@ public:
   void draw_upper_layer(Image& dst) const;
   // позиция игрока с предыдущего уровня
   Vec player_prev_lvl_pos() const;
-  void set_player_pos_from_prev_level(const Vec pos);
+  void set_player_prev_pos(const Vec pos);
   // узнать название уровня
   Str level_name() const;
   // управляет видимостью фона
   void set_visible(bool mode);
+  // установить текущий уровень
+  void set(CN<Shared<Level>> level);
 
 private:
   nocopy(Level_mgr);
-  Makers makers {}; // конструкторы уровней
-  Shared<Level> level {}; // текущий уровень
+  Makers m_makers {}; // конструкторы уровней
+  Shared<Level> m_level {}; // текущий уровень
   bool m_visible {true}; // if false - disable redraw bg
 
   void accept_maker();

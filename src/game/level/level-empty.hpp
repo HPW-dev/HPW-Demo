@@ -1,4 +1,5 @@
 #pragma once
+#include <string_view>
 #include "level.hpp"
 #include "util/mem-types.hpp"
 
@@ -9,6 +10,8 @@ class Level_empty final: public Level {
   Unique<Impl> impl {};
   
 public:
+  constx std::string_view NAME {"Empty"};
+
   Level_empty();
   ~Level_empty();
   void update(const Vec vel, Delta_time dt) override;

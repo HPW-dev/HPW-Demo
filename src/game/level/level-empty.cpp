@@ -44,4 +44,4 @@ void Level_empty::update(const Vec vel, Delta_time dt) {
   impl->update(vel, dt);
 }
 void Level_empty::draw(Image& dst) const { impl->draw(dst); }
-Str Level_empty::level_name() const { return "Test level 4"; }
+Str Level_empty::level_name() const { return Str{Level_empty::NAME}; }

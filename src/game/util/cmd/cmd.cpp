@@ -40,6 +40,8 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_log_cnosole>());
   //move(new_unique<Cmd_log_screen>());
   //move(new_unique<Cmd_help>());
+  //move(new_unique<Cmd_cls>());
+  //move(new_unique<Cmd_comment>());
 
   //cmd-script.hpp
   //move(new_unique<Cmd_script>());
@@ -52,7 +54,7 @@ Cmd::Cmd() {
   //cmd-level.hpp
   move(new_unique<Cmd_levels>(this));
   move(new_unique<Cmd_set_level>(this));
-  move(new_unique<Cmd_restart>(this));
+  //move(new_unique<Cmd_restart>(this));
 
   //cmd-core.hpp
   //move(new_unique<Cmd_tickrate>());
