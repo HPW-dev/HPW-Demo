@@ -48,6 +48,13 @@ private:
   bool m_log_console {true};
 
   Command* find_command(CN<Str> name);
+  void impl_exec(CN<Str> cmd_and_args);
+  // показать имена всех команд
+  Strs command_names() const;
+  // ищет совпадения в названиях команд
+  Strs find_cmd_name_matches(CN<Str> cmd_name) const;
+  void print_to_console(CN<utf32> text) const;
+  void print_to_screen(CN<utf32> text) const;
 }; // Cmd
 
 namespace hpw {

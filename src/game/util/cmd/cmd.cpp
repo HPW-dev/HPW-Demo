@@ -17,8 +17,38 @@
 #include "util/error.hpp"
 #include "game/core/messages.hpp"
 
+class Dummy final: public Cmd::Command {
+  Cmd* m_master {};
+
+public:
+  inline explicit Dummy(Cmd* master): m_master {master} {}
+  ~Dummy() = default;
+
+  Str name() const override { return "exec"; }
+  utf32 description() const override { return U"delete me"; }
+
+  void exec(CN<Strs> cmd_and_args) override {}
+
+  Strs command_matches(CN<Strs> cmd_and_args) override {
+    return_if(cmd_and_args.size() >= 2, Strs{});
+    
+    Strs table {
+      "1test",
+      "2test",
+      "3test",
+    };
+    Str concated_cmd;
+    Strs ret;
+    for (cnauto it: cmd_and_args)
+      concated_cmd += it + ' ';
+    for (cnauto it: table)
+      ret.push_back(concated_cmd + it);
+    return ret;
+  }
+};
+
 Cmd::Cmd() {
-  //move(new_unique<Dummy>(this));
+  move(new_unique<Dummy>(this));
 }
 
 void Cmd::move(Unique<Command>&& command) { 
@@ -26,12 +56,16 @@ void Cmd::move(Unique<Command>&& command) {
   m_commands.emplace_back( std::move(command) );
 }
 
+void Cmd::impl_exec(CN<Str> cmd_and_args) {
+  cauto splited = split_str(cmd_and_args, ' ');
+  cnauto command = find_command(splited.at(0));
+  iferror(!command, "not finded command \"" << cmd_and_args << "\"");
+  command->exec(splited);
+}
+
 void Cmd::exec(CN<Str> cmd_and_args) {
   try {
-    cauto splited = split_str(cmd_and_args, ' ');
-    cnauto command = find_command(splited.at(0));
-    iferror(!command, "not finded command \"" << cmd_and_args << "\"");
-    command->exec(splited);
+    impl_exec(cmd_and_args);
   } catch (CN<hpw::Error> err) {
     print(U"error while execute command \"" +
       sconv<utf32>(cmd_and_args) + U"\":\n" + sconv<utf32>(err.what()));
@@ -43,54 +77,65 @@ void Cmd::exec(CN<Str> cmd_and_args) {
 }
 
 Strs Cmd::command_matches(CN<Str> cmd_and_args) {
-  Strs ret;
-
   // если нет параметров, показать все команды и выйти
-  if (cmd_and_args.empty()) {
-    for (cnauto command: m_commands)
-      ret.push_back(command->name());
-    return ret;
-  }
+  return_if (cmd_and_args.empty(), command_names());
 
   cauto args = split(cmd_and_args, ' ');
   cauto cmd_name = str_tolower( args.at(0) );
+  auto ret = find_cmd_name_matches(cmd_name);
 
-  // учитывать совпадения в начале слова
-  auto command_match = [&](CN<decltype(m_commands)::value_type> command)
-    { return command->name().find(cmd_name) == 0; };
-  // найти совпадающие команды по их названию
-  for (cnauto founded: m_commands | std::views::filter(command_match))
-    ret.push_back(founded->name());
-  // если команда введена верно
+  // если команда введена не до конца, то показать только совпадения
   auto cmd = find_command(cmd_name);
   return_if(!cmd, ret);
+
   // узнать, есть ли у команды свои предложения к дополнению команды
   cauto cmd_matches = cmd->command_matches(args);
   return_if(cmd_matches.empty(), ret);
   return cmd_matches;
+} // command_matches
+
+void Cmd::print_to_console(CN<utf32> text) const {
+  return_if(!m_log_console);
+  hpw_log(sconv<Str>(text) << '\n');
+}
+
+void Cmd::print_to_screen(CN<utf32> text) const {
+  return_if(!m_log_screen);
+  Message msg;
+  msg.text = text;
+  msg.lifetime = 3.5;
+  hpw::message_mgr->move(std::move(msg));
 }
 
 void Cmd::print(CN<utf32> text) const {
-  if (m_log_screen)
-    hpw_log(sconv<Str>(text) << '\n');
-
-  if (m_log_console) {
-    Message msg;
-    msg.text = text;
-    msg.lifetime = 3.5;
-    hpw::message_mgr->move(std::move(msg));
-  }
+  print_to_console(text);
+  print_to_screen(text);
 }
 
 Cmd::Command* Cmd::find_command(CN<Str> name) {
   cauto lower_name = str_tolower(name);
-  auto finded_cmd = std::find_if(m_commands.begin(), m_commands.end(),
+  cauto finded_cmd = std::find_if(m_commands.begin(), m_commands.end(),
     [&](CN<Unique<Command>> cmd) { return cmd->name() == lower_name; });
-  if (finded_cmd != m_commands.end()) {
-    nauto ret = *finded_cmd;
-    assert(ret);
-    return ret.get();
-  }
+  return_if (finded_cmd == m_commands.end(), nullptr);
+  nauto ret = *finded_cmd;
+  assert(ret);
+  return ret.get();
+}
 
-  return {};
+Strs Cmd::command_names() const {
+  Strs ret;
+  for (cnauto command: m_commands)
+    ret.push_back(command->name());
+  return ret;
+}
+
+Strs Cmd::find_cmd_name_matches(CN<Str> cmd_name) const {
+  // учитывать совпадения в начале слова
+  auto cmd_name_filter = [&](CN<decltype(m_commands)::value_type> command)
+    { return command->name().find(cmd_name) == 0; };
+  // найти совпадающие команды по их названию
+  Strs ret;
+  for (cnauto founded: m_commands | std::views::filter(cmd_name_filter))
+    ret.push_back(founded->name());
+  return ret;
 }
