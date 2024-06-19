@@ -17,38 +17,8 @@
 #include "util/error.hpp"
 #include "game/core/messages.hpp"
 
-class Dummy final: public Cmd::Command {
-  Cmd* m_master {};
-
-public:
-  inline explicit Dummy(Cmd* master): m_master {master} {}
-  ~Dummy() = default;
-
-  Str name() const override { return "exec"; }
-  utf32 description() const override { return U"delete me"; }
-
-  void exec(CN<Strs> cmd_and_args) override {}
-
-  Strs command_matches(CN<Strs> cmd_and_args) override {
-    return_if(cmd_and_args.size() >= 2, Strs{});
-    
-    Strs table {
-      "1test",
-      "2test",
-      "3test",
-    };
-    Str concated_cmd;
-    Strs ret;
-    for (cnauto it: cmd_and_args)
-      concated_cmd += it + ' ';
-    for (cnauto it: table)
-      ret.push_back(concated_cmd + it);
-    return ret;
-  }
-};
-
 Cmd::Cmd() {
-  move(new_unique<Dummy>(this));
+  //move(new_unique<Dummy>(this));
 }
 
 void Cmd::move(Unique<Command>&& command) { 

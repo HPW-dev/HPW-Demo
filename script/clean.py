@@ -2,6 +2,7 @@
 # скрипт удаляющий файлы билда
 import helper
 
+helper.rem_all('**/delme.html')
 helper.rem_all('**/*.exe')
 helper.rem_all('**/vgcore.*')
 helper.rem_all('**/cpplint.txt')
