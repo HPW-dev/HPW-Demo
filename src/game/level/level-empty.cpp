@@ -6,7 +6,7 @@
 #include "game/core/levels.hpp"
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
-#include "game/util/file-cmd.hpp"
+#include "game/util/cmd/cmd-script.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/player-dark.hpp"
 #include "game/entity/util/entity-util.hpp"

@@ -1,27 +1,27 @@
-#include <filesystem>
-#include <utility>
 #include <ranges>
+#include <utility>
 #include <algorithm>
+#include <filesystem>
 #include <functional>
 #include "cmd.hpp"
-#include "util/vector-types.hpp"
-#include "util/str-util.hpp"
+#include "host/command.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/str-util.hpp"
+#include "util/vector-types.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
-#include "host/command.hpp"
-#include "game-archive.hpp"
+#include "game/entity/player.hpp"
 #include "game/entity/ability/home.hpp"
-#include "game/entity/ability/fullscreen-shoot.hpp"
 #include "game/entity/ability/invise.hpp"
-#include "game/entity/ability/power-shoot.hpp"
 #include "game/entity/ability/speedup.hpp"
+#include "game/entity/ability/power-shoot.hpp"
+#include "game/entity/ability/fullscreen-shoot.hpp"
+#include "game/core/canvas.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/entities.hpp"
-#include "game/core/canvas.hpp"
-#include "game/entity/player.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/game-archive.hpp"
 
 struct Cmd::Impl {
   struct Command {

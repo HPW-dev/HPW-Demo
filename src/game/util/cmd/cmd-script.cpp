@@ -1,7 +1,7 @@
 #include <fstream>
-#include "file-cmd.hpp"
+#include "cmd-script.hpp"
+#include "cmd.hpp"
 #include "util/log.hpp"
-#include "game/util/cmd.hpp"
 
 void execute_script(CN<Str> fname) {
   std::ifstream file(fname);

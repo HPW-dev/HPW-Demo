@@ -33,7 +33,6 @@
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
-#include "game/util/cmd.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
@@ -41,6 +40,7 @@
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
 #ifdef DEBUG
+#include "game/util/cmd/cmd.hpp"
 #include "scene-debug.hpp"
 #include "scene-cmd.hpp"
 //#include "game/level/level-collision-test.hpp"

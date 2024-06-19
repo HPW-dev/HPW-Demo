@@ -13,7 +13,7 @@
 #include "game/core/messages.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/cmd.hpp"
+#include "game/util/cmd/cmd.hpp"
 #include "game/util/game-util.hpp"
 
 struct Scene_cmd::Impl {
