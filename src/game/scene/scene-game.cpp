@@ -99,9 +99,6 @@ Scene_game::Scene_game(const bool start_tutorial)
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
 
-  #ifdef DEBUG
-  hpw::cmd = new_unique<Cmd>();
-  #endif
   graphic::post_effects = new_shared<Effect_mgr>();
   init_entitys();
   load_animations();

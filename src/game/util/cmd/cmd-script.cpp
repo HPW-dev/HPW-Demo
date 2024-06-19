@@ -14,5 +14,5 @@ void execute_script(CN<Str> fname) {
 
   Str line;
   while (std::getline(file, line))
-    hpw::cmd->exec(line);
+    hpw::cmd.exec(line);
 }

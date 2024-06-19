@@ -60,12 +60,12 @@ struct Scene_cmd::Impl {
     }
     // выполнить команду
     if (is_pressed_once(hpw::keycode::enable)) {
-      hpw::cmd->exec( sconv<Str>(hpw::text_input) );
+      hpw::cmd.exec( sconv<Str>(hpw::text_input) );
       hpw::text_input.clear();
     }
     // загрузить предыдущую команду
     if (is_pressed_once(hpw::keycode::up)) {
-      hpw::text_input = sconv<utf32>(hpw::cmd->last_command());
+      hpw::text_input = sconv<utf32>(hpw::cmd.last_command());
       hpw::text_input_pos = hpw::text_input.size();
     }
     // перемещение текстового курсора ввода влево
@@ -81,7 +81,7 @@ struct Scene_cmd::Impl {
     // дописать команду из предлагаемых при автодописывании
     if (is_pressed_once(hpw::keycode::down)) {
       cauto input = sconv<Str>(hpw::text_input);
-      cauto matches = hpw::cmd->command_matches(input);
+      cauto matches = hpw::cmd.command_matches(input);
       if (!matches.empty()) {
         hpw::text_input = sconv<utf32>( matches.at(0) );
         hpw::text_input_pos = hpw::text_input.size();
@@ -113,7 +113,7 @@ struct Scene_cmd::Impl {
   inline void print_autocompletion(Image& dst) const {
     const Vec pos (15, 30);
     cauto input = sconv<Str>(hpw::text_input);
-    cauto matches = hpw::cmd->command_matches(input);
+    cauto matches = hpw::cmd.command_matches(input);
     utf32 text = U"________________________________\n";
     for (cnauto match: matches)
       text += sconv<utf32>(match) + U'\n';
