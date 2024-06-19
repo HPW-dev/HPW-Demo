@@ -50,9 +50,9 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_give_ability>());
 
   //cmd-level.hpp
-  //move(new_unique<Cmd_levels>());
-  //move(new_unique<Cmd_set_level>());
-  //move(new_unique<Cmd_restart>());
+  move(new_unique<Cmd_levels>(this));
+  move(new_unique<Cmd_set_level>(this));
+  move(new_unique<Cmd_restart>(this));
 
   //cmd-core.hpp
   //move(new_unique<Cmd_tickrate>());
