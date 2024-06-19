@@ -2,6 +2,8 @@
 build/editor
 build/plugin
 build/debug.txt
+build/cmd-test-helper.txt
+build/cmd-test.txt
 ignore me.lnk
 imgui.ini
 memleaks.txt
