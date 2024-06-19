@@ -5,6 +5,7 @@ build/debug.txt
 ignore me.lnk
 imgui.ini
 memleaks.txt
+delme.*
 run.py
 a.txt
 b.txt
