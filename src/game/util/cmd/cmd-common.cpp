@@ -1,3 +1,4 @@
+#include <ranges>
 #include <utility>
 #include "cmd-common.hpp"
 #include "util/error.hpp"
@@ -56,7 +57,27 @@ void Cmd_alias::exec(CN<Strs> cmd_and_args) {
 }
 
 Strs Cmd_alias::command_matches(CN<Strs> cmd_and_args) {
-  return {}; // TODO предлагать обычную предложку команд
+  return_if (cmd_and_args.size() < 2, Strs{});
+
+  cauto cmd = cmd_and_args.at(0);
+  cauto alias_name = cmd_and_args.at(1);
+
+  cauto matches = m_master->command_matches({});
+  Strs ret;
+  // без своего варианта команд предлагать любые команды
+  if (cmd_and_args.size() == 2) {
+    for (cnauto it: matches)
+      ret.push_back(cmd + ' ' + alias_name + ' ' + it);
+    return ret;
+  }
+
+  // фильтровать имена команд по вводимому имени
+  cauto second_cmd = cmd_and_args.at(2);
+  cauto name_filter = [&](CN<Str> it)
+    { return it.find(second_cmd) == 0; };
+  for (cnauto it: matches | std::views::filter(name_filter))
+    ret.push_back(cmd + ' ' + alias_name + ' ' + it);
+  return ret;
 }
 
 void Cmd_log_cnosole::exec(CN<Strs> cmd_and_args) {
@@ -72,7 +93,7 @@ void Cmd_log_screen::exec(CN<Strs> cmd_and_args) {
 }
 
 void Cmd_help::exec(CN<Strs> cmd_and_args) {
-  // TODO
+  
 }
 
 void Cmd_cls::exec(CN<Strs> cmd_and_args) {

@@ -33,6 +33,11 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_direct>());
   //move(new_unique<Cmd_direct_to>());
 
+  //cmd-player.hpp
+  //move(new_unique<Cmd_resurect>());
+  //move(new_unique<Cmd_abilities>());
+  //move(new_unique<Cmd_give_ability>());
+
   //cmd-common.hpp
   move(new_unique<Cmd_exit>());
   move(new_unique<Cmd_error>());
@@ -46,11 +51,6 @@ Cmd::Cmd() {
 
   //cmd-script.hpp
   move(new_unique<Cmd_script>());
-
-  //cmd-player.hpp
-  //move(new_unique<Cmd_resurect>());
-  //move(new_unique<Cmd_abilities>());
-  //move(new_unique<Cmd_give_ability>());
 
   //cmd-level.hpp
   move(new_unique<Cmd_levels>(this));

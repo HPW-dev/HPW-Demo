@@ -97,5 +97,3 @@ public:
   inline Str description() const override { return "start of one-line commentary"; }
   inline void exec(CN<Strs> cmd_and_args) override {}
 };
-
-
