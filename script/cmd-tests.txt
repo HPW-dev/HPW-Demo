@@ -1,18 +1,33 @@
 # comment test 1
 # # #
-###
 #
 # Русские символы
 # €s‘џљ
 
-# тест вывода текста
+# тест вывода текста:
 print test message 1
 print 123
 print 1 2 3
 print €s‘џљ
 print Русские символы
+print call help...
+help
 
-# тест открытия файла скрипта
+# тест общих команд:
+print empty error:
+error
+print error with message:
+error >>message test for err<<
+log_cnosole 0
+print only screen text 1
+print only screen text 2
+log_cnosole 1
+log_screen 0 
+print only console text 1
+print only console text 2
+log_screen 1
+
+# тест открытия файла скрипта:
 script cmd-test-helper.txt
 
 # comment test 2
