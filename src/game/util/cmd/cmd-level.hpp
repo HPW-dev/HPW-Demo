@@ -20,8 +20,8 @@ public:
   ~Cmd_set_level() = default;
   Str name() const override { return "set_level"; }
   inline Str description() const override {
-    return "select level by level name (seed levels command output)\n"
-      "  example: set_level tutorial";
+    return "select level by level name (seed levels command output). "
+      "example: set_level tutorial";
   }
   void exec(CN<Strs> cmd_and_args) override;
   Strs command_matches(CN<Strs> cmd_and_args) override;

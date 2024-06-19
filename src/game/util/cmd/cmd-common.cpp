@@ -93,7 +93,11 @@ void Cmd_log_screen::exec(CN<Strs> cmd_and_args) {
 }
 
 void Cmd_help::exec(CN<Strs> cmd_and_args) {
-  
+  Str text = "Commands info:\n";
+  for (cnauto command: m_master->commands())
+    text += "* " + command->name() + " - " +
+      command->description() + '\n';
+  m_master->print(text);
 }
 
 void Cmd_cls::exec(CN<Strs> cmd_and_args) {

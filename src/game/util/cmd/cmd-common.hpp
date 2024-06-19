@@ -27,7 +27,7 @@ public:
   ~Cmd_print() = default;
   inline Str name() const override { return "print"; }
   inline Str description() const override
-    { return "print <message> - print text to screen & console"; }
+    { return "print <message> print text to screen & console"; }
   void exec(CN<Strs> cmd_and_args) override;
 };
 
@@ -39,7 +39,7 @@ public:
   ~Cmd_alias() = default;
   inline Str name() const override { return "alias"; }
   inline Str description() const override
-    { return "alias <name> command args... - set short name for command + parameters";  }
+    { return "alias <name> <command> <args...> set short name for command + parameters";  }
   void exec(CN<Strs> cmd_and_args) override;
   Strs command_matches(CN<Strs> cmd_and_args) override;
 };
@@ -52,7 +52,7 @@ public:
   ~Cmd_log_cnosole() = default;
   inline Str name() const override { return "log_cnosole"; }
   inline Str description() const override
-    { return "log_cnosole 1/0 - enable/disable printing text to console";  }
+    { return "log_cnosole <1/0> enable/disable printing text to console";  }
   void exec(CN<Strs> cmd_and_args) override;
 };
 
@@ -64,7 +64,7 @@ public:
   ~Cmd_log_screen() = default;
   inline Str name() const override { return "log_screen"; }
   inline Str description() const override
-    { return "log_screen 1/0 - enable/disable printing text to game screen"; }
+    { return "log_screen <1/0> enable/disable printing text to game screen"; }
   void exec(CN<Strs> cmd_and_args) override;
 };
 
