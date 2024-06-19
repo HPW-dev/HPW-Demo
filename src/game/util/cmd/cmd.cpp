@@ -6,9 +6,7 @@
 #include "cmd-entity.hpp"
 #include "cmd-phys.hpp"
 #include "cmd-common.hpp"
-#include "cmd-load.hpp"
-#include "cmd-help.hpp"
-#include "cmd-print.hpp"
+#include "cmd-script.hpp"
 #include "cmd-player.hpp"
 #include "cmd-level.hpp"
 #include "cmd-core.hpp"
@@ -18,8 +16,51 @@
 #include "game/core/messages.hpp"
 
 Cmd::Cmd() {
-  //move(new_unique<Dummy>(this));
-}
+  //cmd-entity.hpp
+  //move(new_unique<Cmd_entities>());
+  //move(new_unique<Cmd_spawn>());
+  //move(new_unique<Cmd_kill>());
+  //move(new_unique<Cmd_flag>());
+  //move(new_unique<Cmd_hp>());
+  //move(new_unique<Cmd_copy>());
+
+  //cmd-phys.hpp
+  //move(new_unique<Cmd_pos>());
+  //move(new_unique<Cmd_deg>());
+  //move(new_unique<Cmd_speed>());
+  //move(new_unique<Cmd_force>());
+  //move(new_unique<Cmd_direct>());
+  //move(new_unique<Cmd_direct_to>());
+
+  //cmd-common.hpp
+  //move(new_unique<Cmd_exit>());
+  //move(new_unique<Cmd_error>());
+  //move(new_unique<Cmd_print>());
+  //move(new_unique<Cmd_alias>());
+  //move(new_unique<Cmd_log_cnosole>());
+  //move(new_unique<Cmd_log_screen>());
+  //move(new_unique<Cmd_help>());
+
+  //cmd-script.hpp
+  //move(new_unique<Cmd_script>());
+
+  //cmd-player.hpp
+  //move(new_unique<Cmd_resurect>());
+  //move(new_unique<Cmd_abilities>());
+  //move(new_unique<Cmd_give_ability>());
+
+  //cmd-level.hpp
+  //move(new_unique<Cmd_levels>());
+  //move(new_unique<Cmd_set_level>());
+  //move(new_unique<Cmd_restart>());
+
+  //cmd-core.hpp
+  //move(new_unique<Cmd_tickrate>());
+  //move(new_unique<Cmd_draw_fps>());
+  //move(new_unique<Cmd_save_stats>());
+  //move(new_unique<Cmd_end_save_stats>());
+  //move(new_unique<Cmd_render>());
+} // Cmd c-tor
 
 void Cmd::move(Unique<Command>&& command) { 
   assert(command);

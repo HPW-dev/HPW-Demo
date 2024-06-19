@@ -1,11 +1,16 @@
 #pragma once
 #include "util/mem-types.hpp"
+#include "util/math/vec.hpp"
 #include "util/macro.hpp"
 #include "util/str.hpp"
 #include "util/unicode.hpp"
 #include "util/vector-types.hpp"
 
-// исполняет текстовые команды
+/* исполняет текстовые команды
+
+Символы управления:
+r - рандомная позиция
+l - последний используемый параметр (last entity uid/pos) */
 class Cmd final {
 public:
   // База для команд
@@ -40,12 +45,16 @@ public:
   inline void enable_log_console(const bool yesno) { m_log_console = yesno; }
   // печатает текст на экране игры и в консоль
   void print(CN<utf32> text) const;
+  inline Vec last_pos() const { return m_last_pos; }
+  inline Uid last_uid() const { return m_last_uid; }
 
 private:
   Commands m_commands {};
   Str m_last_cmd {}; // предыдущая команда
   bool m_log_screen {true};
   bool m_log_console {true};
+  Uid m_last_uid {}; // последний uid entity, с которым взаимодействовали
+  Vec m_last_pos {}; // последние корды, с которыми взаимодействовали
 
   Command* find_command(CN<Str> name);
   void impl_exec(CN<Str> cmd_and_args);
