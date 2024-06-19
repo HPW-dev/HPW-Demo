@@ -41,6 +41,7 @@ public:
   inline Str description() const override
     { return "alias <name> command args... - set short name for command + parameters";  }
   void exec(CN<Strs> cmd_and_args) override;
+  Strs command_matches(CN<Strs> cmd_and_args) override;
 };
 
 // включение/отключение вывода в косоль
