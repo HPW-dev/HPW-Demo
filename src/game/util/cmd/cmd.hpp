@@ -22,6 +22,8 @@ class Cmd final {
   using Commands = Vector<Unique<Command>>;
   Commands m_commands {};
   Str m_last_cmd {}; // предыдущая команда
+  bool m_log_screen {true};
+  bool m_log_console {true};
 
 public:
   Cmd();
@@ -35,6 +37,12 @@ public:
   inline CN<Commands> commands() const { return m_commands; }
   // загрузить новую команду
   void move(Unique<Command>&& command);
+  // разрешить выводить лог на игровой кран
+  inline void enable_log_screen(const bool yesno) { m_log_screen = yesno; }
+  // разрешить выводить лог в консоль системы
+  inline void enable_log_console(const bool yesno) { m_log_console = yesno; }
+  // печатает текст на экране игры и в консоль
+  void print(CN<utf32> text) const;
 }; // Cmd
 
 namespace hpw {
