@@ -7,10 +7,10 @@
 #include "scene-loading.hpp"
 #include "scene-manager.hpp"
 #include "host/command.hpp"
+#include "sound/sound-manager.hpp"
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
-#include "sound/sound-manager.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/sounds.hpp"
@@ -28,34 +28,35 @@
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/post-effect/game-post-effects.hpp"
-#include "game/util/post-effect/post-effects.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
-#include "game/entity/util/mem-map.hpp"
+#include "game/util/post-effect/game-post-effects.hpp"
+#include "game/util/post-effect/post-effects.hpp"
 #include "game/hud/hud-asci.hpp"
 #include "game/scene/scene-game-pause.hpp"
 #include "game/level/level-space.hpp"
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
+#include "game/entity/player-dark.hpp"
+#include "game/entity/util/mem-map.hpp"
+#include "game/entity/util/phys.hpp"
+#include "game/entity/util/entity-util.hpp"
+#include "game/entity/collider/collider.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
+
 #ifdef DEBUG
-#include "game/util/cmd/cmd.hpp"
-#include "scene-debug.hpp"
 #include "scene-cmd.hpp"
+#include "scene-debug.hpp"
+#include "game/util/cmd/cmd.hpp"
+#include "game/level/level-empty.hpp"
 //#include "game/level/level-collision-test.hpp"
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
 //#include "game/level/level-debug-3.hpp"
-#include "game/level/level-empty.hpp"
 //#include "game/level/level-debug-bullets.hpp"
 #endif
-#include "game/entity/player-dark.hpp"
-#include "game/entity/util/entity-util.hpp"
-#include "game/entity/util/phys.hpp"
-#include "game/entity/collider/collider.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
 
 void Scene_game::init_levels() {
   // запустить только один уровень при отладке
@@ -98,7 +99,9 @@ Scene_game::Scene_game(const bool start_tutorial)
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
 
+  #ifdef DEBUG
   hpw::cmd = new_unique<Cmd>();
+  #endif
   graphic::post_effects = new_shared<Effect_mgr>();
   init_entitys();
   load_animations();
