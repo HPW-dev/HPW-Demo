@@ -63,6 +63,7 @@ private:
   Strs find_cmd_name_matches(CN<Str> cmd_name) const;
   void print_to_console(CN<Str> text) const;
   void print_to_screen(CN<Str> text) const;
+  void sort_commands();
 }; // Cmd
 
 namespace hpw {

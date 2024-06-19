@@ -34,15 +34,15 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_direct_to>());
 
   //cmd-common.hpp
-  //move(new_unique<Cmd_exit>());
-  //move(new_unique<Cmd_error>());
-  //move(new_unique<Cmd_print>());
-  //move(new_unique<Cmd_alias>());
-  //move(new_unique<Cmd_log_cnosole>());
-  //move(new_unique<Cmd_log_screen>());
-  //move(new_unique<Cmd_help>());
-  //move(new_unique<Cmd_cls>());
-  //move(new_unique<Cmd_comment>());
+  move(new_unique<Cmd_exit>());
+  move(new_unique<Cmd_error>());
+  move(new_unique<Cmd_print>(this));
+  move(new_unique<Cmd_alias>(this));
+  move(new_unique<Cmd_log_cnosole>(this));
+  move(new_unique<Cmd_log_screen>(this));
+  move(new_unique<Cmd_help>(this));
+  move(new_unique<Cmd_cls>());
+  move(new_unique<Cmd_comment>());
 
   //cmd-script.hpp
   move(new_unique<Cmd_script>());
@@ -63,7 +63,16 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_save_stats>());
   //move(new_unique<Cmd_end_save_stats>());
   //move(new_unique<Cmd_render>());
+
+  sort_commands();
 } // Cmd c-tor
+
+void Cmd::sort_commands() { 
+  // сортировка команд по имени
+  cauto name_sorter = [](CN<Unique<Command>> a, CN<Unique<Command>> b)->bool
+    { return a->name() < b->name(); };
+  std::sort(m_commands.begin(), m_commands.end(), name_sorter);
+}
 
 void Cmd::move(Unique<Command>&& command) { 
   assert(command);
