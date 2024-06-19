@@ -10,10 +10,12 @@ class Cmd final {
   // База для команд
   class Command {
   public:
-    Str name {}; // название команды
-    utf32 description {};
-    
     virtual ~Command() = default;
+    // название команды
+    virtual Str name() const = 0;
+    // описание команды
+    virtual utf32 description() const = 0;
+    // выполнить команду
     virtual void exec(CN<Strs> cmd_and_args) = 0;
     // повлиять на автодополнение
     inline virtual Strs add_matches(CN<Strs> cmd_and_args) const { return {}; }
@@ -24,6 +26,8 @@ class Cmd final {
   Str m_last_cmd {}; // предыдущая команда
   bool m_log_screen {true};
   bool m_log_console {true};
+
+  CN<Unique<Command>> find_command(CN<Str> name) const;
 
 public:
   Cmd();
