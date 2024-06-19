@@ -87,6 +87,8 @@ void Cmd::impl_exec(CN<Str> cmd_and_args) {
 }
 
 void Cmd::exec(CN<Str> cmd_and_args) {
+  return_if(cmd_and_args.empty());
+
   try {
     impl_exec(cmd_and_args);
   } catch (CN<hpw::Error> err) {
@@ -96,6 +98,7 @@ void Cmd::exec(CN<Str> cmd_and_args) {
     print("undefined error while execute command \"" +
       cmd_and_args + "\"");
   }
+  
   m_last_cmd = cmd_and_args;
 }
 

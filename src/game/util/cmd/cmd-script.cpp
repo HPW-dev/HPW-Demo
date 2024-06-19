@@ -3,17 +3,23 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "game/core/common.hpp"
 
 void execute_script(CN<Str> _fname) {
   auto fname = _fname;
   conv_sep(fname);
 
   std::ifstream file(fname);
-  if (!file || !file.good()) {
-    hpw::cmd.print("файл скрипта \"" + fname
-      + "\" не найден.\n" + "Игнор исполнения скрипта\n");
-    return;
+  if (!file.is_open()) {
+    fname = hpw::cur_dir + fname;
+    file = std::ifstream(fname);
+    if (!file.is_open()) {
+      hpw::cmd.print("файл скрипта \"" + fname
+        + "\" не найден.\n" + "Игнор исполнения скрипта");
+      return;
+    }
   }
+  hpw::cmd.print("запуск скрипта \"" + fname + '\"');
 
   Str line;
   while (std::getline(file, line))
