@@ -3,7 +3,6 @@
 #include "util/math/vec.hpp"
 #include "util/macro.hpp"
 #include "util/str.hpp"
-#include "util/unicode.hpp"
 #include "util/vector-types.hpp"
 
 /* исполняет текстовые команды
@@ -20,7 +19,7 @@ public:
     // название команды
     virtual Str name() const = 0;
     // описание команды
-    virtual utf32 description() const = 0;
+    virtual Str description() const = 0;
     // выполнить команду
     virtual void exec(CN<Strs> cmd_and_args) = 0;
     // повлиять на автодополнение
@@ -44,7 +43,7 @@ public:
   // разрешить выводить лог в консоль системы
   inline void enable_log_console(const bool yesno) { m_log_console = yesno; }
   // печатает текст на экране игры и в консоль
-  void print(CN<utf32> text) const;
+  void print(CN<Str> text) const;
   inline Vec last_pos() const { return m_last_pos; }
   inline Uid last_uid() const { return m_last_uid; }
 
@@ -62,8 +61,8 @@ private:
   Strs command_names() const;
   // ищет совпадения в названиях команд
   Strs find_cmd_name_matches(CN<Str> cmd_name) const;
-  void print_to_console(CN<utf32> text) const;
-  void print_to_screen(CN<utf32> text) const;
+  void print_to_console(CN<Str> text) const;
+  void print_to_screen(CN<Str> text) const;
 }; // Cmd
 
 namespace hpw {

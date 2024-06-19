@@ -20,9 +20,9 @@ static std::unordered_map<Str, Level_mgr::Maker> g_game_levels {
 };
 
 void Cmd_levels::exec(CN<Strs> cmd_and_args) {
-  utf32 list = U"Avaliable game levels:\n";
+  Str list = "Avaliable game levels:\n";
   for (cnauto [key, maker]: g_game_levels)
-    list += U"- " + sconv<utf32>(key) + U'\n';
+    list += "- " + key + '\n';
   m_master->print(list);
 }
 
@@ -41,7 +41,7 @@ void Cmd_set_level::exec(CN<Strs> cmd_and_args) {
   cnauto level_maker = g_game_levels.at(level_name);
   iferror(!level_maker, "level_maker is null");
   hpw::level_mgr->set(level_maker);
-  m_master->print(U"Level \"" + sconv<utf32>(level_name) + U"\" selected");
+  m_master->print("Level \"" + level_name + "\" selected");
 }
 
 Strs Cmd_set_level::command_matches(CN<Strs> cmd_and_args) {
@@ -73,5 +73,5 @@ void Cmd_restart::exec(CN<Strs> cmd_and_args) {
   cnauto level_maker = g_game_levels.at(level_name);
   iferror(!level_maker, "level_maker is null");
   hpw::level_mgr->set(level_maker);
-  m_master->print(U"Level \"" + sconv<utf32>(level_name) + U"\" restarted");
+  m_master->print("Level \"" + level_name + "\" restarted");
 }

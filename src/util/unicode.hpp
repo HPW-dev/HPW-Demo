@@ -9,6 +9,7 @@
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 #include "util/hpw-concept.hpp"
+#include "util/str.hpp"
 
 using utf8 = std::u8string;
 using utf32 = std::u32string;
@@ -90,3 +91,6 @@ auto base = std::hex) {
   ss >> ret;
   return ret;
 }
+
+// точное перекодирование из utf8 строки в utf32
+utf32 utf8_to_32(CN<Str> text);

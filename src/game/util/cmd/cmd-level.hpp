@@ -8,7 +8,7 @@ public:
   inline Cmd_levels(Cmd* master): m_master{master} {}
   ~Cmd_levels() = default;
   inline Str name() const override { return "levels"; }
-  inline utf32 description() const override { return U"print list of all game-levels"; }
+  inline Str description() const override { return "print list of all game-levels"; }
   void exec(CN<Strs> cmd_and_args) override;
 };
 
@@ -19,8 +19,8 @@ public:
   inline Cmd_set_level(Cmd* master): m_master{master} {}
   ~Cmd_set_level() = default;
   Str name() const override { return "set_level"; }
-  inline utf32 description() const override {
-    return U"select level by level name (seed levels command output)\n"
+  inline Str description() const override {
+    return "select level by level name (seed levels command output)\n"
       "  example: set_level tutorial";
   }
   void exec(CN<Strs> cmd_and_args) override;
@@ -34,6 +34,6 @@ public:
   inline Cmd_restart(Cmd* master): m_master{master} {}
   ~Cmd_restart() = default;
   inline Str name() const override { return "restart"; }
-  inline utf32 description() const override { return U"restart current game-level & reload resources"; }
+  inline Str description() const override { return "restart current game-level & reload resources"; }
   void exec(CN<Strs> cmd_and_args) override;
 };

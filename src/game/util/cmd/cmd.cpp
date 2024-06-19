@@ -11,6 +11,7 @@
 #include "cmd-level.hpp"
 #include "cmd-core.hpp"
 #include "util/log.hpp"
+#include "util/unicode.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "game/core/messages.hpp"
@@ -44,7 +45,7 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_comment>());
 
   //cmd-script.hpp
-  //move(new_unique<Cmd_script>());
+  move(new_unique<Cmd_script>());
 
   //cmd-player.hpp
   //move(new_unique<Cmd_resurect>());
@@ -80,11 +81,11 @@ void Cmd::exec(CN<Str> cmd_and_args) {
   try {
     impl_exec(cmd_and_args);
   } catch (CN<hpw::Error> err) {
-    print(U"error while execute command \"" +
-      sconv<utf32>(cmd_and_args) + U"\":\n" + sconv<utf32>(err.what()));
+    print("error while execute command \"" +
+      cmd_and_args + "\":\n" + err.what());
   } catch (...) {
-    print(U"undefined error while execute command \"" +
-      sconv<utf32>(cmd_and_args) + U"\"");
+    print("undefined error while execute command \"" +
+      cmd_and_args + "\"");
   }
   m_last_cmd = cmd_and_args;
 }
@@ -107,20 +108,20 @@ Strs Cmd::command_matches(CN<Str> cmd_and_args) {
   return cmd_matches;
 } // command_matches
 
-void Cmd::print_to_console(CN<utf32> text) const {
+void Cmd::print_to_console(CN<Str> text) const {
   return_if(!m_log_console);
   hpw_log(sconv<Str>(text) << '\n');
 }
 
-void Cmd::print_to_screen(CN<utf32> text) const {
+void Cmd::print_to_screen(CN<Str> text) const {
   return_if(!m_log_screen);
   Message msg;
-  msg.text = text;
+  msg.text = utf8_to_32(text);
   msg.lifetime = 3.5;
   hpw::message_mgr->move(std::move(msg));
 }
 
-void Cmd::print(CN<utf32> text) const {
+void Cmd::print(CN<Str> text) const {
   print_to_console(text);
   print_to_screen(text);
 }
