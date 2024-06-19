@@ -1,10 +1,10 @@
 #pragma once
 #include "util/mem-types.hpp"
 #include "game/util/store.hpp"
+#include "sound/sound-manager.hpp"
 
 struct Sound;
 struct Device_name;
-class Sound_mgr;
 
 namespace hpw {
 inline Unique<Sound_mgr> sound_mgr {}; // звуковая система

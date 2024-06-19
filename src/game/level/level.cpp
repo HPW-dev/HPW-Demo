@@ -20,8 +20,8 @@ struct Level::Impl {
   Timer cld_debug_timer {1};
   #endif
 
-  explicit Impl(Level* _master): master {_master} {}
-  ~Impl() = default;
+  inline explicit Impl(Level* _master): master {_master} {}
+  ~Impl() {}
 
   inline void update(const Vec vel, Delta_time dt) {
     #ifdef CLD_DEBUG

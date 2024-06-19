@@ -90,4 +90,10 @@ Str Level_mgr::level_name() const {
 }
 
 void Level_mgr::set_visible(bool mode) { m_visible = mode; }
-void Level_mgr::set(CN<Shared<Level>> level) { m_level = level; }
+
+void Level_mgr::set(CN<Level_mgr::Maker> maker) { 
+  assert(maker);
+  if (hpw::entity_mgr)
+    hpw::entity_mgr->clear();
+  m_level = maker();
+}

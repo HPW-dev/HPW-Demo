@@ -34,6 +34,6 @@ public:
   inline Cmd_restart(Cmd* master): m_master{master} {}
   ~Cmd_restart() = default;
   inline Str name() const override { return "restart"; }
-  inline utf32 description() const override { return U"restart current game-level"; }
+  inline utf32 description() const override { return U"restart current game-level & reload resources"; }
   void exec(CN<Strs> cmd_and_args) override;
 };

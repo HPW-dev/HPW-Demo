@@ -37,7 +37,7 @@ public:
   // управляет видимостью фона
   void set_visible(bool mode);
   // установить текущий уровень
-  void set(CN<Shared<Level>> level);
+  void set(CN<Maker> maker);
 
 private:
   nocopy(Level_mgr);

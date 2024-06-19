@@ -1,0 +1,3 @@
+spawn enemy.snake.head 0 -10
+spawn enemy.snake.head 256 -10
+spawn enemy.snake.head 512 -10
