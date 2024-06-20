@@ -54,8 +54,9 @@ Cmd::Cmd() {
 
   //cmd-level.hpp
   move(new_unique<Cmd_levels>(this));
-  move(new_unique<Cmd_set_level>(this));
+  move(new_unique<Cmd_level>(this));
   move(new_unique<Cmd_restart>(this));
+  //move(new_unique<Cmd_collider>());
 
   //cmd-core.hpp
   //move(new_unique<Cmd_draw_fps>());

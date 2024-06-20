@@ -35,8 +35,8 @@ static inline void reload_resources() {
   hpw::entity_mgr->register_types();
 }
 
-void Cmd_set_level::exec(CN<Strs> cmd_and_args) {
-  iferror(cmd_and_args.size() < 2, "need more arguments in set_level command");
+void Cmd_level::exec(CN<Strs> cmd_and_args) {
+  iferror(cmd_and_args.size() < 2, "need more arguments in level command");
   cnauto level_name = str_tolower( cmd_and_args.at(1) );
   cnauto level_maker = g_game_levels.at(level_name);
   iferror(!level_maker, "level_maker is null");
@@ -44,7 +44,7 @@ void Cmd_set_level::exec(CN<Strs> cmd_and_args) {
   m_master->print("Level \"" + level_name + "\" selected");
 }
 
-Strs Cmd_set_level::command_matches(CN<Strs> cmd_and_args) {
+Strs Cmd_level::command_matches(CN<Strs> cmd_and_args) {
   return_if(cmd_and_args.size() > 2, Strs{});
 
   Strs ret;

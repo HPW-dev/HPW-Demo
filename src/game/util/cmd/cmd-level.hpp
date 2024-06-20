@@ -13,15 +13,15 @@ public:
 };
 
 // выбрать уровень
-class Cmd_set_level final: public Cmd::Command {
+class Cmd_level final: public Cmd::Command {
   Cmd* m_master {};
 public:
-  inline Cmd_set_level(Cmd* master): m_master{master} {}
-  ~Cmd_set_level() = default;
-  Str name() const override { return "set_level"; }
+  inline Cmd_level(Cmd* master): m_master{master} {}
+  ~Cmd_level() = default;
+  Str name() const override { return "level"; }
   inline Str description() const override {
     return "select level by level name (seed levels command output). "
-      "example: set_level tutorial";
+      "example: level tutorial";
   }
   void exec(CN<Strs> cmd_and_args) override;
   Strs command_matches(CN<Strs> cmd_and_args) override;
