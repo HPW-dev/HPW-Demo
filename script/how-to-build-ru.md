@@ -14,6 +14,8 @@
 
 **Требуемые пакеты: GCC/Clang, GLEW, GLFW3, OpenAL-soft, YAML-cpp.**
 
+Если у вас Wayland, то нужно качать **glfw-wayland**
+
 ### Сборка игры
 
 Для сборки потребуется [система сборки SCons](https://scons.org/) и Python интерпретатор.
@@ -24,5 +26,5 @@
 ```
 git clone --depth=1 https://github.com/HPW-dev/HPW-Demo
 cd HPW-Demo
-py "script/build-game-release.py"
+python "script/build-game-release.py"
 ```
