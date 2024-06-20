@@ -58,11 +58,11 @@ Cmd::Cmd() {
   move(new_unique<Cmd_restart>(this));
 
   //cmd-core.hpp
-  //move(new_unique<Cmd_tickrate>());
   //move(new_unique<Cmd_draw_fps>());
+  //move(new_unique<Cmd_render>());
+  //move(new_unique<Cmd_tickrate>());
   //move(new_unique<Cmd_save_stats>());
   //move(new_unique<Cmd_end_save_stats>());
-  //move(new_unique<Cmd_render>());
 
   sort_commands();
 } // Cmd c-tor
