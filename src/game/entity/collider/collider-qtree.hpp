@@ -25,6 +25,8 @@ class Collider_qtree final: public Collider {
 
 public:
   using Collision_pair = std::pair<Entity*, Entity*>;
+  // память под ветви
+  Mem_pool qtree_mempool;
 
   // хешер для collision_pairs
   struct Collision_pairs_hash {

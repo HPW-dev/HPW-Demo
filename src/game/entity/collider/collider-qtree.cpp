@@ -11,13 +11,10 @@
 #include "game/core/debug.hpp"
 #include "host/command.hpp"
 #include "util/math/rect.hpp"
-#include "util/mempool.hpp"
-#include "graphic/util/util-templ.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
 
-// память под ветви
-static Mem_pool qtree_mempool;
 // сколько нужно игровых объектов чтобы запустить многопоточный поиск в QTree
 constexpr std::size_t MAX_ENTS_FOR_MULTY_TEST_PAIRS = 300;
 // сколько нужно игровых объектов чтобы запустить многопоточный просчёт столкновений
@@ -60,6 +57,7 @@ public:
   std::size_t depth {}; // текущая глубина ноды
   std::size_t max_depth {}; // макс. глубина деления нод
   std::size_t entity_limit {}; // макс. число объектов в ноде
+  Collider_qtree* m_master {};
 
   ~Qtree() = default;
 
@@ -127,10 +125,14 @@ public:
     Rect ld_rect {Vec(bound.pos.x, bound.pos.y + rect_size.y), rect_size};
     Rect rd_rect {Vec(bound.pos.x + rect_size.x, bound.pos.y + rect_size.y), rect_size};
     have_branches = true;
-    lu = qtree_mempool.new_object<Qtree>(lu_rect, depth + 1, max_depth, entity_limit);
-    ru = qtree_mempool.new_object<Qtree>(ru_rect, depth + 1, max_depth, entity_limit);
-    ld = qtree_mempool.new_object<Qtree>(ld_rect, depth + 1, max_depth, entity_limit);
-    rd = qtree_mempool.new_object<Qtree>(rd_rect, depth + 1, max_depth, entity_limit);
+    lu = m_master->qtree_mempool.new_object<Qtree>(lu_rect, depth + 1, max_depth, entity_limit);
+    ru = m_master->qtree_mempool.new_object<Qtree>(ru_rect, depth + 1, max_depth, entity_limit);
+    ld = m_master->qtree_mempool.new_object<Qtree>(ld_rect, depth + 1, max_depth, entity_limit);
+    rd = m_master->qtree_mempool.new_object<Qtree>(rd_rect, depth + 1, max_depth, entity_limit);
+    lu->m_master = m_master;
+    ru->m_master = m_master;
+    ld->m_master = m_master;
+    rd->m_master = m_master;
     // перенос объектов из ветки выше в новые
     for (nauto entity: m_entitys)
       add(*entity);
@@ -199,17 +201,17 @@ public:
       rd->clear();
     }
   }
-
 }; // Qtree
 
-Collider_qtree::~Collider_qtree() { qtree_mempool.release(); }
+Collider_qtree::~Collider_qtree() {}
 
 Collider_qtree::Collider_qtree(uint max_depth, uint entity_limit,
-std::size_t X, std::size_t Y) 
-: root { qtree_mempool.new_object<Qtree>(
-  Rect(0, 0, std::max(X, Y), std::max(X, Y)),
-  0, max_depth, entity_limit) }
-{}
+std::size_t X, std::size_t Y) {
+  root = qtree_mempool.new_object<Qtree>(
+    Rect(0, 0, std::max(X, Y), std::max(X, Y)),
+    0, max_depth, entity_limit);
+  root->m_master = this;
+}
 
 void Collider_qtree::operator()(CN<Entitys> entities, Delta_time dt) {
   auto filtered_entitys = update_qtree(entities);

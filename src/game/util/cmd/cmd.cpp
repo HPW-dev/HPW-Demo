@@ -56,14 +56,14 @@ Cmd::Cmd() {
   move(new_unique<Cmd_levels>(this));
   move(new_unique<Cmd_level>(this));
   move(new_unique<Cmd_restart>(this));
-  //move(new_unique<Cmd_collider>());
+  move(new_unique<Cmd_collider>(this));
 
   //cmd-core.hpp
-  //move(new_unique<Cmd_draw_fps>());
+  //move(new_unique<Cmd_fps>());
   //move(new_unique<Cmd_render>());
   //move(new_unique<Cmd_tickrate>());
-  //move(new_unique<Cmd_save_stats>());
-  //move(new_unique<Cmd_end_save_stats>());
+  //move(new_unique<Cmd_stats>());
+  //move(new_unique<Cmd_end_stats>());
 
   sort_commands();
 } // Cmd c-tor
@@ -110,6 +110,8 @@ Strs Cmd::command_matches(CN<Str> cmd_and_args) {
   cauto args = split(cmd_and_args, ' ');
   cauto cmd_name = str_tolower( args.at(0) );
   auto ret = find_cmd_name_matches(cmd_name);
+  for (nauto cmd_name: ret)
+    cmd_name += ' ';
 
   // если команда введена не до конца, то показать только совпадения
   auto cmd = find_command(cmd_name);
