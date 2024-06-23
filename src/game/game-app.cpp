@@ -51,9 +51,9 @@ Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
   // управление сценами
   init_scene_mgr();
   #ifndef DEBUG
-  hpw::easy_debug = false;
+  hpw::empty_level_first = false;
   #endif
-  if (hpw::easy_debug) {
+  if (hpw::empty_level_first) {
     hpw_log("start debug level...\n");
     hpw::scene_mgr->add( new_shared<Scene_game>() );
   } else {

@@ -105,6 +105,7 @@ Strs Cmd_collider::command_matches(CN<Strs> cmd_and_args) {
     return ret;
   }
 
+  // по вводу определить что взять из списка автодополнения
   cauto arg_name = cmd_and_args.at(1); // имя колайдер ресолвера
   cauto name_filter = [&](CN<decltype(g_colliders)::value_type> it)
     { return it.first.find(arg_name) == 0; };

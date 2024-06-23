@@ -26,9 +26,12 @@ int get_scancode(const hpw::keycode keycode) {
 
 void save_config() {
   auto& config = *hpw::config;
-  config.set_bool("easy_debug", hpw::easy_debug);
   config.set_bool("enable_replay", hpw::enable_replay);
   config.set_bool("need_tutorial", hpw::need_tutorial);
+
+  auto debug = config.make_node("debug");
+  debug.set_bool("empty_level_first", hpw::empty_level_first);
+  debug.set_str("start_script", hpw::start_script);
 
   auto graphic_node = config.make_node("graphic");
   graphic_node.set_v_int("canvas_size",        {graphic::width, graphic::height} );
@@ -83,9 +86,12 @@ void load_config() {
   hpw::config = new_shared<Yaml>(hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;
-  hpw::easy_debug    = config.get_bool("easy_debug", false);
   hpw::enable_replay = config.get_bool("enable_replay", true);
   hpw::need_tutorial = config.get_bool("need_tutorial", true);
+
+  cauto debug = config["debug"];
+  hpw::empty_level_first = debug.get_bool("empty_level_first", false);
+  hpw::start_script = debug.get_str("start_script", hpw::start_script);
 
   auto path_node = config["path"];
   // добавить инфу о путях, если конфиг сделан в первый раз

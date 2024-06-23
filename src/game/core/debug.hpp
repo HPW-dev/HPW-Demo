@@ -1,5 +1,6 @@
 #pragma once
 #include "util/mem-types.hpp"
+#include "util/str.hpp"
 #ifdef CLD_DEBUG
 #include <atomic>
 #endif
@@ -21,7 +22,8 @@ inline bool show_entity_mem_map {false};
 @details нужен чтобы выявить места, где нельзя вызывать такие рандомы */
 inline bool allow_random_stable {false};
 inline bool allow_random_stable_bak {false};
-inline bool easy_debug {false}; // включает быстрый запуск уровня для отладки
+inline Str start_script {}; // выполнить этот скрипт при старте игры
+inline bool empty_level_first {}; // запустить при старте игры пустой уровень
 } // hpw ns
 
 namespace graphic {

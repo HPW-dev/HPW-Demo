@@ -61,7 +61,7 @@
 void Scene_game::init_levels() {
   // запустить только один уровень при отладке
   #ifdef DEBUG
-  if (hpw::easy_debug) {
+  if (hpw::empty_level_first) {
     hpw::level_mgr = new_unique<Level_mgr> (Level_mgr::Makers {
       []{ return new_shared<Level_empty>(); }
     } ); 
