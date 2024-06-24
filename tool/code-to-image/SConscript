@@ -10,10 +10,10 @@ Import([
 
 build_dir = "../../build/"
 prog_name = "code-to-image"
-src_dir = "."
+src_dir = "../../src/"
 thirdparty_dir = "../../thirdparty/"
 inc_path = [
-  "../../src",
+  ".",
   src_dir,
   thirdparty_dir + "include",
 ]
@@ -21,6 +21,7 @@ lib_path = []
 used_libs = []
 sources = [
   Glob("*.cpp"),
+  src_dir + "util/error.cpp",
 ]
 
 env.Program(
