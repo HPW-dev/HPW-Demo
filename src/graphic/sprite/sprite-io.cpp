@@ -2,6 +2,7 @@
 #include <omp.h>
 #include <utility>
 #include "sprite-io.hpp"
+#include "graphic/image/palette.hpp"
 #include "graphic/image/image.hpp"
 #include "sprite.hpp"
 //#define STB_IMAGE_IMPLEMENTATION
@@ -13,7 +14,6 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "graphic/util/convert.hpp"
-#include "host/host-util.hpp"
 
 /** делает контур картинки жирнее
 Нужен для картинки в rotsprite, чтобы при повороте не было артефактов */

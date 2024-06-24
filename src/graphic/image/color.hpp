@@ -3,11 +3,14 @@
 #include "util/math/num-types.hpp"
 
 struct Rgb24 {
+  struct Null_tag {}; // чтобы указать на constexpr c-tor
+
   using value_t = byte;
   value_t r {}, g {}, b {};
 
   Rgb24() = default;
   Rgb24(int ir, int ig, int ib);
+  inline constexpr Rgb24(byte _r, byte _g, byte _b, const Null_tag tag): r{_r}, g{_g}, b{_b} {}
 };
 
 /** Индексированные цвета HPW
@@ -39,10 +42,10 @@ struct Pal8 {
   bool operator != (auto other) const { return val ^ Pal8(other).val; }
   inline constexpr void set(int nval) { val = scast<byte>(nval); }
   void set_gray(int value);
-  void set_red(int value);
+  inline constexpr void set_red(int value);
   void set_red_nosafe(int value);
   static Pal8 get_gray(int value);
-  static Pal8 get_red(int value);
+  inline constexpr static Pal8 get_red(int value);
   static Pal8 get_red_nosafe(int value);
   bool is_red() const;
   bool is_white() const;
@@ -84,3 +87,12 @@ inline constexpr Pal8 Pal8::from_real(real src, bool is_red) {
     get_red(src * red_size) :
     Pal8(src * gray_size);
 } // from_real
+
+inline constexpr Pal8 Pal8::get_red(int value) {
+  Pal8 ret;
+  ret.set_red(value);
+  return ret;
+}
+
+inline constexpr void Pal8::set_red(int value)
+  { val = std::min(uint(value) + uint(red_start), uint(red)); }

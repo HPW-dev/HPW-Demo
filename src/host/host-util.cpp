@@ -10,6 +10,7 @@
 #include "util/math/random.hpp"
 #include "graphic/util/convert.hpp"
 #include "graphic/image/color.hpp"
+#include "graphic/image/palette.hpp"
 
 static Vector<GLfloat> m_ogl_palette {};
 
@@ -42,10 +43,11 @@ Vector<GLfloat> load_ogl_palette(CN<Str> fname) {
   }
   stbi_image_free(decoded);
   m_ogl_palette = ogl_pal;
+  to_palette_rgb24 = &pal8_to_rgb24_by_file;
   return ogl_pal;
 } // load_ogl_palette
 
-Rgb24 to_palette_rgb24(const Pal8 x) {
+Rgb24 pal8_to_rgb24_by_file(const Pal8 x) {
   if ( !m_ogl_palette.empty())
     return Rgb24 {
       scast<int>(m_ogl_palette.at(x.val * 3 + 0) * 255.0),

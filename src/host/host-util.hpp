@@ -11,7 +11,7 @@ struct Rgb24;
 void set_target_ups(int new_ups);
 // загружкает палитру для 1D текстуры в opengl
 Vector<GLfloat> load_ogl_palette(CN<Str> fname);
-// преобразует палитровый цвет в RGB24 с учётом текущей палитры
-Rgb24 to_palette_rgb24(const Pal8 x);
+// красит Pal8 -> RGB24 с помощью таблицы из файла
+Rgb24 pal8_to_rgb24_by_file(const Pal8 x);
 // случайное название для окна игры
 Str rnd_window_name();
