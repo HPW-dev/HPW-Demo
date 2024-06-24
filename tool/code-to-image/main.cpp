@@ -8,6 +8,7 @@
 #include "util/platform.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"
+#include "graphic/util/util-templ.hpp"
 
 inline Str prepare_seach_dir(CN<Str> path) {
   Str ret = path;
@@ -21,7 +22,7 @@ inline Str prepare_seach_dir(CN<Str> path) {
 // true если имя файла подходит по маске
 inline bool check_file_masks(CN<Str> fname, CN<Strs> masks) {
   for (cnauto mask: masks)
-    if (fname.find(mask) != Str::npos)
+    if (std::filesystem::path(fname).extension() == mask)
       return true;
   return false;
 }
@@ -61,13 +62,43 @@ void exclude_mask(Strs& dst, CN<Strs> masks) {
 }
 
 Image text_to_image(CN<Str> fname) {
-  std::ifstream src(fname);
-  iferror(!src.is_open(), "error while openin file \"" << fname << "\"");
+  std::ifstream file(fname);
+  iferror(!file.is_open(), "error while openin file \"" << fname << "\"");
 
-  // узнать размер картинки
-  Image ret;
+  // узнать ширину и высоту текста
+  int txt_w {}, txt_h {};
+  while (!file.eof()) {
+    Str line;
+    file >> line;
+    txt_w = std::max<int>(txt_w, line.size());
+    ++txt_h;
+  }
+
+  constexpr int BORDER = 2;
+  constexpr int SPACE_H = 2; // отступ строки по высоте
+  Image ret(txt_w + BORDER * 2, txt_h * SPACE_H + BORDER * 2, Pal8::black);
+  ret.set_path(fname);
+  ret.set_generated(true);
+
+  // рисовать символы как пиксели
+  int y {};
+  file = std::ifstream(fname);
+  while (!file.eof()) {
+    Str line;
+    file >> line;
+    for (int x {}; cnauto ch: line) {
+      Pal8 color {};
+      if (ch != ' ')
+        color = Pal8::white;
+      ret.set(BORDER + x, BORDER + y * SPACE_H, color);
+      ++x;
+    }
+    ++y;
+  }
+
+  draw_rect(ret, Rect(0, 0, ret.X, ret.Y), Pal8::white);
   return ret;
-}
+} // text_to_image
 
 int main(const int argc, const char* argv[]) {
   // получить путь поиска файлов
@@ -87,7 +118,7 @@ int main(const int argc, const char* argv[]) {
   std::cout << "files:\n";
   for (cnauto fname: files)
     std::cout << "  \"" << fname << "\"\n";
-  
+
   cauto test = text_to_image(files.at(0));
   save(test, "delme.png");
 }
