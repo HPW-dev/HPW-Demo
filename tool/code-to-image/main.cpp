@@ -69,13 +69,15 @@ Image text_to_image(CN<Str> fname) {
   int txt_w {}, txt_h {};
   while (!file.eof()) {
     Str line;
-    file >> line;
+    std::getline(file, line);
     txt_w = std::max<int>(txt_w, line.size());
     ++txt_h;
   }
 
   constexpr int BORDER = 2;
   constexpr int SPACE_H = 2; // отступ строки по высоте
+  static_assert(BORDER > 0);
+  static_assert(SPACE_H > 0);
   Image ret(txt_w + BORDER * 2, txt_h * SPACE_H + BORDER * 2, Pal8::black);
   ret.set_path(fname);
   ret.set_generated(true);
@@ -85,11 +87,23 @@ Image text_to_image(CN<Str> fname) {
   file = std::ifstream(fname);
   while (!file.eof()) {
     Str line;
-    file >> line;
+    std::getline(file, line);
+    bool is_comment {};
+    Str::value_type prev_ch {};
+
     for (int x {}; cnauto ch: line) {
+      // раскрасить каждый символ
       Pal8 color {};
       if (ch != ' ')
         color = Pal8::white;
+      /*if (ch >= '0' && ch <= '9')
+        color = Pal8::red;*/
+      if (prev_ch == '/' && ch == '/')
+        is_comment = true;
+      if (is_comment)
+        color = Pal8::from_real(0.45);
+      prev_ch = ch;
+
       ret.set(BORDER + x, BORDER + y * SPACE_H, color);
       ++x;
     }
@@ -119,6 +133,10 @@ int main(const int argc, const char* argv[]) {
   for (cnauto fname: files)
     std::cout << "  \"" << fname << "\"\n";
 
-  cauto test = text_to_image(files.at(0));
-  save(test, "delme.png");
+  Vector<Image> images {};
+  for (cnauto file: files)
+    images.push_back(text_to_image(file));
+  
+  for (uint i {}; cnauto image: images)
+    save(image, "delme\\" + n2s(i++) + "-img.png");
 }
