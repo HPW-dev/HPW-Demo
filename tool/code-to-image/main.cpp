@@ -5,11 +5,19 @@
 #include "util/error.hpp"
 #include "util/str.hpp"
 #include "util/str-util.hpp"
+#include "util/mem-types.hpp"
 #include "util/path.hpp"
 #include "util/platform.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"
 #include "graphic/util/util-templ.hpp"
+
+using Images = Vector<Image>;
+constexpr static const Pal8 TEXT_COLOR = Pal8::white;
+constexpr static const Pal8 BORDER_COLOR = Pal8::from_real(0.5, true);
+constexpr static const Pal8 COMENT_COLOR = Pal8::from_real(0.45);
+//constexpr static const Pal8 BORDER_COLOR = Pal8::black;
+//constexpr static const Pal8 COMENT_COLOR = TEXT_COLOR;
 
 inline Str prepare_seach_dir(CN<Str> path) {
   Str ret = path;
@@ -96,13 +104,13 @@ Image text_to_image(CN<Str> fname) {
       // раскрасить каждый символ
       Pal8 color {};
       if (ch != ' ')
-        color = Pal8::white;
+        color = TEXT_COLOR;
       /*if (ch >= '0' && ch <= '9')
         color = Pal8::red;*/
       if (prev_ch == '/' && ch == '/')
         is_comment = true;
       if (is_comment)
-        color = Pal8::from_real(0.45);
+        color = COMENT_COLOR;
       prev_ch = ch;
 
       ret.set(BORDER + x, BORDER + y * SPACE_H, color);
@@ -112,55 +120,90 @@ Image text_to_image(CN<Str> fname) {
     ++y;
   } // file !file.eof
 
-  draw_rect(ret, Rect(0, 0, ret.X, ret.Y), Pal8::white);
+  draw_rect(ret, Rect(0, 0, ret.X, ret.Y), BORDER_COLOR);
   return ret;
 } // text_to_image
 
+struct Node {
+  Unique<Node> a {};
+  Unique<Node> b {};
+  Rect area {};
+  CP<Image> image_ptr {};
+};
 
-/** нарезает картинки на атлас для save_all_images
-*@return если вернул true, то можно продолжать нарезку */
-inline bool stream_concat(CN<Vector<Image>> image_list,
-std::size_t& idx, Image& buffer) {
-  assert(!image_list.empty());
-  assert(buffer);
-
-  uint timeout = 200'000;
-  int pos_x {}, pos_y {};
-  /* чтобы следующая строка карьинки не была на уровне меньше,
-  чем максимальная высота картинок на уровне выше */
-  int max_pos_y {}; 
-
-  while (idx < image_list.size()) {
-    // чтобы не уйти в вечный цикл
-    if (timeout == 0)
-      break;
-    else
-      --timeout;
-
-    cnauto image = image_list.at(idx);
-    ++idx;
-    cont_if (!image);
-    max_pos_y = std::max(max_pos_y, image.Y);
-
-    // найти свободное место для вставки
-    if (pos_x + image.X >= buffer.X) {
-      pos_x = 0;
-      pos_y += max_pos_y;
-      max_pos_y = 0;
-    }
-    // если места не нашлось, оставить вставку другим вызовам этой функции
-    if (pos_y + image.Y >= buffer.Y) {
-      idx = std::max<int>(idx - 1, 0); // отменить смену спрайта
-      break;
-    }
-    insert(buffer, image, Vec(pos_x, pos_y));
-    pos_x += image.X;
+// true, если получилось вставить изображение
+bool insert_to_tree(Unique<Node>& node, CN<Image> image) {
+  /* когда нада есть и картинка уже в ней, то определить
+  в какую внутреннюю ветвь добавить изображение */
+  if (node->image_ptr) {
+    if (!insert_to_tree(node->a, image))
+      return insert_to_tree(node->b, image);
+    return false;
   }
-  return idx < image_list.size();
-} // stream_concat
+
+  // определить что изображение помещается в область
+  if (image.X <= node->area.size.x && image.Y <= node->area.size.y) {
+    node->a = new_unique<Node>();
+    node->a->area = Rect (
+      node->area.pos.x + image.X,
+      node->area.pos.y,
+      std::max<int>(0, node->area.size.x - image.X),
+      image.Y
+    );
+    node->b = new_unique<Node>();
+    node->b->area = Rect (
+      node->area.pos.x,
+      node->area.pos.y + image.Y,
+      node->area.size.x,
+      std::max<int>(0, node->area.size.y - image.Y)
+    );
+    node->image_ptr = &image;
+    return true;
+  }
+
+  return false;
+} // insert_to_tree
+
+void draw_tree(CN<Unique<Node>> node, Image& dst) {
+  return_if(!node);
+  //draw_rect(dst, node->area, Pal8::white);
+  if (node->image_ptr)
+    insert(dst, *node->image_ptr, node->area.pos);
+  if (node->a)
+    draw_tree(node->a, dst);
+  if (node->b)
+    draw_tree(node->b, dst);
+}
+
+Image make_atlas(CN<Images> images, int w, int h) {
+  assert(!images.empty());
+
+  Unique<Node> root;
+  for (cnauto image: images) {
+    // есди это первая нода
+    if (!root) {
+      cont_if (image.X > w);
+      cont_if (image.Y > h);
+      root = new_unique<Node>();
+      root->a = new_unique<Node>();
+      root->a->area = Rect(image.X, 0, std::max(0, w - image.X), image.Y);
+      root->b = new_unique<Node>();
+      root->b->area = Rect(0, image.Y, w, std::max(0, h - image.Y));
+      root->area = Rect(0,0, w,h);
+      root->image_ptr = &image;
+      continue;
+    }
+
+    insert_to_tree(root, image);
+  }
+
+  Image ret(w, h, Pal8::black);
+  draw_tree(root, ret);
+  return ret;
+}
 
 // фильтрует и сортирует картинки для save_all_images
-inline void prepare_image_list(Vector<Image>& image_list) {
+inline void prepare_image_list(Images& image_list) {
   assert(!image_list.empty());
   // сортировка по размеру
   std::sort(image_list.begin(), image_list.end(), [](CN<Image> a, CN<Image> b) {
@@ -170,33 +213,6 @@ inline void prepare_image_list(Vector<Image>& image_list) {
     return a.size > b.size;
   });
 }
-
-// сейвит все картинки в атлас
-void save_all_images(CN<Str> save_dir, CN<Strs> files, const int MX, const int MY) {
-  assert(MX >= 256);
-  assert(MY >= 256);
-
-  make_dir_if_not_exist(save_dir);
-  Vector<Image> image_list {};
-  for (cnauto file: files)
-    image_list.push_back(text_to_image(file));
-  prepare_image_list(image_list);
-  std::size_t idx {};
-  uint time_out = 1'000;
-  
-  while (true) {
-    // чтобы не уйти в вечный цикл
-    if (time_out == 0)
-      break;
-    else
-      --time_out;
-
-    Image buffer(MX, MY);
-    cauto continue_stream = stream_concat(image_list, idx, buffer);
-    save(buffer, save_dir + "image pack " + n2s(idx) + ".png");
-    break_if(!continue_stream);
-  }
-} // save_all_images
 
 int main(const int argc, const char* argv[]) {
   // получить путь поиска файлов
@@ -217,10 +233,15 @@ int main(const int argc, const char* argv[]) {
   for (cnauto fname: files)
     std::cout << "  \"" << fname << "\"\n";
 
-  save_all_images("delme/", files, 8000, 4000);
-  
-  /*const Str save_dir = "delme/";
+  // прочитать все картинки
+  const Str save_dir = "delme/";
   make_dir_if_not_exist(save_dir);
-  for (uint i {}; cnauto file: files)
-    save(text_to_image(file), save_dir + n2s(i++) + ".png");*/
+  Images images;
+  for (cnauto file: files)
+    images.push_back( text_to_image(file) );
+  // засейвить картинки в атлас
+  prepare_image_list(images);
+  cauto atlas = make_atlas(images, 3000, 4000);
+  //cauto atlas = make_atlas(images, 600, 800);
+  save(atlas, save_dir + "atlas.png");
 }
