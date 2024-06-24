@@ -5,6 +5,7 @@
 #include "util/error.hpp"
 #include "util/str.hpp"
 #include "util/str-util.hpp"
+#include "util/path.hpp"
 #include "util/platform.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/image-io.hpp"
@@ -107,12 +108,95 @@ Image text_to_image(CN<Str> fname) {
       ret.set(BORDER + x, BORDER + y * SPACE_H, color);
       ++x;
     }
+
     ++y;
-  }
+  } // file !file.eof
 
   draw_rect(ret, Rect(0, 0, ret.X, ret.Y), Pal8::white);
   return ret;
 } // text_to_image
+
+
+/** нарезает картинки на атлас для save_all_images
+*@return если вернул true, то можно продолжать нарезку */
+inline bool stream_concat(CN<Vector<Image>> image_list,
+std::size_t& idx, Image& buffer) {
+  assert(!image_list.empty());
+  assert(buffer);
+
+  uint timeout = 200'000;
+  int pos_x {}, pos_y {};
+  /* чтобы следующая строка карьинки не была на уровне меньше,
+  чем максимальная высота картинок на уровне выше */
+  int max_pos_y {}; 
+
+  while (idx < image_list.size()) {
+    // чтобы не уйти в вечный цикл
+    if (timeout == 0)
+      break;
+    else
+      --timeout;
+
+    cnauto image = image_list.at(idx);
+    ++idx;
+    cont_if (!image);
+    max_pos_y = std::max(max_pos_y, image.Y);
+
+    // найти свободное место для вставки
+    if (pos_x + image.X >= buffer.X) {
+      pos_x = 0;
+      pos_y += max_pos_y;
+      max_pos_y = 0;
+    }
+    // если места не нашлось, оставить вставку другим вызовам этой функции
+    if (pos_y + image.Y >= buffer.Y) {
+      idx = std::max<int>(idx - 1, 0); // отменить смену спрайта
+      break;
+    }
+    insert(buffer, image, Vec(pos_x, pos_y));
+    pos_x += image.X;
+  }
+  return idx < image_list.size();
+} // stream_concat
+
+// фильтрует и сортирует картинки для save_all_images
+inline void prepare_image_list(Vector<Image>& image_list) {
+  assert(!image_list.empty());
+  // сортировка по размеру
+  std::sort(image_list.begin(), image_list.end(), [](CN<Image> a, CN<Image> b) {
+    // при одинаковых размерах сортировать по ширине
+    if (a.size == b.size)
+      return a.X > b.X;
+    return a.size > b.size;
+  });
+}
+
+// сейвит все картинки в атлас
+void save_all_images(CN<Str> save_dir, CN<Strs> files, const int MX, const int MY) {
+  assert(MX >= 256);
+  assert(MY >= 256);
+
+  make_dir_if_not_exist(save_dir);
+  Vector<Image> image_list {};
+  for (cnauto file: files)
+    image_list.push_back(text_to_image(file));
+  prepare_image_list(image_list);
+  std::size_t idx {};
+  uint time_out = 1'000;
+  
+  while (true) {
+    // чтобы не уйти в вечный цикл
+    if (time_out == 0)
+      break;
+    else
+      --time_out;
+
+    Image buffer(MX, MY);
+    cauto continue_stream = stream_concat(image_list, idx, buffer);
+    save(buffer, save_dir + "image pack " + n2s(idx) + ".png");
+    break_if(!continue_stream);
+  }
+} // save_all_images
 
 int main(const int argc, const char* argv[]) {
   // получить путь поиска файлов
@@ -133,10 +217,10 @@ int main(const int argc, const char* argv[]) {
   for (cnauto fname: files)
     std::cout << "  \"" << fname << "\"\n";
 
-  Vector<Image> images {};
-  for (cnauto file: files)
-    images.push_back(text_to_image(file));
+  save_all_images("delme/", files, 8000, 4000);
   
-  for (uint i {}; cnauto image: images)
-    save(image, "delme\\" + n2s(i++) + "-img.png");
+  /*const Str save_dir = "delme/";
+  make_dir_if_not_exist(save_dir);
+  for (uint i {}; cnauto file: files)
+    save(text_to_image(file), save_dir + n2s(i++) + ".png");*/
 }

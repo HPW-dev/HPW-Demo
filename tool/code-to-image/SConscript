@@ -23,11 +23,18 @@ sources = [
   Glob("*.cpp"),
   src_dir + "util/error.cpp",
   src_dir + "util/str-util.cpp",
+  src_dir + "util/path.cpp",
   src_dir + "util/file/file.cpp",
+  src_dir + "util/math/vec-util.cpp",
+  src_dir + "util/math/random.cpp",
+  src_dir + "util/math/mat.cpp",
   src_dir + "graphic/image/image-io.cpp",
   src_dir + "graphic/image/image.cpp",
+  src_dir + "graphic/sprite/sprite.cpp",
   src_dir + "graphic/image/palette.cpp",
   src_dir + "graphic/image/color.cpp",
+  src_dir + "graphic/image/color-blend.cpp",
+  src_dir + "graphic/util/graphic-util.cpp",
   src_dir + "graphic/util/convert.cpp",
 ]
 
