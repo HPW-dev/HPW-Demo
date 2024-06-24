@@ -64,12 +64,6 @@ Pal8 Pal8::get_gray(int value) {
   return ret;
 }
 
-Pal8 Pal8::get_red(int value) {
-  Pal8 ret;
-  ret.set_red(value);
-  return ret;
-}
-
 Pal8 Pal8::get_red_nosafe(int value) {
   Pal8 ret;
   ret.set_red_nosafe(value);
@@ -78,9 +72,6 @@ Pal8 Pal8::get_red_nosafe(int value) {
 
 void Pal8::set_gray(int value)
   { val = std::clamp<int>(value, black, gray_end); }
-
-void Pal8::set_red(int value)
-  { val = std::min(uint(value) + uint(red_start), uint(red)); }
 
 void Pal8::set_red_nosafe(int value)
   { val = scast<int>(red_start) + (value % scast<int>(red_size)); }
