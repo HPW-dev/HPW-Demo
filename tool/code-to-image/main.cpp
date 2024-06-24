@@ -1,10 +1,13 @@
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 #include <algorithm>
 #include "util/error.hpp"
 #include "util/str.hpp"
 #include "util/str-util.hpp"
 #include "util/platform.hpp"
+#include "graphic/image/image.hpp"
+#include "graphic/image/image-io.hpp"
 
 inline Str prepare_seach_dir(CN<Str> path) {
   Str ret = path;
@@ -57,6 +60,15 @@ void exclude_mask(Strs& dst, CN<Strs> masks) {
   });
 }
 
+Image text_to_image(CN<Str> fname) {
+  std::ifstream src(fname);
+  iferror(!src.is_open(), "error while openin file \"" << fname << "\"");
+
+  // узнать размер картинки
+  Image ret;
+  return ret;
+}
+
 int main(const int argc, const char* argv[]) {
   // получить путь поиска файлов
   iferror(argc < 2, "Need more args.\n"
@@ -75,4 +87,7 @@ int main(const int argc, const char* argv[]) {
   std::cout << "files:\n";
   for (cnauto fname: files)
     std::cout << "  \"" << fname << "\"\n";
+  
+  cauto test = text_to_image(files.at(0));
+  save(test, "delme.png");
 }

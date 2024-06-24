@@ -1,4 +1,5 @@
 #include "image-io.hpp"
+#include "palette.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
@@ -9,7 +10,6 @@
 #include "util/file/file.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
-#include "host/host-util.hpp"
 
 inline void _data_to_image(Image& dst, CN<Bytes> mem) {
   iferror(mem.empty(), "_data_to_image: mem.empty");
