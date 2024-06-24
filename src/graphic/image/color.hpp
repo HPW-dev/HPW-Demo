@@ -11,7 +11,9 @@ struct Rgb24 {
 
   Rgb24() = default;
   Rgb24(int ir, int ig, int ib);
-  inline constexpr Rgb24(byte _r, byte _g, byte _b, const Null_tag tag): r{_r}, g{_g}, b{_b} {}
+  inline constexpr Rgb24(byte _r, byte _g, byte _b,
+  const Null_tag tag)
+    : r{_r}, g{_g}, b{_b} {}
 };
 
 /** Индексированные цвета HPW
