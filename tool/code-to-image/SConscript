@@ -22,6 +22,7 @@ used_libs = []
 sources = [
   Glob("*.cpp"),
   src_dir + "util/error.cpp",
+  src_dir + "util/str-util.cpp",
 ]
 
 env.Program(
