@@ -83,5 +83,11 @@
       "command": "python",
       "args": ["script/sound-test.py"]
     },
+    {
+      "label": "code-to-image",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/code-to-image.py"]
+    },
   ]
 }

@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+Import([
+  "env",
+  "ld_flags",
+  "cpp_flags",
+  "compiler",
+  "defines",
+])
+
+build_dir = "../../build/"
+prog_name = "code-to-image"
+src_dir = "."
+thirdparty_dir = "../../thirdparty/"
+inc_path = [
+  "../../src",
+  src_dir,
+  thirdparty_dir + "include",
+]
+lib_path = []
+used_libs = []
+sources = [
+  Glob("*.cpp"),
+]
+
+env.Program(
+  target = build_dir + prog_name,
+  source = sources,
+  LIBPATH = lib_path,
+  LIBS = used_libs,
+  CXX = compiler,
+  CPPDEFINES = defines,
+  CXXFLAGS = cpp_flags,
+  LINKFLAGS = ld_flags,
+  CPPPATH = inc_path,
+)
