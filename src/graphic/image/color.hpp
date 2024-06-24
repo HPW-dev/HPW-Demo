@@ -3,11 +3,14 @@
 #include "util/math/num-types.hpp"
 
 struct Rgb24 {
+  struct Null_tag {}; // чтобы указать на constexpr c-tor
+
   using value_t = byte;
   value_t r {}, g {}, b {};
 
   Rgb24() = default;
   Rgb24(int ir, int ig, int ib);
+  inline constexpr Rgb24(byte _r, byte _g, byte _b, const Null_tag tag): r{_r}, g{_g}, b{_b} {}
 };
 
 /** Индексированные цвета HPW
