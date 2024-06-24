@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
 

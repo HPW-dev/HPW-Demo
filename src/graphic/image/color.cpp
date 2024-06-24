@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "color.hpp"
 
 #ifdef ECOMEM
