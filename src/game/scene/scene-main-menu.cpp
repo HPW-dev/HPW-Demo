@@ -76,11 +76,12 @@ void Scene_main_menu::init_bg() {
     //&bgp_spline,
     //&bgp_circle_with_text,
     //&bgp_dither_wave,
+    &bgp_dither_wave_2,
     //&bgp_tiles_1,
     //&bgp_tiles_2,
     #ifndef ECOMEM
       //&bgp_warabimochi,
-      &bgp_skyline,
+      //&bgp_skyline,
     #endif
   #endif
   }; // bg_patterns table

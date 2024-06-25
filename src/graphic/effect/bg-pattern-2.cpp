@@ -22,8 +22,39 @@ void bgp_circle_with_text(Image& dst, const int bg_state) {
   // TODO
 }
 
+inline real sigmoid(const real x)
+  { return x / (real(1) + std::abs(x)); }
+
 void bgp_dither_wave(Image& dst, const int bg_state) {
-  // TODO
+  const real state = bg_state * 3.2f;
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const real zoom = 0.07f - std::cos(state * 0.0005f) * 0.07f;
+    real color = std::cos((x + state) * zoom + y * zoom);
+    color *= std::tan((-x + state) * zoom + y * zoom);
+    color *= 0.2f;
+    dst(x, y) = std::fmod(color * 255.f, 255.f);
+  }
+
+  dither_bayer16x16_1bit(dst);
+}
+
+void bgp_dither_wave_2(Image& dst, const int bg_state) {
+  const real state = bg_state * 3.2f;
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const real zoom = 0.07f - std::cos(state * 0.0005f) * 0.07f;
+    real color = std::cos((x + state) * zoom + y * zoom);
+    color *= std::tan((-x + state) * zoom + y * zoom);
+    color *= 0.2f;
+    dst(x, y) = std::fmod(color * 255.f, 255.f);
+  }
+
+  dither_bayer16x16_1bit(dst);
 }
 
 void bgp_tiles_1(Image& dst, const int bg_state) {
