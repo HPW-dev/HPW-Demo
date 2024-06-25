@@ -42,19 +42,44 @@ void bgp_dither_wave(Image& dst, const int bg_state) {
 }
 
 void bgp_dither_wave_2(Image& dst, const int bg_state) {
-  const real state = bg_state * 3.2f;
+  const real state = bg_state * 0.0005f;
+  const real mul_x = 1.0 / dst.X;
 
   #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    const real zoom = 0.07f - std::cos(state * 0.0005f) * 0.07f;
-    real color = std::cos((x + state) * zoom + y * zoom);
-    color *= std::tan((-x + state) * zoom + y * zoom);
-    color *= 0.2f;
-    dst(x, y) = std::fmod(color * 255.f, 255.f);
+    const Pal8 color = std::fmod((y * x) + std::cos(state) * 100'000.0f, 40.f) > 20.f
+      ? Pal8::from_real(x * mul_x) : Pal8{};
+    dst(x, y) = color;
   }
 
   dither_bayer16x16_1bit(dst);
+}
+
+void bgp_fast_lines(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.0005f;
+  const real mul_x = 1.0 / dst.X;
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const Pal8 color = std::fmod(y + std::cos(state) * 100'000.0f, 40.f) > 20.f
+      ? Pal8::from_real(x * mul_x) : Pal8{};
+    dst(x, y) = blend_avr(color, dst(x, y));
+  }
+}
+
+void bgp_fast_lines_red(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.0005f;
+  const real mul_x = 1.0 / dst.X;
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    const Pal8 color = std::fmod(y + x + std::cos(state) * 100'000.0f, 40.f) > 20.f
+      ? Pal8::from_real(x * mul_x, true) : Pal8{};
+    dst(x, y) = color;
+  }
 }
 
 void bgp_tiles_1(Image& dst, const int bg_state) {
