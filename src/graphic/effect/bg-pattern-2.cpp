@@ -137,7 +137,7 @@ void bgp_dither_wave(Image& dst, const int bg_state) {
 }
 
 void bgp_dither_wave_2(Image& dst, const int bg_state) {
-  const real state = bg_state * 0.0005f;
+  const real state = (bg_state % 2'000) * 0.0005f;
   const real mul_x = 1.0 / dst.X;
 
   #pragma omp parallel for simd collapse(2)

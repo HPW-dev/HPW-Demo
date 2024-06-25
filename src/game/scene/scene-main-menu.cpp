@@ -26,10 +26,15 @@
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 
+void bg_copy_1(Image& dst, const int state);
+void bg_copy_2(Image& dst, const int state);
+void bg_copy_3(Image& dst, const int state);
+void bg_copy_4(Image& dst, const int state);
+
 void Scene_main_menu::init_bg() {
   sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
   // Пак 1:
-  #if 0
+  #if 1
     &bgp_hpw_text_lines,
     &bgp_bit_1,
     &bgp_bit_2,
@@ -73,16 +78,16 @@ void Scene_main_menu::init_bg() {
 
   // Пак 2:
   #if 1
+    &bgp_dither_wave,
+    &bgp_dither_wave_2,
+    &bgp_fast_lines,
+    &bgp_fast_lines_red,
     //&bgp_spline,
     //&bgp_circle_with_text,
-    //&bgp_dither_wave,
-    //&bgp_dither_wave_2,
-    //&bgp_fast_lines,
-    //&bgp_fast_lines_red,
     //&bgp_tiles_1,
     //&bgp_tiles_2,
     &bgp_warabimochi,
-    //&bgp_skyline,
+    &bgp_skyline,
     #ifndef ECOMEM
       //...
     #endif
