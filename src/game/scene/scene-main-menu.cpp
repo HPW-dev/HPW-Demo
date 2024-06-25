@@ -81,9 +81,10 @@ void Scene_main_menu::init_bg() {
     //&bgp_fast_lines_red,
     //&bgp_tiles_1,
     //&bgp_tiles_2,
+    &bgp_warabimochi,
+    //&bgp_skyline,
     #ifndef ECOMEM
-      &bgp_warabimochi,
-      //&bgp_skyline,
+      //...
     #endif
   #endif
   }; // bg_patterns table
