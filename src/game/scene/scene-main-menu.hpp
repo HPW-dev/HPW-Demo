@@ -6,6 +6,7 @@
 #include "util/math/vec.hpp"
 #include "util/math/timer.hpp"
 #include "util/str.hpp"
+#include "util/unicode.hpp"
 
 class Menu;
 class Sprite;
@@ -32,6 +33,9 @@ class Scene_main_menu final: public Scene {
   void cache_logo_names();
   void next_bg();
   Unique<Sprite> prepare_logo(CN<Str> name) const;
+  utf32 prepare_game_ver() const;
+  void init_menu_sounds();
+  void update_bg_order(const Delta_time dt);
   
 public:
   Scene_main_menu();

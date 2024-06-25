@@ -106,17 +106,7 @@ void Scene_main_menu::update(const Delta_time dt) {
 
   bg_state += dt;
   menu->update(dt);
-
-  if (
-    // поменять фон возвращаясь из сцены
-    hpw::scene_mgr->status.came_back ||
-    // поменять фон через кнопку
-    is_pressed_once(hpw::keycode::fast_forward) ||
-    // поменять фон по таймеру
-    change_bg_timer.update(dt)
-  ) {
-    next_bg();
-  }
+  update_bg_order(dt);
 }
 
 void Scene_main_menu::draw_bg(Image& dst) const {
@@ -178,47 +168,33 @@ void Scene_main_menu::draw(Image& dst) const {
 void Scene_main_menu::init_menu() {
   menu = new_unique<Text_menu>(
     Menu_items {
-      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"), []{
-        hpw::scene_mgr->add(new_shared<Scene_difficulty>());
-      }),
+      // старт
+      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_difficulty>()); }),
+      // выбор реплея
       new_shared<Menu_text_item>(get_locale_str("scene.replay.name"), []{
         hpw::scene_mgr->add(new_shared<Scene_loading>( []{
           hpw::scene_mgr->add(new_shared<Scene_replay_select>());
         } ));
       }),
-      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"), [this]{ next_bg(); }),
+      // сменить фон
+      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
+        [this]{ next_bg(); }),
+      // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr->add(new_shared<Scene_info>());
-      }), TODO*/
-      new_shared<Menu_text_item>(get_locale_str("scene.options.name"), []{
-        hpw::scene_mgr->add(new_shared<Scene_options>());
-      }),
-      new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-        hpw::scene_mgr->back();
-      }),
+      }),*/
+      // опции
+      new_shared<Menu_text_item>(get_locale_str("scene.options.name"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_options>()); }),
+      // выйти из игры
+      new_shared<Menu_text_item>(get_locale_str("common.exit"),
+        []{ hpw::scene_mgr->back(); }),
     },
     Vec{140, 200}
-  );
-  // звук при выборе пункта меню
-  menu->set_select_callback( [](Menu_item& item) {
-    hpw::sound_mgr->play("sfx/UI/close.flac"); } );
-  // звук при перемещении по пунктам меню
-  menu->set_move_cursor_callback( [](Menu_item& item) {
-    static const Vector<Str> names {
-      "sfx/UI/Milpon guitar/1.flac",
-      "sfx/UI/Milpon guitar/2.flac",
-      "sfx/UI/Milpon guitar/3.flac",
-      "sfx/UI/Milpon guitar/4.flac",
-      "sfx/UI/Milpon guitar/5.flac",
-      "sfx/UI/Milpon guitar/6.flac",
-      "sfx/UI/Milpon guitar/7.flac",
-      "sfx/UI/Milpon guitar/8.flac",
-      "sfx/UI/Milpon guitar/9.flac",
-      "sfx/UI/Milpon guitar/10.flac",
-      "sfx/UI/Milpon guitar/11.flac",
-    };
-    hpw::sound_mgr->play(names.at(rndu_fast(names.size() - 1)), {}, {}, 0.3);
-  } );
+  ); // init menu
+
+  init_menu_sounds();
 } // init_menu
 
 void Scene_main_menu::next_bg() {
@@ -287,46 +263,23 @@ void bg_copy_4(Image& dst, const int state) {
 }
 
 void Scene_main_menu::draw_text(Image& dst) const {
-  static Image text_layer(dst.X, dst.Y);
-  assert(text_layer.size == dst.size);
-  text_layer.fill(Pal8::black);
+  // нарисовать текст меню в маленькое окошко
+  Image text_layer(dst.X, dst.Y, Pal8::black);
   menu->draw(text_layer);
 
   // показать версию игры  
-  auto game_ver = sconv<utf32>( get_game_version() );
-  if (game_ver.empty())
-    game_ver = get_locale_str("common.unknown");
-  // добавить инфу по платформе и билду
-  #ifdef WINDOWS
-    game_ver += U" W";
-  #else
-    game_ver += U" L";
-  #endif
-  #ifdef is_x64
-    game_ver += U"64";
-  #else
-    game_ver += U"32";
-  #endif
-  #ifdef DEBUG
-    game_ver += U'D';
-  #else
-    game_ver += U'R';
-  #endif
-  #ifdef ECOMEM
-    game_ver += U'E';
-  #endif
+  cauto game_ver = prepare_game_ver();
   graphic::font->draw(text_layer, {140, 300},
     get_locale_str("common.game_version") + U": " + game_ver);
 
   // нарисовать тень от текста
-  static Image shadow_layer(text_layer);
-  assert(shadow_layer.size == dst.size);
+  Image shadow_layer(text_layer);
   insert_fast(shadow_layer, text_layer);
   apply_invert(shadow_layer);
   expand_color_4(shadow_layer, Pal8::black);
   insert<&blend_min>(dst, shadow_layer);
 
-  // нарисовать текст
+  // нарисовать текст повер тени
   insert<&blend_max>(dst, text_layer);
 } // draw_text
 
@@ -344,4 +297,71 @@ Unique<Sprite> Scene_main_menu::prepare_logo(CN<Str> name) const {
     zoom_x2(*logo);
 
   return logo;
+}
+
+utf32 Scene_main_menu::prepare_game_ver() const {
+  auto game_ver = sconv<utf32>( get_game_version() );
+  if (game_ver.empty())
+    game_ver = get_locale_str("common.unknown");
+
+  // добавить инфу по платформе и билду:
+  #ifdef WINDOWS
+    game_ver += U" W";
+  #else
+    game_ver += U" L";
+  #endif
+
+  #ifdef is_x64
+    game_ver += U"64";
+  #else
+    game_ver += U"32";
+  #endif
+
+  #ifdef DEBUG
+    game_ver += U'D';
+  #else
+    game_ver += U'R';
+  #endif
+
+  #ifdef ECOMEM
+    game_ver += U'E';
+  #endif
+
+  return game_ver;
+} // prepare_game_ver
+
+void Scene_main_menu::init_menu_sounds() {
+  // звук при выборе пункта меню
+  menu->set_select_callback( [](Menu_item& item) {
+    hpw::sound_mgr->play("sfx/UI/close.flac"); } );
+
+  // звук при перемещении по пунктам меню
+  menu->set_move_cursor_callback( [](Menu_item& item) {
+    static const Vector<Str> names {
+      "sfx/UI/Milpon guitar/1.flac",
+      "sfx/UI/Milpon guitar/2.flac",
+      "sfx/UI/Milpon guitar/3.flac",
+      "sfx/UI/Milpon guitar/4.flac",
+      "sfx/UI/Milpon guitar/5.flac",
+      "sfx/UI/Milpon guitar/6.flac",
+      "sfx/UI/Milpon guitar/7.flac",
+      "sfx/UI/Milpon guitar/8.flac",
+      "sfx/UI/Milpon guitar/9.flac",
+      "sfx/UI/Milpon guitar/10.flac",
+      "sfx/UI/Milpon guitar/11.flac",
+    };
+    hpw::sound_mgr->play(names.at(rndu_fast(names.size() - 1)), {}, {}, 0.3);
+  } );
+}
+
+void Scene_main_menu::update_bg_order(const Delta_time dt) {
+  // поменять фон возвращаясь из сцены
+  const bool came_back = hpw::scene_mgr->status.came_back;
+  // поменять фон через кнопку
+  const bool fast_forward = is_pressed_once(hpw::keycode::fast_forward);
+  // поменять фон по таймеру
+  const bool bg_timer_ready = change_bg_timer.update(dt);
+
+  if (came_back || fast_forward || bg_timer_ready)
+    next_bg();
 }
