@@ -252,7 +252,13 @@ void Scene_main_menu::init_bg() {
     &bgp_clock,
     &bgp_clock_24,
     &bgp_graph,
+    //&bgp_spline,
+    //&bgp_circle_with_text,
+    //&bgp_dither_wave,
+    //&bgp_tiles_1,
+    //&bgp_tiles_2,
   #ifndef ECOMEM
+    //&bgp_warabimochi,
     &bgp_3d_rain_waves,
     &bgp_3d_waves,
     &bgp_3d_terrain,
