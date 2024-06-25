@@ -26,11 +26,77 @@
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 
+void Scene_main_menu::init_bg() {
+  sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
+  // Пак 1:
+  #if 0
+    &bgp_hpw_text_lines,
+    &bgp_bit_1,
+    &bgp_bit_2,
+    &bgp_pinterest_1,
+    &bgp_random_lines_1,
+    &bgp_random_lines_2,
+    &bgp_3d_atomar_cube,
+    &bgp_circles,
+    &bgp_circles_2,
+    &bgp_circles_moire,
+    &bgp_circles_moire_2,
+    &bgp_red_circles_1,
+    &bgp_red_circles_2,
+    &bgp_pixel_font,
+    &bgp_numbers,
+    &bgp_numbers_alpha,
+    &bgp_ipv4,
+    &bgp_ipv4_2,
+    &bgp_unicode,
+    &bgp_unicode_red,
+    &bgp_glsl_spheres,
+    &bgp_clock,
+    &bgp_clock_24,
+    &bgp_graph,
+    #ifndef ECOMEM
+      &bgp_3d_rain_waves,
+      &bgp_3d_waves,
+      &bgp_3d_terrain,
+      &bgp_3d_flat_stars,
+      &bg_copy_1,
+      &bg_copy_2,
+      &bg_copy_3,
+      &bg_copy_4,
+      &bgp_rain_waves,
+      &bgp_line_waves,
+      &bgp_rotated_lines,
+      &bgp_labyrinth_1,
+      &bgp_labyrinth_2,
+    #endif
+  #endif
+
+  // Пак 2:
+  #if 1
+    //&bgp_spline,
+    //&bgp_circle_with_text,
+    //&bgp_dither_wave,
+    //&bgp_tiles_1,
+    //&bgp_tiles_2,
+    #ifndef ECOMEM
+      //&bgp_warabimochi,
+      &bgp_skyline,
+    #endif
+  #endif
+  }; // bg_patterns table
+
+  // выбрать случайный фон
+  cauto idx = rndu_fast(bg_patterns.size());
+  bg_pattern_pf = bg_patterns.at(idx);
+} // init_bg
+
 Scene_main_menu::Scene_main_menu() {
   init_menu();
   init_logo();
   init_bg();
 }
+
+Scene_main_menu::~Scene_main_menu() {}
 
 void Scene_main_menu::update(const Delta_time dt) {
 #ifdef DEBUG
@@ -58,23 +124,17 @@ void Scene_main_menu::draw_bg(Image& dst) const {
 }
 
 void Scene_main_menu::init_logo() {
-  std::call_once(m_logo_load_once, [this]{ cache_logo_names(); });
+  // получить список логотипов из конфига
+  std::call_once(m_logo_load_once,
+    [this]{ cache_logo_names(); });
   assert(!m_logo_names.empty());
-  // случайный выбор логотипа игры из списка
-  Str logo_name = m_logo_names.at(rndu_fast(m_logo_names.size()));
 
-  auto finded_sprite = hpw::store_sprite->find(logo_name);
-  assert(finded_sprite && scast<bool>(*finded_sprite));
-  logo = new_shared<Sprite>(*finded_sprite);
+  // случайный выбор логотипа из списка
+  cauto idx = rndu_fast(m_logo_names.size());
+  cauto logo_name = m_logo_names.at(idx);
+  logo = prepare_logo(logo_name);
 
-  // маленькие логотипы заресайзить
-  if (logo->X() < 32 && logo->Y() < 16)
-    zoom_x8(*logo);
-  else if (logo->X() < 64 && logo->Y() < 32)
-    zoom_x4(*logo);
-  else if (logo->X() < 128 && logo->Y() < 64)
-    zoom_x2(*logo);
-
+  // нарисовать логотип по центру меню
   const Vec logo_sz(logo->X(), logo->Y());
   const Vec menu_sz(graphic::canvas->X, 160);
   logo_pos = center_point(menu_sz, logo_sz);
@@ -116,7 +176,7 @@ void Scene_main_menu::draw(Image& dst) const {
 }
 
 void Scene_main_menu::init_menu() {
-  menu = new_shared<Text_menu>(
+  menu = new_unique<Text_menu>(
     Menu_items {
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"), []{
         hpw::scene_mgr->add(new_shared<Scene_difficulty>());
@@ -226,57 +286,6 @@ void bg_copy_4(Image& dst, const int state) {
   insert(dst, buffer, pos);
 }
 
-void Scene_main_menu::init_bg() {
-  sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
-    &bgp_hpw_text_lines,
-    &bgp_bit_1,
-    &bgp_bit_2,
-    &bgp_pinterest_1,
-    &bgp_random_lines_1,
-    &bgp_random_lines_2,
-    &bgp_3d_atomar_cube,
-    &bgp_circles,
-    &bgp_circles_2,
-    &bgp_circles_moire,
-    &bgp_circles_moire_2,
-    &bgp_red_circles_1,
-    &bgp_red_circles_2,
-    &bgp_pixel_font,
-    &bgp_numbers,
-    &bgp_numbers_alpha,
-    &bgp_ipv4,
-    &bgp_ipv4_2,
-    &bgp_unicode,
-    &bgp_unicode_red,
-    &bgp_glsl_spheres,
-    &bgp_clock,
-    &bgp_clock_24,
-    &bgp_graph,
-    //&bgp_spline,
-    //&bgp_circle_with_text,
-    //&bgp_dither_wave,
-    //&bgp_tiles_1,
-    //&bgp_tiles_2,
-  #ifndef ECOMEM
-    //&bgp_warabimochi,
-    &bgp_3d_rain_waves,
-    &bgp_3d_waves,
-    &bgp_3d_terrain,
-    &bgp_3d_flat_stars,
-    &bg_copy_1,
-    &bg_copy_2,
-    &bg_copy_3,
-    &bg_copy_4,
-    &bgp_rain_waves,
-    &bgp_line_waves,
-    &bgp_rotated_lines,
-    &bgp_labyrinth_1,
-    &bgp_labyrinth_2,
-  #endif
-  }; // bg_patterns table
-  bg_pattern_pf = bg_patterns.at( rndu_fast(bg_patterns.size()) );
-} // init_bg
-
 void Scene_main_menu::draw_text(Image& dst) const {
   static Image text_layer(dst.X, dst.Y);
   assert(text_layer.size == dst.size);
@@ -320,3 +329,19 @@ void Scene_main_menu::draw_text(Image& dst) const {
   // нарисовать текст
   insert<&blend_max>(dst, text_layer);
 } // draw_text
+
+Unique<Sprite> Scene_main_menu::prepare_logo(CN<Str> name) const {
+  auto finded_sprite = hpw::store_sprite->find(name);
+  assert(finded_sprite && scast<bool>(*finded_sprite));
+  auto logo = new_unique<Sprite>(*finded_sprite);
+
+  // маленькие логотипы заресайзить
+  if (logo->X() < 32 && logo->Y() < 16)
+    zoom_x8(*logo);
+  else if (logo->X() < 64 && logo->Y() < 32)
+    zoom_x4(*logo);
+  else if (logo->X() < 128 && logo->Y() < 64)
+    zoom_x2(*logo);
+
+  return logo;
+}

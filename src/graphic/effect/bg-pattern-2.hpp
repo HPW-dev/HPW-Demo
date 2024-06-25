@@ -14,3 +14,5 @@ void bgp_dither_wave(Image& dst, const int bg_state);
 void bgp_tiles_1(Image& dst, const int bg_state);
 // узор отрисованный тайлами
 void bgp_tiles_2(Image& dst, const int bg_state);
+// просто Ниссан Скайлан на фоне
+void bgp_skyline(Image& dst, const int bg_state);
