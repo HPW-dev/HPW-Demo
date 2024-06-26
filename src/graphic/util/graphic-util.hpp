@@ -86,4 +86,8 @@ void apply_brightness(Image& dst, const int val);
 // рисует плавную кривую (сплайн)
 void draw_spline(Image& dst, const Vec a, const Vec b,
   const Vec c, const Vec d, const Pal8 color,
-  const blend_pf bf=blend_past);
+  const blend_pf bf=blend_past, const uint quality=30);
+
+// рисует линию между двумя точками
+void draw_line(Image& dst, Vec _p1, const Vec _p2,
+  const Pal8 color, const blend_pf bf);
