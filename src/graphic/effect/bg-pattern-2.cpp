@@ -1,4 +1,6 @@
 #include <omp.h>
+#include <array>
+#include <algorithm>
 #include <cassert>
 #include "bg-pattern.hpp"
 #include "graphic/image/image.hpp"
@@ -10,6 +12,14 @@
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
 #include "util/math/random.hpp"
+
+// делает случайные числа
+uint prng(uint& state) {
+  state %= 37'891u;
+  state *= 123'456'789u;
+  state += 313'242u;
+  return state;
+}
 
 void bgp_warabimochi(Image& dst, const int bg_state) {
   // фон с тачкой
@@ -113,8 +123,113 @@ void bgp_warabimochi(Image& dst, const int bg_state) {
 } // bgp_warabimochi
 
 void bgp_spline(Image& dst, const int bg_state) {
-  // TODO
-}
+  const real state = bg_state * 0.066666f;
+
+  // случайные точки на экране
+  uint seed = 97997; // ALMONDS
+  constexpr uint points_sz = 15;
+  std::array<Vec, points_sz> points;
+  for (nauto point: points) {
+    const Vec vel (
+      std::fmod(prng(seed), 8.f) - 4.f,
+      std::fmod(prng(seed), 8.f) - 4.f
+    );
+    point = Vec (
+      std::fmod( std::abs(std::fmod(prng(seed), dst.X) + vel.x * state), dst.X),
+      std::fmod( std::abs(std::fmod(prng(seed), dst.Y) + vel.y * state), dst.Y)
+    );
+  }
+
+  dst.fill(Pal8::black);
+
+  static_assert(points_sz > 4);
+  for (uint i = 3; i < points_sz; ++i)
+    draw_spline(dst, points[i-3], points[i-2], points[i-1], points[i], Pal8::red);
+} // bgp_spline
+
+void bgp_bounding_repeated_circles(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.066666f;
+
+  // случайные точки на экране
+  uint seed = 97997; // ALMONDS
+  constexpr uint points_sz = 8;
+  std::array<Vec, points_sz> points;
+  for (nauto point: points) {
+    const Vec vel (
+      std::fmod(prng(seed), 8.f) - 4.f,
+      std::fmod(prng(seed), 8.f) - 4.f
+    );
+    point = Vec (
+      std::fmod( std::abs(std::fmod(prng(seed), dst.X) + vel.x * state), dst.X),
+      std::fmod( std::abs(std::fmod(prng(seed), dst.Y) + vel.y * state), dst.Y)
+    );
+  }
+
+  dst.fill(Pal8::black);
+
+  static_assert(points_sz > 2);
+  for (uint i = 1; i < points_sz; ++i) {
+    auto r = distance(points[i], points[i-1]);
+    cauto color_mul = 1.f / r;
+    while (r > 0) {
+      draw_circle<&blend_max>( dst, points[i], r,
+        Pal8::from_real(1.f - (r * color_mul), true)
+      );
+      r -= 5.f;
+    }
+  }
+} // bgp_bounding_repeated_circles
+
+void bgp_bounding_circles(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.1414f;
+
+  // случайные точки на экране
+  uint seed = 97997; // ALMONDS
+  constexpr uint points_sz = 9;
+  std::array<Vec, points_sz> points;
+  for (nauto point: points) {
+    const Vec vel (
+      std::fmod(prng(seed), 8.f) - 4.f,
+      std::fmod(prng(seed), 8.f) - 4.f
+    );
+    point = Vec (
+      std::fmod( std::abs(std::fmod(prng(seed), dst.X) + vel.x * state), dst.X),
+      std::fmod( std::abs(std::fmod(prng(seed), dst.Y) + vel.y * state), dst.Y)
+    );
+  }
+
+  dst.fill(Pal8::black);
+
+  static_assert(points_sz > 2);
+  for (uint i = 1; i < points_sz; ++i) {
+    draw_circle(dst, points[i], distance(points[i], points[i-1]), Pal8::white);
+  }
+} // bgp_bounding_circles
+
+void bgp_bounding_lines(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.25f;
+
+  // случайные точки на экране
+  uint seed = 97997; // ALMONDS
+  constexpr uint points_sz = 35;
+  std::array<Vec, points_sz> points;
+  for (nauto point: points) {
+    const Vec vel (
+      std::fmod(prng(seed), 8.f) - 4.f,
+      std::fmod(prng(seed), 8.f) - 4.f
+    );
+    point = Vec (
+      std::fmod( std::abs(std::fmod(prng(seed), dst.X) + vel.x * state), dst.X),
+      std::fmod( std::abs(std::fmod(prng(seed), dst.Y) + vel.y * state), dst.Y)
+    );
+  }
+
+  dst.fill(Pal8::black);
+
+  static_assert(points_sz > 2);
+  for (uint i = 1; i < points_sz; ++i)
+    draw_line(dst, points[i-1], points[i], Pal8::white);
+} // bgp_bounding_lines
 
 void bgp_circle_with_text(Image& dst, const int bg_state) {
   // TODO

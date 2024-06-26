@@ -6,6 +6,12 @@ class Image;
 void bgp_warabimochi(Image& dst, const int bg_state);
 // сплайн-линии
 void bgp_spline(Image& dst, const int bg_state);
+// линии отскакивают от экрана
+void bgp_bounding_lines(Image& dst, const int bg_state);
+// круги отскакивают от экрана
+void bgp_bounding_circles(Image& dst, const int bg_state);
+// круги с кругами внутри отскакивают от экрана
+void bgp_bounding_repeated_circles(Image& dst, const int bg_state);
 // круг скрывающий текст https://pin.it/3qf4zkkcd
 void bgp_circle_with_text(Image& dst, const int bg_state);
 // узор под дизером с отдалением

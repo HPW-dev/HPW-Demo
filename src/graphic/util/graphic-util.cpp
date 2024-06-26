@@ -17,7 +17,8 @@
 void insert_fast(Image& dst, CN<Image> src)
   { memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8)); }
 
-void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf, int optional) {
+void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf,
+int optional) {
   assert(src);
   assert(dst);
   
@@ -189,7 +190,8 @@ void insert_x2(Image& dst, CN<Image> src, Vec pos) {
   insert(dst, insert_x2_buf, pos);
 } // insert_x2
 
-Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src) {
+Rect get_insertion_bound(CN<Image> dst, const Vec pos,
+CN<Image> src) {
   Rect bound( Vec{}, Vec(src.X, src.Y) );
 
   // уход за право/низ
@@ -215,7 +217,8 @@ Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src) {
   return bound;
 } // insert_bound
 
-void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf, int optional) {
+void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf,
+int optional) {
   if (!src || !dst) {
     hpw_log("WARNING: center_point src or dst is empty\n");
     return;
@@ -270,7 +273,8 @@ void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf, int optional) {
   }
 } // insert image sprite bf
 
-void blend(Image& dst, CN<Image> src, const Vec pos, real alpha, blend_pf bf, int optional) {
+void blend(Image& dst, CN<Image> src, const Vec pos, real alpha,
+blend_pf bf, int optional) {
   error("test it");
   return_if (!dst || !src);
   return_if (alpha <= 0);
@@ -291,7 +295,8 @@ void blend(Image& dst, CN<Image> src, const Vec pos, real alpha, blend_pf bf, in
   }
 }
 
-void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha, blend_pf bf, int optional) {
+void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
+blend_pf bf, int optional) {
   return_if (!src || !dst);
   return_if (alpha <= 0);
   if (alpha >= 1) {
@@ -314,7 +319,8 @@ void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha, blend_pf bf, i
   }
 }
 
-void draw_polygon(Image& dst, const Vec pos, CN<Polygon> poly, const Pal8 color) {
+void draw_polygon(Image& dst, const Vec pos, CN<Polygon> poly,
+const Pal8 color) {
   auto max_points = poly.points.size();
   cfor (i, max_points) {
     auto p1 = (pos + poly.offset + poly.points[i]);
@@ -377,8 +383,8 @@ void expand_color_8(Image& dst, const Pal8 color) {
   }
 } // expand_color_8
 
-void insert_blured(Image& dst, CN<Sprite> src, const Vec old_pos,
-const Vec cur_pos, blend_pf bf, Uid uid) {
+void insert_blured(Image& dst, CN<Sprite> src,
+const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
 
   auto traveled = distance(old_pos, cur_pos);
   
@@ -474,4 +480,9 @@ void apply_brightness(Image& dst, const int val) {
     for (nauto pix: dst)
       pix.add(val);
   }
+}
+
+void draw_spline(Image& dst, const Vec a, const Vec b,
+const Vec c, const Vec d, const Pal8 color, const blend_pf bf) {
+  
 }
