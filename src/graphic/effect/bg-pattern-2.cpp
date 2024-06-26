@@ -122,12 +122,41 @@ void bgp_warabimochi(Image& dst, const int bg_state) {
   insert<&blend_no_black>(dst, comments_layer);
 } // bgp_warabimochi
 
-void bgp_spline(Image& dst, const int bg_state) {
-  const real state = bg_state * 0.066666f;
+void bgp_spline_zoom(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.04f;
+  Image buffer(dst.X/4, dst.Y/4);
 
   // случайные точки на экране
   uint seed = 97997; // ALMONDS
-  constexpr uint points_sz = 15;
+  constexpr uint points_sz = 25;
+  std::array<Vec, points_sz> points;
+  for (nauto point: points) {
+    const Vec vel (
+      std::fmod(prng(seed), 8.f) - 4.f,
+      std::fmod(prng(seed), 8.f) - 4.f
+    );
+    point = Vec (
+      std::fmod( std::abs(std::fmod(prng(seed), buffer.X) + vel.x * state), buffer.X),
+      std::fmod( std::abs(std::fmod(prng(seed), buffer.Y) + vel.y * state), buffer.Y)
+    );
+  }
+
+  buffer.fill(Pal8::black);
+
+  static_assert(points_sz > 4);
+  for (uint i = 3; i < points_sz; ++i)
+    draw_spline(buffer, points[i-3], points[i-2], points[i-1], points[i], Pal8::red);
+  
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
+} // bgp_spline_zoom
+
+void bgp_spline(Image& dst, const int bg_state) {
+  const real state = bg_state * 0.04f;
+
+  // случайные точки на экране
+  uint seed = 97997; // ALMONDS
+  constexpr uint points_sz = 75;
   std::array<Vec, points_sz> points;
   for (nauto point: points) {
     const Vec vel (
@@ -144,7 +173,7 @@ void bgp_spline(Image& dst, const int bg_state) {
 
   static_assert(points_sz > 4);
   for (uint i = 3; i < points_sz; ++i)
-    draw_spline(dst, points[i-3], points[i-2], points[i-1], points[i], Pal8::red);
+    draw_spline(dst, points[i-3], points[i-2], points[i-1], points[i], Pal8::white);
 } // bgp_spline
 
 void bgp_bounding_repeated_circles(Image& dst, const int bg_state) {
@@ -231,10 +260,6 @@ void bgp_bounding_lines(Image& dst, const int bg_state) {
     draw_line(dst, points[i-1], points[i], Pal8::white);
 } // bgp_bounding_lines
 
-void bgp_circle_with_text(Image& dst, const int bg_state) {
-  // TODO
-}
-
 void bgp_dither_wave(Image& dst, const int bg_state) {
   const real state = bg_state * 3.2f;
 
@@ -292,16 +317,57 @@ void bgp_fast_lines_red(Image& dst, const int bg_state) {
   }
 }
 
-void bgp_tiles_1(Image& dst, const int bg_state) {
-  // TODO
-}
-
 void bgp_skyline(Image& dst, const int bg_state) {
   cauto skyline = hpw::store_sprite->find("resource/image/loading logo/skyline.png");
   assert(skyline);
   insert_fast(dst, skyline->image());
 }
 
+void bgp_epilepsy(Image& dst, const int bg_state)
+  { dst.fill( Pal8::from_real(rndr_fast(), rndu(3) == 0) ); }
+
+void bgp_red_gradient(Image& dst, const int bg_state) {
+  const real alpha_mul = 1.f / dst.Y;
+  cauto gradient = (1.f + std::sin(bg_state * 0.009f)) * 0.5f;
+  cauto a = Pal8::from_real(gradient);
+  cauto b = Pal8::black;
+
+  cfor(y, dst.Y) {
+    cauto alpha = y * alpha_mul;
+    cauto color = blend_alpha(a, b, alpha * 255.f);
+    cfor(x, dst.X)
+      dst(x, y) = color;
+  }
+
+  fast_dither_bayer16x16_4bit(dst, true);
+  to_red(dst);
+}
+
+void bgp_red_gradient_2(Image& dst, const int bg_state) {
+  const real alpha_mul = 1.f / dst.Y;
+  cauto gradient = (1.f + std::sin(bg_state * 0.009f)) * 0.5f;
+  cauto a = Pal8::from_real(gradient);
+  cauto b = Pal8::black;
+
+  cfor(y, dst.Y) {
+    cauto alpha = y * alpha_mul;
+    cauto color = blend_alpha(a, b, alpha * 255.f);
+    cfor(x, dst.X)
+      dst(x, y) = color;
+  }
+
+  dither_bayer16x16_1bit(dst);
+  to_red(dst);
+}
+
 void bgp_tiles_2(Image& dst, const int bg_state) {
+  // TODO
+}
+
+void bgp_tiles_1(Image& dst, const int bg_state) {
+  // TODO
+}
+
+void bgp_circle_with_text(Image& dst, const int bg_state) {
   // TODO
 }

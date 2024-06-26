@@ -6,6 +6,8 @@ class Image;
 void bgp_warabimochi(Image& dst, const int bg_state);
 // сплайн-линии
 void bgp_spline(Image& dst, const int bg_state);
+// сплайн-линии увеличенные
+void bgp_spline_zoom(Image& dst, const int bg_state);
 // линии отскакивают от экрана
 void bgp_bounding_lines(Image& dst, const int bg_state);
 // круги отскакивают от экрана
@@ -29,3 +31,9 @@ void bgp_skyline(Image& dst, const int bg_state);
 void bgp_fast_lines(Image& dst, const int bg_state);
 // красная версия bgp_fast_lines
 void bgp_fast_lines_red(Image& dst, const int bg_state);
+// мерцающий фон
+void bgp_epilepsy(Image& dst, const int bg_state);
+// красный фон с градиентом и дизерингом
+void bgp_red_gradient(Image& dst, const int bg_state);
+// красный фон с градиентом и более грубым дизерингом
+void bgp_red_gradient_2(Image& dst, const int bg_state);

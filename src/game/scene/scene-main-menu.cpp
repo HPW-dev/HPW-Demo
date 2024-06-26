@@ -82,12 +82,19 @@ void Scene_main_menu::init_bg() {
     &bgp_dither_wave_2,
     &bgp_fast_lines,
     &bgp_fast_lines_red,
-    //&bgp_spline,
+    &bgp_epilepsy,
+    &bgp_red_gradient,
+    &bgp_red_gradient_2,
+    &bgp_spline_zoom,
+    &bgp_spline,
+    &bgp_bounding_lines,
+    &bgp_bounding_repeated_circles,
+    &bgp_bounding_circles,
+    &bgp_skyline,
+    &bgp_warabimochi,
     //&bgp_circle_with_text,
     //&bgp_tiles_1,
     //&bgp_tiles_2,
-    &bgp_warabimochi,
-    &bgp_skyline,
     #ifndef ECOMEM
       //...
     #endif

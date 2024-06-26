@@ -448,6 +448,7 @@ uint size) {
 
 template <blend_pf bf>
 void insert_fast(Image& dst, CN<Image> src, int optional) {
+  assert(dst.size == src.size);
   cfor (i, dst.size)
     dst[i] = bf(src[i], dst[i], optional);
 }
