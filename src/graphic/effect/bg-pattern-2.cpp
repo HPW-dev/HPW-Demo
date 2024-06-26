@@ -360,6 +360,31 @@ void bgp_red_gradient_2(Image& dst, const int bg_state) {
   to_red(dst);
 }
 
+void bgp_repeated_rectangles(Image& dst, const int bg_state) {
+  constexpr real space = 15.f;
+  const real speed = bg_state * 0.015f;
+  const real x = std::fmod(std::cos(speed) * 150.f, space);
+  Rect rect(-x,-x, dst.X+x*2.f,dst.Y+x*2.f);
+
+  dst.fill(Pal8::black);
+  while (rect.size.x > 0 && rect.size.y > 0) {
+    rect.pos += Vec(space, space);
+    rect.size -= Vec(space*2.f, space*2.f);
+    rect.pos = floor(rect.pos);
+    rect.size = ceil(rect.size);
+    draw_rect(dst, rect, Pal8::white);
+    cfor (i, space/3)
+      draw_rect (
+        dst,
+        Rect (
+          rect.pos - Vec(i,i),
+          rect.size + Vec(i,i)
+        ),
+        Pal8::white
+      );
+  }
+} // bgp_repeated_rectangles
+
 void bgp_tiles_2(Image& dst, const int bg_state) {
   // TODO
 }

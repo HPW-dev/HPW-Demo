@@ -37,3 +37,5 @@ void bgp_epilepsy(Image& dst, const int bg_state);
 void bgp_red_gradient(Image& dst, const int bg_state);
 // красный фон с градиентом и более грубым дизерингом
 void bgp_red_gradient_2(Image& dst, const int bg_state);
+// прямоугольник в прямоугольнике
+void bgp_repeated_rectangles(Image& dst, const int bg_state);

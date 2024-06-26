@@ -89,10 +89,11 @@ void Scene_main_menu::init_bg() {
     &bgp_spline,
     &bgp_bounding_lines,
     &bgp_bounding_repeated_circles,
+    &bgp_repeated_rectangles,
     &bgp_bounding_circles,
     &bgp_skyline,
     &bgp_warabimochi,
-    //&bgp_circle_with_text,
+    &bgp_circle_with_text,
     //&bgp_tiles_1,
     //&bgp_tiles_2,
     #ifndef ECOMEM
