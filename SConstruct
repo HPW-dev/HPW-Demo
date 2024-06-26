@@ -54,14 +54,12 @@ else:
   defines.append("-DWINDOWS")
 
 is_debug = bool( int( ARGUMENTS.get("debug", 0) ) )
+disable_debug_info = bool( int( ARGUMENTS.get("disable_debug_info", 0) ) )
 if is_debug:
   defines.append("-DDEBUG")
   cpp_flags.extend([
     "-O0",
-    #"-Og",
-
-    #"-g0",
-    "-ggdb3",
+    ("-ggdb3" if disable_debug_info else "-g0"),
     ("-m64" if is_64bit else "-m32")
   ])
 else: # release

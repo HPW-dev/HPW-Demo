@@ -54,6 +54,12 @@
       "args": ["script/build-game-debug.py"]
     },
     {
+      "label": "build game (fast)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-fast.py"]
+    },
+    {
       "label": "build game (release)",
       "type": "shell",
       "command": "python",
