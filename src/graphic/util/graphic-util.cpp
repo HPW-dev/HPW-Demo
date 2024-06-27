@@ -14,8 +14,11 @@
 #include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
 
-void insert_fast(Image& dst, CN<Image> src)
-  { memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8)); }
+void insert_fast(Image& dst, CN<Image> src) {
+  return_if(!dst);
+  assert(dst.size >= src.size);
+  memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8));
+}
 
 void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf,
 int optional) {

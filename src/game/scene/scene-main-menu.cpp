@@ -34,7 +34,7 @@ void bg_copy_4(Image& dst, const int state);
 void Scene_main_menu::init_bg() {
   sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
   // Пак 1:
-  #if 1
+  #if 0
     &bgp_hpw_text_lines,
     &bgp_bit_1,
     &bgp_bit_2,
@@ -78,24 +78,28 @@ void Scene_main_menu::init_bg() {
 
   // Пак 2:
   #if 1
-    &bgp_dither_wave,
-    &bgp_dither_wave_2,
-    &bgp_fast_lines,
-    &bgp_fast_lines_red,
-    &bgp_epilepsy,
-    &bgp_red_gradient,
-    &bgp_red_gradient_2,
-    &bgp_spline_zoom,
-    &bgp_spline,
-    &bgp_bounding_lines,
-    &bgp_bounding_repeated_circles,
-    &bgp_repeated_rectangles,
-    &bgp_bounding_circles,
-    &bgp_skyline,
-    &bgp_warabimochi,
-    &bgp_circle_with_text,
+    //&bgp_dither_wave,
+    //&bgp_dither_wave_2,
+    //&bgp_fast_lines,
+    //&bgp_fast_lines_red,
+    //&bgp_epilepsy,
+    //&bgp_red_gradient,
+    //&bgp_red_gradient_2,
+    //&bgp_spline_zoom,
+    //&bgp_spline,
+    //&bgp_bounding_lines,
+    //&bgp_bounding_repeated_circles,
+    //&bgp_repeated_rectangles,
+    //&bgp_bounding_circles,
+    //&bgp_skyline,
+    //&bgp_warabimochi,
+    //&bgp_circle_with_text,
+    //&bgp_red_circle_white,
+    //&bgp_red_circle_black,
     //&bgp_tiles_1,
     //&bgp_tiles_2,
+    //&bgp_tiles_3,
+    &bgp_tiles_4,
     #ifndef ECOMEM
       //...
     #endif

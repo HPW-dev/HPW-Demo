@@ -1,5 +1,7 @@
 #include <omp.h>
 #include <array>
+#include <mutex>
+#include <ranges>
 #include <algorithm>
 #include <cassert>
 #include "bg-pattern-2.hpp"
@@ -13,6 +15,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
 #include "util/math/random.hpp"
+#include "util/math/xorshift.hpp"
 
 // делает случайные числа
 uint prng(uint& state) {
@@ -387,12 +390,108 @@ void bgp_repeated_rectangles(Image& dst, const int bg_state) {
 } // bgp_repeated_rectangles
 
 void bgp_tiles_2(Image& dst, const int bg_state) {
-  // TODO
+  // тайлы
+  static Vector<Image> tiles {};
+  static std::once_flag init_once {};
+  std::call_once(init_once, [&] {
+    assert(hpw::store_sprite);
+    // найти тайлы из нужной папки
+    cauto list = hpw::store_sprite->list();
+    cauto tile_name_filter = [](CN<Str> name)
+      { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
+    for (cnauto tile_name: list | std::views::filter(tile_name_filter)) {
+      auto tile = hpw::store_sprite->find(tile_name);
+      assert(tile && *tile);
+      tiles.push_back(tile->image());
+    }
+  });
+
+  // уменьшенный буффер
+  constexpr int scale = 4;
+  Image buffer(dst.X / scale, dst.Y / scale);
+
+  // сетка тайлов
+  cauto tile_x = tiles.at(0).X;
+  cauto tile_y = tiles.at(0).Y;
+  assert(tile_x > 0);
+  assert(tile_y > 0);
+  cauto tile_map_x = buffer.X / tile_x;
+  cauto tile_map_y = buffer.Y / tile_y;
+  Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
+
+  // генерация анимации на сетке
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    std::size_t idx = x + (bg_state >> 2);
+    idx |= y;
+    tile_map[y * tile_map_x + x] = idx % tiles.size();
+  }
+
+  // заполнение буффера тайлами
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
+  }
+
+  // увеличение буффера
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
 }
 
 void bgp_tiles_1(Image& dst, const int bg_state) {
-  // TODO
-}
+  // тайлы
+  static Vector<Image> tiles {};
+  static std::once_flag init_once {};
+  std::call_once(init_once, [&] {
+    assert(hpw::store_sprite);
+    // найти тайлы из нужной папки
+    cauto list = hpw::store_sprite->list();
+    cauto tile_name_filter = [](CN<Str> name)
+      { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
+    for (cnauto tile_name: list | std::views::filter(tile_name_filter)) {
+      auto tile = hpw::store_sprite->find(tile_name);
+      assert(tile && *tile);
+      tiles.push_back(tile->image());
+    }
+  });
+
+  // показать тайлы:
+  /*
+  for (int y {}; cnauto tile: tiles)
+    insert(dst, tile, {5, y++ * (tile.Y + 1)});
+  */
+
+  // уменьшенный буффер
+  constexpr int scale = 4;
+  Image buffer(dst.X / scale, dst.Y / scale);
+
+  // сетка тайлов
+  cauto tile_x = tiles.at(0).X;
+  cauto tile_y = tiles.at(0).Y;
+  assert(tile_x > 0);
+  assert(tile_y > 0);
+  cauto tile_map_x = buffer.X / tile_x;
+  cauto tile_map_y = buffer.Y / tile_y;
+  Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
+
+  // генерация анимации на сетке
+  const uint state = bg_state * 0.025f;
+  xorshift128_state seed;
+  for (nauto tile: tile_map)
+    tile = (xorshift128(seed) + state) % tiles.size();
+
+  // заполнение буффера тайлами
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
+  }
+
+  // увеличение буффера
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
+} // bgp_tiles_1
 
 void bgp_circle_with_text(Image& dst, const int bg_state) {
   const int state = bg_state * 3;
@@ -440,3 +539,118 @@ void bgp_red_circle_white(Image& dst, const int bg_state) {
   const real R = dst.Y/2.f - 25.f;
   draw_circle_filled(dst, center_point(dst), R, Pal8::red);
 }
+
+void bgp_tiles_3(Image& dst, const int bg_state) {
+  // тайлы
+  static Vector<Image> tiles {};
+  static std::once_flag init_once {};
+  std::call_once(init_once, [&] {
+    assert(hpw::store_sprite);
+    static const Strs list {
+      "resource/image/other/bw tiles 4x4/black.png",
+      "resource/image/other/bw tiles 4x4/pixel.png",
+      "resource/image/other/bw tiles 4x4/cube small.png",
+      "resource/image/other/bw tiles 4x4/cube small 2.png",
+      "resource/image/other/bw tiles 4x4/cube.png",
+      "resource/image/other/bw tiles 4x4/white.png",
+    };
+    for (cnauto tile_name: list) {
+      auto tile = hpw::store_sprite->find(tile_name);
+      assert(tile && *tile);
+      tiles.push_back(tile->image());
+    }
+  });
+
+  // уменьшенный буффер
+  constexpr int scale = 4;
+  Image buffer(dst.X / scale, dst.Y / scale);
+
+  // сетка тайлов
+  cauto tile_x = tiles.at(0).X;
+  cauto tile_y = tiles.at(0).Y;
+  assert(tile_x > 0);
+  assert(tile_y > 0);
+  cauto tile_map_x = buffer.X / tile_x;
+  cauto tile_map_y = buffer.Y / tile_y;
+  Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
+
+  // генерация анимации на сетке
+  const real state = bg_state * 3.2f;
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    const real zoom = 0.07f - std::cos(state * 0.0005f) * 0.07f;
+    real color = std::cos((x + state) * zoom + y * zoom);
+    color *= std::tan((-x + state) * zoom + y * zoom);
+    color *= 0.2f;
+    const std::size_t idx = color * tiles.size();
+    tile_map[y * tile_map_x + x] = idx % tiles.size();
+  }
+
+  // заполнение буффера тайлами
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
+  }
+
+  // увеличение буффера
+  zoom_x4(buffer);
+  apply_brightness(dst, -40);
+  insert_fast<&blend_max>(dst, buffer);
+} // bgp_tiles_3
+
+void bgp_tiles_4(Image& dst, const int bg_state) {
+  // тайлы
+  static Vector<Image> tiles {};
+  static std::once_flag init_once {};
+  std::call_once(init_once, [&] {
+    assert(hpw::store_sprite);
+    static const Strs list {
+      "resource/image/other/bw tiles 4x4/black.png",
+      "resource/image/other/bw tiles 4x4/pixel.png",
+      "resource/image/other/bw tiles 4x4/cube small.png",
+      "resource/image/other/bw tiles 4x4/circle.png",
+      "resource/image/other/bw tiles 4x4/circle filled.png",
+    };
+    for (cnauto tile_name: list) {
+      auto tile = hpw::store_sprite->find(tile_name);
+      assert(tile && *tile);
+      tiles.push_back(tile->image());
+    }
+  });
+
+  // уменьшенный буффер
+  constexpr int scale = 8;
+  Image buffer(dst.X / scale, dst.Y / scale);
+
+  // сетка тайлов
+  cauto tile_x = tiles.at(0).X;
+  cauto tile_y = tiles.at(0).Y;
+  assert(tile_x > 0);
+  assert(tile_y > 0);
+  cauto tile_map_x = buffer.X / tile_x;
+  cauto tile_map_y = buffer.Y / tile_y;
+  Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
+
+  // генерация анимации на сетке
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    std::size_t idx = x;
+    idx ^= y;
+    idx += bg_state >> 3;
+    idx >>= 2;
+    tile_map[y * tile_map_x + x] = idx % tiles.size();
+  }
+
+  // заполнение буффера тайлами
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
+  }
+
+  // увеличение буффера
+  zoom_x8(buffer);
+  apply_brightness(dst, -40);
+  insert_fast<&blend_max>(dst, buffer);
+} // bgp_tiles_4

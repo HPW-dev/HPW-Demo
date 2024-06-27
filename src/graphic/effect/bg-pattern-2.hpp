@@ -20,10 +20,6 @@ void bgp_circle_with_text(Image& dst, const int bg_state);
 void bgp_dither_wave(Image& dst, const int bg_state);
 // узор под дизером
 void bgp_dither_wave_2(Image& dst, const int bg_state);
-// узор отрисованный тайлами
-void bgp_tiles_1(Image& dst, const int bg_state);
-// узор отрисованный тайлами
-void bgp_tiles_2(Image& dst, const int bg_state);
 // просто Ниссан Скайлан на фоне
 void bgp_skyline(Image& dst, const int bg_state);
 /* белые полоски движутся так быстро, что
@@ -43,3 +39,11 @@ void bgp_repeated_rectangles(Image& dst, const int bg_state);
 void bgp_red_circle_white(Image& dst, const int bg_state);
 // красный круг на чёрном фоне
 void bgp_red_circle_black(Image& dst, const int bg_state);
+// узор отрисованный случайными тайлами
+void bgp_tiles_1(Image& dst, const int bg_state);
+// узор отрисованный тайлами (OR узор)
+void bgp_tiles_2(Image& dst, const int bg_state);
+// узор отрисованный тайлами (bgp_dither_wave узор)
+void bgp_tiles_3(Image& dst, const int bg_state);
+// узор отрисованный тайлами (узор mul)
+void bgp_tiles_4(Image& dst, const int bg_state);
