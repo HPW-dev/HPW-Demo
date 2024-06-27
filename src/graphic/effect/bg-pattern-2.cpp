@@ -2,6 +2,7 @@
 #include <array>
 #include <algorithm>
 #include <cassert>
+#include "bg-pattern-2.hpp"
 #include "bg-pattern.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"
@@ -292,7 +293,7 @@ void bgp_dither_wave_2(Image& dst, const int bg_state) {
 }
 
 void bgp_fast_lines(Image& dst, const int bg_state) {
-  const real state = bg_state * 0.0005f;
+  const real state = std::fmod(bg_state * 0.0005f, 1'000.f);
   const real mul_x = 1.0 / dst.X;
 
   #pragma omp parallel for simd collapse(2)
@@ -305,7 +306,7 @@ void bgp_fast_lines(Image& dst, const int bg_state) {
 }
 
 void bgp_fast_lines_red(Image& dst, const int bg_state) {
-  const real state = bg_state * 0.0005f;
+  const real state = std::fmod(bg_state * 0.0005f, 1'000.f);
   const real mul_x = 1.0 / dst.X;
 
   #pragma omp parallel for simd collapse(2)
@@ -394,5 +395,48 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
 }
 
 void bgp_circle_with_text(Image& dst, const int bg_state) {
-  // TODO
+  const int state = bg_state * 3;
+
+  // фоновой текст
+  Image text_layer(dst.X, dst.Y);
+  bgp_unicode_red(text_layer, bg_state);
+
+  // круг
+  Image circle_layer(dst.X, dst.Y, Pal8::black);
+  const real R = dst.Y/2.f - 25.f;
+  draw_circle_filled(circle_layer,
+    center_point(circle_layer), R, Pal8::white);
+  
+  // срезать текст кругом
+  insert<&blend_and>(text_layer, circle_layer);
+
+  // закрасить красным часть круга
+  Image overlay_layer(dst.X, dst.Y);
+  const int level = state % dst.Y;
+  cfor(y, overlay_layer.Y) {
+    // полоска движется вниз
+    const bool cond_1 = level >= y;
+    // когда полоска снизу, сверху убирается закрашивание
+    const bool cond_2 = state % (dst.Y * 2) >= dst.Y;
+    cfor(x, overlay_layer.X)
+      overlay_layer(x, y) = cond_1 ^ cond_2
+        ? Pal8::white : Pal8::black;
+  }
+  insert<&blend_and>(circle_layer, overlay_layer);
+  to_red(circle_layer);
+  insert_fast<&blend_max>(text_layer, circle_layer);
+
+  insert_fast(dst, text_layer);
+} // bgp_circle_with_text
+
+void bgp_red_circle_black(Image& dst, const int bg_state) {
+  dst.fill(Pal8::black);
+  const real R = dst.Y/2.f - 25.f;
+  draw_circle_filled(dst, center_point(dst), R, Pal8::red);
+}
+
+void bgp_red_circle_white(Image& dst, const int bg_state) {
+  dst.fill(Pal8::white);
+  const real R = dst.Y/2.f - 25.f;
+  draw_circle_filled(dst, center_point(dst), R, Pal8::red);
 }

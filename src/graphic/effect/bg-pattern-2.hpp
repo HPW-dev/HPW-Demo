@@ -39,3 +39,7 @@ void bgp_red_gradient(Image& dst, const int bg_state);
 void bgp_red_gradient_2(Image& dst, const int bg_state);
 // прямоугольник в прямоугольнике
 void bgp_repeated_rectangles(Image& dst, const int bg_state);
+// белый круг на чёрном фоне
+void bgp_red_circle_white(Image& dst, const int bg_state);
+// красный круг на чёрном фоне
+void bgp_red_circle_black(Image& dst, const int bg_state);
