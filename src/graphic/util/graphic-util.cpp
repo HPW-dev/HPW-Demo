@@ -14,10 +14,14 @@
 #include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
 
-void insert_fast(Image& dst, CN<Image> src)
-  { memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8)); }
+void insert_fast(Image& dst, CN<Image> src) {
+  return_if(!dst);
+  assert(dst.size >= src.size);
+  memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8));
+}
 
-void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf, int optional) {
+void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf,
+int optional) {
   assert(src);
   assert(dst);
   
@@ -189,7 +193,8 @@ void insert_x2(Image& dst, CN<Image> src, Vec pos) {
   insert(dst, insert_x2_buf, pos);
 } // insert_x2
 
-Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src) {
+Rect get_insertion_bound(CN<Image> dst, const Vec pos,
+CN<Image> src) {
   Rect bound( Vec{}, Vec(src.X, src.Y) );
 
   // уход за право/низ
@@ -215,7 +220,8 @@ Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src) {
   return bound;
 } // insert_bound
 
-void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf, int optional) {
+void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf,
+int optional) {
   if (!src || !dst) {
     hpw_log("WARNING: center_point src or dst is empty\n");
     return;
@@ -270,7 +276,8 @@ void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf, int optional) {
   }
 } // insert image sprite bf
 
-void blend(Image& dst, CN<Image> src, const Vec pos, real alpha, blend_pf bf, int optional) {
+void blend(Image& dst, CN<Image> src, const Vec pos, real alpha,
+blend_pf bf, int optional) {
   error("test it");
   return_if (!dst || !src);
   return_if (alpha <= 0);
@@ -291,7 +298,8 @@ void blend(Image& dst, CN<Image> src, const Vec pos, real alpha, blend_pf bf, in
   }
 }
 
-void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha, blend_pf bf, int optional) {
+void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
+blend_pf bf, int optional) {
   return_if (!src || !dst);
   return_if (alpha <= 0);
   if (alpha >= 1) {
@@ -314,7 +322,8 @@ void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha, blend_pf bf, i
   }
 }
 
-void draw_polygon(Image& dst, const Vec pos, CN<Polygon> poly, const Pal8 color) {
+void draw_polygon(Image& dst, const Vec pos, CN<Polygon> poly,
+const Pal8 color) {
   auto max_points = poly.points.size();
   cfor (i, max_points) {
     auto p1 = (pos + poly.offset + poly.points[i]);
@@ -377,8 +386,8 @@ void expand_color_8(Image& dst, const Pal8 color) {
   }
 } // expand_color_8
 
-void insert_blured(Image& dst, CN<Sprite> src, const Vec old_pos,
-const Vec cur_pos, blend_pf bf, Uid uid) {
+void insert_blured(Image& dst, CN<Sprite> src,
+const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
 
   auto traveled = distance(old_pos, cur_pos);
   
@@ -475,3 +484,98 @@ void apply_brightness(Image& dst, const int val) {
       pix.add(val);
   }
 }
+
+void draw_spline(Image& dst, const Vec a, const Vec b,
+const Vec c, const Vec d, const Pal8 color, const blend_pf bf,
+const uint quality) {
+  assert(dst);
+  assert(quality > 0);
+  assert(quality <= 10'000);
+
+  const real a3 = (-a.x + 3.f * (b.x - c.x) + d.x) / 6.f;
+  const real b3 = (-a.y + 3.f * (b.y - c.y) + d.y) / 6.f;
+  const real a2 = (a.x - 2.f * b.x + c.x) / 2.f;
+  const real b2 = (a.y - 2.f * b.y + c.y) / 2.f;
+  const real a1 = (c.x - a.x) / 2.f;
+  const real b1 = (c.y - a.y) / 2.f;
+  const real a0 = (a.x + 4.f * b.x + c.x) / 6.f;
+  const real b0 = (a.y + 4.f * b.y + c.y) / 6.f;
+
+  for (uint i = 1; i < quality + 1; ++i) {
+    cauto t0 = scast<real>(i - 1) / quality;
+    cauto t1 = scast<real>(i) / quality;
+    const Vec pos_0 (
+      ((a3 * t0 + a2) * t0 + a1) * t0 + a0,
+      ((b3 * t0 + b2) * t0 + b1) * t0 + b0
+    );
+    const Vec pos_1 (
+      ((a3 * t1 + a2) * t1 + a1) * t1 + a0,
+      ((b3 * t1 + b2) * t1 + b1) * t1 + b0
+    );
+    draw_line(dst, pos_0, pos_1, color, bf);
+  }
+} // draw_spline
+
+void draw_line(Image& dst, Vec _p1, const Vec _p2,
+const Pal8 color, const blend_pf bf) {
+  struct Veci { int x {}, y {}; };
+  auto floored_p1 = floor(_p1);
+  Veci p1 {.x = scast<int>(floored_p1.x), .y = scast<int>(floored_p1.y)};
+  auto floored_p2 = floor(_p2);
+  Veci p2 {.x = scast<int>(floored_p2.x), .y = scast<int>(floored_p2.y)};
+  
+  // EFLA Variation E (Addition Fixed Point PreCalc)
+  return_if( !dst);
+  // выход, если линия за пределами видимости
+  if (p1.x < 0 && p2.x < 0)
+    return;
+  if (p1.x >= dst.X && p2.x >= dst.X)
+    return;
+  if (p1.y < 0 && p2.y < 0)
+    return;
+  if (p1.y >= dst.Y && p2.y >= dst.Y)
+    return; 
+  bool yLonger = false;
+  int shortLen = p2.y - p1.y;
+  int longLen = p2.x - p1.x;
+  if (std::abs(shortLen) > std::abs(longLen)) {
+    int swap = shortLen;
+    shortLen = longLen;
+    longLen = swap;				
+    yLonger = true;
+  }
+  int decInc;
+  if (longLen == 0)
+    decInc = 0;
+  else
+    decInc = (shortLen << 16) / longLen;
+  if (yLonger) {
+    if (longLen > 0) {
+      longLen += p1.y;
+      for (int j = 0x8000 + (p1.x << 16); p1.y <= longLen; ++p1.y) {
+        dst.set(j >> 16, p1.y, color, bf, {});
+        j += decInc;
+      }
+      return;
+    }
+    longLen += p1.y;
+    for (int j = 0x8000 + (p1.x << 16); p1.y >= longLen; --p1.y) {
+      dst.set(j >> 16, p1.y, color, bf, {});	
+      j -= decInc;
+    }
+    return;	
+  }
+  if (longLen > 0) {
+    longLen += p1.x;
+    for (int j = 0x8000 + (p1.y << 16); p1.x <= longLen; ++p1.x) {
+      dst.set(p1.x, j >> 16, color, bf, {});
+      j += decInc;
+    }
+    return;
+  }
+  longLen += p1.x;
+  for (int j = 0x8000 + (p1.y << 16); p1.x >= longLen; --p1.x) {
+    dst.set(p1.x, j >> 16, color, bf, {});
+    j -= decInc;
+  }
+} // draw_line

@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <array>
 #include <mutex>
+#include <cmath>
 #include <algorithm>
 #include <unordered_map>
 #include "dither.hpp"
@@ -33,7 +34,9 @@ inline constexpr std::array<byte, scast<std::size_t>(bayer_16x16_sz.x * bayer_16
 };
 
 // bayer 16x16 real normalized
-inline constexpr const std::array<real, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)> bayer_16x16_real {
+inline constexpr const
+std::array<real, scast<std::size_t>(bayer_16x16_sz.x * bayer_16x16_sz.y)>
+bayer_16x16_real {
   0.496094, -0.253906, 0.308594, -0.441406, 0.449219, -0.300781, 0.261719, -0.488281, 0.484375, -0.265625, 0.296875, -0.453125, 0.4375, -0.3125, 0.25, -0.5,
   -0.00390625, 0.246094, -0.191406, 0.0585938, -0.0507812, 0.199219, -0.238281, 0.0117188, -0.015625, 0.234375, -0.203125, 0.046875, -0.0625, 0.1875, -0.25, 0,
   0.371094, -0.378906, 0.433594, -0.316406, 0.324219, -0.425781, 0.386719, -0.363281, 0.359375, -0.390625, 0.421875, -0.328125, 0.3125, -0.4375, 0.375, -0.375,
@@ -171,3 +174,30 @@ void fast_dither_bayer16x16_4bit(Image& dst, bool rotate_pattern) {
     pix = get_table_db16b4(pix, x + state, y + state);
   }
 }
+
+void dither_bayer16x16_1bit(Image& dst, const real power) {
+  return_if (!dst);
+  return_if (power <= 0);
+  cauto bayer_x = uint(bayer_16x16_sz.x);
+  cauto bayer_y = uint(bayer_16x16_sz.y);
+  // bw | is_red
+  constexpr Pal8 table[2][2] {
+    {Pal8::black, Pal8::white},
+    {Pal8::black, Pal8::red}
+  };
+  cauto dst_x = scast<uint>(dst.X);
+  cauto dst_y = scast<uint>(dst.Y);
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, dst_y)
+  cfor (x, dst_x) {
+    cauto bayer_mul = bayer_16x16_real [
+      (y % bayer_y) * bayer_x + (x % bayer_x) ];
+    nauto pix = dst(x, y);
+    const uint idx = bayer_mul * power + pix.to_real()
+      >= 0.5 ? 1 : 0;
+    cauto is_red = pix.is_red();
+    assert(scast<uint>(is_red) <= 1);
+    pix = table[is_red][idx];
+  }
+} // dither_bayer16x16_1bit

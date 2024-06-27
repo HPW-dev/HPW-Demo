@@ -24,3 +24,5 @@ void dither_blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
   Dither type=Dither::bayer16x16, blend_pf bf=&blend_past);
 // быстрый 16x16 4-бит дизер
 void fast_dither_bayer16x16_4bit(Image& dst, bool rotate_pattern=false);
+
+void dither_bayer16x16_1bit(Image& dst, const real power=1);

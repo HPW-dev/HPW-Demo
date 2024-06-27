@@ -6,14 +6,15 @@
 #include "util/math/vec.hpp"
 #include "util/math/timer.hpp"
 #include "util/str.hpp"
+#include "util/unicode.hpp"
 
 class Menu;
 class Sprite;
 
 // стартовое меню игры
 class Scene_main_menu final: public Scene {
-  Shared<Menu> menu {};
-  Shared<Sprite> logo {};
+  Unique<Menu> menu {};
+  Unique<Sprite> logo {};
   Vec logo_pos {};
   Strs m_logo_names {}; // пути к картинкам для лого
   std::once_flag m_logo_load_once {};
@@ -31,9 +32,14 @@ class Scene_main_menu final: public Scene {
   void draw_wnd(Image& dst) const;
   void cache_logo_names();
   void next_bg();
+  Unique<Sprite> prepare_logo(CN<Str> name) const;
+  utf32 prepare_game_ver() const;
+  void init_menu_sounds();
+  void update_bg_order(const Delta_time dt);
   
 public:
   Scene_main_menu();
+  ~Scene_main_menu();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

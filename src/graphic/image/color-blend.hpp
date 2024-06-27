@@ -4,8 +4,8 @@
 #include "color-table.hpp"
 
 /** blend func type.
-* @param bg фоновой пиксель
-* @param in накладываемый пиксель */
+* @param in накладываемый пиксель
+* @param bg фоновой пиксель */
 using blend_pf = Pal8 (*)(const Pal8 in, const Pal8 bg, int optional);
 
 #ifndef ECOMEM
@@ -42,7 +42,7 @@ using blend_pf = Pal8 (*)(const Pal8 in, const Pal8 bg, int optional);
 [[nodiscard, gnu::const]] inline Pal8 blend_mul_safe (const Pal8 in, const Pal8 bg, int optional=0) { return table_mul_safe [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_and_safe (const Pal8 in, const Pal8 bg, int optional=0) { return table_and_safe [uint(in.val)*256 + uint(bg.val)]; }
 [[nodiscard, gnu::const]] inline Pal8 blend_softlight(const Pal8 in, const Pal8 bg, int optional=0) { return table_softlight[uint(in.val)*256 + uint(bg.val)]; }
-[[nodiscard, gnu::const]] inline Pal8 blend_no_black (const Pal8 in, const Pal8 bg, int optional=0) { return in == Pal8::black ? bg : in; }
+[[nodiscard, gnu::const]] inline Pal8 blend_no_black (const Pal8 in, const Pal8 bg, int optional=0) { return (in == Pal8::black || in == Pal8::red_black) ? bg : in; }
 [[nodiscard, gnu::const]] inline Pal8 blend_diff_no_black (const Pal8 in, const Pal8 bg, int optional=0) { return in == Pal8::black ? bg : blend_diff(in, bg, optional); }
 // @param optional это прозрачность (255 - непрозрачен, 0 - полностью прозрачен)
 [[nodiscard, gnu::const]] inline Pal8 blend_alpha(const Pal8 in, const Pal8 bg, int optional) { return table_blend_alpha[uint(in.val) + uint(bg.val)*256 + scast<uint>(scast<byte>(optional))*256*256]; }

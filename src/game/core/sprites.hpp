@@ -1,8 +1,7 @@
 #pragma once
 #include "game/util/store.hpp"
-
-class Sprite;
+#include "graphic/sprite/sprite.hpp"
 
 namespace hpw {
-inline Shared<Store<Sprite>> store_sprite {}; // все спрайты тут
+inline Unique<Store<Sprite>> store_sprite {}; // все спрайты тут
 }

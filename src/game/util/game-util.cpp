@@ -34,7 +34,6 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/sprite/sprite-io.hpp"
-#include "graphic/sprite/sprite.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
@@ -45,7 +44,7 @@
 
 void load_resources() {
   detailed_log("loading resources...\n");
-  hpw::store_sprite = new_shared<Store<Sprite>>();
+  hpw::store_sprite = new_unique<Store<Sprite>>();
 #ifdef EDITOR
   auto names = all_names_in_dir(hpw::cur_dir);
 #else
