@@ -6,18 +6,10 @@
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/util/entity-util.hpp"
-#include "game/entity/util/info/anim-info.hpp"
-#include "game/entity/util/info/collidable-info.hpp"
-#include "util/hpw-util.hpp"
-#include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/light.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/animation/frame.hpp"
 
 Player_dark::Player_dark(): Player() {}
 
@@ -31,10 +23,14 @@ void Player_dark::shoot(const Delta_time dt) {
 }
 
 void Player_dark::default_shoot(const Delta_time dt) {
+  // подождать кулдаун
   cfor (_, m_shoot_timer.update(dt)) {
-    cfor (bullet_count, m_default_shoot_count) { // несколько за раз
-      cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0); // смещение пули при спавне
-      auto bullet = hpw::entity_mgr->make(this, "bullet.player.small", spawn_pos);
+    // пустить несколько пуль за раз
+    cfor (bullet_count, m_default_shoot_count) {
+      // смещение пули при спавне
+      cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0);
+      auto bullet = hpw::entity_mgr->make(this,
+        "bullet.player.small", spawn_pos);
       // пуля смотрит вверх в шмап моде
       bullet->phys.set_deg(270);
       bullet->phys.set_speed(m_shoot_speed);
@@ -69,14 +65,40 @@ void Player_dark::update(const Delta_time dt) {
 }
 
 void Player_dark::check_input(const Delta_time dt) {
-  move(dt);
+  process_motion();
 
   // стрельба
   if (is_pressed(hpw::keycode::shoot))
     shoot(dt);
 } // check_input
 
-void Player_dark::move(const Delta_time dt) {
+void Player_dark::process_motion() {
+  cauto spd = process_speed();
+  cauto dir = process_motion_dir();
+
+  // инерция через сложение векторов
+  if (dir.not_zero()) {
+    cauto motion = normalize_stable(dir) * spd;
+    phys.set_vel(phys.get_vel() + motion);
+    // не превышать скорость движения игрока
+    cauto new_speed = std::min(phys.get_speed(), spd);
+    phys.set_speed(new_speed);
+  }
+
+  accept_speed_boost(spd);
+} // move
+
+Vec Player_dark::process_motion_dir() const {
+  Vec dir;
+  // Игнорить одновременно зажатые вправ+лево и т.д.
+  if (pressed_up())    dir += Vec(0, -1);
+  if (pressed_down())  dir += Vec(0, +1);
+  if (pressed_left())  dir += Vec(-1, 0);
+  if (pressed_right()) dir += Vec(+1, 0);
+  return dir;
+}
+
+real Player_dark::process_speed() {
   real spd = m_max_speed;
   phys.set_force(default_force);
 
@@ -86,36 +108,49 @@ void Player_dark::move(const Delta_time dt) {
     phys.set_force(focus_force);
   }
 
-  // определить направление движения игрока
-  Vec dir;
-  if ( is_pressed(hpw::keycode::up) && !is_pressed(hpw::keycode::down)) dir += Vec(0, -1);
-  if (!is_pressed(hpw::keycode::up) &&  is_pressed(hpw::keycode::down)) dir += Vec(0, +1);
-  if ( is_pressed(hpw::keycode::left) && !is_pressed(hpw::keycode::right)) dir += Vec(-1, 0);
-  if (!is_pressed(hpw::keycode::left) &&  is_pressed(hpw::keycode::right)) dir += Vec(+1, 0);
-  // сложение векторов
-  if (dir.not_zero()) {
-    auto motion = normalize_stable(dir) * spd;
-    phys.set_vel(phys.get_vel() + motion);
-    // не превышать скорость движения игрока
-    phys.set_speed( std::min(phys.get_speed(), spd) );
+  return spd;
+}
+
+void Player_dark::accept_speed_boost(const real speed) {
+  // во все стороны двигаться с одинаковой скоростью при зажатой фокусировке
+  return_if (is_pressed(hpw::keycode::focus));
+
+  // буст скорости при нажатии вверх
+  if (pressed_up()) {
+    auto vel = phys.get_vel();
+    vel.y *= m_boost_up;
+    phys.set_vel(vel);
+    phys.set_speed( std::min(phys.get_speed(), speed * m_boost_up) );
   }
 
-  // буст скорости в определённых направлениях
-  if ( !is_pressed(hpw::keycode::focus)) {
-    if (is_pressed(hpw::keycode::up) && !is_pressed(hpw::keycode::down)) {
-      auto vel = phys.get_vel();
-      vel.y *= m_boost_up;
-      phys.set_vel(vel);
-      phys.set_speed( std::min(phys.get_speed(), spd * m_boost_up) );
-    }
-    if (!is_pressed(hpw::keycode::up) && is_pressed(hpw::keycode::down)) {
-      auto vel = phys.get_vel();
-      vel.y *= m_boost_down;
-      phys.set_vel(vel);
-      phys.set_speed( std::min(phys.get_speed(), spd * m_boost_down) );
-    }
+  // замедление при нажатии вниз
+  if (pressed_down()) {
+    auto vel = phys.get_vel();
+    vel.y *= m_boost_down;
+    phys.set_vel(vel);
+    phys.set_speed( std::min(phys.get_speed(), speed * m_boost_down) );
   }
-} // move
+}
+
+bool Player_dark::pressed_up() const {
+  return is_pressed(hpw::keycode::up)
+  && !is_pressed(hpw::keycode::down);
+}
+
+bool Player_dark::pressed_down() const {
+  return is_pressed(hpw::keycode::down)
+  && !is_pressed(hpw::keycode::up);
+}
+
+bool Player_dark::pressed_left() const {
+  return is_pressed(hpw::keycode::left)
+  && !is_pressed(hpw::keycode::right);
+}
+
+bool Player_dark::pressed_right() const {
+  return is_pressed(hpw::keycode::right)
+  && !is_pressed(hpw::keycode::left);
+}
 
 void Player_dark::blink_contour() const {
   assert(energy_max > 0);
@@ -157,157 +192,3 @@ void Player_dark::draw_stars(Image& dst) const {
     star.draw(dst, window_pos + anim_ctx.get_draw_pos());
   }
 } // draw_stars
-
-// ограничитель позиции игрока в пределах экрана
-struct Bound_off_screen {
-  Vec screen_lu {}; // ограничение слева сверху
-  Vec screen_rd {}; // ограничение справа снизу
-
-  inline explicit Bound_off_screen(CN<Entity> src) {
-    // получить размеры игрока
-    auto anim = src.get_anim();
-    assert(anim);
-    auto frame = anim->get_frame(0);
-    assert(frame);
-    auto direct = frame->get_direct(0);
-    assert(direct);
-    auto sprite = direct->sprite.lock();
-    assert(sprite);
-    auto image = sprite->image();
-    Vec player_sz(image.X, image.Y);
-    screen_lu = Vec(
-      -1 * direct->offset.x,
-      -1 * direct->offset.y
-    );
-    screen_rd = Vec(
-      graphic::width  - player_sz.x - direct->offset.x,
-      graphic::height - player_sz.y - direct->offset.y
-    );
-  } // c-tor
-
-  inline void operator()(Entity& dst, const Delta_time dt) {
-    auto pos = dst.phys.get_pos();
-    bool decrease_speed {false};
-    if (pos.x < screen_lu.x)
-      { pos.x = screen_lu.x; decrease_speed = true; }
-    if (pos.x >= screen_rd.x)
-      { pos.x = screen_rd.x-1; decrease_speed = true; }
-    if (pos.y < screen_lu.y)
-      { pos.y = screen_lu.y; decrease_speed = true; }
-    if (pos.y >= screen_rd.y)
-      { pos.y = screen_rd.y-1; decrease_speed = true; }
-    // это фиксит быстрое движение при отталкивании
-    if (decrease_speed)
-      dst.phys.set_speed( dst.phys.get_speed() * 0.25 );
-    dst.phys.set_pos(pos);
-  } // op ()
-}; // Bound_off_screen
-
-struct Player_dark::Loader::Impl {
-  Anim_info m_anim_info {};
-  Collidable_info m_collidable_info {};
-  real m_force {};
-  real m_focus_force {};
-  real m_max_speed {};
-  real m_focus_speed {};
-  real m_shoot_timer {};
-  hp_t m_fuel {};
-  hp_t m_shoot_price {};
-  hp_t m_energy_regen {};
-  hp_t m_energy_max {};
-  real m_percent_for_decrease_shoot_speed {};
-  real m_decrease_shoot_speed_ratio {};
-  real m_deg_spread_shoot {};
-  real m_deg_focused_shoot {};
-  int m_default_shoot_count {};
-  real m_shoot_speed {};
-  real m_boost_up {};
-  real m_boost_down {};
-  real m_percent_level_for_blink {};
-  real m_window_star_len {};
-
-  inline explicit Impl(CN<Yaml> config) {
-    m_collidable_info.load(config);
-
-    cauto anim_node = config["animation"];
-    m_anim_info.load(anim_node);
-    assert(anim_node.check());
-    m_percent_level_for_blink = anim_node.get_real("percent_level_for_blink");
-    m_window_star_len         = anim_node.get_real("window_star_len");
-
-    m_force       = config.get_real("force");
-    m_focus_force = config.get_real("focus_force");
-    m_max_speed   = config.get_real("max_speed");
-    m_focus_speed = config.get_real("focus_speed");
-    m_fuel        = config.get_int ("fuel");
-    m_energy_max  = config.get_int ("energy_max");
-    m_boost_up    = config.get_real("boost_up");
-    m_boost_down  = config.get_real("boost_down");
-
-    cauto shoot_node = config["shoot"];
-    assert( shoot_node.check() );
-    m_shoot_timer  = shoot_node.get_real("shoot_timer");
-    m_shoot_price  = shoot_node.get_int ("shoot_price");
-    m_energy_regen = shoot_node.get_int ("energy_regen");
-    m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
-    m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
-    m_default_shoot_count = shoot_node.get_int("default_shoot_count");
-    m_deg_spread_shoot = shoot_node.get_real("deg_spread_shoot");
-    m_deg_focused_shoot = shoot_node.get_real("deg_focused_shoot");
-    m_shoot_speed = shoot_node.get_real("shoot_speed");
-
-    // проверка параметров
-    assert(m_window_star_len > 0);
-    assert(m_max_speed > 0);
-    assert(m_focus_speed > 0);
-    assert(m_shoot_timer > 0);
-    assert(m_fuel > 0);
-    assert(m_energy_regen > 0);
-    assert(m_energy_max > 0);
-    assert(m_percent_for_decrease_shoot_speed > 0 &&
-      m_percent_for_decrease_shoot_speed < 100);
-    assert(m_decrease_shoot_speed_ratio > 0);
-    assert(m_default_shoot_count > 0);
-    assert(m_shoot_speed > 0);
-    assert(m_boost_up > 0);
-    assert(m_boost_down > 0);
-    assert(m_percent_level_for_blink > 0 && m_percent_level_for_blink < 100);
-  } // c-tor
-
-  inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
-    auto entity = hpw::entity_mgr->allocate<Player_dark>();
-    Entity_loader::prepare(*entity, master, pos);
-    m_collidable_info.accept(*entity);
-    m_anim_info.accept(*entity);
-    
-    nauto it = *scast<Player_dark*>(entity);
-    it.move_update_callback( Bound_off_screen(it) );
-    it.phys.set_force( pps(m_force) );
-    it.default_force = pps(m_force);
-    it.focus_force = pps(m_focus_force);
-    it.m_focus_speed = pps(m_focus_speed);
-    it.m_max_speed = pps(m_max_speed);
-    it.m_shoot_timer = m_shoot_timer;
-    it.energy_max = m_energy_max;
-    it.hp_max = it.get_hp();
-    it.m_fuel = it.m_fuel_max = m_fuel;
-    it.m_shoot_price = m_shoot_price;
-    it.m_energy_regen = m_energy_regen;
-    it.m_energy_level_for_decrease_shoot_speed = it.energy_max * (m_percent_for_decrease_shoot_speed / 100.0);
-    it.m_decrease_shoot_speed_ratio = m_decrease_shoot_speed_ratio;
-    it.m_default_shoot_count = m_default_shoot_count;
-    it.m_deg_spread_shoot = m_deg_spread_shoot;
-    it.m_deg_focused_shoot = m_deg_focused_shoot;
-    it.m_shoot_speed = pps(m_shoot_speed);
-    it.m_boost_up = m_boost_up;
-    it.m_boost_down = m_boost_down;
-    it.m_level_for_blink = it.energy_max * (m_percent_level_for_blink / 100.0);
-    it.m_window_star_len = m_window_star_len;
-
-    return entity;
-  } // op ()
-}; // Impl
-
-Player_dark::Loader::Loader(CN<Yaml> config): impl{new_unique<Impl>(config)} {}
-Player_dark::Loader::~Loader() {}
-Entity* Player_dark::Loader::operator()(Entity* master, const Vec pos, Entity* parent) { return impl->operator()(master, pos, parent); }

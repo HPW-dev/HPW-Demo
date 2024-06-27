@@ -16,7 +16,17 @@ class Player_dark final: public Player {
   void blink_contour() const; // мерцание контура
   void draw_stars(Image& dst) const; // звёздочки на окошках игрока
   void default_shoot(const Delta_time dt);
-  void move(const Delta_time dt);
+  // передвижение игрока
+  void process_motion();
+  // вверх лететь быстрее чем вниз
+  void accept_speed_boost(const real speed);
+  real process_speed();
+  // Определить направление движения игрока
+  Vec process_motion_dir() const;
+  bool pressed_up() const; // зажато вверх но не вниз
+  bool pressed_down() const; // зажато вниз но не вверх
+  bool pressed_left() const; // зажато влево но не вправо
+  bool pressed_right() const; // зажато вправо но не влево
 
 public:
   // Загрузчик для игрока
