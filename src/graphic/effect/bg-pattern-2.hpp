@@ -47,3 +47,5 @@ void bgp_tiles_2(Image& dst, const int bg_state);
 void bgp_tiles_3(Image& dst, const int bg_state);
 // узор отрисованный тайлами (узор mul)
 void bgp_tiles_4(Image& dst, const int bg_state);
+// копирует предыдущий кадр и увеличивает с размытием и затемнением
+void bgp_zoom_dst(Image& dst, const int bg_state);

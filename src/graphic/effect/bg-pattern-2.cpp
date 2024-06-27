@@ -654,3 +654,15 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
   apply_brightness(dst, -40);
   insert_fast<&blend_max>(dst, buffer);
 } // bgp_tiles_4
+
+void bgp_zoom_dst(Image& dst, const int bg_state) {
+  Image copy(dst);
+  zoom_x2(copy);
+  #ifdef DEBUG
+    blur_fast(copy, 5);
+  #else
+    adaptive_blur(copy, 5);
+  #endif
+  apply_brightness(copy, -48);
+  insert(dst, copy, center_point(dst, copy));
+}
