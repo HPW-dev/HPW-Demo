@@ -1,5 +1,5 @@
 #pragma once
-#include "collidable.hpp"
+#include "game/entity/collidable.hpp"
 
 class Ability;
 

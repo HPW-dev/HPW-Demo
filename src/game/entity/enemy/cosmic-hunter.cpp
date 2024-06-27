@@ -5,7 +5,7 @@
 #include "graphic/image/image.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/math/random.hpp"

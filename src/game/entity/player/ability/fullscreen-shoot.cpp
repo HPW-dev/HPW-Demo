@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include <algorithm>
 #include "fullscreen-shoot.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/core/entities.hpp"

@@ -9,7 +9,7 @@
 #include "game/util/game-util.hpp"
 #include "game/util/cmd/cmd-script.hpp"
 #include "game/entity/util/phys.hpp"
-#include "game/entity/player-dark.hpp"
+#include "game/entity/player/player-dark.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 

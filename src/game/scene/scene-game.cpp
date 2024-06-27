@@ -38,7 +38,7 @@
 #include "game/level/level-space.hpp"
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
-#include "game/entity/player-dark.hpp"
+#include "game/entity/player/player-dark.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"

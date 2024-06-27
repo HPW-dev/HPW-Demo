@@ -1,6 +1,6 @@
 #pragma once
 #include "player.hpp"
-#include "entity-loader.hpp"
+#include "game/entity/entity-loader.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/timer.hpp"
 

@@ -3,7 +3,7 @@
 #include "util/math/random.hpp"
 #include "util/unicode.hpp"
 #include "util/hpw-util.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/core/entities.hpp"

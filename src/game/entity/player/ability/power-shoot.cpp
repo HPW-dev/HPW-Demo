@@ -3,7 +3,7 @@
 #include "power-shoot.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/game-archive.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"

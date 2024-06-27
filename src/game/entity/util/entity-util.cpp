@@ -5,7 +5,7 @@
 #include "anim-ctx.hpp"
 #include "game/core/anims.hpp"
 #include "game/entity/entity.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/particle.hpp"
 #include "game/core/canvas.hpp"

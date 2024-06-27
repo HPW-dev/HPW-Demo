@@ -7,7 +7,7 @@
 #include "bonus-loader.hpp"
 #include "bullet-loader.hpp"
 #include "entity.hpp"
-#include "player-dark.hpp"
+#include "player/player-dark.hpp"
 #include "collider/collider-empty.hpp"
 #include "util/hitbox.hpp"
 #include "util/phys.hpp"
@@ -29,7 +29,7 @@
 #include "game/entity/enemy/illaen.hpp"
 #include "game/entity/enemy/snake.hpp"
 #include "game/entity/enemy/enemy-tutorial.hpp"
-#include "game/entity/ability/invise.hpp"
+#include "game/entity/player/ability/invise.hpp"
 
 struct Entity_mgr::Impl {
   // за пределами этого расстояние пули за экраном умирают в шмап-моде

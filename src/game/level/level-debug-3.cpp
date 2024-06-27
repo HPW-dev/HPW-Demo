@@ -15,7 +15,7 @@
 #include "game/core/levels.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/scatter.hpp"
-#include "game/entity/player-dark.hpp"
+#include "game/entity/player/player-dark.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/particle.hpp"

@@ -17,7 +17,7 @@
 #include "game/level/util/layer-simple.hpp"
 #include "game/level/util/task-spawn.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/random.hpp"

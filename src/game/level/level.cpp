@@ -3,7 +3,7 @@
 #include "util/math/timer.hpp"
 #include "game/scene/scene-manager.hpp"
 #include "game/scene/scene-gameover.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/scenes.hpp"
 #ifdef CLD_DEBUG
