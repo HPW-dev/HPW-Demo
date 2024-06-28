@@ -11,15 +11,19 @@ CN<Strs> args) {
 
   if (new_fps <= 0) {
     graphic::set_disable_frame_limit(true);
+    console.print("лимит FPS выключен");
   } else {
     graphic::set_disable_frame_limit(false);
     graphic::set_target_fps(new_fps);
+    console.print("лимит FPS = " + n2s(new_fps));
   }
 }
 
 void config_reload(Cmd_maker& command, Cmd& console,
-CN<Strs> args)
-  { load_config(); }
+CN<Strs> args) {
+  load_config(); 
+  console.print("конфиг перезагружен");
+}
 
 void enable_render(Cmd_maker& command, Cmd& console,
 CN<Strs> args) {
