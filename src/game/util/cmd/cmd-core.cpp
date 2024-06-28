@@ -1,4 +1,5 @@
 #include "cmd-util.hpp"
+#include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "util/error.hpp"
@@ -27,7 +28,11 @@ CN<Strs> args) {
 
 void enable_render(Cmd_maker& command, Cmd& console,
 CN<Strs> args) {
-  // TODO
+  iferror(args.size() < 2, "у команды "
+    + command.name() + " не задан параметр");
+  const bool yesno = s2n<int>(args[1]) == 0 ? false : true;
+  graphic::enable_render = yesno;
+  console.print(Str("рендер ") + (yesno ? "включён" : "выключен"));
 }
 
 void set_tickrate(Cmd_maker& command, Cmd& console,
