@@ -1,9 +1,25 @@
 #include "cmd-util.hpp"
+#include "game/util/sync.hpp"
+#include "game/util/config.hpp"
+#include "util/error.hpp"
+#include "util/str-util.hpp"
 
 void set_fps_limit(Cmd_maker& command, Cmd& console,
 CN<Strs> args) {
-  // TODO
+  iferror(args.size() < 2, "не указано количество FPS в команде");
+  cauto new_fps = s2n<int>(args[1]);
+
+  if (new_fps <= 0) {
+    graphic::set_disable_frame_limit(true);
+  } else {
+    graphic::set_disable_frame_limit(false);
+    graphic::set_target_fps(new_fps);
+  }
 }
+
+void config_reload(Cmd_maker& command, Cmd& console,
+CN<Strs> args)
+  { load_config(); }
 
 void enable_render(Cmd_maker& command, Cmd& console,
 CN<Strs> args) {
@@ -50,6 +66,10 @@ void cmd_core_init(Cmd& cmd) {
     "stats_end",
     "stats_end - end of saving statistics to file",
     &end_stat_record, {} )
+  MAKE_CMD (
+    "config_reload",
+    "config_reload - reload config.yml",
+    &config_reload, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
