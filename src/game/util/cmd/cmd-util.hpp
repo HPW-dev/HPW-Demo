@@ -28,4 +28,4 @@ private:
   Str m_description {}; // описание использования
   Func_exec m_exec {};
   Func_command_matches m_command_matches {};
-};
+}; // Cmd_maker
