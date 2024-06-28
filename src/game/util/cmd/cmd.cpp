@@ -78,12 +78,11 @@ void Cmd::move(Unique<Command>&& command) {
 /* Разбивает строчки разделённые пробелами с учётом кавычек.
 Кавычки в результат не входят */
 inline Strs split_args_str(CN<Str> cmd_and_args) {
-  return split_str(cmd_and_args, ' ');
-  // TODO:
-
   constexpr const char separator = ' ';
   constexpr const char comma = '"';
   bool comma_mode = false;
+  Str cur_str;
+  Strs ret;
 
   for (cnauto ch: cmd_and_args) {
     if (ch == comma) {
@@ -92,10 +91,25 @@ inline Strs split_args_str(CN<Str> cmd_and_args) {
     }
 
     if (comma_mode) {
+      cur_str += ch;
       continue;
     }
+
+    if (ch == separator) {
+      if (!cur_str.empty())
+        ret.push_back(cur_str);
+      cur_str.clear();
+      continue;
+    }
+
+    cur_str += ch;
   } // for all chars in cmd_and_args
-}
+
+  if (!cur_str.empty())
+    ret.push_back(cur_str);
+
+  return ret;
+} // split_args_str
 
 void Cmd::impl_exec(CN<Str> cmd_and_args) {
   cauto splited = split_args_str(cmd_and_args);

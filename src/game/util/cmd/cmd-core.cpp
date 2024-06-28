@@ -1,5 +1,6 @@
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/tasks.hpp"
 #include "host/host-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
