@@ -37,16 +37,22 @@ void set_tickrate(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не указано количество UPS в команде");
   cauto new_ups = s2n<int>(args[1]);
   set_target_ups(new_ups);
-  console.print("тикрейт игры = " + n2s(new_ups));
+  console.print("тикрейт игры = " + n2s(new_ups, 2));
 }
 
 void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 3, "в команде stat_record задано мало параметров");
-  
+  cnauto filename = args[1];
+  cnauto seconds = s2n<Delta_time>(args[2]);
+  // TODO
+  console.print("Начат сбор статистики...");
+  console.print("Статистика сохранится в файл \"" + filename + "\"");
+  console.print("Завершение через " + n2s(seconds) + " сек.");
 }
 
 void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   // TODO
+  console.print("сбор статистики принудительно завершён");
 }
 
 void cmd_core_init(Cmd& cmd) {
@@ -68,7 +74,8 @@ void cmd_core_init(Cmd& cmd) {
     &set_tickrate, {} )
   MAKE_CMD (
     "stats_start",
-    "stats_start <filename> <seconds> - save statistics to file",
+    "stats_start <filename> <seconds> - save statistics to file. "
+    "If seconds = 0 - infinite",
     &start_stat_record, {} )
   MAKE_CMD (
     "stats_end",
