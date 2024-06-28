@@ -19,7 +19,7 @@ public:
 
   ~Image() = default;
   Image() noexcept = default;
-  Image(int nx, int ny, std::optional<Pal8> col={}) noexcept;
+  Image(int nx, int ny, const std::optional<const Pal8> col={}) noexcept;
   Image(CN<Image> img) noexcept;
   Image(Image&& img) noexcept;
   Image& operator = (Image&& other) noexcept;
