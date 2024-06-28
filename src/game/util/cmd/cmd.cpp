@@ -38,7 +38,7 @@ Cmd::Cmd() {
   move(new_unique<Cmd_collider>(this));
 
   cmd_core_init(*this); //cmd-core.hpp
-  
+
   //cmd-entity.hpp
   //move(new_unique<Cmd_entities>());
   //move(new_unique<Cmd_spawn>());
@@ -75,8 +75,30 @@ void Cmd::move(Unique<Command>&& command) {
   m_commands.emplace_back( std::move(command) );
 }
 
+/* Разбивает строчки разделённые пробелами с учётом кавычек.
+Кавычки в результат не входят */
+inline Strs split_args_str(CN<Str> cmd_and_args) {
+  return split_str(cmd_and_args, ' ');
+  // TODO:
+
+  constexpr const char separator = ' ';
+  constexpr const char comma = '"';
+  bool comma_mode = false;
+
+  for (cnauto ch: cmd_and_args) {
+    if (ch == comma) {
+      comma_mode = !comma_mode;
+      continue;
+    }
+
+    if (comma_mode) {
+      continue;
+    }
+  } // for all chars in cmd_and_args
+}
+
 void Cmd::impl_exec(CN<Str> cmd_and_args) {
-  cauto splited = split_str(cmd_and_args, ' ');
+  cauto splited = split_args_str(cmd_and_args);
   cnauto command = find_command(splited.at(0));
   iferror(!command, "not finded command \"" << cmd_and_args << "\"");
   command->exec(splited);
