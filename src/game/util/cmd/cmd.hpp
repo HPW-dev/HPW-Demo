@@ -5,11 +5,7 @@
 #include "util/str.hpp"
 #include "util/vector-types.hpp"
 
-/* исполняет текстовые команды
-
-Символы управления:
-r - рандомная позиция
-l - последний используемый параметр (last entity uid/pos) */
+// исполняет текстовые команды
 class Cmd final {
 public:
   // База для команд
@@ -48,6 +44,7 @@ public:
   inline Uid last_uid() const { return m_last_uid; }
 
 private:
+  nocopy(Cmd);
   Commands m_commands {};
   Str m_last_cmd {}; // предыдущая команда
   bool m_log_screen {true};

@@ -17,27 +17,6 @@
 #include "game/core/messages.hpp"
 
 Cmd::Cmd() {
-  //cmd-entity.hpp
-  //move(new_unique<Cmd_entities>());
-  //move(new_unique<Cmd_spawn>());
-  //move(new_unique<Cmd_kill>());
-  //move(new_unique<Cmd_flag>());
-  //move(new_unique<Cmd_hp>());
-  //move(new_unique<Cmd_copy>());
-
-  //cmd-phys.hpp
-  //move(new_unique<Cmd_pos>());
-  //move(new_unique<Cmd_deg>());
-  //move(new_unique<Cmd_speed>());
-  //move(new_unique<Cmd_force>());
-  //move(new_unique<Cmd_direct>());
-  //move(new_unique<Cmd_direct_to>());
-
-  //cmd-player.hpp
-  //move(new_unique<Cmd_resurect>());
-  //move(new_unique<Cmd_abilities>());
-  //move(new_unique<Cmd_give_ability>());
-
   //cmd-common.hpp
   move(new_unique<Cmd_exit>());
   move(new_unique<Cmd_error>());
@@ -58,12 +37,28 @@ Cmd::Cmd() {
   move(new_unique<Cmd_restart>(this));
   move(new_unique<Cmd_collider>(this));
 
-  //cmd-core.hpp
-  //move(new_unique<Cmd_fps>());
-  //move(new_unique<Cmd_render>());
-  //move(new_unique<Cmd_tickrate>());
-  //move(new_unique<Cmd_stats>());
-  //move(new_unique<Cmd_end_stats>());
+  cmd_core_init(*this); //cmd-core.hpp
+  
+  //cmd-entity.hpp
+  //move(new_unique<Cmd_entities>());
+  //move(new_unique<Cmd_spawn>());
+  //move(new_unique<Cmd_kill>());
+  //move(new_unique<Cmd_flag>());
+  //move(new_unique<Cmd_hp>());
+  //move(new_unique<Cmd_copy>());
+
+  //cmd-phys.hpp
+  //move(new_unique<Cmd_pos>());
+  //move(new_unique<Cmd_deg>());
+  //move(new_unique<Cmd_speed>());
+  //move(new_unique<Cmd_force>());
+  //move(new_unique<Cmd_direct>());
+  //move(new_unique<Cmd_direct_to>());
+
+  //cmd-player.hpp
+  //move(new_unique<Cmd_resurect>());
+  //move(new_unique<Cmd_abilities>());
+  //move(new_unique<Cmd_give_ability>());
 
   sort_commands();
 } // Cmd c-tor
