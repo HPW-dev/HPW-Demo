@@ -1,34 +1,35 @@
 #pragma once
-#include <functional>
 #include "util/math/num-types.hpp"
 #include "util/vector-types.hpp"
 #include "util/macro.hpp"
+#include "util/mem-types.hpp"
 
 class Image;
 
-struct Task {
-  using Func_update = std::function<void (Task&, const Delta_time dt)>;
-  using Func_draw = std::function<void (CN<Task>, Image& dst)>;
-  using Action = std::function<void (Task&)>;
-  bool active {true};
-  bool paused {};
-  
-  Func_update update_f {};
-  Func_draw draw_f {};
-  Action on_start {}; // действие при запуске
-  Action on_end {}; // действие при завершении
-  Action on_stop {}; // действие при стопе
-  Action on_unfreeze {}; // действие при выходе из стопа
-};
+// Базовый класс для задач в геймлупе
+class Task {
+  bool m_active {true};
+  bool m_paused {};
 
-void stop(Task& task);
-void unfreeze(Task& task);
-void kill(Task& task);
-void restart(Task& task);
+public:
+  virtual ~Task() = default;
+  inline virtual void on_start() {};
+  inline virtual void on_end() {};
+  inline virtual void on_stop() {};
+  inline virtual void on_unfreeze() {};
+  inline virtual void update(const Delta_time dt) {};
+  inline virtual void draw(Image& dst) const {};
+  virtual void stop();
+  virtual void unfreeze();
+  virtual void kill();
+  virtual void restart();
+  inline bool is_active() const { return m_active; }
+  inline bool is_paused() const { return m_paused; }
+};
 
 // рулит задачами
 class Task_mgr final {
-  using Tasks = Vector<Task>;
+  using Tasks = Vector<Shared<Task>>;
   Tasks m_tasks {};
 
   void process_killed();
@@ -38,8 +39,8 @@ public:
   Task_mgr() = default;
   ~Task_mgr() = default;
 
-  Task& add(CN<Task> task);
-  Task& move(Task&& task);
+  Shared<Task> add(CN<Shared<Task>> task);
+  Shared<Task> move(Shared<Task>&& task);
   void update(const Delta_time dt);
   void draw(Image& dst) const;
   void reset_all();

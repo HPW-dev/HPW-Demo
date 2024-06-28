@@ -1,3 +1,4 @@
+#include <fstream>
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/tasks.hpp"
@@ -42,11 +43,30 @@ void set_tickrate(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("тикрейт игры = " + n2s(new_ups, 2));
 }
 
+class Task_state_saver final: public Task {
+  Timer timeout {};
+  std::ofstream file {};
+
+public:
+  /*inline explicit Stats_saver(CN<Str> fname, const Delta_time _timeout)
+  : timeout {_timeout}
+  {
+    file.open(fname);
+    iferror(!file.is_open(), "не удалось открыть файл \"" + fname + "\"");
+  }
+
+  inline void operator()(Task& task, const Delta_time dt) {
+
+  }*/
+}; // Stats_saver
+
 void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 3, "в команде stat_record задано мало параметров");
   cnauto filename = args[1];
   cnauto seconds = s2n<Delta_time>(args[2]);
-  
+  //Task task;
+  //task.update_f = std::move(Stats_saver(filename, seconds));
+  //hpw::task_mgr.move( std::move(task) );
   console.print("Начат сбор статистики...");
   console.print("Статистика сохранится в файл \"" + filename + "\"");
   console.print("Завершение через " + n2s(seconds) + " сек.");

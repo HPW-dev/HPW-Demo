@@ -2,77 +2,78 @@
 #include <utility>
 #include "task.hpp"
 #include "util/safecall.hpp"
+#include "util/error.hpp"
+
+void Task::stop() {
+  m_paused = true;
+  on_stop();
+}
+
+void Task::unfreeze() {
+  m_paused = false;
+  on_unfreeze();
+}
+
+void Task::kill() {
+  m_active = false;
+  on_end();
+}
+
+void Task::restart() {
+  on_end();
+  on_start();
+}
 
 void Task_mgr::process_killed() {
   // удалить всех неактивных
-  std::erase_if(m_tasks, [](CN<Task> task) { return !task.active; });
+  std::erase_if(m_tasks, [](CN<Shared<Task>> task)
+    { return !task->is_active(); });
 }
 
-Task& Task_mgr::add(CN<Task> task) {
+Shared<Task> Task_mgr::add(CN<Shared<Task>> task) {
+  iferror(!task, "bad task ptr");
   m_tasks.push_back(task);
-  nauto ret = m_tasks.back();
-  safecall(ret.on_start, ret);
-  return ret;
+  task->on_start();
+  return task;
 }
 
-Task& Task_mgr::move(Task&& task) {
-  nauto ret = m_tasks.emplace_back( std::move(task) );
-  safecall(ret.on_start, ret);
-  return ret;
+Shared<Task> Task_mgr::move(Shared<Task>&& task) {
+  iferror(!task, "bad task ptr");
+  m_tasks.emplace_back( std::move(task) );
+  task->on_start();
+  return task;
 }
 
 void Task_mgr::update(const Delta_time dt) {
   process_killed();
-  for (nauto task: m_tasks) {
-    if (task.active && !task.paused && task.update_f)
-      task.update_f(task, dt);
-  }
+
+  for (nauto task: m_tasks)
+    if (task->is_active() && !task->is_paused())
+      task->update(dt);
 }
 
 void Task_mgr::draw(Image& dst) const {
-  for (cnauto task: m_tasks) {
-    if (task.active && task.draw_f)
-      task.draw_f(task, dst);
-  }
+  for (cnauto task: m_tasks)
+    if (task->is_active())
+      task->draw(dst);
 }
 
 void Task_mgr::reset_all() {
   for (nauto task: m_tasks)
-    restart(task);
+    task->restart();
 }
 
 void Task_mgr::stop_all() {
   for (nauto task: m_tasks)
-    stop(task);
+    task->stop();
 }
 
 void Task_mgr::unfreeze_all() {
   for (nauto task: m_tasks)
-    unfreeze(task);
+    task->unfreeze();
 }
 
 void Task_mgr::kill_all() {
   for (nauto task: m_tasks)
-    kill(task);
-}
-
-void stop(Task& task) {
-  safecall(task.on_stop, task);
-  task.paused = true;
-}
-void unfreeze(Task& task) {
-  safecall(task.on_unfreeze, task);
-  task.paused = false;
-}
-
-void kill(Task& task) {
-  task.active = false;
-  safecall(task.on_end, task);
-}
-
-void restart(Task& task) {
-  safecall(task.on_end, task);
-  safecall(task.on_start, task);
-  task.active = true;
-  task.paused = false;
+    task->kill();
 }
