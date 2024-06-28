@@ -39,9 +39,9 @@ Shared<Task> Task_mgr::add(CN<Shared<Task>> task) {
 
 Shared<Task> Task_mgr::move(Shared<Task>&& task) {
   iferror(!task, "bad task ptr");
-  m_tasks.emplace_back( std::move(task) );
-  task->on_start();
-  return task;
+  nauto ret = m_tasks.emplace_back( std::move(task) );
+  ret->on_start();
+  return ret;
 }
 
 void Task_mgr::update(const Delta_time dt) {

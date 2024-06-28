@@ -1,3 +1,4 @@
+#include <cassert>
 #include <fstream>
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
@@ -8,6 +9,7 @@
 #include "util/math/timer.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "util/log.hpp"
 
 void set_fps_limit(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не указано количество FPS в команде");
@@ -44,37 +46,63 @@ void set_tickrate(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 }
 
 class Task_state_saver final: public Task {
-  Timer timeout {};
-  std::ofstream file {};
+  Timer m_sample_delay {1};
+  Timer m_timeout {};
+  std::ofstream m_file {};
+  Cmd& m_console;
 
 public:
-  /*inline explicit Stats_saver(CN<Str> fname, const Delta_time _timeout)
-  : timeout {_timeout}
+  inline explicit Task_state_saver(CN<Str> fname, const Delta_time _timeout,
+  Cmd& console)
+  : m_timeout {_timeout}
+  , m_console {console}
   {
-    file.open(fname);
-    iferror(!file.is_open(), "не удалось открыть файл \"" + fname + "\"");
+    iferror(_timeout <= 0, "неправильный параметр таймаута");
+    m_file.open(fname);
+    iferror(!m_file.is_open(), "не удалось открыть файл \"" + fname + "\"");
   }
 
-  inline void operator()(Task& task, const Delta_time dt) {
+  inline void update(const Delta_time dt) override {
+    if (m_timeout.update(dt)) {
+      kill();
+      return;
+    }
+    // каждую секунду сейвить инфу о игре
+    cfor (_, m_sample_delay.update(dt))
+      hpw_log("test\n");
+  }
 
-  }*/
-}; // Stats_saver
+  inline void on_end() override {
+    m_console.print("сбор статистики завершён");
+  }
+}; // Task_state_saver
+
+namespace {
+Shared<Task> g_state_saver_task {};
+}
+
+void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  if (::g_state_saver_task) {
+    ::g_state_saver_task->kill();
+    ::g_state_saver_task = {};
+    console.print("сбор статистики принудительно завершён");
+    return;
+  }
+  console.print("не удалось завершить запись статистики, "
+    "так как она и не начиналась");
+}
 
 void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 3, "в команде stat_record задано мало параметров");
   cnauto filename = args[1];
   cnauto seconds = s2n<Delta_time>(args[2]);
-  //Task task;
-  //task.update_f = std::move(Stats_saver(filename, seconds));
-  //hpw::task_mgr.move( std::move(task) );
+  if (::g_state_saver_task)
+    end_stat_record(command, console, args);
+  ::g_state_saver_task = hpw::task_mgr.move (
+    new_shared<Task_state_saver>(filename, seconds, console) );
   console.print("Начат сбор статистики...");
   console.print("Статистика сохранится в файл \"" + filename + "\"");
   console.print("Завершение через " + n2s(seconds) + " сек.");
-}
-
-void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
-  // TODO
-  console.print("сбор статистики принудительно завершён");
 }
 
 void cmd_core_init(Cmd& cmd) {
