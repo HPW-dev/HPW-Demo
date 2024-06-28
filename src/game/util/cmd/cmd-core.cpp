@@ -4,6 +4,7 @@
 #include "host/host-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
+#include "util/math/timer.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 
@@ -45,7 +46,7 @@ void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 3, "в команде stat_record задано мало параметров");
   cnauto filename = args[1];
   cnauto seconds = s2n<Delta_time>(args[2]);
-  // TODO
+  
   console.print("Начат сбор статистики...");
   console.print("Статистика сохранится в файл \"" + filename + "\"");
   console.print("Завершение через " + n2s(seconds) + " сек.");

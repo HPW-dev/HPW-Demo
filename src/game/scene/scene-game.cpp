@@ -24,6 +24,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/huds.hpp"
+#include "game/core/tasks.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
@@ -150,6 +151,7 @@ void Scene_game::update(const Delta_time dt) {
   else if (hpw::enable_replay)
     replay_save_keys();
 
+  hpw::task_mgr.update(dt);
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
     hpw::scene_mgr->back(); // exit to loading screen
@@ -181,6 +183,7 @@ void Scene_game::draw(Image& dst) const {
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
   graphic::post_effects->draw(dst);
+  hpw::task_mgr.draw(dst);
   if (graphic::hud)
     graphic::hud->draw(dst);
   post_draw(dst);
