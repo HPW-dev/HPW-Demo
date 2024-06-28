@@ -6,8 +6,7 @@
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 
-void set_fps_limit(Cmd_maker& command, Cmd& console,
-CN<Strs> args) {
+void set_fps_limit(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не указано количество FPS в команде");
   cauto new_fps = s2n<int>(args[1]);
 
@@ -21,14 +20,12 @@ CN<Strs> args) {
   }
 }
 
-void config_reload(Cmd_maker& command, Cmd& console,
-CN<Strs> args) {
+void config_reload(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   load_config(); 
   console.print("конфиг перезагружен");
 }
 
-void enable_render(Cmd_maker& command, Cmd& console,
-CN<Strs> args) {
+void enable_render(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "у команды "
     + command.name() + " не задан параметр");
   const bool yesno = s2n<int>(args[1]) == 0 ? false : true;
@@ -36,21 +33,19 @@ CN<Strs> args) {
   console.print(Str("рендер ") + (yesno ? "включён" : "выключен"));
 }
 
-void set_tickrate(Cmd_maker& command, Cmd& console,
-CN<Strs> args) {
+void set_tickrate(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не указано количество UPS в команде");
   cauto new_ups = s2n<int>(args[1]);
   set_target_ups(new_ups);
   console.print("тикрейт игры = " + n2s(new_ups));
 }
 
-void start_stat_record(Cmd_maker& command, Cmd& console,
-CN<Strs> args) {
-  // TODO
+void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 3, "в команде stat_record задано мало параметров");
+  
 }
 
-void end_stat_record(Cmd_maker& command, Cmd& console,
-CN<Strs> args) {
+void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   // TODO
 }
 
