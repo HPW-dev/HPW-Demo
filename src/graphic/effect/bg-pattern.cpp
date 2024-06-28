@@ -177,8 +177,8 @@ void bgp_bit_3(Image& dst, const int bg_state) {
 inline Pal8 rnd_color_fast() { return Pal8::from_real(rndr_fast(), rndu_fast() & 1); }
 
 void bgp_pinterest_1(Image& dst, const int bg_state) {
-  constx auto MX = 12u;
-  constx auto ICONS = 5u;
+  cautox MX = 12u;
+  cautox ICONS = 5u;
 
   cfor (y, dst.Y) {
     cfor(x, dst.X)

@@ -6,6 +6,7 @@
 #define nauto auto&
 #define sconst static const
 #define constx constexpr static const
+#define cautox constexpr static const auto
 
 template <class T>
 inline constexpr T scast(auto&& val) { return static_cast<T>(val); }

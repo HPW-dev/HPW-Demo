@@ -18,7 +18,7 @@
 
 struct Scene_cmd::Impl {
   // сколько апдейтов надо зажимать удаление текста, чтобы он начал удаляться
-  constx auto TEXT_DELETE_TIMEOUT = 120u;
+  cautox TEXT_DELETE_TIMEOUT = 120u;
   Image bg {};
   uint m_text_delete_timer {};
 
