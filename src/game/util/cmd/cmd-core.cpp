@@ -1,5 +1,6 @@
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
+#include "host/host-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "util/error.hpp"
@@ -37,7 +38,10 @@ CN<Strs> args) {
 
 void set_tickrate(Cmd_maker& command, Cmd& console,
 CN<Strs> args) {
-  // TODO
+  iferror(args.size() < 2, "не указано количество UPS в команде");
+  cauto new_ups = s2n<int>(args[1]);
+  set_target_ups(new_ups);
+  console.print("тикрейт игры = " + n2s(new_ups));
 }
 
 void start_stat_record(Cmd_maker& command, Cmd& console,
