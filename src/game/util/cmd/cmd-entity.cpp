@@ -9,6 +9,10 @@
 #include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
 
+namespace {
+Uid last_uid {}; // последний соспавненный объект
+}
+
 void spawn(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не задано имя объекта в команде spawn");
   cnauto entity_name = args[1];
@@ -21,10 +25,11 @@ void spawn(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     pos = rnd_screen_pos_safe();
   }
 
-  hpw::entity_mgr->make({}, entity_name, pos);
-  console.print("entity \"" + entity_name +
-    "\" spawned at {" + n2s(pos.x, 2) + ", " +
-    n2s(pos.y, 2) + '}');
+  cauto entity = hpw::entity_mgr->make({}, entity_name, pos);
+  ::last_uid = entity->uid;
+  console.print("entity \"" + entity_name
+    + "\" spawned at {" + n2s(pos.x, 2) + ", "
+    + n2s(pos.y, 2) + "} uid: " + n2s(::last_uid));
 }
 
 Strs get_entity_names() {
