@@ -85,7 +85,7 @@ public:
         return n2s(hpw::real_dt * 1'000.f, 5); }},
       Stat {.title="'FPS'", .getter=[]{
         return n2s(graphic::cur_fps, 2); }},
-      Stat {.title="'tickrate per sec.'", .getter=[]{
+      Stat {.title="'tickrate'", .getter=[]{
         return n2s(hpw::cur_ups, 2); }},
       Stat {.title="'Lives'", .getter=[]{
         cnauto entities = hpw::entity_mgr->get_entities();
