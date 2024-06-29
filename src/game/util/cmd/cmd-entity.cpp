@@ -116,6 +116,12 @@ Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   return ret;
 }
 
+// убирает всех противников
+void clear_entities(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  hpw::entity_mgr->clear();
+  console.print("all entities erased");
+}
+
 void cmd_entity_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -131,6 +137,10 @@ void cmd_entity_init(Cmd& cmd) {
     "kill <uid> - kill entity by entity-uid."
     "If uid not defined, kill last spawned",
     &kill, &kill_matches )
+  MAKE_CMD (
+    "clear_entities",
+    "clear_entities - erase all entities from game",
+    &clear_entities, {} )
     
   #undef MAKE_CMD
 } // cmd_entity_init
