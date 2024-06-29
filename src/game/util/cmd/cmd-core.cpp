@@ -1,15 +1,17 @@
 #include <cassert>
+#include <chrono>
 #include <fstream>
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/tasks.hpp"
-#include "host/host-util.hpp"
+#include "game/core/entities.hpp"
+#include "game/core/core.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
+#include "host/host-util.hpp"
 #include "util/math/timer.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
-#include "util/log.hpp"
 
 void set_fps_limit(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не указано количество FPS в команде");
@@ -45,34 +47,92 @@ void set_tickrate(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("тикрейт игры = " + n2s(new_ups, 2));
 }
 
+using namespace std::chrono_literals;
+
 class Task_state_saver final: public Task {
-  Timer m_sample_delay {1};
-  Timer m_timeout {};
+  Str m_fname {};
   std::ofstream m_file {};
   Cmd& m_console;
+  struct Stat {
+    Str title {};
+    using Getter = std::function<Str ()>;
+    Getter getter {};
+  };
+  Vector<Stat> m_stats {};
+  cautox separator = '|';
+  Delta_time m_timeout {};
+  std::chrono::steady_clock::time_point m_time_start {};
+  std::chrono::steady_clock::time_point m_sample_delay_start {};
+  cautox sample_delay {1s};
 
 public:
-  inline explicit Task_state_saver(CN<Str> fname, const Delta_time _timeout,
+  inline explicit Task_state_saver(CN<Str> fname, const Delta_time timeout,
   Cmd& console)
-  : m_timeout {_timeout}
+  : m_fname {fname}
   , m_console {console}
+  , m_timeout {timeout}
   {
-    iferror(_timeout <= 0, "неправильный параметр таймаута");
-    m_file.open(fname);
-    iferror(!m_file.is_open(), "не удалось открыть файл \"" + fname + "\"");
+    iferror(fname.empty(), "пустое имя файла");
+    iferror(timeout <= 0, "неправильный параметр таймаута");
+    m_stats = {
+      Stat {.title="'Software draw time Ms.'", .getter=[]{
+        return n2s(graphic::soft_draw_time * 1'000.f, 5); }},
+      Stat {.title="'Hardware draw time Ms.'", .getter=[]{
+        return n2s(graphic::hard_draw_time * 1'000.f, 5); }},
+      Stat {.title="'tick time Ms.'", .getter=[]{
+        return n2s(hpw::update_time_unsafe * 1'000.f, 5); }},
+      Stat {.title="'Real Dt. Ms.'", .getter=[]{
+        return n2s(hpw::real_dt * 1'000.f, 5); }},
+      Stat {.title="'FPS'", .getter=[]{
+        return n2s(graphic::cur_fps, 2); }},
+      Stat {.title="'tickrate per sec.'", .getter=[]{
+        return n2s(hpw::cur_ups, 2); }},
+      Stat {.title="'Lives'", .getter=[]{
+        cnauto entities = hpw::entity_mgr->get_entities();
+        uint lives {};
+        for (cnauto entity: entities)
+          lives += entity->status.live;
+        return n2s(lives);
+      }},
+      Stat {.title="'Entities capacity'", .getter=[]{
+        return n2s(hpw::entity_mgr->get_entities().capacity()); }},
+    };
+  } // c-tor
+
+  inline void on_start() override {
+    m_file.open(m_fname);
+    iferror(!m_file.is_open(), "не удалось открыть файл \"" << m_fname << "\"");
+    Str grid_title;
+    for (cnauto stat: m_stats)
+      grid_title += stat.title + separator;
+    m_file << grid_title << std::endl;
+    m_sample_delay_start = m_time_start = std::chrono::steady_clock::now();
   }
 
   inline void update(const Delta_time dt) override {
-    if (m_timeout.update(dt)) {
+    using Seconds = std::chrono::duration<Delta_time, std::ratio<1, 1>>;
+    // проверить таймер выхода
+    cauto timeout_timediff = std::chrono::steady_clock::now() - m_time_start;
+    if (std::chrono::duration_cast<Seconds>(timeout_timediff).count()
+    >= m_timeout) {
       kill();
       return;
     }
+    
     // каждую секунду сейвить инфу о игре
-    cfor (_, m_sample_delay.update(dt))
-      hpw_log("test\n");
+    cauto sample_delay_timediff = std::chrono::steady_clock::now()
+      - m_sample_delay_start;
+    if (std::chrono::duration_cast<Seconds>(sample_delay_timediff)
+    >= sample_delay) {
+      for (cnauto stat: m_stats)
+        m_file << stat.getter() + separator;
+      m_file << std::endl;
+      m_sample_delay_start = std::chrono::steady_clock::now();
+    }
   }
 
   inline void on_end() override {
+    m_file.close();
     m_console.print("сбор статистики завершён");
   }
 }; // Task_state_saver

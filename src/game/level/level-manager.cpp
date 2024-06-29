@@ -4,6 +4,7 @@
 #include "game/core/core.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/debug.hpp"
+#include "game/core/tasks.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/util/phys.hpp"
@@ -64,6 +65,7 @@ void Level_mgr::accept_maker() {
     auto maker = m_makers.front();
     m_level = maker();
     m_makers.pop_front();
+    hpw::task_mgr.kill_all();
   }
 }
 

@@ -12,7 +12,7 @@ class Task {
   bool m_paused {};
 
 public:
-  virtual ~Task() = default;
+  virtual ~Task();
   inline virtual void on_start() {};
   inline virtual void on_end() {};
   inline virtual void on_stop() {};
@@ -37,7 +37,7 @@ class Task_mgr final {
 public:
   nocopy(Task_mgr);
   Task_mgr() = default;
-  ~Task_mgr() = default;
+  ~Task_mgr();
 
   Shared<Task> add(CN<Shared<Task>> task);
   Shared<Task> move(Shared<Task>&& task);

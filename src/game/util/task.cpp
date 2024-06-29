@@ -4,6 +4,8 @@
 #include "util/safecall.hpp"
 #include "util/error.hpp"
 
+Task::~Task() { kill(); }
+
 void Task::stop() {
   m_paused = true;
   on_stop();
@@ -73,7 +75,6 @@ void Task_mgr::unfreeze_all() {
     task->unfreeze();
 }
 
-void Task_mgr::kill_all() {
-  for (nauto task: m_tasks)
-    task->kill();
-}
+void Task_mgr::kill_all() { m_tasks.clear(); }
+
+Task_mgr::~Task_mgr() { kill_all(); }
