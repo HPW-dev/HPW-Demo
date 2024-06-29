@@ -56,7 +56,7 @@ struct Entity_mgr::Impl {
     #endif
   }
 
-  ~Impl() = default;
+  inline ~Impl() { clear(); }
 
   inline CN<Entitys> get_entities() const { return entities; }
 
@@ -119,6 +119,7 @@ struct Entity_mgr::Impl {
     entity_pool.release();
     phys_pool.release();
     hitbox_pool.release();
+    clear_entity_uid();
   }
 
   inline void update_entitys(const Delta_time dt) {
