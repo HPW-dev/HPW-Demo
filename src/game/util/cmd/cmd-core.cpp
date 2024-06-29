@@ -9,9 +9,17 @@
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "host/host-util.hpp"
-#include "util/math/timer.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "util/math/random.hpp"
+#include "util/math/timer.hpp"
+
+void set_seed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "в команде seed не задан параметр");
+  cnauto seed = s2n<std::uint32_t>(args[1]);
+  set_rnd_seed(seed);
+  console.print("новый сид рандома = " + n2s(seed));
+}
 
 void set_fps_limit(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "не указано количество FPS в команде");
@@ -184,7 +192,7 @@ void cmd_core_init(Cmd& cmd) {
     &enable_render, {} )
   MAKE_CMD (
     "tickrate",
-    "tickrate <limit> - sets count of updates per. sec.",
+    "tickrate <limit> - sets count of updates per sec.",
     &set_tickrate, {} )
   MAKE_CMD (
     "stats",
@@ -199,6 +207,10 @@ void cmd_core_init(Cmd& cmd) {
     "config_reload",
     "config_reload - reload config.yml",
     &config_reload, {} )
+  MAKE_CMD (
+    "seed",
+    "seed <num> - set random seed",
+    &set_seed, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
