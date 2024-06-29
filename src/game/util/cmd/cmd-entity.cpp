@@ -1,5 +1,6 @@
 #include <cassert>
 #include <ranges>
+#include <algorithm>
 #include "cmd-entity.hpp"
 #include "cmd-util.hpp"
 #include "game/core/entities.hpp"
@@ -63,6 +64,58 @@ Strs spawn_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   return ret;
 }
 
+void kill(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  cnauto entity_uid = args.size() >= 2 ? args[1] : n2s(::last_uid);
+  cnauto entities = hpw::entity_mgr->get_entities();
+  cauto it = std::find_if(entities.begin(), entities.end(),
+    [&](CN<Entitys::value_type> entity) {
+      return n2s(entity->uid) == entity_uid;
+    }
+  );
+
+  if (it != entities.end()) {
+    cnauto entity = it->get();
+    entity->kill();
+    console.print("killed entity \"" + entity->name()
+      + "\" uid: " + entity_uid);
+  } else {
+    error("не удалось убить объект с UID = " << entity_uid);
+  }
+} // kill
+
+// получить uid'ы всех живых объекто в виде строк
+Strs get_lived_str_uid() {
+  Strs ret;
+  cnauto entityes = hpw::entity_mgr->get_entities();
+  for (cnauto entity: entityes)
+    if (entity->status.live)
+      ret.push_back( n2s(entity->uid) );
+  return ret;
+}
+
+// предложить uid'ы всего того, что можно убить
+Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  return_if(args.size() > 2, Strs{});
+  Strs ret;
+  cauto cmd_name = ctx.name();
+  cauto str_uids = get_lived_str_uid();
+
+  // отфильтровать пользоватеьский ввод
+  if (args.size() == 2) {
+    cnauto entity_name = args.at(1);
+    cauto name_filter = [&](CN<Str> it)
+      { return it.find(entity_name) == 0; };
+    for (cnauto name: str_uids | std::views::filter(name_filter))
+      ret.push_back(cmd_name + ' ' + name);
+    return ret;
+  }
+
+  // предложить из списка
+  for (cnauto name: str_uids)
+    ret.push_back(cmd_name + ' ' + name);
+  return ret;
+}
+
 void cmd_entity_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -73,6 +126,11 @@ void cmd_entity_init(Cmd& cmd) {
     "spawn <entity> <x> <y> - make entity on x/y pos."
     "If x/y not defined, use random on-screen pos",
     &spawn, &spawn_matches )
+  MAKE_CMD (
+    "kill",
+    "kill <uid> - kill entity by entity-uid."
+    "If uid not defined, kill last spawned",
+    &kill, &kill_matches )
     
   #undef MAKE_CMD
 } // cmd_entity_init
