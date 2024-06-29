@@ -111,12 +111,18 @@ struct Scene_cmd::Impl {
 
   // показывает автодополнение команд
   inline void print_autocompletion(Image& dst) const {
+    constexpr uint lines_limit = 23; // больше чем столько строк не выводить
     const Vec pos (15, 30);
     cauto input = sconv<Str>(hpw::text_input);
     cauto matches = hpw::cmd.command_matches(input);
     utf32 text = U"________________________________\n";
-    for (cnauto match: matches)
+    
+    for (uint line {}; cnauto match: matches) {
       text += sconv<utf32>(match) + U'\n';
+      ++line;
+      if (line >= lines_limit)
+        break;
+    }
     graphic::font->draw(dst, pos, text);
   }
 }; // impl
