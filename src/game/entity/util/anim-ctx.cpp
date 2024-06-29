@@ -15,11 +15,8 @@
 #include "util/math/vec-util.hpp"
 #include "util/log.hpp"
 
-Anim_ctx::Anim_ctx() {}
-
-Anim_ctx::Anim_ctx(CN<decltype(anim)> new_anim)
-: anim {new_anim}
-{ assert(anim); }
+Anim_ctx::Anim_ctx(CP<Anim> new_anim): anim {new_anim}
+  { assert(anim); }
 
 void Anim_ctx::update(const Delta_time dt, Entity &entity) {
   // если нет анимации, выйти
@@ -127,7 +124,8 @@ void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
         old_interpolated_pos + direct->offset + offset,
         interpolated_pos + direct->offset + offset, blend_f, entity.uid );
     } else { // обычный рендер
-      insert(dst, *direct->sprite.lock(), interpolated_pos + direct->offset + offset, blend_f, entity.uid);
+      insert(dst, *direct->sprite.lock(),
+        interpolated_pos + direct->offset + offset, blend_f, entity.uid);
     }
     
     m_draw_pos = interpolated_pos;
@@ -146,14 +144,15 @@ Vec Anim_ctx::get_interpolated_pos() const {
   );
 }
 
-void Anim_ctx::set_anim(CN<decltype(anim)> new_anim) {
+void Anim_ctx::set_anim(CP<Anim> new_anim) {
   *this = {};
   anim = new_anim;
 }
 
 void Anim_ctx::set_contour(CP<Anim> val) {
   assert(val);
-  iferror(!anim, "anim не задан, поэтому контур может быть удалён при set_anim");
+  iferror(!anim, "anim не задан, поэтому контур "
+    "может быть удалён при set_anim");
   contour = val;
 }
 
@@ -214,7 +213,6 @@ void Anim_ctx::update_hitbox(CN<Pool_ptr(Hitbox>) _hitbox) {
 } // update_hitbox
 
 void Anim_ctx::set_default_deg(real deg) { fixed_deg = ring_deg(deg); }
-decltype(Anim_ctx::fixed_deg) Anim_ctx::get_default_deg() const { return fixed_deg; }
 
 void Anim_ctx::draw_contour(Image& dst, const Vec offset, real degree) const {
   return_if (!contour);
@@ -225,5 +223,3 @@ void Anim_ctx::draw_contour(Image& dst, const Vec offset, real degree) const {
   auto contour_sprite = contour_direct->sprite.lock();
   insert(dst, *contour_sprite, contour_direct->offset + offset, contour_bf);
 } // draw_contour
-
-Vec Anim_ctx::get_draw_pos() const { return m_draw_pos; }
