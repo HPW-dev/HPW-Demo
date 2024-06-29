@@ -189,6 +189,6 @@ void Player_dark::draw_stars(Image& dst) const {
     assert(m_window_star_len > 0);
     star.radius = ratio * rndr_fast(0, m_window_star_len);
     star.flags.no_sphere = true;
-    star.draw(dst, window_pos + anim_ctx.get_draw_pos());
+    star.draw(dst, window_pos + anim_ctx.get_drawed_pos());
   }
 } // draw_stars
