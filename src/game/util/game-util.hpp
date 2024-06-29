@@ -33,6 +33,8 @@ CN<Shared<Anim>> make_light_mask(CN<Str> src, CN<Str> dst);
 Str get_random_replay_name();
 [[nodiscard]] Vec get_rand_pos_safe(const real sx, const real sy, const real ex, const real ey);
 [[nodiscard]] Vec get_rand_pos_graphic(const real sx, const real sy, const real ex, const real ey);
+// случайная позиция на экране
+[[nodiscard]] Vec rnd_screen_pos_safe();
 // рисует нажатые игровые клавиши
 void draw_controls(Image& dst);
 // вычисляет контрольные суммы по экзешнику и data.zip

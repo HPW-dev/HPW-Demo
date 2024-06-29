@@ -469,3 +469,11 @@ void load_sounds() {
 
   init_store_sound();
 } // load_sounds
+
+[[nodiscard]] Vec rnd_screen_pos_safe() {
+  assert(graphic::canvas);
+  return Vec {
+    rndr(0, graphic::canvas->X),
+    rndr(0, graphic::canvas->Y)
+  };
+}
