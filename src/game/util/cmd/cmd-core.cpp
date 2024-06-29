@@ -61,19 +61,22 @@ class Task_state_saver final: public Task {
   Vector<Stat> m_stats {};
   cautox separator = '|';
   Delta_time m_timeout {};
+  Delta_time m_sample_delay {};
   std::chrono::steady_clock::time_point m_time_start {};
   std::chrono::steady_clock::time_point m_sample_delay_start {};
-  cautox sample_delay {1s};
 
 public:
   inline explicit Task_state_saver(CN<Str> fname, const Delta_time timeout,
-  Cmd& console)
+  const Delta_time sample_delay, Cmd& console)
   : m_fname {fname}
   , m_console {console}
   , m_timeout {timeout}
+  , m_sample_delay {sample_delay}
   {
     iferror(fname.empty(), "пустое имя файла");
-    iferror(timeout <= 0, "неправильный параметр таймаута");
+    iferror(m_timeout <= 0, "неправильный параметр таймаута");
+    iferror(m_sample_delay <= 0,
+      "неправильный параметр задержки между сохранениями");
     m_stats = {
       Stat {.title="'Software draw time Ms.'", .getter=[]{
         return n2s(graphic::soft_draw_time * 1'000.f, 5); }},
@@ -122,8 +125,8 @@ public:
     // каждую секунду сейвить инфу о игре
     cauto sample_delay_timediff = std::chrono::steady_clock::now()
       - m_sample_delay_start;
-    if (std::chrono::duration_cast<Seconds>(sample_delay_timediff)
-    >= sample_delay) {
+    if (std::chrono::duration_cast<Seconds>(sample_delay_timediff).count()
+    >= m_sample_delay) {
       for (cnauto stat: m_stats)
         m_file << stat.getter() + separator;
       m_file << std::endl;
@@ -153,13 +156,14 @@ void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 }
 
 void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
-  iferror(args.size() < 3, "в команде stat_record задано мало параметров");
+  iferror(args.size() < 4, "в команде stat задано мало параметров");
   cnauto filename = args[1];
   cnauto seconds = s2n<Delta_time>(args[2]);
+  cnauto sample_delay = s2n<Delta_time>(args[3]);
   if (::g_state_saver_task)
     end_stat_record(command, console, args);
   ::g_state_saver_task = hpw::task_mgr.move (
-    new_shared<Task_state_saver>(filename, seconds, console) );
+    new_shared<Task_state_saver>(filename, seconds, sample_delay, console) );
   console.print("Начат сбор статистики...");
   console.print("Статистика сохранится в файл \"" + filename + "\"");
   console.print("Завершение через " + n2s(seconds) + " сек.");
@@ -183,9 +187,9 @@ void cmd_core_init(Cmd& cmd) {
     "tickrate <limit> - sets count of updates per. sec.",
     &set_tickrate, {} )
   MAKE_CMD (
-    "stats_start",
-    "stats_start <filename> <seconds> - save statistics to file. "
-    "If seconds = 0 - infinite",
+    "stats",
+    "stats <filename> <seconds> <sample save delay>"
+    " - save statistics to file. ",
     &start_stat_record, {} )
   MAKE_CMD (
     "stats_end",
