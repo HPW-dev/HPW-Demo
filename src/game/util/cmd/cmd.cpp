@@ -37,7 +37,8 @@ Cmd::Cmd() {
   move(new_unique<Cmd_restart>(this));
   move(new_unique<Cmd_collider>(this));
 
-  cmd_core_init(*this); //cmd-core.hpp
+  cmd_core_init(*this); // cmd-core.hpp
+  cmd_entity_init(*this); // cmd-entity.hpp
 
   //cmd-entity.hpp
   //move(new_unique<Cmd_entities>());
