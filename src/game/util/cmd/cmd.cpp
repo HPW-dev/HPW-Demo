@@ -165,6 +165,7 @@ void Cmd::print_to_screen(CN<Str> text) const {
   Message msg;
   msg.text = utf8_to_32(text);
   msg.lifetime = 3.5;
+  assert(hpw::message_mgr);
   hpw::message_mgr->move(std::move(msg));
 }
 

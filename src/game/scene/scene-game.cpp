@@ -15,7 +15,6 @@
 #include "game/core/core.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/entities.hpp"
@@ -50,6 +49,8 @@
 #ifdef DEBUG
 #include "scene-cmd.hpp"
 #include "scene-debug.hpp"
+#include "game/core/debug.hpp"
+#include "game/util/cmd/cmd-script.hpp"
 #include "game/util/cmd/cmd.hpp"
 #include "game/level/level-empty.hpp"
 //#include "game/level/level-collision-test.hpp"
@@ -116,6 +117,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
   hpw::message_mgr = new_unique<Message_mgr>();
+  startup_script();
 } // c-tor
 
 Scene_game::~Scene_game() {
@@ -188,6 +190,11 @@ void Scene_game::draw(Image& dst) const {
     graphic::hud->draw(dst);
   post_draw(dst);
 } // draw
+
+void Scene_game::startup_script() {
+  if (!hpw::start_script.empty())
+    execute_script(hpw::cur_dir + hpw::start_script);
+}
 
 void Scene_game::init_entitys() {
   // для показа хитбоксов

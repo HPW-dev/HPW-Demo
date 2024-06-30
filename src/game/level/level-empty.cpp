@@ -1,13 +1,11 @@
 #include "level-empty.hpp"
 #include "util/hpw-util.hpp"
-#include "game/core/debug.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
-#include "game/util/cmd/cmd-script.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/player/player-dark.hpp"
 #include "game/entity/util/entity-util.hpp"
@@ -18,8 +16,6 @@ struct Level_empty::Impl {
     make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
       7, 1, graphic::canvas->X, graphic::canvas->Y));
-    if (!hpw::start_script.empty())
-      execute_script(hpw::cur_dir + hpw::start_script);
   }
 
   inline void update(const Vec vel, Delta_time dt) {
