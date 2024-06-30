@@ -62,10 +62,10 @@ void Level_mgr::accept_maker() {
     end_of_levels = true;
   } else {
     // взять следующий уровень и убрать его из списка на создание
+    hpw::task_mgr.kill_all();
     auto maker = m_makers.front();
     m_level = maker();
     m_makers.pop_front();
-    hpw::task_mgr.kill_all();
   }
 }
 
