@@ -14,6 +14,43 @@
 #include "util/math/random.hpp"
 #include "util/math/timer.hpp"
 
+// выполняет команду после задержки
+class Timed_cmd final: public Task {
+  Cmd& m_console;
+  Str m_cmd_with_args {};
+  Delta_time m_delay {};
+
+public:
+  inline explicit Timed_cmd(Cmd& console, Delta_time delay,
+  CN<Str> cmd_with_args)
+  : m_console {console}
+  , m_cmd_with_args {cmd_with_args}
+  , m_delay {delay}
+  {
+    iferror(delay < 0, "задержка < 0");
+    iferror(cmd_with_args.empty(), "команда пуста");
+  }
+
+  inline void update(const Delta_time dt) override {
+    m_delay -= dt;
+    if (m_delay <= 0)
+      kill(); // в on_end вызовется команда
+  }
+
+  inline void on_end() override { m_console.exec(m_cmd_with_args); }
+}; // Timed_cmd
+
+void timed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 3, "в команде timed недостаточно аргументов");
+  cauto delay = s2n<real>(args[1]);
+  // объединить строки в команду для отложенного запуска
+  Str cmd_str;
+  for (std::size_t i = 2; i < args.size(); ++i)
+    cmd_str += '\"' + args.at(i) + "\" ";
+  hpw::task_mgr.move( new_shared<Timed_cmd>(console, delay, cmd_str) );
+  console.print(Str("команда \"") + cmd_str + "\" поставлена на таймер");
+}
+
 void set_seed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "в команде seed не задан параметр");
   cnauto seed = s2n<std::uint32_t>(args[1]);
@@ -211,6 +248,10 @@ void cmd_core_init(Cmd& cmd) {
     "seed",
     "seed <num> - set random seed",
     &set_seed, {} )
+  MAKE_CMD (
+    "timed",
+    "timed <seconds> <command args...> - execute command after <seconds>",
+    &timed, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
