@@ -18,12 +18,8 @@ Anim_ctx::Anim_ctx(CP<Anim> new_anim): m_anim {new_anim}
   { assert(m_anim); }
 
 void Anim_ctx::update(const Delta_time dt, Entity &entity) {
-  // если нет анимации, выйти
-  if ( !m_anim) {
-    entity.status.end_anim = true;
-    return;
-  }
-
+  // при проблемах, старый код тут: b90e158115e53482c1fafe95990249a89f796dd7
+  assert(m_anim);
   // не крутить анимацию, если не надо
   return_if (m_speed_scale == 0);
   return_if (entity.status.stop_anim);
