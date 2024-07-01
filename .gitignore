@@ -1,4 +1,5 @@
-﻿build/debug script.txt
+﻿stats.csv
+build/debug script.txt
 build/config.yml
 build/editor
 build/plugin
