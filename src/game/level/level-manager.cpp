@@ -97,5 +97,6 @@ void Level_mgr::set(CN<Level_mgr::Maker> maker) {
   assert(maker);
   if (hpw::entity_mgr)
     hpw::entity_mgr->clear();
+  hpw::task_mgr.clear();
   m_level = maker();
 }

@@ -4,7 +4,10 @@
 #include "util/safecall.hpp"
 #include "util/error.hpp"
 
-Task::~Task() { kill(); }
+Task::~Task() { 
+  if (m_active)
+    kill();
+}
 
 void Task::stop() {
   m_paused = true;
@@ -17,13 +20,17 @@ void Task::unfreeze() {
 }
 
 void Task::kill() {
-  m_active = false;
-  on_end();
+  if (m_active) {
+    m_active = false;
+    on_end();
+  }
 }
 
 void Task::restart() {
-  on_end();
-  on_start();
+  if (m_active)
+    on_end();
+  if (!m_active)    
+    on_start();
 }
 
 void Task_mgr::process_killed() {
@@ -77,4 +84,10 @@ void Task_mgr::unfreeze_all() {
 
 void Task_mgr::kill_all() { m_tasks.clear(); }
 
-Task_mgr::~Task_mgr() { kill_all(); }
+Task_mgr::~Task_mgr() { clear(); }
+
+void Task_mgr::clear() {
+  for (nauto task: m_tasks)
+    task->deactivate();
+  m_tasks.clear();
+}

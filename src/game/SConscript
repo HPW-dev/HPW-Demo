@@ -17,8 +17,8 @@ if enable_omp:
   cpp_flags.extend(["-fopenmp"])
   
 lib_path = []
-build_dir = "../../build/"
 prog_name = "HPW"
+build_dir = "../../build/"
 src_dir = "../../src/"
 thirdparty_dir = "../../thirdparty/"
 

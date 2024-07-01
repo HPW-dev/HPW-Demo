@@ -25,6 +25,8 @@ public:
   virtual void restart();
   inline bool is_active() const { return m_active; }
   inline bool is_paused() const { return m_paused; }
+  inline void deactivate() { m_active = false; }
+  inline void activate() { m_active = true; }
 };
 
 // рулит задачами
@@ -47,4 +49,5 @@ public:
   void stop_all();
   void unfreeze_all();
   void kill_all();
+  void clear();
 };
