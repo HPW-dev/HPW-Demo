@@ -1,5 +1,8 @@
 #pragma once
+#ifndef __clang__
 #include <omp.h>
+#endif
+
 #include <mutex>
 
 namespace omp {

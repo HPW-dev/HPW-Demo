@@ -1,4 +1,7 @@
+#ifndef __clang__
 #include <omp.h>
+#endif
+
 #include <cassert>
 #include <cmath>
 #include <utility>
@@ -31,16 +34,16 @@ Image mirror_v(CN<Image> src) {
 Sprite mirror_h(CN<Sprite> src) {
   assert(src);
   Sprite ret;
-  ret.move_image(std::move( mirror_h(src.image()) ));
-  ret.move_mask(std::move( mirror_h(src.mask()) ));
+  ret.move_image( mirror_h(src.image()) );
+  ret.move_mask( mirror_h(src.mask()) );
   return ret;
 }
 
 Sprite mirror_v(CN<Sprite> src) {
   assert(src);
   Sprite ret;
-  ret.move_image(std::move( mirror_v(src.image()) ));
-  ret.move_mask(std::move( mirror_v(src.mask()) ));
+  ret.move_image( mirror_v(src.image()) );
+  ret.move_mask( mirror_v(src.mask()) );
   return ret;
 }
 
@@ -87,8 +90,8 @@ Sprite rotate_90(CN<Sprite> src, uint pass) {
     return {};
   }
   Sprite dst;
-  dst.move_image(std::move( rotate_90(src.image(), pass) ));
-  dst.move_mask(std::move( rotate_90(src.mask(), pass) ));
+  dst.move_image( rotate_90(src.image(), pass) );
+  dst.move_mask( rotate_90(src.mask(), pass) );
   return dst;
 }
 

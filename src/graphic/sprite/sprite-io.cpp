@@ -1,5 +1,8 @@
 #include <cassert>
+#ifndef __clang__
 #include <omp.h>
+#endif
+
 #include <utility>
 #include "sprite-io.hpp"
 #include "graphic/image/palette.hpp"

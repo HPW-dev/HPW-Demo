@@ -1,4 +1,7 @@
+#ifndef __clang__
 #include <omp.h>
+#endif
+
 #include <array>
 #include <mutex>
 #include <cmath>

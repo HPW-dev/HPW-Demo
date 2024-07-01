@@ -61,7 +61,11 @@ name& operator = (name&&) = delete; \
 name& operator = (CN<name>) = delete;
 
 // для обмана оптимизатора
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-#define do_not_optimize(val) { (void)val; }
-#pragma GCC pop_options
+#if defined(__clang__)
+  [[clang::optnone]] void do_not_optimize(auto val) { (void)val; }
+#else // GCC:
+  #pragma GCC push_options
+  #pragma GCC optimize ("O0")
+  #define do_not_optimize(val) { (void)val; }
+  #pragma GCC pop_options
+#endif

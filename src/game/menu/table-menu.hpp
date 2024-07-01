@@ -16,7 +16,6 @@ public:
   };
   using Rows = Vector<Row>;
 
-  Table_menu() = default;
   ~Table_menu();
   explicit Table_menu(CN<utf32> title, CN<Rows> rows, const uint row_height,
     CN<Menu_items> items, CN<utf32> elems_empty_txt={});

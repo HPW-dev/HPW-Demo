@@ -14,11 +14,14 @@
 #include "util/math/random.hpp"
 #include "util/math/timer.hpp"
 
+//#include "util/log.hpp"
+
 // выполняет команду после задержки
 class Timed_cmd final: public Task {
   Cmd& m_console;
   Str m_cmd_with_args {};
   Delta_time m_delay {};
+  Delta_time m_delay_start {};
 
 public:
   inline explicit Timed_cmd(Cmd& console, Delta_time delay,
@@ -26,15 +29,17 @@ public:
   : m_console {console}
   , m_cmd_with_args {cmd_with_args}
   , m_delay {delay}
+  , m_delay_start {delay}
   {
     iferror(delay < 0, "задержка < 0");
     iferror(cmd_with_args.empty(), "команда пуста");
   }
 
   inline void update(const Delta_time dt) override {
-    m_delay -= dt;
+    //hpw_log("delay: " << m_delay << '/' << m_delay_start << '\n');
     if (m_delay <= 0)
       kill(); // в on_end вызовется команда
+    m_delay -= dt;
   }
 
   inline void on_end() override { m_console.exec(m_cmd_with_args); }

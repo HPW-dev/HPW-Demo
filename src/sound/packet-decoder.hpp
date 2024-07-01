@@ -13,11 +13,23 @@ public:
   virtual Bytes decode(const uint needed_sz) = 0;
 };
 
+#ifdef __clang__
+  #define Smart_ptr Shared
+#else
+  #define Smart_ptr Unique
+#endif
+
+#ifdef __clang__
+  #define new_smart_ptr new_shared
+#else
+  #define new_smart_ptr new_unique
+#endif
+
 #define MAKE_PACKET_DECODER(NAME) \
 class NAME: public Packet_decoder { \
   nocopy(NAME); \
   struct Impl; \
-  Unique<Impl> impl {}; \
+  Smart_ptr<Impl> impl {}; \
 public: \
   explicit NAME(CN<Audio> sound); \
   ~NAME(); \

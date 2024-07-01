@@ -1,4 +1,7 @@
+#ifndef __clang__
 #include <omp.h>
+#endif
+
 #include <cassert>
 #include "blur.hpp"
 #include "graphic/image/image.hpp"
