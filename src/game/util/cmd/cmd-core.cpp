@@ -8,6 +8,7 @@
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "host/host-util.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
@@ -238,6 +239,25 @@ void clear_tasks(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("все задачи удалены");
 }
 
+void set_direction(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "в команде direct мало аргументов");
+  cauto uid_a = s2n<Uid>(args[1]);
+  cauto uid_b = s2n<Uid>(args[2]);
+
+  auto a = hpw::entity_mgr->find(uid_a);
+  auto b = hpw::entity_mgr->find(uid_b);
+  iferror(!a, "не удалось найти объект с UID = " << uid_a);
+  iferror(!b, "не удалось найти объект с UID = " << uid_b);
+
+  cauto deg = deg_to_target(*a, *b);
+  a->phys.set_deg(deg);
+
+  cauto name_a = a->name();
+  cauto name_b = b->name();
+  console.print("объект \"" + name_a
+    + "\" направлен на объект \"" + name_b + "\"");
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -284,6 +304,10 @@ void cmd_core_init(Cmd& cmd) {
     "clear_tasks",
     "clear_tasks - убирает все задачи",
     &clear_tasks, {} )
+  MAKE_CMD (
+    "direct",
+    "direct <uid> <uid> - поворачивает один объект в сторону другого",
+    &set_direction, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init

@@ -307,6 +307,16 @@ struct Entity_mgr::Impl {
   }
 
   inline void set_visible(const bool mode) { m_visible = mode; }
+
+  inline Entity* find(const Uid uid) const {
+    auto it = std::find_if(entities.begin(), entities.end(),
+      [&](CN<decltype(entities)::value_type> entity)
+      { return entity->uid == uid; }
+    );
+    if (it != entities.end())
+      return it->get();
+    return nullptr;
+  }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>()} {}
@@ -329,3 +339,4 @@ Player* Entity_mgr::get_player() const { return impl->get_player(); }
 void Entity_mgr::set_player(Player* player) { impl->set_player(player); }
 Vec Entity_mgr::target_for_enemy() const { return impl->target_for_enemy(); }
 void Entity_mgr::set_visible(const bool mode) { return impl->set_visible(mode); }
+Entity* Entity_mgr::find(const Uid uid) const { return impl->find(uid); }
