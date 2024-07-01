@@ -1,37 +1,23 @@
 #include "level-empty.hpp"
-#include "util/hpw-util.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
-#include "game/entity/util/phys.hpp"
-#include "game/entity/player/player-dark.hpp"
-#include "game/entity/util/entity-util.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
+#include "util/hpw-util.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {
-    make_player();
     hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
       7, 1, graphic::canvas->X, graphic::canvas->Y));
   }
 
-  inline void update(const Vec vel, Delta_time dt) {
-    cauto player = hpw::entity_mgr->get_player();
-    return_if( !player);
-  }
+  inline void update(const Vec vel, Delta_time dt) {}
 
   inline void draw(Image& dst) const {
     dst.fill( Pal8::from_real(1.0 / 3.0, true) );
-  }
-
-  void make_player() {
-    auto player_pos_from_prev_level = hpw::level_mgr->player_prev_lvl_pos();
-    // если игрок где-то стоял до этого, то поставить его туда же, иначе в центр экрана
-    auto pos = player_pos_from_prev_level.not_zero() ? player_pos_from_prev_level : get_screen_center();
-    hpw::entity_mgr->make({}, "player.boo.dark", pos);
   }
 }; // Impl
 
