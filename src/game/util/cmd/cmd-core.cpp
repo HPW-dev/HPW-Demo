@@ -14,8 +14,6 @@
 #include "util/math/random.hpp"
 #include "util/math/timer.hpp"
 
-//#include "util/log.hpp"
-
 // выполняет команду после задержки
 class Timed_cmd final: public Task {
   Cmd& m_console;
@@ -36,7 +34,6 @@ public:
   }
 
   inline void update(const Delta_time dt) override {
-    //hpw_log("delay: " << m_delay << '/' << m_delay_start << '\n');
     if (m_delay <= 0)
       kill(); // в on_end вызовется команда
     m_delay -= dt;
@@ -219,6 +216,23 @@ void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("Завершение через " + n2s(seconds) + " сек.");
 }
 
+// повторяет команды
+void repeat(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() == 1, "в команде repeat не задано число повторений");
+  iferror(args.size() < 3, "в команде repeat не задана команда для повторения");
+  cnauto times = s2n<int>(args[1]);
+  iferror(times < 1, "число повторений не должно быть меньше 1");
+  iferror(times > 4'000'000, "число повторений не должно быть больше 4M");
+
+  // соединить оставшиеся аргументы в команду чтобы запустить их
+  Str cmd_with_args;
+  for (std::size_t i = 2; i < args.size(); ++i)
+    cmd_with_args += args[i] + ' ';
+
+  cfor (i, times)
+    console.exec(cmd_with_args);
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -257,6 +271,10 @@ void cmd_core_init(Cmd& cmd) {
     "timed",
     "timed <seconds> <command args...> - execute command after <seconds>",
     &timed, {} )
+  MAKE_CMD (
+    "rep",
+    "rep <count> <command args...> - repeats command <count> times",
+    &repeat, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
