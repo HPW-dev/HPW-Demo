@@ -116,7 +116,6 @@ struct Entity_mgr::Impl {
     collision_resolver = {};
     m_player = {};
     entities.clear();
-    entity_pool.release();
     phys_pool.release();
     hitbox_pool.release();
     clear_entity_uid();
@@ -138,6 +137,9 @@ struct Entity_mgr::Impl {
   } // update_entitys
 
   inline void update_kills() {
+    if (entities.empty())
+      entity_pool.release();
+
     for (nauto entity: entities) {
       cont_if( !entity);
       cont_if( !entity->status.live);
