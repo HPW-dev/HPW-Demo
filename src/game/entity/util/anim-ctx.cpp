@@ -14,8 +14,7 @@
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
 
-Anim_ctx::Anim_ctx(CP<Anim> new_anim): m_anim {new_anim}
-  { assert(m_anim); }
+Anim_ctx::Anim_ctx(CP<Anim> new_anim): m_anim {new_anim} { assert(m_anim); }
 
 void Anim_ctx::update(const Delta_time dt, Entity &entity) {
   // при проблемах, старый код тут: b90e158115e53482c1fafe95990249a89f796dd7
@@ -28,22 +27,21 @@ void Anim_ctx::update(const Delta_time dt, Entity &entity) {
 
   // переключать кадры
   while (true) {
-    auto frame = m_anim->get_frame(m_frame_idx);
+    cauto frame = m_anim->get_frame(m_frame_idx);
     break_if( !frame);
 
     // если время текущего кадра не прошло, то ждать
-    auto cur_duration = frame->duration;
+    cauto cur_duration = frame->duration;
     break_if (m_frame_timer < cur_duration);
     m_frame_timer -= cur_duration;
 
-    update_frame_idx(entity);
-    entity.status.end_frame = true;
-
+    next_frame_idx(entity); // сменить кадр
     break_if(cur_duration == 0); // защита от зацикливания
   } // while 1
 } // update
 
-void Anim_ctx::update_frame_idx(Entity &entity) {
+void Anim_ctx::next_frame_idx(Entity &entity) {
+  entity.status.end_frame = true;
   auto frame_count = m_anim->frame_count();
   m_prev_frame_idx = m_frame_idx;
 
@@ -190,22 +188,6 @@ CP<Frame> Anim_ctx::get_cur_frame() const {
   auto idx = get_cur_frame_idx();
   return m_anim->get_frame(idx);
 }
-
-CP<Hitbox> Anim_ctx::get_hitbox(real degree, CN<Entity> entity) const {
-  if ( !m_anim)
-    return nullptr;
-  auto new_deg = get_degree_with_flags(degree, entity);
-  return m_anim->get_hitbox(new_deg);
-}
-
-void Anim_ctx::update_hitbox(CN<Pool_ptr(Hitbox>) _hitbox) {
-  // в режакторе можно менять константные вещи
-  auto _anim = ccast<Anim*>(m_anim);
-  if (_anim)
-    _anim->update_hitbox(_hitbox);
-  else
-    error("hitbox set error");
-} // update_hitbox
 
 void Anim_ctx::set_default_deg(real deg) { m_fixed_deg = ring_deg(deg); }
 

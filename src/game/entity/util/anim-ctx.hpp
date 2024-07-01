@@ -42,15 +42,13 @@ public:
   inline void next_frame() { set_cur_frame(m_frame_idx + 1); }
   // переключить на предующий кадр
   inline void prev_frame() { set_cur_frame(m_frame_idx - 1); }
-  // получить хитбокс анимации
-  CP<Hitbox> get_hitbox(real degree, CN<Entity> entity) const;
-  // назначить новых хитбокс
-  void update_hitbox(CN<Pool_ptr(Hitbox)> _hitbox);
   // задать статичный угол (юзается флагом .m_fixed_deg)
   void set_default_deg(real deg);
   inline real get_default_deg() const { return m_fixed_deg; }
   // координаты, в которых объект был нарисован
   inline Vec get_drawed_pos() const { return m_drawed_pos; }
+  // получение угла поворота с учётом флагов
+  real get_degree_with_flags(real src, CN<Entity> entity) const;
 
 private:
   CP<Anim> m_anim {}; // анимация с банка
@@ -66,9 +64,7 @@ private:
   mutable Vec m_old_interp_pos {};
   mutable Vec m_drawed_pos {}; // здесь объект был нарисован
 
-  // получение угла поворота с учётом флагов
-  real get_degree_with_flags(real src, CN<Entity> entity) const;
   Vec get_interpolated_pos() const;
-  void update_frame_idx(Entity &entity);
+  void next_frame_idx(Entity &entity);
   void draw_contour(Image& dst, const Vec offset, real degree) const;
 }; // Anim_ctx

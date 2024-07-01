@@ -3,7 +3,7 @@
 #include "util/hitbox.hpp"
 #include "util/phys.hpp"
 #include "util/error.hpp"
-#include "util/anim-ctx.hpp"
+#include "util/anim-ctx-util.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
 #include "graphic/image/image.hpp"
@@ -50,9 +50,8 @@ bool Collidable::is_collided_with(CN<Collidable> other) const {
   return this_hitbox->is_collided_with(this_pos, other_pos, *other_hitbox);
 } // is_collided_with
 
-CP<Hitbox> Collidable::get_hitbox() const {
-  return anim_ctx.get_hitbox(phys.get_deg(), *this);
-}
+CP<Hitbox> Collidable::get_hitbox() const
+  { return anim_ctx_util::get_hitbox(anim_ctx, phys.get_deg(), *this); }
 
 void Collidable::draw_hitbox(Image& dst, const Vec offset) const {
   if (auto local_hitbox = get_hitbox(); local_hitbox) {
