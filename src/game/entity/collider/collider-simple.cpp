@@ -1,7 +1,4 @@
-#ifndef __clang__
 #include <omp.h>
-#endif
-
 #include "collider-simple.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/core/debug.hpp"

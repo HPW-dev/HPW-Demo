@@ -1,7 +1,4 @@
-#ifndef __clang__
 #include <omp.h>
-#endif
-
 #include <unordered_map>
 #include <utility>
 #include <algorithm>

@@ -54,7 +54,7 @@ struct Packet_decoder_flac::Impl {
   } // decode
 }; // FLAC impl
 
-Packet_decoder_flac::Packet_decoder_flac(CN<Audio> sound): impl {new_smart_ptr<Impl>(sound)} {}
+Packet_decoder_flac::Packet_decoder_flac(CN<Audio> sound): impl {new_unique<Impl>(sound)} {}
 Bytes Packet_decoder_flac::decode(const uint needed_sz) { return impl->decode(needed_sz); }
 
 struct Packet_decoder_raw::Impl {
@@ -85,7 +85,7 @@ struct Packet_decoder_raw::Impl {
   }
 }; // RAW impl
 
-Packet_decoder_raw::Packet_decoder_raw(CN<Audio> sound): impl {new_smart_ptr<Impl>(sound)} {}
+Packet_decoder_raw::Packet_decoder_raw(CN<Audio> sound): impl {new_unique<Impl>(sound)} {}
 Bytes Packet_decoder_raw::decode(const uint needed_sz) { return impl->decode(needed_sz); }
 
 struct Packet_decoder_vorbis::Impl {
@@ -112,5 +112,5 @@ struct Packet_decoder_vorbis::Impl {
   }
 }; // Vorbis impl
 
-Packet_decoder_vorbis::Packet_decoder_vorbis(CN<Audio> sound): impl {new_smart_ptr<Impl>(sound)} {}
+Packet_decoder_vorbis::Packet_decoder_vorbis(CN<Audio> sound): impl {new_unique<Impl>(sound)} {}
 Bytes Packet_decoder_vorbis::decode(const uint needed_sz) { return impl->decode(needed_sz); }

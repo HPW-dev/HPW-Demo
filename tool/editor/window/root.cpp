@@ -1,7 +1,4 @@
-#ifndef __clang__
 #include <omp.h>
-#endif
-
 #include <cmath>
 #include "window-util.hpp"
 #include "root.hpp"

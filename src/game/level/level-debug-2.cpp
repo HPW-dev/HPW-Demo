@@ -1,7 +1,4 @@
-#ifndef __clang__
 #include <omp.h>
-#endif
-
 #include <cmath>
 #include "level-debug-2.hpp"
 #include "graphic/util/util-templ.hpp"

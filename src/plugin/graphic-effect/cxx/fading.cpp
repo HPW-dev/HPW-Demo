@@ -1,7 +1,4 @@
-#ifndef __clang__
 #include <omp.h>
-#endif
-
 #include <algorithm>
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include "pge-util.hpp"

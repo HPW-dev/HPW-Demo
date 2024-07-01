@@ -1,7 +1,4 @@
-#ifndef __clang__
 #include <omp.h>
-#endif
-
 #include <array>
 #include <cassert>
 #include <algorithm>
