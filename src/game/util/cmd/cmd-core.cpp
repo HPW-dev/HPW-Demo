@@ -233,6 +233,11 @@ void repeat(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     console.exec(cmd_with_args);
 }
 
+void clear_tasks(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  hpw::task_mgr.clear();
+  console.print("все задачи удалены");
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -275,6 +280,10 @@ void cmd_core_init(Cmd& cmd) {
     "rep",
     "rep <count> <command args...> - repeats command <count> times",
     &repeat, {} )
+  MAKE_CMD (
+    "clear_tasks",
+    "clear_tasks - убирает все задачи",
+    &clear_tasks, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
