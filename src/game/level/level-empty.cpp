@@ -7,6 +7,7 @@
 #include "game/util/game-util.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 #include "util/hpw-util.hpp"
+#include "util/math/timer.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {
@@ -14,7 +15,9 @@ struct Level_empty::Impl {
       7, 1, graphic::canvas->X, graphic::canvas->Y));
   }
 
-  inline void update(const Vec vel, Delta_time dt) {}
+  inline void update(const Vec vel, Delta_time dt) {
+    // ...
+  }
 
   inline void draw(Image& dst) const {
     dst.fill( Pal8::from_real(1.0 / 3.0, true) );
