@@ -10,6 +10,7 @@
 #include "game/util/config.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "host/host-util.hpp"
+#include "util/hpw-util.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 #include "util/math/random.hpp"
@@ -258,6 +259,20 @@ void set_direction(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     + "\" направлен на объект \"" + name_b + "\"");
 }
 
+void set_speed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "в команде speed мало аргументов");
+  cauto uid = s2n<Uid>(args[1]);
+  auto speed = s2n<real>(args[2]);
+  speed = pps(speed);
+
+  auto entity = hpw::entity_mgr->find(uid);
+  iferror(!entity, "не удалось найти объект с UID = " << uid);
+
+  entity->phys.set_speed(speed);
+  console.print("объекту \"" + entity->name()
+    + "\" назначена скорость " + n2s(speed, 2));
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -308,6 +323,10 @@ void cmd_core_init(Cmd& cmd) {
     "direct",
     "direct <uid> <uid> - поворачивает один объект в сторону другого",
     &set_direction, {} )
+  MAKE_CMD (
+    "speed",
+    "speed <uid> <speed> - поворачивает меняет скорость объекту",
+    &set_speed, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
