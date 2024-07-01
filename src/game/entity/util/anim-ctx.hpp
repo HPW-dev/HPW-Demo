@@ -67,4 +67,12 @@ private:
   Vec get_interpolated_pos() const;
   void next_frame_idx(Entity &entity);
   void draw_contour(Image& dst, const Vec offset, real degree) const;
+  // обратный порядок кадров
+  void goto_prev_frame(Entity &entity);
+  // сделать следующий кадр случайный
+  void goto_rnd_frame();
+  // режим обратного воспроизведения кадров
+  void return_back_frame(Entity &entity);
+  // запустить анимацию заново
+  void reset_animation(Entity &entity);
 }; // Anim_ctx

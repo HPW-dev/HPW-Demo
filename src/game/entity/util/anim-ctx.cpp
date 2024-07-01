@@ -16,7 +16,7 @@
 
 Anim_ctx::Anim_ctx(CP<Anim> new_anim): m_anim {new_anim} { assert(m_anim); }
 
-void Anim_ctx::update(const Delta_time dt, Entity &entity) {
+void Anim_ctx::update(const Delta_time dt, Entity& entity) {
   // при проблемах, старый код тут: b90e158115e53482c1fafe95990249a89f796dd7
   assert(m_anim);
   // не крутить анимацию, если не надо
@@ -40,39 +40,63 @@ void Anim_ctx::update(const Delta_time dt, Entity &entity) {
   } // while 1
 } // update
 
-void Anim_ctx::next_frame_idx(Entity &entity) {
+void Anim_ctx::next_frame_idx(Entity& entity) {
   entity.status.end_frame = true;
-  auto frame_count = m_anim->frame_count();
   m_prev_frame_idx = m_frame_idx;
 
-  // применение флагов на переключение кадров
-  if (entity.status.rnd_frame) { // если след. кадр случайный
-    m_frame_idx = rndu(frame_count-1);
-  } else if (entity.status.goto_prev_frame) { // обратный порядок кадров
-    prev_frame();
-    /* дойдя до нуля включить обычный порядок
-    и засчитать конец анимации */
-    if (m_frame_idx == 0 && !entity.status.no_restart_anim) {
-      entity.status.goto_prev_frame = false;
-      entity.status.end_anim = true;
-    }
-  } else { // обычный порядок кадров
-    ++m_frame_idx;
-    // если дошли до конца:
-    if (m_frame_idx >= frame_count) {
-      if (entity.status.return_back) { // вернуться по кадрам обратно
-        prev_frame();
-        entity.status.goto_prev_frame = true;
-      } else { // запустить анимацию заново
-        if (entity.status.no_restart_anim)
-          set_last_frame();
-        else
-          m_frame_idx = 0;
-        entity.status.end_anim = true;
-      }
-    } // if end frame idx's
+  if (entity.status.rnd_frame) {
+    goto_rnd_frame();
+    return;
   }
+
+  if (entity.status.goto_prev_frame) {
+    goto_prev_frame(entity);
+    return;
+  }
+  
+  // обычный порядок кадров
+  ++m_frame_idx;
+
+  // если не дошли до конца анимации, то выйти
+  return_if (m_frame_idx < m_anim->frame_count());
+
+  if (entity.status.return_back) {
+    return_back_frame(entity);
+    return;
+  }
+  
+  reset_animation(entity);
 } // next_frame
+
+void Anim_ctx::reset_animation(Entity& entity) {
+  if (entity.status.no_restart_anim)
+    set_last_frame();
+  else
+    m_frame_idx = 0;
+  entity.status.end_anim = true;
+}
+
+void Anim_ctx::return_back_frame(Entity& entity) {
+  prev_frame();
+  entity.status.goto_prev_frame = true;
+}
+
+void Anim_ctx::goto_prev_frame(Entity& entity) {
+  prev_frame();
+
+  cauto frame_idx_is_zero = m_frame_idx == 0;
+  cauto is_restart_anim = entity.status.no_restart_anim;
+
+  /* дойдя до нуля включить обычный порядок
+  и засчитать конец анимации */
+  if (frame_idx_is_zero && is_restart_anim) {
+    entity.status.goto_prev_frame = false;
+    entity.status.end_anim = true;
+  }
+}
+
+void Anim_ctx::goto_rnd_frame()
+  { m_frame_idx = rndu(m_anim->frame_count()-1); }
 
 void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
   // TODO сделать межкадровый дизеринг
