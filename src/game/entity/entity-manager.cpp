@@ -145,16 +145,17 @@ struct Entity_mgr::Impl {
       cont_if( !entity->status.live);
 
       // смерть от флага killed (нет жизней у объекта)
-      if (entity->status.killed) {
-        entity->kill();
-        continue;
-      }
+      cauto is_killed = entity->status.killed;
       // смерть от конца анимации
-      if (entity->status.kill_by_end_anim && entity->status.end_anim) {
+      cauto is_kill_by_end_anim = entity->status.kill_by_end_anim
+        && entity->status.end_anim;
+      // смерть от конца кадра
+      cauto is_kill_by_end_frame = entity->status.kill_by_end_frame
+        && entity->status.end_frame;
+
+      if (is_killed || is_kill_by_end_anim || is_kill_by_end_frame)
         entity->kill();
-        continue;
-      }
-    } // for entities
+    }
 
     // TODO чистка в ECOMEM
   } // update_kills
