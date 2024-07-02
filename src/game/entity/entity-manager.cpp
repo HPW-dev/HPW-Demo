@@ -37,40 +37,40 @@ struct Entity_mgr::Impl {
   // за пределами этого расстояние объект за экраном умирает в шмап-моде
   constx real shmup_bound = 250;
 
-  Entitys entities {}; // массив всех игровых объектов
-  Shared<Collider> collision_resolver {}; // обработчик столкновений
-  Mem_pool entity_pool {}; // мем-пул под объекты
-  Mem_pool phys_pool {}; // мем-пул под физические контексты
-  Mem_pool hitbox_pool {}; // мем-пул под хитбоксы
+  Entitys m_entities {}; // массив всех игровых объектов
+  Shared<Collider> m_collision_resolver {}; // обработчик столкновений
+  Mem_pool m_entity_pool {}; // мем-пул под объекты
+  Mem_pool m_phys_pool {}; // мем-пул под физические контексты
+  Mem_pool m_hitbox_pool {}; // мем-пул под хитбоксы
   // БД инициализаторов объектов
-  std::unordered_map<Str, Shared<Entity_loader>> entity_loaders {};
-  Vector<Scatter> scatters {}; // источники взрывных волн
-  Entitys registrate_list {};
+  std::unordered_map<Str, Shared<Entity_loader>> m_entity_loaders {};
+  Vector<Scatter> m_scatters {}; // источники взрывных волн
+  Entitys m_registrate_list {};
   // текущая ссылка на игрока, чтобы враги могли брать его в таргет
   Player* m_player {};
   bool m_visible {true}; // видимость игровых объектов
 
   inline Impl() {
     #ifndef ECOMEM
-    entities.reserve(4'000);
+    m_entities.reserve(4'000);
     #endif
   }
 
   inline ~Impl() { clear(); }
 
-  inline CN<Entitys> get_entities() const { return entities; }
+  inline CN<Entitys> get_entities() const { return m_entities; }
 
   inline void set_collider(CN<Shared<Collider>> new_collider)
-    { collision_resolver = new_collider; }
+    { m_collision_resolver = new_collider; }
 
   inline void draw(Image& dst, const Vec offset) const {
     return_if(!m_visible);
     // нарисовать нижний слой
-    for (cnauto entity: entities)
+    for (cnauto entity: m_entities)
       if (entity->status.live && !entity->status.layer_up)
         entity->draw(dst, offset);
     // нарисовать верхний слой
-    for (cnauto entity: entities)
+    for (cnauto entity: m_entities)
       if (entity->status.live && entity->status.layer_up)
         entity->draw(dst, offset);
   }
@@ -79,52 +79,52 @@ struct Entity_mgr::Impl {
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
-    if (collision_resolver)
-      (*collision_resolver)(entities, dt);
+    if (m_collision_resolver)
+      (*m_collision_resolver)(m_entities, dt);
     bound_check();
     update_kills();
   } // update
 
-  // применить список на добавление объектов из очереди registrate_list
+  // применить список на добавление объектов из очереди m_registrate_list
   inline void accept_registrate_list() {
-    entities.reserve(entities.size() + registrate_list.size());
-    for (nauto elem: registrate_list)
-      entities.emplace_back(std::move(elem));
-    registrate_list.clear();
+    m_entities.reserve(m_entities.size() + m_registrate_list.size());
+    for (nauto elem: m_registrate_list)
+      m_entities.emplace_back(std::move(elem));
+    m_registrate_list.clear();
   }
 
   // применить все взрывные волны к объектам
   inline void update_scatters() {
-    if (!scatters.empty()) {
-      for (nauto entity: entities)
+    if (!m_scatters.empty()) {
+      for (nauto entity: m_entities)
         if (entity->status.live && !entity->status.ignore_scatter) {
-          for (cnauto scatter: scatters)
+          for (cnauto scatter: m_scatters)
             scatter.accept(*entity);
         }
-      scatters.clear();
+      m_scatters.clear();
     }
   }
 
   inline Entity* registrate(Entitys::value_type&& entity) {
     assert(entity);
-    auto ret = registrate_list.emplace_back(std::move(entity)).get();
+    auto ret = m_registrate_list.emplace_back(std::move(entity)).get();
     return ret;
   }
 
   inline void clear() {
     detailed_log("Entity_mgr.clear\n");
-    collision_resolver = {};
+    m_collision_resolver = {};
     m_player = {};
-    entities.clear();
-    phys_pool.release();
-    hitbox_pool.release();
+    m_entities.clear();
+    m_phys_pool.release();
+    m_hitbox_pool.release();
     clear_entity_uid();
   }
 
   inline void update_entitys(const Delta_time dt) {
     assert(hpw::time_scale > 0);
 
-    for (nauto entity: entities) {
+    for (nauto entity: m_entities) {
       if (entity->status.live) {
         // изменять время для игрока и его объектов
         cauto player = get_player();
@@ -137,10 +137,10 @@ struct Entity_mgr::Impl {
   } // update_entitys
 
   inline void update_kills() {
-    if (entities.empty())
-      entity_pool.release();
+    if (m_entities.empty())
+      m_entity_pool.release();
 
-    for (nauto entity: entities) {
+    for (nauto entity: m_entities) {
       cont_if( !entity);
       cont_if( !entity->status.live);
 
@@ -161,11 +161,11 @@ struct Entity_mgr::Impl {
   } // update_kills
 
   inline void debug_draw(Image& dst) const
-    { collision_resolver->debug_draw(dst, {}/* camera TODO */); }
+    { m_collision_resolver->debug_draw(dst, {}/* camera TODO */); }
 
-  inline Mem_pool& get_phys_pool() { return phys_pool; }
-  inline Mem_pool& get_hitbox_pool() { return hitbox_pool; }
-  inline Mem_pool& get_entity_pool() { return entity_pool; }
+  inline Mem_pool& get_phys_pool() { return m_phys_pool; }
+  inline Mem_pool& get_hitbox_pool() { return m_hitbox_pool; }
+  inline Mem_pool& get_entity_pool() { return m_entity_pool; }
 
   // по type определяет какой Entity_loader создать и передать ему параметры с конфига
   inline Shared<Entity_loader> make_entity_loader(CN<Str> type, CN<Yaml> config) {
@@ -196,7 +196,7 @@ struct Entity_mgr::Impl {
   } // make_entity_loader
 
   inline void register_types() {
-    entity_loaders.clear();
+    m_entity_loaders.clear();
 
     #ifndef ECOMEM // при экономии памяти объекты подгружаются в момент вызова
       // загрузить все объекты из конфига
@@ -204,7 +204,7 @@ struct Entity_mgr::Impl {
       for (cnauto entity_name: config.root_tags()) {
         auto entity_node = config[entity_name];
         auto type = entity_node.get_str("type", "error type");
-        entity_loaders[entity_name] = make_entity_loader(type, entity_node);
+        m_entity_loaders[entity_name] = make_entity_loader(type, entity_node);
       }
     #endif
   } // register_types
@@ -214,10 +214,10 @@ struct Entity_mgr::Impl {
     auto config = load_entity_config();
     auto entity_node = config[name];
     auto type = entity_node.get_str("type", "error type");
-    entity_loaders[name] = make_entity_loader(type, entity_node);
+    m_entity_loaders[name] = make_entity_loader(type, entity_node);
         
     try {
-      return ( *entity_loaders.at(name) )(master, pos);
+      return ( *m_entity_loaders.at(name) )(master, pos);
     } catch (CN<std::out_of_range> ex) {
       error("нет инициализатора для \"" << name << "\"");
     }
@@ -229,10 +229,11 @@ struct Entity_mgr::Impl {
       return load_unknown_entity(master, name, pos);
     #endif
 
-    iferror(entity_loaders.empty(), "вызови register_types для заполнения entity_loaders");
+    iferror(m_entity_loaders.empty(),
+      "вызови register_types для заполнения m_entity_loaders");
 
     try {
-      auto entity_loader = entity_loaders.at(name);
+      auto entity_loader = m_entity_loaders.at(name);
       assert(entity_loader);
       auto ret = (*entity_loader)(master, pos);
       if (ret)
@@ -259,12 +260,12 @@ struct Entity_mgr::Impl {
   inline void add_scatter(CN<Scatter> scatter) {
     return_if(scatter.power <= 0);
     return_if(scatter.range <= 0);
-    scatters.emplace_back(scatter);
+    m_scatters.emplace_back(scatter);
   }
 
   // удаление объектов за экраном
   inline void bound_check() {
-    for (nauto entity: entities) {
+    for (nauto entity: m_entities) {
       if (entity->status.live && !entity->status.ignore_bound) {
         cnauto entity_pos = entity->phys.get_pos();
         auto bound = entity->status.is_bullet ? shmup_bound_for_bullet : shmup_bound;
@@ -281,7 +282,7 @@ struct Entity_mgr::Impl {
           entity->accept_kill_callbacks();
         }
       } // if live
-    } // for entities
+    } // for m_entities
   } // bound_check
 
   // возвращает первый попавшийся мёртвый объект нужного типа
@@ -310,13 +311,20 @@ struct Entity_mgr::Impl {
   inline void set_visible(const bool mode) { m_visible = mode; }
 
   inline Entity* find(const Uid uid) const {
-    auto it = std::find_if(entities.begin(), entities.end(),
-      [&](CN<decltype(entities)::value_type> entity)
+    auto it = std::find_if(m_entities.begin(), m_entities.end(),
+      [&](CN<decltype(m_entities)::value_type> entity)
       { return entity->uid == uid; }
     );
-    if (it != entities.end())
+    if (it != m_entities.end())
       return it->get();
     return nullptr;
+  }
+
+  inline uint lives() const {
+    uint count {};
+    for (cnauto ent: m_entities)
+      count += ent->status.live;
+    return count;
   }
 }; // Impl
 
@@ -341,3 +349,4 @@ void Entity_mgr::set_player(Player* player) { impl->set_player(player); }
 Vec Entity_mgr::target_for_enemy() const { return impl->target_for_enemy(); }
 void Entity_mgr::set_visible(const bool mode) { return impl->set_visible(mode); }
 Entity* Entity_mgr::find(const Uid uid) const { return impl->find(uid); }
+uint Entity_mgr::lives() const { return impl->lives(); }

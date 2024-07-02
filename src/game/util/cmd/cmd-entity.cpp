@@ -122,6 +122,11 @@ void clear_entities(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   console.print("all entities erased");
 }
 
+void print_lives(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  cauto lives = hpw::entity_mgr->lives();
+  console.print("активных объектов: " + n2s(lives));
+}
+
 void cmd_entity_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -141,6 +146,10 @@ void cmd_entity_init(Cmd& cmd) {
     "clear_entities",
     "clear_entities - erase all entities from game",
     &clear_entities, {} )
+  MAKE_CMD (
+    "lives",
+    "lives - показать все живые объекты",
+    &print_lives, {} )
     
   #undef MAKE_CMD
 } // cmd_entity_init

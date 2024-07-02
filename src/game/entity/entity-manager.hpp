@@ -58,6 +58,7 @@ public:
   Mem_pool& get_entity_pool();
   // получить массив всех объектов
   CN<Entitys> get_entities() const;
+  uint lives() const; // сколько сейчас активных объектов
   // ссылка на игрока
   Player* get_player() const;
   void set_player(Player* player);
