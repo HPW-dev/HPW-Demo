@@ -1,6 +1,6 @@
 #include <cassert>
 #include <unordered_map>
-#include "entity-manager.hpp"
+#include "entity-mgr.hpp"
 #include "entity-type.hpp"
 #include "particle-loader.hpp"
 #include "explosion-loader.hpp"
@@ -96,11 +96,12 @@ struct Entity_mgr::Impl {
   // применить все взрывные волны к объектам
   inline void update_scatters() {
     if (!m_scatters.empty()) {
-      for (nauto entity: m_entities)
+      for (nauto entity: m_entities) {
         if (entity->status.live && !entity->status.ignore_scatter) {
           for (cnauto scatter: m_scatters)
             scatter.accept(*entity);
         }
+      }
       m_scatters.clear();
     }
   }
