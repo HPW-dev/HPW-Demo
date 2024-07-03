@@ -4,7 +4,6 @@
 #include <algorithm>
 #include "cmd.hpp"
 #include "cmd-entity.hpp"
-#include "cmd-phys.hpp"
 #include "cmd-common.hpp"
 #include "cmd-script.hpp"
 #include "cmd-player.hpp"
