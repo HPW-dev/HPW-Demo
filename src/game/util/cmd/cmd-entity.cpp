@@ -127,6 +127,34 @@ void print_lives(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   console.print("активных объектов: " + n2s(lives));
 }
 
+void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void teleport(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void entity_force(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
 void cmd_entity_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -150,6 +178,38 @@ void cmd_entity_init(Cmd& cmd) {
     "lives",
     "lives - показать все живые объекты",
     &print_lives, {} )
+  MAKE_CMD (
+    "tp",
+    "tp <uid> <x/y> - переносит объект на новое место",
+    &teleport, {} )
+  MAKE_CMD (
+    "hp",
+    "hp <uid> <val> - назначает жизни объекту. "
+    "Без парамерта показывает сколько жизней",
+    &entity_hp, {} )
+  MAKE_CMD (
+    "deg",
+    "deg <uid> <degree> - назначает угол поворота объекту"
+    "Без парамерта показывает угол",
+    &entity_deg, {} )
+  MAKE_CMD (
+    "copy",
+    "copy <uid> <x/y> - создаёт компию объекта."
+    "Без парамерта <x/y> создаёт в любом месте",
+    &make_copy, {} )
+  MAKE_CMD (
+    "copy",
+    "copy <uid> <x/y> - настраивает сопротивление объекта."
+    "Без парамерта показывает сопротивление",
+    &entity_force, {} )
+  MAKE_CMD (
+    "flags",
+    "flags <uid> - показывает флаги объекта",
+    &print_flags, {} )
+  MAKE_CMD (
+    "flag",
+    "flag <uid> <flag_name> <1/0> - настраивает конкретные флаги объекта",
+    &set_flag, {} )
     
   #undef MAKE_CMD
 } // cmd_entity_init
