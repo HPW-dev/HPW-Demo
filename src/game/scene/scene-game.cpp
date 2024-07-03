@@ -153,7 +153,6 @@ void Scene_game::update(const Delta_time dt) {
   else if (hpw::enable_replay)
     replay_save_keys();
 
-  hpw::task_mgr.update(dt);
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
     hpw::scene_mgr->back(); // exit to loading screen
@@ -161,6 +160,7 @@ void Scene_game::update(const Delta_time dt) {
     hpw::scene_mgr->back(); // exit to main menu
     detailed_log("уровни кончились, выход из сцены игры\n");
   }
+  hpw::task_mgr.update(dt);
 
   if (graphic::hud)
     graphic::hud->update(dt);

@@ -30,18 +30,25 @@ public:
       }
     }
     hpw::cmd.print("запуск скрипта \"" + m_fname + '\"');
-
-    Str line;
-    while (std::getline(m_file, line))
-      hpw::cmd.exec(line);
   }
 
   inline void on_end() {
-
+    #ifdef DETAILED_LOG
+      hpw::cmd.print("завершение скрипта \"" + m_fname + '\"');
+    #endif
+    m_fname.clear();
+    m_file.close();
   }
 
   inline void update(const Delta_time dt) {
-
+    /* читать и выполнять строки из файла 
+    по порядку, в конце завершить процесс */
+    Str line;
+    cnauto status = std::getline(m_file, line);
+    if (status)
+      hpw::cmd.exec(line);
+    else
+      kill();
   }
 }; // Exec_script
 

@@ -52,7 +52,10 @@ void timed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   for (std::size_t i = 2; i < args.size(); ++i)
     cmd_str += '\"' + args.at(i) + "\" ";
   hpw::task_mgr.move( new_shared<Timed_cmd>(console, delay, cmd_str) );
-  console.print(Str("команда \"") + cmd_str + "\" поставлена на таймер");
+
+  #ifdef DETAILED_LOG
+    console.print(Str("команда \"") + cmd_str + "\" поставлена на таймер");
+  #endif
 }
 
 void set_seed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
