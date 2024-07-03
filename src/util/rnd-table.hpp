@@ -2,7 +2,7 @@
 #include "math/random.hpp"
 #include "vector-types.hpp"
 
-// выдаёт рандомный контент из таблицы
+// класс для случайных значений из списка
 template <class T>
 class Rnd_table {
 public:
