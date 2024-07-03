@@ -15,6 +15,8 @@ int main() {
     "Test 2",
     "Test 3",
   });
+  table.push("test 4");
 
-  
+  cnauto value = table.rnd_stable();
+  std::cout << "random table value: " << value << std::endl;
 }
