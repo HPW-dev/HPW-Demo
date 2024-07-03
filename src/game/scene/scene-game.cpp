@@ -193,7 +193,7 @@ void Scene_game::draw(Image& dst) const {
 
 void Scene_game::startup_script() {
   if (!hpw::start_script.empty())
-    execute_script(hpw::cur_dir + hpw::start_script);
+    hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
 }
 
 void Scene_game::init_entitys() {

@@ -78,7 +78,6 @@ sources = [
   src_dir + "util/file/yaml.cpp",
   src_dir + "util/str-util.cpp",
   src_dir + "util/error.cpp",
-  src_dir + "util/mempool.cpp",
   src_dir + "util/path.cpp",
   src_dir + "util/math/mat.cpp",
   src_dir + "util/math/vec-util.cpp",

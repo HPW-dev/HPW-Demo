@@ -1,18 +1,13 @@
 #pragma once
 #include <utility>
 #include <optional>
-#include <vector>
 #include "color-blend.hpp"
 #include "mode-get.hpp"
 #include "game/util/resource.hpp"
 
 // 2d buff
 class Image final: public Resource {
-  #ifdef ECOMEM
   Vector<Pal8> pix {};
-  #else
-  std::pmr::vector<Pal8> pix {};
-  #endif
 
   // проверяет допустимые размеры растра
   bool size_check(int x, int y) const noexcept;
