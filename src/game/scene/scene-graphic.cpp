@@ -27,7 +27,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "util/error.hpp"
 
 Scene_graphic::Scene_graphic() {

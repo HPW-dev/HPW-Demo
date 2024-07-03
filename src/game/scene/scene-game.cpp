@@ -7,7 +7,7 @@
 #include "scene-loading.hpp"
 #include "scene-mgr.hpp"
 #include "host/command.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"

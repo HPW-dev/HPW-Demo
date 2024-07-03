@@ -38,7 +38,7 @@
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "sound/sound.hpp"
 
