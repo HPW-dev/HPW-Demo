@@ -314,13 +314,13 @@ void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     get_locale_str("scene.graphic_menu.title"),
     Menu_items {
-      get_fullscreen_item(),
+      get_plugin_item(),
       get_palette_item(),
+      get_fullscreen_item(),
       new_shared<Menu_text_item>(
         get_locale_str("scene.graphic_menu.pressets.name"),
         [this]{ cur_menu = preset_menu; }
       ),
-      get_plugin_item(),
       get_resize_type_item(),
       get_vsync_item(),
       get_frame_limit_item(),
