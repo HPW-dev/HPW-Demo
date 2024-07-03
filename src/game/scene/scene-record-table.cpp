@@ -1,5 +1,5 @@
 #include "scene-record-table.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/keybits.hpp"

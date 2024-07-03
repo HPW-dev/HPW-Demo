@@ -15,7 +15,7 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/phys.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
 #include "graphic/animation/anim.hpp"

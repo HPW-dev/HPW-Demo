@@ -1,5 +1,5 @@
 #include "scene-options.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "scene-input.hpp"
 #include "scene-graphic.hpp"
 #include "game/core/fonts.hpp"

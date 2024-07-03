@@ -1,6 +1,6 @@
 #include <cassert>
 #include "scene-palette-select.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/fonts.hpp"

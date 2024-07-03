@@ -5,7 +5,7 @@
 #include <ctime>
 #include "scene-game.hpp"
 #include "scene-loading.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "host/command.hpp"
 #include "sound/sound-manager.hpp"
 #include "util/str-util.hpp"

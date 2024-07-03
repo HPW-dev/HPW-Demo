@@ -21,7 +21,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sounds.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 #include "util/hpw-util.hpp"

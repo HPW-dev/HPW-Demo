@@ -1,5 +1,5 @@
 #include <cassert>
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "scene.hpp"
 
 bool Scene_mgr::update(const Delta_time dt) {

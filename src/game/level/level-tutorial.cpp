@@ -12,7 +12,7 @@
 #include "game/core/levels.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/level/util/level-tasks.hpp"
 #include "game/level/util/task-timed.hpp"
 #include "game/util/sync.hpp"

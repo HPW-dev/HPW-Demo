@@ -4,7 +4,7 @@
 #include <functional>
 #include "scene-game.hpp"
 #include "scene-pge.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"

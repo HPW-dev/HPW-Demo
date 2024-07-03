@@ -6,7 +6,7 @@
 #include "game/core/core.hpp"
 #include "game/core/common.hpp"
 #include "game/core/scenes.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"

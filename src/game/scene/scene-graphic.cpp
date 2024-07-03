@@ -1,7 +1,7 @@
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
 #include "scene-pge.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
 #include "game/core/common.hpp"

@@ -3,7 +3,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/util/keybits.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"

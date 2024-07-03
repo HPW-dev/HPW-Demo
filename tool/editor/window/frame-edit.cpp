@@ -10,7 +10,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/entities.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/phys.hpp"

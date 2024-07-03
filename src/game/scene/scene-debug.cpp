@@ -1,6 +1,6 @@
 #include <ctime>
 #include "scene-debug.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"

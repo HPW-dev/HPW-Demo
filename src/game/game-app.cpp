@@ -3,7 +3,7 @@
 #include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"

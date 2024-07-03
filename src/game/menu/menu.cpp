@@ -4,7 +4,7 @@
 #include "util/log.hpp"
 #include "game/core/common.hpp"
 #include "game/util/keybits.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "graphic/font/font.hpp"
 
 struct Menu::Sticking {

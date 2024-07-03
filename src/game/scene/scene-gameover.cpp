@@ -1,5 +1,5 @@
 #include "scene-gameover.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "scene-loading.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/scenes.hpp"

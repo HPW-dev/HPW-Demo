@@ -1,6 +1,6 @@
 #include <cassert>
 #include "scene-gamma.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 #include "graphic/util/util-templ.hpp"

@@ -2,7 +2,7 @@
 #include "scene/sprite-select.hpp"
 #include "util/hpw-util.hpp"
 #include "util/str-util.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/store.hpp"
 #include "game/util/resource.hpp"
