@@ -1,5 +1,5 @@
 #pragma once
-#include "game/level/level-manager.hpp"
+#include "game/level/level-mgr.hpp"
 
 namespace hpw {
 inline Unique<Level_mgr> level_mgr {}; // управление уровнями
