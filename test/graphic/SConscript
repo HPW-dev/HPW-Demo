@@ -49,6 +49,7 @@ sources = [
   src_dir + "graphic/image/color-blend.cpp",
   src_dir + "graphic/image/image.cpp",
   src_dir + "graphic/image/image-io.cpp",
+  src_dir + "graphic/image/palette.cpp",
   src_dir + "graphic/font/unifont.cpp",
   src_dir + "graphic/font/font.cpp",
   src_dir + "graphic/util/convert.cpp",
