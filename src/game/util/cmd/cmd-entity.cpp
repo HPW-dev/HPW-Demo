@@ -128,7 +128,32 @@ void print_lives(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 }
 
 void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
-  // TODO
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // найти кого копируем
+  cauto uid = s2n<Uid>(args[1]);
+  cauto src = hpw::entity_mgr->find(uid);
+  iferror(!src, "объект uid=" << uid << " не найден");
+  // задать позицию копии
+  Vec pos;
+  if (args.size() >= 4) {
+    cauto x = s2n<real>(args[2]);
+    cauto y = s2n<real>(args[3]);
+    pos = Vec(x, y);
+  } else {
+    pos = rnd_screen_pos_safe();
+  }
+  // скопировать
+  auto dst = hpw::entity_mgr->make(src, src->name(), {});
+  assert(dst);
+  dst->status = src->status;
+  dst->phys = src->phys;
+  dst->phys.set_pos(pos);
+
+  console.print("объект " + src->name()
+    + " скопирован на координаты {"
+    + n2s(pos.x, 2) + ", " + n2s(pos.y, 2) + "} UID="
+    + n2s(dst->uid));
 }
 
 void teleport(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
@@ -198,8 +223,8 @@ void cmd_entity_init(Cmd& cmd) {
     "Без парамерта <x/y> создаёт в любом месте",
     &make_copy, {} )
   MAKE_CMD (
-    "copy",
-    "copy <uid> <x/y> - настраивает сопротивление объекта."
+    "force",
+    "force <uid> <velue> - настраивает сопротивление объекта."
     "Без парамерта показывает сопротивление",
     &entity_force, {} )
   MAKE_CMD (
