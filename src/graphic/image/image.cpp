@@ -6,6 +6,14 @@
 #include "util/macro.hpp"
 #include "util/log.hpp"
 
+#ifndef ECOMEM
+#include "util/mempool.hpp"
+#endif
+
+namespace {
+Mem_pool pixel_pool {};
+}
+
 Image::Image(CN<Image> img) noexcept { init(img); }
 Image::Image(Image&& other) noexcept { *this = std::move(other); }
 
@@ -37,7 +45,11 @@ Image::Image(int nx, int ny, const std::optional<const Pal8> col) noexcept
     free();
     return;
   } else {
-    pix = decltype(pix)(size);
+    #ifdef ECOMEM
+      pix = decltype(pix)(size);
+    #else
+      pix = decltype(pix)(size, &::pixel_pool.source);
+    #endif
   }
   if (col)
     fill(*col);
