@@ -112,5 +112,7 @@ void Level_mgr::set_visible(bool mode) { m_visible = mode; }
 
 void Level_mgr::set(CN<Level_mgr::Maker> maker) { 
   assert(maker);
+  if (m_level)
+    on_end_level();
   m_level = maker();
 }
