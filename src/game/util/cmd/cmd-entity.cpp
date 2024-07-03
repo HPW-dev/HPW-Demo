@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "cmd-entity.hpp"
 #include "cmd-util.hpp"
+#include "game/entity/collidable.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/game-util.hpp"
@@ -157,11 +158,54 @@ void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 }
 
 void teleport(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
-  // TODO
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // найти кого телепортим
+  cauto uid = s2n<Uid>(args[1]);
+  cauto ent = hpw::entity_mgr->find(uid);
+  iferror(!ent, "объект uid=" << uid << " не найден");
+  // задать позицию для телепорта
+  Vec pos;
+  if (args.size() >= 4) {
+    cauto x = s2n<real>(args[2]);
+    cauto y = s2n<real>(args[3]);
+    pos = Vec(x, y);
+  } else {
+    pos = rnd_screen_pos_safe();
+  }
+  // перенестись
+  ent->phys.set_pos(pos);
+
+  console.print("объект " + ent->name()
+    + " перемещён на новое место {"
+    + n2s(pos.x, 2) + ", " + n2s(pos.y, 2) + "}");
 }
 
 void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
-  // TODO
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // find raw entity
+  cauto uid = s2n<Uid>(args[1]);
+  auto ent = hpw::entity_mgr->find(uid);
+  iferror(!ent, "объект uid=" << uid << " не найден");
+
+  // cast to collidable
+  iferror(!ent->status.collidable, "у объекта "
+    << ent->name() << " нету параметра HP");
+  auto collidable = ptr2ptr<Collidable*>(ent);
+  cauto hp = collidable->get_hp();
+
+  // показать хп
+  if (args.size() == 2) {
+    console.print("у объекта \"" + collidable->name() + "\" HP = " + n2s(hp));
+    return;
+  }
+
+  // задать хп
+  cauto new_hp = s2n<hp_t>(args.at(2));
+  collidable->set_hp(new_hp);
+  console.print("объекту \"" + collidable->name() + "\" назначено "
+    + n2s(new_hp) + " HP");
 }
 
 void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {

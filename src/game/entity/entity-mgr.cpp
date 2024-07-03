@@ -314,7 +314,7 @@ struct Entity_mgr::Impl {
   inline Entity* find(const Uid uid) const {
     auto it = std::find_if(m_entities.begin(), m_entities.end(),
       [&](CN<decltype(m_entities)::value_type> entity)
-      { return entity->uid == uid; }
+      { return entity->status.live && entity->uid == uid; }
     );
     if (it != m_entities.end())
       return it->get();
