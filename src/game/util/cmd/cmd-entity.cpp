@@ -12,7 +12,12 @@
 #include "util/file/yaml.hpp"
 
 namespace {
-Uid last_uid {}; // последний соспавненный объект
+Uid g_last_uid {}; // последний соспавненный объект
+}
+
+inline Uid get_uid(CN<Str> str) {
+  return_if (str_tolower(str) == "u", ::g_last_uid);
+  return s2n<Uid>(str);
 }
 
 void spawn(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
@@ -28,10 +33,10 @@ void spawn(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   }
 
   cauto entity = hpw::entity_mgr->make({}, entity_name, pos);
-  ::last_uid = entity->uid;
+  ::g_last_uid = entity->uid;
   console.print("entity \"" + entity_name
     + "\" spawned at {" + n2s(pos.x, 2) + ", "
-    + n2s(pos.y, 2) + "} uid: " + n2s(::last_uid));
+    + n2s(pos.y, 2) + "} uid: " + n2s(::g_last_uid));
 }
 
 Strs get_entity_names() {
@@ -66,11 +71,12 @@ Strs spawn_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 }
 
 void kill(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
-  cnauto entity_uid = args.size() >= 2 ? args[1] : n2s(::last_uid);
+  iferror(args.size() < 2, "недостаточно параметров");
+  cnauto entity_uid = get_uid(args[1]);
   cnauto entities = hpw::entity_mgr->get_entities();
   cauto it = std::find_if(entities.begin(), entities.end(),
     [&](CN<Entitys::value_type> entity) {
-      return n2s(entity->uid) == entity_uid;
+      return entity->uid == entity_uid;
     }
   );
 
@@ -78,9 +84,9 @@ void kill(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     cnauto entity = it->get();
     entity->kill();
     console.print("killed entity \"" + entity->name()
-      + "\" uid: " + entity_uid);
+      + "\" uid: " + n2s(entity_uid));
   } else {
-    error("не удалось убить объект с UID = " << entity_uid);
+    error("не удалось убить объект с UID = " << n2s(entity_uid));
   }
 } // kill
 
@@ -126,10 +132,6 @@ void clear_entities(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 void print_lives(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   cauto lives = hpw::entity_mgr->lives();
   console.print("активных объектов: " + n2s(lives));
-}
-
-inline Uid get_uid(CN<Str> str) {
-  return s2n<Uid>(str);
 }
 
 void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
@@ -297,7 +299,7 @@ void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   console.print("флаги объекта \"" + ent->name() + "\":");
   for (cnauto entity_flag: ::g_entity_flags)
     if (entity_flag.get(flags))
-      console.print("- \"" + entity_flag.name);
+      console.print("* " + entity_flag.name);
 }
 
 void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
