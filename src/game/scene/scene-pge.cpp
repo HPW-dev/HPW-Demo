@@ -4,7 +4,7 @@
 #include <functional>
 #include "scene-game.hpp"
 #include "scene-pge.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -140,22 +140,17 @@ struct Scene_pge::Impl {
       }
     } // for params
     
-    menu_items.push_back(
-      new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.pge.disable"),
-        [this] {
-          disable_pge();
-          m_reinit_menu = true;
-        }
-      )
-    );
-    menu_items.push_back(
-      new_shared<Menu_text_item>(get_locale_str("common.back"),
-        [] {
-          save_pge_to_config();
-          hpw::scene_mgr->back();
-        }
-      )
-    );
+    menu_items.push_back( new_shared<Menu_text_item>(
+      get_locale_str("common.back"), [] {
+        save_pge_to_config();
+        hpw::scene_mgr->back();
+      } ) );
+    menu_items.push_back( new_shared<Menu_text_item>(
+      get_locale_str("scene.graphic_menu.pge.disable"), [this] {
+        disable_pge();
+        m_reinit_menu = true;
+      } ) );
+
     m_menu = new_unique<Advanced_text_menu>(
       get_locale_str("scene.graphic_menu.pge.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}

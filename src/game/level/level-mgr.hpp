@@ -46,4 +46,7 @@ private:
   bool m_visible {true}; // if false - disable redraw bg
 
   void accept_maker();
+  void level_update(const Vec vel, Delta_time dt);
+  void level_order_update();
+  void on_end_level();
 }; // Level_mgr

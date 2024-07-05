@@ -1,6 +1,6 @@
 #include <ctime>
 #include "scene-debug.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
@@ -12,7 +12,7 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/int-item.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 #include "util/mem-types.hpp"
 #include "game/util/store.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 
 struct Sound;
 struct Device_name;

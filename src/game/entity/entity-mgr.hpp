@@ -36,7 +36,8 @@ public:
   void update(const Delta_time dt);
   void clear();
   void debug_draw(Image& dst) const;
-  void set_visible(const bool mode); // mode=false выключает видимость игровых объектов
+  // mode=false выключает видимость игровых объектов
+  void set_visible(const bool mode);
 
   // задать обработчик столкновений
   void set_collider(CN<Shared<Collider>> new_collider);
@@ -48,6 +49,8 @@ public:
   @param pos соспавнить объект на этой позиции
   @return по возможности верёт объект, для последующего изменения извне */
   Entity* make(Entity* master, CN<Str> name, const Vec pos);
+  // найти объект по его UID. Null при ошибке
+  Entity* find(const Uid uid) const;
   // создать волну от взрыва расталкивающую объекты
   void add_scatter(CN<Scatter> scatter);
   Mem_pool& get_phys_pool();
@@ -55,6 +58,7 @@ public:
   Mem_pool& get_entity_pool();
   // получить массив всех объектов
   CN<Entitys> get_entities() const;
+  uint lives() const; // сколько сейчас активных объектов
   // ссылка на игрока
   Player* get_player() const;
   void set_player(Player* player);

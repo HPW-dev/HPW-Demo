@@ -1,5 +1,5 @@
 #pragma once
-#include "game/entity/entity-manager.hpp"
+#include "game/entity/entity-mgr.hpp"
 
 namespace hpw {
 inline Unique<Entity_mgr> entity_mgr {}; // управление сущностями игры

@@ -322,7 +322,8 @@ void bgp_fast_lines_red(Image& dst, const int bg_state) {
 }
 
 void bgp_skyline(Image& dst, const int bg_state) {
-  cauto skyline = hpw::store_sprite->find("resource/image/loading logo/skyline.png");
+  cauto skyline = hpw::store_sprite->find(
+    "resource/image/loading logo/skyline.png");
   assert(skyline);
   insert_fast(dst, skyline->image());
 }
@@ -665,4 +666,381 @@ void bgp_zoom_dst(Image& dst, const int bg_state) {
   #endif
   apply_brightness(copy, -48);
   insert(dst, copy, center_point(dst, copy));
+}
+
+void bgp_deep_lines(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 5;
+  constexpr uint lines = 6;
+  constexpr int scale = 4;
+  constexpr real bg_speed = 0.00171717f;
+  constexpr real speed = 0.00171717f;
+
+  cauto bg_color = std::fmod(bg_state * bg_speed, 2.f);
+  Image buffer(dst.X / scale, dst.Y / scale,
+    Pal8::from_real(bg_color <= 1.f
+      ? bg_color
+      : 1.f - (bg_color - 1.f)));
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real(1.f - (alpha <= 1.f
+      ? alpha
+      : 1.f - (alpha - 1.f)));
+
+    cfor (line, lines) {
+      Vec a(xorshift128(seed) % buffer.X, 0);
+      Vec b(xorshift128(seed) % buffer.X, buffer.Y-1);
+      draw_line(buffer, a, b, layer_color);
+
+      a = Vec(0, xorshift128(seed) % buffer.Y);
+      b = Vec(buffer.X-1, xorshift128(seed) % buffer.Y);
+      draw_line(buffer, a, b, layer_color);
+    }
+  }
+
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
+} // bgp_deep_lines
+
+void bgp_deep_lines_2(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 5;
+  constexpr uint lines = 6;
+  constexpr int scale = 4;
+  constexpr real bg_speed = 0.00171717f;
+  constexpr real speed = 0.01f;
+
+  cauto bg_color = std::fmod(bg_state * bg_speed, 2.f);
+  Image buffer(
+    dst.X / scale, dst.Y / scale,
+    Pal8::from_real(
+      bg_color <= 1.f
+      ? bg_color
+      : 1.f - (bg_color - 1.f)
+    )
+  );
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+        ? alpha
+        : 1.f - (alpha - 1.f)
+      )
+    );
+
+    cfor (line, lines) {
+      Vec a(xorshift128(seed) % buffer.X, 0);
+      Vec b(xorshift128(seed) % buffer.X, buffer.Y-1);
+      draw_line(buffer, a, b, layer_color);
+
+      a = Vec(0, xorshift128(seed) % buffer.Y);
+      b = Vec(buffer.X-1, xorshift128(seed) % buffer.Y);
+      draw_line(buffer, a, b, layer_color);
+    }
+  }
+
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
+} // bgp_deep_lines_2
+
+void bgp_deep_lines_red(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 5;
+  constexpr uint lines = 6;
+  constexpr int scale = 4;
+  constexpr real bg_speed = 0.00171717f;
+  constexpr real speed = 0.00171717f;
+
+  cauto bg_color = std::fmod(bg_state * bg_speed, 2.f);
+  Image buffer(
+    dst.X / scale, dst.Y / scale,
+    Pal8::from_real(
+      bg_color <= 1.f
+      ? bg_color
+      : 1.f - (bg_color - 1.f),
+      true
+    )
+  );
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+        ? alpha
+        : 1.f - (alpha - 1.f)
+      ),
+      true
+    );
+
+    cfor (line, lines) {
+      Vec a(xorshift128(seed) % buffer.X, 0);
+      Vec b(xorshift128(seed) % buffer.X, buffer.Y-1);
+      draw_line(buffer, a, b, layer_color);
+
+      a = Vec(0, xorshift128(seed) % buffer.Y);
+      b = Vec(buffer.X-1, xorshift128(seed) % buffer.Y);
+      draw_line(buffer, a, b, layer_color);
+    }
+  }
+
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
+} // bgp_deep_lines_red
+
+void bgp_deep_lines_3(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 3;
+  constexpr uint lines = 6;
+  constexpr real bg_speed = 0.00171717f;
+  constexpr real speed = 0.01f;
+
+  cauto bg_color = std::fmod(bg_state * bg_speed, 2.f);
+  dst.fill (
+    Pal8::from_real(
+      bg_color <= 1.f
+      ? bg_color
+      : 1.f - (bg_color - 1.f)
+    )
+  );
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+        ? alpha
+        : 1.f - (alpha - 1.f)
+      )
+    );
+
+    cfor (line, lines) {
+      Vec a(xorshift128(seed) % dst.X, 0);
+      Vec b(xorshift128(seed) % dst.X, dst.Y-1);
+      draw_line(dst, a, b, layer_color);
+
+      a = Vec(0, xorshift128(seed) % dst.Y);
+      b = Vec(dst.X-1, xorshift128(seed) % dst.Y);
+      draw_line(dst, a, b, layer_color);
+    }
+  }
+} // bgp_deep_lines_3
+
+void bgp_deep_lines_red_2(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 20;
+  constexpr uint lines = 2;
+  constexpr real speed = 0.0075f;
+
+  // красный градиент на фоне
+  cauto gradient_mul = 1.f / dst.Y;
+  cfor (y, dst.Y) {
+    cauto alpha = y * gradient_mul;
+    cauto color = Pal8::from_real(alpha * 0.25f, true);
+    cfor (x, dst.X) 
+      dst(x, y) = color;
+  }
+
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+          ? alpha
+          : 1.f - (alpha - 1.f)
+      ),
+      true
+    );
+
+    cfor (line, lines) {
+      Vec a(xorshift128(seed) % dst.X, 0);
+      Vec b(xorshift128(seed) % dst.X, dst.Y-1);
+      draw_line(dst, a, b, layer_color);
+
+      a = Vec(0, xorshift128(seed) % dst.Y);
+      b = Vec(dst.X-1, xorshift128(seed) % dst.Y);
+      draw_line(dst, a, b, layer_color);
+    }
+  }
+} // bgp_deep_lines_4
+
+void bgp_deep_lines_red_3(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 20;
+  constexpr uint lines = 20;
+  constexpr real speed = 0.005f;
+
+  dst.fill({});
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+        ? alpha
+        : 1.f - (alpha - 1.f)
+      ),
+      true
+    );
+
+    cfor (line, lines) {
+      Vec a(xorshift128(seed) % dst.X, 0);
+      Vec b(xorshift128(seed) % dst.X, dst.Y-1);
+      draw_line(dst, a, b, layer_color);
+
+      a = Vec(0, xorshift128(seed) % dst.Y);
+      b = Vec(dst.X-1, xorshift128(seed) % dst.Y);
+      draw_line(dst, a, b, layer_color);
+    }
+  }
+} // bgp_deep_lines_red_3
+
+void bgp_deep_circles_red(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 20;
+  constexpr uint circles = 20;
+  constexpr real speed = 0.005f;
+
+  dst.fill({});
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+        ? alpha
+        : 1.f - (alpha - 1.f)
+      ),
+      true
+    );
+
+    cfor (circle, circles) {
+      const Vec pos(
+        xorshift128(seed) % dst.X,
+        xorshift128(seed) % dst.Y
+      );
+      const real r = xorshift128(seed) % dst.Y;
+      draw_circle(dst, pos, r, layer_color);
+    }
+  }
+} // bgp_deep_circles_red
+
+void bgp_deep_circles(Image& dst, const int bg_state) {
+  constexpr uint layer_max = 5;
+  constexpr uint circles = 4;
+  constexpr real speed = 0.0025f;
+
+  dst.fill({});
+  xorshift128_state seed;
+  const real layer_mul = 1.f / layer_max;
+
+  cfor (layer, layer_max) {
+    const real alpha = std::fmod(
+      layer * layer_mul + bg_state * speed, 2.f);
+    const Pal8 layer_color = Pal8::from_real (
+      1.f - (
+        alpha <= 1.f
+        ? alpha
+        : 1.f - (alpha - 1.f)
+      )
+    );
+
+    cfor (circle, circles) {
+      const Vec pos(
+        xorshift128(seed) % dst.X,
+        xorshift128(seed) % dst.Y
+      );
+      const real r = xorshift128(seed) % dst.Y;
+      draw_circle(dst, pos, r, layer_color);
+    }
+  }
+} // bgp_deep_circles
+
+void bgp_tile_corruption(Image& dst, const int bg_state) {
+  // тайлы
+  constexpr uint max_tiles = 16;
+  constexpr int tile_x = 4;
+  constexpr int tile_y = tile_x;
+  static Vector<Image> tiles (max_tiles);
+  static std::once_flag init_once {};
+  std::call_once(init_once, [&] {
+    for (nauto tile: tiles)
+      tile.init(tile_x, tile_y);
+  });
+
+  // уменьшенный буффер
+  constexpr int scale = 2;
+  Image buffer(dst.X / scale, dst.Y / scale);
+
+  // сетка тайлов
+  cauto tile_map_x = buffer.X / tile_x;
+  cauto tile_map_y = buffer.Y / tile_y;
+  Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
+
+  // заполнение сетки
+  xorshift128_state seed;
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cauto idx = xorshift128(seed);
+    tile_map[y * tile_map_x + x] = idx % tiles.size();
+  }
+
+  // поменять случайный пиксель в случайном тайле
+  seed.a += bg_state;
+  seed.b *= bg_state;
+  seed.c += bg_state;
+  seed.d *= bg_state;
+  cauto tile_id = (xorshift128(seed) + bg_state * 123 + 456) % tiles.size();
+  cauto pix_x = (xorshift128(seed) + bg_state * 345 + 567) % tile_x;
+  cauto pix_y = (xorshift128(seed) + bg_state * 234 + 564) % tile_y;
+  tiles[tile_id](pix_x, pix_y).val ^= 0xFFu;
+
+  // заполнение буффера тайлами
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
+  }
+
+  // увеличение буффера
+  zoom_x2(buffer);
+  insert_fast(dst, buffer);
+}
+
+void bgp_noise(Image& dst, const int bg_state) {
+  xorshift128_state seed;
+  seed.a ^= bg_state;
+  seed.b ^= bg_state;
+  seed.c ^= bg_state;
+  seed.d ^= bg_state;
+
+  for (nauto pix: dst)
+    pix.val = xorshift128(seed) % 256u;
+
+  to_gray(dst);
+}
+
+void bgp_self_code(Image& dst, const int bg_state) {
+  cauto code_img = hpw::store_sprite->find(
+    "resource/image/other/bgp_self_code.png");
+  assert(code_img);
+  insert_fast(dst, code_img->image());
 }

@@ -7,8 +7,9 @@ inline void safecall(auto func, auto ...args) {
 }
 
 // вызов функции с проверкой её валидности и получение возврата
-inline auto saferet(auto func, auto ...args) {
+template <class RET>
+inline RET saferet(auto func, auto ...args) {
   if (func)
     return func(args...);
-  return {};
+  return RET{};
 }

@@ -1,7 +1,7 @@
 #include <cassert>
 #include <typeinfo>
 #include "speedup.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/util/game-util.hpp"
 
 struct Ability_speedup::Impl {

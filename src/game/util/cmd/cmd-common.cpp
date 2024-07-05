@@ -81,7 +81,7 @@ Strs Cmd_alias::command_matches(CN<Strs> cmd_and_args) {
 }
 
 void Cmd_log_cnosole::exec(CN<Strs> cmd_and_args) {
-  iferror(cmd_and_args.size() < 2, "need more parameters for log_cnosole command");
+  iferror(cmd_and_args.size() < 2, "need more parameters for log_console command");
   const bool yesno = s2n<int>(cmd_and_args.at(1)) == 0 ? false : true;
   m_master->enable_log_console(yesno);
 }

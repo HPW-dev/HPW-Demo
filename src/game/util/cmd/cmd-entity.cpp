@@ -1,0 +1,284 @@
+#include <cassert>
+#include <ranges>
+#include <algorithm>
+#include "cmd-entity.hpp"
+#include "cmd-util.hpp"
+#include "game/entity/collidable.hpp"
+#include "game/core/entities.hpp"
+#include "game/util/game-archive.hpp"
+#include "game/util/game-util.hpp"
+#include "util/error.hpp"
+#include "util/str-util.hpp"
+#include "util/file/yaml.hpp"
+
+namespace {
+Uid last_uid {}; // последний соспавненный объект
+}
+
+void spawn(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "не задано имя объекта в команде spawn");
+  cnauto entity_name = args[1];
+
+  Vec pos;
+  if (args.size() >= 4) {
+    pos.x = s2n<real>(args[2]);
+    pos.y = s2n<real>(args[3]);
+  } else {
+    pos = rnd_screen_pos_safe();
+  }
+
+  cauto entity = hpw::entity_mgr->make({}, entity_name, pos);
+  ::last_uid = entity->uid;
+  console.print("entity \"" + entity_name
+    + "\" spawned at {" + n2s(pos.x, 2) + ", "
+    + n2s(pos.y, 2) + "} uid: " + n2s(::last_uid));
+}
+
+Strs get_entity_names() {
+  const Yaml config(hpw::archive->get_file("config/entities.yml"));
+  Strs ret;
+  for (cnauto tag: config.root_tags())
+    ret.push_back(tag);
+  return ret;
+}
+
+// предложить имена всего что можно соспавнить
+Strs spawn_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  return_if(args.size() > 2, Strs{});
+  Strs ret;
+  cauto cmd_name = ctx.name();
+  cauto entity_names = get_entity_names();
+
+  // отфильтровать пользоватеьский ввод
+  if (args.size() == 2) {
+    cnauto entity_name = args.at(1);
+    cauto name_filter = [&](CN<Str> it)
+      { return it.find(entity_name) == 0; };
+    for (cnauto name: entity_names | std::views::filter(name_filter))
+      ret.push_back(cmd_name + ' ' + name);
+    return ret;
+  }
+
+  // предложить из списка
+  for (cnauto name: entity_names)
+    ret.push_back(cmd_name + ' ' + name);
+  return ret;
+}
+
+void kill(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  cnauto entity_uid = args.size() >= 2 ? args[1] : n2s(::last_uid);
+  cnauto entities = hpw::entity_mgr->get_entities();
+  cauto it = std::find_if(entities.begin(), entities.end(),
+    [&](CN<Entitys::value_type> entity) {
+      return n2s(entity->uid) == entity_uid;
+    }
+  );
+
+  if (it != entities.end()) {
+    cnauto entity = it->get();
+    entity->kill();
+    console.print("killed entity \"" + entity->name()
+      + "\" uid: " + entity_uid);
+  } else {
+    error("не удалось убить объект с UID = " << entity_uid);
+  }
+} // kill
+
+// получить uid'ы всех живых объекто в виде строк
+Strs get_lived_str_uid() {
+  Strs ret;
+  cnauto entityes = hpw::entity_mgr->get_entities();
+  for (cnauto entity: entityes)
+    if (entity->status.live)
+      ret.push_back( n2s(entity->uid) );
+  return ret;
+}
+
+// предложить uid'ы всего того, что можно убить
+Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  return_if(args.size() > 2, Strs{});
+  Strs ret;
+  cauto cmd_name = ctx.name();
+  cauto str_uids = get_lived_str_uid();
+
+  // отфильтровать пользоватеьский ввод
+  if (args.size() == 2) {
+    cnauto entity_name = args.at(1);
+    cauto name_filter = [&](CN<Str> it)
+      { return it.find(entity_name) == 0; };
+    for (cnauto name: str_uids | std::views::filter(name_filter))
+      ret.push_back(cmd_name + ' ' + name);
+    return ret;
+  }
+
+  // предложить из списка
+  for (cnauto name: str_uids)
+    ret.push_back(cmd_name + ' ' + name);
+  return ret;
+}
+
+// убирает всех противников
+void clear_entities(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  hpw::entity_mgr->clear();
+  console.print("all entities erased");
+}
+
+void print_lives(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  cauto lives = hpw::entity_mgr->lives();
+  console.print("активных объектов: " + n2s(lives));
+}
+
+void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // найти кого копируем
+  cauto uid = s2n<Uid>(args[1]);
+  cauto src = hpw::entity_mgr->find(uid);
+  iferror(!src, "объект uid=" << uid << " не найден");
+  // задать позицию копии
+  Vec pos;
+  if (args.size() >= 4) {
+    cauto x = s2n<real>(args[2]);
+    cauto y = s2n<real>(args[3]);
+    pos = Vec(x, y);
+  } else {
+    pos = rnd_screen_pos_safe();
+  }
+  // скопировать
+  auto dst = hpw::entity_mgr->make(src, src->name(), {});
+  assert(dst);
+  dst->status = src->status;
+  dst->phys = src->phys;
+  dst->phys.set_pos(pos);
+
+  console.print("объект " + src->name()
+    + " скопирован на координаты {"
+    + n2s(pos.x, 2) + ", " + n2s(pos.y, 2) + "} UID="
+    + n2s(dst->uid));
+}
+
+void teleport(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // найти кого телепортим
+  cauto uid = s2n<Uid>(args[1]);
+  cauto ent = hpw::entity_mgr->find(uid);
+  iferror(!ent, "объект uid=" << uid << " не найден");
+  // задать позицию для телепорта
+  Vec pos;
+  if (args.size() >= 4) {
+    cauto x = s2n<real>(args[2]);
+    cauto y = s2n<real>(args[3]);
+    pos = Vec(x, y);
+  } else {
+    pos = rnd_screen_pos_safe();
+  }
+  // перенестись
+  ent->phys.set_pos(pos);
+
+  console.print("объект " + ent->name()
+    + " перемещён на новое место {"
+    + n2s(pos.x, 2) + ", " + n2s(pos.y, 2) + "}");
+}
+
+void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // find raw entity
+  cauto uid = s2n<Uid>(args[1]);
+  auto ent = hpw::entity_mgr->find(uid);
+  iferror(!ent, "объект uid=" << uid << " не найден");
+
+  // cast to collidable
+  iferror(!ent->status.collidable, "у объекта "
+    << ent->name() << " нету параметра HP");
+  auto collidable = ptr2ptr<Collidable*>(ent);
+  cauto hp = collidable->get_hp();
+
+  // показать хп
+  if (args.size() == 2) {
+    console.print("у объекта \"" + collidable->name() + "\" HP = " + n2s(hp));
+    return;
+  }
+
+  // задать хп
+  cauto new_hp = s2n<hp_t>(args.at(2));
+  collidable->set_hp(new_hp);
+  console.print("объекту \"" + collidable->name() + "\" назначено "
+    + n2s(new_hp) + " HP");
+}
+
+void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void entity_force(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  // TODO
+}
+
+void cmd_entity_init(Cmd& cmd) {
+  #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
+    cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
+      Cmd_maker::Func_command_matches{MATCH_F}) );
+
+  MAKE_CMD (
+    "spawn",
+    "spawn <entity> <x> <y> - make entity on x/y pos."
+    "If x/y not defined, use random on-screen pos",
+    &spawn, &spawn_matches )
+  MAKE_CMD (
+    "kill",
+    "kill <uid> - kill entity by entity-uid."
+    "If uid not defined, kill last spawned",
+    &kill, &kill_matches )
+  MAKE_CMD (
+    "clear_entities",
+    "clear_entities - erase all entities from game",
+    &clear_entities, {} )
+  MAKE_CMD (
+    "lives",
+    "lives - показать все живые объекты",
+    &print_lives, {} )
+  MAKE_CMD (
+    "tp",
+    "tp <uid> <x/y> - переносит объект на новое место",
+    &teleport, {} )
+  MAKE_CMD (
+    "hp",
+    "hp <uid> <val> - назначает жизни объекту. "
+    "Без парамерта показывает сколько жизней",
+    &entity_hp, {} )
+  MAKE_CMD (
+    "deg",
+    "deg <uid> <degree> - назначает угол поворота объекту"
+    "Без парамерта показывает угол",
+    &entity_deg, {} )
+  MAKE_CMD (
+    "copy",
+    "copy <uid> <x/y> - создаёт компию объекта."
+    "Без парамерта <x/y> создаёт в любом месте",
+    &make_copy, {} )
+  MAKE_CMD (
+    "force",
+    "force <uid> <velue> - настраивает сопротивление объекта."
+    "Без парамерта показывает сопротивление",
+    &entity_force, {} )
+  MAKE_CMD (
+    "flags",
+    "flags <uid> - показывает флаги объекта",
+    &print_flags, {} )
+  MAKE_CMD (
+    "flag",
+    "flag <uid> <flag_name> <1/0> - настраивает конкретные флаги объекта",
+    &set_flag, {} )
+    
+  #undef MAKE_CMD
+} // cmd_entity_init

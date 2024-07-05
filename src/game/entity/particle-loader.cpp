@@ -13,16 +13,18 @@
 struct Particle_loader::Impl {
   Anim_info m_anim_info {};
   bool m_kill_by_end_anim {}; // уничтожить частицу после конца анимации
+  bool m_kill_by_end_frame {};
   bool m_rand_deg {}; // начальный угол сделает случайным
   real m_lifetime {}; // частица умрёт через время
   real m_force {};
 
   inline explicit Impl(CN<Yaml> config) {
     m_anim_info.load(config["animation"]);
-    m_rand_deg         = config.get_bool("rand_deg");
-    m_kill_by_end_anim = config.get_bool("kill_by_end_anim", true);
-    m_lifetime         = config.get_real("lifetime");
-    m_force            = config.get_real("force");
+    m_rand_deg          = config.get_bool("rand_deg");
+    m_kill_by_end_anim  = config.get_bool("kill_by_end_anim", true);
+    m_kill_by_end_frame = config.get_bool("kill_by_end_frame");
+    m_lifetime          = config.get_real("lifetime");
+    m_force             = config.get_real("force");
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -31,6 +33,7 @@ struct Particle_loader::Impl {
     
     m_anim_info.accept(*entity);
     entity->status.kill_by_end_anim = m_kill_by_end_anim;
+    entity->status.kill_by_end_frame = m_kill_by_end_frame;
     entity->phys.set_force( pps(m_force) );
     if (m_lifetime > 0)
       entity->set_lifetime(m_lifetime);

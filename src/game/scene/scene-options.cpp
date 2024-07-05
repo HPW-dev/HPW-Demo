@@ -1,10 +1,11 @@
 #include "scene-options.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "scene-input.hpp"
 #include "scene-graphic.hpp"
+#include "scene-game-options.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/keybits.hpp"
 #include "game/core/scenes.hpp"
+#include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/bool-item.hpp"
@@ -30,19 +31,18 @@ void Scene_options::draw(Image& dst) const {
 void Scene_options::init_menu() {
   menu = new_shared<Text_menu>(
     Menu_items {
-      new_shared<Menu_text_item>(get_locale_str("scene.options.graphic"), []{
-        hpw::scene_mgr->add(new_shared<Scene_graphic>());
-      }),
-      new_shared<Menu_text_item>(get_locale_str("scene.options.input"), []{
-        hpw::scene_mgr->add(new_shared<Scene_input>());
-      }),
+      new_shared<Menu_text_item>(get_locale_str("scene.options.game"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_game_options>()); }),
+      new_shared<Menu_text_item>(get_locale_str("scene.options.graphic"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_graphic>()); }),
+      new_shared<Menu_text_item>(get_locale_str("scene.options.input"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_input>()); }),
       /* TODO
       new_shared<Menu_text_item>(get_locale_str("scene.options.sound"), []{
         hpw_log("need impl. for Sound settings\n");
       }),*/
-      new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-        hpw::scene_mgr->back();
-      }),
+      new_shared<Menu_text_item>(get_locale_str("common.exit"),
+        []{ hpw::scene_mgr->back(); }),
     },
     Vec{60, 80}
   );

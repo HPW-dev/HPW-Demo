@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "player.hpp"
 #include "util/error.hpp"
-#include "game/entity/ability/ability.hpp"
+#include "game/entity/player/ability/ability.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/camera.hpp"
 

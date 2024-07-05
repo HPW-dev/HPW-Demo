@@ -50,9 +50,9 @@ class Cmd_log_cnosole final: public Cmd::Command {
 public:
   inline Cmd_log_cnosole(Cmd* master): m_master{master} {}
   ~Cmd_log_cnosole() = default;
-  inline Str name() const override { return "log_cnosole"; }
+  inline Str name() const override { return "log_console"; }
   inline Str description() const override
-    { return "log_cnosole <1/0> enable/disable printing text to console";  }
+    { return "log_console <1/0> enable/disable printing text to console";  }
   void exec(CN<Strs> cmd_and_args) override;
 };
 

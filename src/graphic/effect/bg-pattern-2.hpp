@@ -49,3 +49,25 @@ void bgp_tiles_3(Image& dst, const int bg_state);
 void bgp_tiles_4(Image& dst, const int bg_state);
 // копирует предыдущий кадр и увеличивает с размытием и затемнением
 void bgp_zoom_dst(Image& dst, const int bg_state);
+// несколько слоёв с линиями меняют яркость
+void bgp_deep_lines(Image& dst, const int bg_state);
+// несколько слоёв с линиями меняют яркость (быстрее)
+void bgp_deep_lines_2(Image& dst, const int bg_state);
+// несколько слоёв с линиями меняют яркость (высокое разрешение)
+void bgp_deep_lines_3(Image& dst, const int bg_state);
+// несколько слоёв с линиями меняют яркость (красный)
+void bgp_deep_lines_red(Image& dst, const int bg_state);
+// несколько слоёв с линиями меняют яркость (больше слоёв)
+void bgp_deep_lines_red_2(Image& dst, const int bg_state);
+// несколько слоёв с линиями меняют яркость (больше линий)
+void bgp_deep_lines_red_3(Image& dst, const int bg_state);
+// несколько слоёв с кругами меняют яркость
+void bgp_deep_circles(Image& dst, const int bg_state);
+// несколько слоёв с кругами меняют яркость (красные)
+void bgp_deep_circles_red(Image& dst, const int bg_state);
+// пиксели тайлов рандомно меняются
+void bgp_tile_corruption(Image& dst, const int bg_state);
+// рисует код эффекта
+void bgp_self_code(Image& dst, const int bg_state);
+// шум
+void bgp_noise(Image& dst, const int bg_state);

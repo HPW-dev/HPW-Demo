@@ -5,7 +5,7 @@
 #include <utility>
 #include <thread>
 #include <cmath>
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "util/error.hpp"
 #include "util/vector-types.hpp"

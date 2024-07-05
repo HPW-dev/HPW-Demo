@@ -2,7 +2,7 @@
 #include "game/util/keybits.hpp"
 #include "game/core/scenes.hpp"
 #include "graphic/image/image.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/core/fonts.hpp"
 
 struct Cutscene_1::Impl {

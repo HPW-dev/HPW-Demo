@@ -5,7 +5,7 @@
 #include "game/menu/item/table-row-item.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 
 struct Shop_debug::Impl {
   Unique<Table_menu> item_table {};

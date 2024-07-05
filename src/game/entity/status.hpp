@@ -7,6 +7,7 @@ struct Enity_status {
   bool collided: 1 {};         // минимум один раз в объект врезались
   bool killed: 1 {};           // используется в update_kills для отложенной смерти
   bool kill_by_end_anim: 1 {}; // убить объект концом анимации
+  bool kill_by_end_frame: 1 {}; // убить объект в конце его кадра анимации
   bool kill_by_timeout: 1 {};  // убить объект концом времени жизни
   bool is_bullet: 1 {};        // объект является пулей
   bool is_enemy: 1 {};         // объект является врагом

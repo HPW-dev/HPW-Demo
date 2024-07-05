@@ -1,6 +1,6 @@
 #include <cassert>
 #include "scene-replay-select.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "scene-loading.hpp"
 #include "game/core/common.hpp"
 #include "game/core/scenes.hpp"

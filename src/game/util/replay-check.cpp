@@ -6,7 +6,7 @@
 #include "game/core/entities.hpp"
 #include "game/util/keybits.hpp"
 #include "game/entity/entity-type.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "util/math/num-types.hpp"
 #include "util/math/vec-util.hpp"

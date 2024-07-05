@@ -27,7 +27,10 @@ Host_ogl::Host_ogl(int argc, char *argv[])
   #endif
 }
 
-void Host_ogl::draw() { ogl_draw(); }
+void Host_ogl::draw() {
+  if (graphic::enable_render)
+    ogl_draw(); 
+}
 
 void Host_ogl::ogl_resize(int w, int h) {
   if ( !w || !h)

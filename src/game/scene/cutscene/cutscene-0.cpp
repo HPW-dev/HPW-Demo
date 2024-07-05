@@ -4,7 +4,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "util/math/vec.hpp"
 #include "util/vector-types.hpp"
 #include "util/math/circle.hpp"

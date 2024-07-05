@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include "home.hpp"
 #include "game/core/entities.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/util/game-util.hpp"
 #include "util/error.hpp"
 #include "util/math/timer.hpp"

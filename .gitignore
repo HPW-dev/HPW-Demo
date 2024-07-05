@@ -1,7 +1,8 @@
-﻿build/config.yml
+﻿stats.csv
+build/config.yml
+build/*.txt
 build/editor
 build/plugin
-build/debug.txt
 build/cmd-test-helper.txt
 build/cmd-test.txt
 ignore me.lnk

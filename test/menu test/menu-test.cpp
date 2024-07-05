@@ -1,7 +1,7 @@
 #include "menu-test.hpp"
 #include "game/util/game-util.hpp"
 #include "game/scene/scene.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/core/canvas.hpp"

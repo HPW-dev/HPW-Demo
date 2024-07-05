@@ -75,9 +75,19 @@ void Scene_main_menu::init_bg() {
       &bgp_labyrinth_2,
     #endif
   #endif
-
   // Пак 2:
   #if 1
+    &bgp_self_code
+    &bgp_noise
+    &bgp_tile_corruption,
+    &bgp_deep_circles,
+    &bgp_deep_circles_red,
+    &bgp_deep_lines,
+    &bgp_deep_lines_2,
+    &bgp_deep_lines_3,
+    &bgp_deep_lines_red,
+    &bgp_deep_lines_red_2,
+    &bgp_deep_lines_red_3,
     &bgp_dither_wave,
     &bgp_dither_wave_2,
     &bgp_fast_lines,

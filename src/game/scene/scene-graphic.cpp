@@ -1,7 +1,7 @@
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
 #include "scene-pge.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
 #include "game/core/common.hpp"
@@ -27,7 +27,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "util/error.hpp"
 
 Scene_graphic::Scene_graphic() {
@@ -314,13 +314,13 @@ void Scene_graphic::init_simple_menu() {
   simple_menu = new_shared<Advanced_text_menu>(
     get_locale_str("scene.graphic_menu.title"),
     Menu_items {
-      get_fullscreen_item(),
+      get_plugin_item(),
       get_palette_item(),
+      get_fullscreen_item(),
       new_shared<Menu_text_item>(
         get_locale_str("scene.graphic_menu.pressets.name"),
         [this]{ cur_menu = preset_menu; }
       ),
-      get_plugin_item(),
       get_resize_type_item(),
       get_vsync_item(),
       get_frame_limit_item(),

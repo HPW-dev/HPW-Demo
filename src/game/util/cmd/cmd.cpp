@@ -4,7 +4,6 @@
 #include <algorithm>
 #include "cmd.hpp"
 #include "cmd-entity.hpp"
-#include "cmd-phys.hpp"
 #include "cmd-common.hpp"
 #include "cmd-script.hpp"
 #include "cmd-player.hpp"
@@ -17,6 +16,29 @@
 #include "game/core/messages.hpp"
 
 Cmd::Cmd() {
+  //cmd-common.hpp
+  move(new_unique<Cmd_exit>());
+  move(new_unique<Cmd_error>());
+  move(new_unique<Cmd_print>(this));
+  move(new_unique<Cmd_alias>(this));
+  move(new_unique<Cmd_log_cnosole>(this));
+  move(new_unique<Cmd_log_screen>(this));
+  move(new_unique<Cmd_help>(this));
+  move(new_unique<Cmd_cls>());
+  move(new_unique<Cmd_comment>());
+
+  //cmd-script.hpp
+  move(new_unique<Cmd_script>());
+
+  //cmd-level.hpp
+  move(new_unique<Cmd_levels>(this));
+  move(new_unique<Cmd_level>(this));
+  move(new_unique<Cmd_restart>(this));
+  move(new_unique<Cmd_collider>(this));
+
+  cmd_core_init(*this); // cmd-core.hpp
+  cmd_entity_init(*this); // cmd-entity.hpp
+
   //cmd-entity.hpp
   //move(new_unique<Cmd_entities>());
   //move(new_unique<Cmd_spawn>());
@@ -38,33 +60,6 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_abilities>());
   //move(new_unique<Cmd_give_ability>());
 
-  //cmd-common.hpp
-  move(new_unique<Cmd_exit>());
-  move(new_unique<Cmd_error>());
-  move(new_unique<Cmd_print>(this));
-  move(new_unique<Cmd_alias>(this));
-  move(new_unique<Cmd_log_cnosole>(this));
-  move(new_unique<Cmd_log_screen>(this));
-  move(new_unique<Cmd_help>(this));
-  move(new_unique<Cmd_cls>());
-  move(new_unique<Cmd_comment>());
-
-  //cmd-script.hpp
-  move(new_unique<Cmd_script>());
-
-  //cmd-level.hpp
-  move(new_unique<Cmd_levels>(this));
-  move(new_unique<Cmd_level>(this));
-  move(new_unique<Cmd_restart>(this));
-  move(new_unique<Cmd_collider>(this));
-
-  //cmd-core.hpp
-  //move(new_unique<Cmd_fps>());
-  //move(new_unique<Cmd_render>());
-  //move(new_unique<Cmd_tickrate>());
-  //move(new_unique<Cmd_stats>());
-  //move(new_unique<Cmd_end_stats>());
-
   sort_commands();
 } // Cmd c-tor
 
@@ -80,8 +75,44 @@ void Cmd::move(Unique<Command>&& command) {
   m_commands.emplace_back( std::move(command) );
 }
 
+/* Разбивает строчки разделённые пробелами с учётом кавычек.
+Кавычки в результат не входят */
+inline Strs split_args_str(CN<Str> cmd_and_args) {
+  constexpr const char separator = ' ';
+  constexpr const char comma = '"';
+  bool comma_mode = false;
+  Str cur_str;
+  Strs ret;
+
+  for (cnauto ch: cmd_and_args) {
+    if (ch == comma) {
+      comma_mode = !comma_mode;
+      continue;
+    }
+
+    if (comma_mode) {
+      cur_str += ch;
+      continue;
+    }
+
+    if (ch == separator) {
+      if (!cur_str.empty())
+        ret.push_back(cur_str);
+      cur_str.clear();
+      continue;
+    }
+
+    cur_str += ch;
+  } // for all chars in cmd_and_args
+
+  if (!cur_str.empty())
+    ret.push_back(cur_str);
+
+  return ret;
+} // split_args_str
+
 void Cmd::impl_exec(CN<Str> cmd_and_args) {
-  cauto splited = split_str(cmd_and_args, ' ');
+  cauto splited = split_args_str(cmd_and_args);
   cnauto command = find_command(splited.at(0));
   iferror(!command, "not finded command \"" << cmd_and_args << "\"");
   command->exec(splited);
@@ -133,6 +164,7 @@ void Cmd::print_to_screen(CN<Str> text) const {
   Message msg;
   msg.text = utf8_to_32(text);
   msg.lifetime = 3.5;
+  assert(hpw::message_mgr);
   hpw::message_mgr->move(std::move(msg));
 }
 

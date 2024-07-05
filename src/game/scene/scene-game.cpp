@@ -5,9 +5,9 @@
 #include <ctime>
 #include "scene-game.hpp"
 #include "scene-loading.hpp"
-#include "scene-manager.hpp"
+#include "scene-mgr.hpp"
 #include "host/command.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
@@ -15,7 +15,6 @@
 #include "game/core/core.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/entities.hpp"
@@ -24,6 +23,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/huds.hpp"
+#include "game/core/tasks.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
@@ -38,7 +38,7 @@
 #include "game/level/level-space.hpp"
 #include "game/level/level-tutorial.hpp"
 //#include "game/level/level-1.hpp"
-#include "game/entity/player-dark.hpp"
+#include "game/entity/player/player-dark.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
@@ -49,6 +49,8 @@
 #ifdef DEBUG
 #include "scene-cmd.hpp"
 #include "scene-debug.hpp"
+#include "game/core/debug.hpp"
+#include "game/util/cmd/cmd-script.hpp"
 #include "game/util/cmd/cmd.hpp"
 #include "game/level/level-empty.hpp"
 //#include "game/level/level-collision-test.hpp"
@@ -115,6 +117,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
   hpw::message_mgr = new_unique<Message_mgr>();
+  startup_script();
 } // c-tor
 
 Scene_game::~Scene_game() {
@@ -157,6 +160,7 @@ void Scene_game::update(const Delta_time dt) {
     hpw::scene_mgr->back(); // exit to main menu
     detailed_log("уровни кончились, выход из сцены игры\n");
   }
+  hpw::task_mgr.update(dt);
 
   if (graphic::hud)
     graphic::hud->update(dt);
@@ -181,10 +185,16 @@ void Scene_game::draw(Image& dst) const {
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
   graphic::post_effects->draw(dst);
+  hpw::task_mgr.draw(dst);
   if (graphic::hud)
     graphic::hud->draw(dst);
   post_draw(dst);
 } // draw
+
+void Scene_game::startup_script() {
+  if (!hpw::start_script.empty())
+    hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
+}
 
 void Scene_game::init_entitys() {
   // для показа хитбоксов

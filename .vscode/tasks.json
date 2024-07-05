@@ -95,5 +95,11 @@
       "command": "python",
       "args": ["script/code-to-image.py"]
     },
+    {
+      "label": "empty test (debug)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/empty-test.py"]
+    },
   ]
 }

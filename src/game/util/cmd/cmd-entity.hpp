@@ -1,4 +1,5 @@
 #pragma once
-#include "cmd.hpp"
 
+class Cmd;
 
+void cmd_entity_init(Cmd& cmd);

@@ -11,7 +11,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/core.hpp"
-#include "game/entity/entity-manager.hpp"
+#include "game/entity/entity-mgr.hpp"
 #include "game/entity/util/entity-util.hpp"
 
 Entity::Entity()

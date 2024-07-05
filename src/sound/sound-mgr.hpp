@@ -102,7 +102,7 @@ public:
   void set_doppler_factor(const real doppler_factor) override;
   void disable(const Audio_id sound_id) override;
   CN<Audio> find_audio(CN<Str> sound_name) const override;
-  void shutup();
+  void shutup() override;
 }; // Sound_mgr_oal
 
 // Беззвучная заглушка
@@ -131,5 +131,5 @@ public:
   inline void set_doppler_factor(const real doppler_factor) override {}
   inline void disable(const Audio_id sound_id) override {}
   CN<Audio> find_audio(CN<Str> sound_name) const override;
-  inline void shutup() {}
+  inline void shutup() override {}
 }; // Sound_mgr_nosound

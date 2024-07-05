@@ -4,10 +4,11 @@
 #include "game/core/core.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/debug.hpp"
+#include "game/core/tasks.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/util/phys.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/util/game-util.hpp"
 #include "graphic/image/image.hpp"
 #include "util/log.hpp"
@@ -20,20 +21,36 @@ Level_mgr::Level_mgr(CN<Makers> _makers)
 }
 
 void Level_mgr::update(const Vec vel, Delta_time dt) {
-  if (m_level) {
-    m_level->update(vel, dt);
-    if (m_level->m_complete)
-      m_level = {};
-  } 
-  // смена уровня
-  if (!m_level) {
+  level_order_update();
+  level_update(vel, dt);
+}
+
+void Level_mgr::level_update(const Vec vel, Delta_time dt) {
+  return_if (!m_level);
+
+  m_level->update(vel, dt);
+  if (m_level->m_complete)
+    on_end_level();
+}
+
+void Level_mgr::level_order_update() {
+  return_if (m_level);
+  accept_maker(); 
+  #ifdef DETAILED_LOG
+  if (cauto name = level_name(); !name.empty())
+    detailed_log("выбран уровень: \"" << name << "\"\n");
+  #endif
+}
+
+void Level_mgr::on_end_level() {
+  // завершить все задачи
+  hpw::task_mgr.kill_all();
+  // освободить память от объектов
+  if (hpw::entity_mgr)
     hpw::entity_mgr->clear();
-    accept_maker();
-    
-    if (cauto _level_name = level_name(); !_level_name.empty())
-      detailed_log("выбран уровень: \"" << _level_name << "\"\n");
-  } // if !m_level
-} // update
+  // для смены уровня в level_order_update
+  m_level = {};
+}
 
 void Level_mgr::draw(Image& dst) const {
   return_if(!m_visible);
@@ -57,14 +74,16 @@ void Level_mgr::draw_upper_layer(Image& dst) const {
 }
 
 void Level_mgr::accept_maker() {
+  // если уровней в очереди нет, то поставить флаг
   if (m_makers.empty()) {
     end_of_levels = true;
-  } else {
-    // взять следующий уровень и убрать его из списка на создание
-    auto maker = m_makers.front();
-    m_level = maker();
-    m_makers.pop_front();
+    return;
   }
+
+  // взять следующий уровень и убрать его из списка на создание
+  auto maker = m_makers.front();
+  m_level = maker();
+  m_makers.pop_front();
 }
 
 void Level_mgr::finalize_level() {
@@ -93,7 +112,7 @@ void Level_mgr::set_visible(bool mode) { m_visible = mode; }
 
 void Level_mgr::set(CN<Level_mgr::Maker> maker) { 
   assert(maker);
-  if (hpw::entity_mgr)
-    hpw::entity_mgr->clear();
+  if (m_level)
+    on_end_level();
   m_level = maker();
 }

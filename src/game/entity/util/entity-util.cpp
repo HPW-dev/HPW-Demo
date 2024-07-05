@@ -5,7 +5,7 @@
 #include "anim-ctx.hpp"
 #include "game/core/anims.hpp"
 #include "game/entity/entity.hpp"
-#include "game/entity/player.hpp"
+#include "game/entity/player/player.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/particle.hpp"
 #include "game/core/canvas.hpp"
@@ -13,6 +13,10 @@
 #include "util/hpw-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/vec-util.hpp"
+#include "graphic/animation/anim.hpp"
+#include "graphic/animation/frame.hpp"
+#include "graphic/image/image.hpp"
+#include "graphic/sprite/sprite.hpp"
 
 static Uid m_entity_uid = 0;
 
@@ -251,4 +255,43 @@ void Timed_kill_if_master_death::operator()
 
   return_if(entity.master && entity.master->status.live);
   m_master_death = true;
+}
+
+Bound_off_screen::Bound_off_screen(CN<Entity> src) {
+  // получить размеры игрока
+  auto anim = src.get_anim();
+  assert(anim);
+  auto frame = anim->get_frame(0);
+  assert(frame);
+  auto direct = frame->get_direct(0);
+  assert(direct);
+  auto sprite = direct->sprite.lock();
+  assert(sprite);
+  auto image = sprite->image();
+  Vec player_sz(image.X, image.Y);
+  screen_lu = Vec(
+    -1 * direct->offset.x,
+    -1 * direct->offset.y
+  );
+  screen_rd = Vec(
+    graphic::width  - player_sz.x - direct->offset.x,
+    graphic::height - player_sz.y - direct->offset.y
+  );
+} // Bound_off_screen c-tor
+
+void Bound_off_screen::operator()(Entity& dst, const Delta_time dt) {
+  auto pos = dst.phys.get_pos();
+  bool decrease_speed {false};
+  if (pos.x < screen_lu.x)
+    { pos.x = screen_lu.x; decrease_speed = true; }
+  if (pos.x >= screen_rd.x)
+    { pos.x = screen_rd.x-1; decrease_speed = true; }
+  if (pos.y < screen_lu.y)
+    { pos.y = screen_lu.y; decrease_speed = true; }
+  if (pos.y >= screen_rd.y)
+    { pos.y = screen_rd.y-1; decrease_speed = true; }
+  // это фиксит быстрое движение при отталкивании
+  if (decrease_speed)
+    dst.phys.set_speed( dst.phys.get_speed() * 0.25 );
+  dst.phys.set_pos(pos);
 }

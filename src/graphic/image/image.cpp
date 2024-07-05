@@ -28,7 +28,7 @@ Image& Image::operator = (CN<Image> other) noexcept {
   return *this;
 }
 
-Image::Image(int nx, int ny, std::optional<Pal8> col) noexcept
+Image::Image(int nx, int ny, const std::optional<const Pal8> col) noexcept
 : X {nx}
 , Y {ny}
 , size {nx * ny}

@@ -108,3 +108,12 @@ real deg_to_target(CN<Entity> self, const Vec target);
 * @param self позиция стреляющего объекта
 * @param target движущаяся цель, в которую стреляют */
 Vec predict(CN<Entity> self, CN<Entity> target, Delta_time dt);
+
+// ограничитель позиции игрока в пределах экрана
+struct Bound_off_screen {
+  Vec screen_lu {}; // ограничение слева сверху
+  Vec screen_rd {}; // ограничение справа снизу
+
+  explicit Bound_off_screen(CN<Entity> src);
+  void operator()(Entity& dst, const Delta_time dt);
+}; // Bound_off_screen

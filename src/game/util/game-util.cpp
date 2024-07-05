@@ -21,7 +21,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sounds.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 #include "util/hpw-util.hpp"
@@ -38,7 +38,7 @@
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
-#include "sound/sound-manager.hpp"
+#include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "sound/sound.hpp"
 
@@ -469,3 +469,11 @@ void load_sounds() {
 
   init_store_sound();
 } // load_sounds
+
+[[nodiscard]] Vec rnd_screen_pos_safe() {
+  assert(graphic::canvas);
+  return Vec {
+    rndr(0, graphic::canvas->X),
+    rndr(0, graphic::canvas->Y)
+  };
+}

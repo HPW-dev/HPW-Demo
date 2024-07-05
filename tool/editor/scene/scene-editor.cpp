@@ -2,7 +2,7 @@
 #include "window/root.hpp"
 #include "graphic/image/image.hpp"
 #include "game/util/keybits.hpp"
-#include "game/scene/scene-manager.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "yn.hpp"
 
 Editor_scene::Editor_scene()

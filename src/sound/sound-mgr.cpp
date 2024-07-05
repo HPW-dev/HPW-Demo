@@ -8,7 +8,7 @@
 #include <functional>
 #include <utility>
 #include <unordered_map>
-#include "sound-manager.hpp"
+#include "sound-mgr.hpp"
 #include "packet-decoder.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"

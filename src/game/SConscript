@@ -17,8 +17,8 @@ if enable_omp:
   cpp_flags.extend(["-fopenmp"])
   
 lib_path = []
-build_dir = "../../build/"
 prog_name = "HPW"
+build_dir = "../../build/"
 src_dir = "../../src/"
 thirdparty_dir = "../../thirdparty/"
 
@@ -56,13 +56,14 @@ sources = [
   Glob(src_dir + "util/math/*.c"),
   Glob(src_dir + "host/*.cpp"),
   Glob(src_dir + "game/*.cpp"),
-  Glob(src_dir + "game/util/post-effect/*.cpp"),
   Glob(src_dir + "game/util/*.cpp"),
+  Glob(src_dir + "game/util/post-effect/*.cpp"),
   Glob(src_dir + "game/util/cmd/*.cpp"),
   Glob(src_dir + "game/core/*.cpp"),
   Glob(src_dir + "game/hud/*.cpp"),
   Glob(src_dir + "game/entity/*.cpp"),
-  Glob(src_dir + "game/entity/ability/*.cpp"),
+  Glob(src_dir + "game/entity/player/ability/*.cpp"),
+  Glob(src_dir + "game/entity/player/*.cpp"),
   Glob(src_dir + "game/entity/enemy/*.cpp"),
   Glob(src_dir + "game/entity/collider/*.cpp"),
   Glob(src_dir + "game/entity/util/info/*.cpp"),

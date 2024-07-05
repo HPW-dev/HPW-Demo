@@ -329,6 +329,7 @@ void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
 bool Host_glfw::is_ran() const { return m_is_ran && !glfwWindowShouldClose(m_window); }
 
 void Host_glfw::game_frame(const Delta_time dt) {
+  return_if (!graphic::enable_render);
   return_if (dt <= 0 || dt >= 10);
 
   m_frame_time += dt;
@@ -441,7 +442,7 @@ void Host_glfw::calc_upf() {
 void Host_glfw::set_update_time(const Delta_time dt) {
   if (
     // ждать конца кадра
-    graphic::wait_frame &&
+    (graphic::wait_frame && graphic::enable_render) &&
     // если используются синхронизации по VSync или лимиту кадров
     !graphic::get_disable_frame_limit() &&
     // юзать только при выключенном фреймскипе

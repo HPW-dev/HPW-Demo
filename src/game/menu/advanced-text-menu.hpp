@@ -10,7 +10,6 @@ class Advanced_text_menu: public Menu {
   Unique<Impl> impl {};
 
 public:
-  Advanced_text_menu() = default;
   ~Advanced_text_menu();
   explicit Advanced_text_menu(CN<utf32> title, CN<Menu_items> items, const Rect rect);
   void draw(Image& dst) const override;
