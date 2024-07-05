@@ -32,7 +32,7 @@ inline bool show_grids          {false}; // сетка для разбиения
 inline bool draw_hitboxes       {false}; // показать хитбокс
 inline bool draw_full_hitboxes  {false}; // показать ещё и покрывающий круг с крестом
 inline bool draw_entity_pos     {false};
-inline bool draw_entitys        {true};
+inline bool draw_entities        {true};
 inline bool draw_level          {true};  // рисовать фон уровня
 inline bool draw_controls       {false}; // показать что за кнопки нажимаются
 inline bool draw_entity_hp      {false}; // показать жизни у объекта
