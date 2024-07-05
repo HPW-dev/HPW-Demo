@@ -10,6 +10,7 @@
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
+#include "util/math/random.hpp"
 
 namespace {
 Uid g_last_uid {}; // последний соспавненный объект
@@ -215,9 +216,9 @@ void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 }
 
 void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
-  iferror(args.size() < 3, "недостаточно параметров");
+  iferror(args.size() < 2, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
-  cauto deg = s2n<real>(args[2]);
+  cauto deg = (args.size() >= 3 ? s2n<real>(args[2]) : rndr(0, 360));
   auto ent = hpw::entity_mgr->find(uid);
   iferror(!ent, "объект uid=" << uid << " не найден");
   ent->phys.set_deg(deg);

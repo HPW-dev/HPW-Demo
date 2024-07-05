@@ -11,3 +11,14 @@ public:
   }
   void exec(CN<Strs> cmd_and_args) override;
 };
+
+// выполняет команды из файла за один апдейт
+class Cmd_script_instant final: public Cmd::Command {
+public:
+  ~Cmd_script_instant() = default;
+  inline Str name() const override { return "script_instant"; }
+  inline Str description() const override {
+    return "script_instant <file.txt> - мгновенно выполняет команды из файла"; 
+  }
+  void exec(CN<Strs> cmd_and_args) override;
+};
