@@ -21,12 +21,14 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sounds.hpp"
+#include "game/core/palette.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/rnd-table.hpp"
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/vec-util.hpp"
@@ -41,6 +43,7 @@
 #include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "sound/sound.hpp"
+#include "host/command.hpp"
 
 void load_resources() {
   detailed_log("loading resources...\n");
@@ -476,4 +479,16 @@ void load_sounds() {
     rndr(0, graphic::canvas->X),
     rndr(0, graphic::canvas->Y)
   };
+}
+
+void set_random_palette() {
+  cauto sprites = hpw::store_sprite->list();
+  cauto filter = [](CN<Str> src) {
+    return src.find("resource/image/palettes/") != Str::npos;
+  };
+  Rnd_table<Str> palettes( sprites | std::views::filter(filter)
+    | std::ranges::to<Strs>() );
+  cauto palette_name = palettes.rnd_fast();
+  graphic::current_palette_file = palette_name;
+  hpw::init_palette_from_archive (palette_name);
 }

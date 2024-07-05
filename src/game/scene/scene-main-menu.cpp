@@ -4,7 +4,6 @@
 #include "scene-options.hpp"
 #include "scene-loading.hpp"
 #include "scene-difficulty.hpp"
-#include "scene-replay-select.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
@@ -202,15 +201,12 @@ void Scene_main_menu::init_menu() {
       // старт
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),
         []{ hpw::scene_mgr->add(new_shared<Scene_difficulty>()); }),
-      // выбор реплея
-      new_shared<Menu_text_item>(get_locale_str("scene.replay.name"), []{
-        hpw::scene_mgr->add(new_shared<Scene_loading>( []{
-          hpw::scene_mgr->add(new_shared<Scene_replay_select>());
-        } ));
-      }),
       // сменить фон
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
         [this]{ next_bg(); }),
+      // сменить палитру
+      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.rnd_pal"),
+        []{ set_random_palette(); }),
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr->add(new_shared<Scene_info>());
@@ -300,7 +296,7 @@ void Scene_main_menu::draw_text(Image& dst) const {
 
   // показать версию игры  
   cauto game_ver = prepare_game_ver();
-  graphic::font->draw(text_layer, {140, 300},
+  graphic::font->draw(text_layer, {140, 306},
     get_locale_str("common.game_version") + U": " + game_ver);
 
   // нарисовать тень от текста

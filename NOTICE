@@ -71,7 +71,7 @@ MinGW-w64:
   <https://cdpstudio.com/manual/cdp-studio/legal/credits-mingw-w64.html>
 
 GCC:
-  Copyright (c) 2009 Free Software Foundation, Inc.
+  Copyright (C) 2024 Free Software Foundation, Inc.
   SPDX-License-Identifier: GPL-3.0+
   <https://gcc.gnu.org/onlinedocs/libstdc++/manual/license.html>
 

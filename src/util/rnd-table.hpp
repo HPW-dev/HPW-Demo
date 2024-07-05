@@ -16,7 +16,7 @@ public:
   constexpr inline Rnd_table(Values_cref values)
   : m_values{ values } {}
 
-  constexpr inline Rnd_table(Values&& values)
+  constexpr inline Rnd_table(Values&& values) noexcept
   : m_values{ std::move(values) } {}
 
   inline Value_cref push(Value_cref val) {
