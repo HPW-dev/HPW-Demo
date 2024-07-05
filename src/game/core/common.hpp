@@ -11,9 +11,12 @@ inline bool any_key_pressed {}; // факт нажатия нажатия люб
 inline bool shmup_mode {true}; // традиционный shoot'em-up режим
 inline Str exe_sha256 {}; // чексумма для экзешника игры
 inline Str data_sha256 {}; // чексумма для данных игры
-inline bool need_tutorial {true}; // играя первый раз, предлагать туториал первым в списке
+// играя первый раз, предлагать туториал первым в списке
+inline bool need_tutorial {true};
 inline bool save_last_replay {}; // сохранить последний реплей в именной файл?
-inline bool sound_mgr_init_error {}; // true, если не удалось инициализировать звуковую систему
+// true, если не удалось инициализировать звуковую систему
+inline bool sound_mgr_init_error {};
 inline bool multiple_apps {}; // true - два и более окна с игрой запущено
+inline bool rnd_pal_after_death {}; // true - менять палитру при проигрыше
 
 } // hpw ns
