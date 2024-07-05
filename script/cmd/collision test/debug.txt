@@ -1,7 +1,12 @@
+render 0
+log_screen 0
+log_console 0
 seed 97997
-hitboxes 1
 rep 20 script_instant spawn.txt
 
+hitboxes 1
+render 1
+cls
 log_screen 1
 log_console 1
 collided
