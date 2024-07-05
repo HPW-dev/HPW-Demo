@@ -1,6 +1,7 @@
 #include "scene-difficulty.hpp"
 #include "scene-mgr.hpp"
 #include "scene-loading.hpp"
+#include "scene-replay-select.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/difficulty.hpp"
 #include "game/core/canvas.hpp"
@@ -72,6 +73,12 @@ void Scene_difficulty::init_menu() {
       [](const bool val) { hpw::enable_replay = val; },
       get_locale_str("scene.difficulty_select.description.write_replay")
     ),
+    // выбор реплея
+    new_shared<Menu_text_item>(get_locale_str("scene.replay.watch"), []{
+      hpw::scene_mgr->add(new_shared<Scene_loading>( []{
+        hpw::scene_mgr->add(new_shared<Scene_replay_select>());
+      } ));
+    }),
     // TODO select difficulty item
     new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
       hpw::scene_mgr->back();
