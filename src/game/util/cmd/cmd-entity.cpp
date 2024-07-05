@@ -215,6 +215,33 @@ void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + n2s(new_hp) + " HP");
 }
 
+void entity_dmg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "недостаточно параметров");
+
+  // find raw entity
+  cauto uid = get_uid(args[1]);
+  auto ent = hpw::entity_mgr->find(uid);
+  iferror(!ent, "объект uid=" << uid << " не найден");
+
+  // cast to collidable
+  iferror(!ent->status.collidable, "у объекта "
+    << ent->name() << " нету параметра DMG");
+  auto collidable = ptr2ptr<Collidable*>(ent);
+  cauto dmg = collidable->get_dmg();
+
+  // показать дамаг
+  if (args.size() == 2) {
+    console.print("у объекта \"" + collidable->name() + "\" DMG = " + n2s(dmg));
+    return;
+  }
+
+  // задать дамаг
+  cauto new_dmg = s2n<hp_t>(args.at(2));
+  collidable->set_hp(new_dmg);
+  console.print("объекту \"" + collidable->name() + "\" назначено "
+    + n2s(new_dmg) + " DMG");
+}
+
 void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
@@ -378,6 +405,10 @@ void cmd_entity_init(Cmd& cmd) {
     "hp <uid> <val> - назначает жизни объекту. "
     "Без парамерта показывает сколько жизней",
     &entity_hp, {} )
+  MAKE_CMD (
+    "dmg",
+    "dmg <uid> <val> - назначает урон объекту",
+    &entity_dmg, {} )
   MAKE_CMD (
     "deg",
     "deg <uid> <degree> - назначает угол поворота объекту",
