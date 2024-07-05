@@ -323,7 +323,7 @@ void print_collided(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   uint total {};
   for (cnauto ent: entities)
     total += ent->status.collided;
-  console.print(n2s(total) + " объектов столкнулось");
+  console.print("столкновений " + n2s(total));
 }
 
 void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
