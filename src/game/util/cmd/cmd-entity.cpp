@@ -237,7 +237,7 @@ void entity_dmg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 
   // задать дамаг
   cauto new_dmg = s2n<hp_t>(args.at(2));
-  collidable->set_hp(new_dmg);
+  collidable->set_dmg(new_dmg);
   console.print("объекту \"" + collidable->name() + "\" назначено "
     + n2s(new_dmg) + " DMG");
 }
