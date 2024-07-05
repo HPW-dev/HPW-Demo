@@ -27,6 +27,7 @@
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/rnd-table.hpp"
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/vec-util.hpp"
@@ -476,4 +477,15 @@ void load_sounds() {
     rndr(0, graphic::canvas->X),
     rndr(0, graphic::canvas->Y)
   };
+}
+
+void set_random_palette() {
+  cauto sprites = hpw::store_sprite->list();
+  cauto filter = [](CN<Str> src) {
+    return src.find("resource/image/palettes/") != Str::npos;
+  };
+  //Rnd_table<Str> palettes( sprites | std::views::filter(filter)
+  //  | std::ranges::to<Strs>() );
+  //graphic::current_palette_file = palettes.rnd_fast();
+  //hpw::init_palette_from_archive( cur_palette_file() );
 }

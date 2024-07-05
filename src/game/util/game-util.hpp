@@ -48,3 +48,5 @@ void save_all_sprites(CN<Str> save_dir, const int MX=512, const int MY=512);
 std::size_t sizeof_all_sprites();
 // загрузить звуки в звуковую систему
 void load_sounds();
+// ставит случайную палитру
+void set_random_palette();
