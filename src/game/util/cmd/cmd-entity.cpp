@@ -318,6 +318,14 @@ static Vector<Flag_struct> g_entity_flags {
 }; // Entity_flags
 } // empty ns
 
+void print_collided(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+  cnauto entities = hpw::entity_mgr->get_entities();
+  uint total {};
+  for (cnauto ent: entities)
+    total += ent->status.collided;
+  console.print(n2s(total) + " объектов столкнулось");
+}
+
 void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
@@ -430,6 +438,10 @@ void cmd_entity_init(Cmd& cmd) {
     "flag",
     "flag <uid> <flag_name> <1/0> - настраивает конкретные флаги объекта",
     &set_flag, &set_flag_matches )
+  MAKE_CMD (
+    "collided",
+    "показывает число столкнувшихся объектов",
+    &print_collided, {} )
     
   #undef MAKE_CMD
 } // cmd_entity_init
