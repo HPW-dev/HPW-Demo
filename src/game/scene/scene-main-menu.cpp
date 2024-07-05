@@ -25,6 +25,7 @@
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
+#include "util/rnd-table.hpp"
 
 void bg_copy_1(Image& dst, const int state);
 void bg_copy_2(Image& dst, const int state);
@@ -32,7 +33,7 @@ void bg_copy_3(Image& dst, const int state);
 void bg_copy_4(Image& dst, const int state);
 
 void Scene_main_menu::init_bg() {
-  sconst Vector<decltype(bg_pattern_pf)> bg_patterns {
+  sconst Rnd_table<decltype(bg_pattern_pf)> bg_patterns {{
   // Пак 1:
   #if 1
     &bgp_hpw_text_lines,
@@ -77,8 +78,8 @@ void Scene_main_menu::init_bg() {
   #endif
   // Пак 2:
   #if 1
-    &bgp_self_code
-    &bgp_noise
+    &bgp_self_code,
+    &bgp_noise,
     &bgp_tile_corruption,
     &bgp_deep_circles,
     &bgp_deep_circles_red,
@@ -116,11 +117,8 @@ void Scene_main_menu::init_bg() {
       //...
     #endif
   #endif
-  }; // bg_patterns table
-
-  // выбрать случайный фон
-  cauto idx = rndu_fast(bg_patterns.size());
-  bg_pattern_pf = bg_patterns.at(idx);
+  }}; // bg_patterns table
+  bg_pattern_pf = bg_patterns.rnd_fast();
 } // init_bg
 
 Scene_main_menu::Scene_main_menu() {
