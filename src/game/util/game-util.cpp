@@ -21,6 +21,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sounds.hpp"
+#include "game/core/palette.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
@@ -42,6 +43,7 @@
 #include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "sound/sound.hpp"
+#include "host/command.hpp"
 
 void load_resources() {
   detailed_log("loading resources...\n");
@@ -484,8 +486,9 @@ void set_random_palette() {
   cauto filter = [](CN<Str> src) {
     return src.find("resource/image/palettes/") != Str::npos;
   };
-  //Rnd_table<Str> palettes( sprites | std::views::filter(filter)
-  //  | std::ranges::to<Strs>() );
-  //graphic::current_palette_file = palettes.rnd_fast();
-  //hpw::init_palette_from_archive( cur_palette_file() );
+  Rnd_table<Str> palettes( sprites | std::views::filter(filter)
+    | std::ranges::to<Strs>() );
+  cauto palette_name = palettes.rnd_fast();
+  graphic::current_palette_file = palette_name;
+  hpw::init_palette_from_archive (palette_name);
 }

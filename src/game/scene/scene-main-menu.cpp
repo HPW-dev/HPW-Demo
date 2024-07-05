@@ -211,6 +211,9 @@ void Scene_main_menu::init_menu() {
       // сменить фон
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
         [this]{ next_bg(); }),
+      // сменить палитру
+      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.rnd_pal"),
+        []{ set_random_palette(); }),
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr->add(new_shared<Scene_info>());
@@ -300,7 +303,7 @@ void Scene_main_menu::draw_text(Image& dst) const {
 
   // показать версию игры  
   cauto game_ver = prepare_game_ver();
-  graphic::font->draw(text_layer, {140, 300},
+  graphic::font->draw(text_layer, {140, 307},
     get_locale_str("common.game_version") + U": " + game_ver);
 
   // нарисовать тень от текста
