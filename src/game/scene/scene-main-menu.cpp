@@ -75,9 +75,11 @@ void Scene_main_menu::init_bg() {
       &bgp_labyrinth_2,
     #endif
   #endif
-
   // Пак 2:
   #if 1
+    &bgp_self_code
+    &bgp_noise
+    &bgp_tile_corruption,
     &bgp_deep_circles,
     &bgp_deep_circles_red,
     &bgp_deep_lines,

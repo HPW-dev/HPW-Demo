@@ -322,7 +322,8 @@ void bgp_fast_lines_red(Image& dst, const int bg_state) {
 }
 
 void bgp_skyline(Image& dst, const int bg_state) {
-  cauto skyline = hpw::store_sprite->find("resource/image/loading logo/skyline.png");
+  cauto skyline = hpw::store_sprite->find(
+    "resource/image/loading logo/skyline.png");
   assert(skyline);
   insert_fast(dst, skyline->image());
 }
@@ -972,3 +973,74 @@ void bgp_deep_circles(Image& dst, const int bg_state) {
     }
   }
 } // bgp_deep_circles
+
+void bgp_tile_corruption(Image& dst, const int bg_state) {
+  // тайлы
+  constexpr uint max_tiles = 16;
+  constexpr int tile_x = 4;
+  constexpr int tile_y = tile_x;
+  static Vector<Image> tiles (max_tiles);
+  static std::once_flag init_once {};
+  std::call_once(init_once, [&] {
+    for (nauto tile: tiles)
+      tile.init(tile_x, tile_y);
+  });
+
+  // уменьшенный буффер
+  constexpr int scale = 2;
+  Image buffer(dst.X / scale, dst.Y / scale);
+
+  // сетка тайлов
+  cauto tile_map_x = buffer.X / tile_x;
+  cauto tile_map_y = buffer.Y / tile_y;
+  Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
+
+  // заполнение сетки
+  xorshift128_state seed;
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cauto idx = xorshift128(seed);
+    tile_map[y * tile_map_x + x] = idx % tiles.size();
+  }
+
+  // поменять случайный пиксель в случайном тайле
+  seed.a += bg_state;
+  seed.b *= bg_state;
+  seed.c += bg_state;
+  seed.d *= bg_state;
+  cauto tile_id = (xorshift128(seed) + bg_state * 123 + 456) % tiles.size();
+  cauto pix_x = (xorshift128(seed) + bg_state * 345 + 567) % tile_x;
+  cauto pix_y = (xorshift128(seed) + bg_state * 234 + 564) % tile_y;
+  tiles[tile_id](pix_x, pix_y).val ^= 0xFFu;
+
+  // заполнение буффера тайлами
+  cfor (y, tile_map_y)
+  cfor (x, tile_map_x) {
+    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
+  }
+
+  // увеличение буффера
+  zoom_x2(buffer);
+  insert_fast(dst, buffer);
+}
+
+void bgp_noise(Image& dst, const int bg_state) {
+  xorshift128_state seed;
+  seed.a ^= bg_state;
+  seed.b ^= bg_state;
+  seed.c ^= bg_state;
+  seed.d ^= bg_state;
+
+  for (nauto pix: dst)
+    pix.val = xorshift128(seed) % 256u;
+
+  to_gray(dst);
+}
+
+void bgp_self_code(Image& dst, const int bg_state) {
+  cauto code_img = hpw::store_sprite->find(
+    "resource/image/other/bgp_self_code.png");
+  assert(code_img);
+  insert_fast(dst, code_img->image());
+}

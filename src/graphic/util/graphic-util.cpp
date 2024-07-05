@@ -354,6 +354,11 @@ void to_red(Image& dst) {
     pix = Pal8::from_real(pix.to_real(), true);
 }
 
+void to_gray(Image& dst) {
+  for (nauto pix: dst)
+    pix = Pal8::from_real(pix.to_real(), false);
+}
+
 void expand_color_4(Image& dst, const Pal8 color) {
   Image buffer(dst);
 

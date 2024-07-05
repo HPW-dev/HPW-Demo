@@ -69,6 +69,8 @@ void sub_brightness(Image& dst, const Pal8 brightness);
 void apply_invert(Image& dst);
 // превратить все цвета в красный
 void to_red(Image& dst);
+// превратить все оттенки в серый
+void to_gray(Image& dst);
 
 // распространение пикселей от цвета color в 4-х направлениях
 void expand_color_4(Image& dst, const Pal8 color);

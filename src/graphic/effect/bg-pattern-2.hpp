@@ -65,3 +65,9 @@ void bgp_deep_lines_red_3(Image& dst, const int bg_state);
 void bgp_deep_circles(Image& dst, const int bg_state);
 // несколько слоёв с кругами меняют яркость (красные)
 void bgp_deep_circles_red(Image& dst, const int bg_state);
+// пиксели тайлов рандомно меняются
+void bgp_tile_corruption(Image& dst, const int bg_state);
+// рисует код эффекта
+void bgp_self_code(Image& dst, const int bg_state);
+// шум
+void bgp_noise(Image& dst, const int bg_state);
