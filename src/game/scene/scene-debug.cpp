@@ -91,8 +91,8 @@ void Scene_debug::init_menu() {
         [] (bool new_val) { graphic::draw_entity_pos = new_val; }
       ),
       new_shared<Menu_bool_item>(U"Draw entities",
-        [] { return graphic::draw_entitys; },
-        [] (bool new_val) { graphic::draw_entitys = new_val; }
+        [] { return graphic::draw_entities; },
+        [] (bool new_val) { graphic::draw_entities = new_val; }
       ),
       new_shared<Menu_bool_item>(U"Draw level bg",
         [] { return graphic::draw_level; },

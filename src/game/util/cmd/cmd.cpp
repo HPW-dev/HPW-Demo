@@ -29,6 +29,7 @@ Cmd::Cmd() {
 
   //cmd-script.hpp
   move(new_unique<Cmd_script>());
+  move(new_unique<Cmd_script_instant>());
 
   //cmd-level.hpp
   move(new_unique<Cmd_levels>(this));

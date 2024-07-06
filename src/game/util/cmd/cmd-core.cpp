@@ -6,6 +6,7 @@
 #include "game/core/tasks.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/core.hpp"
+#include "game/core/debug.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/entity/util/entity-util.hpp"
@@ -276,6 +277,17 @@ void set_speed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     + "\" назначена скорость " + n2s(speed, 2));
 }
 
+void draw_hitboxes(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "в команде мало аргументов");
+  cauto yesno = (args.at(1) == "0" ? false : true);
+  #ifdef DEBUG
+  graphic::draw_hitboxes = yesno;
+  graphic::draw_entities = !yesno;
+  graphic::draw_level = !yesno;
+  #endif
+  console.print("режим показа хитбоксов " + Str(yesno ? "включён" : "выключен"));
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -330,6 +342,10 @@ void cmd_core_init(Cmd& cmd) {
     "speed",
     "speed <uid> <speed> - поворачивает меняет скорость объекту",
     &set_speed, {} )
+  MAKE_CMD (
+    "hitboxes",
+    "hitboxes <1/0> - вкл/выкл режим отображения хитбоксов",
+    &draw_hitboxes, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init

@@ -44,7 +44,7 @@ void Entity::draw(Image& dst, const Vec offset) const {
   if (!status.disable_render) {
     // отрисовка игрового объекта
     #ifdef DEBUG
-    if (graphic::draw_entitys)
+    if (graphic::draw_entities)
     #endif
       anim_ctx.draw(dst, *this, offset);
 

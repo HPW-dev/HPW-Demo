@@ -3,7 +3,5 @@
   "C_Cpp.intelliSenseCachePath": "M:\\vscode cache",
   "files.eol": "\n",
   "editor.tabSize": 2,
-  "editor.insertSpaces": true,
-  "editor.wordWrap": "wordWrapColumn",
-  "editor.wordWrapColumn": 80
+  "editor.insertSpaces": true
 }
