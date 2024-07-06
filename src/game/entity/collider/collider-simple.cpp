@@ -30,6 +30,7 @@ void Collider_simple::test_collide(Entity& a, Entity& b) {
 
 void Collider_simple::operator()(CN<Entitys> entities, Delta_time dt) {
   cauto entitys_sz = entities.size();
+  return_if(entitys_sz <= 1);
 
   // проверить столкновения пар объектов (без повторений)
   #pragma omp parallel for simd schedule(dynamic, 4)
