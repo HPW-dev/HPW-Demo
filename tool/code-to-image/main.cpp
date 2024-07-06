@@ -13,8 +13,10 @@
 #include "graphic/util/util-templ.hpp"
 
 using Images = Vector<Image>;
+constexpr static const Pal8 BG_COLOR = Pal8::black;
 constexpr static const Pal8 TEXT_COLOR = Pal8::white;
-constexpr static const Pal8 BORDER_COLOR = Pal8::from_real(0.5, true);
+//constexpr static const Pal8 BORDER_COLOR = Pal8::from_real(0.5, true);
+constexpr static const Pal8 BORDER_COLOR = Pal8::black;
 constexpr static const Pal8 COMENT_COLOR = Pal8::from_real(0.45);
 //constexpr static const Pal8 BORDER_COLOR = Pal8::black;
 //constexpr static const Pal8 COMENT_COLOR = TEXT_COLOR;
@@ -124,84 +126,6 @@ Image text_to_image(CN<Str> fname) {
   return ret;
 } // text_to_image
 
-struct Node {
-  Unique<Node> a {};
-  Unique<Node> b {};
-  Rect area {};
-  CP<Image> image_ptr {};
-};
-
-// true, если получилось вставить изображение
-bool insert_to_tree(Unique<Node>& node, CN<Image> image) {
-  /* когда нада есть и картинка уже в ней, то определить
-  в какую внутреннюю ветвь добавить изображение */
-  if (node->image_ptr) {
-    if (!insert_to_tree(node->a, image))
-      return insert_to_tree(node->b, image);
-    return false;
-  }
-
-  // определить что изображение помещается в область
-  if (image.X <= node->area.size.x && image.Y <= node->area.size.y) {
-    node->a = new_unique<Node>();
-    node->a->area = Rect (
-      node->area.pos.x + image.X,
-      node->area.pos.y,
-      std::max<int>(0, node->area.size.x - image.X),
-      image.Y
-    );
-    node->b = new_unique<Node>();
-    node->b->area = Rect (
-      node->area.pos.x,
-      node->area.pos.y + image.Y,
-      node->area.size.x,
-      std::max<int>(0, node->area.size.y - image.Y)
-    );
-    node->image_ptr = &image;
-    return true;
-  }
-
-  return false;
-} // insert_to_tree
-
-void draw_tree(CN<Unique<Node>> node, Image& dst) {
-  return_if(!node);
-  //draw_rect(dst, node->area, Pal8::white);
-  if (node->image_ptr)
-    insert(dst, *node->image_ptr, node->area.pos);
-  if (node->a)
-    draw_tree(node->a, dst);
-  if (node->b)
-    draw_tree(node->b, dst);
-}
-
-Image make_atlas(CN<Images> images, int w, int h) {
-  assert(!images.empty());
-
-  Unique<Node> root;
-  for (cnauto image: images) {
-    // есди это первая нода
-    if (!root) {
-      cont_if (image.X > w);
-      cont_if (image.Y > h);
-      root = new_unique<Node>();
-      root->a = new_unique<Node>();
-      root->a->area = Rect(image.X, 0, std::max(0, w - image.X), image.Y);
-      root->b = new_unique<Node>();
-      root->b->area = Rect(0, image.Y, w, std::max(0, h - image.Y));
-      root->area = Rect(0,0, w,h);
-      root->image_ptr = &image;
-      continue;
-    }
-
-    insert_to_tree(root, image);
-  }
-
-  Image ret(w, h, Pal8::black);
-  draw_tree(root, ret);
-  return ret;
-}
-
 // фильтрует и сортирует картинки для save_all_images
 inline void prepare_image_list(Images& image_list) {
   assert(!image_list.empty());
@@ -212,6 +136,50 @@ inline void prepare_image_list(Images& image_list) {
       return a.X > b.X;
     return a.size > b.size;
   });
+}
+
+using Rects = Vector<Rect>;
+
+/* перебирать каждый пиксель, пока не найдётся
+свободная область или не хватит места под картинку */
+void inser_to_free_space(Image& dst, CN<Image> src, Rects& occupied) {
+  cauto mx = dst.X;
+  cauto my = dst.Y;
+
+  cfor (y, my) {
+    cont_if(y + src.Y >= my);
+
+    cfor (x, mx) {
+      cont_if(x + src.X >= mx);
+      const Rect src_rect(Vec(x, y), Vec(src.X, src.Y));
+
+      // проверить свободные области
+      bool is_free {true};
+      for (cnauto rect: occupied) {
+        if (intersect(rect, src_rect)) {
+          is_free = false;
+          break;
+        }
+      }
+      if (is_free) {
+        insert(dst, src, {x, y});
+        occupied.push_back(src_rect);
+        return;
+      }
+    } // for x
+  } // for y
+}
+
+Image make_atlas(CN<Images> images, int w, int h) {
+  assert(!images.empty());
+  Rects occupied {}; // занятые области
+  Image dst(w, h, {BG_COLOR});
+
+  // каждой картинке попытаться найти свободную область
+  for (cnauto image: images)
+    inser_to_free_space(dst, image, occupied);
+
+  return dst;
 }
 
 int main(const int argc, const char* argv[]) {

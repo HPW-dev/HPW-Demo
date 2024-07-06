@@ -28,6 +28,7 @@ sources = [
   src_dir + "util/math/vec-util.cpp",
   src_dir + "util/math/random.cpp",
   src_dir + "util/math/mat.cpp",
+  src_dir + "util/math/rect.cpp",
   src_dir + "graphic/image/image-io.cpp",
   src_dir + "graphic/image/image.cpp",
   src_dir + "graphic/sprite/sprite.cpp",
