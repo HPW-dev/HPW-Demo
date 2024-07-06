@@ -10,7 +10,7 @@ struct Collider_experimental::Impl {
   // область, в которую входят объекты
   struct Area {
     Rect rect {};
-    Entitiess entities {};
+    Entities entities {};
   };
   Vector<Area> areas {};
 
@@ -42,7 +42,7 @@ struct Collider_experimental::Impl {
     // ...
   }
 
-  inline void operator()(CN<Entitiess> entities, Delta_time dt) {
+  inline void operator()(CN<Entities> entities, Delta_time dt) {
     /*cauto entitys_sz = entities.size();
     return_if(entitys_sz <= 1); // защита от зацикливания
 
@@ -51,11 +51,20 @@ struct Collider_experimental::Impl {
     for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
     for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
       test_collide(*entities[a_i], *entities[b_i]);*/
+
     for (nauto ent: entities)
-      insert(ent);
+      insert(ent.get());
     for (nauto area: areas)
       process_collisions(area);
     areas.clear();
+  }
+
+  inline void insert(Entity& ent) {
+
+  }
+
+  inline void process_collisions(area) {
+
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
@@ -65,5 +74,5 @@ struct Collider_experimental::Impl {
 
 Collider_experimental::Collider_experimental(): impl {new_unique<Impl>()} {}
 Collider_experimental::~Collider_experimental() {}
-void Collider_experimental::operator()(CN<Entitiess> entities, Delta_time dt) { impl->operator()(entities, dt); }
+void Collider_experimental::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_experimental::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }

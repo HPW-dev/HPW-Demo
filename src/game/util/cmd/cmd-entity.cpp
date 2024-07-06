@@ -76,7 +76,7 @@ void kill(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   cnauto entity_uid = get_uid(args[1]);
   cnauto entities = hpw::entity_mgr->get_entities();
   cauto it = std::find_if(entities.begin(), entities.end(),
-    [&](CN<Entitiess::value_type> entity) {
+    [&](CN<Entities::value_type> entity) {
       return entity->uid == entity_uid;
     }
   );

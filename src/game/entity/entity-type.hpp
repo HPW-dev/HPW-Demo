@@ -7,7 +7,7 @@
 using Entity_type = std::size_t;
 
 class Entity;
-using Entitiess = Vector<Pool_ptr(Entity)>;
+using Entities = Vector<Pool_ptr(Entity)>;
 
 using hp_t = i64_t; // for hp/dmg/mana
 

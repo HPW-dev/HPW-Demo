@@ -12,6 +12,6 @@ class Collider {
 public:
   Collider() = default;
   virtual ~Collider() = default;
-  virtual void operator()(CN<Entitiess> entities, Delta_time dt) = 0;
+  virtual void operator()(CN<Entities> entities, Delta_time dt) = 0;
   inline virtual void debug_draw(Image& dst, const Vec camera_offset) {}
 };
