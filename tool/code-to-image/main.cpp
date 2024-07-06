@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <fstream>
+#include <chrono>
 #include <iostream>
 #include <algorithm>
 #include "util/error.hpp"
@@ -175,9 +176,19 @@ Image make_atlas(CN<Images> images, int w, int h) {
   Rects occupied {}; // занятые области
   Image dst(w, h, {BG_COLOR});
 
+  using Clock = std::chrono::steady_clock;
+  auto time_point = Clock::now();
+  using namespace std::chrono_literals;
+
   // каждой картинке попытаться найти свободную область
-  for (cnauto image: images)
+  for (std::size_t i {}; cnauto image: images) {
     inser_to_free_space(dst, image, occupied);
+    if (Clock::now() - time_point >= 1s) {
+      std::cout << "processed " << i << '/' << images.size() << '\n';
+      time_point = Clock::now();
+    }
+    ++i;
+  }
 
   return dst;
 }
