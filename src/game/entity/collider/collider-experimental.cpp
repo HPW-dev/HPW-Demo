@@ -46,15 +46,6 @@ struct Collider_experimental::Impl {
   }
 
   inline void operator()(CN<Entities> entities, Delta_time dt) {
-    /*cauto entitys_sz = entities.size();
-    return_if(entitys_sz <= 1); // защита от зацикливания
-
-    // проверить столкновения пар объектов (без повторений)
-    #pragma omp parallel for simd schedule(dynamic, 4)
-    for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
-    for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
-      test_collide(*entities[a_i], *entities[b_i]);*/
-
     m_areas.clear();
     for (nauto ent: entities)
       insert(ent.get());
@@ -100,12 +91,29 @@ struct Collider_experimental::Impl {
   }
 
   inline static Rect expand_rect(CN<Rect> a, CN<Rect> b) {
-    return a;
+    Rect ret;
+    ret.pos.x = std::min(a.pos.x, b.pos.x);
+    ret.pos.y = std::min(a.pos.y, b.pos.y);
+    // крайние точки
+    Vec a_end = a.pos + a.size;
+    Vec b_end = b.pos + b.size;
+    Vec end;
+    end.x = std::max(a_end.x, b_end.x);
+    end.y = std::max(a_end.y, b_end.y);
+    ret.size = end - ret.pos;
+    return ret;
   }
 
   // проверить столкновения в области
   inline void process_collisions(CN<Area> area) {
+    cauto entitys_sz = area.entities.size();
+    return_if(entitys_sz <= 1);
 
+    // проверить столкновения пар объектов (без повторений)
+    #pragma omp parallel for simd schedule(dynamic, 4)
+    for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
+    for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
+      test_collide(*area.entities[a_i], *area.entities[b_i]);
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
