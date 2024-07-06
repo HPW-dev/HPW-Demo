@@ -125,7 +125,7 @@ void Anim::update_hitbox(CN<Pool_ptr(Hitbox)> _hitbox, uint _directions) {
     auto& diection = hitbox_diections->get(degree);
     diection = *source_hitbox; // берём копию с эталона
     diection.rotate(degree); // поворачиваем всё что можно
-    diection.simple = cover_polygons(diection.polygons); // внешний покрывающие хитбокс
+    diection.simple = cover_polygons(diection.polygons); // внешний покрывающий хитбокс
   }
 } // update_hitbox
 

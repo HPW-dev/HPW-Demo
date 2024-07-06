@@ -29,7 +29,7 @@ CN<Hitbox> other) const {
 void Hitbox::draw(const Vec this_pos, Image& dst, const Pal8 color) const {
   if (graphic::draw_full_hitboxes) {
     // нарисовать покрывающий упрощённый круг
-    auto circle_pos = ceil(this_pos + simple.offset);
+    auto circle_pos = floor(this_pos + simple.offset);
     draw_circle(dst, circle_pos, std::ceil(simple.r), color);
 
     if ((graphic::frame_count & 0b11) == 0) { // мигание
@@ -41,13 +41,13 @@ void Hitbox::draw(const Vec this_pos, Image& dst, const Pal8 color) const {
 
   // нарисовать все полигоны хитбокса
   for (cnauto poly: polygons) {
-    auto poly_pos = ceil(this_pos + poly.offset);
-    draw_polygon(dst, ceil(this_pos), poly, color);
+    auto poly_pos = floor(this_pos + poly.offset);
+    draw_polygon(dst, floor(this_pos), poly, color);
 
     if ((graphic::frame_count & 0b11) == 0) { // мигание
       // линию с крестиком до оффсета полигона
-      draw_line(dst, ceil(this_pos), poly_pos, color);
-      draw_cross(dst, ceil(poly_pos), color);
+      draw_line(dst, floor(this_pos), poly_pos, color);
+      draw_cross(dst, floor(poly_pos), color);
     }
   } // for polygones
 } // draw

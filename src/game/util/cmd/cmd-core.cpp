@@ -282,6 +282,7 @@ void draw_hitboxes(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   cauto yesno = (args.at(1) == "0" ? false : true);
   #ifdef DEBUG
   graphic::draw_hitboxes = yesno;
+  //graphic::draw_full_hitboxes = yesno;
   graphic::draw_entities = !yesno;
   graphic::draw_level = !yesno;
   #endif
