@@ -35,8 +35,8 @@ ld_flags = [
 
 # узнать архитектуру машины
 arch_info = platform.architecture()
-is_64bit = sys.maxsize > 2**32
-is_linux = arch_info[1]  == "ELF"
+is_64bit = arch_info[0] == "64bit"
+is_linux = arch_info[1] == "ELF"
 compiler = ARGUMENTS.get("compiler", "g++")
 
 if (compiler != "clang++"):
