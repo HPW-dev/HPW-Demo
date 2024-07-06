@@ -37,7 +37,7 @@ struct Entity_mgr::Impl {
   // за пределами этого расстояние объект за экраном умирает в шмап-моде
   constx real shmup_bound = 250;
 
-  Entitys m_entities {}; // массив всех игровых объектов
+  Entitiess m_entities {}; // массив всех игровых объектов
   Shared<Collider> m_collision_resolver {}; // обработчик столкновений
   Mem_pool m_entity_pool {}; // мем-пул под объекты
   Mem_pool m_phys_pool {}; // мем-пул под физические контексты
@@ -45,7 +45,7 @@ struct Entity_mgr::Impl {
   // БД инициализаторов объектов
   std::unordered_map<Str, Shared<Entity_loader>> m_entity_loaders {};
   Vector<Scatter> m_scatters {}; // источники взрывных волн
-  Entitys m_registrate_list {};
+  Entitiess m_registrate_list {};
   // текущая ссылка на игрока, чтобы враги могли брать его в таргет
   Player* m_player {};
   bool m_visible {true}; // видимость игровых объектов
@@ -58,7 +58,7 @@ struct Entity_mgr::Impl {
 
   inline ~Impl() { clear(); }
 
-  inline CN<Entitys> get_entities() const { return m_entities; }
+  inline CN<Entitiess> get_entities() const { return m_entities; }
 
   inline void set_collider(CN<Shared<Collider>> new_collider)
     { m_collision_resolver = new_collider; }
@@ -106,7 +106,7 @@ struct Entity_mgr::Impl {
     }
   }
 
-  inline Entity* registrate(Entitys::value_type&& entity) {
+  inline Entity* registrate(Entitiess::value_type&& entity) {
     assert(entity);
     auto ret = m_registrate_list.emplace_back(std::move(entity)).get();
     return ret;
@@ -337,13 +337,13 @@ void Entity_mgr::clear() { impl->clear(); }
 void Entity_mgr::set_collider(CN<Shared<Collider>> new_collider) { impl->set_collider(new_collider); }
 void Entity_mgr::register_types() { impl->register_types(); }
 Entity* Entity_mgr::make(Entity* master, CN<Str> name, const Vec pos) { return impl->make(master, name, pos); }
-Entity* Entity_mgr::registrate(Entitys::value_type&& entity) { return impl->registrate(std::move(entity)); }
+Entity* Entity_mgr::registrate(Entitiess::value_type&& entity) { return impl->registrate(std::move(entity)); }
 void Entity_mgr::add_scatter(CN<Scatter> scatter) { return impl->add_scatter(scatter); }
 void Entity_mgr::debug_draw(Image& dst) const { impl->debug_draw(dst); }
 Mem_pool& Entity_mgr::get_phys_pool() { return impl->get_phys_pool(); }
 Mem_pool& Entity_mgr::get_hitbox_pool() { return impl->get_hitbox_pool(); }
 Mem_pool& Entity_mgr::get_entity_pool() { return impl->get_entity_pool(); }
-CN<Entitys> Entity_mgr::get_entities() const { return impl->get_entities(); }
+CN<Entitiess> Entity_mgr::get_entities() const { return impl->get_entities(); }
 Entity* Entity_mgr::find_avaliable_entity(const Entity_type type) { return impl->find_avaliable_entity(type); }
 Player* Entity_mgr::get_player() const { return impl->get_player(); }
 void Entity_mgr::set_player(Player* player) { impl->set_player(player); }

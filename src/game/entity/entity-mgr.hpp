@@ -26,7 +26,7 @@ class Entity_mgr final {
   // найти в памяти подходящий по типу объект
   Entity* find_avaliable_entity(const Entity_type type);
   // добавить объект в систему
-  Entity* registrate(Entitys::value_type&& entity);
+  Entity* registrate(Entitiess::value_type&& entity);
 
 public:
   Entity_mgr();
@@ -57,7 +57,7 @@ public:
   Mem_pool& get_hitbox_pool();
   Mem_pool& get_entity_pool();
   // получить массив всех объектов
-  CN<Entitys> get_entities() const;
+  CN<Entitiess> get_entities() const;
   uint lives() const; // сколько сейчас активных объектов
   // ссылка на игрока
   Player* get_player() const;

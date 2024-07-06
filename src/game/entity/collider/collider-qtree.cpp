@@ -213,7 +213,7 @@ std::size_t X, std::size_t Y) {
   root->m_master = this;
 }
 
-void Collider_qtree::operator()(CN<Entitys> entities, Delta_time dt) {
+void Collider_qtree::operator()(CN<Entitiess> entities, Delta_time dt) {
   auto filtered_entitys = update_qtree(entities);
   update_pairs(filtered_entitys);
 
@@ -250,8 +250,8 @@ void Collider_qtree::debug_draw(Image& dst, const Vec camera_offset) {
   root->draw(dst, camera_offset);
 }
 
-Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
-  Entitys ret; // объекты пригодные к сталкиванию
+Entitiess Collider_qtree::update_qtree(CN<Entitiess> entities) {
+  Entitiess ret; // объекты пригодные к сталкиванию
 
   #ifdef ECOMEM
     // сбросить листы в дереве
@@ -278,7 +278,7 @@ Entitys Collider_qtree::update_qtree(CN<Entitys> entities) {
   return ret;
 } // update_qtree
 
-void Collider_qtree::update_pairs(CN<Entitys> entities) {
+void Collider_qtree::update_pairs(CN<Entitiess> entities) {
   collision_pairs.clear();
 
   if (entities.size() >= MAX_ENTS_FOR_MULTY_UPDATE) {
