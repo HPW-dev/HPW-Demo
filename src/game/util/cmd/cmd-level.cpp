@@ -15,6 +15,7 @@
 #include "game/entity/collider/collider-empty.hpp"
 #include "game/entity/collider/collider-simple.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
+#include "game/entity/collider/collider-experimental.hpp"
 
 // привязка имён уровней к их конструкторам
 static std::unordered_map<Str, Level_mgr::Maker> g_game_levels {
@@ -84,6 +85,7 @@ using Collider_maker = std::function< Shared<Collider> ()>;
 static std::unordered_map<Str, Collider_maker> g_colliders {
   {"empty", []{ return new_shared<Collider_empty>(); }},
   {"simple", []{ return new_shared<Collider_simple>(); }},
+  {"experimental", []{ return new_shared<Collider_experimental>(); }},
   {"qtree", []{ return new_shared<Collider_qtree>(7, 1, graphic::width, graphic::height); }},
 };
 
