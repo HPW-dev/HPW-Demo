@@ -7,6 +7,8 @@
 #include "graphic/util/util-templ.hpp"
 
 void Collider_simple::test_collide(Entity& a, Entity& b) {
+  // столкновение с собой не проверять
+  return_if(std::addressof(a) == std::addressof(b));
   // проверить что объекты живые
   return_if(!a.status.live);
   return_if(!b.status.live);
