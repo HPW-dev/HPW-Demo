@@ -1,10 +1,13 @@
 #pragma once
+#include <unordered_set>
 #include "entity.hpp"
 #include "util/str.hpp"
 
 // Всё что способно сталкиваться и дохнуть от дамага
 class Collidable: public Entity {
   nocopy(Collidable);
+  // список всех тек, кто столкнулся с объектом
+  std::unordered_set<Collidable*> m_collided {};
   hp_t m_hp {}; // жизни (можно сносить в минус)
   hp_t m_dmg {}; // урон от столкновения с объектом
   Str m_explosion_name {}; // имя анимации взрыва
@@ -27,6 +30,10 @@ public:
   // имя взрыва
   inline CN<Str> get_explosion_name() const { return m_explosion_name; }
   inline void set_explosion_name(CN<Str> name) { m_explosion_name = name; }
+  // проверить что с таким объетом уже было столкновение
+  inline bool collided_with(Collidable* other) const { return m_collided.contains(other); }
+  // обработать столкновение с другим объектом
+  void collide(Collidable& other);
 
   Collidable();
   explicit Collidable(Entity_type new_type);

@@ -10,8 +10,10 @@
 
 Collidable::Collidable()
 : Entity(GET_SELF_TYPE)
+, m_collided {}
 , m_hp {}
 , m_dmg {}
+, m_explosion_name {}
 { status.collidable = true; }
 
 Collidable::Collidable(Entity_type new_type): Collidable()
@@ -30,6 +32,7 @@ void Collidable::update(const Delta_time dt) {
 
   // когда заканчивается обработка столкновений, флаг выключается
   status.collided = false;
+  m_collided.clear();
 }
 
 bool Collidable::is_collided_with(CN<Collidable> other) const {
@@ -74,4 +77,19 @@ void Collidable::kill() {
   // запустить анимацию взрыва, если она есть
   if ( !m_explosion_name.empty())
     hpw::entity_mgr->make(this, m_explosion_name, phys.get_pos());
+}
+
+void Collidable::collide(Collidable& other) {
+  // не сталкиваться с объектом, если уже столкнулись
+  return_if(this->collided_with(std::addressof(other)));
+
+  // нанести урон
+  this->status.collided = true;
+  this->sub_hp( other.get_dmg() );
+  other.status.collided = true;
+  other.sub_hp( this->get_dmg() );
+
+  // вписать инфу о том, с кем столкнулись
+  this->m_collided.emplace(std::addressof(other));
+  other.m_collided.emplace(this);
 }

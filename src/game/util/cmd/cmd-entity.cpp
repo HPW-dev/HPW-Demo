@@ -265,8 +265,8 @@ void entity_force(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 }
 
 struct Flag_struct {
-  using Set = std::function<void (Enity_status&, bool)>;
-  using Get = std::function<bool (Enity_status)>;
+  using Set = std::function<void (Entity_status&, bool)>;
+  using Get = std::function<bool (Entity_status)>;
   Str name {};
   Set set {};
   Get get {};
@@ -276,8 +276,8 @@ namespace {
 static Vector<Flag_struct> g_entity_flags {
   #define MAKE_FLAG(FLAG) Flag_struct { \
     .name=#FLAG, \
-    .set=[](Enity_status& flag, bool val){ flag.FLAG = val; }, \
-    .get=[](Enity_status flag) { return flag.FLAG; } \
+    .set=[](Entity_status& flag, bool val){ flag.FLAG = val; }, \
+    .get=[](Entity_status flag) { return flag.FLAG; } \
   },
   MAKE_FLAG (live)
   MAKE_FLAG (collidable)

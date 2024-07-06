@@ -43,7 +43,7 @@ public:
   using Master_p = CP<Entity>;
   Master_p master {}; // объект создатель
   Uid uid {};
-  mutable Enity_status status {}; // флаги
+  mutable Entity_status status {}; // флаги
   Entity_type type {GET_SELF_TYPE};
   
   Entity();

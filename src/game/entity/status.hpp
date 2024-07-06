@@ -1,7 +1,7 @@
 #pragma once
 
 // флаги управления и статуса игрового объекта
-struct Enity_status {
+struct Entity_status {
   bool live: 1 {};             // объект жив и активен
   bool collidable: 1 {};       // можно сталкиваться
   bool collided: 1 {};         // минимум один раз в объект врезались
@@ -37,6 +37,6 @@ struct Enity_status {
   bool disable_render: 1 {};   // выключает отображение объекта и проигрывание анимации
   bool no_sound: 1 {};         // выключить звук объекта
   bool disable_motion: 1 {};   // запрет на перемещение
-}; // Enity_status
+}; // Entity_status
 
-inline constexpr auto ENITY_STATUS_BYTES {sizeof(Enity_status)};
+inline constexpr auto ENITY_STATUS_BYTES {sizeof(Entity_status)};
