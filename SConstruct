@@ -15,7 +15,7 @@ pgo = [
   #"-fprofile-dir=pgo", "-fprofile-use=pgo", "-fprofile-correction",
 ]
 defines = [
-  "-DCLD_DEBUG", # показать сколько коллизий за тик
+  #"-DCLD_DEBUG", # показать сколько коллизий за тик
   #"-DDETAILED_LOG", # вывод доп инфы
   #"-DECOMEM", # экономия памяти для немощных компов
   #"-DSTABLE_REPLAY", # включает проверки для стабильности реплея
