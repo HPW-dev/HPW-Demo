@@ -13,6 +13,8 @@ class Collidable: public Entity {
   hp_t m_dmg {}; // урон от столкновения с объектом
   Str m_explosion_name {}; // имя анимации взрыва
   mutable omp::mutex m_mutex {};
+  mutable real m_old_deg {-999}; // для кэширования хитбокса
+  mutable CP<Hitbox> m_old_hitbox {}; // кэшированный хитбокс
 
   void draw_hitbox(Image& dst, const Vec offset) const;
 

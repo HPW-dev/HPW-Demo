@@ -53,8 +53,18 @@ bool Collidable::is_collided_with(CN<Collidable> other) const {
   return this_hitbox->is_collided_with(this_pos, other_pos, *other_hitbox);
 } // is_collided_with
 
-CP<Hitbox> Collidable::get_hitbox() const
-  { return anim_ctx_util::get_hitbox(anim_ctx, phys.get_deg(), *this); }
+CP<Hitbox> Collidable::get_hitbox() const {
+  cauto deg = phys.get_deg();
+
+  // если угол не менялся, то вернуть кешированный результат
+  if (m_old_deg == deg)
+    return m_old_hitbox;
+
+  auto ret = anim_ctx_util::get_hitbox(anim_ctx, deg, *this);
+  m_old_deg = deg;
+  m_old_hitbox = ret;
+  return ret;
+}
 
 void Collidable::draw_hitbox(Image& dst, const Vec offset) const {
   if (auto local_hitbox = get_hitbox(); local_hitbox) {
