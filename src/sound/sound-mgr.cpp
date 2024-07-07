@@ -190,12 +190,19 @@ struct Sound_mgr_oal::Impl {
     m_update_thread_live = true;
     m_update_thread = std::thread( [this] {
       detailed_log("Sound_mgr_oal: start update thread\n");
-      while (m_update_thread_live.load(std::memory_order::relaxed)) {
+
+      while (true) {
+        return_if (!m_update_thread_live);
+
+        {
+          std::lock_guard lock(m_mutex);
+          update();
+        }
+
         using namespace std::chrono_literals;
         std::this_thread::sleep_for(50ms);
-        std::lock_guard lock(m_mutex);
-        update();
       }
+      
       detailed_log("Sound_mgr_oal: end of update thread\n");
     } );
   }
