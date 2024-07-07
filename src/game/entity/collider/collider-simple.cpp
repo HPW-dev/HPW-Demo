@@ -7,31 +7,15 @@
 #include "graphic/util/util-templ.hpp"
 
 void Collider_simple::test_collide(Entity& a, Entity& b) {
-  // столкновение с собой не проверять
-  return_if(std::addressof(a) == std::addressof(b));
   // проверить что объекты живые
   return_if(!a.status.live);
   return_if(!b.status.live);
   // проверить что можно сталкиваться
   return_if (!a.status.collidable || !b.status.collidable);
-
   // сталкиваемые объекты можно смело кастовать
   nauto a_collidable = *( ptr2ptr<Collidable*>(&a) );
   nauto b_collidable = *( ptr2ptr<Collidable*>(&b) );
-
-  // проверить столкновение
-  bool collided = false;
-  if (cld_flag_compat(a, b))
-    collided = a_collidable.is_collided_with(b_collidable);
-
-  return_if (!collided);
-  // нанести урон
-  a_collidable.status.collided |= collided;
-  a_collidable.sub_hp( b_collidable.get_dmg() );
-  b_collidable.status.collided |= collided;
-  b_collidable.sub_hp( a_collidable.get_dmg() );
-  // TODO вписать инфу о том, с кем столкнулись
-  // ...
+  a_collidable.resolve_collision(b_collidable);
 }
 
 void Collider_simple::operator()(CN<Entities> entities, Delta_time dt) {

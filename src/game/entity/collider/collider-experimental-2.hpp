@@ -4,8 +4,6 @@
 class Image;
 struct Vec;
 
-/* разбивает пространство расшияющимися прямоугольниками
-и проверяет столькновения в них */
 class Collider_experimental_2 final: public Collider {
   nocopy(Collider_experimental_2);
   struct Impl;

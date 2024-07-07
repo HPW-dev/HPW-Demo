@@ -17,29 +17,19 @@ struct Collider_experimental_2::Impl {
   };
   Vector<Area> m_areas {};
 
-  inline static void test_collide(Entity& a, Entity& b) {
+  inline void test_collide(Entity& a, Entity& b) {
     // столкновение с собой не проверять
     return_if(std::addressof(a) == std::addressof(b));
     // проверить что объекты живые
-    // return_if(!a.status.live);
-    // return_if(!b.status.live);
+    return_if(!a.status.live);
+    return_if(!b.status.live);
     // проверить что можно сталкиваться
-    // return_if (!a.status.collidable || !b.status.collidable);
+    return_if (!a.status.collidable || !b.status.collidable);
 
     // сталкиваемые объекты можно смело кастовать
     nauto a_collidable = *( ptr2ptr<Collidable*>(&a) );
     nauto b_collidable = *( ptr2ptr<Collidable*>(&b) );
-
-    // выйти, если уже столкнулись с объектом
-    return_if(a_collidable.collided_with(&b_collidable));
-
-    // проверить столкновение
-    bool collided = false;
-    if (cld_flag_compat(a, b))
-      collided = a_collidable.is_collided_with(b_collidable);
-
-    return_if (!collided);
-    a_collidable.collide(b_collidable);
+    a_collidable.resolve_collision(b_collidable);
   }
 
   inline void operator()(CN<Entities> entities, Delta_time dt) {

@@ -21,7 +21,6 @@ class Collidable: public Entity {
 public:
   void draw(Image& dst, const Vec offset) const override;
   void update(const Delta_time dt) override;
-  bool is_collided_with(CN<Collidable> other) const;
   CP<Hitbox> get_hitbox() const override;
   void kill() override;
 
@@ -35,14 +34,19 @@ public:
   inline CN<Str> get_explosion_name() const { return m_explosion_name; }
   inline void set_explosion_name(CN<Str> name) { m_explosion_name = name; }
   // проверить что с таким объетом уже было столкновение
-  inline bool collided_with(Collidable* other) const { 
-    omp::lock_guard lock(m_mutex);
-    return m_collided.contains(other);
-  }
-  // обработать столкновение с другим объектом
-  void collide(Collidable& other);
+  bool collided_with(Collidable* other) const;
+  // обработать столкновение с другим объектом. True - если было
+  bool resolve_collision(Collidable& other);
+  // проверяет что столкновение возможно
+  bool collision_possible(Collidable& other) const;
+  // выполняет действия при столкновении двух объектов
+  void collide_with(Collidable& other);
+  // определяет, что столкновение хитбоксов состоялось ранее
+  bool is_collided_with(Collidable* other) const;
+  // проверить столкновения хитбоксов
+  bool hitbox_test(CN<Collidable> other) const;
 
   Collidable();
-  explicit Collidable(Entity_type new_type);
   ~Collidable() = default;
+  explicit Collidable(Entity_type new_type);
 }; // Collidable

@@ -21,8 +21,8 @@ constexpr std::size_t MAX_ENTS_FOR_MULTY_TEST_PAIRS = 300;
 constexpr std::size_t MAX_ENTS_FOR_MULTY_UPDATE = 75;
 
 // quad-tree односвязное дерево
-class Qtree final {
-  Vector<Entity*> m_entitys {}; // список объектов в текущей ноде
+class Collider_qtree::Qtree final {
+  Collidables m_entitys {}; // список объектов в текущей ноде
   Pool_ptr(Qtree) lu {}; // лево верх
   Pool_ptr(Qtree) ru {}; // право верх
   Pool_ptr(Qtree) ld {}; // лево низ
@@ -73,7 +73,7 @@ public:
   }
 
   // добавить объект в систему
-  inline void add(Entity& entity) {
+  inline void add(Collidable& entity) {
     // если есть ветви, то записываем объекы в них
     if (have_branches) {
       auto pos_x = std::floor(entity.phys.get_pos().x);
@@ -165,7 +165,7 @@ public:
   } // draw
 
   // найти соседей в области area
-  inline void find(CN<Circle> area, Vector<Entity*>& list) const {
+  inline void find(CN<Circle> area, Collidables& list) const {
     if (intersect(this->bound, area)) {
       // так быстрее, чем std::copy или list.insert
       for (cnauto en: m_entitys)
@@ -231,27 +231,19 @@ void Collider_qtree::operator()(CN<Entities> entities, Delta_time dt) {
   }
 }
 
-void Collider_qtree::test_collide_pair(Entity& a, Entity& b) {
+void Collider_qtree::test_collide_pair(Collidable& a, Collidable& b) {
   // объектыs что сюда попадут, точно можно будет сталкивать
-  nauto a_collidable = *(ptr2ptr<Collidable*>(&a));
-  nauto b_collidable = *(ptr2ptr<Collidable*>(&b));
-  // обновление флага столкновений
-  cauto collided = a_collidable.is_collided_with(b_collidable);
-  // снести хп
-  if (collided) {
-    a_collidable.status.collided |= collided;
-    a_collidable.sub_hp( b_collidable.get_dmg() );
-    b_collidable.status.collided |= collided;
-    b_collidable.sub_hp( a_collidable.get_dmg() );
-  }
+  return_if (a.is_collided_with(&b));
+  if (a.hitbox_test(b))
+    a.collide_with(b);
 }
 
 void Collider_qtree::debug_draw(Image& dst, const Vec camera_offset) {
   root->draw(dst, camera_offset);
 }
 
-Entities Collider_qtree::update_qtree(CN<Entities> entities) {
-  Entities ret; // объекты пригодные к сталкиванию
+Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
+  Collidables ret; // объекты пригодные к сталкиванию
 
   #ifdef ECOMEM
     // сбросить листы в дереве
@@ -266,19 +258,20 @@ Entities Collider_qtree::update_qtree(CN<Entities> entities) {
   #endif
   
   // перестроить всё дерево заново
-  for (cnauto entity_p: entities) {
-    nauto entity = *entity_p;
+  for (nauto entity_p: entities) {
+    assert(entity_p);
     // проверить что объект может сталкиваться и что он жив
-    if (entity.status.collidable && entity.status.live) {
-      root->add(entity);
-      ret.emplace_back(entity_p);
+    if (entity_p->status.live && entity_p->status.collidable) {
+      auto entity = ptr2ptr<Collidable*>(entity_p.get());
+      root->add(*entity);
+      ret.emplace_back(entity);
     }
   }
 
   return ret;
 } // update_qtree
 
-void Collider_qtree::update_pairs(CN<Entities> entities) {
+void Collider_qtree::update_pairs(CN<Collidables> entities) {
   collision_pairs.clear();
 
   if (entities.size() >= MAX_ENTS_FOR_MULTY_UPDATE) {
@@ -291,7 +284,7 @@ void Collider_qtree::update_pairs(CN<Entities> entities) {
     assert(th_max > 0);
     // для хранения локальных списков в потоках
     static Vector<decltype(collision_pairs)> list_table;
-    static Vector< Vector<Entity*> > lists;
+    static Vector<Collidables> lists;
     list_table.resize(th_max);
     for (nauto table: list_table)
       table.clear();
@@ -320,13 +313,9 @@ void Collider_qtree::update_pairs(CN<Entities> entities) {
 
       // добавить этих соседей в пары на проверки
       for (nauto other: lists[th_idx]) {
-        auto addr_a = entity.get();
+        auto addr_a = entity;
         auto addr_b = other;
-        // сами себя не проверяем
-        cont_if (addr_a == addr_b);
-        // проверить на возможность сталкиваться по флагам
-        cont_if (!cld_flag_compat(*addr_a, *addr_b));
-        // эта перестановка сократит число одинаsковых пар
+        cont_if (!addr_a->collision_possible(*addr_b));
         if (addr_b > addr_a)
           std::swap(addr_a, addr_b);
         // unordered_set сам уберёт повторы
@@ -339,11 +328,7 @@ void Collider_qtree::update_pairs(CN<Entities> entities) {
       for (nauto it: table) {
         auto addr_a = it.first;
         auto addr_b = it.second;
-        // сами себя не проверяем
-        cont_if (addr_a == addr_b);
-        // проверить на возможность сталкиваться по флагам
-        cont_if (!cld_flag_compat(*addr_a, *addr_b));
-        // эта перестановка сократит число одинаковых пар
+        cont_if (!addr_a->collision_possible(*addr_b));
         if (addr_b > addr_a)
           std::swap(addr_a, addr_b);
         // unordered_set сам уберёт повторы
@@ -362,17 +347,14 @@ void Collider_qtree::update_pairs(CN<Entities> entities) {
       Circle area(pos + hitbox->simple.offset, hitbox->simple.r * 2);
       
       // найти соседей к этой точке
-      Vector<Entity*> list;
+      Collidables list;
       root->find(area, list);
 
       // добавить этих соседей в пары на проверки
       for (nauto other: list) {
-        auto addr_a = entity.get();
+        auto addr_a = entity;
         auto addr_b = other;
-        // сами себя не проверяем
-        cont_if (addr_a == addr_b);
-        // проверить на возможность сталкиваться по флагам
-        cont_if (!cld_flag_compat(*addr_a, *addr_b));
+        cont_if (!addr_a->collision_possible(*addr_b));
         // эта перестановка сократит число одинаковых пар
         if (addr_b > addr_a)
           std::swap(addr_a, addr_b);

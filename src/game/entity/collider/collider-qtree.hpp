@@ -8,23 +8,24 @@
 #include "util/math/num-types.hpp"
 #include "collider.hpp"
 
-class Entity;
-class Qtree;
+class Collidable;
+using Collidables = Vector<Collidable*>;
 
 // Нахождение столкновений с помощью разбиения пространства Quad Tree
 class Collider_qtree final: public Collider {
   nocopy(Collider_qtree);
+  class Qtree;
   Pool_ptr(Qtree) root {}; // старт дерева
 
-  // проверка хитбоксов на пересечения
-  void test_collide_pair(Entity& a, Entity& b);
+  // проверка хитбоксов на пересеченияCollidableя
+  void test_collide_pair(Collidable& a, Collidable& b);
   // фильтрует список объектов для проверки по возможности сталкиваться
-  Entities update_qtree(CN<Entities> entities);
+  Collidables update_qtree(CN<Entities> entities);
   // обновляет список пар столкновений
-  void update_pairs(CN<Entities> entities);
+  void update_pairs(CN<Collidables> entities);
 
 public:
-  using Collision_pair = std::pair<Entity*, Entity*>;
+  using Collision_pair = std::pair<Collidable*, Collidable*>;
   // память под ветви
   Mem_pool qtree_mempool;
 

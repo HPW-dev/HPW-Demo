@@ -1,8 +1,9 @@
 #include <cassert>
-#include "collidable.hpp"
-#include "util/hitbox.hpp"
 #include "util/phys.hpp"
 #include "util/error.hpp"
+#include "collidable.hpp"
+#include "util/hitbox.hpp"
+#include "util/entity-util.hpp"
 #include "util/anim-ctx-util.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
@@ -35,23 +36,20 @@ void Collidable::update(const Delta_time dt) {
   m_collided.clear();
 }
 
-bool Collidable::is_collided_with(CN<Collidable> other) const {
+bool Collidable::hitbox_test(CN<Collidable> other) const {
   // столкновение с собой не проверять
-  if (this == std::addressof(other))
-    return false;
+  return_if (this == std::addressof(other), false);
 
   auto this_hitbox = this->get_hitbox();
-  if ( !this_hitbox)
-    return false;
+  return_if (!this_hitbox, false);
   cauto this_pos = phys.get_pos();
   
   auto other_hitbox = other.get_hitbox();
-  if ( !other_hitbox)
-    return false;
+  return_if (!other_hitbox, false);
   cauto other_pos = other.phys.get_pos();
 
   return this_hitbox->is_collided_with(this_pos, other_pos, *other_hitbox);
-} // is_collided_with
+} // hitbox_test
 
 CP<Hitbox> Collidable::get_hitbox() const {
   cauto deg = phys.get_deg();
@@ -89,19 +87,41 @@ void Collidable::kill() {
     hpw::entity_mgr->make(this, m_explosion_name, phys.get_pos());
 }
 
-void Collidable::collide(Collidable& other) {
+bool Collidable::collision_possible(Collidable& other) const {
+  // с собой не врезаться
+  return_if (this == std::addressof(other), false);
+  // надо быть живым
+  return_if (!status.live || !other.status.live, false);
   // не сталкиваться с объектом, если уже столкнулись
-  return_if(this->collided_with(std::addressof(other)));
+  return_if (this->is_collided_with(std::addressof(other)), false);
+  // проверить что по флагам можно сталкиваться
+  return_if (!cld_flag_compat(*this, other), false);
+  // всё гуд, можно проверять столкновения детальнее
+  return true;
+}
+
+void Collidable::collide_with(Collidable& other) {
   omp::lock_guard lock_this(this->m_mutex);
   omp::lock_guard lock_other(other.m_mutex);
-
   // нанести урон
   this->status.collided = true;
   this->sub_hp( other.get_dmg() );
   other.status.collided = true;
   other.sub_hp( this->get_dmg() );
-
   // вписать инфу о том, с кем столкнулись
   this->m_collided.emplace(std::addressof(other));
   other.m_collided.emplace(this);
+}
+
+bool Collidable::resolve_collision(Collidable& other) {
+  return_if (!collision_possible(other), false);
+  if (hitbox_test(other))
+    collide_with(other);
+  return false;
+}
+
+bool Collidable::is_collided_with(Collidable* other) const {
+  assert(other);
+  omp::lock_guard lock(m_mutex);
+  return m_collided.contains(other);
 }

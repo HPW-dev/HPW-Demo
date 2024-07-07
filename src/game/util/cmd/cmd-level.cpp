@@ -87,7 +87,7 @@ static std::unordered_map<Str, Collider_maker> g_colliders {
   {"empty", []{ return new_shared<Collider_empty>(); }},
   {"simple", []{ return new_shared<Collider_simple>(); }},
   {"experimental", []{ return new_shared<Collider_experimental>(); }},
-  {"experimental-2", []{ return new_shared<Collider_experimental_2>(); }},
+  //{"experimental-2", []{ return new_shared<Collider_experimental_2>(); }},
   {"qtree", []{ return new_shared<Collider_qtree>(7, 1, graphic::width, graphic::height); }},
 };
 
