@@ -82,6 +82,8 @@ void Collidable::kill() {
 void Collidable::collide(Collidable& other) {
   // не сталкиваться с объектом, если уже столкнулись
   return_if(this->collided_with(std::addressof(other)));
+  omp::lock_guard lock_this(this->m_mutex);
+  omp::lock_guard lock_other(other.m_mutex);
 
   // нанести урон
   this->status.collided = true;
