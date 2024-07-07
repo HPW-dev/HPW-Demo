@@ -93,7 +93,7 @@ bool Collidable::collision_possible(Collidable& other) const {
   // надо быть живым
   return_if (!status.live || !other.status.live, false);
   // не сталкиваться с объектом, если уже столкнулись
-  return_if (this->is_collided_with(std::addressof(other)), false);
+  //return_if (this->is_collided_with(std::addressof(other)), false);
   // проверить что по флагам можно сталкиваться
   return_if (!cld_flag_compat(*this, other), false);
   // всё гуд, можно проверять столкновения детальнее

@@ -1,118 +1,49 @@
 #include <omp.h>
+#include <cassert>
 #include "collider-experimental-2.hpp"
-#include "game/core/debug.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "graphic/util/util-templ.hpp"
 
 struct Collider_experimental_2::Impl {
-  using List = Vector<Entity*>;
+  using Collidables = Vector<Collidable*>;
 
-  // область, в которую входят объекты
-  struct Area {
-    Rect rect {};
-    List entities {};
-  };
-  Vector<Area> m_areas {};
-
-  inline void test_collide(Entity& a, Entity& b) {
-    // столкновение с собой не проверять
-    return_if(std::addressof(a) == std::addressof(b));
-    // проверить что объекты живые
-    return_if(!a.status.live);
-    return_if(!b.status.live);
-    // проверить что можно сталкиваться
-    return_if (!a.status.collidable || !b.status.collidable);
-
-    // сталкиваемые объекты можно смело кастовать
-    nauto a_collidable = *( ptr2ptr<Collidable*>(&a) );
-    nauto b_collidable = *( ptr2ptr<Collidable*>(&b) );
-    a_collidable.resolve_collision(b_collidable);
+  inline static void test_collide(Collidable& a, Collidable& b) {
+    return_if (!a.collision_possible(b));
+    return_if (!a.hitbox_test(b));
+    a.collide_with(b);
   }
 
-  inline void operator()(CN<Entities> entities, Delta_time dt) {
-    m_areas.clear();
-    for (nauto ent: entities)
-      insert(ent.get());
-    for (nauto area: m_areas)
-      process_collisions(area);
-  }
-
-  // добавить объект в области
-  inline void insert(Entity* ent) {
-    // проверить что объекту можно сталкиваться
-    return_if(!ent->status.live);
-    return_if(!ent->status.collidable);
-
-    cauto rect = make_rect(*ent);
-
-    // найти столкновения с другими областями
-    bool intersected {};
-    for (nauto area: m_areas)
-      if (intersect(area.rect, rect)) {
-        area.entities.push_back(ent);
-        // расширить область чтобы она покрывала два объекта
-        area.rect = expand_rect(area.rect, rect);
-        intersected = true;
-      }
-    
-    // когда нету никаких областей или не попали никуда
-    if (!intersected) {
-      Area area {.rect = rect, .entities = {ent}};
-      m_areas.emplace_back( std::move(area) );
+  // получить список объектов доступных для столкновения
+  inline Collidables collidable_filter(CN<Entities> entities) const {
+    Collidables ret;
+    for (cnauto ent: entities) {
+      assert(ent);
+      cont_if (!ent->status.live);
+      cont_if (!ent->status.collidable);
+      // при соблюдении условия выше можно смело кастовать
+      auto collidable = ptr2ptr<Collidable*>(ent.get());
+      cont_if (!collidable->get_hitbox());
+      ret.push_back(collidable);
     }
-  } // insert
-
-  // создаёт прямоугольник оборачивающий хитбокс
-  inline Rect make_rect(CN<Entity> ent) const {
-    cauto hitbox = ent.get_hitbox();
-    assert(hitbox);
-    cauto sz = hitbox->simple.r * 2;
-    return Rect {
-      // TODO влияние офсета не протещено
-      ent.phys.get_pos() - Vec(sz/2., sz/2.),
-      Vec(sz, sz)
-    };
-  }
-
-  inline static Rect expand_rect(CN<Rect> a, CN<Rect> b) {
-    Rect ret;
-    ret.pos.x = std::min(a.pos.x, b.pos.x);
-    ret.pos.y = std::min(a.pos.y, b.pos.y);
-    // крайние точки
-    Vec a_end = a.pos + a.size;
-    Vec b_end = b.pos + b.size;
-    Vec end;
-    end.x = std::max(a_end.x, b_end.x);
-    end.y = std::max(a_end.y, b_end.y);
-    ret.size = end - ret.pos;
     return ret;
   }
 
-  // проверить столкновения в области
-  inline void process_collisions(CN<Area> area) {
-    cauto entitys_sz = area.entities.size();
-    return_if(entitys_sz <= 1);
+  inline void operator()(CN<Entities> entities, Delta_time dt) {
+    auto collidables = collidable_filter(entities);
+    cauto entitys_sz = collidables.size();
+    return_if(entitys_sz <= 1); // защита от зацикливания
 
-    // проверить столкновения пар объектов (без повторений)
+    // сделать список уникальных пар для проверки столкновений
     #pragma omp parallel for simd schedule(dynamic, 4)
     for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
     for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
-      test_collide(*area.entities[a_i], *area.entities[b_i]);
-  }
-
-  inline void debug_draw(Image& dst, const Vec camera_offset) {
-    for (cnauto area: m_areas) {
-      auto rect = area.rect;
-      rect.pos += camera_offset;
-      draw_rect<&blend_diff>(dst, rect, Pal8::white);
-    }
+      test_collide(*collidables[a_i], *collidables[b_i]);
   }
 }; // Impl
 
 Collider_experimental_2::Collider_experimental_2(): impl {new_unique<Impl>()} {}
 Collider_experimental_2::~Collider_experimental_2() {}
 void Collider_experimental_2::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
-void Collider_experimental_2::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }
+void Collider_experimental_2::debug_draw(Image& dst, const Vec camera_offset) { /*impl->debug_draw(dst, camera_offset);*/ }
