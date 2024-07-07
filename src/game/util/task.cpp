@@ -36,7 +36,7 @@ void Task::restart() {
 void Task_mgr::process_killed() {
   // удалить всех неактивных
   std::erase_if(m_tasks, [](CN<Shared<Task>> task)
-    { return !task->is_active(); });
+    { return !task || !task->is_active(); });
 }
 
 Shared<Task> Task_mgr::add(CN<Shared<Task>> task) {
@@ -56,9 +56,12 @@ Shared<Task> Task_mgr::move(Shared<Task>&& task) {
 void Task_mgr::update(const Delta_time dt) {
   process_killed();
 
-  for (nauto task: m_tasks)
-    if (task->is_active() && !task->is_paused())
-      task->update(dt);
+  for (nauto task: m_tasks) {
+    cont_if(!task);
+    cont_if(!task->is_active());
+    cont_if(task->is_paused());
+    task->update(dt);
+  }
 }
 
 void Task_mgr::draw(Image& dst) const {
