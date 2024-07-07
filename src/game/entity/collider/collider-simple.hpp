@@ -1,15 +1,18 @@
 #pragma once
 #include "collider.hpp"
 
-class Entity;
+class Image;
+struct Vec;
 
-// Простая проверка столкновения всех со всеми
+// поиск столкновений через перебор всех объектов
 class Collider_simple final: public Collider {
   nocopy(Collider_simple);
-  void test_collide(Entity& a, Entity& b);
+  struct Impl;
+  Unique<Impl> impl {};
 
 public:
-  Collider_simple() = default;
-  ~Collider_simple() = default;
+  Collider_simple();
+  ~Collider_simple();
   void operator()(CN<Entities> entities, Delta_time dt) override;
-}; // Collider_simple
+  void debug_draw(Image& dst, const Vec camera_offset) override;
+};
