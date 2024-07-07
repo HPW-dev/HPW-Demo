@@ -3,7 +3,13 @@
 
 // Physical context
 class Phys final {
-  Vec m_old_pos {}; // старая позиция
+  mutable Vec m_old_pos {-9999, 9999}; // старая позиция
+  mutable Vec m_old_vel {-9999, 9999}; // для кеширования
+  mutable Vec m_cached_dir {-999, 999}; // для кеширования
+  mutable Vec m_cached_vel {-999, 999}; // для кеширования
+  mutable real m_old_deg {-9999}; // для кеширования
+  mutable real m_old_speed {-9999}; // для кеширования
+
   Vec m_pos {}; // позиция
   real m_speed {}; // скорость движения (pps)
   real m_accel {}; // ускорение (pps)

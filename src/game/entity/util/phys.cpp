@@ -14,14 +14,28 @@ CN<decltype(Phys::m_speed)> Phys::get_speed() const { return m_speed; }
 CN<decltype(Phys::m_rotate_speed)> Phys::get_rot_spd() const { return m_rotate_speed; }
 CN<decltype(Phys::m_rotate_accel)> Phys::get_rot_ac() const { return m_rotate_accel; }
 CN<decltype(Phys::m_rotate_force)> Phys::get_rot_fc() const { return m_rotate_force; }
-Vec Phys::get_direction() const { return normalize_stable(get_vel()); }
 void Phys::set_force( CN<decltype(m_force)> _force) { m_force = std::max<decltype(m_force)>(0, _force); }
 CN<decltype(Phys::m_invert_rotation)> Phys::get_invert_rotation() const { return m_invert_rotation; }
 void Phys::set_invert_rotation( CN<decltype(m_invert_rotation)> val) { m_invert_rotation = val; }
 
+Vec Phys::get_direction() const {
+  cauto velocity = get_vel();
+  return_if (m_old_vel == velocity, m_cached_dir);
+  m_cached_dir = normalize_stable(velocity);
+  m_old_vel = velocity;
+  return m_cached_dir;
+}
+
 Vec Phys::get_vel() const {
+  if (m_deg == m_old_deg && m_speed == m_old_speed)
+    return m_cached_vel;
+
   auto direct = deg_to_vec(m_deg);
-  return direct * m_speed;
+  cauto ret = direct * m_speed;
+  m_old_deg = m_deg;
+  m_old_speed = m_speed;
+  m_cached_vel = ret;
+  return ret;
 }
 
 void Phys::set_pos( CN<decltype(m_pos)> val) {

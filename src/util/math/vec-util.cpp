@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cmath>
+#include <cassert>
 #include "vec-util.hpp"
 #include "vec.hpp"
 #include "mat.hpp"
@@ -14,9 +15,10 @@ real length(const Vec src) {
 }
 
 Vec normalize_stable(const Vec src) { 
-  auto len = length(src);
-  if (len == 0)
-    return rand_normalized_stable();
+  return_if (src.is_zero(), {});
+
+  cauto len = length(src);
+  assert(len != 0);
   return src / len;
 }
 
