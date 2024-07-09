@@ -38,12 +38,31 @@ struct Collider_grid::Impl {
     return ret;
   }
 
+  inline void clear_grid() {
+    m_grid.clear();
+    m_grid_offset = {};
+    m_grid_mx = m_grid_my = {};
+  }
+
   // подготовить сетку
   inline void config_grid(CN<Collidables> entities) {
-    m_grid.resize(2);
-    m_grid_mx = 8;
-    m_grid_my = 6;
-    m_grid_offset = {50, 30};
+    clear_grid();
+    return_if(entities.size() < 2);
+
+    // найти крайние точки слева сверху и справа снизу
+    Vec lu {}, rd {};
+    for (cnauto ent: entities) {
+      cauto pos = ent->phys.get_pos();
+      lu.x = std::min(lu.x, pos.x);
+      lu.y = std::min(lu.y, pos.y);
+      rd.x = std::max(rd.x, pos.x);
+      rd.y = std::max(rd.y, pos.y);
+    }
+
+    m_grid_offset = lu;
+    m_grid_mx = std::ceil((rd.x - lu.x) / m_grid_sz);
+    m_grid_my = std::ceil((rd.y - lu.y) / m_grid_sz);
+    m_grid.resize(m_grid_mx * m_grid_my);
   }
 
   // добавить объект на сетку
@@ -53,11 +72,17 @@ struct Collider_grid::Impl {
 
   // найти столкновения в сетке
   inline void process_collisions() {
-
+    /*
+    // сделать список уникальных пар для проверки столкновений
+    #pragma omp parallel for simd schedule(dynamic, 4)
+    for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
+    for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
+      test_collide(*collidables[a_i], *collidables[b_i]);
+    */
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
-    return_if(m_grid.empty());
+    return_if(m_grid.size() < 2);
     assert(m_grid_mx > 0);
     assert(m_grid_my > 0);
     // нарисовать сетку
@@ -81,17 +106,6 @@ struct Collider_grid::Impl {
     for (cnauto entity: collidables)
       insert(entity);
     process_collisions();
-    
-    /*
-    cauto entitys_sz = collidables.size();
-    return_if(entitys_sz <= 1); // защита от зацикливания
-
-    // сделать список уникальных пар для проверки столкновений
-    #pragma omp parallel for simd schedule(dynamic, 4)
-    for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
-    for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
-      test_collide(*collidables[a_i], *collidables[b_i]);
-    */
   }
 }; // Impl
 

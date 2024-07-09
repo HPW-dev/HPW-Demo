@@ -17,6 +17,7 @@
 #include "util/file/yaml.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/camera.hpp"
 #include "game/core/time-scale.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -161,8 +162,10 @@ struct Entity_mgr::Impl {
     // TODO чистка в ECOMEM
   } // update_kills
 
-  inline void debug_draw(Image& dst) const
-    { m_collision_resolver->debug_draw(dst, {}/* camera TODO */); }
+  inline void debug_draw(Image& dst) const {
+    if (m_collision_resolver)
+      m_collision_resolver->debug_draw(dst, graphic::camera->get_offset());
+  }
 
   inline Mem_pool& get_phys_pool() { return m_phys_pool; }
   inline Mem_pool& get_hitbox_pool() { return m_hitbox_pool; }
