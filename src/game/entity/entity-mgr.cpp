@@ -163,8 +163,8 @@ struct Entity_mgr::Impl {
   } // update_kills
 
   inline void debug_draw(Image& dst) const {
-    if (m_collision_resolver)
-      m_collision_resolver->debug_draw(dst, graphic::camera->get_offset());
+    return_if (!m_collision_resolver);
+    m_collision_resolver->debug_draw(dst, graphic::camera->get_offset());
   }
 
   inline Mem_pool& get_phys_pool() { return m_phys_pool; }

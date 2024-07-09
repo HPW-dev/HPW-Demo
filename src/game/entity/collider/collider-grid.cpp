@@ -86,8 +86,8 @@ struct Collider_grid::Impl {
     assert(m_grid_mx > 0);
     assert(m_grid_my > 0);
     // нарисовать сетку
-    int offset_x = std::floor(m_grid_offset.x);
-    int offset_y = std::floor(m_grid_offset.y);
+    int offset_x = std::floor(m_grid_offset.x + camera_offset.x);
+    int offset_y = std::floor(m_grid_offset.y + camera_offset.y);
     cfor (y, m_grid_my) {
       const Vec a(offset_x, offset_y + y * m_grid_sz);
       const Vec b(offset_x + m_grid_mx * m_grid_sz, offset_y + y * m_grid_sz);
