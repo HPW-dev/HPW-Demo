@@ -126,7 +126,7 @@ Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 
 // убирает всех противников
 void clear_entities(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
-  hpw::entity_mgr->clear();
+  hpw::entity_mgr->clear_entities();
   console.print("all entities erased");
 }
 

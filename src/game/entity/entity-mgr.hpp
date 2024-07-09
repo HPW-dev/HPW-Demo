@@ -35,6 +35,8 @@ public:
   void draw(Image& dst, const Vec offset) const;
   void update(const Delta_time dt);
   void clear();
+  // убирает все объекты
+  void clear_entities();
   void debug_draw(Image& dst) const;
   // mode=false выключает видимость игровых объектов
   void set_visible(const bool mode);

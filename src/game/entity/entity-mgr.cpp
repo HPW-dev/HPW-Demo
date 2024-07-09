@@ -116,6 +116,10 @@ struct Entity_mgr::Impl {
   inline void clear() {
     detailed_log("Entity_mgr.clear\n");
     m_collision_resolver = {};
+    clear_entities();
+  }
+
+  inline void clear_entities() {
     m_player = {};
     m_entities.clear();
     m_phys_pool.release();
@@ -337,6 +341,7 @@ Entity_mgr::~Entity_mgr() { impl->clear(); }
 void Entity_mgr::draw(Image& dst, const Vec offset) const { impl->draw(dst, offset); }
 void Entity_mgr::update(const Delta_time dt) { impl->update(dt); }
 void Entity_mgr::clear() { impl->clear(); }
+void Entity_mgr::clear_entities() { impl->clear_entities(); }
 void Entity_mgr::set_collider(CN<Shared<Collider>> new_collider) { impl->set_collider(new_collider); }
 void Entity_mgr::register_types() { impl->register_types(); }
 Entity* Entity_mgr::make(Entity* master, CN<Str> name, const Vec pos) { return impl->make(master, name, pos); }

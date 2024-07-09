@@ -7,6 +7,7 @@
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "util/log.hpp"
 
 struct Collider_grid::Impl {
   using Collidables = Vector<Collidable*>;
@@ -102,6 +103,7 @@ struct Collider_grid::Impl {
 
   inline void operator()(CN<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
+    hpw_log("collidables: " << collidables.size() << '\n');
     config_grid(collidables);
     for (cnauto entity: collidables)
       insert(entity);
