@@ -289,6 +289,13 @@ void draw_hitboxes(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("режим показа хитбоксов " + Str(yesno ? "включён" : "выключен"));
 }
 
+void draw_grids(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "в команде мало аргументов");
+  cauto yesno = (args.at(1) == "0" ? false : true);
+  graphic::show_grids = yesno;
+  console.print("режим показа сетки " + Str(yesno ? "включён" : "выключен"));
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -347,6 +354,10 @@ void cmd_core_init(Cmd& cmd) {
     "hitboxes",
     "hitboxes <1/0> - вкл/выкл режим отображения хитбоксов",
     &draw_hitboxes, {} )
+  MAKE_CMD (
+    "grids",
+    "grids <1/0> - вкл/выкл режим отображения сеток",
+    &draw_grids, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init

@@ -68,9 +68,25 @@ struct Collider_grid::Impl {
   }
 
   // добавить объект на сетку
-  inline void insert(CP<Collidable> entity) {
-
-  }
+  inline void insert(Collidable* entity) {
+    // определить размеры хитбокса
+    cnauto hitbox = entity->get_hitbox();
+    cauto pos = entity->phys.get_pos() - m_grid_offset;
+    const Vec lu = pos + hitbox->simple.offset - hitbox->simple.r;
+    const Vec rd = pos + hitbox->simple.offset + hitbox->simple.r;
+    
+    // залить сектора по всему размеру объекта
+    const int mx = std::ceil((rd.x - lu.x) / m_grid_sz + 0.5);
+    const int my = std::ceil((rd.y - lu.y) / m_grid_sz + 0.5);
+    cfor (y, my)
+    cfor (x, mx) {
+      auto sector = get_sector_by_pos(
+        lu.x + x * m_grid_sz,
+        lu.y + y * m_grid_sz);
+      cont_if(!sector);
+      sector->push_back(entity);
+    }
+  } // insert
 
   // найти столкновения в сетке
   inline void process_collisions() {
@@ -83,10 +99,16 @@ struct Collider_grid::Impl {
     */
   }
 
-  inline Sector* get_sector(int x, int y) {
-    return_if (uint(x) >= uint(m_grid_mx), nullptr);
-    return_if (uint(y) >= uint(m_grid_my), nullptr);
+  inline Sector* get_sector_by_idx(int x, int y) {
+    return_if (x < 0, nullptr);
+    return_if (x >= m_grid_mx, nullptr);
+    return_if (y < 0, nullptr);
+    return_if (y >= m_grid_my, nullptr);
     return &m_grid[y * m_grid_mx + x];
+  }
+
+  inline Sector* get_sector_by_pos(real x, real y) {
+    return get_sector_by_idx(x / m_grid_sz, y / m_grid_sz);
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
@@ -112,7 +134,7 @@ struct Collider_grid::Impl {
       const Vec pos(
         offset_x + x * m_grid_sz + 2,
         offset_y + y * m_grid_sz + 2);
-      cnauto sector = get_sector(x, y);
+      cnauto sector = get_sector_by_idx(x, y);
       cauto count = sector->size();
       graphic::font->draw(dst, pos, n2s<utf32>(count), &blend_diff);
     }
