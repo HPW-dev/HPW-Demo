@@ -45,8 +45,12 @@ struct Collider_grid::Impl {
   }
 
   inline void clear_grid() {
-    for (nauto sector: m_grid)
-      sector.clear();
+    cfor (y, m_grid_my)
+    cfor (x, m_grid_mx) {
+      auto sector = get_sector_by_idx(x, y);
+      cont_if(!sector);
+      sector->clear();
+    }
     m_grid_offset = {};
     m_grid_mx = m_grid_my = {};
   }
