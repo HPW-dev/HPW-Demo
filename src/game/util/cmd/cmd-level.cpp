@@ -90,7 +90,7 @@ static std::unordered_map<Str, Collider_maker> g_colliders {
   {"experimental", []{ return new_shared<Collider_experimental>(); }},
   {"experimental-2", []{ return new_shared<Collider_experimental_2>(); }},
   {"qtree", []{ return new_shared<Collider_qtree>(7, 1, graphic::width, graphic::height); }},
-  {"grid", []{ return new_shared<Collider_grid>(); }},
+  {"grid", []{ return new_shared<Collider_grid>(28); }},
 };
 
 void Cmd_collider::exec(CN<Strs> cmd_and_args) {

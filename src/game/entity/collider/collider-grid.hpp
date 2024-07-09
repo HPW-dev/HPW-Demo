@@ -11,7 +11,7 @@ class Collider_grid final: public Collider {
   Unique<Impl> impl {};
 
 public:
-  Collider_grid();
+  explicit Collider_grid(int grid_sz=30);
   ~Collider_grid();
   void operator()(CN<Entities> entities, Delta_time dt) override;
   void debug_draw(Image& dst, const Vec camera_offset) override;

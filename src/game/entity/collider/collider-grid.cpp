@@ -2,7 +2,6 @@
 #include <cassert>
 #include <cmath>
 #include "collider-grid.hpp"
-#include "game/core/debug.hpp"
 #include "game/core/fonts.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
@@ -13,11 +12,16 @@
 struct Collider_grid::Impl {
   using Collidables = Vector<Collidable*>;
   using Sector = Vector<Collidable*>;
-  int m_grid_sz = 16; // размер ячейки сетки в пикселях
+  int m_grid_sz {}; // размер ячейки сетки в пикселях
   int m_grid_mx {}; // ширина сетки
   int m_grid_my {}; // высота сетки
   Vec m_grid_offset {}; // левый верхний угол сетки
   Vector<Sector> m_grid {}; // сетка со списками объектов
+
+  explicit inline Impl(int grid_sz)
+  : m_grid_sz {grid_sz} {
+    assert(m_grid_sz > 6);
+  }
 
   inline static void test_collide(Collidable& a, Collidable& b) {
     return_if (!a.collision_possible(b));
@@ -41,7 +45,8 @@ struct Collider_grid::Impl {
   }
 
   inline void clear_grid() {
-    m_grid.clear();
+    for (nauto sector: m_grid)
+      sector.clear();
     m_grid_offset = {};
     m_grid_mx = m_grid_my = {};
   }
@@ -79,8 +84,8 @@ struct Collider_grid::Impl {
     const Vec rd = pos + hitbox->simple.offset + hitbox->simple.r + 1;
     
     // залить сектора по всему размеру объекта
-    const int mx = std::floor((rd.x - lu.x) / m_grid_sz + 1.5);
-    const int my = std::floor((rd.y - lu.y) / m_grid_sz + 1.5);
+    const int mx = std::floor((rd.x - lu.x) / m_grid_sz + 1.75);
+    const int my = std::floor((rd.y - lu.y) / m_grid_sz + 1.75);
     cfor (y, my)
     cfor (x, mx) {
       auto sector = get_sector_by_pos(
@@ -89,23 +94,28 @@ struct Collider_grid::Impl {
       cont_if(!sector);
       sector->push_back(entity);
     }
-
-    cauto _pos = entity->phys.get_pos();
-    const Vec _lu = hitbox->simple.offset - hitbox->simple.r;
-    const Vec _rd = hitbox->simple.offset + hitbox->simple.r + 1;
-    draw_rect<&blend_diff>(*hpw::hitbox_layer,
-      Rect(_pos + _lu, _rd - _lu), Pal8::white);
   } // insert
 
   // найти столкновения в сетке
   inline void process_collisions() {
-    /*
-    // сделать список уникальных пар для проверки столкновений
-    #pragma omp parallel for simd schedule(dynamic, 4)
-    for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
-    for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
-      test_collide(*collidables[a_i], *collidables[b_i]);
-    */
+    return_if (m_grid_mx == 0);
+    return_if (m_grid_my == 0);
+
+    #pragma omp parallel for schedule(dynamic)
+    for (cnauto sector: m_grid) {
+      cauto entitys_sz = sector.size();
+      cont_if(entitys_sz < 2);
+
+      if (entitys_sz == 2) {
+        test_collide(*sector[0], *sector[1]);
+        continue;
+      }
+
+      // сделать список уникальных пар для проверки столкновений
+      for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
+      for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
+        test_collide(*sector[a_i], *sector[b_i]);
+    }
   }
 
   inline Sector* get_sector_by_idx(int x, int y) {
@@ -121,9 +131,8 @@ struct Collider_grid::Impl {
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
-    return_if(m_grid.size() < 2);
-    assert(m_grid_mx > 0);
-    assert(m_grid_my > 0);
+    return_if (m_grid_mx == 0);
+    return_if (m_grid_my == 0);
     // нарисовать сетку
     int offset_x = std::floor(m_grid_offset.x + camera_offset.x);
     int offset_y = std::floor(m_grid_offset.y + camera_offset.y);
@@ -158,7 +167,7 @@ struct Collider_grid::Impl {
   }
 }; // Impl
 
-Collider_grid::Collider_grid(): impl {new_unique<Impl>()} {}
+Collider_grid::Collider_grid(int grid_sz): impl {new_unique<Impl>(grid_sz)} {}
 Collider_grid::~Collider_grid() {}
 void Collider_grid::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_grid::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }

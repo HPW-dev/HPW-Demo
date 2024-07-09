@@ -5,14 +5,13 @@
 #include "game/core/levels.hpp"
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
-#include "game/entity/collider/collider-qtree.hpp"
+#include "game/entity/collider/collider-grid.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_qtree>(
-      7, 1, graphic::canvas->X, graphic::canvas->Y));
+    hpw::entity_mgr->set_collider(new_shared<Collider_grid>(28));
   }
 
   inline void update(const Vec vel, Delta_time dt) {
