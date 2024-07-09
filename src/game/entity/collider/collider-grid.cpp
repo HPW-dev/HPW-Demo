@@ -1,19 +1,21 @@
 #include <omp.h>
 #include <cassert>
+#include <cmath>
 #include "collider-grid.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
+#include "graphic/util/util-templ.hpp"
 
 struct Collider_grid::Impl {
   using Collidables = Vector<Collidable*>;
   using List = Vector<Collidable*>;
-  int grid_sz = 10; // размер ячейки сетки в пикселях
-  int grid_mx {}; // ширина сетки
-  int grid_my {}; // высота сетки
-  Vec grid_offset {}; // левый верхний угол сетки
-  Vector<List> grid {}; // сетка со списками объектов
+  int m_grid_sz = 10; // размер ячейки сетки в пикселях
+  int m_grid_mx {}; // ширина сетки
+  int m_grid_my {}; // высота сетки
+  Vec m_grid_offset {}; // левый верхний угол сетки
+  Vector<List> m_grid {}; // сетка со списками объектов
 
   inline static void test_collide(Collidable& a, Collidable& b) {
     return_if (!a.collision_possible(b));
@@ -38,7 +40,10 @@ struct Collider_grid::Impl {
 
   // подготовить сетку
   inline void config_grid(CN<Collidables> entities) {
-
+    m_grid.resize(2);
+    m_grid_mx = 8;
+    m_grid_my = 6;
+    m_grid_offset = {50, 30};
   }
 
   // добавить объект на сетку
@@ -52,8 +57,23 @@ struct Collider_grid::Impl {
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
-
-  }
+    return_if(m_grid.empty());
+    assert(m_grid_mx > 0);
+    assert(m_grid_my > 0);
+    // нарисовать сетку
+    int offset_x = std::floor(m_grid_offset.x);
+    int offset_y = std::floor(m_grid_offset.y);
+    cfor (y, m_grid_my) {
+      const Vec a(offset_x, offset_y + y * m_grid_sz);
+      const Vec b(offset_x + m_grid_mx * m_grid_sz, offset_y + y * m_grid_sz);
+      draw_line<&blend_diff>(dst, a, b, Pal8::white);
+    }
+    cfor (x, m_grid_mx) {
+      const Vec a(offset_x + x * m_grid_sz, offset_y);
+      const Vec b(offset_x + x * m_grid_sz, offset_y + m_grid_my * m_grid_sz);
+      draw_line<&blend_diff>(dst, a, b, Pal8::white);
+    }
+  } // debug_draw
 
   inline void operator()(CN<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
