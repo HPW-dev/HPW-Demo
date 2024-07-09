@@ -11,7 +11,7 @@
 
 struct Level_empty::Impl {
   inline explicit Impl() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_grid>(28));
+    hpw::entity_mgr->set_collider(new_shared<Collider_grid>());
   }
 
   inline void update(const Vec vel, Delta_time dt) {

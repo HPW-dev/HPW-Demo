@@ -62,7 +62,7 @@ struct Level_tutorial::Impl {
     { hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center() + Vec(0, 100)); }
 
   inline void init_collider() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_grid>(28));
+    hpw::entity_mgr->set_collider(new_shared<Collider_grid>());
   }
 
   inline void init_tasks() {

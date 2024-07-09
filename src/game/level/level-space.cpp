@@ -92,7 +92,7 @@ struct Level_space::Impl {
   }
 
   inline void init_collider() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_grid>(28));
+    hpw::entity_mgr->set_collider(new_shared<Collider_grid>());
   }
 
   // наполнение уровня тригерами
