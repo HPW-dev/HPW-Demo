@@ -2,6 +2,7 @@
 #include <cassert>
 #include <cmath>
 #include "collider-grid.hpp"
+#include "game/core/debug.hpp"
 #include "game/core/fonts.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
@@ -12,7 +13,7 @@
 struct Collider_grid::Impl {
   using Collidables = Vector<Collidable*>;
   using Sector = Vector<Collidable*>;
-  int m_grid_sz = 20; // размер ячейки сетки в пикселях
+  int m_grid_sz = 16; // размер ячейки сетки в пикселях
   int m_grid_mx {}; // ширина сетки
   int m_grid_my {}; // высота сетки
   Vec m_grid_offset {}; // левый верхний угол сетки
@@ -72,12 +73,14 @@ struct Collider_grid::Impl {
     // определить размеры хитбокса
     cnauto hitbox = entity->get_hitbox();
     cauto pos = entity->phys.get_pos() - m_grid_offset;
-    const Vec lu = pos + hitbox->simple.offset - hitbox->simple.r;
-    const Vec rd = pos + hitbox->simple.offset + hitbox->simple.r;
+    Vec lu = pos + hitbox->simple.offset - hitbox->simple.r;
+    lu.x = std::max<real>(0, lu.x);
+    lu.y = std::max<real>(0, lu.y);
+    const Vec rd = pos + hitbox->simple.offset + hitbox->simple.r + 1;
     
     // залить сектора по всему размеру объекта
-    const int mx = std::ceil((rd.x - lu.x) / m_grid_sz + 0.5);
-    const int my = std::ceil((rd.y - lu.y) / m_grid_sz + 0.5);
+    const int mx = std::floor((rd.x - lu.x) / m_grid_sz + 1.5);
+    const int my = std::floor((rd.y - lu.y) / m_grid_sz + 1.5);
     cfor (y, my)
     cfor (x, mx) {
       auto sector = get_sector_by_pos(
@@ -86,6 +89,12 @@ struct Collider_grid::Impl {
       cont_if(!sector);
       sector->push_back(entity);
     }
+
+    cauto _pos = entity->phys.get_pos();
+    const Vec _lu = hitbox->simple.offset - hitbox->simple.r;
+    const Vec _rd = hitbox->simple.offset + hitbox->simple.r + 1;
+    draw_rect<&blend_diff>(*hpw::hitbox_layer,
+      Rect(_pos + _lu, _rd - _lu), Pal8::white);
   } // insert
 
   // найти столкновения в сетке
