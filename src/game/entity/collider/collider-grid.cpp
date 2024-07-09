@@ -12,7 +12,7 @@
 struct Collider_grid::Impl {
   using Collidables = Vector<Collidable*>;
   using List = Vector<Collidable*>;
-  int m_grid_sz = 10; // размер ячейки сетки в пикселях
+  int m_grid_sz = 20; // размер ячейки сетки в пикселях
   int m_grid_mx {}; // ширина сетки
   int m_grid_my {}; // высота сетки
   Vec m_grid_offset {}; // левый верхний угол сетки
@@ -51,7 +51,8 @@ struct Collider_grid::Impl {
     return_if(entities.size() < 2);
 
     // найти крайние точки слева сверху и справа снизу
-    Vec lu {}, rd {};
+    Vec lu { 1'000'000,  1'000'000};
+    Vec rd {-1'000'000, -1'000'000};
     for (cnauto ent: entities) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
