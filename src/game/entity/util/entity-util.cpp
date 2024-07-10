@@ -4,11 +4,13 @@
 #include "phys.hpp"
 #include "anim-ctx.hpp"
 #include "game/core/anims.hpp"
+#include "game/core/entities.hpp"
+#include "game/core/canvas.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/particle.hpp"
-#include "game/core/canvas.hpp"
+#include "game/entity/collider/collider-2d-tree.hpp"
 #include "util/error.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/mat.hpp"
@@ -294,4 +296,8 @@ void Bound_off_screen::operator()(Entity& dst, const Delta_time dt) {
   if (decrease_speed)
     dst.phys.set_speed( dst.phys.get_speed() * 0.25 );
   dst.phys.set_pos(pos);
+}
+
+void set_default_collider() {
+  hpw::entity_mgr->set_collider( new_shared<Collider_2d_tree>() );
 }

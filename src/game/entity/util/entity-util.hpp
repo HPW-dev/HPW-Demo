@@ -9,6 +9,8 @@ class Particle;
 class Collidable;
 class Phys;
 
+// рекомендуемый колижн ресолвер для шмап мода
+void set_default_collider();
 // генерирует UID
 Uid get_entity_uid();
 // для синхронизации в реплеях

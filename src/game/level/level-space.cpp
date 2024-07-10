@@ -16,7 +16,6 @@
 #include "game/level/util/tilemap.hpp"
 #include "game/level/util/layer-simple.hpp"
 #include "game/level/util/task-spawn.hpp"
-#include "game/entity/collider/collider-grid.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
@@ -92,7 +91,7 @@ struct Level_space::Impl {
   }
 
   inline void init_collider() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_grid>());
+    set_default_collider();
   }
 
   // наполнение уровня тригерами

@@ -4,7 +4,6 @@
 #include "util/unicode.hpp"
 #include "util/hpw-util.hpp"
 #include "game/entity/player/player.hpp"
-#include "game/entity/collider/collider-grid.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
@@ -62,7 +61,7 @@ struct Level_tutorial::Impl {
     { hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center() + Vec(0, 100)); }
 
   inline void init_collider() {
-    hpw::entity_mgr->set_collider(new_shared<Collider_grid>());
+    set_default_collider();
   }
 
   inline void init_tasks() {
