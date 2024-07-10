@@ -9,6 +9,12 @@
 
 using Collidables = Vector<Collidable*>;
 
+inline void test_collide(Collidable& a, Collidable& b) {
+  return_if (!a.collision_possible(b));
+  return_if (!a.hitbox_test(b));
+  a.collide_with(b);
+}
+
 /* ветвь дерева содержит две половины, внутри
 которых другие ветви или объекты */
 struct Node {
@@ -119,11 +125,27 @@ struct Node {
     auto rect = area;
     rect.pos += camera_offset;
     draw_rect(dst, rect, Pal8::white);
+    if (a) a->debug_draw(dst, camera_offset);
+    if (b) b->debug_draw(dst, camera_offset);
+  }
+
+  inline void process_collisions() {
+    #pragma omp task
+    impl_process_collisions();
+    if (a) a->process_collisions();
+    if (b) b->process_collisions();
+  }
+
+  inline void impl_process_collisions() {
+    cauto entitys_sz = list.size();
+    return_if (entitys_sz < 2);
+
+    if (entitys_sz == 2)
+      test_collide(*list[0], *list[1]);
     
-    if (a)
-      a->debug_draw(dst, camera_offset);
-    if (b)
-      b->debug_draw(dst, camera_offset);
+    for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
+    for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
+      test_collide(*list[a_i], *list[b_i]);
   }
 }; // Node
 
@@ -135,12 +157,6 @@ struct Collider_2d_tree::Impl {
   explicit inline Impl(uint depth)
   : m_depth {depth} {
     assert(m_depth > 0);
-  }
-
-  inline static void test_collide(Collidable& a, Collidable& b) {
-    return_if (!a.collision_possible(b));
-    return_if (!a.hitbox_test(b));
-    a.collide_with(b);
   }
 
   // получить список объектов доступных для столкновения
@@ -202,7 +218,9 @@ struct Collider_2d_tree::Impl {
   }
 
   inline void process_collisions() {
-    
+    #pragma omp parallel
+    #pragma omp single
+    m_root->process_collisions();
   }
 }; // Impl
 
