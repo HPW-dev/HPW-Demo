@@ -65,18 +65,38 @@ struct Node {
 
     // поделить объекты по ветвям
     for (cnauto ent: list) {
+      cauto pos = ent->phys.get_pos();
+      cnauto hitbox = ent->get_hitbox();
+      assert(hitbox);
+      // учесть размеры хитбокса
+      lu.x = pos.x + hitbox->simple.offset.x - hitbox->simple.r;
+      lu.y = pos.y + hitbox->simple.offset.y - hitbox->simple.r;
+      rd.x = pos.x + hitbox->simple.offset.x + hitbox->simple.r;
+      rd.y = pos.y + hitbox->simple.offset.y + hitbox->simple.r;
+
       if (x_axis) {
-        if (ent->phys.get_pos().x < area_a.pos.x + area_a.size.x)
+        if (rd.x < area_a.pos.x + area_a.size.x)
           a->list.push_back(ent);
-        else
+        else {
           b->list.push_back(ent);
+          /* если объект залазит на чужую
+          территорию, то добавить его в списки там */
+          if (lu.x < area_a.pos.x + area_a.size.x)
+            a->list.push_back(ent);
+        }
       } else {
-        if (ent->phys.get_pos().y < area_a.pos.y + area_a.size.y)
+        if (rd.y < area_a.pos.y + area_a.size.y)
           a->list.push_back(ent);
-        else
+        else {
           b->list.push_back(ent);
+          /* если объект залазит на чужую
+          территорию, то добавить его в списки там */
+          if (lu.y < area_a.pos.y + area_a.size.y)
+            a->list.push_back(ent);
+        }
       }
     }
+
     list.clear();
     a->split(depth);
     b->split(depth);
@@ -98,8 +118,8 @@ struct Node {
   inline void debug_draw(Image& dst, const Vec camera_offset) const {
     auto rect = area;
     rect.pos += camera_offset;
-    //draw_rect<&blend_diff>(dst, rect, Pal8::white);
     draw_rect(dst, rect, Pal8::white);
+    
     if (a)
       a->debug_draw(dst, camera_offset);
     if (b)
