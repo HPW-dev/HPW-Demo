@@ -62,8 +62,10 @@ struct Node {
     } // set area
 
     // сделать две половинки и перенести туда объекты
-    a = new_unique<Node>();
-    b = new_unique<Node>();
+    if (!a)
+      a = new_unique<Node>();
+    if (!b)
+      b = new_unique<Node>();
     a->is_active = true;
     b->is_active = true;
     a->area = area_a;
@@ -122,6 +124,7 @@ struct Node {
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) const {
+    return_if(!is_active);
     auto rect = area;
     rect.pos += camera_offset;
     draw_rect(dst, rect, Pal8::white);
@@ -130,6 +133,8 @@ struct Node {
   }
 
   inline void process_collisions() {
+    return_if(!is_active);
+
     #pragma omp task
     impl_process_collisions();
     if (a) a->process_collisions();
@@ -146,6 +151,13 @@ struct Node {
     for (std::size_t a_i = 0;       a_i < entitys_sz - 1; ++a_i)
     for (std::size_t b_i = a_i + 1; b_i < entitys_sz;     ++b_i)
       test_collide(*list[a_i], *list[b_i]);
+  }
+
+  inline void clear() {
+    is_active = false;
+    list.clear();
+    if (a) a->clear();
+    if (b) b->clear();
   }
 }; // Node
 
@@ -206,15 +218,15 @@ struct Collider_2d_tree::Impl {
 
   inline void make_tree(CN<Collidables> entities) {
     find_area(entities);
-    m_root = {};
-
-    if (!m_root) {
+    if (!m_root)
       m_root = new_unique<Node>();
-      m_root->area = m_world;
-      m_root->is_active = true;
-      m_root->list = entities;
-      m_root->split(m_depth);
-    }
+
+    m_root->clear();
+    m_root->is_active = true;
+
+    m_root->area = m_world;
+    m_root->list = entities;
+    m_root->split(m_depth);
   }
 
   inline void process_collisions() {
