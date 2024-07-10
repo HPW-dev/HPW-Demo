@@ -17,6 +17,10 @@ class Collidable: public Entity {
   mutable CP<Hitbox> m_old_hitbox {}; // кэшированный хитбокс
 
   void draw_hitbox(Image& dst, const Vec offset) const;
+  // обработка смерти от потери хп. Ret true если умерли
+  bool kill_by_damage();
+  // нанести урон от всех, кто столкнулся в объект
+  void process_damage();
 
 public:
   void draw(Image& dst, const Vec offset) const override;

@@ -29,11 +29,24 @@ void Collidable::draw(Image& dst, const Vec offset) const {
 }
 
 void Collidable::update(const Delta_time dt) {
+  process_damage();
+  return_if (kill_by_damage());
   Entity::update(dt);
 
   // когда заканчивается обработка столкновений, флаг выключается
   status.collided = false;
   m_collided.clear();
+}
+
+void Collidable::process_damage() {
+  for (cnauto other: m_collided)
+    sub_hp( other->get_dmg() );
+}
+
+bool Collidable::kill_by_damage() {
+  return_if (get_hp() > 0, false);
+  status.killed = true;
+  return true;
 }
 
 bool Collidable::hitbox_test(CN<Collidable> other) const {
@@ -73,11 +86,8 @@ void Collidable::draw_hitbox(Image& dst, const Vec offset) const {
 
 void Collidable::sub_hp(hp_t incoming_dmg) {
   static_assert(std::is_signed<decltype(m_hp)>()); // иначе переделай момент с выходом за 0
-
   // вычесть дамаг, если кончились жизни - сдохнуть
   set_hp( get_hp() - incoming_dmg );
-  if (get_hp() <= 0)
-    status.killed = true;
 }
 
 void Collidable::kill() {
@@ -103,11 +113,8 @@ bool Collidable::collision_possible(Collidable& other) const {
 void Collidable::collide_with(Collidable& other) {
   omp::lock_guard lock_this(this->m_mutex);
   omp::lock_guard lock_other(other.m_mutex);
-  // нанести урон
   this->status.collided = true;
-  this->sub_hp( other.get_dmg() );
   other.status.collided = true;
-  other.sub_hp( this->get_dmg() );
   // вписать инфу о том, с кем столкнулись
   this->m_collided.emplace(std::addressof(other));
   other.m_collided.emplace(this);
