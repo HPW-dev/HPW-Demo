@@ -68,12 +68,16 @@ CP<Hitbox> Collidable::get_hitbox() const {
   cauto deg = phys.get_deg();
 
   // если угол не менялся, то вернуть кешированный результат
-  if (m_old_deg == deg)
+  const bool deg_is_equal = m_old_deg == deg;
+  const bool anim_is_equal = m_old_anim == anim_ctx.get_anim();
+  if (deg_is_equal && anim_is_equal)
     return m_old_hitbox;
 
+  // кэшировать новый результат
   auto ret = anim_ctx_util::get_hitbox(anim_ctx, deg, *this);
   m_old_deg = deg;
   m_old_hitbox = ret;
+  m_old_anim = anim_ctx.get_anim();
   return ret;
 }
 
