@@ -16,6 +16,7 @@
 #include "game/entity/collider/collider-simple.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
 #include "game/entity/collider/collider-grid.hpp"
+#include "game/entity/collider/collider-2d-tree.hpp"
 #include "game/entity/collider/collider-experimental.hpp"
 #include "game/entity/collider/collider-experimental-2.hpp"
 
@@ -91,6 +92,7 @@ static std::unordered_map<Str, Collider_maker> g_colliders {
   {"experimental-2", []{ return new_shared<Collider_experimental_2>(); }},
   {"qtree", []{ return new_shared<Collider_qtree>(7, 1, graphic::width, graphic::height); }},
   {"grid", []{ return new_shared<Collider_grid>(); }},
+  {"2d-tree", []{ return new_shared<Collider_2d_tree>(); }},
 };
 
 void Cmd_collider::exec(CN<Strs> cmd_and_args) {
