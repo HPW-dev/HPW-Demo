@@ -226,13 +226,24 @@ struct Collider_2d_tree::Impl {
 
     m_root->area = m_world;
     m_root->list = entities;
-    m_root->split(m_depth);
+    m_root->split( get_depth(entities) );
   }
 
   inline void process_collisions() {
     #pragma omp parallel
     #pragma omp single
     m_root->process_collisions();
+  }
+
+  // определяет глубину построения дерева по количеству объектов
+  inline uint get_depth(CN<Collidables> entities) const {
+    cauto entities_sz = entities.size();
+    assert(entities_sz > 1);
+
+    const uint depth = std::floor(std::sqrt(entities_sz));
+    assert(depth > 0);
+    
+    return std::min(m_depth, depth);
   }
 }; // Impl
 
