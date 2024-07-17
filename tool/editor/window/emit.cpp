@@ -65,6 +65,7 @@ void Emit_wnd::reset() {
   editor::entity = hpw::entity_mgr->allocate<Collidable>();
   editor::entity->phys.set_pos(center_point(*graphic::canvas));
   select_anim_by_name(get_avaliable_first_anim());
+  editor::entity->status.ignore_damage = true;
 }
 
 Strs spawner_type_names() {

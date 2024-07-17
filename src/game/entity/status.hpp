@@ -24,6 +24,7 @@ struct Entity_status {
   bool ignore_bullet: 1 {};    // не сталкиваться с другими пулями
   bool ignore_self_type: 1 {}; // не сталкиваться с объектами своего типа
   bool ignore_bound: 1 {};     // не удалять объект, если он вышел за края экрана
+  bool ignore_damage: 1 {}; // не получать урон
   bool fixed_deg: 1 {};        // будет искать в anim_ctx default_deg и поворачивать только на него
   bool return_back: 1 {};      // включит флаг goto_prev_frame в конце анимации
   bool goto_prev_frame: 1 {};  // отображает кадры в обратном порядке (дойдя до 0, выключается)

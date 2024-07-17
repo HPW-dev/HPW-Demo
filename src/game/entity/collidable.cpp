@@ -45,6 +45,7 @@ void Collidable::process_damage() {
 
 bool Collidable::kill_by_damage() {
   return_if (get_hp() > 0, false);
+  return_if (status.ignore_damage, false);
   status.killed = true;
   return true;
 }
@@ -89,6 +90,8 @@ void Collidable::draw_hitbox(Image& dst, const Vec offset) const {
 }
 
 void Collidable::sub_hp(hp_t incoming_dmg) {
+  return_if (status.ignore_damage);
+
   static_assert(std::is_signed<decltype(m_hp)>()); // иначе переделай момент с выходом за 0
   // вычесть дамаг, если кончились жизни - сдохнуть
   set_hp( get_hp() - incoming_dmg );
