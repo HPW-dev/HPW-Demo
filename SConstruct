@@ -59,7 +59,7 @@ if is_debug:
   defines.append("-DDEBUG")
   cpp_flags.extend([
     "-O0",
-    ("-ggdb3" if disable_debug_info else "-g0"),
+    ("-g0" if disable_debug_info else "-ggdb3"),
     ("-m64" if is_64bit else "-m32")
   ])
 else: # release
