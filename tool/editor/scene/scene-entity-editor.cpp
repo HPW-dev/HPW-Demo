@@ -1,10 +1,13 @@
 #include <imgui.h>
 #include "scene-entity-editor.hpp"
 #include "yn.hpp"
+#include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/scenes.hpp"
 
 struct Scene_entity_editor::Impl {
+  Entity_editor_ctx m_ctx {};
+
   inline void update(const Delta_time dt) {}
   inline void draw(Image& dst) const {}
 

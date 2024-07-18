@@ -3,6 +3,7 @@
 #include "scene-entity-editor.hpp"
 #include "scene-anim-editor.hpp"
 #include "yn.hpp"
+#include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
@@ -10,10 +11,10 @@
 #include "game/menu/item/text-item.hpp"
 
 struct Scene_editor_select::Impl {
-  Unique<Advanced_text_menu> menu {};
+  Unique<Advanced_text_menu> m_menu {};
 
   inline Impl() {
-    menu = new_unique<Advanced_text_menu>(
+    m_menu = new_unique<Advanced_text_menu>(
       U"Редакторы",
       Menu_items {
         new_shared<Menu_text_item>(U"Редактор анимаций и хитбоксов", [this]{ goto_anim_editor(); }),
@@ -25,11 +26,11 @@ struct Scene_editor_select::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    menu->update(dt);
+    m_menu->update(dt);
   }
 
   inline void draw(Image& dst) const {
-    menu->draw(dst);
+    m_menu->draw(dst);
   }
 
   inline void imgui_exec() {
