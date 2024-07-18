@@ -14,4 +14,8 @@ public:
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
   void imgui_exec() override;
+  void exit();
+  void pause();
+  void save();
+  void reload();
 };
