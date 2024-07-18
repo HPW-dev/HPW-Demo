@@ -16,6 +16,7 @@
 #include "util/file/yaml.hpp"
 #include "graphic/animation/anim-io.hpp"
 #include "scene/yn.hpp"
+#include "scene/scene-entity-editor.hpp"
 
 inline void save_all_anims() {
   Yaml file (hpw::cur_dir + "config/animation.yml");
@@ -43,6 +44,10 @@ void Menu_wnd::imgui_exec() {
   // менюшка сверху слева
   if (BeginMenu("Menu")) {
     Scope _({}, &EndMenu);
+    if (MenuItem("entity editor")) {
+      hpw::scene_mgr->add(new_shared<Scene_entity_editor>());
+      return;
+    }
     if (MenuItem("Pause", "SPACE"))
       editor::is_pause = !editor::is_pause;
     if (MenuItem("Save", "CTRL+S"))
