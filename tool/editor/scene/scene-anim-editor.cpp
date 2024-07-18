@@ -1,5 +1,5 @@
 #include "scene-anim-editor.hpp"
-#include "window/root.hpp"
+#include "anim-window/root.hpp"
 #include "graphic/image/image.hpp"
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-mgr.hpp"
