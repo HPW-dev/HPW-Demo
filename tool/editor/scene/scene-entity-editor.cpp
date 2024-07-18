@@ -1,19 +1,30 @@
 #include <imgui.h>
 #include "scene-entity-editor.hpp"
 #include "yn.hpp"
+#include "window.hpp"
 #include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/scenes.hpp"
 
 struct Scene_entity_editor::Impl {
-  Entity_editor_ctx m_ctx {};
+  Entity_editor_ctx m_ctx {}; // данные редактора распределяемые между окнами
+  Vector<Unique<Window>> m_windows {};
 
-  inline void update(const Delta_time dt) {}
-  inline void draw(Image& dst) const {}
+  inline void update(const Delta_time dt) {
+    for (cnauto window: m_windows)
+      window->update(dt);
+  }
+
+  inline void draw(Image& dst) const {
+    for (cnauto window: m_windows)
+      window->draw(dst);
+  }
 
   inline void imgui_exec() {
     if (ImGui::IsKeyDown(ImGuiKey_Escape))
       exit();
+    for (cnauto window: m_windows)
+      window->imgui_exec();
   }
 
   inline void exit() {
