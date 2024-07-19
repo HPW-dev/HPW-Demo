@@ -33,6 +33,7 @@ void Root_wnd::init_root_wnd() {
   hpw::entity_mgr = new_unique<Entity_mgr>();
   // редактору нужно загрузить все анимации
   hpw::lazy_load_anim = false;
+  hpw::lazy_load_sprite = false;
   load_resources();
   load_animations();
   wnds.clear();

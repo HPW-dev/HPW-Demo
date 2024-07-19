@@ -78,6 +78,7 @@ struct Scene_entity_editor::Impl {
     graphic::set_vsync(true);
     // resource:
     hpw::lazy_load_anim = true;
+    hpw::lazy_load_sprite = true;
     load_resources();
     load_animations();
     // game:
@@ -92,6 +93,7 @@ struct Scene_entity_editor::Impl {
     log_txt << "  V-sync = " << graphic::get_vsync() << '\n';
     log_txt << "resources:\n";
     log_txt << "  lazy anim loading = " << hpw::lazy_load_anim << '\n';
+    log_txt << "  lazy sprite loading = " << hpw::lazy_load_sprite << '\n';
     log_txt << "  anim's = " << hpw::anim_mgr->anim_count() << '\n';
     log_txt << "  sprites = " << hpw::store_sprite->list().size() << '\n';
     log_txt << "game:\n";
