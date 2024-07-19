@@ -12,7 +12,7 @@ class Wnd_ent_edit_menu final: public Window {
   Unique<Impl> impl {};
 
 public:
-  explicit Wnd_ent_edit_menu(Scene_entity_editor* master);
+  explicit Wnd_ent_edit_menu(Scene_entity_editor& master);
   ~Wnd_ent_edit_menu();
   inline void draw(Image& dst) const {}
   inline void update(const Delta_time dt) {}

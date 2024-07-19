@@ -1,4 +1,3 @@
-#include <cassert>
 #include <imgui.h>
 #include "scene-entity-editor.hpp"
 #include "yn.hpp"
@@ -22,13 +21,12 @@
 #include "util/log.hpp"
 
 struct Scene_entity_editor::Impl {
-  Scene_entity_editor* m_master {};
+  Scene_entity_editor& m_master;
   Entity_editor_ctx m_ctx {}; // данные редактора распределяемые между окнами
   Vector<Unique<Window>> m_windows {};
 
-  explicit inline Impl(Scene_entity_editor* master)
+  explicit inline Impl(Scene_entity_editor& master)
   : m_master {master} {
-    assert(m_master);
     init();
   }
 
@@ -135,7 +133,7 @@ struct Scene_entity_editor::Impl {
   }
 }; // Impl
 
-Scene_entity_editor::Scene_entity_editor(): impl {new_unique<Impl>(this)} {}
+Scene_entity_editor::Scene_entity_editor(): impl {new_unique<Impl>(*this)} {}
 Scene_entity_editor::~Scene_entity_editor() {}
 void Scene_entity_editor::update(const Delta_time dt) { impl->update(dt); }
 void Scene_entity_editor::draw(Image& dst) const { impl->draw(dst); }

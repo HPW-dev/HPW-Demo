@@ -1,5 +1,4 @@
 #include <sstream>
-#include <cassert>
 #include <iomanip>
 #include <imgui.h>
 #include "wnd-ent-edit-menu.hpp"
@@ -9,12 +8,9 @@
 #include "game/core/core.hpp"
 
 struct Wnd_ent_edit_menu::Impl {
-  Scene_entity_editor* m_master {};
+  Scene_entity_editor& m_master;
 
-  inline explicit Impl(Scene_entity_editor* master)
-  : m_master{master} {
-    assert(master);
-  }
+  inline explicit Impl(Scene_entity_editor& master): m_master{master} {}
 
   inline void imgui_exec() {
     ImGui::BeginMainMenuBar();
@@ -23,13 +19,13 @@ struct Wnd_ent_edit_menu::Impl {
     if (ImGui::BeginMenu("меню")) {
       Scope _({}, &ImGui::EndMenu);
       if (ImGui::MenuItem("пауза", "SPACE"))
-        m_master->pause();
+        m_master.pause();
       if (ImGui::MenuItem("сохранить", "CTRL+S"))
-        m_master->save();
+        m_master.save();
       if (ImGui::MenuItem("перезагрузить", "CTRL+R"))
-        m_master->reload();
+        m_master.reload();
       if (ImGui::MenuItem("выйти", "ESC"))
-        m_master->exit();
+        m_master.exit();
     }
 
     // инфу о таймингах в меню
@@ -47,6 +43,6 @@ struct Wnd_ent_edit_menu::Impl {
   }
 }; // Impl
 
-Wnd_ent_edit_menu::Wnd_ent_edit_menu(Scene_entity_editor* master): impl {new_unique<Impl>(master)} {}
+Wnd_ent_edit_menu::Wnd_ent_edit_menu(Scene_entity_editor& master): impl {new_unique<Impl>(master)} {}
 Wnd_ent_edit_menu::~Wnd_ent_edit_menu() {}
 void Wnd_ent_edit_menu::imgui_exec() { impl->imgui_exec(); }
