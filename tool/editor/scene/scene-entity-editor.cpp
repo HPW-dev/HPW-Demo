@@ -5,6 +5,7 @@
 #include "window.hpp"
 #include "entity-window/wnd-ent-edit-menu.hpp"
 #include "entity-window/wnd-ent-edit-opts.hpp"
+#include "entity-editor-util.hpp"
 #include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/scenes.hpp"
@@ -28,8 +29,6 @@ struct Scene_entity_editor::Impl {
   explicit inline Impl(Scene_entity_editor* master)
   : m_master {master} {
     assert(m_master);
-    m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
-    m_windows.push_back(new_unique<Wnd_ent_edit_opts>(m_ctx));
     init();
   }
 
@@ -70,12 +69,10 @@ struct Scene_entity_editor::Impl {
 
   inline void pause() { m_ctx.pause = !m_ctx.pause; }
 
-  inline void save() {
-    // TODO
-    hpw_log("need impl");
-  }
+  inline void save() { entity_editor_save(); }
 
   inline void reload() {
+    hpw_log("reloading entity editor...\n");
     init();
   }
 
@@ -86,6 +83,7 @@ struct Scene_entity_editor::Impl {
   }
 
   inline void init() {
+    detailed_log("entity editor init...\n");
     // graphic:
     graphic::cpu_safe = false;
     graphic::set_vsync(true);
@@ -104,10 +102,11 @@ struct Scene_entity_editor::Impl {
     graphic::camera = new_shared<Camera>();
     hpw::entity_mgr = new_unique<Entity_mgr>();
     // editor context:
-    m_ctx.pause = false;
+    m_ctx = {};
     // log:
+    #ifdef DETAILED_LOG
     std::stringstream log_txt;
-    log_txt << "entity editor init...\n";
+    log_txt << "entity editor init info:\n";
     log_txt << "graphic:\n";
     log_txt << "  CPU safe mode = " << std::boolalpha << graphic::cpu_safe << '\n';
     log_txt << "  V-sync = " << graphic::get_vsync() << '\n';
@@ -122,7 +121,17 @@ struct Scene_entity_editor::Impl {
     log_txt << "game:\n";
     log_txt << "  entity loaders = " << hpw::entity_mgr->entity_loaders_sz() << '\n';
     log_txt << "  shmup mode = " << std::boolalpha << hpw::shmup_mode << '\n';
-    hpw_log(log_txt.str());
+    detailed_log(log_txt.str());
+    #endif
+
+    // load entity editor data
+    entity_editor_load();
+
+    // windows
+    m_windows.clear();
+    m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
+    m_windows.push_back(new_unique<Wnd_ent_edit_opts>(m_ctx));
+    detailed_log("windows initialized\n");
   }
 }; // Impl
 
