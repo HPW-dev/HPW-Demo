@@ -334,6 +334,10 @@ struct Entity_mgr::Impl {
       count += ent->status.live;
     return count;
   }
+
+  inline std::size_t entity_loaders_sz() const {
+    return m_entity_loaders.size();
+  }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>()} {}
@@ -359,3 +363,4 @@ Vec Entity_mgr::target_for_enemy() const { return impl->target_for_enemy(); }
 void Entity_mgr::set_visible(const bool mode) { return impl->set_visible(mode); }
 Entity* Entity_mgr::find(const Uid uid) const { return impl->find(uid); }
 uint Entity_mgr::lives() const { return impl->lives(); }
+std::size_t Entity_mgr::entity_loaders_sz() const { return impl->entity_loaders_sz(); }

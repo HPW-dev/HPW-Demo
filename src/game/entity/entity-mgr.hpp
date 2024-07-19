@@ -66,6 +66,8 @@ public:
   void set_player(Player* player);
   // сюда должны стрелять противники
   Vec target_for_enemy() const;
+  // узнать сколько сейчас загрузчиков
+  std::size_t entity_loaders_sz() const;
   
   // выделить память под объект
   template <class T> inline T* allocate();

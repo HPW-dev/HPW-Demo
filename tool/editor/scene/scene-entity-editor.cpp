@@ -8,6 +8,14 @@
 #include "graphic/image/image.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/anims.hpp"
+#include "game/core/sprites.hpp"
+#include "game/core/entities.hpp"
+#include "game/core/common.hpp"
+#include "game/util/camera.hpp"
+#include "game/util/sync.hpp"
+#include "game/util/game-util.hpp"
 #include "util/log.hpp"
 
 struct Scene_entity_editor::Impl {
@@ -19,6 +27,7 @@ struct Scene_entity_editor::Impl {
   : m_master {master} {
     assert(m_master);
     m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
+    init();
   }
 
   inline void update(const Delta_time dt) {
@@ -61,6 +70,34 @@ struct Scene_entity_editor::Impl {
   inline void reload() {
     // TODO
     hpw_log("need impl");
+  }
+
+  inline void init() {
+    // graphic:
+    graphic::cpu_safe = false;
+    graphic::set_vsync(true);
+    // resource:
+    hpw::lazy_load_anim = true;
+    load_resources();
+    load_animations();
+    // game:
+    hpw::shmup_mode = true;
+    graphic::camera = new_shared<Camera>();
+    hpw::entity_mgr = new_unique<Entity_mgr>();
+    // log:
+    std::stringstream log_txt;
+    log_txt << "entity editor init...\n";
+    log_txt << "graphic:\n";
+    log_txt << "  CPU safe mode = " << std::boolalpha << graphic::cpu_safe << '\n';
+    log_txt << "  V-sync = " << graphic::get_vsync() << '\n';
+    log_txt << "resources:\n";
+    log_txt << "  lazy anim loading = " << hpw::lazy_load_anim << '\n';
+    log_txt << "  anim's = " << hpw::anim_mgr->anim_count() << '\n';
+    log_txt << "  sprites = " << hpw::store_sprite->list().size() << '\n';
+    log_txt << "game:\n";
+    log_txt << "  entity loaders = " << hpw::entity_mgr->entity_loaders_sz() << '\n';
+    log_txt << "  shmup mode = " << std::boolalpha << hpw::shmup_mode << '\n';
+    hpw_log(log_txt.str());
   }
 }; // Impl
 
