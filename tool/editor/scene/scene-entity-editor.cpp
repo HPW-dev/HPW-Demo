@@ -14,6 +14,7 @@
 #include "game/core/sprites.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/common.hpp"
+#include "game/core/fonts.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
@@ -28,19 +29,26 @@ struct Scene_entity_editor::Impl {
   : m_master {master} {
     assert(m_master);
     m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
-    m_windows.push_back(new_unique<Wnd_ent_edit_opts>());
+    m_windows.push_back(new_unique<Wnd_ent_edit_opts>(m_ctx));
     init();
   }
 
   inline void update(const Delta_time dt) {
+    if (!m_ctx.pause) {
+      hpw::entity_mgr->update(dt);
+    }
+
     for (cnauto window: m_windows)
       window->update(dt);
   }
 
   inline void draw(Image& dst) const {
     draw_bg(dst);
+    hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
     for (cnauto window: m_windows)
       window->draw(dst);
+    if (m_ctx.pause)
+      draw_pause(dst);
   }
 
   inline void imgui_exec() {
@@ -56,13 +64,11 @@ struct Scene_entity_editor::Impl {
   }
 
   inline void draw_bg(Image& dst) const {
-    graphic::canvas->fill(Pal8::gray);
+    cauto bg_color = Pal8::from_real(m_ctx.bg_color, m_ctx.red_bg);
+    graphic::canvas->fill(bg_color);
   }
 
-  inline void pause() {
-    // TODO
-    hpw_log("need impl");
-  }
+  inline void pause() { m_ctx.pause = !m_ctx.pause; }
 
   inline void save() {
     // TODO
@@ -72,6 +78,12 @@ struct Scene_entity_editor::Impl {
   inline void reload() {
     // TODO
     hpw_log("need impl");
+  }
+
+  inline void draw_pause(Image& dst) const {
+    // мигающая надпись пазуы
+    return_if (graphic::frame_count % 30 > 15);
+    graphic::font->draw(dst, get_screen_center(), U"П А У З А", &blend_diff);
   }
 
   inline void init() {

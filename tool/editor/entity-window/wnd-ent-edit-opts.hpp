@@ -3,7 +3,7 @@
 #include "util/mem-types.hpp"
 #include "util/macro.hpp"
 
-class Scene_entity_editor;
+class Entity_editor_ctx;
 
 // верхнее меню в редакторе игровых объектов
 class Wnd_ent_edit_opts final: public Window {
@@ -12,7 +12,7 @@ class Wnd_ent_edit_opts final: public Window {
   Unique<Impl> impl {};
 
 public:
-  Wnd_ent_edit_opts();
+  explicit Wnd_ent_edit_opts(Entity_editor_ctx& ctx);
   ~Wnd_ent_edit_opts();
   inline void draw(Image& dst) const {}
   inline void update(const Delta_time dt) {}
