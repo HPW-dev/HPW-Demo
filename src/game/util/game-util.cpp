@@ -65,7 +65,7 @@ decltype(hpw::store_sprite)::element_type::Velue find_err_cb(CN<Str> _name) {
   #endif
   cauto spr = sprite_loader(name);
   detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
-  // закинуть недостающий ресурос в банк
+  // закинуть недостающий ресурс в банк
   if (spr)
     hpw::store_sprite->push(name, spr);
   return spr;
