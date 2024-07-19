@@ -4,9 +4,10 @@
 
 namespace hpw {
 
-inline Unique<Store<Sprite>> store_sprite {}; // все спрайты тут
+// все спрайты тут
+inline Unique<Store<Sprite>> store_sprite {};
 
-// если true, все спрайты не загрузятся, а только по запросу
+// если true, грузить спрайты только по запросу по имени
 inline bool lazy_load_sprite {
 #ifdef DEBUG
   true
@@ -15,4 +16,4 @@ inline bool lazy_load_sprite {
 #endif
 };
 
-}
+} // hpw ns

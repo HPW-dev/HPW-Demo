@@ -38,9 +38,8 @@ Store<T>::Velue Store<T>::find(CN<Str> name) const {
   try {
     return m_table.at(name);
   } catch (...) {
-    detailed_iflog( !name.empty(),
-      "resource \"" << name << "\" not finded\n" );
     return_if (m_find_err_cb, m_find_err_cb(name));
+    detailed_iflog( !name.empty(), "resource \"" << name << "\" not finded\n" );
   }
   return {};
 }

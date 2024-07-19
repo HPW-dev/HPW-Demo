@@ -46,16 +46,28 @@
 #include "host/command.hpp"
 
 // грузит спрайт либо из файловой системы, либо из архива
-Shared<Sprite> sprite_loader(Str& name) {
+Shared<Sprite> sprite_loader(CN<Str> name) {
   auto spr = new_shared<Sprite>();
   assert(hpw::archive);
   #ifdef EDITOR
     load(*spr, name);
-    delete_all(name, hpw::cur_dir);
-    conv_sep_for_archive(name);
   #else
     load(hpw::archive->get_file(name), *spr);
   #endif
+  return spr;
+}
+
+decltype(hpw::store_sprite)::element_type::Velue find_err_cb(CN<Str> _name) {
+  assert(hpw::store_sprite);
+  auto name {_name};
+  #ifdef EDITOR
+    name = hpw::cur_dir + name;
+  #endif
+  cauto spr = sprite_loader(name);
+  detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
+  // закинуть недостающий ресурос в банк
+  if (spr)
+    hpw::store_sprite->push(name, spr);
   return spr;
 }
 
@@ -71,16 +83,9 @@ void load_resources() {
 
   // колбек на отложенную загрузку
   if (hpw::lazy_load_sprite) {
-    using Value = decltype(hpw::store_sprite)::element_type::Velue;
-    auto find_err_cb = [](CN<Str> _name)->Value {
-      auto name {_name};
-      cauto spr = sprite_loader(name);
-      detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
-      return spr;
-    };
-    hpw::store_sprite->move_find_err_cb(std::move(find_err_cb));
+    hpw::store_sprite->move_find_err_cb(&find_err_cb);
     return;
-  }
+  } // make fined err cb
 
   // загрузка всех спрайтов
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
@@ -102,8 +107,14 @@ void load_resources() {
   iferror (image_names.empty(), "image_names пуст, возможно нет ресурсов в папках");
 
   // загрузка в хранилище
-  for (auto &name: image_names)
-    hpw::store_sprite->push(name, sprite_loader(name));
+  for (auto &name: image_names) {
+    auto sprite = sprite_loader(name);
+    #ifdef EDITOR
+      delete_all(name, hpw::cur_dir);
+      conv_sep_for_archive(name);
+    #endif
+    hpw::store_sprite->push(name, sprite);
+  }
 }
 
 void load_animations() {

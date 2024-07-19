@@ -5,6 +5,7 @@
 #include "game/core/sprites.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/game-archive.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -15,9 +16,14 @@
 Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
 : scene_maker {_scene_maker} {
   // найти в ресурсах загруженные картинки с фонами
-  auto bg_names = hpw::store_sprite->list(true);
+  // удалить всё что не содержит в названии logo и сам путь к папке logo
+  assert(hpw::archive);
+  auto bg_names = hpw::archive->get_all_names();
   std::erase_if(bg_names, [](CN<Str> src) {
-    return src.find("resource/image/loading logo/") == Str::npos; });
+    cauto path_mask = "resource/image/loading logo/";
+    return src.find(path_mask) == Str::npos && src != path_mask;
+  });
+  assert(!bg_names.empty());
 
   cauto bg_name = bg_names.at(rndu_fast(bg_names.size()));
   bg = hpw::store_sprite->find(bg_name).get();
@@ -27,7 +33,7 @@ Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
 void Scene_loading::update(const Delta_time dt) {
   // если сцена отработала, можно вернутся обратно
   if (used) {
-    if (time_out-- <= 0) // защита на всякий случай
+    if (time_out-- <= 0) // защита от зацикливания
       hpw::scene_mgr->back();
   }
 
@@ -38,7 +44,6 @@ void Scene_loading::update(const Delta_time dt) {
 } // update
 
 void Scene_loading::draw(Image& dst) const {
-  //return_if(used);
   cnauto bg_image = bg->image();
   assert(bg_image);
   assert(dst.size == bg_image.size);

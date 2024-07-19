@@ -115,9 +115,7 @@ void Frame::init_quarters() {
 CP<Direct> Frame::get_direct(real degree) const {
   accept_degree_offset(degree);
   iferror (degree < 0 || degree > 360.0, "degree not clamped");
-
-  if (directions.empty())
-    return nullptr;
+  return_if (directions.empty(), nullptr);
   
   // перекрутка, чтобы было удобно выбирать индекс по углу
   degree += degree_frag * real(0.5); // отсчёт с половинки деления
