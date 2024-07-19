@@ -16,13 +16,11 @@
 Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
 : scene_maker {_scene_maker} {
   // найти в ресурсах загруженные картинки с фонами
-  // удалить всё что не содержит в названии logo и сам путь к папке logo
+  // удалить всё что не содержит в названии logo
   assert(hpw::archive);
-  auto bg_names = hpw::archive->get_all_names();
+  auto bg_names = hpw::archive->get_all_names(false);
   std::erase_if(bg_names, [](CN<Str> src) {
-    cauto path_mask = "resource/image/loading logo/";
-    return src.find(path_mask) == Str::npos && src != path_mask;
-  });
+    return src.find("resource/image/loading logo/") == Str::npos; });
   assert(!bg_names.empty());
 
   cauto bg_name = bg_names.at(rndu_fast(bg_names.size()));

@@ -510,7 +510,7 @@ void load_sounds() {
 }
 
 void set_random_palette() {
-  cauto sprites = hpw::store_sprite->list();
+  cauto sprites = hpw::archive->get_all_names(false);;
   cauto filter = [](CN<Str> src) {
     return src.find("resource/image/palettes/") != Str::npos;
   };

@@ -2,20 +2,21 @@
 #include <array>
 #include <mutex>
 #include <ranges>
-#include <algorithm>
 #include <cassert>
-#include "bg-pattern-2.hpp"
+#include <algorithm>
 #include "bg-pattern.hpp"
+#include "bg-pattern-2.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"
 #include "graphic/util/blur.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
 #include "graphic/util/resize.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
 #include "util/math/random.hpp"
 #include "util/math/xorshift.hpp"
+#include "game/util/game-archive.hpp"
 
 // делает случайные числа
 uint prng(uint& state) {
@@ -397,7 +398,7 @@ void bgp_tiles_2(Image& dst, const int bg_state) {
   std::call_once(init_once, [&] {
     assert(hpw::store_sprite);
     // найти тайлы из нужной папки
-    cauto list = hpw::store_sprite->list();
+    cauto list = hpw::archive->get_all_names(false);;
     cauto tile_name_filter = [](CN<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (cnauto tile_name: list | std::views::filter(tile_name_filter)) {
@@ -447,7 +448,7 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
   std::call_once(init_once, [&] {
     assert(hpw::store_sprite);
     // найти тайлы из нужной папки
-    cauto list = hpw::store_sprite->list();
+    cauto list = hpw::archive->get_all_names(false);
     cauto tile_name_filter = [](CN<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (cnauto tile_name: list | std::views::filter(tile_name_filter)) {
