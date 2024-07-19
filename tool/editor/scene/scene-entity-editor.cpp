@@ -76,8 +76,7 @@ struct Scene_entity_editor::Impl {
   }
 
   inline void reload() {
-    // TODO
-    hpw_log("need impl");
+    init();
   }
 
   inline void draw_pause(Image& dst) const {
@@ -90,6 +89,11 @@ struct Scene_entity_editor::Impl {
     // graphic:
     graphic::cpu_safe = false;
     graphic::set_vsync(true);
+    graphic::wait_frame = false;
+    graphic::auto_frame_skip = false;
+    graphic::blink_particles = false;
+    graphic::disable_heat_distort_while_lag = false;
+    graphic::light_quality = Light_quality::high;
     // resource:
     hpw::lazy_load_anim = true;
     hpw::lazy_load_sprite = true;
@@ -99,12 +103,17 @@ struct Scene_entity_editor::Impl {
     hpw::shmup_mode = true;
     graphic::camera = new_shared<Camera>();
     hpw::entity_mgr = new_unique<Entity_mgr>();
+    // editor context:
+    m_ctx.pause = false;
     // log:
     std::stringstream log_txt;
     log_txt << "entity editor init...\n";
     log_txt << "graphic:\n";
     log_txt << "  CPU safe mode = " << std::boolalpha << graphic::cpu_safe << '\n';
     log_txt << "  V-sync = " << graphic::get_vsync() << '\n';
+    log_txt << "  wait frame for game tick = " << graphic::wait_frame << '\n';
+    log_txt << "  blink particles = " << graphic::blink_particles << '\n';
+    log_txt << "  auto frame skip = " << graphic::auto_frame_skip << '\n';
     log_txt << "resources:\n";
     log_txt << "  lazy anim loading = " << hpw::lazy_load_anim << '\n';
     log_txt << "  lazy sprite loading = " << hpw::lazy_load_sprite << '\n';
