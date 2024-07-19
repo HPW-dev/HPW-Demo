@@ -45,21 +45,51 @@
 #include "sound/sound.hpp"
 #include "host/command.hpp"
 
+// грузит спрайт либо из файловой системы, либо из архива
+Shared<Sprite> sprite_loader(Str& name) {
+  auto spr = new_shared<Sprite>();
+  assert(hpw::archive);
+  #ifdef EDITOR
+    load(*spr, name);
+    delete_all(name, hpw::cur_dir);
+    conv_sep_for_archive(name);
+  #else
+    load(hpw::archive->get_file(name), *spr);
+  #endif
+  return spr;
+}
+
 void load_resources() {
   detailed_log("loading resources...\n");
   hpw::store_sprite = new_unique<Store<Sprite>>();
-#ifdef EDITOR
-  auto names = all_names_in_dir(hpw::cur_dir);
-#else
-  auto names = hpw::archive->get_all_names();
-#endif
-// загрузка спрайтов из файлов системы
+
+  #ifdef EDITOR
+    auto names = all_names_in_dir(hpw::cur_dir);
+  #else
+    auto names = hpw::archive->get_all_names();
+  #endif
+
+  // колбек на отложенную загрузку
+  if (hpw::lazy_load_sprite) {
+    using Value = decltype(hpw::store_sprite)::element_type::Velue;
+    auto find_err_cb = [](CN<Str> _name)->Value {
+      auto name {_name};
+      cauto spr = sprite_loader(name);
+      detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
+      return spr;
+    };
+    hpw::store_sprite->move_find_err_cb(std::move(find_err_cb));
+    return;
+  }
+
+  // загрузка всех спрайтов
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](CN<Str> name) {
     Str find_str = "resource/image/";
-#ifdef EDITOR
-    conv_sep(find_str);
-#endif
+    #ifdef EDITOR
+      conv_sep(find_str);
+    #endif
+
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория
       ( // подходит формат
@@ -70,19 +100,11 @@ void load_resources() {
   Strs image_names;
   to_vector(image_names, names | std::views::filter(name_filter));
   iferror (image_names.empty(), "image_names пуст, возможно нет ресурсов в папках");
+
   // загрузка в хранилище
-  for (auto &name: image_names) {
-    auto spr {new_shared<Sprite>()};
-#ifdef EDITOR
-    load(*spr, name);
-    delete_all(name, hpw::cur_dir);
-    conv_sep_for_archive(name);
-#else
-    load(hpw::archive->get_file(name), *spr);
-#endif
-    hpw::store_sprite->push(name, spr);
-  }
-} // load_resources
+  for (auto &name: image_names)
+    hpw::store_sprite->push(name, sprite_loader(name));
+}
 
 void load_animations() {
   hpw::anim_mgr = new_unique<Anim_mgr>();

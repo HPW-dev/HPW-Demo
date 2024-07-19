@@ -1,30 +1,32 @@
 #pragma once
+#include <cassert>
 #include <algorithm>
 #include <functional>
 #include <unordered_map>
-#include "util/macro.hpp"
 #include "util/str.hpp"
-#include "util/mem-types.hpp"
 #include "util/log.hpp"
+#include "util/macro.hpp"
+#include "util/mem-types.hpp"
 
 // хранилище контента
 template <class T>
 class Store {
 public:
-  using Find_err_cb = std::function<Shared<T> (CN<Str> name)>;
+  using Velue = Shared<T>;
+  using Find_err_cb = std::function<Velue (CN<Str> name)>;
 
   Store() = default;
   ~Store() = default;
-  Shared<T>& push(CN<Str> name, CN<Shared<T>> res);
-  Shared<T>& move(CN<Str> name, Shared<T>&& res);
-  Shared<T> find(CN<Str> name) const;
+  Velue& push(CN<Str> name, CN<Velue> res);
+  Velue& move(CN<Str> name, Shared<T>&& res);
+  Velue find(CN<Str> name) const;
   // узнать названия всех ресурсов
   Strs list(bool without_generated=false) const;
   void move_find_err_cb(Find_err_cb&& cb);
 
 private:
   nocopy(Store);
-  std::unordered_map<Str, Shared<T>> m_table {};
+  std::unordered_map<Str, Velue> m_table {};
   // если не удаётся найти ресурс, выполнить калбэк
   Find_err_cb m_find_err_cb {};
 }; // Store
@@ -32,20 +34,19 @@ private:
 // ----------------------- impl ------------------------------
 
 template <class T>
-Shared<T> Store<T>::find(CN<Str> name) const {
+Store<T>::Velue Store<T>::find(CN<Str> name) const {
   try {
     return m_table.at(name);
   } catch (...) {
     detailed_iflog( !name.empty(),
       "resource \"" << name << "\" not finded\n" );
-    if (m_find_err_cb)
-      return m_find_err_cb(name);
+    return_if (m_find_err_cb, m_find_err_cb(name));
   }
   return {};
 }
 
 template <class T>
-Shared<T>& Store<T>::push(CN<Str> name, CN<Shared<T>> res) {
+Store<T>::Velue& Store<T>::push(CN<Str> name, CN<Velue> res) {
   detailed_log("Store.push: " << name << "\n");
   res->set_path(name);
   if (m_table.count(name) != 0)
@@ -56,7 +57,7 @@ Shared<T>& Store<T>::push(CN<Str> name, CN<Shared<T>> res) {
 }
 
 template <class T>
-Shared<T>& Store<T>::move(CN<Str> name, Shared<T>&& res) {
+Store<T>::Velue& Store<T>::move(CN<Str> name, Velue&& res) {
   detailed_log("Store.move: " << name << "\n");
   res->set_path(name);
   if (m_table.count(name) != 0)
@@ -80,6 +81,6 @@ Strs Store<T>::list(bool without_generated) const {
 
 template <class T>
 void Store<T>::move_find_err_cb(Find_err_cb&& cb) {
-  iferror(!cb, "cb is null");
+  assert(cb);
   m_find_err_cb = std::move(cb);
 }
