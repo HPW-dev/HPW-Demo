@@ -4,6 +4,7 @@
 #include "yn.hpp"
 #include "window.hpp"
 #include "entity-window/wnd-ent-edit-menu.hpp"
+#include "entity-window/wnd-ent-edit-opts.hpp"
 #include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/scenes.hpp"
@@ -27,6 +28,7 @@ struct Scene_entity_editor::Impl {
   : m_master {master} {
     assert(m_master);
     m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
+    m_windows.push_back(new_unique<Wnd_ent_edit_opts>());
     init();
   }
 
