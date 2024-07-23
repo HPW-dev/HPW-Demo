@@ -4,6 +4,7 @@
 #include "window.hpp"
 #include "entity-window/wnd-ent-edit-menu.hpp"
 #include "entity-window/wnd-ent-edit-opts.hpp"
+#include "entity-window/window-emitter.hpp"
 #include "entity-editor-util.hpp"
 #include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
@@ -28,6 +29,8 @@ struct Scene_entity_editor::Impl {
   Scene_entity_editor& m_master;
   Entity_editor_ctx m_ctx {}; // данные редактора распределяемые между окнами
   Vector<Unique<Window>> m_windows {};
+  // окна под настройки спавнеров
+  Vector<Unique<Window_emitter>> m_emitters {};
 
   explicit inline Impl(Scene_entity_editor& master): m_master {master}
   { init(); }
@@ -42,6 +45,13 @@ struct Scene_entity_editor::Impl {
     }
 
     for (cnauto window: m_windows)
+      window->update(dt);
+    
+    // удалить выключенные окна
+    std::erase_if(m_emitters, [](CN<decltype(m_emitters)::value_type> window) {
+      return !window->active();
+    });
+    for (cnauto window: m_emitters)
       window->update(dt);
   }
 
@@ -84,6 +94,10 @@ struct Scene_entity_editor::Impl {
     // мигающая надпись пазуы
     return_if (graphic::frame_count % 30 > 15);
     graphic::font->draw(dst, get_screen_center(), U"П А У З А", &blend_diff);
+  }
+
+  inline void add_emitter() {
+    // TODO
   }
 
   inline void init() {
@@ -150,3 +164,4 @@ void Scene_entity_editor::exit() { impl->exit(); }
 void Scene_entity_editor::pause() { impl->pause(); }
 void Scene_entity_editor::save() { impl->save(); }
 void Scene_entity_editor::reload() { impl->reload(); }
+void Scene_entity_editor::add_emitter() { impl->add_emitter(); }

@@ -18,4 +18,5 @@ public:
   void pause();
   void save();
   void reload();
+  void add_emitter(); // создаёт окошко для настроек спавна объектов
 };

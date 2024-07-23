@@ -18,6 +18,8 @@ struct Wnd_ent_edit_menu::Impl {
 
     if (ImGui::BeginMenu("меню")) {
       Scope _({}, &ImGui::EndMenu);
+      if (ImGui::MenuItem("добавить эмиттер", "CTRL+A"))
+        m_master.add_emitter();
       if (ImGui::MenuItem("пауза", "SPACE"))
         m_master.pause();
       if (ImGui::MenuItem("сохранить", "CTRL+S"))
@@ -40,6 +42,21 @@ struct Wnd_ent_edit_menu::Impl {
     ss << "Update " << prec(8) << hpw::update_time_unsafe;
     #undef prec
     ImGui::BeginMenu(ss.str().c_str(), false);
+
+    process_imgui_input();
+  }
+
+  // обработка горячих кдавишь
+  inline void process_imgui_input() {
+    using namespace ImGui;
+    if (IsKeyDown(ImGuiKey_LeftCtrl) && IsKeyReleased(ImGuiKey_A))
+      m_master.add_emitter();
+    if (IsKeyDown(ImGuiKey_LeftCtrl) && IsKeyReleased(ImGuiKey_S))
+      m_master.save();
+    if (IsKeyDown(ImGuiKey_LeftCtrl) && IsKeyReleased(ImGuiKey_R))
+      m_master.reload();
+    if (IsKeyReleased(ImGuiKey_Space))
+      m_master.pause();
   }
 }; // Impl
 
