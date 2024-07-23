@@ -152,6 +152,8 @@ struct Scene_entity_editor::Impl {
     entity_editor_load(m_ctx);
 
     // windows
+    m_emitters.clear();
+    add_emitter();
     m_windows.clear();
     m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
     m_windows.push_back(new_unique<Wnd_ent_edit_opts>(m_ctx));

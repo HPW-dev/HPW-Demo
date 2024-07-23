@@ -22,6 +22,7 @@ void entity_editor_load(Entity_editor_ctx& ctx) {
   conv_sep(entities_yml_path);
   ctx.entities_yml = Yaml(entities_yml_path);
   // загрузить объекты
+  hpw::entity_mgr->clear();
   hpw::entity_mgr->register_types();
 
   hpw_log("entity editor data loaded\n");
