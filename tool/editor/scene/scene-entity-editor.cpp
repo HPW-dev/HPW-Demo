@@ -15,9 +15,13 @@
 #include "game/core/entities.hpp"
 #include "game/core/common.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/messages.hpp"
+#include "game/util/cmd/cmd.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/keybits.hpp"
+#include "game/scene/scene-cmd.hpp"
 #include "util/log.hpp"
 
 struct Scene_entity_editor::Impl {
@@ -29,6 +33,10 @@ struct Scene_entity_editor::Impl {
   { init(); }
 
   inline void update(const Delta_time dt) {
+    // переключение в консоль
+    if (is_pressed_once(hpw::keycode::console))
+      hpw::scene_mgr->add(new_shared<Scene_cmd>());
+
     if (!m_ctx.pause) {
       hpw::entity_mgr->update(dt);
     }
@@ -99,6 +107,8 @@ struct Scene_entity_editor::Impl {
     init_unique(hpw::entity_mgr);
     // editor context:
     m_ctx = {};
+    // показ текста на экране:
+    init_unique(hpw::message_mgr);
     // log:
     #ifdef DETAILED_LOG
     std::stringstream log_txt;

@@ -30,7 +30,7 @@ used_libs = [
 
 ld_flags.extend(["-fopenmp"])
 cpp_flags.extend(["-fopenmp"])
-defines.extend(["-DEDITOR"])
+defines.extend(["-DEDITOR", "-DNO_LVL_CMDS"])
 
 if is_linux:
   used_libs.extend(["GL", "GLEW", "glfw", "openal"])
@@ -83,8 +83,16 @@ sources = [
   src_dir + "host/host-ogl.cpp",
   src_dir + "host/host-glfw.cpp",
   src_dir + "host/host-glfw-keymap.cpp",
+  src_dir + "game/util/cmd/cmd.cpp",
+  src_dir + "game/util/cmd/cmd-util.cpp",
+  #src_dir + "game/util/cmd/cmd-player.cpp",
+  src_dir + "game/util/cmd/cmd-entity.cpp",
+  src_dir + "game/util/cmd/cmd-script.cpp",
+  src_dir + "game/util/cmd/cmd-common.cpp",
+  src_dir + "game/util/cmd/cmd-core.cpp",
   src_dir + "game/scene/scene.cpp",
   src_dir + "game/scene/scene-mgr.cpp",
+  src_dir + "game/scene/scene-cmd.cpp",
   src_dir + "game/level/level-mgr.cpp",
   src_dir + "game/entity/entity.cpp",
   src_dir + "game/entity/entity-loader.cpp",

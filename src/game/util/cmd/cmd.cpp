@@ -7,7 +7,9 @@
 #include "cmd-common.hpp"
 #include "cmd-script.hpp"
 #include "cmd-player.hpp"
+#ifndef NO_LVL_CMDS
 #include "cmd-level.hpp"
+#endif
 #include "cmd-core.hpp"
 #include "util/log.hpp"
 #include "util/unicode.hpp"
@@ -32,10 +34,12 @@ Cmd::Cmd() {
   move(new_unique<Cmd_script_instant>());
 
   //cmd-level.hpp
+  #ifndef NO_LVL_CMDS
   move(new_unique<Cmd_levels>(this));
   move(new_unique<Cmd_level>(this));
   move(new_unique<Cmd_restart>(this));
   move(new_unique<Cmd_collider>(this));
+  #endif
 
   cmd_core_init(*this); // cmd-core.hpp
   cmd_entity_init(*this); // cmd-entity.hpp

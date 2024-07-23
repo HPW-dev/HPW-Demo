@@ -46,9 +46,11 @@ void Editor::draw() {
 
 void Editor::imgui_exec() {
   auto scene {hpw::scene_mgr->get_current()};
-  return_if ( !scene);
+  return_if (!scene);
+
   auto editor_scene {dcast<Editor_scene_base*>(scene)};
-  assert(editor_scene);
+  return_if (!editor_scene);
+  
   editor_scene->imgui_exec();
 }
 
