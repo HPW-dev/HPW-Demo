@@ -146,7 +146,7 @@ public:
     return *this;
   }
 
-  inline void save(Str fname) {
+  inline void save(Str fname) const {
     assert( !fname.empty());
     conv_sep(fname);
     detailed_log("save to file \"" << fname << "\"\n");
@@ -276,7 +276,7 @@ Yaml& Yaml::operator = (Yaml&& other) noexcept {
   return *this;
 }
 
-void Yaml::save(Str fname) { impl->save(fname); }
+void Yaml::save(Str fname) const { impl->save(fname); }
 void Yaml::clear() { impl->clear(); }
 Yaml Yaml::make_node(CN<Str> name) { return impl->make_node(name); }
 Yaml Yaml::make_node_if_not_exist(CN<Str> name) { return impl->make_node_if_not_exist(name); }

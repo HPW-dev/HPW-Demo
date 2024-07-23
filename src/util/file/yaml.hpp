@@ -25,7 +25,7 @@ public:
   Yaml& operator = (Yaml&& other) noexcept;
 
   // сохранить .yml на диск
-  void save(Str fname);
+  void save(Str fname) const;
   // стереть все данные
   void clear();
   // создать пустую ветвь

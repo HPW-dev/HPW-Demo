@@ -86,7 +86,7 @@ struct Scene_entity_editor::Impl {
 
   inline void pause() { m_ctx.pause = !m_ctx.pause; }
 
-  inline void save() { entity_editor_save(); }
+  inline void save() { entity_editor_save(m_ctx); }
 
   inline void reload() {
     hpw_log("reloading entity editor...\n");
@@ -149,7 +149,7 @@ struct Scene_entity_editor::Impl {
     #endif
 
     // load entity editor data
-    entity_editor_load();
+    entity_editor_load(m_ctx);
 
     // windows
     m_windows.clear();
