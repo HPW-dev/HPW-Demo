@@ -8,6 +8,7 @@
 #include "entity-editor-util.hpp"
 #include "entity-editor-ctx.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/util/util-templ.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
@@ -17,6 +18,7 @@
 #include "game/core/common.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/messages.hpp"
+#include "game/core/debug.hpp"
 #include "game/util/cmd/cmd.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/sync.hpp"
@@ -63,6 +65,16 @@ struct Scene_entity_editor::Impl {
       window->draw(dst);
     if (m_ctx.pause)
       draw_pause(dst);
+    post_draw(dst);
+  }
+
+  inline void post_draw(Image& dst) const {
+    if (graphic::draw_hitboxes) { // показать хитбоксы
+      insert<&blend_no_black>(dst, *hpw::hitbox_layer, {});
+      hpw::hitbox_layer->fill(Pal8::black);
+    }
+    if (graphic::show_grids) // сетки системы коллизий
+      hpw::entity_mgr->debug_draw(dst);
   }
 
   inline void imgui_exec() {
@@ -128,6 +140,8 @@ struct Scene_entity_editor::Impl {
     m_ctx = {};
     // показ текста на экране:
     init_unique(hpw::message_mgr);
+    // слой отладки
+    init_shared(hpw::hitbox_layer, graphic::width, graphic::height);
     // log:
     #ifdef DETAILED_LOG
     std::stringstream log_txt;

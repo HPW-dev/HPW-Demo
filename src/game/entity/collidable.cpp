@@ -85,6 +85,7 @@ CP<Hitbox> Collidable::get_hitbox() const {
 void Collidable::draw_hitbox(Image& dst, const Vec offset) const {
   if (auto local_hitbox = get_hitbox(); local_hitbox) {
     Pal8 color = this->status.collided ? Pal8::red : Pal8::white;
+    assert(hpw::hitbox_layer);
     local_hitbox->draw(phys.get_pos() + offset, *hpw::hitbox_layer, color);
   }
 }
