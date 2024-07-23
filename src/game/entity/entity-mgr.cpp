@@ -254,6 +254,7 @@ struct Entity_mgr::Impl {
         error("нет инициализатора для \"" << name << "\"");
       #endif
     }
+    
     return {};
   } // make
 

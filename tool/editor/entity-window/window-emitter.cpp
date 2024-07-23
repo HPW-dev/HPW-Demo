@@ -42,7 +42,7 @@ struct Window_emitter::Impl {
   inline void imgui_exec() {
     ImGui::Begin(m_title.c_str(), {}, ImGuiWindowFlags_AlwaysAutoResize);
     Scope _({}, &ImGui::End);
-    
+
     name_select();
     phys_select();
     imgui_input();
@@ -110,7 +110,8 @@ struct Window_emitter::Impl {
     return_if(m_last_entity && m_last_entity->status.live);
 
     m_last_entity = hpw::entity_mgr->make({}, m_name_for_spawn, m_pos);
-    assert(m_last_entity);
+    return_if(!m_last_entity);
+    
     m_last_entity->phys.set_pos(m_pos);
     m_last_entity->phys.set_deg(m_deg);
     m_last_entity->phys.set_speed(m_speed);

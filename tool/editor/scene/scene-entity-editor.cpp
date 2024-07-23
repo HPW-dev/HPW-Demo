@@ -46,6 +46,7 @@ struct Scene_entity_editor::Impl {
 
     if (!m_ctx.pause) {
       hpw::entity_mgr->update(dt);
+      graphic::camera->update(dt);
       for (cnauto window: m_windows)
         window->update(dt);
       for (cnauto window: m_emitters)
