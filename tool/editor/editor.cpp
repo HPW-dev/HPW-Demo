@@ -9,7 +9,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "host/command.hpp"
-//#include "scene/scene-editor-select.hpp" TODO при слиянии с dev верни это
+//#include "scene/scene-editor-select.hpp" // TODO при слиянии с dev верни это
 #include "scene/scene-entity-editor.hpp"
 
 Editor::Editor(int argc, char *argv[])
@@ -20,7 +20,7 @@ void Editor::init() {
   load_config(); // refresh config
   init_scene_mgr();
   init_graphic();
-  //hpw::scene_mgr->add(new_shared<Scene_editor_select>()); TODO при слиянии с dev верни это
+  //hpw::scene_mgr->add(new_shared<Scene_editor_select>()); // TODO при слиянии с dev верни это
   hpw::scene_mgr->add(new_shared<Scene_entity_editor>());
   // при старте редактор сам растягивается и перетаскивается на нужное место
   set_window_pos(200, 25);

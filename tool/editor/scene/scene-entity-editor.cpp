@@ -25,10 +25,8 @@ struct Scene_entity_editor::Impl {
   Entity_editor_ctx m_ctx {}; // данные редактора распределяемые между окнами
   Vector<Unique<Window>> m_windows {};
 
-  explicit inline Impl(Scene_entity_editor& master)
-  : m_master {master} {
-    init();
-  }
+  explicit inline Impl(Scene_entity_editor& master): m_master {master}
+  { init(); }
 
   inline void update(const Delta_time dt) {
     if (!m_ctx.pause) {
