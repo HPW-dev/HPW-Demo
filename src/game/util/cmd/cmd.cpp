@@ -38,7 +38,6 @@ Cmd::Cmd() {
   move(new_unique<Cmd_levels>(this));
   move(new_unique<Cmd_level>(this));
   move(new_unique<Cmd_restart>(this));
-  move(new_unique<Cmd_collider>(this));
   #endif
 
   cmd_core_init(*this); // cmd-core.hpp

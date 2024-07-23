@@ -135,7 +135,6 @@ struct Scene_entity_editor::Impl {
     // game:
     hpw::shmup_mode = true;
     init_shared(graphic::camera);
-    init_unique(hpw::entity_mgr);
     // editor context:
     m_ctx = {};
     // показ текста на экране:

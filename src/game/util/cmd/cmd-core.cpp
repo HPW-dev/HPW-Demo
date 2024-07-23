@@ -1,5 +1,6 @@
 #include <cassert>
 #include <chrono>
+#include <ranges>
 #include <fstream>
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
@@ -7,9 +8,17 @@
 #include "game/core/entities.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
+#include "game/core/canvas.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/entity/util/entity-util.hpp"
+#include "game/entity/collider/collider-empty.hpp"
+#include "game/entity/collider/collider-simple.hpp"
+#include "game/entity/collider/collider-qtree.hpp"
+#include "game/entity/collider/collider-grid.hpp"
+#include "game/entity/collider/collider-2d-tree.hpp"
+#include "game/entity/collider/collider-experimental.hpp"
+#include "game/entity/collider/collider-experimental-2.hpp"
 #include "host/host-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/error.hpp"
@@ -296,6 +305,46 @@ void draw_grids(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("режим показа сетки " + Str(yesno ? "включён" : "выключен"));
 }
 
+// системы коллизий и их имена
+using Collider_maker = std::function< Shared<Collider> ()>;
+static std::unordered_map<Str, Collider_maker> g_colliders {
+  {"empty", []{ return new_shared<Collider_empty>(); }},
+  {"simple", []{ return new_shared<Collider_simple>(); }},
+  {"experimental", []{ return new_shared<Collider_experimental>(); }},
+  {"experimental-2", []{ return new_shared<Collider_experimental_2>(); }},
+  {"qtree", []{ return new_shared<Collider_qtree>(7, 1, graphic::width, graphic::height); }},
+  {"grid", []{ return new_shared<Collider_grid>(); }},
+  {"2d-tree", []{ return new_shared<Collider_2d_tree>(); }},
+};
+
+void set_collider(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  iferror(args.size() < 2, "need more parameters for collider command");
+  cnauto collider_name = args.at(1);
+  cnauto maker = g_colliders.at(collider_name);
+  assert(hpw::entity_mgr);
+  hpw::entity_mgr->set_collider(maker());
+  console.print("selected \"" + collider_name + "\" collision resolver");
+}
+
+Strs set_collider_matches(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  Strs ret;
+  cauto cmd_name = args.at(0);
+  if (args.size() < 2) {
+    // предложить системы из списка
+    for (cnauto [collider_name, maker]: g_colliders)
+      ret.push_back(cmd_name + ' ' + collider_name);
+    return ret;
+  }
+
+  // по вводу определить что взять из списка автодополнения
+  cauto arg_name = args.at(1); // имя колайдер ресолвера
+  cauto name_filter = [&](CN<decltype(g_colliders)::value_type> it)
+    { return it.first.find(arg_name) == 0; };
+  for (cnauto [collider_name, maker]: g_colliders | std::views::filter(name_filter))
+    ret.push_back(cmd_name + ' ' + collider_name);
+  return ret;
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -358,6 +407,10 @@ void cmd_core_init(Cmd& cmd) {
     "grids",
     "grids <1/0> - вкл/выкл режим отображения сеток",
     &draw_grids, {} )
+  MAKE_CMD (
+    "collider",
+    "collider <name> set collision resolver",
+    &set_collider, &set_collider_matches )
     
   #undef MAKE_CMD
 } // cmd_core_init

@@ -37,15 +37,3 @@ public:
   inline Str description() const override { return "restart current game-level & reload resources"; }
   void exec(CN<Strs> cmd_and_args) override;
 };
-
-// выбор обработчика столкновений
-class Cmd_collider final: public Cmd::Command {
-  Cmd* m_master {};
-public:
-  inline Cmd_collider(Cmd* master): m_master{master} {}
-  ~Cmd_collider() = default;
-  inline Str name() const override { return "collider"; }
-  inline Str description() const override { return "collider <name> set collision resolver"; }
-  void exec(CN<Strs> cmd_and_args) override;
-  Strs command_matches(CN<Strs> cmd_and_args) override;
-};

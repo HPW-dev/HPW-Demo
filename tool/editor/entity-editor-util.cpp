@@ -1,6 +1,8 @@
 #include "entity-editor-ctx.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
+#include "game/util/game-util.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
 #include "util/macro.hpp"
@@ -22,8 +24,10 @@ void entity_editor_load(Entity_editor_ctx& ctx) {
   conv_sep(entities_yml_path);
   ctx.entities_yml = Yaml(entities_yml_path);
   // загрузить объекты
-  hpw::entity_mgr->clear();
+  init_unique(hpw::entity_mgr);
   hpw::entity_mgr->register_types();
+  // выбрать коллайдер
+  set_default_collider();
 
   hpw_log("entity editor data loaded\n");
 }

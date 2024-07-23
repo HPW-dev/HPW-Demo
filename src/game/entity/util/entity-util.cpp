@@ -299,5 +299,6 @@ void Bound_off_screen::operator()(Entity& dst, const Delta_time dt) {
 }
 
 void set_default_collider() {
+  assert(hpw::entity_mgr);
   hpw::entity_mgr->set_collider( new_shared<Collider_2d_tree>() );
 }
