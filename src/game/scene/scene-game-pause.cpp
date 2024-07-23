@@ -30,7 +30,7 @@ void Scene_game_pause::draw(Image& dst) const {
 }
 
 void Scene_game_pause::init_menu() {
-  menu = new_shared<Text_menu>(
+  init_shared<Text_menu>( menu,
     Menu_items {
       new_shared<Menu_text_item>(get_locale_str("common.continue"), []{
         hpw::scene_mgr->back();

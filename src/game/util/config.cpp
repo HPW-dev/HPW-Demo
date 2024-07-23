@@ -84,7 +84,7 @@ void save_config() {
 } // save_config
 
 void load_config() {
-  hpw::config = new_shared<Yaml>(hpw::cur_dir + "config.yml", true);
+  init_shared(hpw::config, hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;
   hpw::enable_replay = config.get_bool("enable_replay", true);

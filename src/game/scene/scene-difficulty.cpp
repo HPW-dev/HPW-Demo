@@ -88,7 +88,7 @@ void Scene_difficulty::init_menu() {
   if (hpw::need_tutorial)
     std::swap(menu_items.at(0), menu_items.at(1));
 
-  menu = new_shared<Advanced_text_menu>(
+  init_shared<Advanced_text_menu>( menu,
     get_locale_str("scene.difficulty_select.title"),
     menu_items, Rect(Vec{}, Vec(graphic::width, graphic::height))
   );

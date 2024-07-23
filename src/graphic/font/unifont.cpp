@@ -29,7 +29,7 @@ Unifont::Unifont(CN<File> file, int height, bool mono)
   w_ = 0; // auto
   h_ = height;
   space_ = {1, 1};
-  info_ = new_shared<stbtt_fontinfo>();
+  init_shared(info_);
   iferror( !stbtt_InitFont(info_.get(), font_file_mem_.data(), 0),
     "Unifont: stbtt_InitFont error");
   scale_ = stbtt_ScaleForPixelHeight(info_.get(), height);
@@ -93,7 +93,7 @@ bool Unifont::_load_glyph(char32_t ch) const {
   if (ch == U' ') {
     int ax, lsb;
     stbtt_GetCodepointHMetrics(info_.get(), ' ', &ax, &lsb);
-    glyph_table[ch] = new_shared<Glyph>();
+    init_shared(glyph_table[ch]);
     auto& glyph = glyph_table.at(ch);
     glyph->image.init(ax * scale_, 1);
     glyph->image.image().fill(Pal8::black);
@@ -107,7 +107,7 @@ bool Unifont::_load_glyph(char32_t ch) const {
     hpw_log("stbtt_GetCodepointBitmap error ("<< std::hex << int(ch) << ")\n");
     return false;
   }
-  glyph_table[ch] = new_shared<Glyph>();
+  init_shared(glyph_table[ch]);
   auto& glyph = glyph_table.at(ch);
   glyph->image.init(bitmap_w, bitmap_h);
   glyph->image.image().fill(Pal8::black);

@@ -169,7 +169,7 @@ void Emit_wnd::heat_distort_edit() {
   auto enable = scast<bool>(editor::entity->heat_distort);
   if (ImGui::Checkbox("enable heat distort", &enable)) {
     if (enable) {
-      editor::entity->heat_distort = new_shared<Heat_distort>();
+      init_shared(editor::entity->heat_distort);
       auto& heat_distort = *editor::entity->heat_distort;
       heat_distort.block_count = 6;
       heat_distort.block_size = 32;
@@ -236,7 +236,7 @@ void Emit_wnd::light_edit() {
   auto enable = scast<bool>(editor::entity->light);
   if (ImGui::Checkbox("enable light", &enable)) {
     if (enable) {
-      editor::entity->light = new_shared<Light>();
+      init_shared(editor::entity->light);
       Light& light = *editor::entity->light;
       light.set_duration(10);
       light.radius = 64;

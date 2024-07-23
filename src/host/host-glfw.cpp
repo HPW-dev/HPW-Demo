@@ -111,7 +111,7 @@ Host_glfw::Host_glfw(int argc, char *argv[])
   iferror(!glfwInit(), "!glfwInit");
 
   init_window();
-  m_key_mapper = new_shared<Key_mapper>();
+  init_shared(m_key_mapper);
   m_key_mapper->reset();
   hpw::keys_info = m_key_mapper->get_info();
   init_commands();

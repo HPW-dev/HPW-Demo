@@ -30,8 +30,8 @@ void Graphic_test::init() {
   Host_glfw::init();
   graphic_tests();
   hpw_log("Gpragic test usage: shoot back key - VSync\n");
-  bg_tmr = new_shared<Timer>(5.0);
-  board_2_tmr = new_shared<Timer>(0.5);
+  init_shared(bg_tmr, 5.0);
+  init_shared(board_2_tmr, 0.5);
   // добавление фонов
   v_bg.push_back(&Graphic_test::draw_bit_effect_1);
   v_bg.push_back(&Graphic_test::draw_bit_effect_2);
@@ -43,13 +43,13 @@ void Graphic_test::init() {
   v_bg.push_back(&Graphic_test::draw_insert);
   v_bg.push_back({});
   // шарики
-  ball_1 = new_shared<Ball>(1_pps, Pal8::red);
-  ball_2 = new_shared<Ball>(4_pps, Pal8::white);
+  init_shared(ball_1, 1_pps, Pal8::red);
+  init_shared(ball_2, 4_pps, Pal8::white);
   // первый фон случайный
   cur_bg = rndu(v_bg.size() - 1);
-  strawberry = new_shared<Image>();
+  init_shared(strawberry);
   load(*strawberry, hpw::cur_dir + "../test/graphic/strawberry.png");
-  board_2 = new_shared<Image>(graphic::canvas->X - 30, 40);
+  init_shared(board_2, graphic::canvas->X - 30, 40);
   text = U"EN: ABCDEFG abcdefg\n"
     U"RU: АБВГДЖЗ абвгджз\n"
     U"JP: 漢字 仮借文字\n"

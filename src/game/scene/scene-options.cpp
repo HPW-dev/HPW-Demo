@@ -29,7 +29,7 @@ void Scene_options::draw(Image& dst) const {
 }
 
 void Scene_options::init_menu() {
-  menu = new_shared<Text_menu>(
+  init_shared<Text_menu>( menu,
     Menu_items {
       new_shared<Menu_text_item>(get_locale_str("scene.options.graphic"),
         []{ hpw::scene_mgr->add(new_shared<Scene_graphic>()); }),

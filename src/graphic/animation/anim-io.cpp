@@ -97,8 +97,7 @@ void read_anims(CN<Yaml> src) {
 
 Shared<Anim> read_anim(CN<Yaml> anim_node) {
   // анимация будет сохранена в Anim_mgr
-  Shared<Anim> anim;
-  anim = new_shared<Anim>();
+  auto anim = new_shared<Anim>();
 
   // загрузка хитбокса
   load_hitbox(*anim, anim_node["hitbox"]);

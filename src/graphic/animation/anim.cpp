@@ -117,7 +117,7 @@ void Anim::update_hitbox(CN<Pool_ptr(Hitbox)> _hitbox, uint _directions) {
   source_hitbox = _hitbox;
 
   // создать все хитбоксы направлений
-  hitbox_diections = new_shared<Hitbox_diections>(_directions);
+  init_shared(hitbox_diections, _directions);
   auto max_diections = hitbox_diections->max_diections();
   auto degree_step = 360.0 / max_diections;
   cfor (i, max_diections) {

@@ -76,5 +76,5 @@ void Scene_input::init_menu() {
     } )
   );
 
-  menu = new_shared<Text_menu>(menu_items, Vec{30, 45} );
+  init_shared<Text_menu>(menu, menu_items, Vec{30, 45} );
 } // init_menu

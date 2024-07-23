@@ -45,7 +45,7 @@ void load_pge(Str libname) {
     conv_sep(libname);
 
     std::cout << "загрузка плагина: " << libname << std::endl;
-    g_lib_loader = new_shared<DyLib>(libname);
+    init_shared<DyLib>(g_lib_loader, libname);
     g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");
     g_plugin_apply = g_lib_loader->getFunction<decltype(plugin_apply)>("plugin_apply");
     g_plugin_finalize = g_lib_loader->getFunction<decltype(plugin_finalize)>("plugin_finalize");

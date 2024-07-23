@@ -171,7 +171,7 @@ struct Cosmic::Loader::Impl {
     it->anim_ctx.set_contour(m_info.contour);
     it->anim_ctx.contour_bf = &blend_past;
     it->anim_ctx.blend_f = &blend_avr_max;
-    it->heat_distort = new_shared<Heat_distort>(m_info.heat_distort);
+    init_shared(it->heat_distort, m_info.heat_distort);
     it->status.disable_heat_distort = true;
     it->m_info.shoot_timer.randomize_stable();
     it->m_info.particle_timer.randomize_stable();
