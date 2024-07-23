@@ -16,7 +16,7 @@ public:
   ~Window_emitter();
   void imgui_exec() override;
   inline void draw(Image& dst) const override {}
-  inline void update(const Delta_time dt) override {}
+  void update(const Delta_time dt) override;
   inline bool active() const { return m_active; }
 };
 
