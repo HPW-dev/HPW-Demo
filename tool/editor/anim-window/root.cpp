@@ -27,10 +27,10 @@ Root_wnd::Root_wnd() {
 
 void Root_wnd::init_root_wnd() {
   hpw::shmup_mode = true;
-  graphic::camera = new_shared<Camera>();
+  init_shared(graphic::camera);
   editor::anim_name = {};
-  hpw::hitbox_layer = new_shared<Image>(graphic::canvas->X, graphic::canvas->Y);
-  hpw::entity_mgr = new_unique<Entity_mgr>();
+  init_shared(hpw::hitbox_layer, graphic::canvas->X, graphic::canvas->Y);
+  init_unique(hpw::entity_mgr);
   // редактору нужно загрузить все анимации
   hpw::lazy_load_anim = false;
   hpw::lazy_load_sprite = false;

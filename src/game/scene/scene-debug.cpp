@@ -38,7 +38,7 @@ void Scene_debug::draw(Image& dst) const {
 }
 
 void Scene_debug::init_menu() {
-  menu = new_shared<Text_menu>(
+  init_shared<Text_menu>( menu,
     Menu_items {
       new_shared<Menu_bool_item>(U"I/U/FPS",
         [] { return graphic::show_debug_info; },

@@ -26,7 +26,7 @@ void Scene_record_table::init_menu() {
     )
   };
 
-  menu = new_shared<Text_menu>(menu_items, Vec{30, 50} );
+  init_shared<Text_menu>(menu, menu_items, Vec{30, 50} );
 } // init_menu
 
 void Scene_record_table::update(const Delta_time dt) {

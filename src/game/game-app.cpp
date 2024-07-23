@@ -105,8 +105,8 @@ void Game_app::load_locale() {
 }
 
 void Game_app::load_font() {
-  auto mem {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
-  graphic::font = new_unique<Unifont>(mem, 16, true);
+  auto mem = hpw::archive->get_file("resource/font/unifont-13.0.06.ttf");
+  init_unique<Unifont>(graphic::font, mem, 16, true);
 }
 
 void Game_app::update_graphic_autoopt(const Delta_time dt) {

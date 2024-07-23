@@ -69,7 +69,7 @@ struct Scene_gamma::Impl {
         []{ hpw::scene_mgr->back(); } ),
     }; // menu_items
 
-    m_menu = new_unique<Advanced_text_menu>(
+    init_unique( m_menu,
       get_locale_str("scene.graphic_menu.gamma.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}
     );

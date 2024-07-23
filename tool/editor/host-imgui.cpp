@@ -34,7 +34,7 @@ void Host_imgui::init_window() {
 // загрузка шрифта
   init_archive();
   auto font_file {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
-  graphic::font = new_unique<Unifont>(font_file, 16);
+  init_unique<Unifont>(graphic::font, font_file, 16);
   ImFontConfig font_cfg;
   // без этого шрифт нормально не грузится из памяти
   font_cfg.FontDataOwnedByAtlas = false;

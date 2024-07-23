@@ -196,7 +196,7 @@ void Scene_main_menu::draw(Image& dst) const {
 }
 
 void Scene_main_menu::init_menu() {
-  menu = new_unique<Text_menu>(
+  init_unique<Text_menu>( menu,
     Menu_items {
       // старт
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),

@@ -14,7 +14,7 @@ struct Scene_editor_select::Impl {
   Unique<Advanced_text_menu> m_menu {};
 
   inline Impl() {
-    m_menu = new_unique<Advanced_text_menu>(
+    init_unique( m_menu,
       U"Редакторы",
       Menu_items {
         new_shared<Menu_text_item>(U"Редактор анимаций и хитбоксов", [this]{ goto_anim_editor(); }),

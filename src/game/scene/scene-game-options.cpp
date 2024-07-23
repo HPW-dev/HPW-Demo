@@ -51,7 +51,7 @@ struct Scene_game_options::Impl {
 
     }; // menu_items
 
-    m_menu = new_unique<Advanced_text_menu>(
+    init_unique( m_menu,
       get_locale_str("scene.game_opts.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}
     );

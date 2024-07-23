@@ -95,8 +95,8 @@ struct Scene_entity_editor::Impl {
     load_animations();
     // game:
     hpw::shmup_mode = true;
-    graphic::camera = new_shared<Camera>();
-    hpw::entity_mgr = new_unique<Entity_mgr>();
+    init_shared(graphic::camera);
+    init_unique(hpw::entity_mgr);
     // editor context:
     m_ctx = {};
     // log:

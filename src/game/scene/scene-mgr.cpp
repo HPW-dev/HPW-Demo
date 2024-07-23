@@ -24,8 +24,12 @@ void Scene_mgr::add(CN<Shared<Scene>> scene) {
   jobs.emplace_back([this, scene]{ _add(scene); });
 }
 
-void Scene_mgr::back() {
-  jobs.emplace_back([this]{ _back(); });
+void Scene_mgr::back(uint count) {
+  assert(count > 0);
+  assert(count < 1000);
+  
+  cfor (_, count)
+    jobs.emplace_back([this]{ _back(); });
 }
 
 void Scene_mgr::_add(CN<Shared<Scene>> scene) {

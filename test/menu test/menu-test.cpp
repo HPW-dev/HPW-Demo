@@ -15,7 +15,7 @@ class Nested_scene final: public Scene {
 
 public:
   Nested_scene() {
-    menu = new_shared<Text_menu>( Menu_items{
+    init_shared( menu, Menu_items{
       new_shared<Menu_text_item>(U"none 2"),
       new_shared<Menu_text_item>(U"back", [](){ hpw::scene_mgr->back(); }),
     },
@@ -32,7 +32,7 @@ class Test_scene final: public Scene {
 
 public:
   Test_scene() {
-    menu = new_shared<Text_menu>( Menu_items{
+    init_shared( menu, Menu_items{
       new_shared<Menu_text_item>(U"next", []{
         hpw::scene_mgr->add(new_shared<Nested_scene>()); }),
       new_shared<Menu_text_item>(U"none"),
@@ -51,7 +51,7 @@ void Menu_test::init(int argc, char *argv[]) {
   init_archive();
   auto font_file {hpw::archive->get_file(
     "resource/font/unifont-13.0.06.ttf")};
-  graphic::font = new_shared<Unifont>(font_file, 16));
+  init_shared<Unifont>(graphic::font, font_file, 16));
   init_scene_mgr();
   hpw::scene_mgr->add(new_shared<Test_scene>());
 }

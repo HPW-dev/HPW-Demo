@@ -37,5 +37,5 @@ public:
   void draw(Image& dst) const;
   Scene* get_current() const;
   void add(CN<Shared<Scene>> scene); // добавить новую сцену
-  void back(); // вернуться в предыдущую сцену
+  void back(uint count=1); // вернуться обратно по стеку сцен <count> раз
 }; // Scene_mgr

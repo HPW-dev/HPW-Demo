@@ -38,7 +38,7 @@ struct Scene_replay_select::Impl {
   inline void init_menu() {
     load_replays();
 
-    menu = new_unique<Table_menu>(
+    init_unique<Table_menu>( menu,
       get_locale_str("scene.replay.name"),
       Table_menu::Rows {
         Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 200},

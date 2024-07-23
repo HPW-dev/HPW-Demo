@@ -73,7 +73,7 @@ decltype(hpw::store_sprite)::element_type::Velue find_err_cb(CN<Str> _name) {
 
 void load_resources() {
   detailed_log("loading resources...\n");
-  hpw::store_sprite = new_unique<Store<Sprite>>();
+  init_unique(hpw::store_sprite);
 
   #ifdef EDITOR
     auto names = all_names_in_dir(hpw::cur_dir);
@@ -118,7 +118,7 @@ void load_resources() {
 }
 
 void load_animations() {
-  hpw::anim_mgr = new_unique<Anim_mgr>();
+  init_unique(hpw::anim_mgr);
 
   if (!hpw::lazy_load_anim) {
     cauto anim_yml = get_anim_config();
@@ -318,9 +318,7 @@ void init_validation_info() {
   hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
 } // init_validation_info
 
-void init_scene_mgr() {
-  hpw::scene_mgr = new_unique<Scene_mgr>();
-}
+void init_scene_mgr() { init_unique(hpw::scene_mgr); }
 
 utf32 difficulty_to_str(const Difficulty difficulty) {
   static const std::unordered_map<Difficulty, utf32> table {
@@ -446,20 +444,21 @@ std::size_t sizeof_all_sprites() {
 
 // связывание звуков с банком
 inline void init_store_sound() {
-  hpw::store_sound = new_unique<Store<Sound>>();
+  init_unique(hpw::store_sound);
   // TODO
+  // загрузка контента
 }
 
 void load_sounds() {
   detailed_log("loading sounds...\n");
   try {
     // TODO применение настроек при создании
-    hpw::sound_mgr = new_unique<Sound_mgr_oal>();
+    init_unique<Sound_mgr_oal>(hpw::sound_mgr);
   } catch (CN<hpw::Error> err) {
     hpw_log("Error while initialize OpenAL sound system. Sound disabled\n");
     std::cerr << err.what() << std::endl;
     hpw::sound_mgr_init_error = true;
-    hpw::sound_mgr = new_unique<Sound_mgr_nosound>();
+    init_unique<Sound_mgr_nosound>(hpw::sound_mgr);
   }
   
 #ifdef EDITOR

@@ -311,7 +311,7 @@ Shared<Menu_text_item> Scene_graphic::get_gamma_item() {
 }
 
 void Scene_graphic::init_simple_menu() {
-  simple_menu = new_shared<Advanced_text_menu>(
+  init_shared<Advanced_text_menu>( simple_menu,
     get_locale_str("scene.graphic_menu.title"),
     Menu_items {
       get_palette_item(),
@@ -341,7 +341,7 @@ void Scene_graphic::init_simple_menu() {
 } // init_simple_menu
 
 void Scene_graphic::init_detailed_menu() {
-  detailed_menu = new_shared<Advanced_text_menu>(
+  init_shared<Advanced_text_menu>( detailed_menu,
     U"Расширенные настройки графики", // TODO locale
     Menu_items {
       get_palette_item(),
@@ -433,7 +433,7 @@ void Scene_graphic::init_detailed_menu() {
 } // init_detailed_menu
 
 void Scene_graphic::init_preset_menu() {
-  preset_menu = new_shared<Advanced_text_menu>(
+  init_shared<Advanced_text_menu>( preset_menu,
     get_locale_str("scene.graphic_menu.pressets.name"),
     Menu_items {
       get_preset_item(),

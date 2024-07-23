@@ -238,11 +238,11 @@ struct Ability_power_shoot::Impl {
   // создаёт пустой объект с контекстами вспышки и волны
   inline void make_effects(Player& player) {
     auto entity = hpw::entity_mgr->make(&player, "particle.void", player.phys.get_pos());
-    entity->heat_distort = new_shared<Heat_distort>(m_heat_distort);
+    init_shared(entity->heat_distort, m_heat_distort);
     entity->heat_distort->radius *= m_power;
     entity->heat_distort->power *= m_power;
     entity->heat_distort->block_count *= m_power * 1.25;
-    entity->light = new_shared<Light>(m_light);
+    init_shared(entity->light, m_light);
     entity->light->radius *= m_power * 1.5;
     entity->light->set_duration(entity->light->get_max_duration() * m_power * 0.1717);
   }
