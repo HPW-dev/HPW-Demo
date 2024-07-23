@@ -26,10 +26,8 @@ struct Scene_gameover::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    if (hpw::replay_read_mode) {
-      hpw::scene_mgr->back(); // to gameover
-      hpw::scene_mgr->back(); // to replay-select
-    }
+    if (hpw::replay_read_mode)
+      hpw::scene_mgr->back(2); // cur->gameover->replay-select
 
     menu->update(dt);
   }
@@ -43,9 +41,7 @@ struct Scene_gameover::Impl {
     Menu_items items;
     items.push_back (
       new_shared<Menu_text_item>( get_locale_str("scene.gameover.try_again"), []{
-        hpw::scene_mgr->back(); // to game
-        hpw::scene_mgr->back(); // to load screen
-        hpw::scene_mgr->back(); // to difficulty menu
+        hpw::scene_mgr->back(3); // cur->game->load screen->difficulty menu
         // перезапуск игры
         hpw::scene_mgr->add(new_shared<Scene_loading>( []{
           hpw::replay_read_mode = false;
@@ -76,15 +72,12 @@ struct Scene_gameover::Impl {
       get_locale_str("scene.game_opts.rnd_pal.desc")
     ) );
 
-    items.push_back (
-      new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-        hpw::scene_mgr->back(); // to game
-        hpw::scene_mgr->back(); // to load screen
-        hpw::scene_mgr->back(); // to difficulty menu
-        hpw::scene_mgr->back(); // to main menu
-      })
-    );
-    menu = new_unique<Advanced_text_menu>( get_locale_str("scene.gameover.title"),
+    items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
+      // cur->game->load screen->difficulty menu->main menu
+      hpw::scene_mgr->back(4); }) );
+
+    init_unique<Advanced_text_menu>( menu,
+      get_locale_str("scene.gameover.title"),
       items, Rect(0,0, graphic::width, graphic::height) );
   } // init_menu
 

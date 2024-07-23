@@ -11,7 +11,7 @@ struct Shop_debug::Impl {
   Unique<Table_menu> item_table {};
 
   inline Impl() {
-    item_table = new_unique<Table_menu>(
+    init_unique( item_table,
       U"Отладочное меню способностей",
       Table_menu::Rows {
         Table_menu::Row {.name = U"СПОСОБНОСТЬ", .sz = scast<uint>((graphic::width / 3.0) * 2)},

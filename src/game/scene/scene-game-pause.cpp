@@ -42,9 +42,7 @@ void Scene_game_pause::init_menu() {
         hpw::make_screenshot();
       }),
       new_shared<Menu_text_item>(get_locale_str("scene.pause.main_menu"), []{
-        hpw::scene_mgr->back(); // выйти из паузы
-        hpw::scene_mgr->back(); // выйти из игрового процесса
-        hpw::scene_mgr->back(); // выйти из окна загрузки
+        hpw::scene_mgr->back(3); // cur->пауза->игровой процесс->окно загрузки
         // в реплее в выбор сложности не заходим (TODO может поменяться)
         if (!hpw::replay_read_mode)
           hpw::scene_mgr->back(); // выйти из меню выбора сложности

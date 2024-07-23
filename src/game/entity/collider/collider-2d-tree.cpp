@@ -6,6 +6,7 @@
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "util/mem-types.hpp"
 
 using Collidables = Vector<Collidable*>;
 
@@ -63,9 +64,9 @@ struct Node {
 
     // сделать две половинки и перенести туда объекты
     if (!a)
-      a = new_unique<Node>();
+      init_unique(a);
     if (!b)
-      b = new_unique<Node>();
+      init_unique(b);
     a->is_active = true;
     b->is_active = true;
     a->area = area_a;
@@ -219,7 +220,7 @@ struct Collider_2d_tree::Impl {
   inline void make_tree(CN<Collidables> entities) {
     find_area(entities);
     if (!m_root)
-      m_root = new_unique<Node>();
+      init_unique(m_root);
 
     m_root->clear();
     m_root->is_active = true;

@@ -80,7 +80,7 @@ struct Scene_palette_select::Impl {
     { return m_palette_files.at(m_cur_palette_idx); }
 
   inline void init_menu() {
-    menu = new_unique<Text_menu>(
+    init_unique<Text_menu>( menu,
       Menu_items {
         new_shared<Menu_text_item>(get_locale_str("scene.palette_select.next"), [this]{
           if ( !m_palette_files.empty()) {

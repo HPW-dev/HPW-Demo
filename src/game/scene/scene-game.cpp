@@ -64,7 +64,7 @@ void Scene_game::init_levels() {
   // запустить только один уровень при отладке
   #ifdef DEBUG
   if (hpw::empty_level_first) {
-    hpw::level_mgr = new_unique<Level_mgr> (Level_mgr::Makers {
+    init_unique(hpw::level_mgr, Level_mgr::Makers {
       []{ return new_shared<Level_empty>(); }
     } ); 
     return;
@@ -72,14 +72,14 @@ void Scene_game::init_levels() {
   #endif
 
   if (m_start_tutorial) { // начать с туториала
-    hpw::level_mgr = new_unique<Level_mgr>( Level_mgr::Makers{
+    init_unique(hpw::level_mgr, Level_mgr::Makers{
       [] { return new_shared<Level_tutorial>(); }
     });
     return;
   }
 
   // стандартный порядок уровней
-  hpw::level_mgr = new_unique<Level_mgr>( Level_mgr::Makers{
+  init_unique(hpw::level_mgr, Level_mgr::Makers{
     [] { return new_shared<Level_space>(); },
     //[] { return new_shared<Level_1>(); },
     #ifdef DEBUG
@@ -101,22 +101,22 @@ Scene_game::Scene_game(const bool start_tutorial)
   replay_init(); // не перемещать вниз, тут грузится сид
   // -------------- [!] ----------------
 
-  graphic::post_effects = new_shared<Effect_mgr>();
+  init_shared<Effect_mgr>(graphic::post_effects);
   init_entitys();
   load_animations();
 
   hpw::entity_mgr->register_types();
   init_levels();
-  graphic::camera = new_shared<Camera>();
+  init_shared(graphic::camera);
   graphic::render_lag = false; // когда игра грузиться, она думает что лагает
   // на средних настройках закэшировать вспышки перед запуском игры
   if (graphic::light_quality == Light_quality::medium)
     cache_light_spheres();
   // TODO выбор HUD с конфига
-  graphic::hud = new_shared<Hud_asci>();
+  init_shared<Hud_asci>(graphic::hud);
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
-  hpw::message_mgr = new_unique<Message_mgr>();
+  init_unique(hpw::message_mgr);
   startup_script();
 } // c-tor
 
@@ -155,9 +155,7 @@ void Scene_game::update(const Delta_time dt) {
 
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
-    hpw::scene_mgr->back(); // exit to loading screen
-    hpw::scene_mgr->back(); // exit to diffuculty
-    hpw::scene_mgr->back(); // exit to main menu
+    hpw::scene_mgr->back(3); // cur->loading screen->diffuculty->main menu
     detailed_log("уровни кончились, выход из сцены игры\n");
   }
   hpw::task_mgr.update(dt);
@@ -198,8 +196,8 @@ void Scene_game::startup_script() {
 
 void Scene_game::init_entitys() {
   // для показа хитбоксов
-  hpw::hitbox_layer = new_shared<Image>(graphic::canvas->X, graphic::canvas->Y);
-  hpw::entity_mgr = new_unique<Entity_mgr>();
+  init_shared(hpw::hitbox_layer, graphic::canvas->X, graphic::canvas->Y);
+  init_unique(hpw::entity_mgr);
 }
 
 void Scene_game::post_draw(Image& dst) const {
@@ -272,9 +270,9 @@ void Scene_game::replay_init() {
   #endif
 
   if (hpw::replay_read_mode)
-    replay = new_unique<Replay>(hpw::cur_replay_file_name, false);
+    init_unique(replay, hpw::cur_replay_file_name, false);
   else if (hpw::enable_replay)
-    replay = new_unique<Replay>(hpw::cur_dir + "replays/last_replay.hpw_replay", true);
+    init_unique(replay, hpw::cur_dir + "replays/last_replay.hpw_replay", true);
 } // replay_init
 
 void Scene_game::replay_save_keys() {

@@ -151,7 +151,7 @@ struct Scene_pge::Impl {
         m_reinit_menu = true;
       } ) );
 
-    m_menu = new_unique<Advanced_text_menu>(
+    init_unique( m_menu,
       get_locale_str("scene.graphic_menu.pge.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}
     );
