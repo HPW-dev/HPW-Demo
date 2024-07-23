@@ -29,8 +29,7 @@ struct Scene_entity_editor::Impl {
   Scene_entity_editor& m_master;
   Entity_editor_ctx m_ctx {}; // данные редактора распределяемые между окнами
   Vector<Unique<Window>> m_windows {};
-  // окна под настройки спавнеров
-  Vector<Unique<Window_emitter>> m_emitters {};
+  Vector<Unique<Window_emitter>> m_emitters {}; // окна под настройки спавнеров
 
   explicit inline Impl(Scene_entity_editor& master): m_master {master}
   { init(); }
@@ -60,6 +59,8 @@ struct Scene_entity_editor::Impl {
     hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
     for (cnauto window: m_windows)
       window->draw(dst);
+    for (cnauto window: m_emitters)
+      window->draw(dst);
     if (m_ctx.pause)
       draw_pause(dst);
   }
@@ -68,6 +69,8 @@ struct Scene_entity_editor::Impl {
     if (ImGui::IsKeyDown(ImGuiKey_Escape))
       exit();
     for (cnauto window: m_windows)
+      window->imgui_exec();
+    for (cnauto window: m_emitters)
       window->imgui_exec();
   }
 
@@ -97,7 +100,8 @@ struct Scene_entity_editor::Impl {
   }
 
   inline void add_emitter() {
-    // TODO
+    auto wnd = new_unique<decltype(m_emitters)::value_type::element_type>(m_ctx);
+    m_emitters.emplace_back(std::move(wnd));
   }
 
   inline void init() {
