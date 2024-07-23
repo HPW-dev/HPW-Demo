@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include "wnd-ent-edit-opts.hpp"
 #include "game/util/sync.hpp"
+#include "game/core/debug.hpp"
 #include "entity-editor-ctx.hpp"
 #include "util/hpw-util.hpp"
 
@@ -22,6 +23,8 @@ struct Wnd_ent_edit_opts::Impl {
     }
     // entity editor pause
     ImGui::Checkbox("пауза", &m_ctx.pause);
+    ImGui::Checkbox("хитбоксы", &graphic::draw_hitboxes);
+    ImGui::Checkbox("сетка системы коллизий", &graphic::show_grids);
     // настройки фона
     ImGui::Checkbox("красный оттенок фона", &m_ctx.red_bg);
     ImGui::Text("яркость фона");
