@@ -14,6 +14,7 @@ struct Window_emitter::Impl {
   Window_emitter& m_master;
   Uid m_uid {};
   Str m_title {}; // название окна для ImGui
+
   std::size_t m_selected_name_id {};
   Str m_name_for_spawn {}; // выбранный entity
 
@@ -23,7 +24,7 @@ struct Window_emitter::Impl {
   , m_uid {get_uid()}
   {
     m_title = "Эмиттер " + n2s(m_uid);
-    hpw_log("добавлено окно эмиттера (№" << m_uid << ")\n");
+    detailed_log("добавлено окно эмиттера (№" << m_uid << ")\n");
   }
 
   inline void imgui_exec() {

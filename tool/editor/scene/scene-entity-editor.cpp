@@ -108,7 +108,8 @@ struct Scene_entity_editor::Impl {
     detailed_log("entity editor init...\n");
     // graphic:
     graphic::cpu_safe = false;
-    graphic::set_vsync(true);
+    graphic::set_vsync(false);
+    graphic::set_disable_frame_limit(!graphic::get_vsync());
     graphic::wait_frame = false;
     graphic::auto_frame_skip = false;
     graphic::blink_particles = false;
