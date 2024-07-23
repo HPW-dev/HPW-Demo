@@ -42,9 +42,12 @@ struct Window_emitter::Impl {
   inline void imgui_exec() {
     ImGui::Begin(m_title.c_str(), {}, ImGuiWindowFlags_AlwaysAutoResize);
     Scope _({}, &ImGui::End);
+    
     name_select();
     phys_select();
     imgui_input();
+    if (ImGui::Button("Убрать объект"))
+      kill_cur_entity();
     if (ImGui::Button("Закрыть"))
       exit();
   }
@@ -99,6 +102,10 @@ struct Window_emitter::Impl {
   } // phys_select
 
   inline void update(const Delta_time dt) {
+    update_spawner(dt);
+  }
+
+  inline void update_spawner(const Delta_time dt) {
     return_if(m_name_for_spawn.empty());
     return_if(m_last_entity && m_last_entity->status.live);
 

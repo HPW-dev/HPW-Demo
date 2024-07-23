@@ -39,19 +39,18 @@ struct Scene_entity_editor::Impl {
     if (is_pressed_once(hpw::keycode::console))
       hpw::scene_mgr->add(new_shared<Scene_cmd>());
 
-    if (!m_ctx.pause) {
-      hpw::entity_mgr->update(dt);
-    }
-
-    for (cnauto window: m_windows)
-      window->update(dt);
-    
     // удалить выключенные окна
     std::erase_if(m_emitters, [](CN<decltype(m_emitters)::value_type> window) {
       return !window->active();
     });
-    for (cnauto window: m_emitters)
-      window->update(dt);
+
+    if (!m_ctx.pause) {
+      hpw::entity_mgr->update(dt);
+      for (cnauto window: m_windows)
+        window->update(dt);
+      for (cnauto window: m_emitters)
+        window->update(dt);
+    }
   }
 
   inline void draw(Image& dst) const {
