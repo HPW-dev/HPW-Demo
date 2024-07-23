@@ -15,6 +15,7 @@ struct Window_emitter::Impl {
   Uid m_uid {};
   Str m_title {}; // название окна для ImGui
   std::size_t m_selected_name_id {};
+  Str m_name_for_spawn {}; // выбранный entity
 
   inline explicit Impl(Window_emitter& master, Entity_editor_ctx& ctx)
   : m_ctx {ctx}
@@ -41,15 +42,24 @@ struct Window_emitter::Impl {
 
   // выбирает доступный для спавна объект
   inline void name_select() {
-    /*
-    if (ImGui::BeginCombo("test", list[m_selected_name_id])) {
-      ImGui::Selectable(list[0], true);
-      ImGui::SetItemDefaultFocus();
-      ImGui::Selectable(list[1]);
-      ImGui::Selectable(list[2]);
+    Strs names = m_ctx.entities_yml.root_tags();
+    if (names.empty())
+      names.push_back("entities.yml is empty");
+
+    ImGui::Text("entity:");
+    if (ImGui::BeginCombo("##entity", names.at(m_selected_name_id).c_str())) {
+      for (uint i; cnauto name: names) {
+        const bool is_selected = (i == m_selected_name_id);
+        if (ImGui::Selectable(name.c_str(), is_selected))
+          m_selected_name_id = i;
+        if (is_selected)
+          ImGui::SetItemDefaultFocus();
+        ++i;
+      }
       ImGui::EndCombo();
-    }
-    */
+    } // if BeginCombo
+
+    m_name_for_spawn = names.at(m_selected_name_id);
   }
 }; // Impl
 
