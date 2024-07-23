@@ -16,7 +16,7 @@
 #include "util/file/yaml.hpp"
 
 Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {
-  graphic::canvas = new_unique<Image>(graphic::width, graphic::height);
+  init_unique(graphic::canvas, graphic::width, graphic::height);
   iferror(graphic::canvas->size == 0 || graphic::canvas->size >= 1024*720,
     "canvas bad size: " + n2s(graphic::canvas->size));
   m_w = graphic::canvas->X;
