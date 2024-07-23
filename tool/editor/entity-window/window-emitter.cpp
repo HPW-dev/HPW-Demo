@@ -102,6 +102,8 @@ struct Window_emitter::Impl {
   } // phys_select
 
   inline void update(const Delta_time dt) {
+    if (m_ctx.entities_is_clear)
+      kill_cur_entity();
     update_spawner(dt);
   }
 

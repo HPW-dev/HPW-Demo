@@ -2,6 +2,7 @@
 #include "wnd-ent-edit-opts.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/debug.hpp"
+#include "game/core/entities.hpp"
 #include "entity-editor-ctx.hpp"
 #include "util/hpw-util.hpp"
 
@@ -25,6 +26,10 @@ struct Wnd_ent_edit_opts::Impl {
     ImGui::Checkbox("пауза", &m_ctx.pause);
     ImGui::Checkbox("хитбоксы", &graphic::draw_hitboxes);
     ImGui::Checkbox("сетка системы коллизий", &graphic::show_grids);
+    if(ImGui::Button("убрать все объекты")) {
+      hpw::entity_mgr->clear_entities();
+      m_ctx.entities_is_clear = true;
+    }
     // настройки фона
     ImGui::Checkbox("красный оттенок фона", &m_ctx.red_bg);
     ImGui::Text("яркость фона");

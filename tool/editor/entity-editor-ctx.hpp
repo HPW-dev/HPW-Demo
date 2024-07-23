@@ -7,5 +7,6 @@ struct Entity_editor_ctx {
   bool pause {};
   bool red_bg {true};
   float bg_color {0.333333};
+  bool entities_is_clear {};
   Yaml entities_yml {};
 };

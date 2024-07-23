@@ -54,6 +54,7 @@ struct Scene_entity_editor::Impl {
       for (cnauto window: m_emitters)
         window->update(dt);
     }
+    m_ctx.entities_is_clear = false;
   }
 
   inline void draw(Image& dst) const {
