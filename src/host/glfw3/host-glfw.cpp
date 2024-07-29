@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <ctime>
 #include "stb/stb_image.h"
-#include "host-util.hpp"
+#include "host/host-util.hpp"
 #include "host-glfw.hpp"
 #include "host-glfw-keymap.hpp"
 #include "util/log.hpp"
@@ -24,7 +24,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/user.hpp"
 extern "C" {
-  #include "ogl.hpp"
+  #include "host/ogl3/ogl.hpp"
   #ifdef WINDOWS
     #define GLFW_DLL
   #else
@@ -77,6 +77,7 @@ static void key_callback(GLFWwindow* m_window, int key, int scancode, int action
 
 // колбэк для ошибок нужен для GLFW
 static void error_callback(int error, Cstr description) {
+  // TODO эти glfw-функции могут вызвать рекурсивный вызов ошибки:
   // на всякий случай вернуть гамму как была
   auto monitor = glfwGetPrimaryMonitor();
   glfwSetGamma(monitor, 1.0);

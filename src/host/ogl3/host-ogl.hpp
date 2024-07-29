@@ -1,5 +1,5 @@
 #pragma once
-#include "protownd.hpp"
+#include "host/protownd.hpp"
 #include "util/math/num-types.hpp"
 
 // базовый класс для игрового хоста

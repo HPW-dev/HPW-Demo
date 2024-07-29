@@ -1,5 +1,5 @@
 #pragma once
-#include "host/host-glfw.hpp"
+#include "host/glfw3/host-glfw.hpp"
 
 // Imgui рендерер с GLFW
 class Host_imgui: public Host_glfw {

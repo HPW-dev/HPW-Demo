@@ -1,5 +1,5 @@
 #pragma once
-#include "host-ogl.hpp"
+#include "host/ogl3/host-ogl.hpp"
 #include "util/mem-types.hpp"
 #include "game/util/keybits.hpp"
 

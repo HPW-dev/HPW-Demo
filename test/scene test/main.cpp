@@ -1,5 +1,5 @@
 #include <memory>
-#include "host/host-glfw.hpp"
+#include "host/glfw3/host-glfw.hpp"
 #include "scene-test.hpp"
 
 int main(int argc, char *argv[]) {

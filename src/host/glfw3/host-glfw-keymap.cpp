@@ -4,7 +4,7 @@
 #include <GLFW/glfw3.h>
 
 #include "host-glfw-keymap.hpp"
-#include "windows-keycodes.hpp"
+#include "host/windows/windows-keycodes.hpp"
 #include "game/util/keybits.hpp"
 #include "util/str.hpp"
 
