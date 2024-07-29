@@ -1,8 +1,8 @@
 #include <vector>
 #include <algorithm>
 #include "host-ogl.hpp"
-#include "host-util.hpp"
-#include "command.hpp"
+#include "host/host-util.hpp"
+#include "host/command.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "game/core/canvas.hpp"

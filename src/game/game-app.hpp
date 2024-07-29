@@ -1,5 +1,5 @@
 #pragma once
-#include "host/host-glfw.hpp"
+#include "host/glfw3/host-glfw.hpp"
 
 class Image;
 

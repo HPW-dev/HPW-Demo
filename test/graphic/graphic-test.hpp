@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include <functional>
-#include "host/host-glfw.hpp"
+#include "host/glfw3/host-glfw.hpp"
 #include "util/unicode.hpp"
 
 class Timer;
