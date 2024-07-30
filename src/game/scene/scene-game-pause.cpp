@@ -32,24 +32,22 @@ void Scene_game_pause::draw(Image& dst) const {
 void Scene_game_pause::init_menu() {
   init_shared<Text_menu>( menu,
     Menu_items {
-      new_shared<Menu_text_item>(get_locale_str("common.continue"), []{
-        hpw::scene_mgr->back();
-      }),
-      new_shared<Menu_text_item>(get_locale_str("scene.options.name"), []{
-        hpw::scene_mgr->add(new_shared<Scene_options>());
-      }),
-      new_shared<Menu_text_item>(get_locale_str("scene.pause.screenshot"), []{
-        hpw::make_screenshot();
-      }),
+      new_shared<Menu_text_item>(get_locale_str("common.continue"),
+        []{ hpw::scene_mgr->back(); }),
+      new_shared<Menu_text_item>(get_locale_str("scene.options.name"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_options>()); }),
+      new_shared<Menu_text_item>(get_locale_str("scene.pause.screenshot"),
+        []{ hpw::make_screenshot(); }),
+      new_shared<Menu_text_item>(get_locale_str("scene.game_opts.rnd_pal.title"),
+        []{ set_random_palette(); }),
       new_shared<Menu_text_item>(get_locale_str("scene.pause.main_menu"), []{
         hpw::scene_mgr->back(3); // cur->пауза->игровой процесс->окно загрузки
         // в реплее в выбор сложности не заходим (TODO может поменяться)
         if (!hpw::replay_read_mode)
           hpw::scene_mgr->back(); // выйти из меню выбора сложности
       }),
-      new_shared<Menu_text_item>(get_locale_str("scene.pause.game_exit"), []{
-        hpw::soft_exit();
-      }),
+      new_shared<Menu_text_item>(get_locale_str("scene.pause.game_exit"),
+        []{ hpw::soft_exit(); }),
     },
     Vec{60, 80}
   );

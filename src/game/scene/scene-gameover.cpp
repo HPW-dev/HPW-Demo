@@ -62,7 +62,7 @@ struct Scene_gameover::Impl {
     
     // менять палитру при смерти
     items.push_back( new_shared<Menu_bool_item>(
-      get_locale_str("scene.game_opts.rnd_pal.title"),
+      get_locale_str("scene.game_opts.rnd_pal.title_after_death"),
       []{ return hpw::rnd_pal_after_death; },
       [](bool val) { 
         if (val)
