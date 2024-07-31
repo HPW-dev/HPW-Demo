@@ -35,7 +35,10 @@ extern "C" {
 
 inline std::atomic<Host_glfw*> g_instance {};
 inline bool g_rebind_key_mode {false};
-inline hpw::keycode g_key_for_rebind; // появится при hpw::rebind_key
+// позволяет избежать зацикливания при выставлении стандартной гаммы при ошибке
+inline bool g_set_default_gamma_once {true};
+// появится при hpw::rebind_key
+inline hpw::keycode g_key_for_rebind;
 
 static void host_glfw_set_vsync(bool enable) {
   detailed_log("vsync: " << enable << '\n');
@@ -77,10 +80,12 @@ static void key_callback(GLFWwindow* m_window, int key, int scancode, int action
 
 // колбэк для ошибок нужен для GLFW
 static void error_callback(int error, Cstr description) {
-  // TODO эти glfw-функции могут вызвать рекурсивный вызов ошибки:
-  // на всякий случай вернуть гамму как была
-  auto monitor = glfwGetPrimaryMonitor();
-  glfwSetGamma(monitor, 1.0);
+  // поставить дефолтную гамму при ошибке
+  if (g_instance && g_set_default_gamma_once) {
+    g_instance.load()->set_gamma(1);
+    g_set_default_gamma_once = false;
+  }
+
   error("GLFW error: " << error << ": " << description);
 }
 

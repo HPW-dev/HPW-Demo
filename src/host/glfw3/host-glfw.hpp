@@ -16,6 +16,7 @@ public:
   void reshape(int w, int h) override;
   void set_window_pos(int x, int y) override;
   void run() override;
+  void set_gamma(const double gamma) override;
 
 protected:
   int m_wnd_x {}, m_wnd_y {}; // позиция окна на рабочем столе
@@ -44,7 +45,6 @@ protected:
   void _set_mouse_cursour_mode(bool enable) override;
   void _set_fullscreen(bool enable) override;
   void _set_double_buffering(bool enable) override;
-  void set_gamma(const double gamma) override;
   virtual void init_window();
   void init_commands();
   virtual void update(const Delta_time dt);
