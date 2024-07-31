@@ -42,7 +42,7 @@ void Editor::update(const Delta_time dt) {
     detailed_log("scenes are over, call soft_exit\n");
     hpw::soft_exit();
   }
-  hpw::update_time_unsafe = Editor::get_time() - st;
+  hpw::tick_time = Editor::get_time() - st;
 }
 
 void Editor::draw() {

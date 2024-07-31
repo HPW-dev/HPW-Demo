@@ -145,7 +145,7 @@ public:
       Stat {.title="'Hardware draw time Ms.'", .getter=[]{
         return n2s(graphic::hard_draw_time * 1'000.f, 5); }},
       Stat {.title="'tick time Ms.'", .getter=[]{
-        return n2s(hpw::update_time_unsafe * 1'000.f, 5); }},
+        return n2s(hpw::tick_time * 1'000.f, 5); }},
       Stat {.title="'Real Dt. Ms.'", .getter=[]{
         return n2s(hpw::real_dt * 1'000.f, 5); }},
       Stat {.title="'FPS'", .getter=[]{

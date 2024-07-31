@@ -79,7 +79,7 @@ void Game_app::update(const Delta_time dt) {
     hpw::soft_exit();
   }
   check_errors();
-  hpw::update_time_unsafe = get_time() - st;
+  hpw::tick_time = get_time() - st;
 } // update
 
 void Game_app::draw_game_frame() {

@@ -62,7 +62,7 @@ void Menu_wnd::imgui_exec() {
   ss << "R.Dt " << prec(8) << hpw::real_dt << " | ";
   ss << "S.Dt " << prec(8) << hpw::safe_dt << " | ";
   ss << "Draw " << prec(8) << graphic::soft_draw_time << " | ";
-  ss << "Update " << prec(8) << hpw::update_time_unsafe;
+  ss << "Update " << prec(8) << hpw::tick_time;
   #undef prec
   BeginMenu(ss.str().c_str(), false);
 } // imgui_exec

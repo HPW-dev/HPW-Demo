@@ -114,7 +114,7 @@ void Level_debug_3::update(const Vec vel, Delta_time dt) {
   }
   #endif
 
-  /*if ((hpw::game_updates_safe % 100) == 0)
+  /*if ((hpw::game_ticks % 100) == 0)
     save_dbg_info();*/
 
 } // update
@@ -220,7 +220,7 @@ void Level_debug_3::spawn_bullets(const Delta_time dt) {
       auto blt = hpw::entity_mgr->make({}, "bullet.sphere.red", pos);
       real deg = 90;
       // сменяет узор на рандомный
-      deg += (hpw::game_updates_safe % (120 * 3) < 120 * 1.5)
+      deg += (hpw::game_ticks % (120 * 3) < 120 * 1.5)
         ? spawn_offset + i * rndr(0, 30)
         : spawn_offset + i * 15;
       blt->phys.set_speed( 3.333_pps );
@@ -243,7 +243,7 @@ void Level_debug_3::save_dbg_info() {
   #ifdef DEBUG
   for (uint idx {}; auto entity: hpw::entity_mgr->get_entities()) {
     if (entity->status.live) {
-      std::cerr << "game_update: " << hpw::game_updates_safe << "\n";
+      std::cerr << "game_update: " << hpw::game_ticks << "\n";
       std::cerr << "entity [" << idx << "]:\n";
       std::cerr <<"  pos: " << to_str(entity->phys.get_pos()) << '\n';
       std::cerr <<"  vel: " << to_str(entity->phys.get_vel()) << '\n';

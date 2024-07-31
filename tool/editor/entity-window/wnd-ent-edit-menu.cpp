@@ -39,7 +39,7 @@ struct Wnd_ent_edit_menu::Impl {
     ss << "R.Dt " << prec(8) << hpw::real_dt << " | ";
     ss << "S.Dt " << prec(8) << hpw::safe_dt << " | ";
     ss << "Draw " << prec(8) << graphic::soft_draw_time << " | ";
-    ss << "Update " << prec(8) << hpw::update_time_unsafe;
+    ss << "Update " << prec(8) << hpw::tick_time;
     #undef prec
     ImGui::BeginMenu(ss.str().c_str(), false);
 

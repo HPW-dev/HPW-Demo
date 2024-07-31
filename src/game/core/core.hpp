@@ -8,6 +8,6 @@ inline Delta_time target_update_time = 1.0 / target_ups;
 inline Delta_time cur_ups {}; // апдейты в секунду
 inline Delta_time safe_dt {}; // dt для игры
 inline Delta_time real_dt {}; // текущий dt как есть (не юзать в фиксированных апдейтах)
-inline Delta_time update_time_unsafe {}; // время обновления в игре
-inline unsigned game_updates_safe {}; // столько апдейтов случилось с начала сцены игры
+inline Delta_time tick_time {}; // время одного тика игры
+inline uint game_ticks {}; // столько апдейтов случилось с начала сцены игры
 } // hpw ns

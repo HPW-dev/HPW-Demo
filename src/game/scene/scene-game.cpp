@@ -169,12 +169,12 @@ void Scene_game::update(const Delta_time dt) {
   graphic::post_effects->update(dt);
   hpw::message_mgr->update(dt);
   
-  ++hpw::game_updates_safe;
+  ++hpw::game_ticks;
 
   #ifdef STABLE_REPLAY
-    if ((hpw::game_updates_safe % 72) == 0)
+    if ((hpw::game_ticks % 72) == 0)
       replay_stable_log();
-    /*if (hpw::game_updates_safe >= 6'000)
+    /*if (hpw::game_ticks >= 6'000)
       hpw::soft_exit();*/
   #endif
 } // update
@@ -217,7 +217,7 @@ void Scene_game::post_draw(Image& dst) const {
     draw_entity_mem_map(dst, Vec(5, 5));
   #ifdef STABLE_REPLAY
     graphic::font->draw(dst, Vec(5, 5), U"game updates: " +
-      n2s<utf32>(hpw::game_updates_safe), &blend_diff);
+      n2s<utf32>(hpw::game_ticks), &blend_diff);
   #endif
 } // post_draw
 
@@ -226,7 +226,7 @@ void Scene_game::draw_debug_info(Image& dst) const {
   txt << "real dt: " << n2s(hpw::real_dt, 12);
   txt << "\nsafe dt: " << n2s(hpw::safe_dt, 12);
   txt << "\ndraw time: " << n2s(graphic::soft_draw_time, 12);
-  txt << "\nupdate time: " << n2s(hpw::update_time_unsafe, 12);
+  txt << "\nupdate time: " << n2s(hpw::tick_time, 12);
   txt << "\nups: " << n2s(hpw::cur_ups, 1);
   txt << "\nfps: " << n2s(graphic::cur_fps, 1);
   auto str_u32 = sconv<utf32>(txt.str());
@@ -258,7 +258,7 @@ Vec Scene_game::get_level_vel() const {
 void Scene_game::replay_init() {
   clear_cur_keys();
   // globals
-  hpw::game_updates_safe = 0;
+  hpw::game_ticks = 0;
   hpw::any_key_pressed = false;
   hpw::cur_upf = 0;
   hpw::cur_ups = 0;

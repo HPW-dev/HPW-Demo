@@ -114,7 +114,7 @@ void input_log() {
 void replay_stable_log() {
   std::clog << "replay_stable_log(): chunk: " << chunk_id++ << "\n";
 
-  std::clog << "game_updates_safe: " << hpw::game_updates_safe << "\n";
+  std::clog << "game_ticks: " << hpw::game_ticks << "\n";
   rnd_log();
   entities_log();
   player_log();
