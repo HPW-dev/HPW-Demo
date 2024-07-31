@@ -88,6 +88,7 @@ class Yaml::Impl: public Resource {
 
 public:
   inline Impl(): Resource() {}
+  
   inline Impl(CN<Impl> other) noexcept {
     self = other.self;
     Resource::operator = (other);
