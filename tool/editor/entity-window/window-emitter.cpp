@@ -42,15 +42,27 @@ struct Window_emitter::Impl {
   inline void imgui_exec() {
     ImGui::Begin(m_title.c_str(), {}, ImGuiWindowFlags_AlwaysAutoResize);
     Scope _({}, &ImGui::End);
-
-    name_select();
-    phys_select();
     imgui_input();
+
+    if (ImGui::BeginTabBar("emitter tab bar")) {
+      Scope tab_bar_scope({}, &ImGui::EndTabBar);
+
+      if (ImGui::BeginTabItem("основное")) {
+        name_select();
+        ImGui::EndTabItem();
+      }
+
+      if (ImGui::BeginTabItem("Phys")) {
+        phys_select();
+        ImGui::EndTabItem();
+      }
+    } // BeginTabBar
+
     if (ImGui::Button("Убрать объект"))
       kill_cur_entity();
     if (ImGui::Button("Закрыть"))
       exit();
-  }
+  } // imgui_exec
 
   inline static Uid get_uid() { return ::g_wnd_uid++; }
 
