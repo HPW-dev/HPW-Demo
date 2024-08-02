@@ -128,8 +128,9 @@ struct Scene_entity_editor::Impl {
     graphic::set_disable_frame_limit(!graphic::get_vsync());
     graphic::wait_frame = false;
     graphic::auto_frame_skip = false;
+    graphic::frame_skip = 0;
     graphic::blink_particles = false;
-    graphic::disable_heat_distort_while_lag = false;
+    graphic::disable_heat_distort_while_lag = true;
     graphic::light_quality = Light_quality::high;
     // resource:
     hpw::lazy_load_anim = true;
