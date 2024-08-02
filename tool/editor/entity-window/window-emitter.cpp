@@ -122,7 +122,7 @@ struct Window_emitter::Impl {
 
   inline void update(const Delta_time dt) {
     if (m_ctx.entities_is_clear)
-      kill_cur_entity();
+      m_last_entity = {};
     update_spawner(dt);
   }
 
