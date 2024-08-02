@@ -80,14 +80,17 @@ struct Window_emitter::Impl {
       names.push_back("entities.yml не содержит имён объектов");
 
     if (ImGui::BeginCombo("объект", names.at(m_selected_name_id).c_str())) {
-      for (uint i; cnauto name: names) {
+      for (uint i = 0; cnauto name: names) {
         const bool is_selected = (i == m_selected_name_id);
+
         if (ImGui::Selectable(name.c_str(), is_selected)) {
           m_selected_name_id = i;
           kill_cur_entity();
         }
+
         if (is_selected)
           ImGui::SetItemDefaultFocus();
+
         ++i;
       }
       ImGui::EndCombo();
