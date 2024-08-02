@@ -1,3 +1,4 @@
+#include <imgui.h>
 #include "entity-editor-ctx.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
@@ -36,4 +37,8 @@ void entity_editor_load(Entity_editor_ctx& ctx) {
     error("неизвестная ошибка при чтении файла \"" +
       entities_yml_path + "\". Возможно что файла нет и его надо достать из data.zip");
   }
+}
+
+void edit_flags(Entity& entity) {
+  
 }

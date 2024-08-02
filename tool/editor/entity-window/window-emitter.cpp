@@ -1,6 +1,7 @@
 #include <imgui.h>
 #include "window-emitter.hpp"
 #include "entity-editor-ctx.hpp"
+#include "entity-editor-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
@@ -57,6 +58,12 @@ struct Window_emitter::Impl {
 
       if (ImGui::BeginTabItem("Phys")) {
         phys_select();
+        ImGui::EndTabItem();
+      }
+
+      if (ImGui::BeginTabItem("флаги")) {
+        if (m_last_entity)
+          edit_flags(*m_last_entity);
         ImGui::EndTabItem();
       }
     } // BeginTabBar
