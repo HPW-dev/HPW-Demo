@@ -4,6 +4,7 @@
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
+#include "scene/scene-entity-editor.hpp"
 #include "game/entity/entity.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/game-util.hpp"
@@ -14,7 +15,8 @@ Uid g_wnd_uid {}; // чтобы ImGui не перепутал окна
 
 struct Window_emitter::Impl {
   Entity_editor_ctx& m_ctx;
-  Window_emitter& m_master;
+  Window_emitter& m_self;
+  Scene_entity_editor& m_master;
   Uid m_uid {};
   Str m_title {}; // название окна для ImGui
   float m_deg {};
@@ -29,8 +31,9 @@ struct Window_emitter::Impl {
   std::size_t m_selected_name_id {};
   Str m_name_for_spawn {}; // выбранный entity
 
-  inline explicit Impl(Window_emitter& master, Entity_editor_ctx& ctx)
+  inline explicit Impl(Window_emitter& self, Scene_entity_editor& master, Entity_editor_ctx& ctx)
   : m_ctx {ctx}
+  , m_self {self}
   , m_master {master}
   , m_uid {get_uid()}
   {
@@ -58,9 +61,13 @@ struct Window_emitter::Impl {
       }
     } // BeginTabBar
 
-    if (ImGui::Button("Убрать объект"))
+    if (ImGui::Button("копировать"))
+      copy_self();
+    ImGui::SameLine();
+    if (ImGui::Button("убрать объект"))
       kill_cur_entity();
-    if (ImGui::Button("Закрыть"))
+    ImGui::SameLine();
+    if (ImGui::Button("X"))
       exit();
   } // imgui_exec
 
@@ -95,7 +102,7 @@ struct Window_emitter::Impl {
       exit();
   }
 
-  inline void exit() { m_master.m_active = false; }
+  inline void exit() { m_self.m_active = false; }
 
   // настраивает физику спавнера
   inline void phys_select() {
@@ -139,9 +146,25 @@ struct Window_emitter::Impl {
     return_if(!m_last_entity || !m_last_entity->status.live);
     m_last_entity->kill();
   }
+
+  inline void copy_self() {
+    auto copy = new_unique<Window_emitter>(m_master, m_ctx);
+    copy->impl->m_deg = m_deg;
+    copy->impl->m_speed = m_speed;
+    copy->impl->m_force = m_force;
+    copy->impl->m_accel = m_accel;
+    copy->impl->m_rot_frc = m_rot_frc;
+    copy->impl->m_rot_acc = m_rot_acc;
+    copy->impl->m_pos = m_pos;
+    copy->impl->m_last_entity = {};
+    copy->impl->m_selected_name_id = m_selected_name_id;
+    copy->impl->m_name_for_spawn = m_name_for_spawn;
+    m_master.move_emitter(std::move(copy));
+  }
 }; // Impl
 
-Window_emitter::Window_emitter(Entity_editor_ctx& ctx): impl {new_unique<Impl>(*this, ctx)} {}
+Window_emitter::Window_emitter(Scene_entity_editor& master, Entity_editor_ctx& ctx)
+: impl {new_unique<Impl>(*this, master, ctx)} {}
 Window_emitter::~Window_emitter() {}
 void Window_emitter::imgui_exec() { impl->imgui_exec(); }
 void Window_emitter::update(const Delta_time dt) { impl->update(dt); }

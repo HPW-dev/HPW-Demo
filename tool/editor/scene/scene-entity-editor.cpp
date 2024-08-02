@@ -113,9 +113,12 @@ struct Scene_entity_editor::Impl {
   }
 
   inline void add_emitter() {
-    auto wnd = new_unique<decltype(m_emitters)::value_type::element_type>(m_ctx);
+    auto wnd = new_unique<Window_emitter>(m_master, m_ctx);
     m_emitters.emplace_back(std::move(wnd));
   }
+
+  inline void move_emitter(Unique<Window_emitter>&& other)
+    { m_emitters.emplace_back(std::move(other)); }
 
   inline void init() {
     detailed_log("entity editor init...\n");
@@ -186,3 +189,5 @@ void Scene_entity_editor::pause() { impl->pause(); }
 void Scene_entity_editor::save() { impl->save(); }
 void Scene_entity_editor::reload() { impl->reload(); }
 void Scene_entity_editor::add_emitter() { impl->add_emitter(); }
+void Scene_entity_editor::move_emitter(Unique<Window_emitter>&& other)
+  { impl->move_emitter(std::move(other)); }

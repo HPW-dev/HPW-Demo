@@ -3,6 +3,8 @@
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
 
+class Window_emitter;
+
 // редактор игровых объектов
 class Scene_entity_editor: public Editor_scene_base {
   struct Impl;
@@ -19,4 +21,5 @@ public:
   void save();
   void reload();
   void add_emitter(); // создаёт окошко для настроек спавна объектов
+  void move_emitter(Unique<Window_emitter>&& other);
 };
