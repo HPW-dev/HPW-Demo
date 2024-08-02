@@ -86,7 +86,8 @@ struct Window_emitter::Impl {
     if (names.empty())
       names.push_back("entities.yml не содержит имён объектов");
 
-    if (ImGui::BeginCombo("объект", names.at(m_selected_name_id).c_str())) {
+    ImGui::Text("объект:");
+    if (ImGui::BeginCombo("##объект", names.at(m_selected_name_id).c_str())) {
       for (uint i = 0; cnauto name: names) {
         const bool is_selected = (i == m_selected_name_id);
 
