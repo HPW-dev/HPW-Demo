@@ -40,7 +40,6 @@ struct Explosion_loader::Impl {
     assert(!m_entity_names.empty());
     if (auto heat_distort_node = config["heat_distort"]; heat_distort_node.check())
       m_heat_distort = load_heat_distort(heat_distort_node);
-    // TODO load hitbox anim
   }
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {  

@@ -1,5 +1,4 @@
 #pragma once
-// TODO удалить на релизе, если не понадобится
 #include "collider.hpp"
 
 // Никакой проверки столкновений
@@ -10,4 +9,4 @@ public:
   Collider_empty() = default;
   ~Collider_empty() = default;
   inline void operator()(CN<Entities> entities, Delta_time dt) override {}
-}; // Collider_empty
+};

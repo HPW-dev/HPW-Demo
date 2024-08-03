@@ -139,6 +139,7 @@ struct Scene_entity_editor::Impl {
     load_animations();
     // game:
     hpw::shmup_mode = true;
+    hpw::collider_autoopt = true;
     init_shared(graphic::camera);
     // editor context:
     m_ctx = {};
@@ -164,6 +165,7 @@ struct Scene_entity_editor::Impl {
     log_txt << "game:\n";
     log_txt << "  entity loaders = " << hpw::entity_mgr->entity_loaders_sz() << '\n';
     log_txt << "  shmup mode = " << std::boolalpha << hpw::shmup_mode << '\n';
+    log_txt << "  collider autoopt = " << std::boolalpha << hpw::collider_autoopt << '\n';
     detailed_log(log_txt.str());
     #endif
 

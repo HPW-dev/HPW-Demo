@@ -71,7 +71,6 @@ struct Collider_experimental::Impl {
     assert(hitbox);
     cauto sz = hitbox->simple.r * 2;
     return Rect {
-      // TODO влияние офсета не протещено
       ent.phys.get_pos() - Vec(sz/2., sz/2.),
       Vec(sz, sz)
     };

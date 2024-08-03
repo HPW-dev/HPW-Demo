@@ -36,7 +36,7 @@ struct Cosmic_waiter::Loader::Impl {
     it->phys.set_deg(90); // смотреть вниз и лететь туда с ускорением
     it->phys.set_speed( pps(m_start_speed) );
     it->phys.set_accel( pps(m_accel) );
-    it->anim_ctx.set_speed_scale(0); // TODO костыль выключающий анимаю
+    it->anim_ctx.set_speed_scale(0); // костыль выключающий анимаю
 
     return parent;
   } // op ()

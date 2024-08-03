@@ -90,8 +90,8 @@ void load_config() {
   auto& config = *hpw::config;
   hpw::enable_replay = config.get_bool("enable_replay", true);
   hpw::need_tutorial = config.get_bool("need_tutorial", true);
-  hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death");
-  hpw::collider_autoopt = config.get_bool("collider_autoopt");
+  hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
+  hpw::collider_autoopt = config.get_bool("collider_autoopt", hpw::collider_autoopt);
 
   cauto debug = config["debug"];
   hpw::empty_level_first = debug.get_bool("empty_level_first", false);
