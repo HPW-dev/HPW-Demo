@@ -20,13 +20,7 @@ struct Window_emitter::Impl {
   Scene_entity_editor& m_master;
   Uid m_uid {};
   Str m_title {}; // название окна для ImGui
-  float m_deg {};
-  float m_speed {};
-  float m_force {};
-  float m_accel {};
-  float m_rot_frc {};
-  float m_rot_acc {};
-  Vec m_pos {};
+  Phys m_spawn_phys {}; // параметры физики при спавне объектов
   Entity* m_last_entity {};
 
   std::size_t m_selected_name_id {};
@@ -40,7 +34,7 @@ struct Window_emitter::Impl {
   {
     m_title = "Эмиттер " + n2s(m_uid);
     detailed_log("добавлено окно эмиттера (№" << m_uid << ")\n");
-    m_pos = get_screen_center();
+    m_spawn_phys.set_pos( get_screen_center() + Vec(0, 40) );
   }
 
   inline void imgui_exec() {
@@ -56,8 +50,14 @@ struct Window_emitter::Impl {
         ImGui::EndTabItem();
       }
 
-      if (ImGui::BeginTabItem("Phys")) {
-        phys_select();
+      if (ImGui::BeginTabItem("Phys спавна")) {
+        phys_select(m_spawn_phys);
+        ImGui::EndTabItem();
+      }
+
+      if (ImGui::BeginTabItem("Phys объекта")) {
+        if (m_last_entity)
+          phys_select(m_last_entity->phys);
         ImGui::EndTabItem();
       }
 
@@ -119,19 +119,43 @@ struct Window_emitter::Impl {
   }
 
   // настраивает физику спавнера
-  inline void phys_select() {
+  inline void phys_select(Phys& dst) {
+    auto deg = dst.get_deg();
+    auto speed = dst.get_speed();
+    auto force = dst.get_force();
+    auto accel = dst.get_accel();
+    auto rot_frc = dst.get_rot_fc();
+    auto rot_acc = dst.get_rot_ac();
+    Vec pos = dst.get_pos();
+
+    static_assert(std::is_same_v<decltype(deg), float>);
+    static_assert(std::is_same_v<decltype(speed), float>);
+    static_assert(std::is_same_v<decltype(force), float>);
+    static_assert(std::is_same_v<decltype(accel), float>);
+    static_assert(std::is_same_v<decltype(rot_frc), float>);
+    static_assert(std::is_same_v<decltype(rot_acc), float>);
+    static_assert(std::is_same_v<decltype(pos.x), float>);
+
     ImGui::Separator();
-    float pos[2] {m_pos.x, m_pos.y};
-    if (ImGui::SliderFloat2("позиция", pos, -50, 600)) {
-      m_pos.x = pos[0];
-      m_pos.y = pos[1];
+    float imgui_pos[2] {pos.x, pos.y};
+    if (ImGui::SliderFloat2("позиция", imgui_pos, -50, 600)) {
+      pos.x = imgui_pos[0];
+      pos.y = imgui_pos[1];
     }
-    ImGui::SliderFloat("направление", &m_deg, 0, 360);
-    ImGui::SliderFloat("скорость", &m_speed, 0, 150_pps);
-    ImGui::SliderFloat("ускорение", &m_accel, 0, 150_pps);
-    ImGui::SliderFloat("торможение", &m_force, 0, 150_pps);
-    ImGui::SliderFloat("ускор. вращ.", &m_rot_frc, 0, 720);
-    ImGui::SliderFloat("тормо. вращ.", &m_rot_acc, 0, 150_pps);
+    ImGui::SliderFloat("направление", &deg, 0, 360);
+    ImGui::SliderFloat("скорость", &speed, 0, 150_pps);
+    ImGui::SliderFloat("ускорение", &accel, 0, 150_pps);
+    ImGui::SliderFloat("торможение", &force, 0, 150_pps);
+    ImGui::SliderFloat("ускор. вращ.", &rot_frc, 0, 720);
+    ImGui::SliderFloat("тормо. вращ.", &rot_acc, 0, 150_pps);
+
+    dst.set_deg(deg);
+    dst.set_speed(speed);
+    dst.set_force(force);
+    dst.set_accel(accel);
+    dst.set_rot_fc(rot_frc);
+    dst.set_rot_ac(rot_acc);
+    dst.set_pos(pos);
   } // phys_select
 
   inline void update(const Delta_time dt) {
@@ -144,16 +168,9 @@ struct Window_emitter::Impl {
     return_if(m_name_for_spawn.empty());
     return_if(m_last_entity && m_last_entity->status.live);
 
-    m_last_entity = hpw::entity_mgr->make({}, m_name_for_spawn, m_pos);
+    m_last_entity = hpw::entity_mgr->make({}, m_name_for_spawn, m_spawn_phys.get_pos());
     return_if(!m_last_entity);
-    
-    m_last_entity->phys.set_pos(m_pos);
-    m_last_entity->phys.set_deg(m_deg);
-    m_last_entity->phys.set_speed(m_speed);
-    m_last_entity->phys.set_force(m_force);
-    m_last_entity->phys.set_accel(m_accel);
-    m_last_entity->phys.set_rot_ac(m_rot_acc);
-    m_last_entity->phys.set_rot_fc(m_rot_frc);
+    m_last_entity->phys = m_spawn_phys;
   }
 
   inline void kill_cur_entity() {
@@ -163,13 +180,7 @@ struct Window_emitter::Impl {
 
   inline void copy_self() {
     auto copy = new_unique<Window_emitter>(m_master, m_ctx);
-    copy->impl->m_deg = m_deg;
-    copy->impl->m_speed = m_speed;
-    copy->impl->m_force = m_force;
-    copy->impl->m_accel = m_accel;
-    copy->impl->m_rot_frc = m_rot_frc;
-    copy->impl->m_rot_acc = m_rot_acc;
-    copy->impl->m_pos = m_pos;
+    copy->impl->m_spawn_phys = m_spawn_phys;
     copy->impl->m_last_entity = {};
     copy->impl->m_selected_name_id = m_selected_name_id;
     copy->impl->m_name_for_spawn = m_name_for_spawn;
