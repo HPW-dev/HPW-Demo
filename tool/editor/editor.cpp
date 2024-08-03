@@ -35,7 +35,16 @@ void Editor::init() {
   reshape(1024, 720);
 }
 
+inline static void update_graphic_autoopt(const Delta_time dt) {
+  using timeout_t = decltype(graphic::autoopt_timeout);
+  // если рендер не будет лагать, то после таймера - тригер автооптимизации сбросится
+  graphic::autoopt_timeout = std::max(graphic::autoopt_timeout - dt, timeout_t(0));
+  if (graphic::autoopt_timeout == timeout_t(0))
+    graphic::render_lag = false;
+}
+
 void Editor::update(const Delta_time dt) {
+  update_graphic_autoopt(dt);
   Host_imgui::update(dt);
   auto st = Editor::get_time();
   if ( !hpw::scene_mgr->update(dt) ) {
@@ -50,6 +59,7 @@ void Editor::draw() {
   auto st = Editor::get_time();
   hpw::scene_mgr->draw(*graphic::canvas);
   graphic::soft_draw_time = Editor::get_time() - st;
+  graphic::check_autoopt();
 }
 
 void Editor::imgui_exec() {

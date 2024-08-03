@@ -34,6 +34,7 @@ private:
   void move_it(const Delta_time dt);
   void draw_pos(Image& dst, const Vec offset) const;
   void debug_draw(Image& dst, const Vec offset) const;
+  void draw_haze(Image& dst, const Vec offset) const;
 
 public:
   Phys phys {}; // физический контекст

@@ -53,18 +53,27 @@ void Entity::draw(Image& dst, const Vec offset) const {
       light->draw(dst, phys.get_pos() + offset);
       
     // искажение воздуха
-    if (
-      graphic::enable_heat_distort &&
-      heat_distort &&
-      !status.disable_heat_distort &&
-      !(graphic::render_lag && graphic::disable_heat_distort_while_lag)
-    ) {
-      heat_distort->draw(dst, phys.get_pos() + offset);
-    }
+    draw_haze(dst, offset);
   } // if !disable_render
 
   debug_draw(dst, offset);
 } // draw
+
+// искажение воздуха
+void Entity::draw_haze(Image& dst, const Vec offset) const {
+  // не рисовать при лагах
+  const bool auto_opt = graphic::render_lag && graphic::disable_heat_distort_while_lag;
+  return_if(auto_opt);
+
+  // если включено в настройках графики
+  const bool graphic_enable = graphic::enable_heat_distort;
+  const bool pointer_valid = scast<bool>(heat_distort);
+  // если объектом не запрещено
+  const bool entity_flag_enabled = !status.disable_heat_distort;
+  
+  if (graphic_enable && pointer_valid && entity_flag_enabled)
+    heat_distort->draw(dst, phys.get_pos() + offset);
+}
 
 void Entity::update(const Delta_time dt) {
   if (!status.disable_motion)
