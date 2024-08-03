@@ -22,6 +22,7 @@
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
+#include "game/entity/util/collider-optimizer.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/enemy/cosmic-hunter.hpp"
@@ -50,11 +51,14 @@ struct Entity_mgr::Impl {
   // текущая ссылка на игрока, чтобы враги могли брать его в таргет
   Player* m_player {};
   bool m_visible {true}; // видимость игровых объектов
+  Unique<Collider_optimizer> m_collider_optimizer {};
+  Entity_mgr& m_master;
 
-  inline Impl() {
+  inline Impl(Entity_mgr& master): m_master {master} {
     #ifndef ECOMEM
     m_entities.reserve(4'000);
     #endif
+    init_unique(m_collider_optimizer, m_master);
   }
 
   inline ~Impl() { clear(); }
@@ -77,6 +81,7 @@ struct Entity_mgr::Impl {
   }
 
   inline void update(const Delta_time dt) {
+    m_collider_optimizer->update();
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
@@ -342,7 +347,7 @@ struct Entity_mgr::Impl {
   }
 }; // Impl
 
-Entity_mgr::Entity_mgr(): impl {new_unique<Impl>()} {}
+Entity_mgr::Entity_mgr(): impl {new_unique<Impl>(*this)} {}
 Entity_mgr::~Entity_mgr() { impl->clear(); }
 void Entity_mgr::draw(Image& dst, const Vec offset) const { impl->draw(dst, offset); }
 void Entity_mgr::update(const Delta_time dt) { impl->update(dt); }

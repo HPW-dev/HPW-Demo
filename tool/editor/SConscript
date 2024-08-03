@@ -107,6 +107,7 @@ sources = [
   src_dir + "game/entity/particle.cpp",
   src_dir + "game/entity/collidable.cpp",
   src_dir + "game/entity/entity-mgr.cpp",
+  src_dir + "game/entity/util/collider-optimizer.cpp",
   src_dir + "game/entity/util/scatter.cpp",
   src_dir + "game/entity/util/hitbox.cpp",
   src_dir + "game/entity/util/entity-util.cpp",
