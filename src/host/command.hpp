@@ -2,6 +2,7 @@
 // @file глобальные колбэки
 #include <functional>
 #include "util/str.hpp"
+#include "util/math/num-types.hpp"
 
 enum class Resize_mode;
 
@@ -33,5 +34,7 @@ inline std::function<void ()> reset_keymap {};
 inline std::function<void (const Str&)> init_palette_from_archive {};
 // устанавливает гамму
 inline std::function<void (const double)> set_gamma {};
+// для вычисления точных временных интервалов
+inline std::function<Delta_time ()> get_time {};
 
 } // hpw ns

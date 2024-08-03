@@ -7,6 +7,7 @@
 #include "bonus-loader.hpp"
 #include "bullet-loader.hpp"
 #include "entity.hpp"
+#include "host/command.hpp"
 #include "player/player-dark.hpp"
 #include "collider/collider-empty.hpp"
 #include "util/hitbox.hpp"
@@ -53,6 +54,7 @@ struct Entity_mgr::Impl {
   bool m_visible {true}; // видимость игровых объектов
   Unique<Collider_optimizer> m_collider_optimizer {};
   Entity_mgr& m_master;
+  bool m_update_lag {}; // true при слишком медленном апдейте
 
   inline Impl(Entity_mgr& master): m_master {master} {
     #ifndef ECOMEM
@@ -81,6 +83,8 @@ struct Entity_mgr::Impl {
   }
 
   inline void update(const Delta_time dt) {
+    cauto st = hpw::get_time();
+
     m_collider_optimizer->update();
     accept_registrate_list();
     update_scatters();
@@ -89,6 +93,9 @@ struct Entity_mgr::Impl {
       (*m_collision_resolver)(m_entities, dt);
     bound_check();
     update_kills();
+
+    cauto ed = hpw::get_time();
+    m_update_lag = (ed - st) >= hpw::target_update_time * 1.1;
   } // update
 
   // применить список на добавление объектов из очереди m_registrate_list
@@ -345,6 +352,8 @@ struct Entity_mgr::Impl {
   inline std::size_t entity_loaders_sz() const {
     return m_entity_loaders.size();
   }
+
+  bool update_lag() const { return m_update_lag; }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>(*this)} {}
@@ -371,3 +380,4 @@ void Entity_mgr::set_visible(const bool mode) { return impl->set_visible(mode); 
 Entity* Entity_mgr::find(const Uid uid) const { return impl->find(uid); }
 uint Entity_mgr::lives() const { return impl->lives(); }
 std::size_t Entity_mgr::entity_loaders_sz() const { return impl->entity_loaders_sz(); }
+bool Entity_mgr::update_lag() const { return impl->update_lag(); }

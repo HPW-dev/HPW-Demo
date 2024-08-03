@@ -68,6 +68,8 @@ public:
   Vec target_for_enemy() const;
   // узнать сколько сейчас загрузчиков
   std::size_t entity_loaders_sz() const;
+  // узнать что система коллизий лагает
+  bool update_lag() const;
   
   // выделить память под объект
   template <class T> inline T* allocate();

@@ -144,6 +144,7 @@ void Host_glfw::init_commands() {
     hpw::keys_info = m_key_mapper->get_info();
   };
   hpw::set_gamma = [this](const double val) { this->set_gamma(val); };
+  hpw::get_time = [this]{ return this->get_time(); };
 } // init_commands
 
 void Host_glfw::init() {
