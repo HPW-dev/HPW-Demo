@@ -29,6 +29,7 @@ void save_config() {
   config.set_bool("enable_replay", hpw::enable_replay);
   config.set_bool("need_tutorial", hpw::need_tutorial);
   config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
+  config.set_bool("collider_autoopt", hpw::collider_autoopt);
 
   auto debug = config.make_node("debug");
   debug.set_bool("empty_level_first", hpw::empty_level_first);
@@ -90,6 +91,7 @@ void load_config() {
   hpw::enable_replay = config.get_bool("enable_replay", true);
   hpw::need_tutorial = config.get_bool("need_tutorial", true);
   hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death");
+  hpw::collider_autoopt = config.get_bool("collider_autoopt");
 
   cauto debug = config["debug"];
   hpw::empty_level_first = debug.get_bool("empty_level_first", false);
