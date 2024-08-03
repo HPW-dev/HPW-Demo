@@ -113,7 +113,10 @@ struct Window_emitter::Impl {
       exit();
   }
 
-  inline void exit() { m_self.m_active = false; }
+  inline void exit() {
+    kill_cur_entity();
+    m_self.m_active = false;
+  }
 
   // настраивает физику спавнера
   inline void phys_select() {
