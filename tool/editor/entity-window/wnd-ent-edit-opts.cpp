@@ -32,6 +32,11 @@ struct Wnd_ent_edit_opts::Impl {
   }
 
   inline void process_editor_opts() {
+    // fast forward
+    bool fast_forward = graphic::get_fast_forward();
+    if (ImGui::Checkbox("ускорение", &fast_forward))
+      graphic::set_fast_forward(fast_forward);
+
     ImGui::Checkbox("пауза", &m_ctx.pause);
     ImGui::Checkbox("хитбоксы", &graphic::draw_hitboxes);
     ImGui::Checkbox("сетка системы коллизий", &graphic::show_grids);
