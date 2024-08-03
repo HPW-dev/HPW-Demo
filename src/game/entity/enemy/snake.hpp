@@ -13,12 +13,15 @@ class Enemy_snake_head final: public Proto_enemy {
     real speed {};
     real kill_delay {}; // через какое время уничтожить хвосты после смерти головы
     bool enable_scatter_if_head_death {}; // if true - разлетаться по сторонам после смерти головы
+    Entity* tail_entity {}; // чтобы дать хвосту знать что голова умерла
+    Uid tail_entity_uid {}; // чтобы дать хвосту знать что голова умерла
   } m_info {};
 public:
   class Loader;
   Enemy_snake_head();
   ~Enemy_snake_head() = default;
   void update(const Delta_time dt) override;
+  void kill() override;
 };
 
 // хвост змеи

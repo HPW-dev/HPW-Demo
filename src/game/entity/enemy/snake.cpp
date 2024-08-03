@@ -28,6 +28,15 @@ void Enemy_snake_head::update(const Delta_time dt) {
   phys.set_deg( deg_to_target(*this, hpw::entity_mgr->target_for_enemy()) );
 }
 
+void Enemy_snake_head::kill() {
+  Proto_enemy::kill();
+  /* узнать что начало хвоста ещё живо и вырезать из него
+  инфу о мастере, чтобы запустить цепочку смерти */
+  return_if (!m_info.tail_entity);
+  return_if (m_info.tail_entity->uid != m_info.tail_entity_uid);
+  m_info.tail_entity->set_master({});
+}
+
 void Enemy_snake_tail::update(const Delta_time dt) {
   Proto_enemy::update(dt);
 
@@ -102,6 +111,11 @@ Entity* Enemy_snake_head::Loader::operator()
   cfor (i, ret->m_info.tail_count) {
     last_tail = hpw::entity_mgr->make(last_tail,
       ret->m_info.tail_name, ret->phys.get_pos());
+    // записать в голову начало хвоста
+    if (i == 0) {
+      ret->m_info.tail_entity = last_tail;
+      ret->m_info.tail_entity_uid = last_tail->uid;
+    }
     // разлетается ли змейка при смерти
     if (ret->m_info.enable_scatter_if_head_death) {
       last_tail->add_update_callback([ret](Entity& it, const Delta_time dt) {

@@ -313,6 +313,7 @@ struct Entity_mgr::Impl {
         return player->phys.get_pos();
       }
     }
+    
     // если игрока не нашли, стрелять куда попало
     return get_rand_pos_safe(0, 0, graphic::width, graphic::height);
   }

@@ -44,6 +44,7 @@ struct Wnd_ent_edit_opts::Impl {
       hpw::entity_mgr->clear_entities();
       m_ctx.entities_is_clear = true;
     }
+
     // настройки фона
     ImGui::Checkbox("красный оттенок фона", &m_ctx.red_bg);
     ImGui::Text("яркость фона");
