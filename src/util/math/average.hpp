@@ -24,6 +24,17 @@ struct Ring_buffer {
       samples.emplace_back(x);
     }
   }
+
+  // добавить значение
+  inline void push(const T x) {
+    // вставлять значение по кругу
+    if (samples.size() >= MAX_SAMPLES) {
+      samples.pop_front();
+      samples.push_back(x);
+    } else { // добавлять новое значение
+      samples.push_back(x);
+    }
+  }
 }; // Average_base
 
 // поиск среднего значения
@@ -39,6 +50,7 @@ class Average final {
   }
 
   inline void move(T&& x) { core.move(std::move(x)); }
+  inline void push(const T x) { core.push(x); }
 };
 
 // поиск медианного значения

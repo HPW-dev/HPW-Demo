@@ -55,6 +55,7 @@ struct Entity_mgr::Impl {
   Unique<Collider_optimizer> m_collider_optimizer {};
   Entity_mgr& m_master;
   bool m_update_lag {}; // true при слишком медленном апдейте
+  Delta_time m_collider_time {}; // время на просчёт коллизий
 
   inline Impl(Entity_mgr& master): m_master {master} {
     #ifndef ECOMEM
@@ -89,8 +90,16 @@ struct Entity_mgr::Impl {
     accept_registrate_list();
     update_scatters();
     update_entitys(dt);
-    if (m_collision_resolver)
+
+    // просчёт столкновений
+    if (m_collision_resolver) {
+      cauto cld_st = hpw::get_time();
       (*m_collision_resolver)(m_entities, dt);
+      m_collider_time = hpw::get_time() - cld_st;
+    } else {
+      m_collider_time = 0;
+    }
+
     bound_check();
     update_kills();
 
@@ -354,6 +363,7 @@ struct Entity_mgr::Impl {
   }
 
   bool update_lag() const { return m_update_lag; }
+  Delta_time collider_time() const { return m_collider_time; }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>(*this)} {}
@@ -381,3 +391,4 @@ Entity* Entity_mgr::find(const Uid uid) const { return impl->find(uid); }
 uint Entity_mgr::lives() const { return impl->lives(); }
 std::size_t Entity_mgr::entity_loaders_sz() const { return impl->entity_loaders_sz(); }
 bool Entity_mgr::update_lag() const { return impl->update_lag(); }
+Delta_time Entity_mgr::collider_time() const { return impl->collider_time(); }

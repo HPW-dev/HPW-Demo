@@ -70,6 +70,8 @@ public:
   std::size_t entity_loaders_sz() const;
   // узнать что система коллизий лагает
   bool update_lag() const;
+  // сколько времени занимает просчёт столкновений
+  Delta_time collider_time() const;
   
   // выделить память под объект
   template <class T> inline T* allocate();
