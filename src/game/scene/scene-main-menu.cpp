@@ -1,6 +1,3 @@
-#include <fstream> // TODO del
-#include "graphic/image/image-io.hpp" // TODO del
-
 #include <ctime>
 #include "scene-main-menu.hpp"
 #include "scene-game.hpp"
@@ -24,7 +21,6 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/effect/bg-pattern.hpp"
 #include "graphic/effect/bg-pattern-2.hpp"
-#include "graphic/effect/image-to-asci.hpp"
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
@@ -197,13 +193,6 @@ void Scene_main_menu::draw(Image& dst) const {
   draw_wnd(dst);
   draw_logo(dst);
   draw_text(dst);
-
-  ////auto asci = to_asci(dst, 120, 42, Img_to_asci_mode::grayscale_small_pal_2);
-  //auto asci = to_asci(dst, 80, 24, Img_to_asci_mode::grayscale_edges_large_pal);
-  //std::ofstream out("asci.txt");
-  //out << asci;
-
-  //hpw::scene_mgr->back();
 }
 
 void Scene_main_menu::init_menu() {

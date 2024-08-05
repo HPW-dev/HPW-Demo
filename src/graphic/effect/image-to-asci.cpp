@@ -55,10 +55,6 @@ Str to_asci(CN<Image> src, const uint W, const uint H, const Img_to_asci_mode MO
         " `.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@");
     case Img_to_asci_mode::grayscale_small_pal: return img_to_grayscale(src, W, H, " .,:ilwW");
     case Img_to_asci_mode::grayscale_small_pal_2: return img_to_grayscale(src, W, H, " .:-=+*#%@");
-    case Img_to_asci_mode::grayscale_edges_large_pal: {
-      /*return img_to_grayscale(src, W, H,
-        " `.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@");*/
-    }
   } // switch MODE
 
   return {}; // заглушка от ворнингов
