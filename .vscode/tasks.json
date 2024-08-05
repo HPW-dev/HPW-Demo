@@ -60,6 +60,12 @@
       "args": ["script/build-game-fast.py"]
     },
     {
+      "label": "build game ASCI (fast)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-asci-fast.py"]
+    },
+    {
       "label": "build game (release)",
       "type": "shell",
       "command": "python",

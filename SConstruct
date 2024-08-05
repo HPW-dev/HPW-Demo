@@ -74,11 +74,13 @@ else: # release
   ])
 
 script = ARGUMENTS.get("script", "test/graphic/SConscript")
+host = ARGUMENTS.get("host", "glfw3")
 
 print("Execute script: " + script)
 print("System: " +
   ("Linux" if is_linux else "Windows") + " " +
   ("x64" if is_64bit else "x32"))
+print(f"Host: {host}")
 print("Build mode: " + ("debug" if is_debug else "release"))
 print("Compiler: " + compiler)
 
