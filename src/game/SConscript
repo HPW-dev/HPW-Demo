@@ -8,6 +8,7 @@ Import([
   "compiler",
   "defines",
   "is_64bit",
+  "host",
 ])
 
 enable_omp = True
@@ -47,6 +48,25 @@ else: # windows
     thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if is_64bit else "x32"),
   ])
 
+host_sources = []
+match host:
+  case "glfw3":
+    defines.append("-DHOST_GLFW3")
+    host_sources = [
+      Glob(src_dir + "host/glfw3/*.cpp"),
+      Glob(src_dir + "host/ogl3/*.cpp"),
+    ]
+  case "asci":
+    defines.append("-DHOST_ASCI")
+    host_sources = [
+      Glob(src_dir + "host/asci/*.cpp"),
+    ]
+  case "sdl2":
+    defines.append("-DHOST_SDL2")
+    raise ValueError("SDL2 host not implemented")
+  case _:
+    raise ValueError(f"unknown host name \"{host}\"")
+
 sources = [
   Glob(thirdparty_dir + "include/zip/*.c"),
   thirdparty_dir + "include/stb/stb_vorbis.c",
@@ -56,8 +76,6 @@ sources = [
   Glob(src_dir + "util/math/*.c"),
   Glob(src_dir + "host/*.cpp"),
   Glob(src_dir + "host/windows/*.cpp"),
-  Glob(src_dir + "host/glfw3/*.cpp"),
-  Glob(src_dir + "host/ogl3/*.cpp"),
   Glob(src_dir + "game/*.cpp"),
   Glob(src_dir + "game/util/*.cpp"),
   Glob(src_dir + "game/util/post-effect/*.cpp"),
@@ -85,7 +103,8 @@ sources = [
   Glob(src_dir + "graphic/font/*.cpp"),
   Glob(src_dir + "graphic/util/*.cpp"),
   Glob(src_dir + "sound/*.cpp"),
-]  
+]
+sources.extend([host_sources]);
 
 if not is_debug and not is_linux:
   ld_flags.append("-mwindows")

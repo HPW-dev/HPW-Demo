@@ -95,6 +95,7 @@ SConscript(
     "defines",
     "is_64bit",
     "compiler",
+    "host",
   ],
   must_exist=True
 )
