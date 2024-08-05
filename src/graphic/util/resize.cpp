@@ -1,5 +1,6 @@
 #include <omp.h>
 #include <unordered_map>
+#include <cmath>
 #include <utility>
 #include <algorithm>
 #include <cassert>
@@ -295,4 +296,41 @@ Color_get_pattern convert_to_cgp(Str name) {
     {"box", Color_get_pattern::box},
   };
   return table.at(name);
+}
+
+static inline real blerp(real c00, real c10, real c01,
+real c11, real tx, real ty) {
+  return std::lerp(std::lerp(c00, c10, tx), std::lerp(c01, c11, tx), ty);
+}
+
+Image resize_bilinear(CN<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
+  assert(src);
+  return_if(NEW_SIZE_X == scast<uint>(src.X) && NEW_SIZE_Y == scast<uint>(src.Y), src);
+
+  Image ret(NEW_SIZE_X, NEW_SIZE_Y);
+  const real scale_x = 1.0 / (scast<real>(NEW_SIZE_X) / src.X);
+  const real scale_y = 1.0 / (scast<real>(NEW_SIZE_Y) / src.Y);
+
+  cfor (y, ret.Y)
+  cfor (x, ret.X) {
+    const real dx = x * scale_x;
+    const real dy = y * scale_y;
+    const int gxi = std::floor(dx);
+    const int gyi = std::floor(dy);
+    cauto c00 =     src(gxi,     gyi);
+    cauto c10 = src.get(gxi + 1, gyi);
+    cauto c01 = src.get(gxi,     gyi + 1);
+    cauto c11 = src.get(gxi + 1, gyi + 1);
+    cauto tx = dx - gxi;
+    cauto ty = dy - gyi;
+    // TODO учёт красного
+    cauto l = blerp(
+      c00.to_real(),
+      c10.to_real(),
+      c01.to_real(),
+      c11.to_real(), tx, ty);
+    ret.fast_set(x, y, Pal8::from_real(l), {});
+  }
+
+  return ret;
 }

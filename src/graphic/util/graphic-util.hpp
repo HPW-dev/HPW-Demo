@@ -14,7 +14,7 @@ class Image;
 class Sprite;
 
 // ищет пиксель-бленд функцию по имени
-blend_pf find_blend_f(CN<Str> name);
+[[nodiscard]] blend_pf find_blend_f(CN<Str> name);
 
 // рисует полигон
 void draw_polygon(Image& dst, const Vec pos, CN<Polygon> poly,
@@ -30,29 +30,29 @@ void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
 void insert_x2(Image& dst, CN<Image> src, Vec pos);
 
 // обрезать лишнее в спрайте
-Sprite optimize_size(CN<Sprite> src, Vec& offset);
+[[nodiscard]] Sprite optimize_size(CN<Sprite> src, Vec& offset);
 
 // вырезание области без проверко границ
-Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my);
+[[nodiscard]] Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my);
 
 // вырезание области (безопасное)
-Image cut(CN<Image> src, CN<Rect> rect,
+[[nodiscard]] Image cut(CN<Image> src, CN<Rect> rect,
   Image_get mode=Image_get::MIRROR);
 
 // найти центр спрайта
-Vec center_point(CN<Sprite> src);
+[[nodiscard]] Vec center_point(CN<Sprite> src);
 // найти центр картинки
-Vec center_point(CN<Image> src);
+[[nodiscard]] Vec center_point(CN<Image> src);
 // чтобы вставить картинку dst в центр картинки src
-Vec center_point(CN<Image> src, CN<Image> dst);
+[[nodiscard]] Vec center_point(CN<Image> src, CN<Image> dst);
 // чтобы вставить спрайт dst в центр картинки src
-Vec center_point(CN<Image> src, CN<Sprite> dst);
-Vec center_point(const Vec src, const Vec dst);
+[[nodiscard]] Vec center_point(CN<Image> src, CN<Sprite> dst);
+[[nodiscard]] Vec center_point(const Vec src, const Vec dst);
 
 // получить случайный цвет
-Pal8 rand_color_stable(bool red=false);
+[[nodiscard]] Pal8 rand_color_stable(bool red=false);
 // получить случайный цвет (не синхронизирован с реплеем и быстрее)
-Pal8 rand_color_graphic(bool red=false);
+[[nodiscard]] Pal8 rand_color_graphic(bool red=false);
 
 // вставить картинку в картинку
 void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf,
@@ -80,7 +80,7 @@ void expand_color_8(Image& dst, const Pal8 color);
 void insert_blured(Image& dst, CN<Sprite> src, const Vec old_pos,
   const Vec cur_pos, blend_pf bf, Uid uid=0);
 // определяет какую область src надо копировать в пределах dst
-Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src);
+[[nodiscard]] Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src);
 // контраст (0 .. 1 .. inf)
 void apply_contrast(Image& dst, real contrast);
 // меняет яркость картинки
