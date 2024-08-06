@@ -12,6 +12,7 @@
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/config.hpp"
 #include "game/core/anims.hpp"
 #include "game/core/locales.hpp"
 #include "game/core/user.hpp"
@@ -29,6 +30,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/rnd-table.hpp"
+#include "util/platform.hpp"
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/vec-util.hpp"
@@ -36,6 +38,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/sprite/sprite-io.hpp"
+#include "graphic/image/image-io.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
@@ -519,3 +522,24 @@ void set_random_palette() {
   graphic::current_palette_file = palette_name;
   hpw::init_palette_from_archive (palette_name);
 }
+
+void save_screenshot(CN<Image> image) {
+  assert(image);
+
+  auto t = std::time(nullptr);
+#ifdef LINUX
+  struct ::tm lt;
+  ::localtime_r(&t, &lt);
+#else // WINDOWS
+  auto lt = *std::localtime(&t);
+#endif
+
+  auto screenshots_dir = hpw::cur_dir + 
+    (*hpw::config)["path"].get_str("screenshots", "screenshots") + SEPARATOR;
+  std::ostringstream oss;
+  oss << screenshots_dir;
+  make_dir_if_not_exist(oss.str());
+  oss << std::put_time(&lt, "%d-%m-%Y %H-%M-%S");
+  oss << "-" + n2s(rndu_fast(100'000)) + ".png";
+  save(image, oss.str());
+} // save_screenshot

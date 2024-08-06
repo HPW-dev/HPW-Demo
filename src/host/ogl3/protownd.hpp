@@ -14,7 +14,6 @@ protected:
   int m_w = 0, m_h = 0; // разрешение экрана
   Resize_ctx m_window_ctx {};
 
-  void save_screenshot() const override;
   void _gen_palette();
   virtual void ogl_resize(int w, int h) = 0;
   void _set_resize_mode(Resize_mode mode) override;

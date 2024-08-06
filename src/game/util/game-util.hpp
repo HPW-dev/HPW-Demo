@@ -50,3 +50,5 @@ std::size_t sizeof_all_sprites();
 void load_sounds();
 // ставит случайную палитру
 void set_random_palette();
+// сохраняет скриншот в нужную папку с нужным именем
+void save_screenshot(CN<Image> image);

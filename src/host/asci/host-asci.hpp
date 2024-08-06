@@ -75,8 +75,6 @@ public:
   void run() override;
 
 protected:
-  void exit() override;
-  void save_screenshot() const override;
   Delta_time get_time() const override;
   void draw_game_frame() const override;
 

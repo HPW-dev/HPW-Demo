@@ -23,25 +23,6 @@ Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {
   m_h = graphic::canvas->Y;
 }
 
-void Protownd::save_screenshot() const {
-  auto t = std::time(nullptr);
-#ifdef LINUX
-  struct ::tm lt;
-  ::localtime_r(&t, &lt);
-#else // WINDOWS
-  auto lt = *std::localtime(&t);
-#endif
-
-  auto screenshots_dir = hpw::cur_dir + 
-    (*hpw::config)["path"].get_str("screenshots", "screenshots") + SEPARATOR;
-  std::ostringstream oss;
-  oss << screenshots_dir;
-  make_dir_if_not_exist(oss.str());
-  oss << std::put_time(&lt, "%d-%m-%Y %H-%M-%S");
-  oss << "-" + n2s(rndu_fast(100'000)) + ".png";
-  save(*graphic::canvas, oss.str());
-} // save_screenshot
-
 void Protownd::_gen_palette() {
   constexpr real GRAY_MUL = 1.0 / Pal8::gray_end;
 	constexpr real RED_MUL = 1.0 / 31.0;

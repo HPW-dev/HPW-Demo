@@ -551,8 +551,6 @@ struct Host_asci::Impl {
   , _argv {argv}
   {}
 
-  inline void exit() {}
-  inline void save_screenshot() const {}
   inline Delta_time get_time() const { return 0; /*TODO*/ }
   inline void draw_game_frame() const {}
   inline void run() {}
@@ -565,8 +563,6 @@ Host_asci::Host_asci(int argc, char** argv)
 {}
 
 Host_asci::~Host_asci() {}
-void Host_asci::exit() { impl->exit(); }
-void Host_asci::save_screenshot() const { impl->save_screenshot(); }
 Delta_time Host_asci::get_time() const { return impl->get_time(); }
 void Host_asci::draw_game_frame() const { impl->draw_game_frame(); }
 void Host_asci::run() { impl->run(); }

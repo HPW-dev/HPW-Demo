@@ -5,9 +5,11 @@
 #include "command.hpp"
 #include "host-resize.hpp"
 #include "game/core/common.hpp"
+#include "game/core/canvas.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
+#include "game/util/game-util.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
 #include "util/math/random.hpp"
@@ -67,9 +69,15 @@ void Host::callbacks_init() {
   hpw::soft_exit = [this] { this->exit(); };
   hpw::set_fullscreen = [this](bool enable) { this->_set_fullscreen(enable); };
   hpw::set_double_buffering = [this](bool enable) { this->_set_double_buffering(enable); };
-  hpw::make_screenshot = [this] { this->save_screenshot(); };
   hpw::set_resize_mode = [this](Resize_mode mode) { this->_set_resize_mode(mode); };
   hpw::set_mouse_cursour_mode = [this](bool enable) { this->_set_mouse_cursour_mode(enable); };
+
+  hpw::make_screenshot = [this] {
+    if (graphic::canvas)
+      save_screenshot(*graphic::canvas);
+    else
+      hpw_log("не удалось сохранить скриншот, так как graphic::canvas ещё не инициализирован\n");
+  };
 }
 
 void Host::init_app_mutex() {

@@ -20,7 +20,6 @@ protected:
   
   virtual void exit();
   virtual void _set_fullscreen(bool enable) = 0;
-  virtual void save_screenshot() const = 0;
   virtual void _set_double_buffering(bool enable) = 0;
   virtual void _set_resize_mode(Resize_mode mode) = 0;
   virtual void _set_mouse_cursour_mode(bool mode) = 0;
