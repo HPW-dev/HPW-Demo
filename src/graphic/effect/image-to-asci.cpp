@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include <string_view>
 #include "image-to-asci.hpp"
 #include "graphic/image/image.hpp"
@@ -35,7 +36,7 @@ const uint W, const uint H, CN<std::string_view> PAL) {
       // конвертирует яркость пикселя в соответствующий по яркости ASCI-символ
       assert(avr_luma >= 0);
       assert(avr_luma <= 1);
-      asci_art += PAL.at(avr_luma * (PAL.size()-1));
+      asci_art += PAL.at(std::round(avr_luma * (PAL.size()-1)));
     } // for x -> TILES_X
 
     asci_art += '\n';
