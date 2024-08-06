@@ -5,7 +5,7 @@
 using Host_class = Host_glfw;
 #endif
 #ifdef HOST_SDL2
-#error "need impl for SDL2
+#error "need impl for SDL2"
 using Host_class = Host_sdl2;
 #endif
 #ifdef HOST_ASCI
@@ -24,7 +24,7 @@ class Game_app: public Host_class {
   void update_graphic_autoopt(const Delta_time dt);
   // полноэкранная рамка
   void draw_border(Image& dst) const;
-  void draw_game_frame() override;
+  void draw_game_frame() const override;
   void check_errors();
 
 public:

@@ -66,6 +66,18 @@
       "args": ["script/build-game-asci-fast.py"]
     },
     {
+      "label": "build game ASCI Debug",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-asci-debug.py"]
+    },
+    {
+      "label": "build game ASCI Release",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-asci-release.py"]
+    },
+    {
       "label": "build game (release)",
       "type": "shell",
       "command": "python",

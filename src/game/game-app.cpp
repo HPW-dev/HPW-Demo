@@ -31,7 +31,7 @@
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 
-Game_app::Game_app(int argc, char *argv[]): Host_glfw(argc, argv) {
+Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   #ifdef RELEASE
     init_validation_info();
   #endif
@@ -71,7 +71,7 @@ void Game_app::update(const Delta_time dt) {
   assert(dt == hpw::target_update_time);
   update_graphic_autoopt(dt);
   
-  Host_glfw::update(dt);
+  Host_class::update(dt);
 
   auto st = get_time();
   if ( !hpw::scene_mgr->update(dt) ) {
@@ -82,7 +82,7 @@ void Game_app::update(const Delta_time dt) {
   hpw::tick_time = get_time() - st;
 } // update
 
-void Game_app::draw_game_frame() {
+void Game_app::draw_game_frame() const {
   auto st = get_time();
 
   hpw::scene_mgr->draw(*graphic::canvas);
