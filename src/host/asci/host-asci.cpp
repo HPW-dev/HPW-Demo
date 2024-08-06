@@ -1,5 +1,6 @@
 #include <cassert>
 #include <chrono>
+#include <cstdlib>
 #include "host-asci.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -12,6 +13,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "util/pparser.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
 #include "host/host-util.hpp"
@@ -37,17 +39,23 @@ struct Host_asci::Impl {
 
   uint m_console_w = 80; // разрешение консоли по ширине (в символах)
   uint m_console_h = 24; // разрешение консоли по высоте (в символах)
+  Img_to_asci_mode m_asci_pal {Img_to_asci_mode::grayscale_large_pal};
+  uint m_target_fps {15};
+  uint m_frameskip {3};
 
   inline Impl(Host_asci& master, int argc, char** argv)
   : m_master {master}
   , m_argc {argc}
   , m_argv {argv}
   {
+    parse_args();
     init_core();
     init_console();
     init_input();
     init_commands();
   }
+
+  inline ~Impl() { clear_console(); }
 
   inline Delta_time get_time() const {
     static cauto _st = std::chrono::steady_clock::now();
@@ -59,9 +67,7 @@ struct Host_asci::Impl {
 
   inline void draw_frame() const {
     assert(graphic::canvas);
-    // TODO возможность настраивать
-    auto asci = to_asci(*graphic::canvas, m_console_w, m_console_h,
-      Img_to_asci_mode::grayscale_large_pal);
+    auto asci = to_asci(*graphic::canvas, m_console_w, m_console_h, m_asci_pal);
     remove_all(asci, '\n'); // не рендерить символы переноса
     remove_all(asci, '\r'); // не рендерить символы переноса
     
@@ -111,8 +117,11 @@ struct Host_asci::Impl {
     // Graphic:
     hpw::set_resize_mode(Resize_mode::one_to_one);
     hpw::set_fullscreen(false);
-    graphic::set_target_vsync_fps(25); // TODO это можно настраивать
-    graphic::set_target_fps(graphic::get_target_fps());
+    assert(m_console_h > 4);
+    assert(m_console_w > 3);
+    graphic::set_target_vsync_fps(m_target_fps);
+    graphic::set_target_fps(m_target_fps);
+    graphic::frame_skip = m_frameskip;
     // Canvas:
     init_unique(graphic::canvas, graphic::width, graphic::height);
     iferror(graphic::canvas->size == 0 || graphic::canvas->size >= 1024*720,
@@ -120,8 +129,10 @@ struct Host_asci::Impl {
   }
 
   inline void init_console() {
-    std::cout.clear();
+    clear_console();
   }
+
+  inline void clear_console() { system("cls"); }
 
   inline void init_commands() {
     hpw::set_vsync = [](bool){ detailed_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
@@ -384,6 +395,27 @@ struct Host_asci::Impl {
     //delay = std::clamp<Delta_time>(delay, 0, delay_timeout);
     delay = std::clamp<Delta_time>(delay, 0, 1);
     delay_sec(delay);
+  }
+
+  inline void parse_args() {
+    Pparser arg_parser({
+      Pparser::Param {{"-w", "--width"}, "screen width", [this](CN<Str> param) { m_console_w = s2n<uint>(param); }},
+      Pparser::Param {{"-h", "--height"}, "screen height", [this](CN<Str> param) { m_console_h = s2n<uint>(param); }},
+      Pparser::Param {{"-f", "--target-fps"}, "target FPS", [this](CN<Str> param) { m_target_fps = s2n<uint>(param); }},
+      Pparser::Param {{"-s", "--frameskip"}, "frameskip value", [this](CN<Str> param) { m_frameskip = s2n<uint>(param); }},
+      Pparser::Param {{"-p", "--asci-palette"}, "predefined asci-palettes [1, 2, 3]", [this](CN<Str> param) {
+        const uint palette_index = s2n<uint>(param);
+        switch (palette_index) {
+          default:
+          case 1: m_asci_pal = Img_to_asci_mode::grayscale_large_pal; break;
+          case 2: m_asci_pal = Img_to_asci_mode::grayscale_small_pal; break;
+          case 3: m_asci_pal = Img_to_asci_mode::grayscale_small_pal_2; break;
+        }
+      }},
+    });
+    arg_parser.skip_empty = true;
+    arg_parser.print_info();
+    arg_parser(m_argc, m_argv);
   }
 }; // Impl
 
