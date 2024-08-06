@@ -64,7 +64,7 @@ sources = [
   src_dir + "game/util/sync.cpp",
 
   src_dir + "host/protownd.cpp",
-  src_dir + "host/resize.cpp",
+  src_dir + "host/host-resize.cpp",
   src_dir + "host/host.cpp",
   src_dir + "host/host-util.cpp",
   src_dir + "host/ogl3/host-ogl.cpp",

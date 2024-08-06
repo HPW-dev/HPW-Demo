@@ -1,6 +1,6 @@
 #include <iomanip>
 #include "protownd.hpp"
-#include "command.hpp"
+#include "host/command.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"

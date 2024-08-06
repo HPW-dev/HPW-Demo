@@ -2,7 +2,7 @@
 #include <atomic>
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
-#include "resize.hpp"
+#include "host-resize.hpp"
 #include "command.hpp"
 
 // базовый класс для игрового хоста

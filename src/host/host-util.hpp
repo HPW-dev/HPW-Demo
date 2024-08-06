@@ -1,5 +1,11 @@
 #pragma once
+
+#ifdef HOST_GLFW3
 #include <GL/glew.h>
+#else
+using GLfloat = float;
+#endif
+
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"

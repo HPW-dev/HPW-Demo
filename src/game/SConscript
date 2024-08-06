@@ -34,16 +34,13 @@ used_libs = [
 ]
 
 if is_linux:
-  used_libs.extend(["GL", "GLEW", "glfw", "openal"])
+  used_libs.extend(["openal"])
 else: # windows
   inc_path.extend([
     thirdparty_dir + "include/_windows_only",
-    thirdparty_dir + "include/_windows_only/GLEW"
   ])
-  used_libs.extend(["glfw3dll", "glew32", "opengl32", "OpenAL32.dll"])
+  used_libs.extend(["OpenAL32.dll"])
   lib_path.extend([
-    thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
     thirdparty_dir + "lib/yaml-cpp/",
     thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if is_64bit else "x32"),
   ])
@@ -56,14 +53,28 @@ match host:
       Glob(src_dir + "host/glfw3/*.cpp"),
       Glob(src_dir + "host/ogl3/*.cpp"),
     ]
+    if is_linux:
+      used_libs.extend(["GL", "GLEW", "glfw"])
+    else:
+      inc_path.extend([
+        thirdparty_dir + "include/_windows_only/GLEW"
+      ])
+      used_libs.extend(["glfw3dll", "glew32", "opengl32"])
+      lib_path.extend([
+        thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
+        thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
+      ])
+
   case "asci":
     defines.append("-DHOST_ASCI")
     host_sources = [
       Glob(src_dir + "host/asci/*.cpp"),
     ]
+
   case "sdl2":
     defines.append("-DHOST_SDL2")
     raise ValueError("SDL2 host not implemented")
+  
   case _:
     raise ValueError(f"unknown host name \"{host}\"")
 

@@ -2,8 +2,8 @@
 #include <GL/glew.h>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
-#include "host.hpp"
-#include "resize.hpp"
+#include "host/host.hpp"
+#include "host/host-resize.hpp"
 
 // окно без рендерера
 class Protownd: public Host {

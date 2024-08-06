@@ -29,7 +29,7 @@ sources = [
   src_dir + "host/host-ogl.cpp",
   src_dir + "host/host-glfw.cpp",
   src_dir + "host/command.cpp",
-  src_dir + "host/resize.cpp",
+  src_dir + "host/host-resize.cpp",
   src_dir + "host/protownd.cpp",
   Glob(src_dir + "util/math/*.cpp"),
   Glob(src_dir + "util/file/*.cpp"),

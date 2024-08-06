@@ -76,7 +76,7 @@ sources = [
   Glob("anim-window/*.cpp"),
   Glob("entity-window/*.cpp"),
   Glob("*.cpp"),
-  src_dir + "host/resize.cpp",
+  src_dir + "host/host-resize.cpp",
   src_dir + "host/protownd.cpp",
   src_dir + "host/host-util.cpp",
   src_dir + "host/host.cpp",

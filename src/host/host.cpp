@@ -3,7 +3,7 @@
 #include "host.hpp"
 #include "host-util.hpp"
 #include "command.hpp"
-#include "resize.hpp"
+#include "host-resize.hpp"
 #include "game/core/common.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"

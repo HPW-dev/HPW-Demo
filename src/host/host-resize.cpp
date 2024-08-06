@@ -1,5 +1,5 @@
 #include <algorithm>
-#include "resize.hpp"
+#include "host-resize.hpp"
 #include "util/math/num-types.hpp"
 
 void Resize_ctx::resize_by_mode(
