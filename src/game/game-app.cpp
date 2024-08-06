@@ -83,12 +83,13 @@ void Game_app::update(const Delta_time dt) {
 } // update
 
 void Game_app::draw_game_frame() const {
-  auto st = get_time();
+  сauto st = get_time();
 
   hpw::scene_mgr->draw(*graphic::canvas);
   if (graphic::draw_border) // рамка по краям
     draw_border(*graphic::canvas);
   apply_pge(graphic::frame_count);
+  Host_class::draw_game_frame();
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
