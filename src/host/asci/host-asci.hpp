@@ -71,7 +71,6 @@ private:
 public:
   explicit Host_asci(int argc, char** argv);
   ~Host_asci();
-  void update(const Delta_time dt) override;
   void run() override;
 
 protected:

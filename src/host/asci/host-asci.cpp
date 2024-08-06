@@ -540,23 +540,31 @@ void Host_glfw::init_icon() {
 
 #include <chrono>
 #include "host-asci.hpp"
+#include "game/core/core.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/graphic.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
+#include "game/util/game-archive.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/str-util.hpp"
+#include "host/host-util.hpp"
 
 struct Host_asci::Impl {
-  Host_asci& _master;
-  int _argc {};
-  char** _argv {};
+  Host_asci& m_master;
+  int m_argc {};
+  char** m_argv {};
+  Delta_time m_start_update_time {};
+  bool m_is_ran {true};
 
-  uint console_w = 80; // разрешение консоли по ширине (в символах)
-  uint console_h = 24; // разрешение консоли по высоте (в символах)
+  uint m_console_w = 80; // разрешение консоли по ширине (в символах)
+  uint m_console_h = 24; // разрешение консоли по высоте (в символах)
 
   inline Impl(Host_asci& master, int argc, char** argv)
-  : _master {master}
-  , _argc {argc}
-  , _argv {argv}
+  : m_master {master}
+  , m_argc {argc}
+  , m_argv {argv}
   {
     init_core();
     init_console();
@@ -577,19 +585,40 @@ struct Host_asci::Impl {
   }
 
   inline void run() {
-    // TODO
-  }
-
-  inline void update(const Delta_time dt) {
-    // TODO
     // реализация key_callback
     // реализация utf32_text_input_cb
+
+    game_init();
+    auto last_loop_time = get_time();
+  
+    while (m_is_ran) {
+      game_update(hpw::safe_dt);
+      game_frame(hpw::safe_dt);
+
+      // вычисление Delta Time
+      cauto loop_time = get_time();
+      cauto dt = loop_time - last_loop_time;
+      last_loop_time = loop_time;
+      game_set_dt(dt);
+      game_set_fps_info(dt);
+    }
+
+    m_is_ran = false;
   }
 
   inline void init_core() {
+    init_archive();
+    load_color_tables();
+    set_target_ups(hpw::target_ups);
+    // Graphic:
     hpw::set_resize_mode(Resize_mode::one_to_one);
     hpw::set_fullscreen(false);
     graphic::set_target_vsync_fps(30);
+    graphic::set_target_fps(graphic::get_target_fps());
+    // Canvas:
+    init_unique(graphic::canvas, graphic::width, graphic::height);
+    iferror(graphic::canvas->size == 0 || graphic::canvas->size >= 1024*720,
+      "canvas bad size: " + n2s(graphic::canvas->size));
   }
 
   inline void init_console() {
@@ -597,13 +626,16 @@ struct Host_asci::Impl {
   }
 
   inline void init_commands() {
-    hpw::set_vsync = [](bool){ hpw_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
+    hpw::set_vsync = [](bool){ detailed_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
     hpw::rebind_key = [](hpw::keycode hpw_key) { error("rebind_key not implemented for ASCI-host"); };
-    hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode)
-       { error("rebind_key_by_scancode not implemented for ASCI-host"); };
     hpw::reset_keymap = [this]{ { error("reset_keymap not implemented for ASCI-host"); }; };
-    hpw::set_gamma = [this](const double val) { hpw_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
+    hpw::set_gamma = [this](const double val) { detailed_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
     hpw::get_time = [this]{ return this->get_time(); };
+    
+    hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode) {
+      // TODO
+      detailed_log("Warning: rebind_key_by_scancode not implemented for ASCI-host\n");
+    };
   }
 
   inline void init_input() {
@@ -637,6 +669,28 @@ struct Host_asci::Impl {
       }
     };
   }
+
+  inline void game_update(const Delta_time dt) {
+    // TODO
+  }
+
+  inline void game_frame(const Delta_time dt) {
+    // TODO
+  }
+
+  inline void game_set_dt(const Delta_time dt) {
+    // TODO
+  }
+
+  inline void game_set_fps_info(const Delta_time dt) {
+    // TODO
+  }
+
+  inline void game_init() {
+    m_start_update_time = get_time();
+    hpw::safe_dt = graphic::get_target_frame_time();
+    //hpw::keys_info = m_key_mapper->get_info(); TODO после чтения конфига эта инфа меняется
+  }
 }; // Impl
 
 Host_asci::Host_asci(int argc, char** argv)
@@ -647,5 +701,8 @@ Host_asci::Host_asci(int argc, char** argv)
 Host_asci::~Host_asci() {}
 Delta_time Host_asci::get_time() const { return impl->get_time(); }
 void Host_asci::draw_game_frame() const { impl->draw_game_frame(); }
-void Host_asci::run() { impl->run(); }
-void Host_asci::update(const Delta_time dt) { impl->update(dt); }
+
+void Host_asci::run() {
+  Host::run();
+  impl->run();
+}
