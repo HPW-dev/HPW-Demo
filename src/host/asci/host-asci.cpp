@@ -540,17 +540,29 @@ void Host_glfw::init_icon() {
 
 #include <chrono>
 #include "host-asci.hpp"
+#include "game/util/keybits.hpp"
+#include "game/util/sync.hpp"
+#include "util/log.hpp"
+#include "util/error.hpp"
 
 struct Host_asci::Impl {
   Host_asci& _master;
   int _argc {};
   char** _argv {};
 
+  uint console_w = 80; // разрешение консоли по ширине (в символах)
+  uint console_h = 24; // разрешение консоли по высоте (в символах)
+
   inline Impl(Host_asci& master, int argc, char** argv)
   : _master {master}
   , _argc {argc}
   , _argv {argv}
-  {}
+  {
+    init_core();
+    init_console();
+    init_input();
+    init_commands();
+  }
 
   inline Delta_time get_time() const {
     static cauto _st = std::chrono::steady_clock::now();
@@ -560,10 +572,72 @@ struct Host_asci::Impl {
     return std::chrono::duration_cast<Seconds>(_ed - _st).count();
   }
 
-  inline void draw_game_frame() const {}
-  inline void run() {}
-  inline void update(const Delta_time dt) {}
-};
+  inline void draw_game_frame() const {
+    // TODO
+  }
+
+  inline void run() {
+    // TODO
+  }
+
+  inline void update(const Delta_time dt) {
+    // TODO
+    // реализация key_callback
+    // реализация utf32_text_input_cb
+  }
+
+  inline void init_core() {
+    hpw::set_resize_mode(Resize_mode::one_to_one);
+    hpw::set_fullscreen(false);
+    graphic::set_target_vsync_fps(30);
+  }
+
+  inline void init_console() {
+    // TODO
+  }
+
+  inline void init_commands() {
+    hpw::set_vsync = [](bool){ hpw_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
+    hpw::rebind_key = [](hpw::keycode hpw_key) { error("rebind_key not implemented for ASCI-host"); };
+    hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode)
+       { error("rebind_key_by_scancode not implemented for ASCI-host"); };
+    hpw::reset_keymap = [this]{ { error("reset_keymap not implemented for ASCI-host"); }; };
+    hpw::set_gamma = [this](const double val) { hpw_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
+    hpw::get_time = [this]{ return this->get_time(); };
+  }
+
+  inline void init_input() {
+    //init_shared(m_key_mapper); from GLFW
+    //m_key_mapper->reset();
+    //hpw::keys_info = m_key_mapper->get_info();
+
+    hpw::keys_info = Keys_info {
+      .keys = {
+        #define KEY_DEF(HPW_KEY, TITLE, SCANCODE) \
+        Keys_info::Item {.hpw_key=hpw::keycode::HPW_KEY, .name=TITLE, .scancode=SCANCODE},
+        KEY_DEF(up,           U"Arrow Up",    72)
+        KEY_DEF(down,         U"Arrow Down",  80)
+        KEY_DEF(left,         U"Arrow Left",  75)
+        KEY_DEF(right,        U"Arrow Right", 77)
+        KEY_DEF(focus,        U"Left Alt",    56)
+        KEY_DEF(shoot,        U"S",           31)
+        KEY_DEF(bomb,         U"X",           45)
+        KEY_DEF(mode,         U"A",           30)
+        KEY_DEF(escape,       U"Escape",      27)
+        KEY_DEF(enable,       U"Enter",       28)
+        KEY_DEF(reset,        U"F5",          63)
+        KEY_DEF(fast_forward, U"F4",          62)
+        KEY_DEF(debug,        U"F3",          61)
+        KEY_DEF(console,      U"~",           41)
+        KEY_DEF(text_delete,  U"BackSpace",   14)
+        KEY_DEF(fps,          U"F1",          59)
+        KEY_DEF(fulscrn,      U"F11",         87)
+        KEY_DEF(screenshot,   U"F2",          60)
+        #undef KEY_DEF
+      }
+    };
+  }
+}; // Impl
 
 Host_asci::Host_asci(int argc, char** argv)
 : Host(argc, argv)
