@@ -538,6 +538,7 @@ void Host_glfw::init_icon() {
 } // init_icon
 */
 
+#include <chrono>
 #include "host-asci.hpp"
 
 struct Host_asci::Impl {
@@ -551,7 +552,14 @@ struct Host_asci::Impl {
   , _argv {argv}
   {}
 
-  inline Delta_time get_time() const { return 0; /*TODO*/ }
+  inline Delta_time get_time() const {
+    static cauto _st = std::chrono::steady_clock::now();
+    cauto _ed = std::chrono::steady_clock::now();
+    using Seconds = std::chrono::duration<Delta_time, std::ratio<1, 1>>;
+
+    return std::chrono::duration_cast<Seconds>(_ed - _st).count();
+  }
+
   inline void draw_game_frame() const {}
   inline void run() {}
   inline void update(const Delta_time dt) {}
