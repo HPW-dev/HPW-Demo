@@ -25,7 +25,6 @@ struct Host_asci::Impl {
   Host_asci& m_master;
   int m_argc {};
   char** m_argv {};
-  bool m_is_ran {true};
   Delta_time m_fps_timer {}; // для высчитывания фпс
   uint m_fps {};
   uint m_ups {};
@@ -58,7 +57,7 @@ struct Host_asci::Impl {
     return std::chrono::duration_cast<Seconds>(_ed - _st).count();
   }
 
-  inline void draw_game_frame() const {
+  inline void draw_frame() const {
     assert(graphic::canvas);
     // TODO возможность настраивать
     auto asci = to_asci(*graphic::canvas, m_console_w, m_console_h,
@@ -89,7 +88,7 @@ struct Host_asci::Impl {
     game_init();
     auto last_loop_time = get_time();
   
-    while (m_is_ran) {
+    while (m_master.m_is_ran) {
       input_update();
       game_update(hpw::safe_dt);
       game_frame(hpw::safe_dt);
@@ -102,7 +101,7 @@ struct Host_asci::Impl {
       game_set_fps_info(dt);
     }
 
-    m_is_ran = false;
+    m_master.m_is_ran = false;
   }
 
   inline void init_core() {
@@ -220,7 +219,8 @@ struct Host_asci::Impl {
       
       if (!graphic::skip_cur_frame) { // не рисовать кадр при этом флаге
         calc_lerp_alpha();
-        draw_game_frame();
+        draw_frame();
+        m_master.draw_game_frame();
         m_frame_drawn = true;
         apply_render_delay();
         ++m_fps;
@@ -394,10 +394,6 @@ Host_asci::Host_asci(int argc, char** argv)
 
 Host_asci::~Host_asci() {}
 Delta_time Host_asci::get_time() const { return impl->get_time(); }
-void Host_asci::draw_game_frame() const {
-  Host::draw_game_frame();
-  impl->draw_game_frame();
-}
 
 void Host_asci::run() {
   Host::run();

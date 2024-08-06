@@ -15,7 +15,6 @@ public:
 
 protected:
   Delta_time get_time() const override;
-  void draw_game_frame() const override;
 
   inline void _set_resize_mode(Resize_mode mode) override {}
   inline void _set_double_buffering(bool enable) override {}
