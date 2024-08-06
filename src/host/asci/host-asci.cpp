@@ -545,6 +545,7 @@ void Host_glfw::init_icon() {
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
+#include "game/core/debug.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
@@ -560,8 +561,16 @@ struct Host_asci::Impl {
   Host_asci& m_master;
   int m_argc {};
   char** m_argv {};
-  Delta_time m_start_update_time {};
   bool m_is_ran {true};
+  Delta_time m_fps_timer {}; // для высчитывания фпс
+  uint m_fps {};
+  uint m_ups {};
+  uint m_upf {};
+  uint m_ips {};
+  Delta_time m_frame_time {};
+  Delta_time m_update_time {};
+  Delta_time m_start_update_time {}; // нужен для интерполяции движения
+  bool m_frame_drawn {}; // для плавного апдейта игры
 
   uint m_console_w = 80; // разрешение консоли по ширине (в символах)
   uint m_console_h = 24; // разрешение консоли по высоте (в символах)
@@ -674,7 +683,35 @@ struct Host_asci::Impl {
   }
 
   inline void game_update(const Delta_time dt) {
-    // TODO
+    set_update_time(dt);
+    return_if (dt <= 0 || dt >= 10);
+
+    if (graphic::get_fast_forward())
+      m_update_time = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
+
+    while (m_update_time >= hpw::target_update_time) {
+      m_update_time -= hpw::target_update_time;
+      m_start_update_time = get_time();
+
+      // обработка специальных кнопок
+      if (is_pressed_once(hpw::keycode::screenshot))
+        hpw::make_screenshot();
+      hpw::any_key_pressed |= is_any_key_pressed();
+
+      // обновить игровое состояние
+      if (graphic::step_mode) { // пошагово
+        if (hpw::any_key_pressed)
+          m_master.update(hpw::target_update_time);
+      } else { // каждый раз
+        m_master.update(hpw::target_update_time);
+      }
+
+      hpw::any_key_pressed = false;
+      keys_cur_to_prev();
+      ++m_upf;
+      ++m_ups;
+      apply_update_delay();
+    } // while update time
   }
 
   inline void game_frame(const Delta_time dt) {
@@ -696,8 +733,7 @@ struct Host_asci::Impl {
   }
 
   inline void input_update() {
-    // реализация key_callback
-    // реализация utf32_text_input_cb
+    // TODO реализация utf32_text_input_cb
 
     hpw::any_key_pressed = false;
 
@@ -729,6 +765,39 @@ struct Host_asci::Impl {
     // альтернативная кнопка фуллскрина
     if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
       hpw::set_fullscreen( !graphic::fullscreen);*/
+  }
+
+  inline void set_update_time(const Delta_time dt) {
+    if (
+      // ждать конца кадра
+      (graphic::wait_frame && graphic::enable_render) &&
+      // если используются синхронизации по VSync или лимиту кадров
+      !graphic::get_disable_frame_limit() &&
+      // юзать только при выключенном фреймскипе
+      (graphic::frame_skip == 0 || (graphic::auto_frame_skip && !graphic::render_lag))
+    ) {
+      // ждать завершения отрисовки кадра
+      if (m_frame_drawn) {
+        m_update_time += graphic::get_vsync()
+          ? graphic::get_target_vsync_frame_time()
+          : graphic::get_target_frame_time();
+        m_frame_drawn = false;
+      }
+    } else {
+      m_update_time += dt;
+    }
+  } // set_update_time
+
+  inline void apply_update_delay() {
+    #ifdef DEBUG
+    if (hpw::update_delay) {
+      #ifdef WINDOWS
+      Sleep(5);
+      #else
+      usleep(5);
+      #endif
+    }
+    #endif
   }
 }; // Impl
 
