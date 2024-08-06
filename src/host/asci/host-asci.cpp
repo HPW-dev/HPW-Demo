@@ -538,11 +538,13 @@ void Host_glfw::init_icon() {
 } // init_icon
 */
 
+#include <cassert>
 #include <chrono>
 #include "host-asci.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/common.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
@@ -550,6 +552,9 @@ void Host_glfw::init_icon() {
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 #include "host/host-util.hpp"
+
+// -------------- если переместить этот хедевр вверх - всё взорвётся! ------------
+#include <windows.h>
 
 struct Host_asci::Impl {
   Host_asci& m_master;
@@ -585,13 +590,11 @@ struct Host_asci::Impl {
   }
 
   inline void run() {
-    // реализация key_callback
-    // реализация utf32_text_input_cb
-
     game_init();
     auto last_loop_time = get_time();
   
     while (m_is_ran) {
+      input_update();
       game_update(hpw::safe_dt);
       game_frame(hpw::safe_dt);
 
@@ -690,6 +693,42 @@ struct Host_asci::Impl {
     m_start_update_time = get_time();
     hpw::safe_dt = graphic::get_target_frame_time();
     //hpw::keys_info = m_key_mapper->get_info(); TODO после чтения конфига эта инфа меняется
+  }
+
+  inline void input_update() {
+    // реализация key_callback
+    // реализация utf32_text_input_cb
+
+    hpw::any_key_pressed = false;
+
+    // режим ребинда клавиши
+    // TODO:
+    /*if (g_rebind_key_mode) {
+      if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        key_mapper.bind(g_key_for_rebind, scancode);
+        hpw::keys_info = key_mapper.get_info();
+        g_rebind_key_mode = false;
+        return; // чтобы нажатие не применилось в игровой логике
+      }
+    }*/
+
+    // проверить нажатия на игровые клавиши
+    assert(!hpw::keys_info.keys.empty());
+    for (cnauto it: hpw::keys_info.keys) {
+      if (GetKeyState(it.scancode) & 0x8000) {
+        press(it.hpw_key);
+        hpw::any_key_pressed = true;
+      } else {
+        release(it.hpw_key);
+      }
+    }
+
+    /*// альтернативная кнопка скриншота
+    if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
+      hpw::make_screenshot();
+    // альтернативная кнопка фуллскрина
+    if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
+      hpw::set_fullscreen( !graphic::fullscreen);*/
   }
 }; // Impl
 
