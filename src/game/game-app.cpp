@@ -83,7 +83,7 @@ void Game_app::update(const Delta_time dt) {
 } // update
 
 void Game_app::draw_game_frame() const {
-  сauto st = get_time();
+  cauto st = get_time();
 
   hpw::scene_mgr->draw(*graphic::canvas);
   if (graphic::draw_border) // рамка по краям
