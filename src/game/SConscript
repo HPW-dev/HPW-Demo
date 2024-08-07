@@ -117,8 +117,10 @@ sources = [
 ]
 sources.extend([host_sources]);
 
-if not is_debug and not is_linux:
-  ld_flags.append("-mwindows")
+if not is_debug:
+  if not is_linux:
+    if host != "asci":
+      ld_flags.append("-mwindows")
 
 # билд игры
 env.Program(
