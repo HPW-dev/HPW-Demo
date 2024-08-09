@@ -1,7 +1,7 @@
 #include <omp.h>
+#include <ranges>
 #include <array>
 #include <mutex>
-#include <ranges>
 #include <cassert>
 #include <algorithm>
 #include "bg-pattern.hpp"
