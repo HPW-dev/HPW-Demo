@@ -1,3 +1,4 @@
+#pragma once
 #include "cmd.hpp"
 
 // выполняет команды из файла

@@ -1,7 +1,8 @@
+#include <ranges>
 #include <cassert>
 #include <chrono>
-#include <ranges>
 #include <fstream>
+#include "cmd-core.hpp"
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/tasks.hpp"
