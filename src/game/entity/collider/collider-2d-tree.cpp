@@ -84,9 +84,9 @@ struct Node {
       rd.y = pos.y + hitbox->simple.offset.y + hitbox->simple.r;
 
       if (x_axis) {
-        if (rd.x < area_a.pos.x + area_a.size.x)
+        if (rd.x < area_a.pos.x + area_a.size.x) {
           a->list.push_back(ent);
-        else {
+        } else {
           b->list.push_back(ent);
           /* если объект залазит на чужую
           территорию, то добавить его в списки там */
@@ -94,9 +94,9 @@ struct Node {
             a->list.push_back(ent);
         }
       } else {
-        if (rd.y < area_a.pos.y + area_a.size.y)
+        if (rd.y < area_a.pos.y + area_a.size.y) {
           a->list.push_back(ent);
-        else {
+        } else {
           b->list.push_back(ent);
           /* если объект залазит на чужую
           территорию, то добавить его в списки там */
