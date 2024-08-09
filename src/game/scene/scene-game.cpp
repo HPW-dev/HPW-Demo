@@ -51,7 +51,6 @@
 #ifdef DEBUG
 #include "scene-cmd.hpp"
 #include "scene-debug.hpp"
-#include "game/core/debug.hpp"
 #include "game/util/cmd/cmd-script.hpp"
 #include "game/level/level-empty.hpp"
 //#include "game/level/level-collision-test.hpp"

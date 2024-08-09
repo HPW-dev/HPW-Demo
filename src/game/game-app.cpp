@@ -19,7 +19,6 @@
 #include "game/util/game-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/game-archive.hpp"
 #include "graphic/font/unifont.hpp"
