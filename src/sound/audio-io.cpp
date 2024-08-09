@@ -1,5 +1,7 @@
 #include <dr_libs/dr_flac.h>
 #include <filesystem>
+#include <string>
+#include <utility>
 #include <fstream>
 #include <unordered_map>
 #include "audio-io.hpp"

@@ -1,5 +1,5 @@
-#include <cassert>
 #include <omp.h>
+#include <cassert>
 #include <utility>
 #include "sprite-io.hpp"
 #include "graphic/image/palette.hpp"
