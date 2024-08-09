@@ -13,12 +13,12 @@ class Task {
 
 public:
   virtual ~Task();
-  inline virtual void on_start() {};
-  inline virtual void on_end() {};
-  inline virtual void on_stop() {};
-  inline virtual void on_unfreeze() {};
-  inline virtual void update(const Delta_time dt) {};
-  inline virtual void draw(Image& dst) const {};
+  inline virtual void on_start() {}
+  inline virtual void on_end() {}
+  inline virtual void on_stop() {}
+  inline virtual void on_unfreeze() {}
+  inline virtual void update(const Delta_time dt) {}
+  inline virtual void draw(Image& dst) const {}
   virtual void stop();
   virtual void unfreeze();
   virtual void kill();
