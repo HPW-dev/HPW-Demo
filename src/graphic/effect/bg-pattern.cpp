@@ -1113,7 +1113,7 @@ void bgp_graph(Image& dst, const int bg_state) {
   const Rect AREA(28, 0, dst.X - 28, dst.Y - 25);
 
   // нарисовать график
-  const int x = (bg_state / 3) % int(AREA.size.x);
+  const int x = (bg_state / 3) % scast<int>(AREA.size.x);
   real val = std::sin(bg_state / 1000.0) + std::cos(bg_state / 330.0) * 2.0;
   val = std::fmod(std::abs(val) / 4.0, 1.0);
   for (int y = AREA.size.y - (val * AREA.size.y); y < AREA.size.y; ++y)
