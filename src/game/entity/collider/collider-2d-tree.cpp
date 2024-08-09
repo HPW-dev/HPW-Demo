@@ -1,5 +1,6 @@
 #include <omp.h>
 #include <cassert>
+#include <algorithm>
 #include "collider-2d-tree.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"

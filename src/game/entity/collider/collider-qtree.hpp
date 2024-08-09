@@ -1,7 +1,7 @@
 #pragma once
+#include <bit>
 #include <cstdint>
 #include <utility>
-#include <bit>
 #include "robin-hood-hashing/robin_hood.h"
 #include "util/mempool.hpp"
 #include "util/platform.hpp"

@@ -1,4 +1,5 @@
 #include <cassert>
+#include <utility>
 #include "snake.hpp"
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"

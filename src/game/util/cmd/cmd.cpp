@@ -1,6 +1,6 @@
+#include <ranges>
 #include <cassert>
 #include <utility>
-#include <ranges>
 #include <algorithm>
 #include "cmd.hpp"
 #include "cmd-entity.hpp"

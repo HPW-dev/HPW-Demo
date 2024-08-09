@@ -1,4 +1,5 @@
 #include <omp.h>
+#include <algorithm>
 #include <cassert>
 #include <cmath>
 #include "collider-grid.hpp"

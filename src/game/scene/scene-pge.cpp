@@ -1,4 +1,5 @@
 #include <cassert>
+#include <string>
 #include <filesystem>
 #include <utility>
 #include <functional>

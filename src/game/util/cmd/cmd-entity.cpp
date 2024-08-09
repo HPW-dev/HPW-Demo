@@ -1,5 +1,5 @@
-#include <cassert>
 #include <ranges>
+#include <cassert>
 #include <algorithm>
 #include "cmd-entity.hpp"
 #include "cmd-util.hpp"

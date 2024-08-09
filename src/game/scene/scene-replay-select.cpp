@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include "scene-replay-select.hpp"
 #include "scene-mgr.hpp"
 #include "scene-loading.hpp"
