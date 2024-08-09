@@ -564,7 +564,7 @@ void bgp_3d_waves(Image& dst, const int bg_state) {
   // карта высот
   constexpr uint terrain_y = 30;
   constexpr uint terrain_x = 30;
-  static std::vector<real> terrain(terrain_x * terrain_y, 0);
+  static Vector<real> terrain(terrain_x * terrain_y, 0);
   // сгенерить ландшафт
   static bool generate_once {true};
   if (generate_once) {
