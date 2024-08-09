@@ -342,7 +342,7 @@ void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 4, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
   cnauto flag_name = args[2];
-  cauto yesno = bool(args[3] == "0" ? false : true);
+  cauto yesno = scast<bool>(args[3] == "0" ? false : true);
 
   auto ent = hpw::entity_mgr->find(uid);
   iferror(!ent, "объект uid=" << uid << " не найден");
