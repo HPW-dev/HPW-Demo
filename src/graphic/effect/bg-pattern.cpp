@@ -395,9 +395,10 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
   constexpr auto map_x = 64u;
   constexpr auto map_y = 56u;
   static std::array<std::size_t, map_x * map_y> map;
-  if (firt_init)
+  if (firt_init) {
     for (uint i = 0; nauto elem: map)
       elem = ((++i) % block_sz) % blocks.size();
+  }
   
   // случайно поменять несколько блоков узора
   cfor (_, 50)
