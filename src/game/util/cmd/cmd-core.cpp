@@ -1,4 +1,5 @@
 #include <ranges>
+#include <unordered_map>
 #include <cassert>
 #include <chrono>
 #include <fstream>

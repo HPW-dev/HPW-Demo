@@ -494,7 +494,7 @@ void bgp_3d_terrain(Image& dst, const int bg_state) {
   constexpr uint terrain_y = 30;
   constexpr uint terrain_x = 30;
   // карта высот
-  static std::vector<real> terrain(terrain_x * terrain_y, 0);
+  static Vector<real> terrain(terrain_x * terrain_y, 0);
   static bool generate_once {true};
   if (generate_once) {
     // сгенерить ландшафт
