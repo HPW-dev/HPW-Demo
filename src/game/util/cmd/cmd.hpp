@@ -28,7 +28,7 @@ public:
   // выполнить команду
   void exec(CN<Str> cmd_and_args);
   // получить прыдыдущую команду
-  inline Str last_command() const { return m_last_cmd; }
+  inline CN<Str> last_command() const { return m_last_cmd; }
   // найти совпадающие имена команд (для автодополнения)
   Strs command_matches(CN<Str> cmd_and_args);
   // получить все загруженные команды
