@@ -62,14 +62,8 @@ struct Anim_mgr::Impl {
     return v_name;
   }
 
-  inline bool exist(CN<Str> str) const {
-    try {
-      table.at(str_tolower(str));
-    } catch (...) {
-      return false;
-    }
-    return true;
-  }
+  inline bool exist(CN<Str> str) const
+    { return table.find(str_tolower(str)) != table.end(); }
 
   inline Anims get_anims() const {
     Anims anims;
