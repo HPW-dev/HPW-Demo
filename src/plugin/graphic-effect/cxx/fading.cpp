@@ -28,7 +28,7 @@ struct result_t* result) {
   g_h = context->h;
   g_w = context->w;
   g_buffer = decltype(g_buffer)(g_w * g_h, Pal8(Pal8::black));
-  if (g_fading <= 0.0f && g_fading >= 1.0f) {
+  if (g_fading <= 0.0f || g_fading >= 1.0f) {
     result->error = "out of range for fading value (0..1)";
     result->init_succsess = false;
     return;
