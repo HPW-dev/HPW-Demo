@@ -1,5 +1,5 @@
 #pragma once
-//@file конвертирование строк
+// @file конвертирование строк
 #include <type_traits>
 #include <algorithm>
 #include <sstream>
@@ -72,12 +72,11 @@ void remove_all(str_t& str, ch_t ch)
   { str.erase(std::remove(str.begin(), str.end(), ch), str.end()); }
 
 template <class str_t, typename ch_t>
-void replace_all(str_t& str, ch_t find_it, ch_t replace_to) { 
-  std::transform(str.begin(), str.end(), str.begin(),
-    [find_it, replace_to](CN<ch_t> src) { 
+void replace_all(str_t& str, ch_t find_it, ch_t replace_to) {
+  std::transform( str.begin(), str.end(), str.begin(),
+    [find_it, replace_to](CN<ch_t> src) {
       return src == find_it ? replace_to : src;
-    }
-  );
+    } );
 }
 
 // строку в число
