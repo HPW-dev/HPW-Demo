@@ -52,6 +52,7 @@
 #include "scene-cmd.hpp"
 #include "scene-debug.hpp"
 #include "game/util/cmd/cmd-script.hpp"
+#include "game/util/dbg-plots.hpp"
 #include "game/level/level-empty.hpp"
 //#include "game/level/level-collision-test.hpp"
 //#include "game/level/level-debug-1.hpp"
@@ -95,14 +96,27 @@ void Scene_game::init_levels() {
 
 struct Scene_game::Impl {
   Scene_game& m_master;
-  inline explicit Impl(Scene_game& master): m_master {master} {}
+  #ifdef DEBUG
+  Dbg_plots m_dbg_plots {};
+  #endif
+
+  inline explicit Impl(Scene_game& master): m_master {master}
+  {
+    graphic::draw_plots = true; // TODO del
+  }
 
   inline void update(Delta_time dt) {
-
+    #ifdef DEBUG
+    if (graphic::draw_plots)
+      m_dbg_plots.update(dt);
+    #endif
   }
 
   inline void post_draw(Image& dst) const {
-
+    #ifdef DEBUG
+    if (graphic::draw_plots)
+      m_dbg_plots.draw(dst);
+    #endif
   }
 }; // Impl
 

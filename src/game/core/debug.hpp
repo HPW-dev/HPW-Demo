@@ -30,6 +30,7 @@ namespace graphic {
 inline bool show_debug_info     {false}; // отображать инфу о dt и fps
 inline bool show_grids          {false}; // сетка для разбиения пространства
 inline bool draw_hitboxes       {false}; // показать хитбокс
+inline bool draw_plots          {false}; // игровые данные в виде графиков
 inline bool draw_full_hitboxes  {false}; // показать ещё и покрывающий круг с крестом
 inline bool draw_entity_pos     {false};
 inline bool draw_entities        {true};
