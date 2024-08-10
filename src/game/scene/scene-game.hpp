@@ -9,6 +9,8 @@ class Replay;
 class Scene_game final: public Scene {
   Unique<Replay> replay {};
   bool m_start_tutorial {false};
+  struct Impl;
+  Unique<Impl> m_impl {};
 
   void draw_debug_info(Image& dst) const;
   void init_levels();

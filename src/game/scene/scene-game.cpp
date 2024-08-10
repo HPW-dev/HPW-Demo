@@ -93,8 +93,23 @@ void Scene_game::init_levels() {
   }); // init level order
 } // init_levels
 
+struct Scene_game::Impl {
+  Scene_game& m_master;
+  inline explicit Impl(Scene_game& master): m_master {master} {}
+
+  inline void update(Delta_time dt) {
+
+  }
+
+  inline void post_draw(Image& dst) const {
+
+  }
+}; // Impl
+
 Scene_game::Scene_game(const bool start_tutorial)
-: m_start_tutorial {start_tutorial} {
+: m_start_tutorial {start_tutorial}
+, m_impl {new_unique<Impl>(*this)}
+{
   hpw::first_level_is_tutorial = start_tutorial;
 
   // -------------- [!] ----------------
@@ -135,6 +150,7 @@ Scene_game::~Scene_game() {
 
 void Scene_game::update(const Delta_time dt) {
   assert(dt == hpw::target_update_time);
+  m_impl->update(dt);
 
   // input:
   if (is_pressed_once(hpw::keycode::escape))
@@ -217,6 +233,7 @@ void Scene_game::post_draw(Image& dst) const {
     graphic::font->draw(dst, Vec(5, 5), U"game updates: " +
       n2s<utf32>(hpw::game_ticks), &blend_diff);
   #endif
+  m_impl->post_draw(dst);
 } // post_draw
 
 void Scene_game::draw_debug_info(Image& dst) const {
