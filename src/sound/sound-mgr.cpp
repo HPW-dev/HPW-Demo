@@ -345,7 +345,7 @@ struct Sound_mgr_oal::Impl {
     } catch(...) {
       error("Sound \"" << sound_name << "\" not finded in Sound Manager");
     }
-    return *(Audio*)0; // заглушка для анализатора
+    return *rcast<Audio*>(0); // заглушка для анализатора
   }
 
   inline void init_openal() {
@@ -444,7 +444,7 @@ struct Sound_mgr_oal::Impl {
         return format_info;
     }
     error("not finded OAL format for sound \"" << sound.get_path() << "\"");
-    return *(Format_game_to_oal*)0;
+    return *rcast<Format_game_to_oal*>(0);
   }
 
   // записать звуковой источник в список проигрывания
@@ -574,5 +574,5 @@ void Sound_mgr_oal::shutup() { impl->shutup(); }
 
 CN<Audio> Sound_mgr_nosound::find_audio(CN<Str> sound_name) const {
   error("called find_audio in nosound mode");
-  return *(Audio*)0; // заглушка для анализатора
+  return *rcast<Audio*>(0); // заглушка для анализатора
 }
