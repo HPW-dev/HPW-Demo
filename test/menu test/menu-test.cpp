@@ -51,7 +51,7 @@ void Menu_test::init(int argc, char *argv[]) {
   init_archive();
   auto font_file {hpw::archive->get_file(
     "resource/font/unifont-13.0.06.ttf")};
-  init_shared<Unifont>(graphic::font, font_file, 16));
+  init_shared<Unifont>(graphic::font, font_file, 16);
   init_scene_mgr();
   hpw::scene_mgr->add(new_shared<Test_scene>());
 }
