@@ -280,7 +280,7 @@ Str convert(Color_get_pattern cgp) {
   return table.at(cgp);
 }
 
-Color_compute convert_to_ccf(Str name) {
+Color_compute convert_to_ccf(CN<Str> name) {
   std::unordered_map<Str, Color_compute> table {
     {"most common", Color_compute::most_common},
     {"max", Color_compute::max},
@@ -290,7 +290,7 @@ Color_compute convert_to_ccf(Str name) {
   return table.at(name);
 }
 
-Color_get_pattern convert_to_cgp(Str name) {
+Color_get_pattern convert_to_cgp(CN<Str> name) {
   std::unordered_map<Str, Color_get_pattern> table {
     {"cross", Color_get_pattern::cross},
     {"box", Color_get_pattern::box},
