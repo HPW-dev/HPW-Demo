@@ -75,7 +75,7 @@ Strs Pparser::get_tokens(int argc, char** argv) const {
 
 Strs Pparser::get_tokens(CN<Str> opts) const {
   std::stringstream ss(opts);
-  std::string str;
+  Str str;
   Strs tokens;
   while (getline(ss, str, ' '))
     tokens.push_back(str);
