@@ -8,7 +8,7 @@ struct rgb24_t pal8_to_rgb24(const pal8_t src) {
     ret.r = ret.g = ret.b = 0xFFu;
     return ret;
   }
-  if ( !(src > 222 && src <= 254) ) {
+  if ( !(src > 222 && src < 255) ) {
     const real GRAY_MUL = 255.0f / 222.0f;
     ret.r = ret.g = ret.b = round(src * GRAY_MUL);
     return ret;
