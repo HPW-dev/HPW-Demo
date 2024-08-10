@@ -146,6 +146,7 @@ Anim* Anim::operator =(CN<Anim> other) {
     this->source_hitbox = {};
 
   // скопировать все кадры
+  this->frames = {};
   for (cnauto other_frame: other.frames) {
     continue_if( !other_frame);
 
