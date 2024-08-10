@@ -57,14 +57,10 @@ class Exec_script_instant final: public Task {
   Str m_fname {};
 
 public:
-  inline Exec_script_instant(CN<Str> fname) {
-    m_fname = fname;
-    conv_sep(m_fname);
-  }
+  inline Exec_script_instant(CN<Str> fname): m_fname {fname}
+    { conv_sep(m_fname); }
 
-  inline void on_end() {
-    m_fname.clear();
-  }
+  inline void on_end() { m_fname.clear(); }
 
   inline void update(const Delta_time dt) {
     std::ifstream m_file = std::ifstream(m_fname);
