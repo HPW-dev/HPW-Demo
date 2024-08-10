@@ -89,15 +89,11 @@ class Yaml::Impl: public Resource {
 public:
   inline Impl(): Resource() {}
   
-  inline Impl(CN<Impl> other) noexcept {
-    self = other.self;
-    Resource::operator = (other);
-  }
+  inline Impl(CN<Impl> other) noexcept: self {other.self}
+    { Resource::operator = (other); }
 
-  inline Impl(Impl&& other) noexcept {
-    self = std::move(other.self);
-    Resource::operator = (std::move(other));
-  }
+  inline Impl(Impl&& other) noexcept: self {std::move(other.self)}
+    { Resource::operator = (std::move(other)); }
   inline ~Impl() = default;
 
   inline Impl(Str fname, bool make_if_not_exist) {
