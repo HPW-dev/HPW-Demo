@@ -15,7 +15,7 @@ public:
   class Effect {
   public:
     Effect() = default;
-    ~Effect() = default;
+    virtual ~Effect() = default;
     inline virtual bool update(const Delta_time dt) { return true; }
     inline virtual void draw(Image& dst) const {}
   };
