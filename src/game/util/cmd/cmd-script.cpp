@@ -14,10 +14,8 @@ class Exec_script final: public Task {
   Str m_fname {};
 
 public:
-  inline Exec_script(CN<Str> _fname) {
-    m_fname = _fname;
-    conv_sep(m_fname);
-  }
+  inline Exec_script(CN<Str> _fname): m_fname {_fname}
+    { conv_sep(m_fname); }
 
   inline void on_start() {
     m_file = std::ifstream(m_fname);
