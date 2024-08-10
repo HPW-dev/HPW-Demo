@@ -100,8 +100,8 @@ struct Dbg_plots::Impl {
     m_plotters = {
       Plotter(U"тик",            []->Plotter::Value { return hpw::tick_time; },          180, 60, 240*4, {5, 5}),
       Plotter(U"тик зум",        []->Plotter::Value { return hpw::tick_time; },          180, 60, 30,    {260, 5}),
-      Plotter(U"сфот. кадр",     []->Plotter::Value { return graphic::soft_draw_time; }, 180, 66, 240*6, {5, 75}),
-      Plotter(U"сфот. кадр зум", []->Plotter::Value { return graphic::soft_draw_time; }, 180, 66, 60,    {260, 75}),
+      Plotter(U"софт. кадр",     []->Plotter::Value { return graphic::soft_draw_time; }, 180, 66, 240*6, {5, 75}),
+      Plotter(U"софт. кадр зум", []->Plotter::Value { return graphic::soft_draw_time; }, 180, 66, 60,    {260, 75}),
       Plotter(U"хард. кадр",     []->Plotter::Value { return graphic::hard_draw_time; }, 180, 66, 240*6, {5, 150}),
       Plotter(U"хард. кадр зум", []->Plotter::Value { return graphic::hard_draw_time; }, 180, 66, 30,    {260, 150}),
       Plotter(U"FPS",            []->Plotter::Value { return graphic::cur_fps; },        180, 60, 240*6, {5, 225}),
