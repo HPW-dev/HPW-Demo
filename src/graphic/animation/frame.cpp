@@ -34,7 +34,7 @@ void Frame::reinit_directions_by_source() {
     detailed_log("ctx sprite is empty\n");
     return;
   }
-  assert(source_ctx.max_directions > 0 || source_ctx.max_directions <= 360);
+  assert(source_ctx.max_directions <= 360);
   
   degree_frag = 360.0 / source_ctx.max_directions;
 
