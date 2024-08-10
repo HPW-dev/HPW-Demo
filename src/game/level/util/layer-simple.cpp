@@ -19,6 +19,6 @@ real _motion_ratio, blend_pf _bf)
 Layer_simple::Layer_simple(Layer_simple&& other)
 : tilemap {std::move(other.tilemap)}
 , pos {other.pos}
-, motion_ratio {motion_ratio}
+, motion_ratio {other.motion_ratio}
 , bf {other.bf}
 {}
