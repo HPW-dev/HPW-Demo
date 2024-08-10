@@ -32,7 +32,7 @@ protected:
 
 public:
   explicit Host(int argc, char** argv);
-  ~Host();
+  virtual ~Host();
   inline virtual void run() {}
   inline virtual void update(const Delta_time dt) {}
 }; // Host
