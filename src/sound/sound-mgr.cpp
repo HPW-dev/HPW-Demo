@@ -518,7 +518,7 @@ Strs parse_raw_list(Cstr raw_list) {
   Strs ret;
   while (raw_list[0] != '\0') {
     const auto len = std::strlen(raw_list);
-    ret.push_back(std::string(raw_list, raw_list + len));
+    ret.push_back(Str(raw_list, raw_list + len));
     raw_list += len + 1;
   }
   return ret;
