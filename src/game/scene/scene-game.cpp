@@ -100,10 +100,7 @@ struct Scene_game::Impl {
   Dbg_plots m_dbg_plots {};
   #endif
 
-  inline explicit Impl(Scene_game& master): m_master {master}
-  {
-    graphic::draw_plots = true; // TODO del
-  }
+  inline explicit Impl(Scene_game& master): m_master {master} {}
 
   inline void update(Delta_time dt) {
     #ifdef DEBUG

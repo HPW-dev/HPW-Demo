@@ -40,15 +40,19 @@ void Scene_debug::draw(Image& dst) const {
 void Scene_debug::init_menu() {
   init_shared<Text_menu>( menu,
     Menu_items {
-      new_shared<Menu_bool_item>(U"I/U/FPS",
+      new_shared<Menu_bool_item>(U"отладочные тайминги",
         [] { return graphic::show_debug_info; },
         [] (bool new_val) { graphic::show_debug_info = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Entity mem",
+      new_shared<Menu_bool_item>(U"отладочные графики",
+        [] { return graphic::draw_plots; },
+        [] (bool new_val) { graphic::draw_plots = new_val; }
+      ),
+      new_shared<Menu_bool_item>(U"распределение памяти объектов",
         [] { return hpw::show_entity_mem_map; },
         [] (bool new_val) { hpw::show_entity_mem_map = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"ignore enemy",
+      new_shared<Menu_bool_item>(U"игнорить противников",
         [] {
           cauto player = hpw::entity_mgr->get_player();
           if (player)
@@ -63,51 +67,51 @@ void Scene_debug::init_menu() {
           }
         }
       ),
-      new_shared<Menu_bool_item>(U"Step mode",
+      new_shared<Menu_bool_item>(U"пошаговый режим",
         [] { return graphic::step_mode; },
         [] (bool new_val) {
           graphic::step_mode = new_val;
           hpw::scene_mgr->back();
         }
       ),
-      new_shared<Menu_bool_item>(U"Hitboxes",
+      new_shared<Menu_bool_item>(U"хитбоксы объектов",
         [] { return graphic::draw_hitboxes; },
         [] (bool new_val) { graphic::draw_hitboxes = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Collider grids",
+      new_shared<Menu_bool_item>(U"сетка системы коллизий",
         [] { return graphic::show_grids; },
         [] (bool new_val) { graphic::show_grids = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Inputs",
+      new_shared<Menu_bool_item>(U"кнопки ввода",
         [] { return graphic::draw_controls; },
         [] (bool new_val) { graphic::draw_controls = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Entity HP",
+      new_shared<Menu_bool_item>(U"жизни объектов",
         [] { return graphic::draw_entity_hp; },
         [] (bool new_val) { graphic::draw_entity_hp = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Entity pos",
+      new_shared<Menu_bool_item>(U"координаты объектов",
         [] { return graphic::draw_entity_pos; },
         [] (bool new_val) { graphic::draw_entity_pos = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Draw entities",
+      new_shared<Menu_bool_item>(U"рисовать объекты",
         [] { return graphic::draw_entities; },
         [] (bool new_val) { graphic::draw_entities = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"Draw level bg",
+      new_shared<Menu_bool_item>(U"рисовать фон уровня",
         [] { return graphic::draw_level; },
         [] (bool new_val) { graphic::draw_level = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"+ update lag",
+      new_shared<Menu_bool_item>(U"искусственные лаги тика",
         [] { return hpw::update_delay; },
         [] (bool new_val) { hpw::update_delay = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"+ render lag",
+      new_shared<Menu_bool_item>(U"искусственные лаги рендера",
         [] { return hpw::render_delay; },
         [] (bool new_val) { hpw::render_delay = new_val; }
       ),
       new_shared<Menu_int_item>(
-        U"Target UPS",
+        U"тикрейт",
         [] { return hpw::target_ups; },
         [] (int new_val) { set_target_ups(std::clamp(new_val, 10, 1'000)); },
         10
