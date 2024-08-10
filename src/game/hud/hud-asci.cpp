@@ -24,10 +24,11 @@ struct Hud_asci::Impl {
   Rect pts_rect_old {};
   Rect player_rect {};
 
-  inline Impl() {
-    hp_rect = Rect(0, 367, 27, graphic::height - 367);
-    en_rect = Rect(186, 367, 16, graphic::height - 367);
-    pts_rect = Rect(361, 367, 31, graphic::height - 367);
+  inline Impl()
+  : hp_rect(0, 367, 27, graphic::height - 367)
+  , en_rect(186, 367, 16, graphic::height - 367)
+  , pts_rect(361, 367, 31, graphic::height - 367)
+  {
     hp_rect_old = hp_rect;
     en_rect_old = en_rect;
     pts_rect_old = pts_rect;
