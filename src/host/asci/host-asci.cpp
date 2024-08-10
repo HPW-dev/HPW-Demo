@@ -77,17 +77,17 @@ struct Host_asci::Impl {
 
     assert(m_console_w-1 > 2);
     assert(m_console_h-1 > 2);
-    CHAR_INFO buffer[m_console_w * m_console_h];
+    Vector<CHAR_INFO> buffer(m_console_w * m_console_h);
     COORD dwBufferSize (m_console_w, m_console_h);
     constexpr COORD dwBufferCoord (0, 0);
     SMALL_RECT rcRegion (0, 0,  m_console_w-1,  m_console_h-1);
     
-    ReadConsoleOutput(hOutput, buffer, dwBufferSize, dwBufferCoord, &rcRegion);
+    ReadConsoleOutput(hOutput, buffer.data(), dwBufferSize, dwBufferCoord, &rcRegion);
     cfor (i, m_console_w * m_console_h) {
       buffer[i].Char.AsciiChar = asci.at(i);
       buffer[i].Attributes = 0x0E;
     }
-    WriteConsoleOutput(hOutput, buffer, dwBufferSize, dwBufferCoord, &rcRegion);
+    WriteConsoleOutput(hOutput, buffer.data(), dwBufferSize, dwBufferCoord, &rcRegion);
   }
 
   inline void run() {
