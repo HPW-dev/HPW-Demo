@@ -28,7 +28,7 @@ real Pal8::to_real() const {
   if (is_red()) {
     constexpr real red_mul = 1.0 / red_size;
     return (val - red_start) * red_mul;
-  } else if (is_white()) {
+  } elif (is_white()) {
     return 1.0;
   }
   // gray:

@@ -318,9 +318,9 @@ Unique<Sprite> Scene_main_menu::prepare_logo(CN<Str> name) const {
   // маленькие логотипы заресайзить
   if (logo->X() < 32 && logo->Y() < 16)
     zoom_x8(*logo);
-  else if (logo->X() < 64 && logo->Y() < 32)
+  elif (logo->X() < 64 && logo->Y() < 32)
     zoom_x4(*logo);
-  else if (logo->X() < 128 && logo->Y() < 64)
+  elif (logo->X() < 128 && logo->Y() < 64)
     zoom_x2(*logo);
 
   return logo;

@@ -17,7 +17,7 @@ Pal8 rgb_to_pal8(int R, int G, int B) {
     constexpr real RED_MUL = 32.0 / 255.0;
     ret.set_red(std::round(R * RED_MUL));
     return ret;
-  } else if ((G & B & R & 0xFF) == 0xFF) { // полностью белый
+  } elif ((G & B & R & 0xFF) == 0xFF) { // полностью белый
     return Pal8::white;
   }
   // всё остальное, это серый

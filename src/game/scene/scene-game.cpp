@@ -177,7 +177,7 @@ void Scene_game::update(const Delta_time dt) {
 
   if (hpw::replay_read_mode)
     replay_load_keys();
-  else if (hpw::enable_replay)
+  elif (hpw::enable_replay)
     replay_save_keys();
 
   hpw::level_mgr->update(get_level_vel(), dt);
@@ -299,7 +299,7 @@ void Scene_game::replay_init() {
 
   if (hpw::replay_read_mode)
     init_unique(replay, hpw::cur_replay_file_name, false);
-  else if (hpw::enable_replay)
+  elif (hpw::enable_replay)
     init_unique(replay, hpw::cur_dir + "replays/last_replay.hpw_replay", true);
 } // replay_init
 

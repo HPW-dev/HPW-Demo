@@ -26,7 +26,7 @@ pal8_t rgb24_to_pal8(const struct rgb24_t src) {
   if (src.r > 10 + ((src.g + src.b) >> 1)) {
     const real RED_MUL = 32.0f / 255.0f;
     return 222 + round(src.r * RED_MUL);
-  } else if ((src.g & src.b & src.r & 0xFFu) == 0xFFu) { // полностью белый
+  } elif ((src.g & src.b & src.r & 0xFFu) == 0xFFu) { // полностью белый
     return 255u; // white
   }
 

@@ -297,7 +297,7 @@ void Host_glfw::init_window() {
   if (monitor_mode->width > 0 && monitor_mode->height > 0) {
     if (monitor_mode->width == monitor_mode->height)
       graphic::default_resize_mode = Resize_mode::one_to_one;
-    else if (monitor_mode->width > monitor_mode->height)
+    elif (monitor_mode->width > monitor_mode->height)
       graphic::default_resize_mode = Resize_mode::by_height;
     else
       graphic::default_resize_mode = Resize_mode::by_width;
@@ -367,7 +367,7 @@ void Host_glfw::game_frame(const Delta_time dt) {
     cauto new_frame_time = get_time();
     graphic::hard_draw_time = new_frame_time - last_frame_time;
     last_frame_time = new_frame_time;
-  } else if (graphic::cpu_safe && !graphic::get_fast_forward()) {
+  } elif (graphic::cpu_safe && !graphic::get_fast_forward()) {
     frame_wait();
   }
 } // game_frame

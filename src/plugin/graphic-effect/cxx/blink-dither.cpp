@@ -69,7 +69,7 @@ NOT_EXPORTED void init_tables() {
 
       if (cr <= 1.0 / 3.0) {
         table_0.at(i + line_sz * state) = 0;
-      } else if (cr <= 2.0 / 3.0) {
+      } elif (cr <= 2.0 / 3.0) {
         table_0.at(i + line_sz * state) = Pal8::from_real(1 * state, is_red);
       } else {
         table_0.at(i + line_sz * state) = Pal8::from_real(1, is_red);

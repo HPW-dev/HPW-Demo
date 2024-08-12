@@ -58,19 +58,24 @@ Vec deg_to_vec(real deg) {
 }
 
 real vec_to_deg(Vec vec) {
-  if (vec.x == 0) // special cases
+  if (vec.x == 0) { // special cases
     return (vec.y > 0) ? 90 : (vec.y == 0) ? 0 : 270;
-  else if (vec.y == 0) // special cases
+  } elif (vec.y == 0) { // special cases
     return (vec.x >= 0) ? 0 : 180;
+  }
+
   real ret = rad_to_deg(std::atan(vec.y / vec.x));
-  if (vec.x < 0 && vec.y < 0) // quadrant Ⅲ
+
+  if (vec.x < 0 && vec.y < 0) { // quadrant Ⅲ
     ret = 180 + ret;
-  else if (vec.x < 0) // quadrant Ⅱ
+  } elif (vec.x < 0) { // quadrant Ⅱ
     ret = 180 + ret; // it actually substracts
-  else if (vec.y < 0) // quadrant Ⅳ
+  } elif (vec.y < 0) { // quadrant Ⅳ
     ret = 270 + (90 + ret); // it actually substracts
+  }
+
   return ret;
-} // vec2deg
+}
 
 real rand_degree_graphic() { return rndr_fast(0, 360); }
 real rand_degree_stable() { return rndr(0, 360); }

@@ -242,7 +242,7 @@ struct Host_asci::Impl {
       cauto new_frame_time = get_time();
       graphic::hard_draw_time = new_frame_time - last_frame_time;
       last_frame_time = new_frame_time;
-    } else if (graphic::cpu_safe && !graphic::get_fast_forward()) {
+    } elif (graphic::cpu_safe && !graphic::get_fast_forward()) {
       frame_wait();
     }
   }

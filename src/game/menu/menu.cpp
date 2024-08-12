@@ -35,7 +35,7 @@ struct Menu::Sticking {
       hold_count = 1;
       use_sticking = false;
       return true;
-    } else if (is_pressed(keycode)) {
+    } elif (is_pressed(keycode)) {
       // и кнопка та же самая
       if (last_pressed_key == keycode) {
         ++hold_count;

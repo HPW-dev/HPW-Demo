@@ -43,15 +43,17 @@ for (auto index_name = decltype(maximum){0}; index_name < maximum; ++index_name)
 for (auto& val: container) \
   val->expr;
 
-#define return_if(cond, ...) do { \
-    if (static_cast<bool>(cond)) { \
-      return __VA_ARGS__; \
-    } \
-  } while (false);
+#define return_if(cond, ...) \
+do { \
+  if (static_cast<bool>(cond)) { \
+    return __VA_ARGS__; \
+  } \
+} while (false);
 #define ret_if return_if
 #define break_if(cond) if (cond) break;
 #define continue_if(cond) if (cond) continue;
 #define cont_if continue_if
+#define elif else if
 
 // макрос для классов запрещающий копирование
 #define nocopy(name) \

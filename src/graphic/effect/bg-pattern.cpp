@@ -916,7 +916,7 @@ void bgp_ipv4_2(Image& dst, const int bg_state) {
     auto num_str = n2s<utf32>(num);
     if (num < 10)
       num_str = U"00" + num_str;
-    else if (num < 100)
+    elif (num < 100)
       num_str = U"0" + num_str;
     return num_str;
   };

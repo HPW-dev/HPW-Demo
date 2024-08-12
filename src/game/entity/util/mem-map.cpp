@@ -42,7 +42,7 @@ void draw_entity_mem_map(Image& dst, const Vec pos) {
       // определить цвет
       if (entity->type == ENTITY_TYPE(Collidable))
         color = bullet_color;
-      else if (entity->type == ENTITY_TYPE(Particle))
+      elif (entity->type == ENTITY_TYPE(Particle))
         color = particle_color;
       else 
         color = unknownd_entity_color;
