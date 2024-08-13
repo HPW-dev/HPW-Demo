@@ -350,25 +350,13 @@ void Host_glfw::game_frame(const Delta_time dt) {
 void Host_glfw::game_update(const Delta_time dt) {
   set_update_time(dt);
   return_if (dt <= 0 || dt >= 10);
-
-  if (graphic::get_fast_forward())
-    m_update_time = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
+  process_fast_forward();
 
   while (m_update_time >= hpw::target_update_time) {
     m_update_time -= hpw::target_update_time;
     m_start_update_time = get_time();
     glfwPollEvents();
-
-    // обработка специальных кнопок
-    if (is_pressed_once(hpw::keycode::fulscrn)) {
-      assert(hpw::set_fullscreen);
-      hpw::set_fullscreen(!graphic::fullscreen);
-    }
-    if (is_pressed_once(hpw::keycode::screenshot)) {
-      assert(hpw::make_screenshot);
-      hpw::make_screenshot();
-    }
-    hpw::any_key_pressed |= is_any_key_pressed();
+    process_input();
 
     // обновить игровое состояние
     if (graphic::step_mode) { // пошагово
@@ -532,4 +520,24 @@ void Host_glfw::_set_fullscreen(bool enable) {
     reshape(m_w, m_h);
     graphic::set_vsync( graphic::get_vsync() );
   }
+}
+
+void Host_glfw::process_input() {
+  // обработка специальных кнопок
+  if (is_pressed_once(hpw::keycode::fulscrn)) {
+    assert(hpw::set_fullscreen);
+    hpw::set_fullscreen(!graphic::fullscreen);
+  }
+
+  if (is_pressed_once(hpw::keycode::screenshot)) {
+    assert(hpw::make_screenshot);
+    hpw::make_screenshot();
+  }
+
+  hpw::any_key_pressed |= is_any_key_pressed();
+}
+
+void Host_glfw::process_fast_forward() {
+  if (graphic::get_fast_forward())
+    m_update_time = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
 }
