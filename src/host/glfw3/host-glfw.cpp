@@ -258,6 +258,8 @@ void Host_glfw::init_window() {
 
   // ивенты клавы
   glfwSetKeyCallback(m_window, &key_callback);
+  // клавиши надо стереть, чтобы при пересоздании окна не было залипания
+  clear_cur_keys();
   // для чтения юникод текста при вводе
   glfwSetCharCallback(m_window, &utf32_text_input_cb);
   // режим показа курсора мыши
