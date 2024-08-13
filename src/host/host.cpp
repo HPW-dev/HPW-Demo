@@ -67,10 +67,6 @@ void Host::exit() {
  
 void Host::callbacks_init() {
   hpw::soft_exit = [this] { this->exit(); };
-  hpw::set_double_buffering = [this](bool enable) { this->_set_double_buffering(enable); };
-  hpw::set_resize_mode = [this](Resize_mode mode) { this->_set_resize_mode(mode); };
-  hpw::set_mouse_cursour_mode = [this](bool enable) { this->_set_mouse_cursour_mode(enable); };
-
   hpw::make_screenshot = [this] {
     if (graphic::canvas)
       save_screenshot(*graphic::canvas);

@@ -100,6 +100,24 @@ void Host_glfw::init_commands() {
     detailed_log("vsync: " << enable << '\n');
     glfwSwapInterval(enable ? 1 : 0);
   };
+
+  hpw::set_double_buffering = [](bool enable) {  
+    assert(g_instance);
+    auto inst = g_instance.load();
+    inst->_set_double_buffering(enable);
+  };
+
+  hpw::set_resize_mode = [](Resize_mode mode) {
+    assert(g_instance);
+    auto inst = g_instance.load();
+    inst->_set_resize_mode(mode);
+  };
+
+  hpw::set_mouse_cursour_mode = [](bool enable) {
+    assert(g_instance);
+    auto inst = g_instance.load();
+    inst->_set_mouse_cursour_mode(enable);
+  };
 }
 
 void Host_glfw::init() {

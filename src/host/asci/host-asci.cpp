@@ -137,10 +137,13 @@ struct Host_asci::Impl {
   inline void init_commands() {
     hpw::set_vsync = [](bool){ detailed_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
     hpw::rebind_key = [](hpw::keycode) { error("rebind_key not implemented for ASCI-host"); };
-    hpw::reset_keymap = [this]{ { error("reset_keymap not implemented for ASCI-host"); }; };
-    hpw::set_gamma = [this](const double) { detailed_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
+    hpw::reset_keymap = []{ { error("reset_keymap not implemented for ASCI-host"); }; };
+    hpw::set_gamma = [](const double) { detailed_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
     hpw::get_time = [this]{ return this->get_time(); };
-    hpw::set_fullscreen = [this](bool) { detailed_log("настройка fullscreen в ASCI режиме ни на что не влияет\n"); };
+    hpw::set_fullscreen = [](bool) { detailed_log("настройка fullscreen в ASCI режиме ни на что не влияет\n"); };
+    hpw::set_double_buffering = [](bool) { detailed_log("настройка double buffering в ASCI режиме ни на что не влияет\n"); };
+    hpw::set_resize_mode = [](Resize_mode) { detailed_log("настройка resize mode в ASCI режиме ни на что не влияет\n"); };
+    hpw::set_mouse_cursour_mode = [](bool) { detailed_log("в ASCI режиме настройки курсора мыши не применяются\n"); };
     
     hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode) {
       // TODO
