@@ -368,16 +368,16 @@ void cmd_core_init(Cmd& cmd) {
     &set_tickrate, {} )
   MAKE_CMD (
     "stats",
-    "stats <filename> <seconds> <sample save delay>"
-    " - save statistics to file. ",
+    "stats <filename> <total_seconds> <sample_save_delay>"
+    " - сохраняет статистику в файл с заданными временными задержками",
     &start_stat_record, {} )
   MAKE_CMD (
     "stats_end",
-    "stats_end - end of saving statistics to file",
+    "завершает сбор статистики в файл",
     &end_stat_record, {} )
   MAKE_CMD (
     "config_reload",
-    "config_reload - reload config.yml",
+    "перезагружает config.yml",
     &config_reload, {} )
   MAKE_CMD (
     "seed",
@@ -393,7 +393,7 @@ void cmd_core_init(Cmd& cmd) {
     &repeat, {} )
   MAKE_CMD (
     "clear_tasks",
-    "clear_tasks - убирает все задачи",
+    "убирает все задачи",
     &clear_tasks, {} )
   MAKE_CMD (
     "direct",

@@ -398,11 +398,11 @@ void cmd_entity_init(Cmd& cmd) {
     &kill, &kill_matches )
   MAKE_CMD (
     "clear_entities",
-    "clear_entities - erase all entities from game",
+    "erase all entities from game",
     &clear_entities, {} )
   MAKE_CMD (
     "lives",
-    "lives - показать все живые объекты",
+    "показать все живые объекты",
     &print_lives, {} )
   MAKE_CMD (
     "tp",
