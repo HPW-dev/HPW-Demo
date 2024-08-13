@@ -347,6 +347,8 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   return ret;
 }
 
+void call_abort(Cmd_maker&, Cmd&, CN<Strs>) { std::abort(); }
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -413,6 +415,10 @@ void cmd_core_init(Cmd& cmd) {
     "collider",
     "collider <name> set collision resolver",
     &set_collider, &set_collider_matches )
+  MAKE_CMD (
+    "abort",
+    "fast exit (unsafe)",
+    &call_abort, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
