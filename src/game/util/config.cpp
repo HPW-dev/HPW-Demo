@@ -12,6 +12,7 @@
 #include "game/util/keybits.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
+#include "util/log.hpp"
 #include "util/safecall.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
@@ -85,6 +86,7 @@ void save_config() {
 } // save_config
 
 void load_config() {
+  hpw_log("чтение конфига...\n");
   init_shared(hpw::config, hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;

@@ -20,7 +20,7 @@ class Game_app: public Host_class {
   
   void update(const Delta_time dt) override;
   void load_locale();
-  void load_font();
+  void load_fonts();
   void update_graphic_autoopt(const Delta_time dt);
   // полноэкранная рамка
   void draw_border(Image& dst) const;

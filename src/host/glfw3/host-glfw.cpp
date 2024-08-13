@@ -112,14 +112,9 @@ Host_glfw::Host_glfw(int argc, char *argv[])
   g_instance.store(this);
 
   hpw::set_vsync = &host_glfw_set_vsync;
-  glfwSetErrorCallback(error_callback);
-  detailed_log("init GLFW lib\n");
-  iferror(!glfwInit(), "!glfwInit");
-
+  init_glfw();
   init_window();
-  init_shared(m_key_mapper);
-  m_key_mapper->reset();
-  hpw::keys_info = m_key_mapper->get_info();
+  init_keymapper();
   init_commands();
 } // Host_glfw c-tor
 
@@ -127,6 +122,19 @@ Host_glfw::~Host_glfw() {
   glfwDestroyWindow(m_window);
   glfwTerminate();
   g_instance = {};
+}
+
+void Host_glfw::init_keymapper() {
+  hpw_log("инициализация кей-маппера...\n");
+  init_shared(m_key_mapper);
+  m_key_mapper->reset();
+  hpw::keys_info = m_key_mapper->get_info();
+}
+
+void Host_glfw::init_glfw() {
+  hpw_log("инициализация GLFW...\n");
+  glfwSetErrorCallback(error_callback);
+  iferror(!glfwInit(), "!glfwInit");
 }
 
 void Host_glfw::init_commands() {
@@ -226,6 +234,7 @@ void Host_glfw::set_gamma(const double gamma) {
 }
 
 void Host_glfw::init_window() {
+  hpw_log("создание окна игры...\n");
   if (m_window) // на случай реинита
     glfwDestroyWindow(m_window);
 
@@ -259,7 +268,6 @@ void Host_glfw::init_window() {
       ? GL_TRUE
       : GL_FALSE
   ); 
-  detailed_log("make m_window\n");
   m_window = glfwCreateWindow(m_w, m_h, rnd_window_name().c_str(), nullptr, nullptr);
   iferror(!m_window, "bad init GLFW m_window");
   glfwSetWindowPos(m_window, m_wnd_x, m_wnd_y);

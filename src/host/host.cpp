@@ -61,7 +61,7 @@ Host::~Host() {
 }
 
 void Host::exit() {
-  detailed_log("Host.exit\n");
+  hpw_log("вызов программного выхода из игры...\n");
   m_is_ran = false;
 }
  

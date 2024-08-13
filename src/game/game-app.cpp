@@ -39,7 +39,7 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   #endif
   load_resources();
   load_locale();
-  load_font();
+  load_fonts();
 
   /* к этому моменту кеймапер будет инициализирован и
   управление можно будет переназначить с конфига */
@@ -48,6 +48,7 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   load_sounds();
 
   // управление сценами
+  hpw_log("настройка игровых сцен...\n");
   init_scene_mgr();
   #ifndef DEBUG
   hpw::empty_level_first = false;
@@ -58,6 +59,8 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   } else {
     hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
   }
+
+  hpw_log("загрузка завершена\n");
 } // c-tor
 
 Game_app::~Game_app() {
@@ -98,13 +101,17 @@ void Game_app::draw_border(Image& dst) const
   { draw_rect(dst, Rect{0,0, dst.X, dst.Y}, Pal8::white); }
 
 void Game_app::load_locale() {
+  hpw_log("загрузка локализации...\n");
+  assert(hpw::config);
   auto path = (*hpw::config)["path"].get_str("locale", "resource/locale/en.yml");
   auto mem = hpw::archive->get_file(path);
   auto yml = Yaml(mem);
   load_locales_to_store(yml);
 }
 
-void Game_app::load_font() {
+void Game_app::load_fonts() {
+  hpw_log("загрузка шрифтов...\n");
+  assert(hpw::archive);
   auto mem = hpw::archive->get_file("resource/font/unifont-13.0.06.ttf");
   init_unique<Unifont>(graphic::font, mem, 16, true);
 }

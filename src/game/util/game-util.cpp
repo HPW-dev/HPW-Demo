@@ -76,7 +76,7 @@ decltype(hpw::store_sprite)::element_type::Velue find_err_cb(CN<Str> _name) {
 }
 
 void load_resources() {
-  detailed_log("loading resources...\n");
+  hpw_log("загрузка ресурсов...\n");
   init_unique(hpw::store_sprite);
 
   #ifdef EDITOR
@@ -454,7 +454,8 @@ inline void init_store_sound() {
 }
 
 void load_sounds() {
-  detailed_log("loading sounds...\n");
+  hpw_log("загрузка звуков...\n");
+
   try {
     // TODO применение настроек при создании
     init_unique<Sound_mgr_oal>(hpw::sound_mgr);
