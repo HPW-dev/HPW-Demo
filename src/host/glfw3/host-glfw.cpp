@@ -1,117 +1,29 @@
 #include <thread>
-//#include <chrono>
 #include <iostream>
 #include <cassert>
 #include <mutex>
 #include <algorithm>
 #include <ctime>
 #include "stb/stb_image.h"
-#include "host/host-util.hpp"
 #include "host-glfw.hpp"
 #include "host-glfw-keymap.hpp"
+#include "host-glfw-callback.hpp"
+#include "host/host-util.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
-#include "game/util/keybits.hpp"
-#include "game/util/sync.hpp"
-#include "game/util/game-archive.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
-#include "game/core/debug.hpp"
 #include "game/core/core-window.hpp"
+#include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
-#include "game/core/user.hpp"
-extern "C" {
-  #include "host/ogl3/ogl.hpp"
-  #ifdef WINDOWS
-    #define GLFW_DLL
-  #else
-    #include <unistd.h>
-  #endif
-  #include <GLFW/glfw3.h>
-}
+#include "game/util/sync.hpp"
+#include "game/util/game-archive.hpp"
 
-inline std::atomic<Host_glfw*> g_instance {};
-inline bool g_rebind_key_mode {false};
-// позволяет избежать зацикливания при выставлении стандартной гаммы при ошибке
-inline bool g_set_default_gamma_once {true};
-// появится при hpw::rebind_key
-inline hpw::keycode g_key_for_rebind {hpw::keycode::error};
-
-static void host_glfw_set_vsync(bool enable) {
-  detailed_log("vsync: " << enable << '\n');
-  glfwSwapInterval(enable ? 1 : 0);
-}
-
-static void key_callback(GLFWwindow* m_window, int key, int scancode, int action, int mods) {
-  assert(m_window);
-  assert(g_instance);
-
-  hpw::any_key_pressed = true;
-  cauto key_mapper = g_instance.load()->m_key_mapper.get();
-  assert(key_mapper);
-  nauto keymap_table = key_mapper->get_table();
-
-  // режим ребинда клавиши
-  if (g_rebind_key_mode) {
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      key_mapper->bind(g_key_for_rebind, scancode);
-      hpw::keys_info = key_mapper->get_info();
-      g_rebind_key_mode = false;
-      return; // чтобы нажатие не применилось в игровой логике
-    }
-  }
-
-  // проверить нажатия на игровые клавиши
-  for (cnauto [hpw_key, key]: keymap_table) {
-    if (key.scancode == scancode) {
-      if (action == GLFW_PRESS || action == GLFW_REPEAT)
-        press(hpw_key);
-      else // GLFW_RELEASE
-        release(hpw_key);
-    }
-  }
-
-  // альтернативная кнопка скриншота
-  if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
-    hpw::make_screenshot();
-  // альтернативная кнопка фуллскрина
-  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
-    assert(hpw::set_fullscreen);
-    hpw::set_fullscreen(!graphic::fullscreen);
-  }
-} // key_callback
-
-// колбэк для ошибок нужен для GLFW
-static void error_callback(int error, Cstr description) {
-  // поставить дефолтную гамму при ошибке
-  if (g_instance && g_set_default_gamma_once) {
-    assert(g_instance);
-    g_instance.load()->set_gamma(1);
-    g_set_default_gamma_once = false;
-  }
-
-  error("GLFW error: " << error << ": " << description);
-}
-
-static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h) {
-  assert(g_instance);
-  g_instance.load()->reshape(w, h);
-}
-
-// utf32 text input callback
-static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoint) {
-  if (hpw::text_input_mode) {
-    hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos,
-      0, hpw::text_input.size());
-    hpw::text_input.insert(hpw::text_input_pos, 1,
-      scast<decltype(hpw::text_input)::value_type>(codepoint));
-    hpw::text_input_pos = std::min<int>(hpw::text_input_pos + 1,
-      hpw::text_input.size());
-  }
-}
+// вверх этот хедер не таскать, иначе всё развалится
+#include "host-glfw-common.hpp"
 
 Host_glfw::Host_glfw(int argc, char *argv[])
 : Host_ogl (argc, argv)
@@ -120,7 +32,11 @@ Host_glfw::Host_glfw(int argc, char *argv[])
   iferror(g_instance, "no use two GLFW hosts");
   g_instance.store(this);
 
-  hpw::set_vsync = &host_glfw_set_vsync;
+  hpw::set_vsync = [](const bool enable) {
+    detailed_log("vsync: " << enable << '\n');
+    glfwSwapInterval(enable ? 1 : 0);
+  };
+
   init_glfw();
   init_window();
   init_keymapper();
