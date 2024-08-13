@@ -18,7 +18,6 @@ protected:
 
   inline void _set_resize_mode(Resize_mode mode) override {}
   inline void _set_double_buffering(bool enable) override {}
-  inline void _set_fullscreen(bool enable) override {}
   inline void _set_mouse_cursour_mode(bool mode) override {}
   inline void set_gamma(const double gamma) override {}
 };

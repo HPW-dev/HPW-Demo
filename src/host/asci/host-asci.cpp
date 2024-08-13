@@ -136,10 +136,11 @@ struct Host_asci::Impl {
 
   inline void init_commands() {
     hpw::set_vsync = [](bool){ detailed_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
-    hpw::rebind_key = [](hpw::keycode hpw_key) { error("rebind_key not implemented for ASCI-host"); };
+    hpw::rebind_key = [](hpw::keycode) { error("rebind_key not implemented for ASCI-host"); };
     hpw::reset_keymap = [this]{ { error("reset_keymap not implemented for ASCI-host"); }; };
-    hpw::set_gamma = [this](const double val) { detailed_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
+    hpw::set_gamma = [this](const double) { detailed_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
     hpw::get_time = [this]{ return this->get_time(); };
+    hpw::set_fullscreen = [this](bool) { detailed_log("настройка fullscreen в ASCI режиме ни на что не влияет\n"); };
     
     hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode) {
       // TODO

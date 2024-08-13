@@ -31,16 +31,10 @@ Host_glfw::Host_glfw(int argc, char *argv[])
 {
   iferror(g_instance, "no use two GLFW hosts");
   g_instance.store(this);
-
-  hpw::set_vsync = [](const bool enable) {
-    detailed_log("vsync: " << enable << '\n');
-    glfwSwapInterval(enable ? 1 : 0);
-  };
-
+  init_commands();
   init_glfw();
   init_window();
   init_keymapper();
-  init_commands();
 } // Host_glfw c-tor
 
 Host_glfw::~Host_glfw() {
@@ -67,19 +61,46 @@ void Host_glfw::init_commands() {
     g_rebind_key_mode = true;
     g_key_for_rebind = hpw_key;
   };
-  hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode){
-    return_if( !m_key_mapper);
-    m_key_mapper->bind(hpw_key, scancode);
-    hpw::keys_info = m_key_mapper->get_info();
+  
+  hpw::rebind_key_by_scancode = [](hpw::keycode hpw_key, int scancode){
+    assert(g_instance);
+    auto inst = g_instance.load();
+    return_if( !inst->m_key_mapper);
+    inst->m_key_mapper->bind(hpw_key, scancode);
+    hpw::keys_info = inst->m_key_mapper->get_info();
   };
+  
   hpw::reset_keymap = [this]{
-    assert(m_key_mapper);
-    m_key_mapper->reset();
-    hpw::keys_info = m_key_mapper->get_info();
+    assert(g_instance);
+    auto inst = g_instance.load();
+    assert(inst->m_key_mapper);
+    inst->m_key_mapper->reset();
+    hpw::keys_info = inst->m_key_mapper->get_info();
   };
-  hpw::set_gamma = [this](const double val) { this->set_gamma(val); };
-  hpw::get_time = [this]{ return this->get_time(); };
-} // init_commands
+
+  hpw::set_gamma = [](const double val) {
+    assert(g_instance);
+    auto inst = g_instance.load();
+    inst->set_gamma(val);
+  };
+
+  hpw::get_time = []{
+    assert(g_instance);
+    auto inst = g_instance.load();
+    return inst->get_time(); 
+  };
+
+  hpw::set_fullscreen = [](bool enable) {
+    assert(g_instance);
+    auto inst = g_instance.load();
+    inst->_set_fullscreen(enable);
+  };
+
+  hpw::set_vsync = [](const bool enable) {
+    detailed_log("vsync: " << enable << '\n');
+    glfwSwapInterval(enable ? 1 : 0);
+  };
+}
 
 void Host_glfw::init() {
   m_start_update_time = get_time();
@@ -142,25 +163,6 @@ void Host_glfw::game_set_dt(const Delta_time gameloop_time) {
   hpw::safe_dt = std::clamp(gameloop_time, 0.000001, 1.0 / (60 * 0.9));
   graphic::effect_state = std::fmod(graphic::effect_state + hpw::real_dt, 1.0);
 }
-
-void Host_glfw::_set_fullscreen(bool enable) {
-  detailed_log("fullscreen mode: " << std::boolalpha << enable << '\n');
-  graphic::fullscreen = enable;
-  
-  if (enable) {
-    auto monitor = glfwGetPrimaryMonitor();
-    auto mode = glfwGetVideoMode(monitor);
-    reshape(mode->width, mode->height);
-    glfwSetWindowMonitor(m_window, monitor, 0, 0,
-      mode->width, mode->height, mode->refreshRate);
-    graphic::set_vsync( graphic::get_vsync() );
-  } else { // переключение обратно в окно
-    glfwSetWindowMonitor(m_window, nullptr, m_wnd_x, m_wnd_y,
-      m_w, m_h, GLFW_DONT_CARE);
-    reshape(m_w, m_h);
-    graphic::set_vsync( graphic::get_vsync() );
-  }
-} // _set_fullscreen
 
 void Host_glfw::_set_double_buffering(bool enable) {
   detailed_log("Host_glfw._set_double_buffering: " << enable << "\n");
@@ -494,3 +496,22 @@ void Host_glfw::init_icon() {
 
   stbi_image_free(icon.pixels);
 } // init_icon
+
+void Host_glfw::_set_fullscreen(bool enable) {
+  detailed_log("fullscreen mode: " << std::boolalpha << enable << '\n');
+  graphic::fullscreen = enable;
+  
+  if (enable) {
+    auto monitor = glfwGetPrimaryMonitor();
+    auto mode = glfwGetVideoMode(monitor);
+    reshape(mode->width, mode->height);
+    glfwSetWindowMonitor(m_window, monitor, 0, 0,
+      mode->width, mode->height, mode->refreshRate);
+    graphic::set_vsync( graphic::get_vsync() );
+  } else { // переключение обратно в окно
+    glfwSetWindowMonitor(m_window, nullptr, m_wnd_x, m_wnd_y,
+      m_w, m_h, GLFW_DONT_CARE);
+    reshape(m_w, m_h);
+    graphic::set_vsync( graphic::get_vsync() );
+  }
+}
