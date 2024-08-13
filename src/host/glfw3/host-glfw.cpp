@@ -38,7 +38,7 @@ inline bool g_rebind_key_mode {false};
 // позволяет избежать зацикливания при выставлении стандартной гаммы при ошибке
 inline bool g_set_default_gamma_once {true};
 // появится при hpw::rebind_key
-inline hpw::keycode g_key_for_rebind;
+inline hpw::keycode g_key_for_rebind {hpw::keycode::error};
 
 static void host_glfw_set_vsync(bool enable) {
   detailed_log("vsync: " << enable << '\n');
@@ -46,15 +46,19 @@ static void host_glfw_set_vsync(bool enable) {
 }
 
 static void key_callback(GLFWwindow* m_window, int key, int scancode, int action, int mods) {
+  assert(m_window);
+  assert(g_instance);
+
   hpw::any_key_pressed = true;
-  nauto key_mapper = *(g_instance.load()->m_key_mapper.get());
-  nauto keymap_table = key_mapper.get_table();
+  cauto key_mapper = g_instance.load()->m_key_mapper.get();
+  assert(key_mapper);
+  nauto keymap_table = key_mapper->get_table();
 
   // режим ребинда клавиши
   if (g_rebind_key_mode) {
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      key_mapper.bind(g_key_for_rebind, scancode);
-      hpw::keys_info = key_mapper.get_info();
+      key_mapper->bind(g_key_for_rebind, scancode);
+      hpw::keys_info = key_mapper->get_info();
       g_rebind_key_mode = false;
       return; // чтобы нажатие не применилось в игровой логике
     }
@@ -74,14 +78,17 @@ static void key_callback(GLFWwindow* m_window, int key, int scancode, int action
   if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
     hpw::make_screenshot();
   // альтернативная кнопка фуллскрина
-  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
-    hpw::set_fullscreen( !graphic::fullscreen);
+  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
+    assert(hpw::set_fullscreen);
+    hpw::set_fullscreen(!graphic::fullscreen);
+  }
 } // key_callback
 
 // колбэк для ошибок нужен для GLFW
 static void error_callback(int error, Cstr description) {
   // поставить дефолтную гамму при ошибке
   if (g_instance && g_set_default_gamma_once) {
+    assert(g_instance);
     g_instance.load()->set_gamma(1);
     g_set_default_gamma_once = false;
   }
@@ -89,8 +96,10 @@ static void error_callback(int error, Cstr description) {
   error("GLFW error: " << error << ": " << description);
 }
 
-static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h)
-{ g_instance.load()->reshape(w, h); }
+static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h) {
+  assert(g_instance);
+  g_instance.load()->reshape(w, h);
+}
 
 // utf32 text input callback
 static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoint) {
@@ -148,6 +157,7 @@ void Host_glfw::init_commands() {
     hpw::keys_info = m_key_mapper->get_info();
   };
   hpw::reset_keymap = [this]{
+    assert(m_key_mapper);
     m_key_mapper->reset();
     hpw::keys_info = m_key_mapper->get_info();
   };
@@ -160,6 +170,7 @@ void Host_glfw::init() {
   set_target_ups(hpw::target_ups);
   graphic::set_target_fps(graphic::get_target_fps());
   hpw::safe_dt = graphic::get_target_frame_time();
+  assert(m_key_mapper);
   hpw::keys_info = m_key_mapper->get_info();
 }
 
@@ -185,12 +196,26 @@ void Host_glfw::run() {
 } // run
 
 void Host_glfw::reshape(int w, int h) {
+  return_if (w == 0 || h == 0);
+  if (w < 0 || h < 0) {
+    hpw_log("Warning: при растягивании окна были неверно заданы параметры: w = "
+      << w << ", h = " << h << "\n");
+    return;
+  }
+
   if (!graphic::fullscreen)
     glfwSetWindowSize(m_window, w, h);
+
   Host_ogl::reshape(w, h);
 }
 
 void Host_glfw::set_window_pos(int x, int y) {
+  if (x <= m_w || y <= m_h) {
+    hpw_log("Wanring: окно передвинуто за пределы экрана: x = "
+      << x << ", y = " << y << '\n');
+    return;
+  }
+
   glfwSetWindowPos(m_window, x, y);
   Host_ogl::set_window_pos(x, y);
 }
@@ -280,12 +305,16 @@ void Host_glfw::init_window() {
   glfwSwapBuffers(m_window);
 
   // подгрузка расширений OGL
-  auto ver = Str(cptr2ptr<Cstr>(glGetString(GL_VERSION)));
-  detailed_log("OGL version: " << ver << "\n");
+  cauto ogl_ver_cstr = glGetString(GL_VERSION);
+  iferror( !ogl_ver_cstr, "не удалось получить версию OpenGL\n");
+  const Str ogl_ver( cptr2ptr<Cstr>(ogl_ver_cstr) );
+  detailed_log("OpenGL version: " << ogl_ver << "\n");
   detailed_log("GLEW init\n");
   iferror(glewInit() != GLEW_OK, "GLEW init error");
   ogl_post_init();
   glfwSetWindowSizeCallback(m_window, reshape_callback);
+  assert(hpw::set_resize_mode);
+  assert(hpw::set_fullscreen);
   hpw::set_resize_mode(graphic::resize_mode);
   hpw::set_fullscreen(graphic::fullscreen);
 
@@ -393,10 +422,14 @@ void Host_glfw::game_update(const Delta_time dt) {
     glfwPollEvents();
 
     // обработка специальных кнопок
-    if (is_pressed_once(hpw::keycode::fulscrn))
+    if (is_pressed_once(hpw::keycode::fulscrn)) {
+      assert(hpw::set_fullscreen);
       hpw::set_fullscreen(!graphic::fullscreen);
-    if (is_pressed_once(hpw::keycode::screenshot))
+    }
+    if (is_pressed_once(hpw::keycode::screenshot)) {
+      assert(hpw::make_screenshot);
       hpw::make_screenshot();
+    }
     hpw::any_key_pressed |= is_any_key_pressed();
 
     // обновить игровое состояние

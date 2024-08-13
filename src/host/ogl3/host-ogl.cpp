@@ -33,10 +33,10 @@ void Host_ogl::draw() {
 }
 
 void Host_ogl::ogl_resize(int w, int h) {
-  if ( !w || !h)
-    return;
+  return_if (w <= 0 || h <= 0);
   m_window_ctx.resize_by_mode(w, h, m_w, m_h);
-// настройка 2D координат и проекций OpenGL:
+
+  // настройка 2D координат и проекций OpenGL:
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrtho(0, m_window_ctx.w, m_window_ctx.h, 0, 0, 1);
