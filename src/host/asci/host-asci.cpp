@@ -49,10 +49,10 @@ struct Host_asci::Impl {
   , m_argv {argv}
   {
     parse_args();
+    init_commands();
     init_core();
     init_console();
     init_input();
-    init_commands();
   }
 
   inline ~Impl() { clear_console(); }
