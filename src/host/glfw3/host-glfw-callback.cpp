@@ -56,7 +56,11 @@ void error_callback(int error, Cstr description) {
     g_set_default_gamma_once = false;
   }
 
-  error("GLFW error: " << error << ": " << description);
+  Str addition_desc;
+  if (error == 65540)
+    addition_desc += ". Maybe need delete config.yml";
+
+  error("GLFW error: " << error << ": " << description << addition_desc);
 }
 
 void reshape_callback(GLFWwindow* /*m_window*/, int w, int h) {
