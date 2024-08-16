@@ -63,7 +63,7 @@ void timed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   Str cmd_str;
   for (std::size_t i = 2; i < args.size(); ++i)
     cmd_str += '\"' + args.at(i) + "\" ";
-  hpw::task_mgr.move( new_shared<Timed_cmd>(console, delay, cmd_str) );
+  hpw::task_mgr.add( new_shared<Timed_cmd>(console, delay, cmd_str) );
 
   #ifdef DETAILED_LOG
     console.print(Str("команда \"") + cmd_str + "\" поставлена на таймер");
@@ -226,7 +226,7 @@ void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   cnauto sample_delay = s2n<Delta_time>(args[3]);
   if (::g_state_saver_task)
     end_stat_record(command, console, args);
-  ::g_state_saver_task = hpw::task_mgr.move (
+  ::g_state_saver_task = hpw::task_mgr.add (
     new_shared<Task_state_saver>(filename, seconds, sample_delay, console) );
   console.print("Начат сбор статистики...");
   console.print("Статистика сохранится в файл \"" + filename + "\"");

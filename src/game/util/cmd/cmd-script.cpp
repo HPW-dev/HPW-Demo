@@ -96,11 +96,11 @@ public:
 void Cmd_script::exec(CN<Strs> cmd_and_args) {
   iferror(cmd_and_args.size() < 2, "need more parameters in script command");
   cauto fname = cmd_and_args.at(1);
-  hpw::task_mgr.move( new_shared<Exec_script>(fname) );
+  hpw::task_mgr.add( new_shared<Exec_script>(fname) );
 }
 
 void Cmd_script_instant::exec(CN<Strs> cmd_and_args) {
   iferror(cmd_and_args.size() < 2, "need more parameters in script_instant command");
   cauto fname = cmd_and_args.at(1);
-  hpw::task_mgr.move( new_shared<Exec_script_instant>(fname) );
+  hpw::task_mgr.add( new_shared<Exec_script_instant>(fname) );
 }

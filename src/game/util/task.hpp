@@ -43,7 +43,7 @@ public:
   ~Task_mgr();
 
   Shared<Task> add(CN<Shared<Task>> task);
-  Shared<Task> move(Shared<Task>&& task);
+  Shared<Task> add(Shared<Task>&& task);
   void update(const Delta_time dt);
   void draw(Image& dst) const;
   void reset_all();
