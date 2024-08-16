@@ -32,11 +32,19 @@ def exec_cmd (cmd):
   print()
 
 def write_game_version():
-  version = "???"
+  version = "v?.?.?"
+  date = "??.??.??"
+  time = "??:??"
   try:
-    cmd = "git describe --tags --abbrev=0"
-    version = subprocess.check_output(cmd.split()).decode().strip()
-    print("generated version: " + version)
+    cmd_ver = "git describe --tags --abbrev=0"
+    cmd_date = "git --no-pager log -1 --pretty=format:%cd --date=format:%Y.%m.%d"
+    cmd_time = "git --no-pager log -1 --pretty=format:%cd --date=format:%H:%M"
+    version = subprocess.check_output(cmd_ver.split()).decode().strip()
+    date = subprocess.check_output(cmd_date.split()).decode().strip()
+    time = subprocess.check_output(cmd_time.split()).decode().strip()
+    print("game version: " + version)
+    print("last commit date: " + date)
+    print("last commit time: " + time)
   except:
     print("[!] Error when getting game version")
     
@@ -45,4 +53,6 @@ def write_game_version():
       '#include "version.hpp"\n'
       '\n'
       'const char* get_game_version() { return "' + version + '"; }\n'
+      'const char* get_game_date() { return "' + date + '"; }\n'
+      'const char* get_game_creation_time() { return "' + time + '"; }\n'
     )
