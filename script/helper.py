@@ -37,7 +37,7 @@ def write_game_version():
   time = "??:??"
   try:
     cmd_ver = "git describe --tags --abbrev=0"
-    cmd_date = "git --no-pager log -1 --pretty=format:%cd --date=format:%Y.%m.%d"
+    cmd_date = "git --no-pager log -1 --pretty=format:%cd --date=format:%d.%m.%Y"
     cmd_time = "git --no-pager log -1 --pretty=format:%cd --date=format:%H:%M"
     version = subprocess.check_output(cmd_ver.split()).decode().strip()
     date = subprocess.check_output(cmd_date.split()).decode().strip()
@@ -53,6 +53,6 @@ def write_game_version():
       '#include "version.hpp"\n'
       '\n'
       'const char* get_game_version() { return "' + version + '"; }\n'
-      'const char* get_game_date() { return "' + date + '"; }\n'
+      'const char* get_game_creation_date() { return "' + date + '"; }\n'
       'const char* get_game_creation_time() { return "' + time + '"; }\n'
     )

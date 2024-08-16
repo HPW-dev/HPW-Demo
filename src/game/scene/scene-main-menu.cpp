@@ -328,8 +328,9 @@ Unique<Sprite> Scene_main_menu::prepare_logo(CN<Str> name) const {
 
 utf32 Scene_main_menu::prepare_game_ver() const {
   auto game_ver = sconv<utf32>( get_game_version() );
+  auto game_date = sconv<utf32>( get_game_creation_date() );
   if (game_ver.empty())
-    game_ver = get_locale_str("common.unknown");
+    game_ver = U"v?.?.?";
 
   // добавить инфу по платформе и билду:
   #ifdef WINDOWS
@@ -354,6 +355,7 @@ utf32 Scene_main_menu::prepare_game_ver() const {
     game_ver += U'E';
   #endif
 
+  game_ver += U' ' + game_date;
   return game_ver;
 } // prepare_game_ver
 
