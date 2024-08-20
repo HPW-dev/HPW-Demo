@@ -13,6 +13,7 @@ struct Id_and_name {
 static const Vector<Id_and_name> g_id_and_names {
   {Ability_id::invise, "invisiblity"},
   {Ability_id::powershoot, "powershoot"},
+  {Ability_id::dummy, "dummy"},
 };
 
 Str get_name(Ability_id id) {
