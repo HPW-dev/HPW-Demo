@@ -1,9 +1,12 @@
 #include <ranges>
 #include <utility>
+#include "cmd.hpp"
 #include "cmd-common.hpp"
+#include "cmd-util.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 #include "game/core/messages.hpp"
+#include "game/util/version.hpp"
 #include "host/command.hpp"
 
 void Cmd_exit::exec(CN<Strs> cmd_and_args) {
@@ -103,4 +106,19 @@ void Cmd_help::exec(CN<Strs> cmd_and_args) {
 void Cmd_cls::exec(CN<Strs> cmd_and_args) {
   iferror(!hpw::message_mgr, "hpw::message_mgr не инициализирован");
   hpw::message_mgr->clear();
+}
+
+void print_ver(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+  console.print(Str("game version: ") + get_game_version() + " " +
+    + get_game_creation_date() + " " + get_game_creation_time());
+}
+
+void cmd_common_init(Cmd& cmd) {
+  #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
+    cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
+      Cmd_maker::Func_command_matches{MATCH_F}) );
+
+  MAKE_CMD("version", "print game version", &print_ver, {})
+
+  #undef MAKE_CMD
 }

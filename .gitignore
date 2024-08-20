@@ -1,11 +1,5 @@
 ﻿cppcheck.txt
 stats.csv
-build/config.yml
-build/*.txt
-build/editor
-build/plugin
-build/cmd-test-helper.txt
-build/cmd-test.txt
 ignore me.lnk
 imgui.ini
 memleaks.txt
@@ -57,6 +51,12 @@ pgo/
 **/cpplint.txt
 **/*.gcda
 **/*.gcno
+build/config.yml
+build/*.txt
+build/editor
+build/plugin
+build/cmd-test-helper.txt
+build/cmd-test.txt
 build/test.yml
 build/HPW
 build/screenshots/
@@ -64,3 +64,4 @@ build/config
 build/resource
 test/yaml test/test.yml
 src/.sconsign.dblite
+src/game/util/version.cpp
