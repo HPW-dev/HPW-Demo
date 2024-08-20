@@ -294,7 +294,7 @@ struct Host_asci::Impl {
 
     // проверить нажатия на игровые клавиши
     assert(!hpw::keys_info.keys.empty());
-    for (cnauto it: hpw::keys_info.keys) {
+    for (crauto it: hpw::keys_info.keys) {
       if (GetKeyState(it.scancode) & 0x8000) {
         press(it.hpw_key);
         hpw::any_key_pressed = true;

@@ -27,7 +27,7 @@ Bytes mem_from_file(Str fname) {
 } // mem_from_file
 
 inline void all_names_in_dir_helper(Strs& v_name, CN<Str> dir) {
-  for (cnauto entry: std::filesystem::directory_iterator(dir)) {
+  for (crauto entry: std::filesystem::directory_iterator(dir)) {
     auto path = entry.path().string();
     v_name.emplace_back(path);
     if (std::filesystem::is_directory(path))

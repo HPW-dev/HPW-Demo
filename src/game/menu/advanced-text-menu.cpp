@@ -70,9 +70,9 @@ struct Advanced_text_menu::Impl {
     // нарисовать весь текст в прямоугольник
     Image items_rect(m_items_rect.size.x, m_items_rect.size.y, Pal8::black);
 
-    cnauto items = m_base->get_items();
+    crauto items = m_base->get_items();
     cfor (i, items.size()) {
-      cnauto item = items[i];
+      crauto item = items[i];
       assert(item);
 
       utf32 str = item->to_text();

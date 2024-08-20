@@ -24,13 +24,13 @@ void Player::update(const Delta_time dt) {
   if (this->status.collided)
     graphic::camera->add_shake(999);
   // применить способности
-  for (cnauto it: capabilities)
+  for (crauto it: capabilities)
     it->update(*this, dt);
 }
 
 Ability* Player::move_ability(Shared<Ability>&& ability) {
   // если такая способность уже есть у игрока, то апнуть её
-  for (cnauto it: capabilities)
+  for (crauto it: capabilities)
     if (it->type_id() == ability->type_id()) {
       it->power_up();
       return it.get();
@@ -41,7 +41,7 @@ Ability* Player::move_ability(Shared<Ability>&& ability) {
 }
 
 Ability* Player::find_ability(const std::size_t type_id) const {
-  cnauto it = std::find_if (
+  crauto it = std::find_if (
     capabilities.begin(), capabilities.end(),
     [type_id](CN<decltype(capabilities)::value_type> ability)
       { return ability->type_id() == type_id; }
@@ -53,7 +53,7 @@ Ability* Player::find_ability(const std::size_t type_id) const {
 
 void Player::draw(Image& dst, const Vec offset) const {
   Collidable::draw(dst, offset);
-  for (cnauto it: capabilities)
+  for (crauto it: capabilities)
     it->draw(dst, offset);
 }
 

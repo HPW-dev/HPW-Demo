@@ -128,7 +128,7 @@ void calibrate_delay(const Seconds target) {
   // вычислить отставать ние для каждого таймера и выбрать лучший из них
   constexpr uint TESTS = 10;
   Vector<Seconds> results(TESTS);
-  for (nauto stat: statistic) {
+  for (rauto stat: statistic) {
     cfor (i, TESTS) {
       cauto st = std::chrono::steady_clock::now();
       stat.delay_pf(target);
@@ -146,7 +146,7 @@ void calibrate_delay(const Seconds target) {
   // найти самый точный таймер
   CP<Timer_stat> best_timer = &statistic.at(0);
   double min_error = best_timer->delay_error;
-  for (cnauto stat: statistic)
+  for (crauto stat: statistic)
     if (min_error > stat.delay_error) {
       best_timer = &stat;
       min_error = stat.delay_error;

@@ -48,7 +48,7 @@ Shared<Task> Task_mgr::add(CN<Shared<Task>> task) {
 
 Shared<Task> Task_mgr::add(Shared<Task>&& task) {
   iferror(!task, "bad task ptr");
-  nauto ret = m_tasks.emplace_back( std::move(task) );
+  rauto ret = m_tasks.emplace_back( std::move(task) );
   ret->on_start();
   return ret;
 }
@@ -56,7 +56,7 @@ Shared<Task> Task_mgr::add(Shared<Task>&& task) {
 void Task_mgr::update(const Delta_time dt) {
   process_killed();
 
-  for (nauto task: m_tasks) {
+  for (rauto task: m_tasks) {
     cont_if(!task);
     cont_if(!task->is_active());
     cont_if(task->is_paused());
@@ -65,23 +65,23 @@ void Task_mgr::update(const Delta_time dt) {
 }
 
 void Task_mgr::draw(Image& dst) const {
-  for (cnauto task: m_tasks)
+  for (crauto task: m_tasks)
     if (task->is_active())
       task->draw(dst);
 }
 
 void Task_mgr::reset_all() {
-  for (nauto task: m_tasks)
+  for (rauto task: m_tasks)
     task->restart();
 }
 
 void Task_mgr::stop_all() {
-  for (nauto task: m_tasks)
+  for (rauto task: m_tasks)
     task->stop();
 }
 
 void Task_mgr::unfreeze_all() {
-  for (nauto task: m_tasks)
+  for (rauto task: m_tasks)
     task->unfreeze();
 }
 
@@ -90,7 +90,7 @@ void Task_mgr::kill_all() { m_tasks.clear(); }
 Task_mgr::~Task_mgr() { clear(); }
 
 void Task_mgr::clear() {
-  for (nauto task: m_tasks)
+  for (rauto task: m_tasks)
     task->deactivate();
   m_tasks.clear();
 }

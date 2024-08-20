@@ -32,8 +32,8 @@ struct Ability_fullscreen_shoot::Impl {
     uint bullets = 0;
 
     // попытаться склонировать все пули в игре, если удача прокнет
-    nauto entities = hpw::entity_mgr->get_entities();
-    for (nauto entity: entities) {
+    rauto entities = hpw::entity_mgr->get_entities();
+    for (rauto entity: entities) {
       assert(entity);
       cont_if( !(entity->status.live && entity->status.is_bullet) );
       ++bullets; // учесть пулю, которая уже была
@@ -91,10 +91,10 @@ struct Ability_fullscreen_shoot::Impl {
 
   inline void test_bullet_limit() {
     // уничтожить пули если их много
-    nauto entities = hpw::entity_mgr->get_entities();
+    rauto entities = hpw::entity_mgr->get_entities();
     if (m_need_clear) {
       m_need_clear = false;
-      for (nauto entity: entities) {
+      for (rauto entity: entities) {
         assert(entity);
         cont_if( !(entity->status.live && entity->status.is_bullet) );
         entity->kill();

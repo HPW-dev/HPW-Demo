@@ -26,7 +26,7 @@ inline void save_hitbox(CP<Anim> anim, Yaml& root) {
 
   // сохранить полигоны хитбокса
   auto polygons_node = hitbox_node.make_node("polygons");
-  for (uint poly_idx = 0; cnauto polygon: hitbox_source->polygons) {
+  for (uint poly_idx = 0; crauto polygon: hitbox_source->polygons) {
     cont_if( !polygon);
 
     auto cur_poly_node = polygons_node.make_node("poly_" + n2s(poly_idx));
@@ -37,7 +37,7 @@ inline void save_hitbox(CP<Anim> anim, Yaml& root) {
     if ( !polygon.points.empty()) {
       auto points_node = cur_poly_node.make_node("points");
 
-      for (uint point_idx = 0; cnauto point: polygon.points) {
+      for (uint point_idx = 0; crauto point: polygon.points) {
         points_node.set_v_real("P" + n2s(point_idx), {point.x, point.y});
         ++point_idx;
       } // fpr points
@@ -54,7 +54,7 @@ inline void load_hitbox(Anim& anim, CN<Yaml> hitbox_node) {
 
   // загрузить полигоны хитбокса
   auto polygons_node = hitbox_node["polygons"];
-  for (cnauto poly_name: polygons_node.root_tags()) {
+  for (crauto poly_name: polygons_node.root_tags()) {
     Polygon loaded_poly;
 
     auto poly_node = polygons_node[poly_name];
@@ -64,7 +64,7 @@ inline void load_hitbox(Anim& anim, CN<Yaml> hitbox_node) {
 
     // загрузить точки полигона
     auto points_node = poly_node["points"];
-    for (cnauto point_name: points_node.root_tags()) {
+    for (crauto point_name: points_node.root_tags()) {
       auto point_v = points_node.get_v_real(point_name, {0, 0});
       loaded_poly.points.emplace_back( Vec(
         point_v.at(0),
@@ -88,7 +88,7 @@ void read_anims(CN<Yaml> src) {
   std::sort(anim_names.begin(), anim_names.end());
 
   cfor (i, anim_names.size()) {
-    cnauto anim_name {anim_names[i]};
+    crauto anim_name {anim_names[i]};
     cauto anim_node = animations_node[anim_name];
     cauto anim = read_anim(anim_node);
     hpw::anim_mgr->add_anim(anim_name, anim);
@@ -106,7 +106,7 @@ Shared<Anim> read_anim(CN<Yaml> anim_node) {
   cauto frames_node = anim_node["frames"];
 
   // прочитать все кадры
-  for (cnauto frame_name: frames_node.root_tags()) {
+  for (crauto frame_name: frames_node.root_tags()) {
     auto frame = new_shared<Frame>();
     // нода этого кадра
     auto cur_frame_node = frames_node[frame_name];
@@ -157,7 +157,7 @@ void save_anims(Yaml& dst) {
   auto anims = hpw::anim_mgr->get_anims();
   return_if (anims.empty());
   auto animations_node = dst.make_node("animations");
-  for (cnauto anim: anims) {
+  for (crauto anim: anims) {
     cont_if(!anim);
     // нода с именем анимации
     auto cur_anim_node = animations_node.make_node(anim->get_name());
@@ -167,7 +167,7 @@ void save_anims(Yaml& dst) {
     auto frames = anim->get_frames();
     cont_if(frames.empty());
     auto frames_node = cur_anim_node.make_node("frames");
-    for (cnauto frame: frames) {
+    for (crauto frame: frames) {
       cont_if(!frame);
       // нода по имени (uid) кадра
       auto cur_frame_node = frames_node.make_node(frame->get_name());

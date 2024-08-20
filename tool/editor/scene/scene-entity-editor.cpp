@@ -49,9 +49,9 @@ struct Scene_entity_editor::Impl {
     if (!m_ctx.pause) {
       hpw::entity_mgr->update(dt);
       graphic::camera->update(dt);
-      for (cnauto window: m_windows)
+      for (crauto window: m_windows)
         window->update(dt);
-      for (cnauto window: m_emitters)
+      for (crauto window: m_emitters)
         window->update(dt);
     }
     m_ctx.entities_is_clear = false;
@@ -60,9 +60,9 @@ struct Scene_entity_editor::Impl {
   inline void draw(Image& dst) const {
     draw_bg(dst);
     hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
-    for (cnauto window: m_windows)
+    for (crauto window: m_windows)
       window->draw(dst);
-    for (cnauto window: m_emitters)
+    for (crauto window: m_emitters)
       window->draw(dst);
     if (m_ctx.pause)
       draw_pause(dst);
@@ -81,9 +81,9 @@ struct Scene_entity_editor::Impl {
   inline void imgui_exec() {
     if (ImGui::IsKeyDown(ImGuiKey_Escape))
       exit();
-    for (cnauto window: m_windows)
+    for (crauto window: m_windows)
       window->imgui_exec();
-    for (cnauto window: m_emitters)
+    for (crauto window: m_emitters)
       window->imgui_exec();
   }
 

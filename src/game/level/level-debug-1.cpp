@@ -77,7 +77,7 @@ Level_debug_1::Level_debug_1() {
 void Level_debug_1::update(const Vec vel, Delta_time dt) {
   Level::update(vel, dt);
   
-  for (nauto obj: objs) {
+  for (rauto obj: objs) {
     obj->update(dt);
     bound_check(*obj);
   }
@@ -85,7 +85,7 @@ void Level_debug_1::update(const Vec vel, Delta_time dt) {
 
 void Level_debug_1::draw(Image& dst) const {
   draw_bg(dst);
-  for (nauto obj: objs)
+  for (rauto obj: objs)
     draw_obj(*obj, dst);
 } // draw
 

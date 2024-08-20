@@ -120,7 +120,7 @@ Dither type, blend_pf bf) {
     // вырезание по маске
     continue_if (mask(x, y) == Pal8::mask_invisible);
 
-    cnauto table = get_table(type);
+    crauto table = get_table(type);
     auto table_idx = ((y % scast<std::size_t>(table.sz.y)) * scast<std::size_t>(table.sz.x)) + (x % scast<std::size_t>(table.sz.x));
     auto table_mask = table.table[table_idx];
     
@@ -170,7 +170,7 @@ void fast_dither_bayer16x16_4bit(Image& dst, bool rotate_pattern) {
   #pragma omp parallel for simd collapse(2)
   cfor (y, scast<uint>(dst.Y))
   cfor (x, scast<uint>(dst.X)) {
-    nauto pix = dst(x, y);
+    rauto pix = dst(x, y);
     pix = get_table_db16b4(pix, x + state, y + state);
   }
 }
@@ -193,7 +193,7 @@ void dither_bayer16x16_1bit(Image& dst, const real power) {
   cfor (x, dst_x) {
     cauto bayer_mul = bayer_16x16_real [
       (y % bayer_y) * bayer_x + (x % bayer_x) ];
-    nauto pix = dst(x, y);
+    rauto pix = dst(x, y);
     const uint idx = bayer_mul * power + pix.to_real()
       >= 0.5 ? 1 : 0;
     cauto is_red = pix.is_red();

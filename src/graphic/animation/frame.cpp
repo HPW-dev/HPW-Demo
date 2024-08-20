@@ -135,7 +135,7 @@ Vector<Vec> Frame::get_offsets() const {
   if (directions.empty())
     return {};
   Vector<Vec> offsets;
-  for (cnauto direct: directions)
+  for (crauto direct: directions)
     offsets.emplace_back(direct.offset);
   return offsets;
 }
@@ -163,7 +163,7 @@ Frame& Frame::operator = (CN<Frame> other) {
 
   // копиря картинок с разворотами
   this->directions.clear();
-  for (cnauto direct: other.directions)
+  for (crauto direct: other.directions)
     this->directions.emplace_back(direct);
   degree_frag = other.degree_frag;
   name = other.name;

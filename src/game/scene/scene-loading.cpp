@@ -42,7 +42,7 @@ void Scene_loading::update(const Delta_time dt) {
 } // update
 
 void Scene_loading::draw(Image& dst) const {
-  cnauto bg_image = bg->image();
+  crauto bg_image = bg->image();
   assert(bg_image);
   assert(dst.size == bg_image.size);
 

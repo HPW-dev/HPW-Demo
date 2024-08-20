@@ -70,7 +70,7 @@ Store<T>::Velue& Store<T>::move(CN<Str> name, Velue&& res) {
 template <class T>
 Strs Store<T>::list(bool without_generated) const {
   Strs list;
-  for (cnauto [name, res]: m_table) {
+  for (crauto [name, res]: m_table) {
     Str out_name;
     cont_if (without_generated && res && res->is_generated());
     list.emplace_back(name);

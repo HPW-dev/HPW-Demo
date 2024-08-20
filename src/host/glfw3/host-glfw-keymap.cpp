@@ -13,7 +13,7 @@ Key_mapper::Key_mapper() {
 } // c-tor
 
 void Key_mapper::bind(hpw::keycode dst_hpw_key, int scancode) {
-  nauto dst = table[dst_hpw_key];
+  rauto dst = table[dst_hpw_key];
   dst.scancode = scancode;
   utf32 name = n2s<utf32>(scancode);
   // получить читаемое название кнопки
@@ -29,7 +29,7 @@ void Key_mapper::bind(hpw::keycode dst_hpw_key, int scancode) {
 
 Keys_info Key_mapper::get_info() const {
   Keys_info info;
-  for (cnauto [hpw_key, glfw_key]: table) {
+  for (crauto [hpw_key, glfw_key]: table) {
     info.keys.emplace_back(Keys_info::Item {
       .hpw_key = hpw_key,
       .name = glfw_key.name,

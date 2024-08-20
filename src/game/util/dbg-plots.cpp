@@ -42,7 +42,7 @@ public:
     assert(m_w > 0 && m_w < 600);
     assert(m_h > 0 && m_h < 400);
     assert(m_getter);
-    for (nauto val: m_values)
+    for (rauto val: m_values)
       val = 0;
     update_maximum();
   }
@@ -111,12 +111,12 @@ struct Dbg_plots::Impl {
   inline void draw(Image& dst) const {
     apply_brightness(dst, -97);
     
-    for (cnauto plotter: m_plotters)
+    for (crauto plotter: m_plotters)
       plotter.draw(dst);
   }
 
   inline void update(Delta_time dt) {
-    for (nauto plotter: m_plotters)
+    for (rauto plotter: m_plotters)
       plotter.update();
   }
 }; // Impl

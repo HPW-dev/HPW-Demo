@@ -29,7 +29,7 @@ public:
   // отобразить текст
   virtual void draw(Image& dst, const Vec pos, CN<utf32> text,
     blend_pf bf = &blend_past, const int optional = 0) const = 0;
-  inline cnauto w() const { return w_; }
-  inline cnauto h() const { return h_; }
-  inline cnauto space() const { return space_; }
+  inline crauto w() const { return w_; }
+  inline crauto h() const { return h_; }
+  inline crauto space() const { return space_; }
 }; // Font

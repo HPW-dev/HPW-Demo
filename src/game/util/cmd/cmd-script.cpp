@@ -44,7 +44,7 @@ public:
     /* читать и выполнять строки из файла 
     по порядку, в конце завершить процесс */
     Str line;
-    cnauto status = std::getline(m_file, line);
+    crauto status = std::getline(m_file, line);
     if (status)
       hpw::cmd.exec(line);
     else

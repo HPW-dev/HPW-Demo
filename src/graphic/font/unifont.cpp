@@ -116,14 +116,14 @@ bool Unifont::_load_glyph(char32_t ch) const {
   if (mono_) {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
-      cnauto pix = bitmap[y * bitmap_w + x];
+      crauto pix = bitmap[y * bitmap_w + x];
       glyph->image.image().fast_set(x, y, pix > 127 ? Pal8::white : Pal8::black, {});
       glyph->image.mask().fast_set(x, y, pix > 127 ? Pal8::mask_visible : Pal8::mask_invisible, {});
     }
   } else {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
-      cnauto pix = bitmap[y * bitmap_w + x];
+      crauto pix = bitmap[y * bitmap_w + x];
       glyph->image.image().fast_set(x, y, Pal8::get_gray(pix), {});
       glyph->image.mask().fast_set(x, y, Pal8::mask_visible, {});
     }

@@ -282,7 +282,7 @@ NOT_EXPORTED void convert_tile(const uint pos_x, const uint pos_y) {
   // определить какой тайл самый похожий на dst_tile
   real difference {9'999'999.0};
   uint result_tile_idx {};
-  for (uint tile_idx {}; cnauto tile: g_tiles) {
+  for (uint tile_idx {}; crauto tile: g_tiles) {
     real local_difference;
     // нужно ли уменьшать размеры тайлов
     switch (g_downscale_mode) {
@@ -298,7 +298,7 @@ NOT_EXPORTED void convert_tile(const uint pos_x, const uint pos_y) {
     }
     ++tile_idx;
   }
-  cnauto result_tile = g_tiles.at(result_tile_idx);
+  crauto result_tile = g_tiles.at(result_tile_idx);
 
   cfor (y, g_tile_y)
   cfor (x, g_tile_x) {

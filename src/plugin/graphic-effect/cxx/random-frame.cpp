@@ -23,7 +23,7 @@ NOT_EXPORTED void resize_buffers(const int32_t sz) {
   assert(sz > 1);
   assert(sz < 999'999);
   g_buffers.resize(sz);
-  for (nauto buffer: g_buffers)
+  for (rauto buffer: g_buffers)
     buffer.resize(g_w * g_h);
 }
 
@@ -50,7 +50,7 @@ struct result_t* result) {
   g_old_length = g_length;
   resize_buffers(g_length);
   // начальная заливка всех буфферов одним и тем же кадром
-  for (nauto buffer: g_buffers)
+  for (rauto buffer: g_buffers)
     std::memcpy( ptr2ptr<Pal8*>(buffer.data()),
       g_dst, buffer.size() * sizeof(Pal8) );
 } // plugin_init

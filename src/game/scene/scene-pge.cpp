@@ -95,8 +95,8 @@ struct Scene_pge::Impl {
     }
 
     // накидать опций от плагина
-    cnauto params = get_pge_params();
-    for (cnauto param: params) {
+    crauto params = get_pge_params();
+    for (crauto param: params) {
       assert(param);
       switch (param->type) {
         case Param_pge::Type::param_int: {

@@ -139,7 +139,7 @@ Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
 Sprite optimize_size(CN<Sprite> src, Vec& offset) {
   return_if (!src, Sprite{});
   
-  cnauto mask = src.mask();
+  crauto mask = src.mask();
   int sx {mask.X - 1};
   int ex {-1};
   int sy {mask.Y - 1};
@@ -226,8 +226,8 @@ int optional) {
     hpw_log("WARNING: center_point src or dst is empty\n");
     return;
   }
-  cnauto src_image = src.image();
-  cnauto src_mask = src.mask();
+  crauto src_image = src.image();
+  crauto src_mask = src.mask();
 
   pos = floor(pos);
   auto bound = get_insertion_bound(dst, pos, src_image);
@@ -334,28 +334,28 @@ const Pal8 color) {
 
 void add_brightness(Image& dst, const Pal8 brightness) {
   return_if (brightness == 0);
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = blend_add_safe(brightness, pix);
 }
 
 void sub_brightness(Image& dst, const Pal8 brightness) {
   return_if (brightness == 0);
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = blend_sub_safe(brightness, pix);
 }
 
 void apply_invert(Image& dst) {
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix.apply_invert();
 }
 
 void to_red(Image& dst) {
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = Pal8::from_real(pix.to_real(), true);
 }
 
 void to_gray(Image& dst) {
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = Pal8::from_real(pix.to_real(), false);
 }
 
@@ -471,7 +471,7 @@ blend_pf find_blend_f(CN<Str> name) {
 void apply_contrast(Image& dst, real contrast) {
   assert(contrast >= 0);
 
-  for (nauto pix: dst) {
+  for (rauto pix: dst) {
     cauto is_red = pix.is_red();
     auto dst = (pix.to_real() - 0.5) * contrast;
     dst += 0.5;
@@ -482,10 +482,10 @@ void apply_contrast(Image& dst, real contrast) {
 void apply_brightness(Image& dst, const int val) {
   assert(dst);
   if (val < 0) {
-    for (nauto pix: dst)
+    for (rauto pix: dst)
       pix.sub(val * -1);
   } else {
-    for (nauto pix: dst)
+    for (rauto pix: dst)
       pix.add(val);
   }
 }

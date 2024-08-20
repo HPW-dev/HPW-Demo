@@ -33,11 +33,11 @@ public:
   void randomize_cur_frame_safe();
 
   // получить индекс текущего кадра
-  inline cnauto get_cur_frame_idx() const { return m_frame_idx; }
+  inline crauto get_cur_frame_idx() const { return m_frame_idx; }
   CP<Frame> get_cur_frame() const;
-  inline cnauto get_anim() const { return m_anim; }
+  inline crauto get_anim() const { return m_anim; }
   // узнать скорость анимации
-  inline cnauto get_speed_scale() const { return m_speed_scale; }
+  inline crauto get_speed_scale() const { return m_speed_scale; }
   // переключить на следыдущий кадр
   inline void next_frame() { set_cur_frame(m_frame_idx + 1); }
   // переключить на предующий кадр

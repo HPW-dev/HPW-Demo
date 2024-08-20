@@ -85,7 +85,7 @@ Str s2t(T val) {
 template <class OUT, class IN>
 OUT from_null_ended(CN<IN> in) {
   OUT ret;
-  for (cnauto ch: in) {
+  for (crauto ch: in) {
     if (ch == '\0')
       break;
     ret += ch;
@@ -97,7 +97,7 @@ OUT from_null_ended(CN<IN> in) {
 template<class OUT, class IN>
 void to_null_ended(OUT &dst, CN<IN> src) {
   uint i {0};
-  for (cnauto ch: src) {
+  for (crauto ch: src) {
     dst[i] = ch;
     ++i;
   }

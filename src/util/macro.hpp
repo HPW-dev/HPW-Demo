@@ -2,8 +2,8 @@
 
 #define cauto const auto
 #define scauto static const auto
-#define cnauto const auto&
-#define nauto auto&
+#define crauto const auto&
+#define rauto auto&
 #define sconst static const
 #define constx constexpr static const
 #define cautox constexpr static const auto

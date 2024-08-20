@@ -149,8 +149,8 @@ Circle cover_polygons(CN<Vector<Polygon>> polygons) {
   // найти крайние точки
   Vec point_min(99999, 99999);
   Vec point_max(-1, -1);
-  for (cnauto poly: polygons)
-  for (cnauto point: poly.points) {
+  for (crauto poly: polygons)
+  for (crauto point: poly.points) {
     point_min.x = std::min(point_min.x, point.x + poly.offset.x);
     point_min.y = std::min(point_min.y, point.y + poly.offset.y);
     point_max.x = std::max(point_max.x, point.x + poly.offset.x);
@@ -160,8 +160,8 @@ Circle cover_polygons(CN<Vector<Polygon>> polygons) {
   Vec mid = point_min + (point_max - point_min) * 0.5;
   // найти самую дальнюю точку от центра
   real dist = 0;
-  for (cnauto poly: polygons)
-  for (cnauto point: poly.points)
+  for (crauto poly: polygons)
+  for (crauto point: poly.points)
     dist = std::max(dist, distance(mid, point + poly.offset));
   return Circle(mid, dist);
 } // cover_polygons
@@ -210,11 +210,11 @@ CN<Shared<Anim>> make_light_mask(CN<Str> src, CN<Str> dst) {
   *dst_anim = *src_anim;
   dst_anim->set_name(dst);
   // замена рисунка спрайта на обведёные контуры
-  for (cnauto frames: dst_anim->get_frames()) {
-    for (cnauto _direct: frames->get_directions()) {
+  for (crauto frames: dst_anim->get_frames()) {
+    for (crauto _direct: frames->get_directions()) {
       // допустимое преобразование:
-      nauto direct = ccast<Direct&>(_direct);
-      cnauto sprite_for_contour = *direct.sprite.lock();
+      rauto direct = ccast<Direct&>(_direct);
+      crauto sprite_for_contour = *direct.sprite.lock();
 
       direct.offset += -Vec(1, 1);
       direct.sprite =hpw::store_sprite->push (
@@ -435,7 +435,7 @@ std::size_t sizeof_all_sprites() {
     return 0;
   std::size_t ret {};
   cauto sprite_list = hpw::store_sprite->list();
-  for (cnauto sprite_name: sprite_list) {
+  for (crauto sprite_name: sprite_list) {
     cauto sprite = hpw::store_sprite->find(sprite_name);
     if (sprite) {
       ret += sizeof(Sprite); // размер класса под спрайт

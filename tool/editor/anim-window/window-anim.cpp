@@ -109,7 +109,7 @@ void Anim_wnd::draw_frame_dur() {
 
   // посчитать длительность каждого кадра и умножить на speed_scale
   real total_duration = 0;
-  for (auto frames = anim->get_frames(); cnauto frame: frames)
+  for (auto frames = anim->get_frames(); crauto frame: frames)
     if (frame)
       total_duration += frame->duration;
   total_duration *= safe_div(1.0, editor::entity->anim_ctx.get_speed_scale());

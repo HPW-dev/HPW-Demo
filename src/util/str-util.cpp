@@ -111,7 +111,7 @@ Vector<Cstr> sv_to_cv_fast(CN<Strs> sv) {
 
 Str strs_to_null_terminated(CN<Strs> strs) {
   Str ret;
-  for (cnauto str: strs)
+  for (crauto str: strs)
     ret += str + '\0';
   return ret;
 }

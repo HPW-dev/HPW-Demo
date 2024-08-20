@@ -110,7 +110,7 @@ inline void update_block_map() {
 
   cfor (y, g_block_y)
   cfor (x, g_block_x) {
-    nauto block = blocks.at(y * g_block_x + x);
+    rauto block = blocks.at(y * g_block_x + x);
     block.rect.pos = Vec(x * g_block_sz, y * g_block_sz);
     block.rect.size = Vec(g_block_sz, g_block_sz);
     block.rotation = get_rnd_rotation();
@@ -143,7 +143,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   assert( !blocks.empty());
   cfor (y, g_block_y)
   cfor (x, g_block_x) {
-    cnauto block = blocks.at(y * g_block_x + x);
+    crauto block = blocks.at(y * g_block_x + x);
     draw_block(block, Vec(x * g_block_sz, y * g_block_sz));
   }
 } // plugin_apply

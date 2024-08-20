@@ -14,8 +14,8 @@ CN<Hitbox> other) const {
   // если внешние упрощённые хитбоксы столкнулись
   if (simple.is_collided(this_pos, other_pos, other.simple)) {
     // то проверить все внутренние полигоны до первого столкновения
-    for (cnauto self_poly: polygons)
-      for (cnauto other_poly: other.polygons)
+    for (crauto self_poly: polygons)
+      for (crauto other_poly: other.polygons)
         if (self_poly.collided_with(this_pos, other_pos, other_poly)) {
           #ifdef CLD_DEBUG
           ++hpw::total_collided;
@@ -40,7 +40,7 @@ void Hitbox::draw(const Vec this_pos, Image& dst, const Pal8 color) const {
   }
 
   // нарисовать все полигоны хитбокса
-  for (cnauto poly: polygons) {
+  for (crauto poly: polygons) {
     auto poly_pos = floor(this_pos + poly.offset);
     draw_polygon(dst, floor(this_pos), poly, color);
 
@@ -54,9 +54,9 @@ void Hitbox::draw(const Vec this_pos, Image& dst, const Pal8 color) const {
 
 void Hitbox::rotate(real degree) {
   simple.offset = rotate_deg({}, simple.offset, degree);
-  for (nauto polygon: polygons) {
+  for (rauto polygon: polygons) {
     polygon.offset = rotate_deg({}, polygon.offset, degree);
-    for (nauto point: polygon.points) {
+    for (rauto point: polygon.points) {
       point = rotate_deg({}, point, degree);
     }
   }
@@ -70,8 +70,8 @@ bool Hitbox::operator ==(CN<Hitbox> other) const {
 
   // почекать все полигоны
   cfor (i, polygons_count) {
-    cnauto this_poly = this->polygons.at(i);
-    cnauto other_poly = other.polygons.at(i);
+    crauto this_poly = this->polygons.at(i);
+    crauto other_poly = other.polygons.at(i);
     if (this_poly != other_poly)
       return false;
   } // for polygons_count
@@ -83,7 +83,7 @@ bool Hitbox::operator !=(CN<Hitbox> other) const
   { return !( operator==(other) ); }
 
 Hitbox::operator bool() const {
-  for (cnauto poly: polygons)
+  for (crauto poly: polygons)
     if (poly)
       return true;
   return false;
@@ -95,7 +95,7 @@ void Hitbox::make_h_symm() {
   cfor (i, cur_poly_count) {
     auto copy = polygons[i];
     copy.offset.x *= -1;
-    for (nauto point: copy.points)
+    for (rauto point: copy.points)
       point.x *= -1;
     polygons.emplace_back(copy);
   }

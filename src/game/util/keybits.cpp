@@ -9,12 +9,12 @@ void release(hpw::keycode code) {
 }
 
 void clear_cur_keys() {
-  for (nauto key: hpw::keys)
+  for (rauto key: hpw::keys)
     key.cur = false;
 }
 
 void keys_cur_to_prev() {
-  for (nauto key: hpw::keys)
+  for (rauto key: hpw::keys)
     key.prev = key.cur;
 }
 
@@ -23,12 +23,12 @@ bool is_pressed(hpw::keycode code) {
 }
 
 bool is_pressed_once(hpw::keycode code) {
-  cnauto key = hpw::keys.at(scast<std::size_t>(code));
+  crauto key = hpw::keys.at(scast<std::size_t>(code));
   return key.cur == true && key.prev == false;
 }
 
 CP<Keys_info::Item> Keys_info::find(hpw::keycode hpw_key) const {
-  cnauto item = std::find_if(keys.begin(), keys.end(), [hpw_key](auto it)->bool
+  crauto item = std::find_if(keys.begin(), keys.end(), [hpw_key](auto it)->bool
     { return it.hpw_key == hpw_key; });
   if (item != keys.end())
     return &(*item);
@@ -36,7 +36,7 @@ CP<Keys_info::Item> Keys_info::find(hpw::keycode hpw_key) const {
 }
 
 bool is_any_key_pressed() {
-  for (cnauto key: hpw::keys) {
+  for (crauto key: hpw::keys) {
     if (key.cur)
       return true;
   }

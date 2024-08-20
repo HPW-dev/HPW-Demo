@@ -39,7 +39,7 @@ public:
   Shared<Frame> get_frame_shared(std::size_t frame_num) const;
   inline bool frame_empty() const { return frames.empty(); }
   inline auto frame_count() const { return frames.size(); }
-  inline cnauto get_frames() const { return frames; }
+  inline crauto get_frames() const { return frames; }
   inline CN<Str> get_name() const { return name; }
 
   // получить хитбокс анимации по иуглу

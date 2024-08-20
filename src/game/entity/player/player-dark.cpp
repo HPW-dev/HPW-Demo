@@ -179,7 +179,7 @@ void Player_dark::draw_stars(Image& dst) const {
   };
 
   cauto ratio = energy / scast<real>(energy_max);
-  for (cnauto window_pos: window_pos_table) {
+  for (crauto window_pos: window_pos_table) {
     // вспышка не всегда появляется
     cont_if (rndb_fast() > 16);
 

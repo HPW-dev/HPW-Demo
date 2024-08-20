@@ -34,7 +34,7 @@ CN<Str> locale_name, hpw::keycode keycode) {
   auto item = info.find(keycode);
   return_if (!item);
   
-  nauto hpw_key = item->hpw_key;
+  rauto hpw_key = item->hpw_key;
   // создать пункт меню с именем клавиши
   dst.emplace_back( new_shared<Menu_text_item>(
     get_locale_str(locale_name),

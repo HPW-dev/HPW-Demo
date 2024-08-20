@@ -208,8 +208,8 @@ real deg_to_target(CN<Entity> self, CN<Entity> target)
   { return deg_to_target(self, target.phys.get_pos()); }
 
 Vec predict(CN<Entity> self_, CN<Entity> target_, Delta_time dt) {
-  cnauto self = self_.phys;
-  cnauto target = target_.phys;
+  crauto self = self_.phys;
+  crauto target = target_.phys;
 
   if (self.get_speed() <= 0)
     return target.get_pos();

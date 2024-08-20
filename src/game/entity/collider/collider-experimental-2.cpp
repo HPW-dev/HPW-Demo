@@ -18,7 +18,7 @@ struct Collider_experimental_2::Impl {
   // получить список объектов доступных для столкновения
   inline Collidables collidable_filter(CN<Entities> entities) const {
     Collidables ret;
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       assert(ent);
       cont_if (!ent->status.live);
       cont_if (!ent->status.collidable);

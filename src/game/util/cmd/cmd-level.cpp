@@ -21,7 +21,7 @@ static std::unordered_map<Str, Level_mgr::Maker> g_game_levels {
 
 void Cmd_levels::exec(CN<Strs> cmd_and_args) {
   Str list = "Avaliable game levels:\n";
-  for (cnauto [key, maker]: g_game_levels)
+  for (crauto [key, maker]: g_game_levels)
     list += "- " + key + '\n';
   m_master->print(list);
 }
@@ -37,8 +37,8 @@ static inline void reload_resources() {
 
 void Cmd_level::exec(CN<Strs> cmd_and_args) {
   iferror(cmd_and_args.size() < 2, "need more arguments in level command");
-  cnauto level_name = str_tolower( cmd_and_args.at(1) );
-  cnauto level_maker = g_game_levels.at(level_name);
+  crauto level_name = str_tolower( cmd_and_args.at(1) );
+  crauto level_maker = g_game_levels.at(level_name);
   iferror(!level_maker, "level_maker is null");
   hpw::level_mgr->set(level_maker);
   m_master->print("Level \"" + level_name + "\" selected");
@@ -52,16 +52,16 @@ Strs Cmd_level::command_matches(CN<Strs> cmd_and_args) {
 
   // отфильтровать пользоватеьский ввод
   if (cmd_and_args.size() == 2) {
-    cnauto level_name = cmd_and_args.at(1);
+    crauto level_name = cmd_and_args.at(1);
     cauto name_filter = [&](CN<decltype(g_game_levels)::value_type> it)
       { return it.first.find(level_name) == 0; };
-    for (cnauto [name, maker]: g_game_levels | std::views::filter(name_filter))
+    for (crauto [name, maker]: g_game_levels | std::views::filter(name_filter))
       ret.push_back(cmd_name + ' ' + name);
     return ret;
   }
 
   // предложить уровни из списка
-  for (cnauto [key, maker]: g_game_levels)
+  for (crauto [key, maker]: g_game_levels)
     ret.push_back(cmd_name + ' ' + key);
   return ret;
 } // command_matches
@@ -70,7 +70,7 @@ void Cmd_restart::exec(CN<Strs> cmd_and_args) {
   reload_resources();
   // рестарт текущего уровня
   cauto level_name = str_tolower( hpw::level_mgr->level_name() );
-  cnauto level_maker = g_game_levels.at(level_name);
+  crauto level_maker = g_game_levels.at(level_name);
   iferror(!level_maker, "level_maker is null");
   hpw::level_mgr->set(level_maker);
   m_master->print("Level \"" + level_name + "\" restarted");

@@ -93,7 +93,7 @@ void Graphic_test::update(const Delta_time dt) {
 
 void Graphic_test::draw() {
   return_if ( !graphic::enable_render);
-  nauto dst {*graphic::canvas};
+  rauto dst {*graphic::canvas};
 
   // draw backgrounds
   if (auto pf = v_bg[cur_bg]; pf)
@@ -151,7 +151,7 @@ void Graphic_test::draw_gradient(Image& dst) const {
 }
 
 void Graphic_test::draw_noise(Image& dst) const {
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix.set(rndu_fast());
 }
 
@@ -296,7 +296,7 @@ void Graphic_test::draw_fps(Image& dst) const {
 }
 
 void Graphic_test::draw_insert(Image& dst) const {
-  cnauto src = *strawberry.get();
+  crauto src = *strawberry.get();
   cfor (x, 25'000)
     insert(dst, src, {
       rnd(-src.X, graphic::canvas->X + src.X),

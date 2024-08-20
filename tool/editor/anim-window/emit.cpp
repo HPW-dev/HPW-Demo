@@ -70,7 +70,7 @@ void Emit_wnd::reset() {
 
 Strs spawner_type_names() {
   Strs list;
-  for (cnauto item: spawner_type_table)
+  for (crauto item: spawner_type_table)
     list.emplace_back(item.second);
   return list;
 }
@@ -94,7 +94,7 @@ void Emit_wnd::draw_anim_list() {
   auto list_for_combo = strs_to_null_terminated(list);
 
   int list_idx = 0;
-  for (cnauto name: list) {
+  for (crauto name: list) {
     if (name == editor::anim_name)
       break;
     ++list_idx;

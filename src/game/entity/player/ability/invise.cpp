@@ -31,8 +31,8 @@ struct Ability_invise::Impl {
 
       // инвиз всего
       case 2: {
-        nauto entities = hpw::entity_mgr->get_entities();
-        for (nauto entity: entities) {
+        rauto entities = hpw::entity_mgr->get_entities();
+        for (rauto entity: entities) {
           if (
             // нужны живые объекты
             entity->status.live &&
@@ -52,8 +52,8 @@ struct Ability_invise::Impl {
 
       // инвиз врагов и игрока
       case 1: {
-        nauto entities = hpw::entity_mgr->get_entities();
-        for (nauto entity: entities) {
+        rauto entities = hpw::entity_mgr->get_entities();
+        for (rauto entity: entities) {
           if (entity->status.live && entity->status.is_enemy) {
             if (entity->status.collided) {
               entity->move_update_callback( Timed_visible(0.25) );

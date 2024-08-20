@@ -44,7 +44,7 @@ struct Space {
       inline void draw(Image& dst, const Vec offset, Pal8 brightness) const {
         draw_circle_filled(dst, star.offset, star.r, brightness);
         // нарисовать кольца и планеты
-        for (cnauto planet: planets) {
+        for (crauto planet: planets) {
           draw_circle(dst, star.offset, planet.range, brightness);
           Vec pos = deg_to_vec(planet.deg) * planet.range;
           draw_circle_filled(dst, star.offset + pos, planet.r, brightness);
@@ -63,7 +63,7 @@ struct Space {
     }
 
     inline void draw(Image& dst) const {
-      for (cnauto system: systems)
+      for (crauto system: systems)
         system.draw(dst, {}, m_brightness); // TODO offset
       // соединить системы прямой
       cfor (i, systems.size()-1) {
@@ -94,7 +94,7 @@ struct Space {
 
   inline void draw(Image& dst, const Vec pos) const {
     frame.fill(Pal8::black);
-    for (nauto layer: layers)
+    for (rauto layer: layers)
       layer.draw(frame);
     draw_rect(frame, Rect(0,0, frame.X-1, frame.Y-1), Pal8::white);
 

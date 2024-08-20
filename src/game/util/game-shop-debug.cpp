@@ -46,7 +46,7 @@ struct Shop_debug::Impl {
 
     // TODO отображение описания способности
     Menu_items ret;
-    for (cnauto it: ability_table) {
+    for (crauto it: ability_table) {
       ret.push_back(
         new_shared<Menu_item_table_row> (
           [=]{

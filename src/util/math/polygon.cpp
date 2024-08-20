@@ -16,12 +16,12 @@ CN<Polygon> other) const {
   // добавить смещения
 	auto this_offset = offset + this_center;
   auto this_poly = *this;
-  for (nauto point: this_poly.points)
+  for (rauto point: this_poly.points)
     point += this_offset;
 
 	auto other_offset = other.offset + other_center;
   auto other_poly = other;
-  for (nauto point: other_poly.points)
+  for (rauto point: other_poly.points)
     point += other_offset;
 
   #ifdef CLD_DEBUG
@@ -57,7 +57,7 @@ Polygon::operator bool() const {
   if (offset.not_zero())
     return true;
 
-  for (cnauto point: points)
+  for (crauto point: points)
     if (point.not_zero())
       return true;
 

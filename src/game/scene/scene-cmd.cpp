@@ -117,7 +117,7 @@ struct Scene_cmd::Impl {
     cauto matches = hpw::cmd.command_matches(input);
     utf32 text = U"________________________________\n";
     
-    for (uint line {}; cnauto match: matches) {
+    for (uint line {}; crauto match: matches) {
       text += sconv<utf32>(match) + U'\n';
       ++line;
       if (line >= lines_limit)

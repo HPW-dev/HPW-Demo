@@ -23,18 +23,18 @@ struct Vec {
   inline constexpr bool not_zero() const { return x != 0 || y != 0; }
   inline constexpr bool is_zero() const { return x == 0 && y == 0; }
 
-  inline constexpr void operator +=(cnauto other);
-  inline constexpr void operator -=(cnauto other);
-  inline constexpr void operator *=(cnauto other);
-  inline constexpr void operator /=(cnauto other);
+  inline constexpr void operator +=(crauto other);
+  inline constexpr void operator -=(crauto other);
+  inline constexpr void operator *=(crauto other);
+  inline constexpr void operator /=(crauto other);
   
-  inline constexpr bool operator > (cnauto other) const;
-  inline constexpr bool operator >= (cnauto other) const;
-  inline constexpr bool operator < (cnauto other) const;
-  inline constexpr bool operator <= (cnauto other) const;
+  inline constexpr bool operator > (crauto other) const;
+  inline constexpr bool operator >= (crauto other) const;
+  inline constexpr bool operator < (crauto other) const;
+  inline constexpr bool operator <= (crauto other) const;
 }; // Vec
 
-inline constexpr void Vec::operator +=(cnauto other) {
+inline constexpr void Vec::operator +=(crauto other) {
   if constexpr (requires { other.x; other.y; }) {
     x += other.x;
     y += other.y;
@@ -44,7 +44,7 @@ inline constexpr void Vec::operator +=(cnauto other) {
   }
 }
 
-inline constexpr void Vec::operator -=(cnauto other) {
+inline constexpr void Vec::operator -=(crauto other) {
   if constexpr (requires { other.x; other.y; }) {
     x -= other.x;
     y -= other.y;
@@ -54,7 +54,7 @@ inline constexpr void Vec::operator -=(cnauto other) {
   }
 }
 
-inline constexpr void Vec::operator *=(cnauto other) {
+inline constexpr void Vec::operator *=(crauto other) {
   if constexpr (requires { other.x; other.y; }) {
     x *= other.x;
     y *= other.y;
@@ -64,7 +64,7 @@ inline constexpr void Vec::operator *=(cnauto other) {
   }
 }
 
-inline constexpr void Vec::operator /=(cnauto other) {
+inline constexpr void Vec::operator /=(crauto other) {
   if constexpr (requires { other.x; other.y; }) {
     x /= other.x;
     y /= other.y;
@@ -74,7 +74,7 @@ inline constexpr void Vec::operator /=(cnauto other) {
   }
 }
 
-inline constexpr Vec operator + (const Vec a, cnauto b) {
+inline constexpr Vec operator + (const Vec a, crauto b) {
   if constexpr (requires { b.x; b.y; }) {
     return Vec(a.x + b.x, a.y + b.y);
   } else {
@@ -82,7 +82,7 @@ inline constexpr Vec operator + (const Vec a, cnauto b) {
   }
 }
 
-inline constexpr Vec operator - (const Vec a, cnauto b) {
+inline constexpr Vec operator - (const Vec a, crauto b) {
   if constexpr (requires { b.x; b.y; }) {
     return Vec(a.x - b.x, a.y - b.y);
   } else {
@@ -90,7 +90,7 @@ inline constexpr Vec operator - (const Vec a, cnauto b) {
   }
 }
 
-inline constexpr Vec operator * (const Vec a, cnauto b) {
+inline constexpr Vec operator * (const Vec a, crauto b) {
   if constexpr (requires { b.x; b.y; }) {
     return Vec(a.x * b.x, a.y * b.y);
   } else {
@@ -98,7 +98,7 @@ inline constexpr Vec operator * (const Vec a, cnauto b) {
   }
 }
 
-inline constexpr Vec operator / (const Vec a, cnauto b) {
+inline constexpr Vec operator / (const Vec a, crauto b) {
   if constexpr (requires { b.x; b.y; }) {
     return Vec(a.x / b.x, a.y / b.y);
   } else {
@@ -106,28 +106,28 @@ inline constexpr Vec operator / (const Vec a, cnauto b) {
   }
 }
 
-inline constexpr bool Vec::operator > (cnauto other) const {
+inline constexpr bool Vec::operator > (crauto other) const {
   if constexpr (requires { other.x; other.y; }) {
     return x > other.x && y > other.y;
   } else {
     return x > other && y > other;
   }
 }
-inline constexpr bool Vec::operator >= (cnauto other) const {
+inline constexpr bool Vec::operator >= (crauto other) const {
   if constexpr (requires { other.x; other.y; }) {
     return x >= other.x && y >= other.y;
   } else {
     return x >= other && y >= other;
   }
 }
-inline constexpr bool Vec::operator < (cnauto other) const {
+inline constexpr bool Vec::operator < (crauto other) const {
   if constexpr (requires { other.x; other.y; }) {
     return x < other.x && y < other.y;
   } else {
     return x < other && y < other;
   }
 }
-inline constexpr bool Vec::operator <= (cnauto other) const {
+inline constexpr bool Vec::operator <= (crauto other) const {
   if constexpr (requires { other.x; other.y; }) {
     return x <= other.x && y <= other.y;
   } else {

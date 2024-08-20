@@ -72,7 +72,7 @@ void timed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 
 void set_seed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "в команде seed не задан параметр");
-  cnauto seed = s2n<std::uint32_t>(args[1]);
+  crauto seed = s2n<std::uint32_t>(args[1]);
   set_rnd_seed(seed);
   console.print("новый сид рандома = " + n2s(seed));
 }
@@ -155,9 +155,9 @@ public:
       Stat {.title="'tickrate'", .getter=[]{
         return n2s(hpw::cur_ups, 2); }},
       Stat {.title="'Lives'", .getter=[]{
-        cnauto entities = hpw::entity_mgr->get_entities();
+        crauto entities = hpw::entity_mgr->get_entities();
         uint lives {};
-        for (cnauto entity: entities)
+        for (crauto entity: entities)
           lives += entity->status.live;
         return n2s(lives);
       }},
@@ -170,7 +170,7 @@ public:
     m_file.open(m_fname);
     iferror(!m_file.is_open(), "не удалось открыть файл \"" << m_fname << "\"");
     Str grid_title;
-    for (cnauto stat: m_stats)
+    for (crauto stat: m_stats)
       grid_title += stat.title + separator;
     m_file << grid_title << std::endl;
     m_sample_delay_start = m_time_start = std::chrono::steady_clock::now();
@@ -191,7 +191,7 @@ public:
       - m_sample_delay_start;
     if (std::chrono::duration_cast<Seconds>(sample_delay_timediff).count()
     >= m_sample_delay) {
-      for (cnauto stat: m_stats)
+      for (crauto stat: m_stats)
         m_file << stat.getter() + separator;
       m_file << std::endl;
       m_sample_delay_start = std::chrono::steady_clock::now();
@@ -221,9 +221,9 @@ void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 
 void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 4, "в команде stat задано мало параметров");
-  cnauto filename = args[1];
-  cnauto seconds = s2n<Delta_time>(args[2]);
-  cnauto sample_delay = s2n<Delta_time>(args[3]);
+  crauto filename = args[1];
+  crauto seconds = s2n<Delta_time>(args[2]);
+  crauto sample_delay = s2n<Delta_time>(args[3]);
   if (::g_state_saver_task)
     end_stat_record(command, console, args);
   ::g_state_saver_task = hpw::task_mgr.add (
@@ -237,7 +237,7 @@ void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 void repeat(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() == 1, "в команде repeat не задано число повторений");
   iferror(args.size() < 3, "в команде repeat не задана команда для повторения");
-  cnauto times = s2n<int>(args[1]);
+  crauto times = s2n<int>(args[1]);
   iferror(times < 1, "число повторений не должно быть меньше 1");
   iferror(times > 4'000'000, "число повторений не должно быть больше 4M");
 
@@ -321,8 +321,8 @@ static std::unordered_map<Str, Collider_maker> g_colliders {
 
 void set_collider(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   iferror(args.size() < 2, "need more parameters for collider command");
-  cnauto collider_name = args.at(1);
-  cnauto maker = g_colliders.at(collider_name);
+  crauto collider_name = args.at(1);
+  crauto maker = g_colliders.at(collider_name);
   assert(hpw::entity_mgr);
   hpw::entity_mgr->set_collider(maker());
   console.print("selected \"" + collider_name + "\" collision resolver");
@@ -333,7 +333,7 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   cauto cmd_name = args.at(0);
   if (args.size() < 2) {
     // предложить системы из списка
-    for (cnauto [collider_name, maker]: g_colliders)
+    for (crauto [collider_name, maker]: g_colliders)
       ret.push_back(cmd_name + ' ' + collider_name);
     return ret;
   }
@@ -342,7 +342,7 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   cauto arg_name = args.at(1); // имя колайдер ресолвера
   cauto name_filter = [&](CN<decltype(g_colliders)::value_type> it)
     { return it.first.find(arg_name) == 0; };
-  for (cnauto [collider_name, maker]: g_colliders | std::views::filter(name_filter))
+  for (crauto [collider_name, maker]: g_colliders | std::views::filter(name_filter))
     ret.push_back(cmd_name + ' ' + collider_name);
   return ret;
 }

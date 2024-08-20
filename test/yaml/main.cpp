@@ -25,7 +25,7 @@ void read(CN<Str> fname) {
   std::cout << "\tint_val:" << node_1.get_int("int_val") << "\n";
   std::cout << "\tbool_val:" << (node_1.get_bool("bool_val") ? "true" : "false") << "\n";
   std::cout << "\tv_real: ";
-  for (cnauto val: node_1.get_v_real("v_real"))
+  for (crauto val: node_1.get_v_real("v_real"))
     std::cout << val << ", ";
   std::cout << "\n";
   auto node_2 = root["node_2"];

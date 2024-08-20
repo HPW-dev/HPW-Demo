@@ -75,7 +75,7 @@ class Yaml::Impl: public Resource {
       Vector<T> ret;
       auto items = self[name];
       iferror(items.size() == 0, "нет элементов с таким тегом");
-      for (cnauto str: items)
+      for (crauto str: items)
         ret.emplace_back(str.as<T>());
       return ret;
     } catch (...) {

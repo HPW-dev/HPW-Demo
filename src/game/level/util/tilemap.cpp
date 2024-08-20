@@ -39,7 +39,7 @@ struct Tilemap::Impl {
     m_tile_h = tilemap_node.get_int("tile_h");
 
     auto tiles_node = tilemap_node["tiles"];
-    for (cnauto tile_name: tiles_node.root_tags()) {
+    for (crauto tile_name: tiles_node.root_tags()) {
       auto cur_tile_node = tiles_node[tile_name];
       auto fname = cur_tile_node.get_str("file");
       auto offset_v = cur_tile_node.get_v_int("offset");
@@ -71,7 +71,7 @@ struct Tilemap::Impl {
     assert(!m_tiles.empty());
 
     #pragma omp parallel for schedule(dynamic)
-    for (cnauto tile: m_tiles) {
+    for (crauto tile: m_tiles) {
       iferror(tile.sprite.expired(), "tile.sprite bad ptr");
       // TODO не рисовать за экраном
       insert(dst, *tile.sprite.lock(), pos + tile.offset, bf, optional);

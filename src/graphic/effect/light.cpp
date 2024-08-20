@@ -58,7 +58,7 @@ void draw_cached_sphere(Image& dst, const real R, const Vec pos, blend_pf bf) {
   assert(cache_spheres_steps > 0);
   int index = R / cache_spheres_steps;
   index = std::clamp<int>(index, 0, cached_spheres.size() - 1);
-  cnauto sphere = cached_spheres.at(index);
+  crauto sphere = cached_spheres.at(index);
   cauto offset = pos - center_point(sphere);
   insert(dst, sphere, offset, bf);
 }
@@ -138,7 +138,7 @@ void Light::draw_fullscreen_blink(Image& dst) const {
   }
 
   // high
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = bf(Pal8::from_real(safe_div(cur_duration, max_duration)), pix, {});
 }
 
@@ -186,7 +186,7 @@ void Light::make_lines(Image& dst) {
   cfor (y, dst.Y) {
     Pal8 for_sub = Pal8::from_real(rndr_fast(0, 0.17));
     cfor (x, dst.X) {
-      nauto dst_pix = dst(x, y);
+      rauto dst_pix = dst(x, y);
       dst_pix = blend_sub_safe(for_sub, dst_pix);
     }
   }

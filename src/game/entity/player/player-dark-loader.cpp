@@ -86,7 +86,7 @@ struct Player_dark::Loader::Impl {
     m_collidable_info.accept(*entity);
     m_anim_info.accept(*entity);
     
-    nauto it = *scast<Player_dark*>(entity);
+    rauto it = *scast<Player_dark*>(entity);
     it.move_update_callback( Bound_off_screen(it) );
     it.phys.set_force( pps(m_force) );
     it.default_force = pps(m_force);

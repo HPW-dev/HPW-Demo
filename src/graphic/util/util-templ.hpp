@@ -345,8 +345,8 @@ void draw_line(Image& dst, Vec _p1, const Vec _p2, Pal8 color) {
 template <blend_pf bf>
 void insert(Image& dst, CN<Sprite> src, Vec pos, int optional) {
   return_if( !src || !dst);
-  nauto src_image {src.image()};
-  nauto src_mask {src.mask()};
+  rauto src_image {src.image()};
+  rauto src_mask {src.mask()};
   
   pos = floor(pos);
   auto bound = get_insertion_bound(dst, pos, src_image);

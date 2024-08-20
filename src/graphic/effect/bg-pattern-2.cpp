@@ -118,7 +118,7 @@ void bgp_warabimochi(Image& dst, const int bg_state) {
     const real pos_x = std::fmod((offset_x - (bg_state * speed)), 1'500.f) - 500.f;
     const real pos_y = std::fmod(offset_y, dst.Y);
     const Vec pos(pos_x, pos_y);
-    cnauto comment = comments.at(i % comments.size());
+    crauto comment = comments.at(i % comments.size());
     graphic::font->draw(comments_layer, pos, comment);
   }
 
@@ -135,7 +135,7 @@ void bgp_spline_zoom(Image& dst, const int bg_state) {
   uint seed = 97997; // ALMONDS
   constexpr uint points_sz = 25;
   std::array<Vec, points_sz> points;
-  for (nauto point: points) {
+  for (rauto point: points) {
     const Vec vel (
       std::fmod(prng(seed), 8.f) - 4.f,
       std::fmod(prng(seed), 8.f) - 4.f
@@ -163,7 +163,7 @@ void bgp_spline(Image& dst, const int bg_state) {
   uint seed = 97997; // ALMONDS
   constexpr uint points_sz = 75;
   std::array<Vec, points_sz> points;
-  for (nauto point: points) {
+  for (rauto point: points) {
     const Vec vel (
       std::fmod(prng(seed), 8.f) - 4.f,
       std::fmod(prng(seed), 8.f) - 4.f
@@ -188,7 +188,7 @@ void bgp_bounding_repeated_circles(Image& dst, const int bg_state) {
   uint seed = 97997; // ALMONDS
   constexpr uint points_sz = 8;
   std::array<Vec, points_sz> points;
-  for (nauto point: points) {
+  for (rauto point: points) {
     const Vec vel (
       std::fmod(prng(seed), 8.f) - 4.f,
       std::fmod(prng(seed), 8.f) - 4.f
@@ -221,7 +221,7 @@ void bgp_bounding_circles(Image& dst, const int bg_state) {
   uint seed = 97997; // ALMONDS
   constexpr uint points_sz = 9;
   std::array<Vec, points_sz> points;
-  for (nauto point: points) {
+  for (rauto point: points) {
     const Vec vel (
       std::fmod(prng(seed), 8.f) - 4.f,
       std::fmod(prng(seed), 8.f) - 4.f
@@ -247,7 +247,7 @@ void bgp_bounding_lines(Image& dst, const int bg_state) {
   uint seed = 97997; // ALMONDS
   constexpr uint points_sz = 35;
   std::array<Vec, points_sz> points;
-  for (nauto point: points) {
+  for (rauto point: points) {
     const Vec vel (
       std::fmod(prng(seed), 8.f) - 4.f,
       std::fmod(prng(seed), 8.f) - 4.f
@@ -401,7 +401,7 @@ void bgp_tiles_2(Image& dst, const int bg_state) {
     cauto list = hpw::archive->get_all_names(false);;
     cauto tile_name_filter = [](CN<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
-    for (cnauto tile_name: list | std::views::filter(tile_name_filter)) {
+    for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
       auto tile = hpw::store_sprite->find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
@@ -432,7 +432,7 @@ void bgp_tiles_2(Image& dst, const int bg_state) {
   // заполнение буффера тайлами
   cfor (y, tile_map_y)
   cfor (x, tile_map_x) {
-    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    crauto tile_idx = tile_map[y * tile_map_x + x];
     insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
   }
 
@@ -451,7 +451,7 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
     cauto list = hpw::archive->get_all_names(false);
     cauto tile_name_filter = [](CN<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
-    for (cnauto tile_name: list | std::views::filter(tile_name_filter)) {
+    for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
       auto tile = hpw::store_sprite->find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
@@ -460,7 +460,7 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
 
   // показать тайлы:
   /*
-  for (int y {}; cnauto tile: tiles)
+  for (int y {}; crauto tile: tiles)
     insert(dst, tile, {5, y++ * (tile.Y + 1)});
   */
 
@@ -480,13 +480,13 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
   // генерация анимации на сетке
   const uint state = bg_state * 0.025f;
   xorshift128_state seed;
-  for (nauto tile: tile_map)
+  for (rauto tile: tile_map)
     tile = (xorshift128(seed) + state) % tiles.size();
 
   // заполнение буффера тайлами
   cfor (y, tile_map_y)
   cfor (x, tile_map_x) {
-    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    crauto tile_idx = tile_map[y * tile_map_x + x];
     insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
   }
 
@@ -556,7 +556,7 @@ void bgp_tiles_3(Image& dst, const int bg_state) {
       "resource/image/other/bw tiles 4x4/cube.png",
       "resource/image/other/bw tiles 4x4/white.png",
     };
-    for (cnauto tile_name: list) {
+    for (crauto tile_name: list) {
       auto tile = hpw::store_sprite->find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
@@ -591,7 +591,7 @@ void bgp_tiles_3(Image& dst, const int bg_state) {
   // заполнение буффера тайлами
   cfor (y, tile_map_y)
   cfor (x, tile_map_x) {
-    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    crauto tile_idx = tile_map[y * tile_map_x + x];
     insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
   }
 
@@ -614,7 +614,7 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
       "resource/image/other/bw tiles 4x4/circle.png",
       "resource/image/other/bw tiles 4x4/circle filled.png",
     };
-    for (cnauto tile_name: list) {
+    for (crauto tile_name: list) {
       auto tile = hpw::store_sprite->find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
@@ -647,7 +647,7 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
   // заполнение буффера тайлами
   cfor (y, tile_map_y)
   cfor (x, tile_map_x) {
-    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    crauto tile_idx = tile_map[y * tile_map_x + x];
     insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
   }
 
@@ -983,7 +983,7 @@ void bgp_tile_corruption(Image& dst, const int bg_state) {
   static Vector<Image> tiles (max_tiles);
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
-    for (nauto tile: tiles)
+    for (rauto tile: tiles)
       tile.init(tile_x, tile_y);
   });
 
@@ -1017,7 +1017,7 @@ void bgp_tile_corruption(Image& dst, const int bg_state) {
   // заполнение буффера тайлами
   cfor (y, tile_map_y)
   cfor (x, tile_map_x) {
-    cnauto tile_idx = tile_map[y * tile_map_x + x];
+    crauto tile_idx = tile_map[y * tile_map_x + x];
     insert(buffer, tiles[tile_idx], Vec(x * tile_x, y * tile_y));
   }
 
@@ -1033,7 +1033,7 @@ void bgp_noise(Image& dst, const int bg_state) {
   seed.c ^= bg_state;
   seed.d ^= bg_state;
 
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix.val = xorshift128(seed) % 256u;
 
   to_gray(dst);

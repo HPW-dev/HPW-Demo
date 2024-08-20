@@ -35,11 +35,11 @@ public:
   Hitbox_diections* operator =(Hitbox_diections&& other) = delete;
 
   inline Hitbox_diections* operator =(CN<Hitbox_diections> other) {
-    for (cnauto other_direct: other.diections) {
+    for (crauto other_direct: other.diections) {
       Hitbox this_direct;
       this_direct.simple = other_direct.simple;
       // скопировать все полигоны
-      for (cnauto other_poly: other_direct.polygons)
+      for (crauto other_poly: other_direct.polygons)
         this_direct.polygons.emplace_back(other_poly);
       diections.emplace_back(std::move(this_direct));
     }
@@ -147,7 +147,7 @@ Anim* Anim::operator =(CN<Anim> other) {
 
   // скопировать все кадры
   this->frames = {};
-  for (cnauto other_frame: other.frames) {
+  for (crauto other_frame: other.frames) {
     continue_if( !other_frame);
 
     auto this_frame = new_shared<Frame>();

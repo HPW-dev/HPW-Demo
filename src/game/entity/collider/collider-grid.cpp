@@ -33,7 +33,7 @@ struct Collider_grid::Impl {
   // получить список объектов доступных для столкновения
   inline Collidables collidable_filter(CN<Entities> entities) const {
     Collidables ret;
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       assert(ent);
       cont_if (!ent->status.live);
       cont_if (!ent->status.collidable);
@@ -64,7 +64,7 @@ struct Collider_grid::Impl {
     // найти крайние точки слева сверху и справа снизу
     Vec lu { 1'000'000,  1'000'000};
     Vec rd {-1'000'000, -1'000'000};
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
       lu.y = std::min(lu.y, pos.y);
@@ -81,7 +81,7 @@ struct Collider_grid::Impl {
   // добавить объект на сетку
   inline void insert(Collidable* entity) {
     // определить размеры хитбокса
-    cnauto hitbox = entity->get_hitbox();
+    crauto hitbox = entity->get_hitbox();
     cauto pos = entity->phys.get_pos() - m_grid_offset;
     Vec lu = pos + hitbox->simple.offset - hitbox->simple.r;
     lu.x = std::max<real>(0, lu.x);
@@ -107,7 +107,7 @@ struct Collider_grid::Impl {
     return_if (m_grid_my == 0);
 
     #pragma omp parallel for schedule(dynamic)
-    for (cnauto sector: m_grid) {
+    for (crauto sector: m_grid) {
       cauto entitys_sz = sector.size();
       cont_if(entitys_sz < 2);
 
@@ -157,7 +157,7 @@ struct Collider_grid::Impl {
       const Vec pos(
         offset_x + x * m_grid_sz + 2,
         offset_y + y * m_grid_sz + 2);
-      cnauto sector = get_sector_by_idx(x, y);
+      crauto sector = get_sector_by_idx(x, y);
       cauto count = sector->size();
       graphic::font->draw(dst, pos, n2s<utf32>(count), &blend_diff);
     }
@@ -166,7 +166,7 @@ struct Collider_grid::Impl {
   inline void operator()(CN<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
     config_grid(collidables);
-    for (cnauto entity: collidables)
+    for (crauto entity: collidables)
       insert(entity);
     process_collisions();
   }

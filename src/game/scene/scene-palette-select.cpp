@@ -41,7 +41,7 @@ struct Scene_palette_select::Impl {
       // докрутить индекс до текущего выбранного файла
       std::size_t idx = 0;
       if ( !graphic::current_palette_file.empty()) {
-        for (cnauto fname: m_palette_files) {
+        for (crauto fname: m_palette_files) {
           if (graphic::current_palette_file == fname) {
             m_cur_palette_idx = idx;
             break;
@@ -123,7 +123,7 @@ struct Scene_palette_select::Impl {
   }
 
   inline void draw_test_image(Image& dst, const Vec pos) const {
-    cnauto test = *test_image;
+    crauto test = *test_image;
     insert(dst, test, pos);
     // рамка вокруг картинки
     draw_rect(dst, Rect(pos - Vec(1, 1), Vec(test.X(), test.Y()) + Vec(2, 2)), Pal8::black);

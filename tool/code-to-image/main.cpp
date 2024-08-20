@@ -33,7 +33,7 @@ inline Str prepare_seach_dir(CN<Str> path) {
 
 // true если имя файла подходит по маске
 inline bool check_file_masks(CN<Str> fname, CN<Strs> masks) {
-  for (cnauto mask: masks)
+  for (crauto mask: masks)
     if (std::filesystem::path(fname).extension() == mask)
       return true;
   return false;
@@ -41,7 +41,7 @@ inline bool check_file_masks(CN<Str> fname, CN<Strs> masks) {
 
 inline void recursive_find_helper(Strs& dst,
 CN<std::filesystem::directory_iterator> dir, CN<Strs> masks) {
-  for (cnauto file: dir) {
+  for (crauto file: dir) {
     if (file.is_directory())
       recursive_find_helper(
         dst,
@@ -66,7 +66,7 @@ Strs recursive_find(CN<Str> search_dir, CN<Strs> masks) {
 // убирает файлы соответствующие маске
 void exclude_mask(Strs& dst, CN<Strs> masks) {
   std::erase_if(dst, [&](CN<Str> fname) {
-    for (cnauto mask: masks)
+    for (crauto mask: masks)
       if (fname.find(mask) != Str::npos)
         return true;
     return false;
@@ -103,7 +103,7 @@ Image text_to_image(CN<Str> fname) {
     bool is_comment {};
     Str::value_type prev_ch {};
 
-    for (int x {}; cnauto ch: line) {
+    for (int x {}; crauto ch: line) {
       // раскрасить каждый символ
       Pal8 color {};
       if (ch != ' ')
@@ -156,7 +156,7 @@ void inser_to_free_space(Image& dst, CN<Image> src, Rects& occupied) {
 
       // проверить свободные области
       bool is_free {true};
-      for (cnauto rect: occupied) {
+      for (crauto rect: occupied) {
         if (intersect(rect, src_rect)) {
           is_free = false;
           break;
@@ -181,7 +181,7 @@ Image make_atlas(CN<Images> images, int w, int h) {
   using namespace std::chrono_literals;
 
   // каждой картинке попытаться найти свободную область
-  for (std::size_t i {}; cnauto image: images) {
+  for (std::size_t i {}; crauto image: images) {
     inser_to_free_space(dst, image, occupied);
     if (Clock::now() - time_point >= 1s) {
       std::cout << "processed " << i << '/' << images.size() << '\n';
@@ -209,14 +209,14 @@ int main(const int argc, const char* argv[]) {
   exclude_mask(files, {"thirdparty"});
   iferror(files.empty(), "empty list of files in dir \"" + search_dir + '\"');
   std::cout << "files:\n";
-  for (cnauto fname: files)
+  for (crauto fname: files)
     std::cout << "  \"" << fname << "\"\n";
 
   // прочитать все картинки
   const Str save_dir = "delme/";
   make_dir_if_not_exist(save_dir);
   Images images;
-  for (cnauto file: files)
+  for (crauto file: files)
     images.push_back( text_to_image(file) );
   // засейвить картинки в атлас
   prepare_image_list(images);

@@ -74,11 +74,11 @@ struct Entity_mgr::Impl {
   inline void draw(Image& dst, const Vec offset) const {
     return_if(!m_visible);
     // нарисовать нижний слой
-    for (cnauto entity: m_entities)
+    for (crauto entity: m_entities)
       if (entity->status.live && !entity->status.layer_up)
         entity->draw(dst, offset);
     // нарисовать верхний слой
-    for (cnauto entity: m_entities)
+    for (crauto entity: m_entities)
       if (entity->status.live && entity->status.layer_up)
         entity->draw(dst, offset);
   }
@@ -110,7 +110,7 @@ struct Entity_mgr::Impl {
   // применить список на добавление объектов из очереди m_registrate_list
   inline void accept_registrate_list() {
     m_entities.reserve(m_entities.size() + m_registrate_list.size());
-    for (nauto elem: m_registrate_list)
+    for (rauto elem: m_registrate_list)
       m_entities.emplace_back(std::move(elem));
     m_registrate_list.clear();
   }
@@ -118,9 +118,9 @@ struct Entity_mgr::Impl {
   // применить все взрывные волны к объектам
   inline void update_scatters() {
     if (!m_scatters.empty()) {
-      for (nauto entity: m_entities) {
+      for (rauto entity: m_entities) {
         if (entity->status.live && !entity->status.ignore_scatter) {
-          for (cnauto scatter: m_scatters)
+          for (crauto scatter: m_scatters)
             scatter.accept(*entity);
         }
       }
@@ -151,7 +151,7 @@ struct Entity_mgr::Impl {
   inline void update_entitys(const Delta_time dt) {
     assert(hpw::time_scale > 0);
 
-    for (nauto entity: m_entities) {
+    for (rauto entity: m_entities) {
       if (entity->status.live) {
         // изменять время для игрока и его объектов
         cauto player = get_player();
@@ -167,7 +167,7 @@ struct Entity_mgr::Impl {
     if (m_entities.empty())
       m_entity_pool.release();
 
-    for (nauto entity: m_entities) {
+    for (rauto entity: m_entities) {
       cont_if( !entity);
       cont_if( !entity->status.live);
 
@@ -230,7 +230,7 @@ struct Entity_mgr::Impl {
     #ifndef ECOMEM // при экономии памяти объекты подгружаются в момент вызова
       // загрузить все объекты из конфига
       auto config = load_entity_config();
-      for (cnauto entity_name: config.root_tags()) {
+      for (crauto entity_name: config.root_tags()) {
         auto entity_node = config[entity_name];
         auto type = entity_node.get_str("type", "error type");
         m_entity_loaders[entity_name] = make_entity_loader(type, entity_node);
@@ -295,9 +295,9 @@ struct Entity_mgr::Impl {
 
   // удаление объектов за экраном
   inline void bound_check() {
-    for (nauto entity: m_entities) {
+    for (rauto entity: m_entities) {
       if (entity->status.live && !entity->status.ignore_bound) {
-        cnauto entity_pos = entity->phys.get_pos();
+        crauto entity_pos = entity->phys.get_pos();
         auto bound = entity->status.is_bullet ? shmup_bound_for_bullet : shmup_bound;
 
         // тихо убить объект, если он вышел за пределы
@@ -317,7 +317,7 @@ struct Entity_mgr::Impl {
 
   // возвращает первый попавшийся мёртвый объект нужного типа
   inline Entity* find_avaliable_entity(const Entity_type type) {
-    for (nauto entity: get_entities())
+    for (rauto entity: get_entities())
       if (entity->type == type && !entity->status.live)
         return entity.get();
     return {};
@@ -353,7 +353,7 @@ struct Entity_mgr::Impl {
 
   inline uint lives() const {
     uint count {};
-    for (cnauto ent: m_entities)
+    for (crauto ent: m_entities)
       count += ent->status.live;
     return count;
   }

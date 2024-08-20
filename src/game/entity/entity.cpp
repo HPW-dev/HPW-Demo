@@ -36,7 +36,7 @@ void Entity::kill() {
 }
 
 void Entity::accept_kill_callbacks() {
-  for (cnauto callback: kill_callbacks)
+  for (crauto callback: kill_callbacks)
     callback(*this);
 }
 
@@ -82,7 +82,7 @@ void Entity::update(const Delta_time dt) {
   anim_ctx.update(dt, *this);
 
   // применить внешние колбэки
-  for (cnauto callback: update_callbacks)
+  for (crauto callback: update_callbacks)
     callback(*this, dt);
 
   if (heat_distort && !status.disable_heat_distort)

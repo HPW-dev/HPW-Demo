@@ -51,7 +51,7 @@ public:
 
 void Cmd_alias::exec(CN<Strs> cmd_and_args) {
   iferror(cmd_and_args.size() < 3, "need more parameters for alias command");
-  cnauto cmd_name = cmd_and_args.at(1);
+  crauto cmd_name = cmd_and_args.at(1);
   Str cmd_args;
   for (std::size_t i = 2; i < cmd_and_args.size(); ++i)
     cmd_args += cmd_and_args[i] + ' ';
@@ -69,7 +69,7 @@ Strs Cmd_alias::command_matches(CN<Strs> cmd_and_args) {
   Strs ret;
   // без своего варианта команд предлагать любые команды
   if (cmd_and_args.size() == 2) {
-    for (cnauto it: matches)
+    for (crauto it: matches)
       ret.push_back(cmd + ' ' + alias_name + ' ' + it);
     return ret;
   }
@@ -78,7 +78,7 @@ Strs Cmd_alias::command_matches(CN<Strs> cmd_and_args) {
   cauto second_cmd = cmd_and_args.at(2);
   cauto name_filter = [&](CN<Str> it)
     { return it.find(second_cmd) == 0; };
-  for (cnauto it: matches | std::views::filter(name_filter))
+  for (crauto it: matches | std::views::filter(name_filter))
     ret.push_back(cmd + ' ' + alias_name + ' ' + it);
   return ret;
 }
@@ -97,7 +97,7 @@ void Cmd_log_screen::exec(CN<Strs> cmd_and_args) {
 
 void Cmd_help::exec(CN<Strs> cmd_and_args) {
   Str text = "Commands info:\n";
-  for (cnauto command: m_master->commands())
+  for (crauto command: m_master->commands())
     text += "* " + command->name() + " - " +
       command->description() + '\n';
   m_master->print(text);

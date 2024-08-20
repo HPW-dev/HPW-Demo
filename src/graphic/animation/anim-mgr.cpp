@@ -57,7 +57,7 @@ struct Anim_mgr::Impl {
 
   inline Strs names() const {
     Strs v_name;
-    for (cnauto [key, _]: table)
+    for (crauto [key, _]: table)
       v_name.push_back(key);
     return v_name;
   }
@@ -67,7 +67,7 @@ struct Anim_mgr::Impl {
 
   inline Anims get_anims() const {
     Anims anims;
-    for (cnauto [_, anim]: table)
+    for (crauto [_, anim]: table)
       anims.emplace_back(anim);
     return anims;
   }
@@ -79,7 +79,7 @@ struct Anim_mgr::Impl {
   inline auto find_helper (CN<Impl> mgr, CN<Str> name) const {
     auto anims = mgr.get_anims();
     auto finded = std::find_if (anims.begin(), anims.end(),
-      [&name](cnauto in) { return in->get_name() == name; } );
+      [&name](crauto in) { return in->get_name() == name; } );
     return std::tuple (
       std::move(anims),
       std::move(finded)

@@ -134,7 +134,7 @@ public:
     ld->m_master = m_master;
     rd->m_master = m_master;
     // перенос объектов из ветки выше в новые
-    for (nauto entity: m_entitys)
+    for (rauto entity: m_entitys)
       add(*entity);
     m_entitys.clear();
   } // split
@@ -168,7 +168,7 @@ public:
   inline void find(CN<Circle> area, Collidables& list) const {
     if (intersect(this->bound, area)) {
       // так быстрее, чем std::copy или list.insert
-      for (cnauto en: m_entitys)
+      for (crauto en: m_entitys)
         list.emplace_back(en);
 
       if (have_branches) {
@@ -222,11 +222,11 @@ void Collider_qtree::operator()(CN<Entities> entities, Delta_time dt) {
     Vector<Collision_pair> tmp_pairs(collision_pairs.begin(), collision_pairs.end());
     #pragma omp parallel for schedule(dynamic, 4)
     cfor (i, tmp_pairs.size()) {
-      cnauto pair = tmp_pairs[i];
+      crauto pair = tmp_pairs[i];
       test_collide_pair(*pair.first, *pair.second);
     }
   } else {
-    for (cnauto pair: collision_pairs)
+    for (crauto pair: collision_pairs)
       test_collide_pair(*pair.first, *pair.second);
   }
 }
@@ -258,7 +258,7 @@ Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
   #endif
   
   // перестроить всё дерево заново
-  for (nauto entity_p: entities) {
+  for (rauto entity_p: entities) {
     assert(entity_p);
     // проверить что объект может сталкиваться и что он жив
     if (entity_p->status.live && entity_p->status.collidable) {
@@ -286,7 +286,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
     static Vector<decltype(collision_pairs)> list_table;
     static Vector<Collidables> lists;
     list_table.resize(th_max);
-    for (nauto table: list_table)
+    for (rauto table: list_table)
       table.clear();
     lists.resize(th_max);
 
@@ -295,7 +295,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
     #pragma omp parallel for \
       schedule(dynamic) \
       shared(root, list_table)
-    for (nauto entity: entities) {
+    for (rauto entity: entities) {
       auto hitbox = entity->get_hitbox();
       cont_if(!hitbox);
       // узнать какой сейчас поток
@@ -312,7 +312,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
       root->find(area, lists[th_idx]);
 
       // добавить этих соседей в пары на проверки
-      for (nauto other: lists[th_idx]) {
+      for (rauto other: lists[th_idx]) {
         auto addr_a = entity;
         auto addr_b = other;
         cont_if (!addr_a->collision_possible(*addr_b));
@@ -324,8 +324,8 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
     } // for entities
 
     // объединение листов с потоков в релизный collision_pairs
-    for (cnauto table: list_table) {
-      for (nauto it: table) {
+    for (crauto table: list_table) {
+      for (rauto it: table) {
         auto addr_a = it.first;
         auto addr_b = it.second;
         cont_if (!addr_a->collision_possible(*addr_b));
@@ -338,7 +338,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
   } else { // вариант без многопотока
     /* проверить области вокруг каждой точки и закинуть в пару
     коллизии соседние ноды входящие в область */
-    for (nauto entity: entities) {
+    for (rauto entity: entities) {
       auto hitbox = entity->get_hitbox();
       cont_if(!hitbox);
       auto pos = entity->phys.get_pos();
@@ -351,7 +351,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
       root->find(area, list);
 
       // добавить этих соседей в пары на проверки
-      for (nauto other: list) {
+      for (rauto other: list) {
         auto addr_a = entity;
         auto addr_b = other;
         cont_if (!addr_a->collision_possible(*addr_b));

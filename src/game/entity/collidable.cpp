@@ -39,7 +39,7 @@ void Collidable::update(const Delta_time dt) {
 }
 
 void Collidable::process_damage() {
-  for (cnauto other: m_collided)
+  for (crauto other: m_collided)
     sub_hp( other->get_dmg() );
 }
 

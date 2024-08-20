@@ -74,9 +74,9 @@ struct Node {
     b->area = area_b;
 
     // поделить объекты по ветвям
-    for (cnauto ent: list) {
+    for (crauto ent: list) {
       cauto pos = ent->phys.get_pos();
-      cnauto hitbox = ent->get_hitbox();
+      crauto hitbox = ent->get_hitbox();
       assert(hitbox);
       // учесть размеры хитбокса
       lu.x = pos.x + hitbox->simple.offset.x - hitbox->simple.r;
@@ -116,7 +116,7 @@ struct Node {
     // найти крайние точки слева сверху и справа снизу
     lu = { 1'000'000,  1'000'000};
     rd = {-1'000'000, -1'000'000};
-    for (cnauto ent: list) {
+    for (crauto ent: list) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
       lu.y = std::min(lu.y, pos.y);
@@ -176,7 +176,7 @@ struct Collider_2d_tree::Impl {
   // получить список объектов доступных для столкновения
   inline static Collidables collidable_filter(CN<Entities> entities) {
     Collidables ret;
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       assert(ent);
       cont_if (!ent->status.live);
       cont_if (!ent->status.collidable);
@@ -206,7 +206,7 @@ struct Collider_2d_tree::Impl {
     // найти крайние точки слева сверху и справа снизу
     Vec lu { 1'000'000,  1'000'000};
     Vec rd {-1'000'000, -1'000'000};
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
       lu.y = std::min(lu.y, pos.y);

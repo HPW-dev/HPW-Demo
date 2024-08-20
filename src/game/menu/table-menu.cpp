@@ -32,7 +32,7 @@ struct Table_menu::Impl {
     // тест на то, что в таблице только табличные элементы нужного формата
     #ifdef DEBUG
       cauto items = base->get_items();
-      for (cnauto item: items) {
+      for (crauto item: items) {
         cauto ptr = dcast< CP<Menu_item_table_row> >(item.get());
         assert(ptr);
       }
@@ -51,7 +51,7 @@ struct Table_menu::Impl {
     constexpr auto text_offset = Vec(7, 7);
 
     // показать заголовок таблицы
-    for (cnauto row: m_rows) {
+    for (crauto row: m_rows) {
       // если размер 0, то значит размер элемента до конца строки
       auto row_sz = (row.sz > 0) ? row.sz : (dst.X - pos.x);
       const Rect rect(pos, Vec(row_sz, m_row_height));
@@ -74,7 +74,7 @@ struct Table_menu::Impl {
     const uint item_idx_start = std::max<int>(0, m_base->get_cur_item_id() - 6);
     // нарисовать элементы таблицы
     for (auto item_idx = item_idx_start; item_idx < items.size(); ++item_idx) {
-      cnauto item = items[item_idx];
+      crauto item = items[item_idx];
       break_if (pos.y > dst.Y); // не надо показывать таблицу за пределами экрана
       cauto selected = item == this->m_base->get_cur_item();
 
@@ -82,10 +82,10 @@ struct Table_menu::Impl {
       // геттеры получают контент в строках таблицы
       cauto item_row = dcast<CP<Menu_item_table_row>>(item.get());
       assert(item_row);
-      cnauto content_getters = item_row->get_content_getters();
+      crauto content_getters = item_row->get_content_getters();
       
       // нарисовать столько столбцов, сколько было задано при ините
-      for (uint i = 0; cnauto row: m_rows) {
+      for (uint i = 0; crauto row: m_rows) {
         // если размер 0, то значит размер элемента до конца строки
         auto row_sz = (row.sz > 0) ? row.sz : (dst.X - pos.x);
         const Rect rect(pos, Vec(row_sz, m_row_height));

@@ -19,7 +19,7 @@ Mem_pool::Mem_pool(std::size_t chunk_sz)
 
 void Mem_pool::release() {
 #ifndef ECOMEM
-  for (cnauto deleter: deleters)
+  for (crauto deleter: deleters)
     deleter();
   deleters.clear();
   source.release();

@@ -89,7 +89,7 @@ inline Strs split_args_str(CN<Str> cmd_and_args) {
   Str cur_str;
   Strs ret;
 
-  for (cnauto ch: cmd_and_args) {
+  for (crauto ch: cmd_and_args) {
     if (ch == comma) {
       comma_mode = !comma_mode;
       continue;
@@ -118,7 +118,7 @@ inline Strs split_args_str(CN<Str> cmd_and_args) {
 
 void Cmd::impl_exec(CN<Str> cmd_and_args) {
   cauto splited = split_args_str(cmd_and_args);
-  cnauto command = find_command(splited.at(0));
+  crauto command = find_command(splited.at(0));
   iferror(!command, "not finded command \"" << cmd_and_args << "\"");
   command->exec(splited);
 }
@@ -146,7 +146,7 @@ Strs Cmd::command_matches(CN<Str> cmd_and_args) {
   cauto args = split(cmd_and_args, ' ');
   cauto cmd_name = str_tolower( args.at(0) );
   auto ret = find_cmd_name_matches(cmd_name);
-  for (nauto cmd_name: ret)
+  for (rauto cmd_name: ret)
     cmd_name += ' ';
 
   // если команда введена не до конца, то показать только совпадения
@@ -183,14 +183,14 @@ Cmd::Command* Cmd::find_command(CN<Str> name) {
   cauto finded_cmd = std::find_if(m_commands.begin(), m_commands.end(),
     [&](CN<Unique<Command>> cmd) { return cmd->name() == lower_name; });
   return_if (finded_cmd == m_commands.end(), nullptr);
-  nauto ret = *finded_cmd;
+  rauto ret = *finded_cmd;
   assert(ret);
   return ret.get();
 }
 
 Strs Cmd::command_names() const {
   Strs ret;
-  for (cnauto command: m_commands)
+  for (crauto command: m_commands)
     ret.push_back(command->name());
   return ret;
 }
@@ -201,7 +201,7 @@ Strs Cmd::find_cmd_name_matches(CN<Str> cmd_name) const {
     { return command->name().find(cmd_name) == 0; };
   // найти совпадающие команды по их названию
   Strs ret;
-  for (cnauto founded: m_commands | std::views::filter(cmd_name_filter))
+  for (crauto founded: m_commands | std::views::filter(cmd_name_filter))
     ret.push_back(founded->name());
   return ret;
 }

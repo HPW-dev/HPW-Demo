@@ -15,7 +15,7 @@ void key_callback(GLFWwindow* /*m_window*/, int key, int scancode, int action, i
   assert(g_instance);
   cauto key_mapper = g_instance.load()->m_key_mapper.get();
   assert(key_mapper);
-  nauto keymap_table = key_mapper->get_table();
+  rauto keymap_table = key_mapper->get_table();
 
   // режим ребинда клавиши
   if (g_rebind_key_mode) {
@@ -28,7 +28,7 @@ void key_callback(GLFWwindow* /*m_window*/, int key, int scancode, int action, i
   }
 
   // проверить нажатия на игровые клавиши
-  for (cnauto [hpw_key, key]: keymap_table) {
+  for (crauto [hpw_key, key]: keymap_table) {
     if (key.scancode == scancode) {
       if (action == GLFW_PRESS || action == GLFW_REPEAT)
         press(hpw_key);

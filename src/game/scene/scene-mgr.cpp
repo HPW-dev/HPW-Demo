@@ -54,7 +54,7 @@ Scene* Scene_mgr::get_current() const {
 
 void Scene_mgr::lazy_scene_update() {
   // выполнить все задания в очереди и удалить учередь
-  for (cnauto job: jobs)
+  for (crauto job: jobs)
     job();
   jobs.clear();
 }

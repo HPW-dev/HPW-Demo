@@ -35,7 +35,7 @@ struct Level_debug_3::Impl {
 
   inline void make_bg() {
     // сделать постоянный шум на фоне
-    for (nauto pix: bg)
+    for (rauto pix: bg)
       pix = Pal8::from_real(rndr(0, 0.166));
 
     // сетка

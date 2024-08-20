@@ -68,7 +68,7 @@ struct Sound_mgr_oal::Impl {
         }
       #endif
 
-      cnauto format = master->to_compatible_oal_format(*sound);
+      crauto format = master->to_compatible_oal_format(*sound);
 
       while (buffers_processed > 0) {
         ALuint buffer_id;
@@ -123,7 +123,7 @@ struct Sound_mgr_oal::Impl {
       return BAD_AUDIO;
     }
 
-    cnauto sound = find_audio(sound_name);
+    crauto sound = find_audio(sound_name);
     Audio_info audio_info;
     audio_info.packet_decoder = make_packet_decoder(sound);
     audio_info.sound = &sound;
@@ -136,7 +136,7 @@ struct Sound_mgr_oal::Impl {
     check_oal_error("alGenBuffers");
 
     // перенести семплы в буферы
-    cnauto format = to_compatible_oal_format(*audio_info.sound);
+    crauto format = to_compatible_oal_format(*audio_info.sound);
     cfor (buffer_id, m_config.buffers) {
       cauto decoded_buffer = audio_info.packet_decoder->decode(m_config.buffer_sz);
       cauto sound_buffer = format.converter(decoded_buffer,
@@ -363,7 +363,7 @@ struct Sound_mgr_oal::Impl {
 
   inline void close_oal() {
     detailed_log("disable OpenAL\n");
-    for (cnauto audio_info: m_audio_infos) {
+    for (crauto audio_info: m_audio_infos) {
       disable(audio_info.first);
       alDeleteSources(1, &audio_info.second.oal_source_id);
       alDeleteBuffers(m_config.buffers, audio_info.second.oal_buffer_ids.data());
@@ -439,7 +439,7 @@ struct Sound_mgr_oal::Impl {
       {.channel = 2, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_s16_to_s16, .bytes_per_sample = 2},
       {.channel = 2, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_STEREO8,  .converter = &conv_stereo_u8_to_u8,   .bytes_per_sample = 1},
     };
-    for (cnauto format_info: format_table) {
+    for (crauto format_info: format_table) {
       if (sound.channels == format_info.channel && sound.format == format_info.sound_format)
         return format_info;
     }
@@ -461,13 +461,13 @@ struct Sound_mgr_oal::Impl {
 
   inline void update() {
     // обновить буферы
-    for (nauto audio_info: m_audio_infos)
+    for (rauto audio_info: m_audio_infos)
       audio_info.second.update(this);
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
       [this](CN<decltype(m_audio_infos)::value_type> audio_info_pair)->bool {
-        cnauto audio_info = audio_info_pair.second; // allias
+        crauto audio_info = audio_info_pair.second; // allias
         ALint state;
         alGetSourcei(audio_info.oal_source_id, AL_SOURCE_STATE, &state);
         
@@ -505,7 +505,7 @@ struct Sound_mgr_oal::Impl {
     // буфферизировать идентификаторы управления
     {
       std::lock_guard lock(m_mutex);
-      for (cnauto audio_info: m_audio_infos)
+      for (crauto audio_info: m_audio_infos)
         ids_for_shutup.push_back(audio_info.first);
     }
     // выключить все звуки

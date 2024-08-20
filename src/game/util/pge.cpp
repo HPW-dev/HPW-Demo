@@ -144,8 +144,8 @@ void disable_pge() {
 
 // перенос значений с конфига в настройки плагина
 void load_params(CN<Yaml> node) {
-  nauto params = get_pge_params();
-  for (uint id = 0; nauto param: params) {
+  rauto params = get_pge_params();
+  for (uint id = 0; rauto param: params) {
     auto param_node = node["param_" + n2s(id)];
     ++id;
     param->load(param_node);
@@ -155,7 +155,7 @@ void load_params(CN<Yaml> node) {
 // грузит только параметры для плагина
 void load_pge_params_only() {
   assert(hpw::config);
-  cnauto config = *hpw::config;
+  crauto config = *hpw::config;
   cauto plugin_node = config["plugin"];
   cauto graphic_node = plugin_node["graphic"];
   if (cauto effect_node = graphic_node[get_cur_pge_name()]; effect_node.check())
@@ -164,7 +164,7 @@ void load_pge_params_only() {
 
 void load_pge_from_config() {
   assert(hpw::config);
-  cnauto config = *hpw::config;
+  crauto config = *hpw::config;
   cauto plugin_node = config["plugin"];
   cauto graphic_node = plugin_node["graphic"];
   cauto selected = graphic_node.get_str("selected");
@@ -191,8 +191,8 @@ void save_pge_to_config() {
   auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
   effect_node.set_str("path", get_cur_pge_path());
   // сейв текущих настроек плагина
-  cnauto params = get_pge_params();
-  for (uint id = 0; cnauto param: params) {
+  crauto params = get_pge_params();
+  for (uint id = 0; crauto param: params) {
     auto param_node = effect_node.make_node("param_" + n2s(id));
     ++id;
     assert(param);

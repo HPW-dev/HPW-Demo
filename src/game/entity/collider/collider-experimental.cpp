@@ -29,16 +29,16 @@ struct Collider_experimental::Impl {
     return_if (!a.status.collidable || !b.status.collidable);
 
     // сталкиваемые объекты можно смело кастовать
-    nauto a_collidable = *( ptr2ptr<Collidable*>(&a) );
-    nauto b_collidable = *( ptr2ptr<Collidable*>(&b) );
+    rauto a_collidable = *( ptr2ptr<Collidable*>(&a) );
+    rauto b_collidable = *( ptr2ptr<Collidable*>(&b) );
     a_collidable.resolve_collision(b_collidable);
   }
 
   inline void operator()(CN<Entities> entities, Delta_time dt) {
     m_areas.clear();
-    for (nauto ent: entities)
+    for (rauto ent: entities)
       insert(ent.get());
-    for (nauto area: m_areas)
+    for (rauto area: m_areas)
       process_collisions(area);
   }
 
@@ -52,7 +52,7 @@ struct Collider_experimental::Impl {
 
     // найти столкновения с другими областями
     bool intersected {};
-    for (nauto area: m_areas)
+    for (rauto area: m_areas)
       if (intersect(area.rect, rect)) {
         area.entities.push_back(ent);
         // расширить область чтобы она покрывала два объекта
@@ -105,7 +105,7 @@ struct Collider_experimental::Impl {
   }
 
   inline void debug_draw(Image& dst, const Vec camera_offset) {
-    for (cnauto area: m_areas) {
+    for (crauto area: m_areas) {
       auto rect = area.rect;
       rect.pos += camera_offset;
       draw_rect<&blend_diff>(dst, rect, Pal8::white);

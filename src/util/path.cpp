@@ -18,7 +18,7 @@ Str get_filedir(CN<Str> str)
 
 Strs files_in_dir(CN<Str> path) {
   Strs ret = {};
-  for (cnauto entry : std::filesystem::directory_iterator(path))
+  for (crauto entry : std::filesystem::directory_iterator(path))
     ret.push_back(entry.path().string());
   return ret;
 }

@@ -60,7 +60,7 @@ struct Scene_replay_select::Impl {
       &Impl::date_comparator);
 
     Menu_items ret;
-    for (cnauto replay_info: m_replay_info_table) {
+    for (crauto replay_info: m_replay_info_table) {
       ret.emplace_back( new_shared<Menu_item_table_row>(
         [replay_info] { // запуск файла реплея
           assert(!replay_info.path.empty());
@@ -86,7 +86,7 @@ struct Scene_replay_select::Impl {
   inline void load_replays() {
     cauto replay_files = files_in_dir(hpw::cur_dir + "replays/");
     return_if(replay_files.empty());
-    for (cnauto replay_file: replay_files) {
+    for (crauto replay_file: replay_files) {
       try {
         cauto info = Replay::get_info(replay_file);
         m_replay_info_table.push_back(info);

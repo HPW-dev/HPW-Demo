@@ -16,7 +16,7 @@ int main(int /*argc*/, char *argv[]) {
 
   hpw_log("\nfiles:\n");
   auto names {archive.get_all_names()};
-  for (cnauto name: names)
+  for (crauto name: names)
     hpw_log("\"" << name << "\"\n")
   hpw_log("\n");
 
