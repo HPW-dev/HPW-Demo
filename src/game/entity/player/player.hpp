@@ -1,7 +1,8 @@
 #pragma once
 #include "game/entity/collidable.hpp"
+#include "ability/ability-entry.hpp"
 
-class Player: public Collidable {
+class Player: public Collidable, Ability_entry {
   nocopy(Player);
 
 public:
