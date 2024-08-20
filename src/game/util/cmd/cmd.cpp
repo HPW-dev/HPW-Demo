@@ -42,6 +42,7 @@ Cmd::Cmd() {
 
   cmd_core_init(*this); // cmd-core.hpp
   cmd_entity_init(*this); // cmd-entity.hpp
+  cmd_common_init(*this); // cmd-common.hpp
 
   //cmd-entity.hpp
   //move(new_unique<Cmd_entities>());
