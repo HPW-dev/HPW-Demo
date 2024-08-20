@@ -12,8 +12,18 @@ struct Ability_entry::Impl {
   inline explicit Impl(Player& player): _player{player} {}
 
   inline void update(Delta_time dt) {
-    for (crauto [_, ability]: _abilities)
+    kill_if_zero_lvl();
+
+    for (crauto [_, ability]: _abilities) {
+      assert(ability->id() != Ability_id::error);
       ability->update(dt);
+    }
+  }
+
+  inline void kill_if_zero_lvl() {
+    std::erase_if(_abilities, [](cr<decltype(_abilities)::value_type> id_and_name) {
+      return id_and_name.second->level() == 0;
+    });
   }
 
   inline void draw_bg(Image& dst, const Vec offset) const {

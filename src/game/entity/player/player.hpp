@@ -2,7 +2,7 @@
 #include "game/entity/collidable.hpp"
 #include "ability/ability-entry.hpp"
 
-class Player: public Collidable, Ability_entry {
+class Player: public Collidable, public Ability_entry {
   nocopy(Player);
 
 public:

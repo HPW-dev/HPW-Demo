@@ -1,6 +1,7 @@
 #include <ranges>
 #include <cassert>
 #include "ability-util.hpp"
+#include "ability-dummy.hpp"
 #include "util/vector-types.hpp"
 #include "util/error.hpp"
 
@@ -35,10 +36,19 @@ Strs get_ability_names() {
   return ret;
 }
 
-Unique<Ability> make_ability(Ability_id id, uint lvl) {
+Unique<Ability> make_ability(Ability_id id, const uint lvl) {
   assert(lvl > 0);
+  Unique<Ability> ret {};
+
   switch (id) {
+    case Ability_id::dummy: ret = new_unique<Ability_dummy>(); break;
     default: error("незарегистрированный id способности (" << scast<int>(id) << ")");
   }
-  return {};
+
+  // докрутить до нужного уровня
+  assert(ret);
+  cfor (i, lvl - 1)
+    ret->on_upgrade();
+
+  return ret;
 }

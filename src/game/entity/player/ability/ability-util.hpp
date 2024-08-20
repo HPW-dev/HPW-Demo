@@ -10,4 +10,4 @@ Str get_name(Ability_id id);
 Ability_id get_id(cr<Str> name);
 Strs get_ability_names();
 // выделяет память под разные классы способностей
-Unique<Ability> make_ability(Ability_id id, uint lvl=1);
+Unique<Ability> make_ability(Ability_id id, const uint lvl=1);

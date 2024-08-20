@@ -22,5 +22,5 @@ public:
   }
 
 protected:
-  uint _level {};
+  uint _level {1};
 };

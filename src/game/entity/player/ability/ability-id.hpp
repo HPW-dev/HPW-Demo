@@ -2,6 +2,7 @@
 
 enum class Ability_id {
   error,
+  dummy,
   invise,
   powershoot,
   //home,
