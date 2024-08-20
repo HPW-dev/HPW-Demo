@@ -1,9 +1,11 @@
 #pragma once
 #include "ability-id.hpp"
 #include "util/mem-types.hpp"
+#include "util/vector-types.hpp"
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
 
+class Ability;
 class Player;
 class Image;
 
@@ -31,4 +33,6 @@ public:
   void upgrade(Ability_id id, uint lvl=1);
   // проверить что способность есть
   bool exist(Ability_id id) const;
+  // список всех способностей
+  Vector<cp<Ability>> abilities() const;
 };

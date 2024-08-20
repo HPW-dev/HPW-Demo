@@ -81,6 +81,13 @@ struct Ability_entry::Impl {
   inline bool exist(Ability_id id) const { 
     return _abilities.find(id) != _abilities.end();
   }
+
+  inline Vector<cp<Ability>> abilities() const {
+    Vector<cp<Ability>> ret;
+    for (crauto [_, ability]: _abilities)
+      ret.push_back(ability.get());
+    return ret;
+  }
 }; // Impl
 
 Ability_entry::Ability_entry(Player& player): impl{new_unique<Impl>(player)} {}
@@ -96,3 +103,4 @@ void Ability_entry::remove(Ability_id id) { impl->remove(id); }
 void Ability_entry::downgrade(Ability_id id, uint lvl) { impl->downgrade(id, lvl); }
 void Ability_entry::upgrade(Ability_id id, uint lvl) { impl->upgrade(id, lvl); }
 bool Ability_entry::exist(Ability_id id) const { return impl->exist(id); }
+Vector<cp<Ability>> Ability_entry::abilities() const { return impl->abilities(); }
