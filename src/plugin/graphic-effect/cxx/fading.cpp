@@ -40,9 +40,9 @@ struct result_t* result) {
 extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   #pragma omp parallel for simd
   cfor (i, g_w * g_h) {
-    nauto buffer_pix = g_buffer[i];
+    rauto buffer_pix = g_buffer[i];
     auto buffer_rgb = to_rgb24(buffer_pix);
-    nauto dst_pix = g_dst[i];
+    rauto dst_pix = g_dst[i];
     cauto dst_rgb = to_rgb24(dst_pix);
     // затухание
     buffer_rgb.r = std::max<real_t>(0, scast<real_t>(buffer_rgb.r) - (g_fading * 255.0) );

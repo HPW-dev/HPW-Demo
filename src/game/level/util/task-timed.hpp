@@ -8,7 +8,7 @@ struct Timed_task {
   Level_task m_task {};
   Timer m_timer {};
 
-  inline explicit Timed_task(const Delta_time timer, CN<Level_task> task={})
+  inline explicit Timed_task(const Delta_time timer, cr<Level_task> task={})
   : m_task {task}
   , m_timer {timer}
   { assert(timer > 0); }

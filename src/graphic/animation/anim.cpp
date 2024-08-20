@@ -30,16 +30,16 @@ class Anim::Hitbox_diections {
 
 public:
   ~Hitbox_diections() = default;
-  Hitbox_diections(CN<Hitbox_diections> other) = delete;
+  Hitbox_diections(cr<Hitbox_diections> other) = delete;
   Hitbox_diections(Hitbox_diections&& other) = delete;
   Hitbox_diections* operator =(Hitbox_diections&& other) = delete;
 
-  inline Hitbox_diections* operator =(CN<Hitbox_diections> other) {
-    for (cnauto other_direct: other.diections) {
+  inline Hitbox_diections* operator =(cr<Hitbox_diections> other) {
+    for (crauto other_direct: other.diections) {
       Hitbox this_direct;
       this_direct.simple = other_direct.simple;
       // скопировать все полигоны
-      for (cnauto other_poly: other_direct.polygons)
+      for (crauto other_poly: other_direct.polygons)
         this_direct.polygons.emplace_back(other_poly);
       diections.emplace_back(std::move(this_direct));
     }
@@ -50,7 +50,7 @@ public:
   : diections (directions_count)
   {}
 
-  inline void set(real degree, CN<Hitbox> src)
+  inline void set(real degree, cr<Hitbox> src)
     { get(degree) = src; }
 
   inline Hitbox& get(real degree=0)
@@ -63,9 +63,9 @@ Anim::Anim()
 : hitbox_diections { new_shared<Hitbox_diections>() }
 {}
 
-void Anim::add_frame(CN<Shared<Frame>> frame) { frames.emplace_back(frame); }
+void Anim::add_frame(cr<Shared<Frame>> frame) { frames.emplace_back(frame); }
 
-void Anim::insert(std::size_t pos, CN<Shared<Frame>> frame) {
+void Anim::insert(std::size_t pos, cr<Shared<Frame>> frame) {
   if (frames.empty()) {
     add_frame(frame);
     return;
@@ -80,7 +80,7 @@ void Anim::remove_frame(std::size_t frame_num) {
   frames.erase(frames.begin() + frame_num);
 }
 
-void Anim::set_name(CN<Str> new_name) {
+void Anim::set_name(cr<Str> new_name) {
   iferror(new_name.empty(), "name is empty");
   name = new_name;
 }
@@ -92,7 +92,7 @@ void Anim::swap_frame(std::size_t a, std::size_t b) {
   std::swap(frames.at(a), frames.at(b));
 }
 
-CP<Frame> Anim::get_frame(std::size_t frame_num) const {
+cp<Frame> Anim::get_frame(std::size_t frame_num) const {
   if (frames.empty() || frame_num >= frames.size())
     return nullptr;
   return frames[frame_num].get();
@@ -104,7 +104,7 @@ Shared<Frame> Anim::get_frame_shared(std::size_t frame_num) const {
   return frames[frame_num];
 }
 
-CP<Hitbox> Anim::get_hitbox(real degree) const {
+cp<Hitbox> Anim::get_hitbox(real degree) const {
   if ( !source_hitbox)
     return {};
   if (hitbox_diections->max_diections() == 0)
@@ -112,7 +112,7 @@ CP<Hitbox> Anim::get_hitbox(real degree) const {
   return &hitbox_diections->get(degree);
 }
 
-void Anim::update_hitbox(CN<Pool_ptr(Hitbox)> _hitbox, uint _directions) {
+void Anim::update_hitbox(cr<Pool_ptr(Hitbox)> _hitbox, uint _directions) {
   assert(_directions > 0 && _directions <= 360);
   source_hitbox = _hitbox;
 
@@ -129,7 +129,7 @@ void Anim::update_hitbox(CN<Pool_ptr(Hitbox)> _hitbox, uint _directions) {
   }
 } // update_hitbox
 
-CN<decltype(Anim::source_hitbox)> Anim::get_hitbox_source() const {
+cr<decltype(Anim::source_hitbox)> Anim::get_hitbox_source() const {
   return source_hitbox;
 }
 
@@ -137,7 +137,7 @@ uint Anim::get_gitbox_directions() const {
   return hitbox_diections->max_diections();
 }
 
-Anim* Anim::operator =(CN<Anim> other) {
+Anim* Anim::operator =(cr<Anim> other) {
   this->name = other.name;
   this->source_hitbox = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>();
   if (other.source_hitbox)
@@ -147,7 +147,7 @@ Anim* Anim::operator =(CN<Anim> other) {
 
   // скопировать все кадры
   this->frames = {};
-  for (cnauto other_frame: other.frames) {
+  for (crauto other_frame: other.frames) {
     continue_if( !other_frame);
 
     auto this_frame = new_shared<Frame>();

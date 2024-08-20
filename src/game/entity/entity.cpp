@@ -36,7 +36,7 @@ void Entity::kill() {
 }
 
 void Entity::accept_kill_callbacks() {
-  for (cnauto callback: kill_callbacks)
+  for (crauto callback: kill_callbacks)
     callback(*this);
 }
 
@@ -82,7 +82,7 @@ void Entity::update(const Delta_time dt) {
   anim_ctx.update(dt, *this);
 
   // применить внешние колбэки
-  for (cnauto callback: update_callbacks)
+  for (crauto callback: update_callbacks)
     callback(*this, dt);
 
   if (heat_distort && !status.disable_heat_distort)
@@ -104,7 +104,7 @@ void Entity::set_pos(const Vec pos) {
   phys.set_pos(pos);
 }
 
-CP<Anim> Entity::get_anim() const {
+cp<Anim> Entity::get_anim() const {
   return anim_ctx.get_anim();
 }
 
@@ -132,7 +132,7 @@ void Entity::debug_draw(Image& dst, const Vec offset) const {
   // показать жизни объекта
   if (graphic::draw_entity_hp && status.collidable) {
     const Vec pos(phys.get_pos() + Vec(15, 10));
-    cauto casted = cptr2ptr<CP<Collidable>>(this);
+    cauto casted = cptr2ptr<cp<Collidable>>(this);
     utf32 hp_text = U"HP: " + n2s<utf32>(casted->get_hp());
     graphic::font->draw(dst, pos, hp_text, &blend_diff);
   }
@@ -143,7 +143,7 @@ void Entity::move_update_callback(Update_callback&& callback) {
     update_callbacks.emplace_back(std::move(callback));
 }
 
-void Entity::add_update_callback(CN<Update_callback> callback) {
+void Entity::add_update_callback(cr<Update_callback> callback) {
   if (callback)
     update_callbacks.push_back(callback);
 }
@@ -153,7 +153,7 @@ void Entity::move_kill_callback(Kill_callback&& callback) {
     kill_callbacks.emplace_back(std::move(callback));
 }
 
-void Entity::add_kill_callback(CN<Kill_callback> callback) {
+void Entity::add_kill_callback(cr<Kill_callback> callback) {
   if (callback)
     kill_callbacks.push_back(callback);
 }

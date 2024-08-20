@@ -330,7 +330,7 @@ void Scene_game::replay_load_keys() {
   // прочитать клавиши с реплея
   auto key_packet = replay->pop();
   if (key_packet) {
-    for (cnauto key: *key_packet) {
+    for (crauto key: *key_packet) {
       press(key);
       hpw::any_key_pressed = true;
     }

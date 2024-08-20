@@ -19,7 +19,7 @@ private:
   uint m_vao = 0, m_vbo = 0;
   uint m_shader_prog = 0, m_vert_shader = 0, m_frag_shader = 0;
   uint m_pal_tex = 0;
-  CP<void> m_pixels {}; // данные для копирования в текстуру
+  cp<void> m_pixels {}; // данные для копирования в текстуру
 
   // растягивает OpenGL полотно
   void ogl_resize(int w, int h) override;

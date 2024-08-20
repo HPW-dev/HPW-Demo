@@ -60,7 +60,7 @@ struct Scene_replay_select::Impl {
       &Impl::date_comparator);
 
     Menu_items ret;
-    for (cnauto replay_info: m_replay_info_table) {
+    for (crauto replay_info: m_replay_info_table) {
       ret.emplace_back( new_shared<Menu_item_table_row>(
         [replay_info] { // запуск файла реплея
           assert(!replay_info.path.empty());
@@ -86,11 +86,11 @@ struct Scene_replay_select::Impl {
   inline void load_replays() {
     cauto replay_files = files_in_dir(hpw::cur_dir + "replays/");
     return_if(replay_files.empty());
-    for (cnauto replay_file: replay_files) {
+    for (crauto replay_file: replay_files) {
       try {
         cauto info = Replay::get_info(replay_file);
         m_replay_info_table.push_back(info);
-      } catch (CN<hpw::Error> error) {
+      } catch (cr<hpw::Error> error) {
         hpw_log("не удалось загрузить один из реплеев: " << error.what() << "\n");
       } catch (...) {
         hpw_log("не удалось загрузить один из реплеев\n");
@@ -99,7 +99,7 @@ struct Scene_replay_select::Impl {
   } // load_replays
 
   // для сравнения времени создания реплея
-  inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
+  inline static bool date_comparator(cr<Replay::Info> a, cr<Replay::Info> b) {
     // год
     if (a.date.year < b.date.year) return false;
     if (a.date.year > b.date.year) return true;

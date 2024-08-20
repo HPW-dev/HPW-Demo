@@ -42,7 +42,7 @@ void entities_log() {
   }
 
   cauto player = hpw::entity_mgr->get_player();
-  for (cnauto entity: entities) {
+  for (crauto entity: entities) {
     cont_if(entity.get() == player);
 
     assert(entity);

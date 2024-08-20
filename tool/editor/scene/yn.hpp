@@ -11,7 +11,7 @@ class Yes_no_scene: public Editor_scene_base {
   void enable();
 
 public:
-  Yes_no_scene(CN<utf8> msg, CN<decltype(callback)> new_callback);
+  Yes_no_scene(cr<utf8> msg, cr<decltype(callback)> new_callback);
   void update(const Delta_time dt) override;
   void imgui_exec() override;
 };

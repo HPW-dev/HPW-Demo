@@ -33,7 +33,7 @@ struct Scene_palette_select::Impl {
     // загрузить имена всех файлов с палитрой
     auto file_list = hpw::archive->get_all_names(false);
     // фильтр списка
-    std::erase_if(file_list, [](CN<Str> src) {
+    std::erase_if(file_list, [](cr<Str> src) {
       return src.find("resource/image/palettes/") == Str::npos; });
     m_palette_files = file_list;
 
@@ -41,7 +41,7 @@ struct Scene_palette_select::Impl {
       // докрутить индекс до текущего выбранного файла
       std::size_t idx = 0;
       if ( !graphic::current_palette_file.empty()) {
-        for (cnauto fname: m_palette_files) {
+        for (crauto fname: m_palette_files) {
           if (graphic::current_palette_file == fname) {
             m_cur_palette_idx = idx;
             break;
@@ -123,7 +123,7 @@ struct Scene_palette_select::Impl {
   }
 
   inline void draw_test_image(Image& dst, const Vec pos) const {
-    cnauto test = *test_image;
+    crauto test = *test_image;
     insert(dst, test, pos);
     // рамка вокруг картинки
     draw_rect(dst, Rect(pos - Vec(1, 1), Vec(test.X(), test.Y()) + Vec(2, 2)), Pal8::black);

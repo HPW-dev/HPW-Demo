@@ -12,9 +12,9 @@ Direct* Direct::operator =(Direct&& other) {
   return this;
 }
 
-Direct::Direct(CN<Direct> other): Direct() { this->operator=(other); }
+Direct::Direct(cr<Direct> other): Direct() { this->operator=(other); }
 
-Direct* Direct::operator =(CN<Direct> other) {
+Direct* Direct::operator =(cr<Direct> other) {
   if (this == std::addressof(other))
     return {};
 
@@ -27,8 +27,8 @@ Direct* Direct::operator =(CN<Direct> other) {
     if (this_sprite) {
       this->sprite = this_sprite;
     } else { // если нет в банке, то сгенерить копию
-      cnauto other_sprite = other.sprite.lock();
-      nauto this_sprite = hpw::store_sprite->push(
+      crauto other_sprite = other.sprite.lock();
+      rauto this_sprite = hpw::store_sprite->push(
         other_sprite->get_path() + ".copy",
         new_shared<Sprite>(*other_sprite)
       );

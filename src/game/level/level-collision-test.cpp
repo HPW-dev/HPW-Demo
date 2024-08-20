@@ -135,7 +135,7 @@ void Level_collision_test::hitbox_test() {
     };
     // добавится новый хитбокс и он будет симметричным
     hitbox.make_h_symm();
-    cnauto other_poly = hitbox.polygons.at(1);
+    crauto other_poly = hitbox.polygons.at(1);
     // проверить что реально симметричный
     assert(scast<int>(other_poly.offset.x) == 10);
     assert(scast<int>(other_poly.points.at(0).x) == 0);

@@ -7,7 +7,7 @@ static uint16_t g_h {}; // высота растра
 
 namespace Epge_autocontrast {
 
-void plugin_init(CP<context_t> context, result_t* result) {
+void plugin_init(cp<context_t> context, result_t* result) {
   // описание плагина
   result->full_name = "Auto-contrast";
   result->author = "HPW-dev";

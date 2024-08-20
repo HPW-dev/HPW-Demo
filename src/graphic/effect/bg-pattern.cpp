@@ -36,7 +36,7 @@ public:
   inline Waves(const real amp): m_amp{amp} {}
 
   inline void clean() {
-    for (nauto it: m_grid)
+    for (rauto it: m_grid)
       it.value = it.velocity = 0;
   }
 
@@ -76,7 +76,7 @@ public:
     } // for freq
   }
 
-  inline void overlay(CN<Image> dst) {
+  inline void overlay(cr<Image> dst) {
     assert(scast<std::size_t>(dst.size) <= m_grid.size());
 
     cfor (i, dst.size)
@@ -93,7 +93,7 @@ public:
       cauto B = get_safe(x+0, y-1).value;
       cauto C = get_safe(x+1, y-1).value * sin_of_45_deg;
       cauto D = get_safe(x-1, y+0).value;
-      nauto P = get     (x+0, y+0);
+      rauto P = get     (x+0, y+0);
       cauto E = get_safe(x+1, y+0).value;
       cauto F = get_safe(x-1, y+1).value * sin_of_45_deg;
       cauto G = get_safe(x+0, y+1).value;
@@ -356,7 +356,7 @@ void bgp_labyrinth_1(Image& dst, const int bg_state) {
   constexpr auto map_x = 64u;
   constexpr auto map_y = 56u;
   std::array<std::size_t, map_x * map_y> map;
-  for (uint i = 0; nauto elem: map) {
+  for (uint i = 0; rauto elem: map) {
     elem = (i ^ ((i % block_sz) * state)) % blocks.size();
     ++i;
   }
@@ -396,7 +396,7 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
   constexpr auto map_y = 56u;
   static std::array<std::size_t, map_x * map_y> map;
   if (firt_init) {
-    for (uint i = 0; nauto elem: map)
+    for (uint i = 0; rauto elem: map)
       elem = ((++i) % block_sz) % blocks.size();
   }
   
@@ -498,7 +498,7 @@ void bgp_3d_terrain(Image& dst, const int bg_state) {
   static bool generate_once {true};
   if (generate_once) {
     // сгенерить ландшафт
-    for (nauto height: terrain)
+    for (rauto height: terrain)
       height = rndr_fast(0, 0.04);
     generate_once = false;
   }
@@ -568,12 +568,12 @@ void bgp_3d_waves(Image& dst, const int bg_state) {
   // сгенерить ландшафт
   static bool generate_once {true};
   if (generate_once) {
-    for (nauto height: terrain)
+    for (rauto height: terrain)
       height = rndr_fast(0, 0.035);
     generate_once = false;
   }
   // сделать волны
-  for (nauto height: terrain)
+  for (rauto height: terrain)
     height = std::clamp<real>(height + rndr_fast(-0.002, 0.002), 0, 0.035);
 
   dst.fill(Pal8::black);
@@ -855,7 +855,7 @@ void bgp_numbers(Image& dst, const int bg_state) {
     graphic::font->draw(dst, pos, num_str, &blend_or_safe);
   }
   // добавить красный оттенок шрифту
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = blend_and_safe(Pal8::red, pix);
 }
 
@@ -974,7 +974,7 @@ void bgp_unicode_red(Image& dst, const int bg_state) {
   dst.fill({});
   graphic::font->draw(dst, {}, sconv<utf32>(text));
   // добавить красный оттенок шрифту
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = blend_and_safe(Pal8::red, pix);
 }
 
@@ -1108,7 +1108,7 @@ void bgp_clock_24(Image& dst, const int bg_state) {
 } // bgp_clock
 
 void bgp_graph(Image& dst, const int bg_state) {
-  for (nauto pix: dst)
+  for (rauto pix: dst)
     pix = blend_alpha(Pal8::black, pix, 10);
   const Rect AREA(28, 0, dst.X - 28, dst.Y - 25);
 

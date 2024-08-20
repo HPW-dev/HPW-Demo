@@ -10,7 +10,7 @@ class Explosion_loader final: public Entity_loader {
   Unique<Impl> impl {};
 
 public:
-  explicit Explosion_loader(CN<Yaml> config);
+  explicit Explosion_loader(cr<Yaml> config);
   ~Explosion_loader();
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
 };

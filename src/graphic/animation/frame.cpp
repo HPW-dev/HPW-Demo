@@ -112,7 +112,7 @@ void Frame::init_quarters() {
   }
 }  // init_quarters
 
-CP<Direct> Frame::get_direct(real degree) const {
+cp<Direct> Frame::get_direct(real degree) const {
   accept_degree_offset(degree);
   iferror (degree < 0 || degree > 360.0, "degree not clamped");
   return_if (directions.empty(), nullptr);
@@ -135,7 +135,7 @@ Vector<Vec> Frame::get_offsets() const {
   if (directions.empty())
     return {};
   Vector<Vec> offsets;
-  for (cnauto direct: directions)
+  for (crauto direct: directions)
     offsets.emplace_back(direct.offset);
   return offsets;
 }
@@ -148,7 +148,7 @@ void Frame::accept_degree_offset(real &degree) const {
   }
 }
 
-Frame::Frame(CN<Frame> other)
+Frame::Frame(cr<Frame> other)
 : directions { other.directions }
 , degree_frag { other.degree_frag }
 , name { generate_frame_name() }
@@ -157,13 +157,13 @@ Frame::Frame(CN<Frame> other)
 , degree_offset { other.degree_offset }
 {}
 
-Frame& Frame::operator = (CN<Frame> other) {
+Frame& Frame::operator = (cr<Frame> other) {
   if (this == std::addressof(other))
     return *this;
 
   // копиря картинок с разворотами
   this->directions.clear();
-  for (cnauto direct: other.directions)
+  for (crauto direct: other.directions)
     this->directions.emplace_back(direct);
   degree_frag = other.degree_frag;
   name = other.name;
@@ -209,7 +209,7 @@ Str Frame::generate_frame_name() {
   return "Frame_UID_" + n2s(frame_uid++);
 }
 
-CN<Str> Frame::get_name() const {
+cr<Str> Frame::get_name() const {
   assert(!name.empty()); // if empty - need generate_frame_name()
   return name;
 }

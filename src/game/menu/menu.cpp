@@ -65,7 +65,7 @@ struct Menu::Sticking {
   }
 }; // Sticking
 
-Menu::Menu(CN<Menu_items> items)
+Menu::Menu(cr<Menu_items> items)
 : m_sticking {new_unique<Sticking>()}
 , m_items(items)
 { iflog(m_items.empty(), "m_items empty\n"); }
@@ -122,9 +122,9 @@ void Menu::next_item() {
 
 Menu::~Menu() {}
 std::size_t Menu::get_cur_item_id() const { return m_cur_item; }
-CN<decltype(Menu::m_items)::value_type> Menu::get_cur_item() const { return m_items.at(m_cur_item); }
-CN<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }
+cr<decltype(Menu::m_items)::value_type> Menu::get_cur_item() const { return m_items.at(m_cur_item); }
+cr<decltype(Menu::m_items)> Menu::get_items() const { return m_items; }
 bool Menu::item_selected() const { return m_item_selected; }
-void Menu::set_select_callback(CN<Menu_select_callback> callback) { m_select_callback = callback; }
-void Menu::set_move_cursor_callback(CN<Menu_select_callback> callback) { m_move_cursor_callback = callback; }
+void Menu::set_select_callback(cr<Menu_select_callback> callback) { m_select_callback = callback; }
+void Menu::set_move_cursor_callback(cr<Menu_select_callback> callback) { m_move_cursor_callback = callback; }
 void Menu::reset_sticking() { m_sticking->reset(); }

@@ -18,11 +18,11 @@ struct Effect_mgr::Impl {
     // обновить эффект и удалить его, если он завершился
     // при update ret true будет удаление эффекта
     std::erase_if(effects,
-      [dt] (nauto effect) { return effect->update(dt); });
+      [dt] (rauto effect) { return effect->update(dt); });
   }
 
   inline void draw(Image& dst) const {
-    for (cnauto effect: effects)
+    for (crauto effect: effects)
       effect->draw(dst);
   }
 }; // Effect_mgr::Impl

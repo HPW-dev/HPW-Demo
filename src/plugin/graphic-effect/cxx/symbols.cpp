@@ -154,14 +154,14 @@ extern "C" EXPORTED void PLUG_CALL plugin_finalize(void)
 
 NOT_EXPORTED void reinit() {
   // определить какая сейчас таблица символов
-  CP<Pal8> symbol_set;
+  cp<Pal8> symbol_set;
   uint symbol_set_sz;
   uint symbol_set_x;
   uint symbol_set_y;
   switch (g_symbol_set) {
     default:
     case 0: {
-      symbol_set = rcast<CP<Pal8>>(SET_0);
+      symbol_set = rcast<cp<Pal8>>(SET_0);
       symbol_set_sz = SET_0_SZ;
       symbol_set_x = SET_0_X;
       symbol_set_y = SET_0_Y;
@@ -170,7 +170,7 @@ NOT_EXPORTED void reinit() {
       break;
     }
     case 1: {
-      symbol_set = rcast<CP<Pal8>>(SET_1);
+      symbol_set = rcast<cp<Pal8>>(SET_1);
       symbol_set_sz = SET_1_SZ;
       symbol_set_x = SET_1_X;
       symbol_set_y = SET_1_Y;
@@ -179,7 +179,7 @@ NOT_EXPORTED void reinit() {
       break;
     }
     case 2: {
-      symbol_set = rcast<CP<Pal8>>(SET_2);
+      symbol_set = rcast<cp<Pal8>>(SET_2);
       symbol_set_sz = SET_2_SZ;
       symbol_set_x = SET_2_X;
       symbol_set_y = SET_2_Y;
@@ -210,7 +210,7 @@ NOT_EXPORTED void reinit() {
   }
 } // reinit
 
-NOT_EXPORTED real check_difference(CN<Tile> a, CN<Tile> b) {
+NOT_EXPORTED real check_difference(cr<Tile> a, cr<Tile> b) {
   assert(a.size() == b.size());
   real difference {};
   cfor (i, a.size())
@@ -222,7 +222,7 @@ NOT_EXPORTED inline constexpr real blerp(const real c00, const real c10, const r
 const real c11, const real tx, const real ty)
   { return std::lerp(std::lerp(c00, c10, tx), std::lerp(c01, c11, tx), ty); }
 
-NOT_EXPORTED Tile scale_bilinear(CN<Tile> src,
+NOT_EXPORTED Tile scale_bilinear(cr<Tile> src,
 const uint dst_x, const uint dst_y) {
   Tile dst(dst_x * dst_y);
   assert(!dst.empty());
@@ -247,7 +247,7 @@ const uint dst_x, const uint dst_y) {
   return dst;
 } // scale_bilinear
 
-NOT_EXPORTED real check_difference_3x3(CN<Tile> a, CN<Tile> b) {
+NOT_EXPORTED real check_difference_3x3(cr<Tile> a, cr<Tile> b) {
   assert(a.size() == b.size());
   real difference {};
   // уменьшить до 3x3 с билинейной интерполяцией
@@ -258,7 +258,7 @@ NOT_EXPORTED real check_difference_3x3(CN<Tile> a, CN<Tile> b) {
   return difference;
 }
 
-NOT_EXPORTED real check_difference_2x2(CN<Tile> a, CN<Tile> b) {
+NOT_EXPORTED real check_difference_2x2(cr<Tile> a, cr<Tile> b) {
   assert(a.size() == b.size());
   real difference {};
   // уменьшить до 2x2 с билинейной интерполяцией
@@ -282,7 +282,7 @@ NOT_EXPORTED void convert_tile(const uint pos_x, const uint pos_y) {
   // определить какой тайл самый похожий на dst_tile
   real difference {9'999'999.0};
   uint result_tile_idx {};
-  for (uint tile_idx {}; cnauto tile: g_tiles) {
+  for (uint tile_idx {}; crauto tile: g_tiles) {
     real local_difference;
     // нужно ли уменьшать размеры тайлов
     switch (g_downscale_mode) {
@@ -298,7 +298,7 @@ NOT_EXPORTED void convert_tile(const uint pos_x, const uint pos_y) {
     }
     ++tile_idx;
   }
-  cnauto result_tile = g_tiles.at(result_tile_idx);
+  crauto result_tile = g_tiles.at(result_tile_idx);
 
   cfor (y, g_tile_y)
   cfor (x, g_tile_x) {

@@ -88,7 +88,7 @@ struct Window_emitter::Impl {
 
     ImGui::Text("объект:");
     if (ImGui::BeginCombo("##объект", names.at(m_selected_name_id).c_str())) {
-      for (uint i = 0; cnauto name: names) {
+      for (uint i = 0; crauto name: names) {
         const bool is_selected = (i == m_selected_name_id);
 
         if (ImGui::Selectable(name.c_str(), is_selected)) {

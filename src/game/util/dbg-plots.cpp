@@ -26,7 +26,7 @@ public:
   @param h высота окна с графиком
   @param len разрешение графика. Если = 0, разрешение станет = w
   @param offset с каким смещением будет отрисовано окно графика */
-  inline explicit Plotter(CN<utf32> title, Getter&& getter, uint w, uint h, uint len, const Vec offset)
+  inline explicit Plotter(cr<utf32> title, Getter&& getter, uint w, uint h, uint len, const Vec offset)
   : m_title {title}
   , m_getter {std::move(getter)}
   , m_w {w}
@@ -42,7 +42,7 @@ public:
     assert(m_w > 0 && m_w < 600);
     assert(m_h > 0 && m_h < 400);
     assert(m_getter);
-    for (nauto val: m_values)
+    for (rauto val: m_values)
       val = 0;
     update_maximum();
   }
@@ -111,12 +111,12 @@ struct Dbg_plots::Impl {
   inline void draw(Image& dst) const {
     apply_brightness(dst, -97);
     
-    for (cnauto plotter: m_plotters)
+    for (crauto plotter: m_plotters)
       plotter.draw(dst);
   }
 
   inline void update(Delta_time dt) {
-    for (nauto plotter: m_plotters)
+    for (rauto plotter: m_plotters)
       plotter.update();
   }
 }; // Impl

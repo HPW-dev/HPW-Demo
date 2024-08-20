@@ -110,8 +110,8 @@ Strs Sprite_select::get_list() const {
   return _list;
 }
 
-int Sprite_select::get_cur_list_idx(CN<Str> name, CN<Strs> list) const {
-  for (int idx = 0; cnauto str: list) {
+int Sprite_select::get_cur_list_idx(cr<Str> name, cr<Strs> list) const {
+  for (int idx = 0; crauto str: list) {
     if (str == name)
       return idx;
     ++idx;

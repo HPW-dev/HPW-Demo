@@ -2,7 +2,7 @@
 #include "blend.hpp"
 #include "graphic/image/image.hpp"
 
-void accept_blend_mask_fast(Image& dst, CN<Image> src, CN<Image> blend_mask) {
+void accept_blend_mask_fast(Image& dst, cr<Image> src, cr<Image> blend_mask) {
   assert(dst);
   assert(src);
   assert(blend_mask);

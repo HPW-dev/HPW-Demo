@@ -239,7 +239,7 @@ struct Level_tutorial::Impl {
           Wave_dir {.rnd_st={-20, py},  .rnd_ed={-20, py},  .vel={wave_speed, 0}},
           Wave_dir {.rnd_st={w-10, py}, .rnd_ed={w-10, py}, .vel={-wave_speed, 0}},
         };
-        cnauto wave_dir = wave_dir_table.at( rndu(wave_dir_table.size()-1) );
+        crauto wave_dir = wave_dir_table.at( rndu(wave_dir_table.size()-1) );
 
         cauto pos = get_rand_pos_safe(wave_dir.rnd_st.x, wave_dir.rnd_st.y,
           wave_dir.rnd_ed.x, wave_dir.rnd_ed.y);

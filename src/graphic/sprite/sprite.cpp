@@ -1,10 +1,10 @@
 #include <cassert>
 #include "sprite.hpp"
 
-Sprite::Sprite(CN<Sprite> other) noexcept { init(other); }
+Sprite::Sprite(cr<Sprite> other) noexcept { init(other); }
 Sprite::Sprite(int new_x, int new_y) noexcept { init(new_x, new_y); }
 
-Sprite& Sprite::operator = (CN<Sprite> other) noexcept { 
+Sprite& Sprite::operator = (cr<Sprite> other) noexcept { 
   init(other);
   return *this;
 }
@@ -21,7 +21,7 @@ Sprite& Sprite::operator = (Sprite&& other) noexcept {
   return *this;
 }
 
-void Sprite::init(CN<Sprite> other) noexcept {
+void Sprite::init(cr<Sprite> other) noexcept {
   return_if (this == std::addressof(other));
   if(!other) {
     *this = {};

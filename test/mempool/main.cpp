@@ -45,11 +45,11 @@ int main() {
     a->val_2 = 40;
 
     std::array<Dummy*, 100> table;
-    for (uint idx = 0; nauto it: table) {
+    for (uint idx = 0; rauto it: table) {
       it = pool.new_object<Dummy>();
       it->val_1 = idx++;
     }
-    for (uint idx = 0; cnauto it: table) {
+    for (uint idx = 0; crauto it: table) {
       assert(it->val_1 == idx);
       ++idx;
     }
@@ -82,11 +82,11 @@ int main() {
     a->val_2 = 40;
 
     std::array<Shared<Dummy>, 100> table;
-    for (uint idx = 0; nauto it: table) {
+    for (uint idx = 0; rauto it: table) {
       it = pool.new_object_shared<Dummy>();
       it->val_1 = idx++;
     }
-    for (uint idx = 0; cnauto it: table) {
+    for (uint idx = 0; crauto it: table) {
       assert(it->val_1 == idx);
       ++idx;
     }

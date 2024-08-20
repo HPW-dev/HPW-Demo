@@ -56,7 +56,7 @@ void Frame_wnd::imgui_exec() {
   }
 } // imgui_exec
 
-void Frame_wnd::draw_info(CN<Frame> frame) {
+void Frame_wnd::draw_info(cr<Frame> frame) {
   Str name = "name: " + frame.get_name();
   Str duration = "duration: " + n2s(frame.duration, 3);
   ImGui::Text(name.c_str());
@@ -67,7 +67,7 @@ void Frame_wnd::draw_info(CN<Frame> frame) {
   // эти ифы для проверки что есть фрейм у анимации
   if (auto direct = frame.get_direct(editor::entity->phys.get_deg()); direct) {
     if (auto sprite = direct->sprite; !sprite.expired()) {
-      cnauto image = sprite.lock()->image();
+      crauto image = sprite.lock()->image();
       res = Vec(image.X, image.Y);
     }
   }
@@ -96,7 +96,7 @@ void Frame_wnd::draw_direction_count_edit(Frame& frame) {
     auto anim = editor::entity->anim_ctx.get_anim();
     if (anim) {
       auto all_frames = anim->get_frames();
-      for (cnauto const_frame: all_frames) {
+      for (crauto const_frame: all_frames) {
         auto cp_frame = const_frame.get();
         cont_if (!cp_frame);
         auto& ref_frame = *ccast<Frame*>(cp_frame);
@@ -113,7 +113,7 @@ void Frame_wnd::draw_path_edit(Frame& frame) {
   if (ImGui::Button("+")) {
     hpw::scene_mgr->add(
       new_shared<Sprite_select>(
-        [this, &frame](Shared<Sprite> sprite, CN<Str> path) {
+        [this, &frame](Shared<Sprite> sprite, cr<Str> path) {
           detailed_log("new sprite selected for frame \"" << frame.get_name() << "\"\n");
           auto new_ctx = frame.source_ctx;
           new_ctx.direct_0.sprite = sprite;
@@ -219,7 +219,7 @@ void Frame_wnd::draw_duration_edit(Frame& frame) {
     auto anim = editor::entity->anim_ctx.get_anim();
     if (anim) {
       auto all_frames = anim->get_frames();
-      for (cnauto const_frame: all_frames) {
+      for (crauto const_frame: all_frames) {
         cont_if (!const_frame);
         auto& ref_frame = *ccast<Frame*>(const_frame.get());
         ref_frame.duration = new_duration;
@@ -339,7 +339,7 @@ bool Frame_wnd::edit_polygon_detailed(Pool_ptr(Hitbox) hitbox) const {
   Scope end_child({}, &ImGui::EndChild);
 
   // все полигоны хитбокса
-  for (auto poly_id = 0; nauto poly: hitbox->polygons) {
+  for (auto poly_id = 0; rauto poly: hitbox->polygons) {
     auto poly_name = "Polygon id: " + n2s(poly_id);
     ImGui::SetNextItemOpen(true, ImGuiCond_Once); // открыть ноду сразу
     if (ImGui::TreeNode(poly_name.c_str())) {
@@ -347,7 +347,7 @@ bool Frame_wnd::edit_polygon_detailed(Pool_ptr(Hitbox) hitbox) const {
       ret |= edit_polygon_offset(poly);
 
       // пройтись по точкам
-      for (uint point_id = 0; nauto point: poly.points) {
+      for (uint point_id = 0; rauto point: poly.points) {
         auto point_name = "point id: " + n2s(point_id);
         ImGui::SetNextItemOpen(true, ImGuiCond_Once); // открыть ноду сразу
         if (ImGui::TreeNode(point_name.c_str())) {
@@ -377,7 +377,7 @@ void Frame_wnd::update_hitbox(Pool_ptr(Hitbox) dst) {
   /* вычислить максимум направлений в кадрах анимации и
   сделать столько же углов разворота для хитбокса */
   uint Hitbox_directions_count = 1;
-  for (cnauto frame: anim->get_frames()) {
+  for (crauto frame: anim->get_frames()) {
     cont_if (!frame);
     auto directions_count = frame->get_directions().size();
       Hitbox_directions_count = std::max<uint>(Hitbox_directions_count, directions_count);

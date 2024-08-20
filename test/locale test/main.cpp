@@ -5,7 +5,7 @@
 #include "game/locale.hpp"
 #include "game/util/game-util.hpp"
 
-void test(CN<Str> fname) {
+void test(cr<Str> fname) {
   hpw_log("\nLoading \"" << fname << "\"\n");
   auto yml {hpw::archive->get_file("resource/locale/" + fname)};
   Yaml locale_yml(yml);

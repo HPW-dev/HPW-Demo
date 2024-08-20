@@ -13,15 +13,15 @@
 #include "util/math/rect.hpp"
 #include "util/error.hpp"
 
-extern Rect get_insertion_bound(CN<Image> dst, const Vec pos, CN<Image> src);
+extern Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src);
 
 // нарисовать прямоуг-к
 template <blend_pf bf = &blend_past>
-void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col);
+void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col);
 
 // нарисовать залитый прямоуг-к
 template <blend_pf bf = &blend_past>
-void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col, const int optional=0);
+void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, const int optional=0);
 
 // нарисовать залитый круг
 template <blend_pf bf = &blend_past>
@@ -30,16 +30,16 @@ void draw_circle_filled(Image& dst, const Vec pos,
 
 // копирует одну картинку в другую
 template <blend_pf bf = &blend_past>
-void insert(Image& dst, CN<Image> src, Vec pos={}, int optional=0);
+void insert(Image& dst, cr<Image> src, Vec pos={}, int optional=0);
 
 // вставка с шахматным миганием
 template<blend_pf bf = &blend_past>
-void insert_blink(Image& dst, CN<Image> src, Vec pos={},
+void insert_blink(Image& dst, cr<Image> src, Vec pos={},
   int timer=0, int optional=0);
 
 // вставка с черезстрочным миганием
 template<blend_pf bf = &blend_past>
-void insert_interlace(Image& dst, CN<Image> src, Vec pos={},
+void insert_interlace(Image& dst, cr<Image> src, Vec pos={},
   int timer=0, int optional=0);
 
 // отрисовка линии
@@ -48,7 +48,7 @@ void draw_line(Image& dst, Vec p1, const Vec p2, Pal8 color);
 
 // копирует спрайт в картинку (шаблонная версия)
 template <blend_pf bf = &blend_past>
-void insert(Image& dst, CN<Sprite> src, Vec pos={}, int optional=0);
+void insert(Image& dst, cr<Sprite> src, Vec pos={}, int optional=0);
 
 // круг без заливки
 template <blend_pf bf = &blend_past>
@@ -66,12 +66,12 @@ void draw_cross_diagonal(Image& dst, const Vec pos, const Pal8 col,
   uint size=3);
 
 template <blend_pf bf>
-void insert_fast(Image& dst, CN<Image> src, int optional={});
+void insert_fast(Image& dst, cr<Image> src, int optional={});
 
 // ----------------------- impl ----------------------------------
 
 template <blend_pf bf>
-void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col) {
+void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) {
   return_if( !dst);
   return_if(rect.size.x <= 2 || rect.size.y <= 2);
   const int rect_pos_x = std::round(rect.pos.x);
@@ -92,7 +92,7 @@ void draw_rect(Image& dst, CN<Rect> rect, const Pal8 col) {
 } // draw_rect
 
 template <blend_pf bf>
-void draw_rect_filled(Image& dst, CN<Rect> rect, const Pal8 col, const int optional) {
+void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, const int optional) {
   return_if( !dst);
   return_if (rect.size.x < 1 || rect.size.y < 1);
   cauto ex = rect.pos.x + rect.size.x;
@@ -132,7 +132,7 @@ int radius, const Pal8 col) {
 } // draw_circle_filled
 
 template <blend_pf bf>
-void insert(Image& dst, CN<Image> src, Vec pos, int optional) {
+void insert(Image& dst, cr<Image> src, Vec pos, int optional) {
   return_if( !src || !dst);
   
   pos = floor(pos);
@@ -176,7 +176,7 @@ void insert(Image& dst, CN<Image> src, Vec pos, int optional) {
 } // insert
 
 template<blend_pf bf>
-void insert_blink(Image& dst, CN<Image> src, Vec pos,
+void insert_blink(Image& dst, cr<Image> src, Vec pos,
 int timer, int optional) {
   return_if( !src || !dst);
 
@@ -228,7 +228,7 @@ int timer, int optional) {
 } // insert_blink
 
 template<blend_pf bf>
-void insert_interlace(Image& dst, CN<Image> src, Vec pos,
+void insert_interlace(Image& dst, cr<Image> src, Vec pos,
 int timer, int optional) {
   return_if( !src || !dst);
   
@@ -343,10 +343,10 @@ void draw_line(Image& dst, Vec _p1, const Vec _p2, Pal8 color) {
 } // draw_line
 
 template <blend_pf bf>
-void insert(Image& dst, CN<Sprite> src, Vec pos, int optional) {
+void insert(Image& dst, cr<Sprite> src, Vec pos, int optional) {
   return_if( !src || !dst);
-  nauto src_image {src.image()};
-  nauto src_mask {src.mask()};
+  rauto src_image {src.image()};
+  rauto src_mask {src.mask()};
   
   pos = floor(pos);
   auto bound = get_insertion_bound(dst, pos, src_image);
@@ -447,7 +447,7 @@ uint size) {
 }
 
 template <blend_pf bf>
-void insert_fast(Image& dst, CN<Image> src, int optional) {
+void insert_fast(Image& dst, cr<Image> src, int optional) {
   assert(dst.size >= src.size);
   cfor (i, dst.size)
     dst[i] = bf(src[i], dst[i], optional);

@@ -22,6 +22,6 @@ struct Anim_info {
   bool ignore_scatter {};
   bool disable_motion {};
 
-  void load(CN<Yaml> node);
+  void load(cr<Yaml> node);
   void accept(Entity& dst);
 };

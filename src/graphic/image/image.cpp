@@ -6,7 +6,7 @@
 #include "util/macro.hpp"
 #include "util/log.hpp"
 
-Image::Image(CN<Image> img) noexcept { init(img); }
+Image::Image(cr<Image> img) noexcept { init(img); }
 Image::Image(Image&& other) noexcept { *this = std::move(other); }
 
 Image& Image::operator = (Image&& other) noexcept {
@@ -19,7 +19,7 @@ Image& Image::operator = (Image&& other) noexcept {
   return *this;
 }
 
-Image& Image::operator = (CN<Image> other) noexcept {
+Image& Image::operator = (cr<Image> other) noexcept {
   return_if (this == std::addressof(other), *this);
   pix = other.pix;
   ccast<int&>(X) = other.X;
@@ -63,7 +63,7 @@ void Image::fill(const Pal8 col) noexcept
   { memset(scast<void*>(pix.data()), col.val, pix.size()); }
 
 // копирование
-void Image::init(CN<Image> img) noexcept {
+void Image::init(cr<Image> img) noexcept {
   return_if (this == std::addressof(img));
   init(img.X, img.Y);
   pix = img.pix;

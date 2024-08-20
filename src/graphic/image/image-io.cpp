@@ -11,12 +11,12 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 
-inline void _data_to_image(Image& dst, CN<Bytes> mem) {
+inline void _data_to_image(Image& dst, cr<Bytes> mem) {
   iferror(mem.empty(), "_data_to_image: mem.empty");
   // декодирование:
   int x, y;
   int comp; // сколько цветовых каналов
-  auto decoded = stbi_load_from_memory( scast<CP<stbi_uc>>(mem.data()),
+  auto decoded = stbi_load_from_memory( scast<cp<stbi_uc>>(mem.data()),
     mem.size(), &x, &y, &comp, STBI_rgb);
   iferror( !decoded, "_data_to_image: image data is not decoded");
 // переносим данные на растр:
@@ -34,19 +34,19 @@ inline void _data_to_image(Image& dst, CN<Bytes> mem) {
   stbi_image_free(decoded);
 } // _data_to_image
 
-void load(Image& dst, CN<Bytes> mem) {
+void load(Image& dst, cr<Bytes> mem) {
   detailed_log("Image.load_file(M)\n");
   _data_to_image(dst, mem);
 } // load
 
-void load(Image& dst, CN<Str> name) {
+void load(Image& dst, cr<Str> name) {
   detailed_log("Image.load_file(F) \"" << name << "\"\n");
   auto mem = mem_from_file(name);
   _data_to_image(dst, mem);
   dst.set_path(name);
 } // load
 
-void save(CN<Image> src, Str name) {
+void save(cr<Image> src, Str name) {
   assert(src);
   assert( !name.empty());
   

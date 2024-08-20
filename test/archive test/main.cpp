@@ -3,7 +3,7 @@
 #include "util/path.hpp"
 #include "util/log.hpp"
 
-void print_raw(CN<Bytes> raw) {
+void print_raw(cr<Bytes> raw) {
   if (raw.empty())
     return;
   Str str(raw.begin(), raw.end());
@@ -16,7 +16,7 @@ int main(int /*argc*/, char *argv[]) {
 
   hpw_log("\nfiles:\n");
   auto names {archive.get_all_names()};
-  for (cnauto name: names)
+  for (crauto name: names)
     hpw_log("\"" << name << "\"\n")
   hpw_log("\n");
 

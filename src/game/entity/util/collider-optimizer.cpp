@@ -102,7 +102,7 @@ struct Collider_optimizer::Impl {
   }
 
   inline void set_collider(std::size_t collider_idx) {
-    cnauto selected = m_collider_infos.at(collider_idx);
+    crauto selected = m_collider_infos.at(collider_idx);
     m_entity_mgr.set_collider(selected.maker());
   }
 }; // Impl

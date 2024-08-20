@@ -65,19 +65,19 @@ struct Entity_mgr::Impl {
 
   inline ~Impl() { clear(); }
 
-  inline CN<Entities> get_entities() const { return m_entities; }
+  inline cr<Entities> get_entities() const { return m_entities; }
 
-  inline void set_collider(CN<Shared<Collider>> new_collider)
+  inline void set_collider(cr<Shared<Collider>> new_collider)
     { m_collision_resolver = new_collider; }
 
   inline void draw(Image& dst, const Vec offset) const {
     return_if(!m_visible);
     // нарисовать нижний слой
-    for (cnauto entity: m_entities)
+    for (crauto entity: m_entities)
       if (entity->status.live && !entity->status.layer_up)
         entity->draw(dst, offset);
     // нарисовать верхний слой
-    for (cnauto entity: m_entities)
+    for (crauto entity: m_entities)
       if (entity->status.live && entity->status.layer_up)
         entity->draw(dst, offset);
   }
@@ -109,7 +109,7 @@ struct Entity_mgr::Impl {
   // применить список на добавление объектов из очереди m_registrate_list
   inline void accept_registrate_list() {
     m_entities.reserve(m_entities.size() + m_registrate_list.size());
-    for (nauto elem: m_registrate_list)
+    for (rauto elem: m_registrate_list)
       m_entities.emplace_back(std::move(elem));
     m_registrate_list.clear();
   }
@@ -117,9 +117,9 @@ struct Entity_mgr::Impl {
   // применить все взрывные волны к объектам
   inline void update_scatters() {
     if (!m_scatters.empty()) {
-      for (nauto entity: m_entities) {
+      for (rauto entity: m_entities) {
         if (entity->status.live && !entity->status.ignore_scatter) {
-          for (cnauto scatter: m_scatters)
+          for (crauto scatter: m_scatters)
             scatter.accept(*entity);
         }
       }
@@ -150,7 +150,7 @@ struct Entity_mgr::Impl {
   inline void update_entitys(const Delta_time dt) {
     assert(hpw::time_scale > 0);
 
-    for (nauto entity: m_entities) {
+    for (rauto entity: m_entities) {
       if (entity->status.live) {
         // изменять время для игрока и его объектов
         cauto player = get_player();
@@ -166,7 +166,7 @@ struct Entity_mgr::Impl {
     if (m_entities.empty())
       m_entity_pool.release();
 
-    for (nauto entity: m_entities) {
+    for (rauto entity: m_entities) {
       cont_if( !entity);
       cont_if( !entity->status.live);
 
@@ -196,27 +196,27 @@ struct Entity_mgr::Impl {
   inline Mem_pool& get_entity_pool() { return m_entity_pool; }
 
   // по type определяет какой Entity_loader создать и передать ему параметры с конфига
-  inline Shared<Entity_loader> make_entity_loader(CN<Str> type, CN<Yaml> config) {
+  inline Shared<Entity_loader> make_entity_loader(cr<Str> type, cr<Yaml> config) {
     // регистрация загрузчиков объектов
-    using Maker = std::function< Shared<Entity_loader> (CN<Yaml>) >;
+    using Maker = std::function< Shared<Entity_loader> (cr<Yaml>) >;
     std::unordered_map<Str, Maker> table {
-      {"explosion", [](CN<Yaml> config){ return new_shared<Explosion_loader>(config); } },
-      {"bonus", [](CN<Yaml> config){ return new_shared<Bonus_loader>(config); } },
-      {"bullet", [](CN<Yaml> config){ return new_shared<Bullet_loader>(config); } },
-      {"particle", [](CN<Yaml> config){ return new_shared<Particle_loader>(config); } },
-      {"enemy.illaen", [](CN<Yaml> config){ return new_shared<Illaen::Loader>(config); } },
-      {"enemy.cosmic.hunter", [](CN<Yaml> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
-      {"enemy.cosmic.waiter", [](CN<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
-      {"enemy.cosmic", [](CN<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
-      {"enemy.tutorial", [](CN<Yaml> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
-      {"snake.head", [](CN<Yaml> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
-      {"snake.tail", [](CN<Yaml> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
-      {"player.boo.dark", [](CN<Yaml> config){ return new_shared<Player_dark::Loader>(config); } },
+      {"explosion", [](cr<Yaml> config){ return new_shared<Explosion_loader>(config); } },
+      {"bonus", [](cr<Yaml> config){ return new_shared<Bonus_loader>(config); } },
+      {"bullet", [](cr<Yaml> config){ return new_shared<Bullet_loader>(config); } },
+      {"particle", [](cr<Yaml> config){ return new_shared<Particle_loader>(config); } },
+      {"enemy.illaen", [](cr<Yaml> config){ return new_shared<Illaen::Loader>(config); } },
+      {"enemy.cosmic.hunter", [](cr<Yaml> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
+      {"enemy.cosmic.waiter", [](cr<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
+      {"enemy.cosmic", [](cr<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
+      {"enemy.tutorial", [](cr<Yaml> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
+      {"snake.head", [](cr<Yaml> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
+      {"snake.tail", [](cr<Yaml> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
+      {"player.boo.dark", [](cr<Yaml> config){ return new_shared<Player_dark::Loader>(config); } },
     };
 
     try {
       return table.at(type)(config);
-    } catch (CN<std::out_of_range> ex) {
+    } catch (cr<std::out_of_range> ex) {
       error("тип загрузчика объекта \"" << type << "\" не зарегистрирован\n" << ex.what());
     }
 
@@ -229,7 +229,7 @@ struct Entity_mgr::Impl {
     #ifndef ECOMEM // при экономии памяти объекты подгружаются в момент вызова
       // загрузить все объекты из конфига
       auto config = load_entity_config();
-      for (cnauto entity_name: config.root_tags()) {
+      for (crauto entity_name: config.root_tags()) {
         auto entity_node = config[entity_name];
         auto type = entity_node.get_str("type", "error type");
         m_entity_loaders[entity_name] = make_entity_loader(type, entity_node);
@@ -237,7 +237,7 @@ struct Entity_mgr::Impl {
     #endif
   } // register_types
 
-  inline Entity* load_unknown_entity(Entity* master, CN<Str> name, const Vec pos) {
+  inline Entity* load_unknown_entity(Entity* master, cr<Str> name, const Vec pos) {
     // попытаться загрузить отсутствующий объект
     auto config = load_entity_config();
     auto entity_node = config[name];
@@ -246,13 +246,13 @@ struct Entity_mgr::Impl {
         
     try {
       return ( *m_entity_loaders.at(name) )(master, pos);
-    } catch (CN<std::out_of_range> ex) {
+    } catch (cr<std::out_of_range> ex) {
       error("нет инициализатора для \"" << name << "\"");
     }
     return {};
   }
 
-  inline Entity* make(Entity* master, CN<Str> name, const Vec pos) {
+  inline Entity* make(Entity* master, cr<Str> name, const Vec pos) {
     #ifdef ECOMEM
       return load_unknown_entity(master, name, pos);
     #endif
@@ -267,7 +267,7 @@ struct Entity_mgr::Impl {
       if (ret)
         ret->set_name(name);
       return ret;
-    } catch (CN<std::out_of_range> ex) {
+    } catch (cr<std::out_of_range> ex) {
       #ifdef ECOMEM
         return load_unknown_entity(master, name, pos);
       #else
@@ -286,7 +286,7 @@ struct Entity_mgr::Impl {
     #endif
   }
 
-  inline void add_scatter(CN<Scatter> scatter) {
+  inline void add_scatter(cr<Scatter> scatter) {
     return_if(scatter.power <= 0);
     return_if(scatter.range <= 0);
     m_scatters.emplace_back(scatter);
@@ -294,9 +294,9 @@ struct Entity_mgr::Impl {
 
   // удаление объектов за экраном
   inline void bound_check() {
-    for (nauto entity: m_entities) {
+    for (rauto entity: m_entities) {
       if (entity->status.live && !entity->status.ignore_bound) {
-        cnauto entity_pos = entity->phys.get_pos();
+        crauto entity_pos = entity->phys.get_pos();
         auto bound = entity->status.is_bullet ? shmup_bound_for_bullet : shmup_bound;
 
         // тихо убить объект, если он вышел за пределы
@@ -316,7 +316,7 @@ struct Entity_mgr::Impl {
 
   // возвращает первый попавшийся мёртвый объект нужного типа
   inline Entity* find_avaliable_entity(const Entity_type type) {
-    for (nauto entity: get_entities())
+    for (rauto entity: get_entities())
       if (entity->type == type && !entity->status.live)
         return entity.get();
     return {};
@@ -341,7 +341,7 @@ struct Entity_mgr::Impl {
 
   inline Entity* find(const Uid uid) const {
     auto it = std::find_if(m_entities.begin(), m_entities.end(),
-      [&](CN<decltype(m_entities)::value_type> entity)
+      [&](cr<decltype(m_entities)::value_type> entity)
       { return entity->status.live && entity->uid == uid; }
     );
     if (it != m_entities.end())
@@ -351,7 +351,7 @@ struct Entity_mgr::Impl {
 
   inline uint lives() const {
     uint count {};
-    for (cnauto ent: m_entities)
+    for (crauto ent: m_entities)
       count += ent->status.live;
     return count;
   }
@@ -370,16 +370,16 @@ void Entity_mgr::draw(Image& dst, const Vec offset) const { impl->draw(dst, offs
 void Entity_mgr::update(const Delta_time dt) { impl->update(dt); }
 void Entity_mgr::clear() { impl->clear(); }
 void Entity_mgr::clear_entities() { impl->clear_entities(); }
-void Entity_mgr::set_collider(CN<Shared<Collider>> new_collider) { impl->set_collider(new_collider); }
+void Entity_mgr::set_collider(cr<Shared<Collider>> new_collider) { impl->set_collider(new_collider); }
 void Entity_mgr::register_types() { impl->register_types(); }
-Entity* Entity_mgr::make(Entity* master, CN<Str> name, const Vec pos) { return impl->make(master, name, pos); }
+Entity* Entity_mgr::make(Entity* master, cr<Str> name, const Vec pos) { return impl->make(master, name, pos); }
 Entity* Entity_mgr::registrate(Entities::value_type&& entity) { return impl->registrate(std::move(entity)); }
-void Entity_mgr::add_scatter(CN<Scatter> scatter) { return impl->add_scatter(scatter); }
+void Entity_mgr::add_scatter(cr<Scatter> scatter) { return impl->add_scatter(scatter); }
 void Entity_mgr::debug_draw(Image& dst) const { impl->debug_draw(dst); }
 Mem_pool& Entity_mgr::get_phys_pool() { return impl->get_phys_pool(); }
 Mem_pool& Entity_mgr::get_hitbox_pool() { return impl->get_hitbox_pool(); }
 Mem_pool& Entity_mgr::get_entity_pool() { return impl->get_entity_pool(); }
-CN<Entities> Entity_mgr::get_entities() const { return impl->get_entities(); }
+cr<Entities> Entity_mgr::get_entities() const { return impl->get_entities(); }
 Entity* Entity_mgr::find_avaliable_entity(const Entity_type type) { return impl->find_avaliable_entity(type); }
 Player* Entity_mgr::get_player() const { return impl->get_player(); }
 void Entity_mgr::set_player(Player* player) { impl->set_player(player); }

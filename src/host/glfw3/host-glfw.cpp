@@ -489,12 +489,12 @@ void Host_glfw::init_icon() {
     cauto icon_file = hpw::archive->get_file(icon_name);
     int channels;
     icon.pixels = stbi_load_from_memory (
-      rcast<CP<stbi_uc>>(icon_file.data.data()), icon_file.data.size(),
+      rcast<cp<stbi_uc>>(icon_file.data.data()), icon_file.data.size(),
       &icon.width, &icon.height, &channels, 4
     );
     iferror(channels != 4, "цветовых каналов в изображении " << n2s(channels) << ", а нужно 4");
     glfwSetWindowIcon(m_window, 1, &icon); 
-  } catch (CN<hpw::Error> err) {
+  } catch (cr<hpw::Error> err) {
     hpw_log("не удалось установить иконку для окна.\nОшибка: " << err.what() << "\n");
   } catch (...) {
     hpw_log("не удалось установить иконку для окна. Неизвестная ошибка\n");

@@ -11,8 +11,8 @@ class Archive final: public Resource {
   zip_t *zip {};
   Bytes strm_buf {};
 
-  void _find_name_rec(CN<Str> fname, Strs& dst) const;
-  void _zip_check(int errcode, CN<Str> fname) const;
+  void _find_name_rec(cr<Str> fname, Strs& dst) const;
+  void _zip_check(int errcode, cr<Str> fname) const;
 
 public:
   explicit Archive(Str fname);

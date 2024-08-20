@@ -9,8 +9,8 @@ class Menu_text_item final: public Menu_item {
   std::function<utf32 ()> get_value = {};
 
 public:
-  explicit Menu_text_item(CN<utf32> _name, menu_item_ft&& _action,
-    decltype(get_value)&& _get_value = {}, CN<utf32> desc={});
+  explicit Menu_text_item(cr<utf32> _name, menu_item_ft&& _action,
+    decltype(get_value)&& _get_value = {}, cr<utf32> desc={});
   void enable() override;
   utf32 to_text() const override;
   utf32 get_description() const override;

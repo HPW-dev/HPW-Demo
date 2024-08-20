@@ -2,11 +2,17 @@
 
 #define cauto const auto
 #define scauto static const auto
-#define cnauto const auto&
-#define nauto auto&
+#define crauto const auto&
+#define rauto auto&
 #define sconst static const
 #define constx constexpr static const
 #define cautox constexpr static const auto
+
+template <class T>
+using cr = const T&;
+
+template <class T>
+using cp = const T*;
 
 template <class T>
 inline constexpr T scast(auto&& val) { return static_cast<T>(val); }
@@ -21,22 +27,14 @@ template <class T>
 inline constexpr T ccast(auto&& val) { return const_cast<T>(val); }
 
 template <class T>
-inline constexpr T ptr2ptr(auto* src) { return static_cast<T>( static_cast<void*>(src) ); }
+inline constexpr T ptr2ptr(auto* src) { return scast<T>( scast<void*>(src) ); }
 
 template <class T>
-inline constexpr T cptr2ptr(auto* src) { return static_cast<T>( static_cast<const void*>(src) ); }
+inline constexpr T cptr2ptr(auto* src) { return scast<T>( scast<cp<void>>(src) ); }
 
-template <class T>
-using CN = const T&;
-
-template <class T>
-using CP = const T*;
-
-inline constexpr const char* s2yn(const bool cond) { return cond ? "yes" : "no"; }
-
-// for с авто определением типа индекса
-#define cfor(index_name, maximum) \
-for (auto index_name = decltype(maximum){0}; index_name < maximum; ++index_name)
+// for с автоопределением типа индекса
+#define cfor(index_name, sz) \
+for (auto index_name = decltype(sz){}; index_name < sz; ++index_name)
 
 // применяет expr для container
 #define cppfor(container, expr) \
@@ -58,9 +56,9 @@ do { \
 // макрос для классов запрещающий копирование
 #define nocopy(name) \
 name(name&&) = delete; \
-name(CN<name>) = delete; \
+name(cr<name>) = delete; \
 name& operator = (name&&) = delete; \
-name& operator = (CN<name>) = delete;
+name& operator = (cr<name>) = delete;
 
 // для обмана оптимизатора
 #if defined(__clang__)

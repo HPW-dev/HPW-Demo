@@ -8,10 +8,10 @@ public:
   using Content_getter = std::function<utf32 ()>;
   using Content_getters = Vector<Content_getter>;
 
-  explicit Menu_item_table_row(CN<Action> action,
-    CN<Content_getters> content_getters);
+  explicit Menu_item_table_row(cr<Action> action,
+    cr<Content_getters> content_getters);
   void enable() override;
-  CN<Content_getters> get_content_getters() const;
+  cr<Content_getters> get_content_getters() const;
 
 private:
   Action m_action {}; // действие при выборе строки таблицы

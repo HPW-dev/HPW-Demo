@@ -12,7 +12,7 @@ struct Blink_text::Impl {
   mutable Timer m_timeout {};
   utf32 m_txt {};
 
-  inline Impl(const Delta_time timeout, CN<utf32> txt)
+  inline Impl(const Delta_time timeout, cr<utf32> txt)
   : m_timeout {timeout}
   , m_txt {txt}
   {
@@ -40,6 +40,6 @@ struct Blink_text::Impl {
 }; // impl
 
 Blink_text::~Blink_text() {}
-Blink_text::Blink_text(const Delta_time timeout, CN<utf32> txt): impl { new_unique<Impl>(timeout, txt) } {}
+Blink_text::Blink_text(const Delta_time timeout, cr<utf32> txt): impl { new_unique<Impl>(timeout, txt) } {}
 bool Blink_text::update(const Delta_time dt) { return impl->update(dt); }
 void Blink_text::draw(Image& dst) const { impl->draw(dst); }

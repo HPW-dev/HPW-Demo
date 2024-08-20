@@ -9,7 +9,7 @@
 #include "util/log.hpp"
 #include "util/math/vec-util.hpp"
 
-Sprite rotate_and_optimize(CN<Sprite> src, real degree, Vec& offset,
+Sprite rotate_and_optimize(cr<Sprite> src, real degree, Vec& offset,
 const Vec rotation_offset, Color_get_pattern cgp, Color_compute ccf) {
   assert(src);
   // выйти, если ничего не поворачивается

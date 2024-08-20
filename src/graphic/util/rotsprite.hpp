@@ -13,7 +13,7 @@ class Image;
 * @param cgp метод выборки пикселей из исходника при даунскейле
 * @param ccf метод определения цвета при даунскейле */
 Sprite rotate_and_optimize(
-  CN<Sprite> src, real degree, Vec& offset,
+  cr<Sprite> src, real degree, Vec& offset,
   const Vec rotation_offset = {},
   Color_get_pattern cgp = Color_get_pattern::cross,
   Color_compute ccf = Color_compute::most_common

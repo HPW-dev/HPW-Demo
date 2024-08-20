@@ -20,7 +20,7 @@ void adaptive_blur(Image& dst, int window_sz) {
       accum += src.get(x + wx, y + wy, Image_get::MIRROR).to_real();
 
     accum *= accum_mul;
-    nauto dst_pix = dst(x, y);
+    rauto dst_pix = dst(x, y);
     dst_pix = Pal8::from_real(accum, dst_pix.is_red());
   }
 } // adaptive_blur
@@ -63,7 +63,7 @@ void blur_fast(Image& dst, int window_sz) {
       accum += dst[i + wi].to_real();
     accum *= accum_mul;
 
-    nauto dst_pix = dst[i];
+    rauto dst_pix = dst[i];
     dst_pix = Pal8::from_real(accum, dst_pix.is_red());
   }
 } // blur_fast

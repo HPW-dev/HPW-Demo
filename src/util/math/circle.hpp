@@ -7,8 +7,8 @@ struct Circle {
   real r; // radius
 
   // проверить пересечения двух кругов
-  bool is_collided(const Vec this_pos, const Vec other_pos, CN<Circle> other) const;
-  bool operator ==(CN<Circle> other) const;
-  bool operator !=(CN<Circle> other) const;
+  bool is_collided(const Vec this_pos, const Vec other_pos, cr<Circle> other) const;
+  bool operator ==(cr<Circle> other) const;
+  bool operator !=(cr<Circle> other) const;
   operator bool() const;
 };

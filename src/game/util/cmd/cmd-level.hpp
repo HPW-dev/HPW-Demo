@@ -9,7 +9,7 @@ public:
   ~Cmd_levels() = default;
   inline Str name() const override { return "levels"; }
   inline Str description() const override { return "print list of all game-levels"; }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // выбрать уровень
@@ -23,8 +23,8 @@ public:
     return "select level by level name (seed levels command output). "
       "example: level tutorial";
   }
-  void exec(CN<Strs> cmd_and_args) override;
-  Strs command_matches(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
+  Strs command_matches(cr<Strs> cmd_and_args) override;
 };
 
 // перезапустить уровень
@@ -35,5 +35,5 @@ public:
   ~Cmd_restart() = default;
   inline Str name() const override { return "restart"; }
   inline Str description() const override { return "restart current game-level & reload resources"; }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };

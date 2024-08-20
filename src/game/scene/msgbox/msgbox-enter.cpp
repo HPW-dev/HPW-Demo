@@ -17,7 +17,7 @@ struct Scene_msgbox_enter::Impl {
   Action m_action {};
   Image m_bg {};
 
-  inline Impl(CN<utf32> msg, CN<utf32> title, CN<Action> action)
+  inline Impl(cr<utf32> msg, cr<utf32> title, cr<Action> action)
   : m_msg {msg}
   , m_title {title}
   , m_action {action}
@@ -69,7 +69,7 @@ struct Scene_msgbox_enter::Impl {
   } // make_bg
 }; // Impl
 
-Scene_msgbox_enter::Scene_msgbox_enter(CN<utf32> msg, CN<utf32> title, CN<Action> action)
+Scene_msgbox_enter::Scene_msgbox_enter(cr<utf32> msg, cr<utf32> title, cr<Action> action)
   : impl {new_unique<Impl>(msg, title, action)} {}
 Scene_msgbox_enter::~Scene_msgbox_enter() {}
 void Scene_msgbox_enter::update(const Delta_time dt) { impl->update(dt); }

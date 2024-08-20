@@ -7,7 +7,7 @@ public:
   ~Cmd_exit() = default;
   inline Str name() const override { return "exit"; }
   inline Str description() const override { return "exit from game";  }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // команда кидающая hpw::Error исключение
@@ -16,7 +16,7 @@ public:
   ~Cmd_error() = default;
   inline Str name() const override { return "error"; }
   inline Str description() const override { return "throw hpw::Error with message";  }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // вывод текста в консоль и на экран
@@ -28,7 +28,7 @@ public:
   inline Str name() const override { return "print"; }
   inline Str description() const override
     { return "print <message> print text to screen & console"; }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // назначить команде короткое имя
@@ -40,8 +40,8 @@ public:
   inline Str name() const override { return "alias"; }
   inline Str description() const override
     { return "alias <name> <command> <args...> set short name for command + parameters";  }
-  void exec(CN<Strs> cmd_and_args) override;
-  Strs command_matches(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
+  Strs command_matches(cr<Strs> cmd_and_args) override;
 };
 
 // включение/отключение вывода в косоль
@@ -53,7 +53,7 @@ public:
   inline Str name() const override { return "log_console"; }
   inline Str description() const override
     { return "log_console <1/0> enable/disable printing text to console";  }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // включение/отключение вывода на экран
@@ -65,7 +65,7 @@ public:
   inline Str name() const override { return "log_screen"; }
   inline Str description() const override
     { return "log_screen <1/0> enable/disable printing text to game screen"; }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // показать справку по всем командам
@@ -77,7 +77,7 @@ public:
   inline Str name() const override { return "help"; }
   inline Str description() const override 
     { return "print this help"; }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // очистка консоли от текста
@@ -86,7 +86,7 @@ public:
   ~Cmd_cls() = default;
   inline Str name() const override { return "cls"; }
   inline Str description() const override { return "clear log messages"; }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // игнорируемый коммент
@@ -95,7 +95,7 @@ public:
   ~Cmd_comment() = default;
   inline Str name() const override { return "#"; }
   inline Str description() const override { return "start of one-line commentary"; }
-  inline void exec(CN<Strs> cmd_and_args) override {}
+  inline void exec(cr<Strs> cmd_and_args) override {}
 };
 
 void cmd_common_init(Cmd& cmd);

@@ -14,7 +14,7 @@ class Exec_script final: public Task {
   Str m_fname {};
 
 public:
-  inline Exec_script(CN<Str> _fname): m_fname {_fname}
+  inline Exec_script(cr<Str> _fname): m_fname {_fname}
     { conv_sep(m_fname); }
 
   inline void on_start() {
@@ -44,7 +44,7 @@ public:
     /* читать и выполнять строки из файла 
     по порядку, в конце завершить процесс */
     Str line;
-    cnauto status = std::getline(m_file, line);
+    crauto status = std::getline(m_file, line);
     if (status)
       hpw::cmd.exec(line);
     else
@@ -57,7 +57,7 @@ class Exec_script_instant final: public Task {
   Str m_fname {};
 
 public:
-  inline Exec_script_instant(CN<Str> fname): m_fname {fname}
+  inline Exec_script_instant(cr<Str> fname): m_fname {fname}
     { conv_sep(m_fname); }
 
   inline void on_end() { m_fname.clear(); }
@@ -93,13 +93,13 @@ public:
   }
 }; // Exec_script_instant
 
-void Cmd_script::exec(CN<Strs> cmd_and_args) {
+void Cmd_script::exec(cr<Strs> cmd_and_args) {
   iferror(cmd_and_args.size() < 2, "need more parameters in script command");
   cauto fname = cmd_and_args.at(1);
   hpw::task_mgr.add( new_shared<Exec_script>(fname) );
 }
 
-void Cmd_script_instant::exec(CN<Strs> cmd_and_args) {
+void Cmd_script_instant::exec(cr<Strs> cmd_and_args) {
   iferror(cmd_and_args.size() < 2, "need more parameters in script_instant command");
   cauto fname = cmd_and_args.at(1);
   hpw::task_mgr.add( new_shared<Exec_script_instant>(fname) );

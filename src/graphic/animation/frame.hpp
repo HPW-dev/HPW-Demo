@@ -36,17 +36,17 @@ public:
   void reinit_directions_by_source();
   void clear_directions();
   // получить угол поворота по градусам поворота
-  CP<Direct> get_direct(real degree) const;
+  cp<Direct> get_direct(real degree) const;
   inline decltype(directions)& get_directions() { return directions; }
-  inline CN<decltype(directions)> get_directions() const { return directions; }
+  inline cr<decltype(directions)> get_directions() const { return directions; }
   // получить смещения всех внутренних кадров поворота
   Vector<Vec> get_offsets() const;
-  CN<Str> get_name() const;
+  cr<Str> get_name() const;
 
   Frame();
   ~Frame() = default;
-  Frame(CN<Frame> other);
-  Frame& operator = (CN<Frame> other);
+  Frame(cr<Frame> other);
+  Frame& operator = (cr<Frame> other);
   Frame(Frame&& other) noexcept;
   Frame& operator = (Frame&& other) noexcept;
 }; // Frame

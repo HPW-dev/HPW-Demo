@@ -22,7 +22,7 @@ struct Message_mgr::Impl {
     assert(dt == hpw::target_update_time);
 
     // обновить таймер жизни сообщений и удалить истёкшие
-    std::erase_if(m_messages, [dt](nauto msg) {
+    std::erase_if(m_messages, [dt](rauto msg) {
       bool ret = msg.lifetime <= 0;
       msg.lifetime -= dt;
       if (ret && msg.on_end_action)
@@ -36,7 +36,7 @@ struct Message_mgr::Impl {
 
     // определить какую область занимают все сообщения
     utf32 concated;
-    for (cnauto msg: m_messages) {
+    for (crauto msg: m_messages) {
       concated += msg.text;
       if (msg.text_gen)
         concated += msg.text_gen();
@@ -46,7 +46,7 @@ struct Message_mgr::Impl {
       {dst.X, dst.Y}, graphic::font->text_size(concated));
 
     // нарисовать каждую строку со своими настройками
-    for (cnauto msg: m_messages) {
+    for (crauto msg: m_messages) {
       auto text = msg.text;
       if (msg.text_gen)
         text += msg.text_gen();
@@ -61,7 +61,7 @@ struct Message_mgr::Impl {
   } // draw
 
   // проверяет сообщение на валидность
-  inline void test_message(CN<Message> msg) const {
+  inline void test_message(cr<Message> msg) const {
     assert(!msg.text.empty() || msg.text_gen);
     assert(msg.blink_delay < 1000u);
     assert(msg.blink_delay == 0 || msg.blink_delay > 1);
@@ -71,7 +71,7 @@ struct Message_mgr::Impl {
 
   inline void clear() { m_messages.clear(); }
   inline void set_visible(const bool enable) { m_visible = enable; }
-  inline CN<Messages> messages() const { return m_messages; }
+  inline cr<Messages> messages() const { return m_messages; }
 }; // Impl
 
 Message_mgr::Message_mgr(): impl{new_unique<Impl>()} {}
@@ -81,4 +81,4 @@ void Message_mgr::update(const Delta_time dt) { impl->update(dt); }
 void Message_mgr::draw(Image& dst) const { impl->draw(dst); }
 void Message_mgr::clear() { impl->clear(); }
 void Message_mgr::set_visible(const bool enable) { impl->set_visible(enable); }
-CN<Message_mgr::Messages> Message_mgr::messages() const { return impl->messages(); }
+cr<Message_mgr::Messages> Message_mgr::messages() const { return impl->messages(); }

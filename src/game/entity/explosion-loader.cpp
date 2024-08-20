@@ -28,7 +28,7 @@ struct Explosion_loader::Impl {
   Strs m_entity_names {};
   Heat_distort m_heat_distort {};
 
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     m_anim_info.load(config["animation"]);
 
     m_power = config.get_real("power");
@@ -76,7 +76,7 @@ struct Explosion_loader::Impl {
 
 }; // Impl
 
-Explosion_loader::Explosion_loader(CN<Yaml> config)
+Explosion_loader::Explosion_loader(cr<Yaml> config)
 : impl {new_unique<Impl>(config)}
 {}
 

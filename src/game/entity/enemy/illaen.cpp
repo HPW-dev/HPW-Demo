@@ -65,7 +65,7 @@ void Illaen::make_particles(const Delta_time dt) {
 struct Illaen::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     /*cauto animations = config.get_v_str("animations");
     m_info.state_1 = hpw::anim_mgr->find_anim(animations.at(0)).get();
     m_info.state_2 = hpw::anim_mgr->find_anim(animations.at(1)).get();
@@ -105,7 +105,7 @@ struct Illaen::Loader::Impl {
   } // op ()
 }; // Impl
 
-Illaen::Loader::Loader(CN<Yaml> config)
+Illaen::Loader::Loader(cr<Yaml> config)
 : Proto_enemy::Loader(config)
 , impl{new_unique<Impl>(config)}
 {}

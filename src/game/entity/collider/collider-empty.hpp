@@ -8,5 +8,5 @@ class Collider_empty final: public Collider {
 public:
   Collider_empty() = default;
   ~Collider_empty() = default;
-  inline void operator()(CN<Entities> entities, Delta_time dt) override {}
+  inline void operator()(cr<Entities> entities, Delta_time dt) override {}
 };

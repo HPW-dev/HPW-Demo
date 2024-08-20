@@ -34,7 +34,7 @@ class Collider_qtree::Qtree final {
     { return std::max(b, std::min(a, c)); }
 
   // https://www.tutorialspoint.com/circle-and-rectangle-overlapping-in-cplusplus
-  static inline bool intersect(CN<Rect> a, CN<Circle> b) {
+  static inline bool intersect(cr<Rect> a, cr<Circle> b) {
     auto cx = b.offset.x;
     auto cy = b.offset.y;
     auto r = b.r;
@@ -61,7 +61,7 @@ public:
 
   ~Qtree() = default;
 
-  inline Qtree(CN<Rect> _bound, std::size_t _depth, std::size_t _max_depth,
+  inline Qtree(cr<Rect> _bound, std::size_t _depth, std::size_t _max_depth,
   std::size_t _entity_limit)
   : bound( _bound )
   , depth( _depth )
@@ -134,7 +134,7 @@ public:
     ld->m_master = m_master;
     rd->m_master = m_master;
     // перенос объектов из ветки выше в новые
-    for (nauto entity: m_entitys)
+    for (rauto entity: m_entitys)
       add(*entity);
     m_entitys.clear();
   } // split
@@ -165,10 +165,10 @@ public:
   } // draw
 
   // найти соседей в области area
-  inline void find(CN<Circle> area, Collidables& list) const {
+  inline void find(cr<Circle> area, Collidables& list) const {
     if (intersect(this->bound, area)) {
       // так быстрее, чем std::copy или list.insert
-      for (cnauto en: m_entitys)
+      for (crauto en: m_entitys)
         list.emplace_back(en);
 
       if (have_branches) {
@@ -213,7 +213,7 @@ std::size_t X, std::size_t Y) {
   root->m_master = this;
 }
 
-void Collider_qtree::operator()(CN<Entities> entities, Delta_time dt) {
+void Collider_qtree::operator()(cr<Entities> entities, Delta_time dt) {
   auto filtered_entitys = update_qtree(entities);
   update_pairs(filtered_entitys);
 
@@ -222,11 +222,11 @@ void Collider_qtree::operator()(CN<Entities> entities, Delta_time dt) {
     Vector<Collision_pair> tmp_pairs(collision_pairs.begin(), collision_pairs.end());
     #pragma omp parallel for schedule(dynamic, 4)
     cfor (i, tmp_pairs.size()) {
-      cnauto pair = tmp_pairs[i];
+      crauto pair = tmp_pairs[i];
       test_collide_pair(*pair.first, *pair.second);
     }
   } else {
-    for (cnauto pair: collision_pairs)
+    for (crauto pair: collision_pairs)
       test_collide_pair(*pair.first, *pair.second);
   }
 }
@@ -242,7 +242,7 @@ void Collider_qtree::debug_draw(Image& dst, const Vec camera_offset) {
   root->draw(dst, camera_offset);
 }
 
-Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
+Collidables Collider_qtree::update_qtree(cr<Entities> entities) {
   Collidables ret; // объекты пригодные к сталкиванию
 
   #ifdef ECOMEM
@@ -258,7 +258,7 @@ Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
   #endif
   
   // перестроить всё дерево заново
-  for (nauto entity_p: entities) {
+  for (rauto entity_p: entities) {
     assert(entity_p);
     // проверить что объект может сталкиваться и что он жив
     if (entity_p->status.live && entity_p->status.collidable) {
@@ -271,7 +271,7 @@ Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
   return ret;
 } // update_qtree
 
-void Collider_qtree::update_pairs(CN<Collidables> entities) {
+void Collider_qtree::update_pairs(cr<Collidables> entities) {
   collision_pairs.clear();
 
   if (entities.size() >= MAX_ENTS_FOR_MULTY_UPDATE) {
@@ -286,7 +286,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
     static Vector<decltype(collision_pairs)> list_table;
     static Vector<Collidables> lists;
     list_table.resize(th_max);
-    for (nauto table: list_table)
+    for (rauto table: list_table)
       table.clear();
     lists.resize(th_max);
 
@@ -295,7 +295,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
     #pragma omp parallel for \
       schedule(dynamic) \
       shared(root, list_table)
-    for (nauto entity: entities) {
+    for (rauto entity: entities) {
       auto hitbox = entity->get_hitbox();
       cont_if(!hitbox);
       // узнать какой сейчас поток
@@ -312,7 +312,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
       root->find(area, lists[th_idx]);
 
       // добавить этих соседей в пары на проверки
-      for (nauto other: lists[th_idx]) {
+      for (rauto other: lists[th_idx]) {
         auto addr_a = entity;
         auto addr_b = other;
         cont_if (!addr_a->collision_possible(*addr_b));
@@ -324,8 +324,8 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
     } // for entities
 
     // объединение листов с потоков в релизный collision_pairs
-    for (cnauto table: list_table) {
-      for (nauto it: table) {
+    for (crauto table: list_table) {
+      for (rauto it: table) {
         auto addr_a = it.first;
         auto addr_b = it.second;
         cont_if (!addr_a->collision_possible(*addr_b));
@@ -338,7 +338,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
   } else { // вариант без многопотока
     /* проверить области вокруг каждой точки и закинуть в пару
     коллизии соседние ноды входящие в область */
-    for (nauto entity: entities) {
+    for (rauto entity: entities) {
       auto hitbox = entity->get_hitbox();
       cont_if(!hitbox);
       auto pos = entity->phys.get_pos();
@@ -351,7 +351,7 @@ void Collider_qtree::update_pairs(CN<Collidables> entities) {
       root->find(area, list);
 
       // добавить этих соседей в пары на проверки
-      for (nauto other: list) {
+      for (rauto other: list) {
         auto addr_a = entity;
         auto addr_b = other;
         cont_if (!addr_a->collision_possible(*addr_b));

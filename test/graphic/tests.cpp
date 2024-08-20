@@ -105,11 +105,11 @@ inline void image_check() {
   hpw_assert(dummy.size == 3*5);
   // проверка заливки при ините
   dummy.init(5, 5, Pal8::red);
-  for (cnauto pix: dummy)
+  for (crauto pix: dummy)
     hpw_assert(pix == Pal8::red);
   // проверка заливки отдельно
   dummy.fill(Pal8::white);
-  for (cnauto pix: dummy)
+  for (crauto pix: dummy)
     hpw_assert(pix == Pal8::white);
   // ресайз до того же размера
   dummy.init(5, 5);
@@ -175,8 +175,8 @@ inline void sprite_check() {
   hpw_assert(dummy.X() == 3);
   hpw_assert(dummy.Y() == 5);
   // тест размера маски и картинки
-  cnauto mask = dummy.mask();
-  cnauto image = dummy.image();
+  crauto mask = dummy.mask();
+  crauto image = dummy.image();
   hpw_assert(mask);
   hpw_assert(mask.X == 3);
   hpw_assert(mask.Y == 5);
@@ -243,7 +243,7 @@ void graphic_tests() {
     image_check();
     sprite_check();
     util_check();
-  } catch (CN<hpw::Error> ex) {
+  } catch (cr<hpw::Error> ex) {
     std::cerr << ex.what() << std::endl;
     std::terminate();
   }

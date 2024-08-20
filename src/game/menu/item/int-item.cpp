@@ -4,8 +4,8 @@
 #include "game/util/locale.hpp"
 #include "util/str-util.hpp"
 
-Menu_int_item::Menu_int_item(CN<utf32> new_name, Get_value _get_value,
-Set_value _set_value, int _speed_step, CN<utf32> desc)
+Menu_int_item::Menu_int_item(cr<utf32> new_name, Get_value _get_value,
+Set_value _set_value, int _speed_step, cr<utf32> desc)
 : name(new_name)
 , m_desc{desc}
 , get_value_f(_get_value)

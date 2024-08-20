@@ -50,7 +50,7 @@ struct Keys_info {
   };
   Vector<Item> keys {};
 
-  CP<Item> find(hpw::keycode hpw_key) const;
+  cp<Item> find(hpw::keycode hpw_key) const;
 }; // Keys_info
 
 namespace hpw {

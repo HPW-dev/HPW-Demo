@@ -20,13 +20,13 @@ void set_target_ups(int new_ups) {
   hpw::target_update_time = 1.0 / hpw::target_ups;
 }
 
-Vector<GLfloat> load_ogl_palette(CN<Str> fname) {
+Vector<GLfloat> load_ogl_palette(cr<Str> fname) {
   // загрузка png
   int x, y;
   int comp; // сколько цветовых каналов
   assert(hpw::archive);
   cauto mem = hpw::archive->get_file(fname);
-  cauto mem_data = cptr2ptr<CP<stbi_uc>>(mem.data.data());
+  cauto mem_data = cptr2ptr<cp<stbi_uc>>(mem.data.data());
   auto decoded = stbi_load_from_memory(mem_data, mem.data.size(), &x, &y, &comp, STBI_rgb);
   iferror( !decoded, "image data is not decoded");
   iferror(x < 256, "ширина картинки должна быть не меньше 256");

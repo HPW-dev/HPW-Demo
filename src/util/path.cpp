@@ -3,33 +3,33 @@
 #include "str-util.hpp"
 #include "util/path.hpp"
 
-Str get_filename(CN<Str> str) {
+Str get_filename(cr<Str> str) {
   std::filesystem::path path(str);
   return path.stem().string();
 }
 
-Str get_fileext(CN<Str> str) {
+Str get_fileext(cr<Str> str) {
   std::filesystem::path path(str);
   return path.extension().string();
 }
 
-Str get_filedir(CN<Str> str)
+Str get_filedir(cr<Str> str)
   { return str.substr(0, str.find_last_of(SEPARATOR)); }
 
-Strs files_in_dir(CN<Str> path) {
+Strs files_in_dir(cr<Str> path) {
   Strs ret = {};
-  for (cnauto entry : std::filesystem::directory_iterator(path))
+  for (crauto entry : std::filesystem::directory_iterator(path))
     ret.push_back(entry.path().string());
   return ret;
 }
 
-void make_dir_if_not_exist(CN<Str> dir) {
+void make_dir_if_not_exist(cr<Str> dir) {
   namespace fs = std::filesystem;
   try {
     // Check if src folder exists
     if ( !fs::is_directory(dir) || !fs::exists(dir))
       fs::create_directory(dir);
-  } catch (CN<fs::filesystem_error> err) {
+  } catch (cr<fs::filesystem_error> err) {
     // TODO надо правильно создать папку в рус-директории
   }
 }

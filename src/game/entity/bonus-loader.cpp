@@ -4,7 +4,7 @@
 #include "util/error.hpp"
 
 struct Bonus_loader::Impl {
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     // TODO
   }
 
@@ -13,7 +13,7 @@ struct Bonus_loader::Impl {
   }
 }; // Impl
 
-Bonus_loader::Bonus_loader(CN<Yaml> config)
+Bonus_loader::Bonus_loader(cr<Yaml> config)
 : impl {new_unique<Impl>(config)}
 {}
 

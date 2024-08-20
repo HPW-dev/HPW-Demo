@@ -18,12 +18,12 @@ struct Glyph {
   int xoff {}, yoff {};
 };
 
-Unifont::Unifont(CN<Str> fname, int height, bool mono)
+Unifont::Unifont(cr<Str> fname, int height, bool mono)
 : Unifont( File{mem_from_file(fname), fname}, height, mono) {
   detailed_log("Unifont: loading (file):\""<< fname <<"\"\n");
 }
 
-Unifont::Unifont(CN<File> file, int height, bool mono)
+Unifont::Unifont(cr<File> file, int height, bool mono)
 : mono_(mono), font_file_mem_(file.data) {
   detailed_log("Unifont.c-tor: loading font\n");
   w_ = 0; // auto
@@ -38,7 +38,7 @@ Unifont::Unifont(CN<File> file, int height, bool mono)
     _load_glyph(i);
 } // Unifontmem  c-tor
 
-int Unifont::text_width(CN<utf32> text) const {
+int Unifont::text_width(cr<utf32> text) const {
   int size = 0;
   int max_size = 0;
   for (auto ch: text) {
@@ -54,7 +54,7 @@ int Unifont::text_width(CN<utf32> text) const {
 } // text_width
 
 
-void Unifont::draw(Image& dst, const Vec pos, CN<utf32> text,
+void Unifont::draw(Image& dst, const Vec pos, cr<utf32> text,
 blend_pf bf, const int optional) const {
   int posx = pos.x;
   int posy = pos.y;
@@ -74,7 +74,7 @@ blend_pf bf, const int optional) const {
   } // for text size
 } // draw
 
-CP<Glyph> Unifont::_get_glyph(char32_t ch) const {
+cp<Glyph> Unifont::_get_glyph(char32_t ch) const {
   // найти символ в кэше
   try {
     return glyph_table.at(ch).get();
@@ -116,14 +116,14 @@ bool Unifont::_load_glyph(char32_t ch) const {
   if (mono_) {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
-      cnauto pix = bitmap[y * bitmap_w + x];
+      crauto pix = bitmap[y * bitmap_w + x];
       glyph->image.image().fast_set(x, y, pix > 127 ? Pal8::white : Pal8::black, {});
       glyph->image.mask().fast_set(x, y, pix > 127 ? Pal8::mask_visible : Pal8::mask_invisible, {});
     }
   } else {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
-      cnauto pix = bitmap[y * bitmap_w + x];
+      crauto pix = bitmap[y * bitmap_w + x];
       glyph->image.image().fast_set(x, y, Pal8::get_gray(pix), {});
       glyph->image.mask().fast_set(x, y, Pal8::mask_visible, {});
     }

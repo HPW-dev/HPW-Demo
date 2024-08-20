@@ -74,9 +74,9 @@ struct Node {
     b->area = area_b;
 
     // поделить объекты по ветвям
-    for (cnauto ent: list) {
+    for (crauto ent: list) {
       cauto pos = ent->phys.get_pos();
-      cnauto hitbox = ent->get_hitbox();
+      crauto hitbox = ent->get_hitbox();
       assert(hitbox);
       // учесть размеры хитбокса
       lu.x = pos.x + hitbox->simple.offset.x - hitbox->simple.r;
@@ -116,7 +116,7 @@ struct Node {
     // найти крайние точки слева сверху и справа снизу
     lu = { 1'000'000,  1'000'000};
     rd = {-1'000'000, -1'000'000};
-    for (cnauto ent: list) {
+    for (crauto ent: list) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
       lu.y = std::min(lu.y, pos.y);
@@ -174,9 +174,9 @@ struct Collider_2d_tree::Impl {
   }
 
   // получить список объектов доступных для столкновения
-  inline static Collidables collidable_filter(CN<Entities> entities) {
+  inline static Collidables collidable_filter(cr<Entities> entities) {
     Collidables ret;
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       assert(ent);
       cont_if (!ent->status.live);
       cont_if (!ent->status.collidable);
@@ -188,7 +188,7 @@ struct Collider_2d_tree::Impl {
     return ret;
   }
  
-  inline void operator()(CN<Entities> entities, Delta_time dt) {
+  inline void operator()(cr<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
     return_if(collidables.size() < 2);
 
@@ -202,11 +202,11 @@ struct Collider_2d_tree::Impl {
   }
 
   // определить в каких пределах работает алгоритм
-  inline void find_area(CN<Collidables> entities) {
+  inline void find_area(cr<Collidables> entities) {
     // найти крайние точки слева сверху и справа снизу
     Vec lu { 1'000'000,  1'000'000};
     Vec rd {-1'000'000, -1'000'000};
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
       lu.y = std::min(lu.y, pos.y);
@@ -218,7 +218,7 @@ struct Collider_2d_tree::Impl {
     m_world.size = rd - lu;
   }
 
-  inline void make_tree(CN<Collidables> entities) {
+  inline void make_tree(cr<Collidables> entities) {
     find_area(entities);
     if (!m_root)
       init_unique(m_root);
@@ -238,7 +238,7 @@ struct Collider_2d_tree::Impl {
   }
 
   // определяет глубину построения дерева по количеству объектов
-  inline uint get_depth(CN<Collidables> entities) const {
+  inline uint get_depth(cr<Collidables> entities) const {
     cauto entities_sz = entities.size();
     assert(entities_sz > 1);
 
@@ -251,5 +251,5 @@ struct Collider_2d_tree::Impl {
 
 Collider_2d_tree::Collider_2d_tree(uint depth): impl {new_unique<Impl>(depth)} {}
 Collider_2d_tree::~Collider_2d_tree() {}
-void Collider_2d_tree::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
+void Collider_2d_tree::operator()(cr<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_2d_tree::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }

@@ -8,7 +8,7 @@ class Hitbox;
 
 namespace anim_ctx_util {
 // получить хитбокс анимации
-CP<Hitbox> get_hitbox(CN<Anim_ctx> anim_ctx, real degree, CN<Entity> entity);
+cp<Hitbox> get_hitbox(cr<Anim_ctx> anim_ctx, real degree, cr<Entity> entity);
 // назначить новых хитбокс
-void update_hitbox(Anim_ctx& anim_ctx, CN<Pool_ptr(Hitbox)> hitbox);
+void update_hitbox(Anim_ctx& anim_ctx, cr<Pool_ptr(Hitbox)> hitbox);
 }

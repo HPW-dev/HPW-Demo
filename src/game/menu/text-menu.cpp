@@ -3,7 +3,7 @@
 #include "item/item.hpp"
 #include "game/core/fonts.hpp"
 
-Text_menu::Text_menu(CN<Menu_items> _items, const Vec _draw_pos)
+Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos)
 : Menu(_items), draw_pos(_draw_pos) {}
 
 void Text_menu::draw(Image& dst) const {

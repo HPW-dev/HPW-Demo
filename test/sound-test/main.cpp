@@ -20,7 +20,7 @@ Audio make_sin_wave(const float freq) {
   sine_wave.samples = sine_wave.frequency * 4;
   Vector<float> f32_wave(sine_wave.samples * sine_wave.channels);
   float step {};
-  for (nauto sample: f32_wave) {
+  for (rauto sample: f32_wave) {
     sample = std::sin(step);
     step += freq;
   }
@@ -85,7 +85,7 @@ void test_noise() {
   noise.frequency = 22'100;
   noise.samples = noise.frequency * 3;
   noise.data.resize(noise.samples * sizeof(std::int16_t) * noise.channels);
-  for (nauto sample: noise.data)
+  for (rauto sample: noise.data)
     sample = rand() % 256;
   
   // добавить звук в базу
@@ -165,7 +165,7 @@ void test_overplay() {
   }
 } // test_overplay
 
-void test_file(CN<Str> fname) {
+void test_file(cr<Str> fname) {
   std::cout << "\nAudio test: loading file \"" << fname << "\"" << std::endl;
   cauto track = load_audio(fname);
   Sound_mgr_oal sound_mgr;

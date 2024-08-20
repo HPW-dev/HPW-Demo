@@ -12,5 +12,5 @@ enum class Img_to_asci_mode {
 };
 
 // превращает картинки в ASCI арты
-[[nodiscard]] Str to_asci(CN<Image> src, const uint W=80, const uint H=24,
+[[nodiscard]] Str to_asci(cr<Image> src, const uint W=80, const uint H=24,
   const Img_to_asci_mode MODE=Img_to_asci_mode::grayscale_large_pal);

@@ -13,6 +13,6 @@ class Collider_2d_tree final: public Collider {
 public:
   explicit Collider_2d_tree(uint depth=6);
   ~Collider_2d_tree();
-  void operator()(CN<Entities> entities, Delta_time dt) override;
+  void operator()(cr<Entities> entities, Delta_time dt) override;
   void debug_draw(Image& dst, const Vec camera_offset) override;
 };

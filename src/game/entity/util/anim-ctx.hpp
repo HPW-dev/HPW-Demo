@@ -18,26 +18,26 @@ public:
   
   Anim_ctx() = default;
   ~Anim_ctx() = default;
-  Anim_ctx(CP<Anim> new_anim);
+  Anim_ctx(cp<Anim> new_anim);
 
   void update(const Delta_time dt, Entity &entity);
-  void draw(Image& dst, CN<Entity> entity, const Vec offset);
+  void draw(Image& dst, cr<Entity> entity, const Vec offset);
   void set_cur_frame(std::size_t num);
   void set_last_frame();
-  void set_anim(CP<Anim> new_anim);
+  void set_anim(cp<Anim> new_anim);
   void set_speed_scale(real new_scale);
 
-  void set_contour(CP<Anim> val);
-  inline CP<Anim> get_contour() const { return m_contour; }
+  void set_contour(cp<Anim> val);
+  inline cp<Anim> get_contour() const { return m_contour; }
 
   void randomize_cur_frame_safe();
 
   // получить индекс текущего кадра
-  inline cnauto get_cur_frame_idx() const { return m_frame_idx; }
-  CP<Frame> get_cur_frame() const;
-  inline cnauto get_anim() const { return m_anim; }
+  inline crauto get_cur_frame_idx() const { return m_frame_idx; }
+  cp<Frame> get_cur_frame() const;
+  inline crauto get_anim() const { return m_anim; }
   // узнать скорость анимации
-  inline cnauto get_speed_scale() const { return m_speed_scale; }
+  inline crauto get_speed_scale() const { return m_speed_scale; }
   // переключить на следыдущий кадр
   inline void next_frame() { set_cur_frame(m_frame_idx + 1); }
   // переключить на предующий кадр
@@ -48,11 +48,11 @@ public:
   // координаты, в которых объект был нарисован
   inline Vec get_drawed_pos() const { return m_drawed_pos; }
   // получение угла поворота с учётом флагов
-  real get_degree_with_flags(real src, CN<Entity> entity) const;
+  real get_degree_with_flags(real src, cr<Entity> entity) const;
 
 private:
-  CP<Anim> m_anim {}; // анимация с банка
-  CP<Anim> m_contour {}; // контур для выделения
+  cp<Anim> m_anim {}; // анимация с банка
+  cp<Anim> m_contour {}; // контур для выделения
   real m_frame_timer {}; // таймер длительности кадра
   real m_speed_scale {1.0}; // скорость воспоризведения анимации
   real m_fixed_deg {}; // поворот по умолчанию, для флага m_fixed_deg

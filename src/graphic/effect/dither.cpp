@@ -70,10 +70,10 @@ inline constexpr const std::array<real, scast<std::size_t>(bayer_2x2_sz.x * baye
 
 struct Table {
   Vec sz {};
-  CP<real> table {};
+  cp<real> table {};
 };
 
-CN<Table> get_table(Dither type) {
+cr<Table> get_table(Dither type) {
   static const Table null_table {
     .sz = {},
     .table = nullptr
@@ -90,7 +90,7 @@ CN<Table> get_table(Dither type) {
   }
 } // get_table
 
-void dither_blend(Image& dst, CN<Image> src, const Vec pos, real alpha,
+void dither_blend(Image& dst, cr<Image> src, const Vec pos, real alpha,
 Dither type, blend_pf bf) {
   error("need impl");
   return_if (!dst || !src);
@@ -105,7 +105,7 @@ Dither type, blend_pf bf) {
   }
 }
 
-void dither_blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
+void dither_blend(Image& dst, cr<Sprite> src, const Vec pos, real alpha,
 Dither type, blend_pf bf) {
   return_if (!src || !dst);
   return_if (alpha <= 0);
@@ -120,7 +120,7 @@ Dither type, blend_pf bf) {
     // вырезание по маске
     continue_if (mask(x, y) == Pal8::mask_invisible);
 
-    cnauto table = get_table(type);
+    crauto table = get_table(type);
     auto table_idx = ((y % scast<std::size_t>(table.sz.y)) * scast<std::size_t>(table.sz.x)) + (x % scast<std::size_t>(table.sz.x));
     auto table_mask = table.table[table_idx];
     
@@ -170,7 +170,7 @@ void fast_dither_bayer16x16_4bit(Image& dst, bool rotate_pattern) {
   #pragma omp parallel for simd collapse(2)
   cfor (y, scast<uint>(dst.Y))
   cfor (x, scast<uint>(dst.X)) {
-    nauto pix = dst(x, y);
+    rauto pix = dst(x, y);
     pix = get_table_db16b4(pix, x + state, y + state);
   }
 }
@@ -193,7 +193,7 @@ void dither_bayer16x16_1bit(Image& dst, const real power) {
   cfor (x, dst_x) {
     cauto bayer_mul = bayer_16x16_real [
       (y % bayer_y) * bayer_x + (x % bayer_x) ];
-    nauto pix = dst(x, y);
+    rauto pix = dst(x, y);
     const uint idx = bayer_mul * power + pix.to_real()
       >= 0.5 ? 1 : 0;
     cauto is_red = pix.is_red();

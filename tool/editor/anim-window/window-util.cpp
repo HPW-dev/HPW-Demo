@@ -19,16 +19,16 @@ void draw_frames(Pool_ptr(Entity) entity, Image& dst, const Vec pos) {
   assert(entity);
   auto anim = editor::entity->anim_ctx.get_anim();
   return_if (!anim);
-  cnauto frames = anim->get_frames();
+  crauto frames = anim->get_frames();
   Vec pos2 {pos};
 
-  for (cnauto frame: frames) {
+  for (crauto frame: frames) {
     int max_frame_y {0};
     continue_if ( !frame);
     auto directions = frame->get_directions();
     continue_if (directions.empty());
-    for (cnauto direct: directions) {
-      cnauto sprite = direct.sprite;
+    for (crauto direct: directions) {
+      crauto sprite = direct.sprite;
       continue_if(sprite.expired());
       switch (editor::draw_frames_mode) {
         default:
@@ -59,7 +59,7 @@ Anim* get_anim() {
   return ccast<Anim*>(anim);
 }
 
-void Flag_editor::emplace(get_flag_pf&& get_f, set_flag_pf&& set_f, CN<Str> name) {
+void Flag_editor::emplace(get_flag_pf&& get_f, set_flag_pf&& set_f, cr<Str> name) {
   assert(get_f);
   assert(set_f);
   m_flags.emplace_back( Flag {
@@ -73,7 +73,7 @@ void Flag_editor::accept() {
   return_if(m_accepted);
 
   // перенести флаги к себе
-  for (nauto flag: m_flags)
+  for (rauto flag: m_flags)
     flag.value = flag.get_f();
 
   // построить таблицу в imgui
@@ -83,14 +83,14 @@ void Flag_editor::accept() {
     ImGuiTableFlags_Resizable | ImGuiTableFlags_NoSavedSettings |
     ImGuiTableFlags_Borders))
   {
-    for (nauto flag: m_flags) {
+    for (rauto flag: m_flags) {
       ImGui::TableNextColumn();
       ImGui::Selectable(flag.name.c_str(), &flag.value);    
     }
   }
 
   // перенести флаги обратно
-  for (cnauto flag: m_flags)
+  for (crauto flag: m_flags)
     flag.set_f(flag.value);
   
   m_accepted = true;

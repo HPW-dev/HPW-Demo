@@ -3,8 +3,8 @@
 #include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 
-Menu_bool_item::Menu_bool_item(CN<utf32> new_name, Get_value _get_value,
-  Set_value _set_value, CN<utf32> desc)
+Menu_bool_item::Menu_bool_item(cr<utf32> new_name, Get_value _get_value,
+  Set_value _set_value, cr<utf32> desc)
 : name(new_name)
 , m_desc(desc)
 , get_value_f(_get_value)

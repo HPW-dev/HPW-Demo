@@ -11,7 +11,7 @@ class Level_debug_1 final: public Level {
   Vector<Shared<Phys>> objs {};
 
   void draw_bg(Image& dst) const;
-  void draw_obj(CN<Phys> obj, Image& dst) const;
+  void draw_obj(cr<Phys> obj, Image& dst) const;
   void bound_check(Phys& obj) const;
 
 public:

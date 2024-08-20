@@ -18,21 +18,21 @@ public:
     // описание команды
     virtual Str description() const = 0;
     // выполнить команду
-    virtual void exec(CN<Strs> cmd_and_args) = 0;
+    virtual void exec(cr<Strs> cmd_and_args) = 0;
     // повлиять на автодополнение
-    inline virtual Strs command_matches(CN<Strs> cmd_and_args) { return {}; }
+    inline virtual Strs command_matches(cr<Strs> cmd_and_args) { return {}; }
   };
   using Commands = Vector<Unique<Command>>;
 
   Cmd();
   // выполнить команду
-  void exec(CN<Str> cmd_and_args);
+  void exec(cr<Str> cmd_and_args);
   // получить прыдыдущую команду
-  inline CN<Str> last_command() const { return m_last_cmd; }
+  inline cr<Str> last_command() const { return m_last_cmd; }
   // найти совпадающие имена команд (для автодополнения)
-  Strs command_matches(CN<Str> cmd_and_args);
+  Strs command_matches(cr<Str> cmd_and_args);
   // получить все загруженные команды
-  inline CN<Commands> commands() const { return m_commands; }
+  inline cr<Commands> commands() const { return m_commands; }
   // загрузить новую команду
   void move(Unique<Command>&& command);
   // разрешить выводить лог на игровой кран
@@ -40,7 +40,7 @@ public:
   // разрешить выводить лог в консоль системы
   inline void enable_log_console(const bool yesno) { m_log_console = yesno; }
   // печатает текст на экране игры и в консоль
-  void print(CN<Str> text) const;
+  void print(cr<Str> text) const;
   inline Vec last_pos() const { return m_last_pos; }
   inline Uid last_uid() const { return m_last_uid; }
 
@@ -53,14 +53,14 @@ private:
   Uid m_last_uid {}; // последний uid entity, с которым взаимодействовали
   Vec m_last_pos {}; // последние корды, с которыми взаимодействовали
 
-  Command* find_command(CN<Str> name);
-  void impl_exec(CN<Str> cmd_and_args);
+  Command* find_command(cr<Str> name);
+  void impl_exec(cr<Str> cmd_and_args);
   // показать имена всех команд
   Strs command_names() const;
   // ищет совпадения в названиях команд
-  Strs find_cmd_name_matches(CN<Str> cmd_name) const;
-  void print_to_console(CN<Str> text) const;
-  void print_to_screen(CN<Str> text) const;
+  Strs find_cmd_name_matches(cr<Str> cmd_name) const;
+  void print_to_console(cr<Str> text) const;
+  void print_to_screen(cr<Str> text) const;
   void sort_commands();
 }; // Cmd
 

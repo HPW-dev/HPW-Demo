@@ -16,9 +16,9 @@ struct Collider_experimental_2::Impl {
   }
 
   // получить список объектов доступных для столкновения
-  inline Collidables collidable_filter(CN<Entities> entities) const {
+  inline Collidables collidable_filter(cr<Entities> entities) const {
     Collidables ret;
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       assert(ent);
       cont_if (!ent->status.live);
       cont_if (!ent->status.collidable);
@@ -30,7 +30,7 @@ struct Collider_experimental_2::Impl {
     return ret;
   }
 
-  inline void operator()(CN<Entities> entities, Delta_time dt) {
+  inline void operator()(cr<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
     cauto entitys_sz = collidables.size();
     return_if(entitys_sz <= 1); // защита от зацикливания
@@ -45,5 +45,5 @@ struct Collider_experimental_2::Impl {
 
 Collider_experimental_2::Collider_experimental_2(): impl {new_unique<Impl>()} {}
 Collider_experimental_2::~Collider_experimental_2() {}
-void Collider_experimental_2::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
+void Collider_experimental_2::operator()(cr<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_experimental_2::debug_draw(Image& dst, const Vec camera_offset) { /*impl->debug_draw(dst, camera_offset);*/ }

@@ -33,7 +33,7 @@ struct Stream {
     data.reserve(1024 * 100); // обычно столько весит реплей
   }
 
-  inline void write(CP<char> in, const std::size_t sz) {
+  inline void write(cp<char> in, const std::size_t sz) {
     assert(sz > 0);
     assert(in != nullptr);
     data.resize(data.size() + sz);
@@ -88,20 +88,20 @@ inline Bits get_bits() {
   return Bits::error;
 }
 
-inline void write_str(Stream& file, CN<Str> str) {
+inline void write_str(Stream& file, cr<Str> str) {
   const uint32_t sz = str.size();
   assert(sz < 1'000);
-  file.write(cptr2ptr<CP<char>>(&sz), sizeof(sz));
+  file.write(cptr2ptr<cp<char>>(&sz), sizeof(sz));
   if (sz > 0)
-    file.write(cptr2ptr<CP<char>>(str.data()), sz * sizeof(Str::value_type));
+    file.write(cptr2ptr<cp<char>>(str.data()), sz * sizeof(Str::value_type));
 }
 
-inline void write_key_packet(Stream& file, CN<Key_packet> key_packet) {
+inline void write_key_packet(Stream& file, cr<Key_packet> key_packet) {
   const uint32_t sz = key_packet.size();
   assert(sz < 1'000);
-  file.write(cptr2ptr<CP<char>>(&sz), sizeof(sz));
+  file.write(cptr2ptr<cp<char>>(&sz), sizeof(sz));
   if (sz > 0)
-    file.write(cptr2ptr<CP<char>>(key_packet.data()), sz * sizeof(Key_packet::value_type));
+    file.write(cptr2ptr<cp<char>>(key_packet.data()), sz * sizeof(Key_packet::value_type));
 }
 
 inline Str read_str(Stream& file) {
@@ -137,13 +137,13 @@ T read_data(Stream& file) {
 template <typename T>
 void write_data(Stream& file, const T& data) {
   static_assert(sizeof(T) > 0);
-  file.write(cptr2ptr<CP<char>>(&data), sizeof(T));
+  file.write(cptr2ptr<cp<char>>(&data), sizeof(T));
 }
 
 template <typename T>
 void write_data(Stream& file, const T&& data) {
   static_assert(sizeof(T) > 0);
-  file.write(cptr2ptr<CP<char>>(&data), sizeof(T));
+  file.write(cptr2ptr<cp<char>>(&data), sizeof(T));
 }
 
 struct Replay::Impl {
@@ -156,7 +156,7 @@ struct Replay::Impl {
 
   inline ~Impl() { close(); }
 
-  inline Impl(CN<Str> path, const bool write_mode, const bool nosave=false)
+  inline Impl(cr<Str> path, const bool write_mode, const bool nosave=false)
   : m_path { path }
   , m_write_mode { write_mode }
   , m_nosave { nosave }
@@ -209,7 +209,7 @@ struct Replay::Impl {
     {
       // чтение с диска в память
       auto mem = mem_from_file(m_path);
-      m_file.write(cptr2ptr<CP<char>>(mem.data()), mem.size());
+      m_file.write(cptr2ptr<cp<char>>(mem.data()), mem.size());
       m_file.set_pos(0);
     }
     #endif
@@ -292,7 +292,7 @@ struct Replay::Impl {
     return ss.str();
   }
 
-  inline static Info get_info(CN<Str> path) {
+  inline static Info get_info(cr<Str> path) {
     Impl replay(path, false, true);
     return replay.m_info;
   }
@@ -311,7 +311,7 @@ struct Replay::Impl {
     #endif
   }
 
-  inline void push(CN<Key_packet> key_packet) {
+  inline void push(cr<Key_packet> key_packet) {
     assert(m_write_mode);
     write_key_packet(m_file, key_packet);
   }
@@ -324,7 +324,7 @@ struct Replay::Impl {
   }
 
   // конвертирует дату и время из строки в удобный формат
-  inline static Date to_date(CN<Str> date) {
+  inline static Date to_date(cr<Str> date) {
     assert(!date.empty());
     // разделение на дату и время
     auto strs = split_str(date, ' ');
@@ -352,11 +352,11 @@ struct Replay::Impl {
   } // to_date
 }; // Impl
 
-Replay::Replay(CN<Str> path, bool write_mode)
+Replay::Replay(cr<Str> path, bool write_mode)
   : impl{new_unique<Impl>(path, write_mode)} {}
 Replay::~Replay() {}
 void Replay::close() { impl->close(); }
-void Replay::push(CN<Key_packet> key_packet) { impl->push(key_packet); }
+void Replay::push(cr<Key_packet> key_packet) { impl->push(key_packet); }
 std::optional<Key_packet> Replay::pop() { return impl->pop(); }
-CP<Replay::Impl> Replay::get_impl() const { return impl.get(); }
-Replay::Info Replay::get_info(CN<Str> path) { return Impl::get_info(path); }
+cp<Replay::Impl> Replay::get_impl() const { return impl.get(); }
+Replay::Info Replay::get_info(cr<Str> path) { return Impl::get_info(path); }

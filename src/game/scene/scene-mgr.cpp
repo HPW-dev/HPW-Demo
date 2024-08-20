@@ -19,7 +19,7 @@ void Scene_mgr::draw(Image& dst) const {
     current->draw(dst);
 }
 
-void Scene_mgr::add(CN<Shared<Scene>> scene) {
+void Scene_mgr::add(cr<Shared<Scene>> scene) {
   assert(scene);
   jobs.emplace_back([this, scene]{ _add(scene); });
 }
@@ -32,7 +32,7 @@ void Scene_mgr::back(uint count) {
     jobs.emplace_back([this]{ _back(); });
 }
 
-void Scene_mgr::_add(CN<Shared<Scene>> scene) {
+void Scene_mgr::_add(cr<Shared<Scene>> scene) {
   scene_stack.emplace(scene);
   status.next_scene = true;
 }
@@ -54,7 +54,7 @@ Scene* Scene_mgr::get_current() const {
 
 void Scene_mgr::lazy_scene_update() {
   // выполнить все задания в очереди и удалить учередь
-  for (cnauto job: jobs)
+  for (crauto job: jobs)
     job();
   jobs.clear();
 }

@@ -17,7 +17,7 @@ public:
   using Rows = Vector<Row>;
 
   ~Table_menu();
-  explicit Table_menu(CN<utf32> title, CN<Rows> rows, const uint row_height,
-    CN<Menu_items> items, CN<utf32> elems_empty_txt={});
+  explicit Table_menu(cr<utf32> title, cr<Rows> rows, const uint row_height,
+    cr<Menu_items> items, cr<utf32> elems_empty_txt={});
   void draw(Image& dst) const override;
 };

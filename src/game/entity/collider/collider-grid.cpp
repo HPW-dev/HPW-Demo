@@ -31,9 +31,9 @@ struct Collider_grid::Impl {
   }
 
   // получить список объектов доступных для столкновения
-  inline Collidables collidable_filter(CN<Entities> entities) const {
+  inline Collidables collidable_filter(cr<Entities> entities) const {
     Collidables ret;
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       assert(ent);
       cont_if (!ent->status.live);
       cont_if (!ent->status.collidable);
@@ -57,14 +57,14 @@ struct Collider_grid::Impl {
   }
 
   // подготовить сетку
-  inline void config_grid(CN<Collidables> entities) {
+  inline void config_grid(cr<Collidables> entities) {
     clear_grid();
     return_if(entities.size() < 2);
 
     // найти крайние точки слева сверху и справа снизу
     Vec lu { 1'000'000,  1'000'000};
     Vec rd {-1'000'000, -1'000'000};
-    for (cnauto ent: entities) {
+    for (crauto ent: entities) {
       cauto pos = ent->phys.get_pos();
       lu.x = std::min(lu.x, pos.x);
       lu.y = std::min(lu.y, pos.y);
@@ -81,7 +81,7 @@ struct Collider_grid::Impl {
   // добавить объект на сетку
   inline void insert(Collidable* entity) {
     // определить размеры хитбокса
-    cnauto hitbox = entity->get_hitbox();
+    crauto hitbox = entity->get_hitbox();
     cauto pos = entity->phys.get_pos() - m_grid_offset;
     Vec lu = pos + hitbox->simple.offset - hitbox->simple.r;
     lu.x = std::max<real>(0, lu.x);
@@ -107,7 +107,7 @@ struct Collider_grid::Impl {
     return_if (m_grid_my == 0);
 
     #pragma omp parallel for schedule(dynamic)
-    for (cnauto sector: m_grid) {
+    for (crauto sector: m_grid) {
       cauto entitys_sz = sector.size();
       cont_if(entitys_sz < 2);
 
@@ -157,16 +157,16 @@ struct Collider_grid::Impl {
       const Vec pos(
         offset_x + x * m_grid_sz + 2,
         offset_y + y * m_grid_sz + 2);
-      cnauto sector = get_sector_by_idx(x, y);
+      crauto sector = get_sector_by_idx(x, y);
       cauto count = sector->size();
       graphic::font->draw(dst, pos, n2s<utf32>(count), &blend_diff);
     }
   } // debug_draw
 
-  inline void operator()(CN<Entities> entities, Delta_time dt) {
+  inline void operator()(cr<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
     config_grid(collidables);
-    for (cnauto entity: collidables)
+    for (crauto entity: collidables)
       insert(entity);
     process_collisions();
   }
@@ -174,5 +174,5 @@ struct Collider_grid::Impl {
 
 Collider_grid::Collider_grid(int grid_sz): impl {new_unique<Impl>(grid_sz)} {}
 Collider_grid::~Collider_grid() {}
-void Collider_grid::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
+void Collider_grid::operator()(cr<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_grid::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }

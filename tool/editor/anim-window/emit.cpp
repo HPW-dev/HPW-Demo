@@ -70,7 +70,7 @@ void Emit_wnd::reset() {
 
 Strs spawner_type_names() {
   Strs list;
-  for (cnauto item: spawner_type_table)
+  for (crauto item: spawner_type_table)
     list.emplace_back(item.second);
   return list;
 }
@@ -94,7 +94,7 @@ void Emit_wnd::draw_anim_list() {
   auto list_for_combo = strs_to_null_terminated(list);
 
   int list_idx = 0;
-  for (cnauto name: list) {
+  for (crauto name: list) {
     if (name == editor::anim_name)
       break;
     ++list_idx;
@@ -105,14 +105,14 @@ void Emit_wnd::draw_anim_list() {
     select_anim_by_name(list.at(list_idx));
 }
 
-void Emit_wnd::delete_anim_by_name(CN<Str> name) {
+void Emit_wnd::delete_anim_by_name(cr<Str> name) {
   return_if (name.empty());
   detailed_log("delete anim \"" << name << "\n");
   hpw::anim_mgr->remove_anim(name);
   select_anim_by_name(get_avaliable_first_anim());
 }
 
-void Emit_wnd::select_anim_by_name(CN<Str> name) {
+void Emit_wnd::select_anim_by_name(cr<Str> name) {
   return_if(name.empty());
   editor::anim_name = name;
   auto anim = hpw::anim_mgr->find_anim(editor::anim_name).get();
@@ -125,12 +125,12 @@ void Emit_wnd::make_new_anim() {
   hpw::scene_mgr->add(
     new_shared<Input_scene>(
       "Enter animation name",
-      [this](CN<Str> name) {
+      [this](cr<Str> name) {
         auto low_name = str_tolower(name);
         auto anim {new_shared<Anim>()};
         try {
           hpw::anim_mgr->add_anim(low_name, anim);
-        } catch (CN<hpw::Error> ex) {
+        } catch (cr<hpw::Error> ex) {
           hpw_log(ex.get_msg() << '\n');
           return;
         }
@@ -257,7 +257,7 @@ void Emit_wnd::light_edit() {
     light.radius = radius;
 } // light_edit
 
-void Emit_wnd::save_to_clipboard(CN<Heat_distort> src) {
+void Emit_wnd::save_to_clipboard(cr<Heat_distort> src) {
   std::stringstream txt;
 
   txt << "heat_distort:\n";

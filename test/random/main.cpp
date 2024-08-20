@@ -84,7 +84,7 @@ struct Answers {
   decltype(rndb()) val_rndb {};
   decltype(rndr()) val_rndr {};
 
-  inline bool operator ==(CN<Answers> other) const {
+  inline bool operator ==(cr<Answers> other) const {
     if (val_rnd != other.val_rnd) { std::cout << "val_rnd != other.val_rnd" << std::endl; return false; }
     if (val_rndu != other.val_rndu) { std::cout << "val_rndu != other.val_rndu" << std::endl; return false; }
     if (val_rndb != other.val_rndb) { std::cout << "val_rndb != other.val_rndb" << std::endl; return false; }
@@ -103,7 +103,7 @@ Answers gen() {
   return answers;
 } // gen
 
-void print(CN<Answers> answers) {
+void print(cr<Answers> answers) {
   std::cout << "rnd:\t\t"  << +answers.val_rnd << std::endl;
   std::cout << "rndu:\t\t" << +answers.val_rndu << std::endl;
   std::cout << "rndb:\t\t" << +answers.val_rndb << std::endl;

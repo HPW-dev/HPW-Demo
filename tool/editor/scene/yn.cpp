@@ -6,8 +6,8 @@
 #include "game/core/scenes.hpp"
 #include "editor-util.hpp"
 
-Yes_no_scene::Yes_no_scene(CN<utf8> msg,
-CN<decltype(callback)> new_callback)
+Yes_no_scene::Yes_no_scene(cr<utf8> msg,
+cr<decltype(callback)> new_callback)
 : msg_(msg), callback(new_callback) {}
 
 void Yes_no_scene::update(const Delta_time dt) {

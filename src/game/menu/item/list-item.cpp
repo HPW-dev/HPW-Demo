@@ -2,7 +2,7 @@
 #include "list-item.hpp"
 #include "util/str-util.hpp"
 
-Menu_list_item::Menu_list_item(CN<utf32> title, CN<Menu_list_item::Items> items,
+Menu_list_item::Menu_list_item(cr<utf32> title, cr<Menu_list_item::Items> items,
 const std::size_t default_selected)
 : m_items {items}
 , m_title {title}

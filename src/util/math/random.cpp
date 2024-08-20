@@ -30,7 +30,7 @@ inline void check_safe_random() {
 }
 
 
-inline CN<std::uint8_t> table_rndb() {
+inline cr<std::uint8_t> table_rndb() {
   return rand_table_256[table_idx++];
 }
 

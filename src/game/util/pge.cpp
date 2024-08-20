@@ -33,7 +33,7 @@ void registrate_param_bool(cstr_t, cstr_t, bool*);
 void load_pge_params_only();
 
 void load_embeded_pge(decltype(plugin_init)* init_f, decltype(plugin_apply)* apply_f,
-decltype(plugin_finalize)* finalize_f, CN<Str> name) {
+decltype(plugin_finalize)* finalize_f, cr<Str> name) {
   try {
     std::cout << "загрузка встроенного плагина..." << std::endl;
     iferror(!init_f, "не удалось получить функцию plugin_init");
@@ -62,7 +62,7 @@ decltype(plugin_finalize)* finalize_f, CN<Str> name) {
     load_pge_params_only();
     std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
     g_pge_loaded = true;
-  } catch (CN<hpw::Error> err) {
+  } catch (cr<hpw::Error> err) {
     hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
     disable_pge();
   } catch (...) {
@@ -112,7 +112,7 @@ void load_pge(Str libname) {
     load_pge_params_only();
     std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
     g_pge_loaded = true;
-  } catch (CN<hpw::Error> err) {
+  } catch (cr<hpw::Error> err) {
     hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
     disable_pge();
   } catch (...) {
@@ -143,9 +143,9 @@ void disable_pge() {
 }
 
 // перенос значений с конфига в настройки плагина
-void load_params(CN<Yaml> node) {
-  nauto params = get_pge_params();
-  for (uint id = 0; nauto param: params) {
+void load_params(cr<Yaml> node) {
+  rauto params = get_pge_params();
+  for (uint id = 0; rauto param: params) {
     auto param_node = node["param_" + n2s(id)];
     ++id;
     param->load(param_node);
@@ -155,7 +155,7 @@ void load_params(CN<Yaml> node) {
 // грузит только параметры для плагина
 void load_pge_params_only() {
   assert(hpw::config);
-  cnauto config = *hpw::config;
+  crauto config = *hpw::config;
   cauto plugin_node = config["plugin"];
   cauto graphic_node = plugin_node["graphic"];
   if (cauto effect_node = graphic_node[get_cur_pge_name()]; effect_node.check())
@@ -164,7 +164,7 @@ void load_pge_params_only() {
 
 void load_pge_from_config() {
   assert(hpw::config);
-  cnauto config = *hpw::config;
+  crauto config = *hpw::config;
   cauto plugin_node = config["plugin"];
   cauto graphic_node = plugin_node["graphic"];
   cauto selected = graphic_node.get_str("selected");
@@ -191,8 +191,8 @@ void save_pge_to_config() {
   auto effect_node = graphic_node.make_node_if_not_exist(plugin_name);
   effect_node.set_str("path", get_cur_pge_path());
   // сейв текущих настроек плагина
-  cnauto params = get_pge_params();
-  for (uint id = 0; cnauto param: params) {
+  crauto params = get_pge_params();
+  for (uint id = 0; crauto param: params) {
     auto param_node = effect_node.make_node("param_" + n2s(id));
     ++id;
     assert(param);
@@ -237,11 +237,11 @@ void registrate_param_bool(cstr_t title, cstr_t desc, bool* val) {
   g_pge_params.push_back( std::move(param) );
 }
 
-CN< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
-CN<Str> get_cur_pge_path() { return g_pge_path; }
-CN<Str> get_cur_pge_name() { return g_pge_name; }
-CN<Str> get_cur_pge_description() { return g_pge_description; }
-CN<Str> get_cur_pge_author() { return g_pge_author; }
+cr< Vector<Shared<Param_pge>> > get_pge_params() { return g_pge_params; }
+cr<Str> get_cur_pge_path() { return g_pge_path; }
+cr<Str> get_cur_pge_name() { return g_pge_name; }
+cr<Str> get_cur_pge_description() { return g_pge_description; }
+cr<Str> get_cur_pge_author() { return g_pge_author; }
 
 void Param_pge::save(Yaml& dst) const {
   dst.set_str("title", title);
@@ -249,7 +249,7 @@ void Param_pge::save(Yaml& dst) const {
   dst.set_int("type", scast<int>(type));
 }
 
-void Param_pge::load(CN<Yaml> dst) {
+void Param_pge::load(cr<Yaml> dst) {
   title = dst.get_str("title");
   description = dst.get_str("description");
 }
@@ -263,7 +263,7 @@ void Param_pge_int::save(Yaml& dst) const {
   dst.set_int("speed_step", speed_step);
 }
 
-void Param_pge_int::load(CN<Yaml> dst) {
+void Param_pge_int::load(cr<Yaml> dst) {
   cauto loaded_type = scast<Param_pge::Type>(dst.get_int("type"));
   iferror(type != loaded_type, "type != loaded_type");
   assert(value);
@@ -282,7 +282,7 @@ void Param_pge_real::save(Yaml& dst) const {
   dst.set_real("speed_step", speed_step);
 }
 
-void Param_pge_real::load(CN<Yaml> dst) {
+void Param_pge_real::load(cr<Yaml> dst) {
   cauto loaded_type = scast<Param_pge::Type>(dst.get_int("type"));
   iferror(type != loaded_type, "type != loaded_type");
   assert(value);
@@ -298,7 +298,7 @@ void Param_pge_bool::save(Yaml& dst) const {
   dst.set_bool("value", *value);
 }
 
-void Param_pge_bool::load(CN<Yaml> dst) {
+void Param_pge_bool::load(cr<Yaml> dst) {
   cauto loaded_type = scast<Param_pge::Type>(dst.get_int("type"));
   iferror(type != loaded_type, "type != loaded_type");
   assert(value);

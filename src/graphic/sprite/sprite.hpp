@@ -15,22 +15,22 @@ public:
   inline int X() const { return m_image.X; }
   inline int Y() const { return m_image.Y; }
   inline int size() const { return m_image.size; }
-  inline CN<Image> image() const { return m_image; }
-  inline CN<Image> mask() const { return m_mask; }
+  inline cr<Image> image() const { return m_image; }
+  inline cr<Image> mask() const { return m_mask; }
   inline Image& image() { return m_image; }
   inline Image& mask() { return m_mask; }
-  inline void set_image(CN<Image> image) noexcept { m_image = image; }
-  inline void set_mask(CN<Image> mask) noexcept { m_mask = mask; }
+  inline void set_image(cr<Image> image) noexcept { m_image = image; }
+  inline void set_mask(cr<Image> mask) noexcept { m_mask = mask; }
   inline void move_image(Image&& image) noexcept { m_image = std::move(image); }
   inline void move_mask(Image&& mask) noexcept { m_mask = std::move(mask); }
-  void init(CN<Sprite> other) noexcept;
+  void init(cr<Sprite> other) noexcept;
   void init(int new_x, int new_y) noexcept;
   operator bool() const;
   Sprite() = default;
-  Sprite(CN<Sprite> other) noexcept;
+  Sprite(cr<Sprite> other) noexcept;
   Sprite(Sprite &&other) noexcept;
   Sprite(int new_x, int new_y) noexcept;
   Sprite& operator = (Sprite &&other) noexcept;
-  Sprite& operator = (CN<Sprite> other) noexcept;
+  Sprite& operator = (cr<Sprite> other) noexcept;
   ~Sprite() = default;
 }; // Sprite

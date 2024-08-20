@@ -19,7 +19,7 @@ Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
   // удалить всё что не содержит в названии logo
   assert(hpw::archive);
   auto bg_names = hpw::archive->get_all_names(false);
-  std::erase_if(bg_names, [](CN<Str> src) {
+  std::erase_if(bg_names, [](cr<Str> src) {
     return src.find("resource/image/loading logo/") == Str::npos; });
   assert(!bg_names.empty());
 
@@ -42,7 +42,7 @@ void Scene_loading::update(const Delta_time dt) {
 } // update
 
 void Scene_loading::draw(Image& dst) const {
-  cnauto bg_image = bg->image();
+  crauto bg_image = bg->image();
   assert(bg_image);
   assert(dst.size == bg_image.size);
 

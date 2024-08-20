@@ -1,7 +1,7 @@
 #include "logo.hpp"
 #include "util/math/random.hpp"
 
-CN<Strs> get_all_logos() {
+cr<Strs> get_all_logos() {
   sconst Strs table_logo {
     R"( |  | +--+ | | | )" "\n"
     R"( +--+ +--+ | | | )" "\n"
@@ -167,7 +167,7 @@ CN<Strs> get_all_logos() {
 
 Str get_random_logo() {
   // случайный выбор лого
-  cnauto table_logo = get_all_logos();
+  crauto table_logo = get_all_logos();
   auto table_idx = rndu_fast(table_logo.size() - 1);
   return table_logo.at(table_idx);
 } // get_random_logo

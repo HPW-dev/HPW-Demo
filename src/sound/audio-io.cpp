@@ -13,7 +13,7 @@
 #include <stb/stb_vorbis.c>
 
 // угадать формат файла по имени
-[[nodiscard]] Audio::Compression quess_format(CN<Str> file_name) {
+[[nodiscard]] Audio::Compression quess_format(cr<Str> file_name) {
   iferror(file_name.empty(), "empty audio file name");
 
   auto ext = std::filesystem::path(file_name).extension().string();
@@ -36,7 +36,7 @@
   return {};
 } // quess_format
 
-Audio load_raw(CN<Bytes> mem, CN<Str> path) {
+Audio load_raw(cr<Bytes> mem, cr<Str> path) {
   Audio ret;
   ret.set_path(path);
   // предположительные данные, потому что с RAW не идёт инфы о треке
@@ -49,7 +49,7 @@ Audio load_raw(CN<Bytes> mem, CN<Str> path) {
   return ret;
 }
 
-Audio load_flac(CN<Bytes> mem, CN<Str> path) {
+Audio load_flac(cr<Bytes> mem, cr<Str> path) {
   // узнать инфу о FLAC файле
   auto flac_info = drflac_open_memory(mem.data(), mem.size(), {});
   Audio ret;
@@ -76,7 +76,7 @@ Audio load_flac(CN<Bytes> mem, CN<Str> path) {
   return ret;
 }
 
-Audio load_opus(CN<Bytes> mem, CN<Str> path) {
+Audio load_opus(cr<Bytes> mem, cr<Str> path) {
   // TODO
   error("need impl for Opus loader");
   Audio ret;
@@ -84,7 +84,7 @@ Audio load_opus(CN<Bytes> mem, CN<Str> path) {
   return ret;
 }
 
-Audio load_vorbis(CN<Bytes> mem, CN<Str> path) {
+Audio load_vorbis(cr<Bytes> mem, cr<Str> path) {
   int error;
   auto vorbis_file = stb_vorbis_open_memory(rcast<const unsigned char*>(mem.data()), 
     mem.size(), &error, {});
@@ -109,7 +109,7 @@ Audio load_vorbis(CN<Bytes> mem, CN<Str> path) {
   return ret;
 } // load_vorbis
 
-Audio load_audio_from_memory(CN<File> file) {
+Audio load_audio_from_memory(cr<File> file) {
   cauto path = file.get_path();
   iferror(path.empty(), "load_audio_from_memory: file.path is empty");
   cauto format = quess_format(path);
@@ -124,7 +124,7 @@ Audio load_audio_from_memory(CN<File> file) {
   return {};
 }
 
-Audio load_audio(CN<Str> file_name) {
+Audio load_audio(cr<Str> file_name) {
   cauto format = quess_format(file_name);
   cauto mem = mem_from_file(file_name);
   switch (format) {

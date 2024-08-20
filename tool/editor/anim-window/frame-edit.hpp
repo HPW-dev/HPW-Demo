@@ -10,7 +10,7 @@ struct Polygon;
 class Frame_wnd: public Window {
   bool reinit {false};
 
-  void draw_info(CN<Frame> frame);
+  void draw_info(cr<Frame> frame);
   void draw_path_edit(Frame& frame);
   void draw_direction_count_edit(Frame& frame);
   void draw_offset_edit(Frame& frame);

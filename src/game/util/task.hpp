@@ -42,7 +42,7 @@ public:
   Task_mgr() = default;
   ~Task_mgr();
 
-  Shared<Task> add(CN<Shared<Task>> task);
+  Shared<Task> add(cr<Shared<Task>> task);
   Shared<Task> add(Shared<Task>&& task);
   void update(const Delta_time dt);
   void draw(Image& dst) const;

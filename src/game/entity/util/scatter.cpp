@@ -39,7 +39,7 @@ void Scatter::accept(Entity& dst) const {
   } // switch type
 
   // добавить тряску игроку, если он рядом
-  cauto player_p = cptr2ptr<CP<Entity>>(hpw::entity_mgr->get_player());
+  cauto player_p = cptr2ptr<cp<Entity>>(hpw::entity_mgr->get_player());
   assert(player_p);
   if (!disable_shake && player_p->status.live && std::addressof(dst) == player_p)
     graphic::camera->add_shake(intense);

@@ -12,6 +12,6 @@ class Collider_experimental_2 final: public Collider {
 public:
   Collider_experimental_2();
   ~Collider_experimental_2();
-  void operator()(CN<Entities> entities, Delta_time dt) override;
+  void operator()(cr<Entities> entities, Delta_time dt) override;
   void debug_draw(Image& dst, const Vec camera_offset) override;
 };

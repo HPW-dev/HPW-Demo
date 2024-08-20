@@ -95,12 +95,12 @@ struct Scene_pge::Impl {
     }
 
     // накидать опций от плагина
-    cnauto params = get_pge_params();
-    for (cnauto param: params) {
+    crauto params = get_pge_params();
+    for (crauto param: params) {
       assert(param);
       switch (param->type) {
         case Param_pge::Type::param_int: {
-          cauto casted = cptr2ptr< CP<Param_pge_int> >(param.get());
+          cauto casted = cptr2ptr< cp<Param_pge_int> >(param.get());
           menu_items.push_back( new_shared<Menu_int_item>(
             sconv<utf32>(casted->title),
             [casted]->int { return *(casted->value); },
@@ -112,7 +112,7 @@ struct Scene_pge::Impl {
         } // param_int
         
         case Param_pge::Type::param_real: {
-          cauto casted = cptr2ptr< CP<Param_pge_real> >(param.get());
+          cauto casted = cptr2ptr< cp<Param_pge_real> >(param.get());
           menu_items.push_back( new_shared<Menu_double_item>(
             sconv<utf32>(casted->title),
             [casted]->double { return *(casted->value); },
@@ -124,7 +124,7 @@ struct Scene_pge::Impl {
         } // param_real
 
         case Param_pge::Type::param_bool: {
-          cauto casted = cptr2ptr< CP<Param_pge_bool> >(param.get());
+          cauto casted = cptr2ptr< cp<Param_pge_bool> >(param.get());
           menu_items.push_back( new_shared<Menu_bool_item>(
             sconv<utf32>(casted->title),
             [casted]->bool { return *(casted->value); },
@@ -165,7 +165,7 @@ struct Scene_pge::Impl {
     m_effects = files_in_dir(path);
     return_if(m_effects.empty());
     // оставить только .so/.dll имена
-    std::erase_if(m_effects, [](CN<Str> fname)->bool {
+    std::erase_if(m_effects, [](cr<Str> fname)->bool {
       cauto ext = std::filesystem::path(fname).extension().string();
       return !(ext == ".so" || ext == ".dll"); // допустимые форматы для плагина
     });

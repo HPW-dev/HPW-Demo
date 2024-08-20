@@ -7,5 +7,5 @@ namespace hpw { class Font; }
 class Image;
 
 // нарисовать текст по центру
-void draw_center(CP<hpw::Font> font, Image& dst,
-  CN<utf32> msg, blend_pf bf=&blend_max);
+void draw_center(cp<hpw::Font> font, Image& dst,
+  cr<utf32> msg, blend_pf bf=&blend_max);

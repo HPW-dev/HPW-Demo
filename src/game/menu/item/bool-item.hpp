@@ -12,8 +12,8 @@ class Menu_bool_item final: public Menu_item {
   Set_value set_value_f {}; // для корректного изменения данных
 
 public:
-  explicit Menu_bool_item(CN<utf32> new_name, Get_value _get_value,
-    Set_value _set_value, CN<utf32> desc={});
+  explicit Menu_bool_item(cr<utf32> new_name, Get_value _get_value,
+    Set_value _set_value, cr<utf32> desc={});
   void enable() override;
   utf32 to_text() const override;
   void plus() override;

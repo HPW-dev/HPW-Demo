@@ -36,7 +36,7 @@ public:
   void update(const Delta_time dt);
   void draw(Image& dst) const;
   // получить все сообщения
-  CN<Messages> messages() const;
+  cr<Messages> messages() const;
   // удалить все сообщения
   void clear();
   // управление видимостью сообщений
