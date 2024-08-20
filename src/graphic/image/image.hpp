@@ -20,17 +20,17 @@ public:
   ~Image() = default;
   Image() noexcept = default;
   Image(int nx, int ny, const std::optional<const Pal8> col={}) noexcept;
-  Image(CN<Image> img) noexcept;
+  Image(cr<Image> img) noexcept;
   Image(Image&& img) noexcept;
   Image& operator = (Image&& other) noexcept;
-  Image& operator = (CN<Image> img) noexcept;
+  Image& operator = (cr<Image> img) noexcept;
 
   inline operator bool() const noexcept { return !pix.empty(); }
   inline Pal8* data() { return pix.data(); }
-  inline CP<Pal8> data() const { return pix.data(); }
+  inline cp<Pal8> data() const { return pix.data(); }
 
   void init(int nx=0, int ny=0, std::optional<Pal8> col={}) noexcept;
-  void init(CN<Image> img) noexcept;
+  void init(cr<Image> img) noexcept;
   void init(Image&& img) noexcept;
   void free() noexcept;
   void fill(const Pal8 col) noexcept;

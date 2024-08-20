@@ -15,13 +15,13 @@ public:
   * @param make_if_not_exist создать, если файла нету */
   Yaml(Str fname, bool make_if_not_exist=false);
   // загрузить .yml из памяти файла
-  Yaml(CN<File> file);
-  Yaml(CN<Impl> new_impl);
+  Yaml(cr<File> file);
+  Yaml(cr<Impl> new_impl);
   Yaml();
   ~Yaml();
-  Yaml(CN<Yaml> other);
+  Yaml(cr<Yaml> other);
   Yaml(Yaml&& other) noexcept;
-  Yaml& operator = (CN<Yaml> other);
+  Yaml& operator = (cr<Yaml> other);
   Yaml& operator = (Yaml&& other) noexcept;
 
   // сохранить .yml на диск
@@ -29,31 +29,31 @@ public:
   // стереть все данные
   void clear();
   // создать пустую ветвь
-  Yaml make_node(CN<Str> name);
+  Yaml make_node(cr<Str> name);
   // не создаст пустую ветвь, если она уже есть с таким именем
-  Yaml make_node_if_not_exist(CN<Str> name);
+  Yaml make_node_if_not_exist(cr<Str> name);
   // удалить ветку
-  void delete_node(CN<Str> name);
+  void delete_node(cr<Str> name);
 
-  void set_int(CN<Str> name, int val);
-  void set_real(CN<Str> name, real val);
-  void set_bool(CN<Str> name, bool val);
-  void set_str(CN<Str> name, CN<Str> val);
-  void set_utf8(CN<Str> name, CN<utf8> val);
-  void set_v_int(CN<Str> name, CN<Vector<int>> val);
-  void set_v_str(CN<Str> name, CN<Vector<Str>> val);
-  void set_v_real(CN<Str> name, CN<Vector<real>> val);
+  void set_int(cr<Str> name, int val);
+  void set_real(cr<Str> name, real val);
+  void set_bool(cr<Str> name, bool val);
+  void set_str(cr<Str> name, cr<Str> val);
+  void set_utf8(cr<Str> name, cr<utf8> val);
+  void set_v_int(cr<Str> name, cr<Vector<int>> val);
+  void set_v_str(cr<Str> name, cr<Vector<Str>> val);
+  void set_v_real(cr<Str> name, cr<Vector<real>> val);
 
   // get node by name
-  Yaml operator[] (CN<Str> name) const;
-  Str get_str(CN<Str> name, CN<Str> def={}) const;
-  int get_int(CN<Str> name, int def={}) const;
-  real get_real(CN<Str> name, real def={}) const;
-  bool get_bool(CN<Str> name, bool def={}) const;
-  utf8 get_utf8(CN<Str> name, CN<utf8> def={}) const;
-  Vector<Str> get_v_str(CN<Str> name, CN<Vector<Str>> def={}) const;
-  Vector<int> get_v_int(CN<Str> name, CN<Vector<int>> def={}) const;
-  Vector<real> get_v_real(CN<Str> name, CN<Vector<real>> def={}) const;
+  Yaml operator[] (cr<Str> name) const;
+  Str get_str(cr<Str> name, cr<Str> def={}) const;
+  int get_int(cr<Str> name, int def={}) const;
+  real get_real(cr<Str> name, real def={}) const;
+  bool get_bool(cr<Str> name, bool def={}) const;
+  utf8 get_utf8(cr<Str> name, cr<utf8> def={}) const;
+  Vector<Str> get_v_str(cr<Str> name, cr<Vector<Str>> def={}) const;
+  Vector<int> get_v_int(cr<Str> name, cr<Vector<int>> def={}) const;
+  Vector<real> get_v_real(cr<Str> name, cr<Vector<real>> def={}) const;
 
   // string key and string value
   struct kv_t { 

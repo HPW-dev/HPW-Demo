@@ -10,12 +10,12 @@ class Ability_power_shoot final: public Ability {
   Unique<Impl> impl {};
 
 public:
-  explicit Ability_power_shoot(CN<Player> player);
+  explicit Ability_power_shoot(cr<Player> player);
   ~Ability_power_shoot();
   void update(Player& player, const Delta_time dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}
   void power_up() override;
   utf32 name() const override;
   utf32 desc() const override;
-  CP<Sprite> icon() const override;
+  cp<Sprite> icon() const override;
 };

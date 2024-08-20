@@ -28,8 +28,8 @@ void Scene_input::draw(Image& dst) const {
 }
 
 // хелпер функция для перезаписи клавиши
-void add_menu_item(Menu_items& dst, CN<Keys_info> info,
-CN<Str> locale_name, hpw::keycode keycode) {
+void add_menu_item(Menu_items& dst, cr<Keys_info> info,
+cr<Str> locale_name, hpw::keycode keycode) {
   // найти по коду hpw клавиши инфу о реальной клавиши из GLFW
   auto item = info.find(keycode);
   return_if (!item);

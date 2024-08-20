@@ -19,16 +19,16 @@ class Unifont final: public hpw::Font {
   Bytes font_file_mem_ {};
 
   // возвращает картинку символа. если её нет в кэше, то добавляет туда
-  CP<Glyph> _get_glyph(char32_t ch) const;
+  cp<Glyph> _get_glyph(char32_t ch) const;
   bool _load_glyph(char32_t ch) const; // грузит новый шрифт. ret 1 if success
 
 public:
-  explicit Unifont(CN<Str> fname, int height=12, bool mono=true);
-  explicit Unifont(CN<File> file, int height=12, bool mono=true);
+  explicit Unifont(cr<Str> fname, int height=12, bool mono=true);
+  explicit Unifont(cr<File> file, int height=12, bool mono=true);
   ~Unifont() = default;
   // узнать ширину текста
-  int text_width(CN<utf32> text) const override;
+  int text_width(cr<utf32> text) const override;
   // отобразить текст
-  void draw(Image& dst, const Vec pos, CN<utf32> text,
+  void draw(Image& dst, const Vec pos, cr<utf32> text,
     blend_pf bf=&blend_diff, const int optional=0) const override;
 }; // Unifont

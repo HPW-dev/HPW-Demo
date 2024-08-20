@@ -243,7 +243,7 @@ void graphic_tests() {
     image_check();
     sprite_check();
     util_check();
-  } catch (CN<hpw::Error> ex) {
+  } catch (cr<hpw::Error> ex) {
     std::cerr << ex.what() << std::endl;
     std::terminate();
   }

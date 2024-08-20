@@ -6,8 +6,8 @@
 class Image;
 
 // load from mem
-void load(Image& dst, CN<Bytes> mem);
+void load(Image& dst, cr<Bytes> mem);
 // load from file
-void load(Image& dst, CN<Str> name);
+void load(Image& dst, cr<Str> name);
 // save to file
-void save(CN<Image> src, Str name);
+void save(cr<Image> src, Str name);

@@ -12,9 +12,9 @@ Direct* Direct::operator =(Direct&& other) {
   return this;
 }
 
-Direct::Direct(CN<Direct> other): Direct() { this->operator=(other); }
+Direct::Direct(cr<Direct> other): Direct() { this->operator=(other); }
 
-Direct* Direct::operator =(CN<Direct> other) {
+Direct* Direct::operator =(cr<Direct> other) {
   if (this == std::addressof(other))
     return {};
 

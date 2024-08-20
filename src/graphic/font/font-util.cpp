@@ -3,8 +3,8 @@
 #include "graphic/font/font.hpp"
 #include "util/math/vec.hpp"
 
-void draw_center(CP<hpw::Font> font, Image& dst,
-CN<utf32> msg, blend_pf bf) {
+void draw_center(cp<hpw::Font> font, Image& dst,
+cr<utf32> msg, blend_pf bf) {
   auto w = font->text_width(msg);
   auto h = font->text_height(msg);
   Vec pos{

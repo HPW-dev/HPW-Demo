@@ -23,7 +23,7 @@ public:
 
   Flag_editor() = default;
   ~Flag_editor();
-  void emplace(get_flag_pf&& get_f, set_flag_pf&& set_f, CN<Str> name);
+  void emplace(get_flag_pf&& get_f, set_flag_pf&& set_f, cr<Str> name);
   void accept();
 
 private:

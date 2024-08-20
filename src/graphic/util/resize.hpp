@@ -39,21 +39,21 @@ void zoom_x8(Image& dst);
 // увеличивает спрайт в 8 раз
 void zoom_x8(Sprite& dst);
 // увеличивает спрайт в 3 раза
-Sprite pixel_upscale_x3(CN<Sprite> src);
+Sprite pixel_upscale_x3(cr<Sprite> src);
 // увеличивает картинку в 3 раза
-Image pixel_upscale_x3(CN<Image> src);
+Image pixel_upscale_x3(cr<Image> src);
 // уменьшает спрайт в 3 раза
-Sprite pixel_downscale_x3(CN<Sprite> src,
+Sprite pixel_downscale_x3(cr<Sprite> src,
   Color_get_pattern cgp = Color_get_pattern::cross,
   Color_compute ccf = Color_compute::most_common);
 // уменьшает картинку в 3 раза
-Image pixel_downscale_x3(CN<Image> src,
+Image pixel_downscale_x3(cr<Image> src,
   Color_get_pattern cgp = Color_get_pattern::cross,
   Color_compute ccf = Color_compute::most_common);
 // паттерн выборки пикселей крест
-Pack9 color_get_cross(CN<Image> src, int x, int y);
+Pack9 color_get_cross(cr<Image> src, int x, int y);
 // паттерн выборки пикселей квадрат
-Pack9 color_get_box(CN<Image> src, int x, int y);
+Pack9 color_get_box(cr<Image> src, int x, int y);
 // возвращает самый частый цвет
 Pal8 most_common_col(const Pack9 colors);
 // возвращает самый яркий цвет
@@ -68,8 +68,8 @@ Str convert(Color_compute ccf);
 // Color_get_pattern -> Str
 Str convert(Color_get_pattern cgp);
 // Str -> Color_compute
-Color_compute convert_to_ccf(CN<Str> name);
+Color_compute convert_to_ccf(cr<Str> name);
 // Str -> Color_get_pattern
-Color_get_pattern convert_to_cgp(CN<Str> name);
+Color_get_pattern convert_to_cgp(cr<Str> name);
 // билинейная интерполяция
-[[nodiscard]] Image resize_bilinear(CN<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y);
+[[nodiscard]] Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y);

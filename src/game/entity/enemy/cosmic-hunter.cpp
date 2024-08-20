@@ -58,7 +58,7 @@ void Cosmic_hunter::update(const Delta_time dt) {
 struct Cosmic_hunter::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     m_info.shoot_timer = Timer( config.get_real("shoot_timer") );
     m_info.speed = pps( config.get_real("speed") );
     m_info.rotate_speed = pps( config.get_real("rotate_speed") );
@@ -86,7 +86,7 @@ struct Cosmic_hunter::Loader::Impl {
 
 }; // Impl
 
-Cosmic_hunter::Loader::Loader(CN<Yaml> config)
+Cosmic_hunter::Loader::Loader(cr<Yaml> config)
 : Proto_enemy::Loader(config)
 , impl{new_unique<Impl>(config)}
 {}

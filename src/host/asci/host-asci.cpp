@@ -403,11 +403,11 @@ struct Host_asci::Impl {
 
   inline void parse_args() {
     Pparser arg_parser({
-      Pparser::Param {{"-w", "--width"}, "screen width", [this](CN<Str> param) { m_console_w = s2n<uint>(param); }},
-      Pparser::Param {{"-h", "--height"}, "screen height", [this](CN<Str> param) { m_console_h = s2n<uint>(param); }},
-      Pparser::Param {{"-f", "--target-fps"}, "target FPS", [this](CN<Str> param) { m_target_fps = s2n<uint>(param); }},
-      Pparser::Param {{"-s", "--frameskip"}, "frameskip value", [this](CN<Str> param) { m_frameskip = s2n<uint>(param); }},
-      Pparser::Param {{"-p", "--asci-palette"}, "predefined asci-palettes [1, 2, 3]", [this](CN<Str> param) {
+      Pparser::Param {{"-w", "--width"}, "screen width", [this](cr<Str> param) { m_console_w = s2n<uint>(param); }},
+      Pparser::Param {{"-h", "--height"}, "screen height", [this](cr<Str> param) { m_console_h = s2n<uint>(param); }},
+      Pparser::Param {{"-f", "--target-fps"}, "target FPS", [this](cr<Str> param) { m_target_fps = s2n<uint>(param); }},
+      Pparser::Param {{"-s", "--frameskip"}, "frameskip value", [this](cr<Str> param) { m_frameskip = s2n<uint>(param); }},
+      Pparser::Param {{"-p", "--asci-palette"}, "predefined asci-palettes [1, 2, 3]", [this](cr<Str> param) {
         const uint palette_index = s2n<uint>(param);
         switch (palette_index) {
           default:

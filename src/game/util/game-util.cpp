@@ -50,7 +50,7 @@
 #include "host/command.hpp"
 
 // грузит спрайт либо из файловой системы, либо из архива
-Shared<Sprite> sprite_loader(CN<Str> name) {
+Shared<Sprite> sprite_loader(cr<Str> name) {
   auto spr = new_shared<Sprite>();
   assert(hpw::archive);
   #ifdef EDITOR
@@ -61,7 +61,7 @@ Shared<Sprite> sprite_loader(CN<Str> name) {
   return spr;
 }
 
-decltype(hpw::store_sprite)::element_type::Velue find_err_cb(CN<Str> _name) {
+decltype(hpw::store_sprite)::element_type::Velue find_err_cb(cr<Str> _name) {
   assert(hpw::store_sprite);
   auto name {_name};
   #ifdef EDITOR
@@ -93,7 +93,7 @@ void load_resources() {
 
   // загрузка всех спрайтов
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
-  auto name_filter = [](CN<Str> name) {
+  auto name_filter = [](cr<Str> name) {
     Str find_str = "resource/image/";
     #ifdef EDITOR
       conv_sep(find_str);
@@ -130,7 +130,7 @@ void load_animations() {
   }
 }
 
-CN<utf32> get_locale_str(CN<Str> key) {
+cr<utf32> get_locale_str(cr<Str> key) {
   assert(hpw::store_locale);
   if (auto ret = hpw::store_locale->find(key); ret)
     return ret->str;
@@ -142,7 +142,7 @@ CN<utf32> get_locale_str(CN<Str> key) {
   return last_error;
 }
 
-Circle cover_polygons(CN<Vector<Polygon>> polygons) {
+Circle cover_polygons(cr<Vector<Polygon>> polygons) {
   if (polygons.empty())
     return {};
 
@@ -169,7 +169,7 @@ Circle cover_polygons(CN<Vector<Polygon>> polygons) {
 Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0); }
 
 // создаёт спрайт только с белыми контурами по исходному спрайту
-Sprite extract_contour(CN<Sprite> src) {
+Sprite extract_contour(cr<Sprite> src) {
   if (!src) {
     hpw_log("WARNING: extract_contour src is empty\n");
     return {};
@@ -202,7 +202,7 @@ Sprite extract_contour(CN<Sprite> src) {
   return ret;
 } // extract_contour
 
-CN<Shared<Anim>> make_light_mask(CN<Str> src, CN<Str> dst) {
+cr<Shared<Anim>> make_light_mask(cr<Str> src, cr<Str> dst) {
   auto dst_anim = new_shared<Anim>();
   auto src_anim = hpw::anim_mgr->find_anim(src);
   assert(src_anim);
@@ -291,10 +291,10 @@ void draw_controls(Image& dst) {
   graphic::font->draw(dst, pos + text_offset, inputs);
 } // draw_controls
 
-Str calc_sum(CP<void> data, std::size_t sz) {
+Str calc_sum(cp<void> data, std::size_t sz) {
   hash_sha256 hash;
   hash.sha256_init();
-  hash.sha256_update(scast<CP<uint8_t>>(data), sz);
+  hash.sha256_update(scast<cp<uint8_t>>(data), sz);
   auto hash_ret = hash.sha256_final();
         
   std::stringstream ss;
@@ -311,12 +311,12 @@ void init_validation_info() {
     Str path = hpw::cur_dir + "HPW";
   #endif
   auto mem = mem_from_file(path);
-  hpw::exe_sha256 = calc_sum( scast<CP<void>>(mem.data()), mem.size() );
+  hpw::exe_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
   // DATA
   path = hpw::cur_dir + "data.zip";
   mem = mem_from_file(path);
-  hpw::data_sha256 = calc_sum( scast<CP<void>>(mem.data()), mem.size() );
+  hpw::data_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
   hpw_log("game executable SHA256: " + hpw::exe_sha256 + "\n");
   hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
@@ -335,7 +335,7 @@ utf32 difficulty_to_str(const Difficulty difficulty) {
 
 /** нарезает ресурсы на атлас для save_all_sprites
 *@return если вернул true, то можно продолжать нарезку ресурсов */
-inline static bool stream_concat(CN<Strs> sprite_list,
+inline static bool stream_concat(cr<Strs> sprite_list,
 std::size_t& idx, Sprite& buffer) {
   assert(!sprite_list.empty());
   assert(buffer);
@@ -382,7 +382,7 @@ std::size_t& idx, Sprite& buffer) {
 // фильтрует и сортирует имена спрайтов для save_all_sprites
 inline static void prepare_sprite_list(Strs& sprite_list) {
   assert(hpw::store_sprite);
-  constexpr auto name_filter = [](CN<Str> sprite_name) {
+  constexpr auto name_filter = [](cr<Str> sprite_name) {
     cauto sprite = hpw::store_sprite->find(sprite_name);
     const bool exist = sprite && *sprite;
     return sprite_name.find("tile") == str_npos // тайлы уровня не нужны
@@ -396,7 +396,7 @@ inline static void prepare_sprite_list(Strs& sprite_list) {
   sprite_list = tmp;
 
   // сортировка спрайтов по размеру
-  std::sort(sprite_list.begin(), sprite_list.end(), [](CN<Str> a, CN<Str> b) {
+  std::sort(sprite_list.begin(), sprite_list.end(), [](cr<Str> a, cr<Str> b) {
     cauto sprite_a = hpw::store_sprite->find(a);
     cauto sprite_b = hpw::store_sprite->find(b);
     // при одинаковых размерах сортировать по ширине
@@ -406,7 +406,7 @@ inline static void prepare_sprite_list(Strs& sprite_list) {
   });
 } // prepare_sprite_list
 
-void save_all_sprites(CN<Str> save_dir, const int MX, const int MY) {
+void save_all_sprites(cr<Str> save_dir, const int MX, const int MY) {
   assert(MX >= 256);
   assert(MY >= 256);
   assert(hpw::store_sprite);
@@ -459,7 +459,7 @@ void load_sounds() {
   try {
     // TODO применение настроек при создании
     init_unique<Sound_mgr_oal>(hpw::sound_mgr);
-  } catch (CN<hpw::Error> err) {
+  } catch (cr<hpw::Error> err) {
     hpw_log("Error while initialize OpenAL sound system. Sound disabled\n");
     std::cerr << err.what() << std::endl;
     hpw::sound_mgr_init_error = true;
@@ -472,7 +472,7 @@ void load_sounds() {
   auto names = hpw::archive->get_all_names();
 #endif
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
-  auto name_filter = [](CN<Str> name) {
+  auto name_filter = [](cr<Str> name) {
     Str find_str = "resource/audio/";
 #ifdef EDITOR
     conv_sep(find_str);
@@ -515,7 +515,7 @@ void load_sounds() {
 
 void set_random_palette() {
   cauto sprites = hpw::archive->get_all_names(false);;
-  cauto filter = [](CN<Str> src) {
+  cauto filter = [](cr<Str> src) {
     return src.find("resource/image/palettes/") != Str::npos;
   };
   Rnd_table<Str> palettes( sprites | std::views::filter(filter)
@@ -525,7 +525,7 @@ void set_random_palette() {
   hpw::init_palette_from_archive (palette_name);
 }
 
-void save_screenshot(CN<Image> image) {
+void save_screenshot(cr<Image> image) {
   assert(image);
 
   auto t = std::time(nullptr);

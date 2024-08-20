@@ -8,7 +8,7 @@ extern "C" {
 #include "util/str-util.hpp"
 #include "util/file/file.hpp"
 
-File::File(CN<Bytes> _data, CN<Str> _path)
+File::File(cr<Bytes> _data, cr<Str> _path)
 : Resource {_path}
 , data {_data}
 {}
@@ -67,6 +67,6 @@ Strs Archive::get_all_names(bool width_folders) const {
   return ret;
 } // get_all_names
 
-void Archive::_zip_check(int errcode, CN<Str> fname) const {
+void Archive::_zip_check(int errcode, cr<Str> fname) const {
   iferror(errcode < 0, fname << ":" << zip_strerror(errcode));
 }

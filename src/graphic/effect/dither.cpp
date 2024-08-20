@@ -70,10 +70,10 @@ inline constexpr const std::array<real, scast<std::size_t>(bayer_2x2_sz.x * baye
 
 struct Table {
   Vec sz {};
-  CP<real> table {};
+  cp<real> table {};
 };
 
-CN<Table> get_table(Dither type) {
+cr<Table> get_table(Dither type) {
   static const Table null_table {
     .sz = {},
     .table = nullptr
@@ -90,7 +90,7 @@ CN<Table> get_table(Dither type) {
   }
 } // get_table
 
-void dither_blend(Image& dst, CN<Image> src, const Vec pos, real alpha,
+void dither_blend(Image& dst, cr<Image> src, const Vec pos, real alpha,
 Dither type, blend_pf bf) {
   error("need impl");
   return_if (!dst || !src);
@@ -105,7 +105,7 @@ Dither type, blend_pf bf) {
   }
 }
 
-void dither_blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
+void dither_blend(Image& dst, cr<Sprite> src, const Vec pos, real alpha,
 Dither type, blend_pf bf) {
   return_if (!src || !dst);
   return_if (alpha <= 0);

@@ -15,10 +15,10 @@ public:
   Error() = default;
   ~Error() = default;
 
-  explicit Error (CN<Str> _msg, CN<Str> _location={});
+  explicit Error (cr<Str> _msg, cr<Str> _location={});
   Cstr what() const noexcept override;
-  CN<decltype(msg)> get_msg() const;
-  CN<decltype(location)> get_location() const;
+  cr<decltype(msg)> get_msg() const;
+  cr<decltype(location)> get_location() const;
 }; // Error
 
 } // hpw ns

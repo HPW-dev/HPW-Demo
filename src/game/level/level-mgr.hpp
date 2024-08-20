@@ -19,7 +19,7 @@ public:
   // чтобы между уровнями игрок ставился в одно и то же место
   Vec m_player_pos_from_prev_level {};
 
-  explicit Level_mgr(CN<Makers> _makers = {});
+  explicit Level_mgr(cr<Makers> _makers = {});
   ~Level_mgr() = default;
   // завершить текущий уровень
   void finalize_level();
@@ -37,7 +37,7 @@ public:
   // управляет видимостью фона
   void set_visible(bool mode);
   // установить текущий уровень
-  void set(CN<Maker> maker);
+  void set(cr<Maker> maker);
 
 private:
   nocopy(Level_mgr);

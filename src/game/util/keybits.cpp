@@ -27,7 +27,7 @@ bool is_pressed_once(hpw::keycode code) {
   return key.cur == true && key.prev == false;
 }
 
-CP<Keys_info::Item> Keys_info::find(hpw::keycode hpw_key) const {
+cp<Keys_info::Item> Keys_info::find(hpw::keycode hpw_key) const {
   crauto item = std::find_if(keys.begin(), keys.end(), [hpw_key](auto it)->bool
     { return it.hpw_key == hpw_key; });
   if (item != keys.end())

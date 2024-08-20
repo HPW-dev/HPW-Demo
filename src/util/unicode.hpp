@@ -16,7 +16,7 @@ using utf32 = std::u32string;
 
 // string convert
 template <class OUT, have_begin_end IN>
-OUT sconv(CN<IN> src)
+OUT sconv(cr<IN> src)
   { return OUT(src.begin(), src.end()); }
 
 // other c-string style convert
@@ -39,7 +39,7 @@ yn2s(bool comp)
 
 // num -> str
 template <class OUT, typename NUM_T>
-OUT n2s(CN<NUM_T> num) {
+OUT n2s(cr<NUM_T> num) {
   cauto str_num = std::to_string(num);
   cauto ret = sconv<OUT>(str_num);
   return ret;
@@ -47,7 +47,7 @@ OUT n2s(CN<NUM_T> num) {
 
 // num -> str + precission len
 template <class OUT, typename NUM_T>
-OUT n2s(CN<NUM_T> num, int prec) {
+OUT n2s(cr<NUM_T> num, int prec) {
   std::ostringstream out;
   out.precision(prec);
   out << std::fixed << num;
@@ -56,7 +56,7 @@ OUT n2s(CN<NUM_T> num, int prec) {
 
 // делит строку в местах разделительного символа
 template <class str_t, typename ch_t>
-Vector<str_t> split(CN<str_t> str, ch_t separator) {
+Vector<str_t> split(cr<str_t> str, ch_t separator) {
   Vector<str_t> ret;
   std::basic_stringstream<ch_t> ss(str);
   str_t token;
@@ -74,14 +74,14 @@ void remove_all(str_t& str, ch_t ch)
 template <class str_t, typename ch_t>
 void replace_all(str_t& str, ch_t find_it, ch_t replace_to) {
   std::transform( str.begin(), str.end(), str.begin(),
-    [find_it, replace_to](CN<ch_t> src) {
+    [find_it, replace_to](cr<ch_t> src) {
       return src == find_it ? replace_to : src;
     } );
 }
 
 // строку в число
 template <class str_t, typename T>
-T s2n(CN<str_t> str,
+T s2n(cr<str_t> str,
 auto base = std::hex) {
   using ch_t = typename str_t::value_type;
   std::basic_stringstream<ch_t> ss;
@@ -92,4 +92,4 @@ auto base = std::hex) {
 }
 
 // точное перекодирование из utf8 строки в utf32
-utf32 utf8_to_32(CN<Str> text);
+utf32 utf8_to_32(cr<Str> text);

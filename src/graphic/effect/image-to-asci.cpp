@@ -6,8 +6,8 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/resize.hpp"
 
-[[nodiscard]] inline static Str img_to_grayscale(CN<Image> src,
-const uint W, const uint H, CN<std::string_view> PAL) {
+[[nodiscard]] inline static Str img_to_grayscale(cr<Image> src,
+const uint W, const uint H, cr<std::string_view> PAL) {
   constexpr uint CHAR_Y = 13;
   constexpr uint CHAR_X = 8;
   assert(PAL.size() > 1);
@@ -45,7 +45,7 @@ const uint W, const uint H, CN<std::string_view> PAL) {
   return asci_art;
 }
 
-Str to_asci(CN<Image> src, const uint W, const uint H, const Img_to_asci_mode MODE) {
+Str to_asci(cr<Image> src, const uint W, const uint H, const Img_to_asci_mode MODE) {
   assert(W);
   assert(H);
   assert(src);

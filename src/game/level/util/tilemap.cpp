@@ -27,9 +27,9 @@ struct Tilemap::Impl {
   int m_tile_h {};
 
   inline Impl() = default;
-  inline Impl(CN<Str> fname) { load_from_archive(fname); }
+  inline Impl(cr<Str> fname) { load_from_archive(fname); }
 
-  inline void load(CN<Yaml> config) {
+  inline void load(cr<Yaml> config) {
     auto tilemap_node = config["tilemap"];
 
     m_source_config = tilemap_node.get_path();
@@ -61,7 +61,7 @@ struct Tilemap::Impl {
     } // for tile names
   } // load
 
-  inline void load_from_archive(CN<Str> fname) {
+  inline void load_from_archive(cr<Str> fname) {
     auto file_data = hpw::archive->get_file(fname);
     Yaml config(file_data);
     load(config);
@@ -87,10 +87,10 @@ struct Tilemap::Impl {
 
 Tilemap::Tilemap(Tilemap&& other): impl{std::move(other.impl)} {}
 Tilemap::Tilemap(): impl{new_unique<Impl>()} {}
-Tilemap::Tilemap(CN<Str> fname): impl{new_unique<Impl>(fname)} {}
+Tilemap::Tilemap(cr<Str> fname): impl{new_unique<Impl>(fname)} {}
 Tilemap::~Tilemap() {}
-void Tilemap::load(CN<Yaml> config) { impl->load(config); }
-void Tilemap::load_from_archive(CN<Str> fname) { impl->load_from_archive(fname); }
+void Tilemap::load(cr<Yaml> config) { impl->load(config); }
+void Tilemap::load_from_archive(cr<Str> fname) { impl->load_from_archive(fname); }
 void Tilemap::draw(const Vec pos, Image& dst, blend_pf bf, int optional) const { impl->draw(pos, dst, bf, optional); }
 int Tilemap::get_original_w() const { return impl->get_original_w(); }
 int Tilemap::get_original_h() const { return impl->get_original_h(); }

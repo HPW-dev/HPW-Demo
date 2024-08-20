@@ -36,7 +36,7 @@ void delay_sec(const Seconds seconds);
 void calibrate_delay(const Seconds target);
 
 // выбрать таймер по имени
-void set_timer(CN<Str> name);
+void set_timer(cr<Str> name);
 
 // унать какой таймер используется сейчас
 Str get_timer();

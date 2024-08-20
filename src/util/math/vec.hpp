@@ -11,9 +11,9 @@ struct Vec {
   Vec() = default;
   inline constexpr Vec(auto _x, auto _y) noexcept: x(_x), y(_y) {}
   inline constexpr Vec(have_xy auto in) noexcept: x(in.x), y(in.y) {}
-  inline constexpr Vec(CN<Vec> other) noexcept: x {other.x}, y {other.y} {}
+  inline constexpr Vec(cr<Vec> other) noexcept: x {other.x}, y {other.y} {}
   inline constexpr Vec(Vec&& other) noexcept: x {other.x}, y {other.y} {}
-  inline constexpr Vec& operator=(CN<Vec> other) noexcept { x = other.x; y = other.y; return *this; }
+  inline constexpr Vec& operator=(cr<Vec> other) noexcept { x = other.x; y = other.y; return *this; }
   inline constexpr Vec& operator=(Vec&& other) noexcept { x = other.x; y = other.y; return *this; }
 
   inline constexpr bool operator ==(const Vec in) const { return x == in.x && y == in.y; }

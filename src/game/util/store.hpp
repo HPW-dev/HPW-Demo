@@ -14,13 +14,13 @@ template <class T>
 class Store {
 public:
   using Velue = Shared<T>;
-  using Find_err_cb = std::function<Velue (CN<Str> name)>;
+  using Find_err_cb = std::function<Velue (cr<Str> name)>;
 
   Store() = default;
   ~Store() = default;
-  Velue& push(CN<Str> name, CN<Velue> res);
-  Velue& move(CN<Str> name, Shared<T>&& res);
-  Velue find(CN<Str> name) const;
+  Velue& push(cr<Str> name, cr<Velue> res);
+  Velue& move(cr<Str> name, Shared<T>&& res);
+  Velue find(cr<Str> name) const;
   // узнать названия всех ресурсов
   Strs list(bool without_generated=false) const;
   void move_find_err_cb(Find_err_cb&& cb);
@@ -35,7 +35,7 @@ private:
 // ----------------------- impl ------------------------------
 
 template <class T>
-Store<T>::Velue Store<T>::find(CN<Str> name) const {
+Store<T>::Velue Store<T>::find(cr<Str> name) const {
   try {
     return m_table.at(name);
   } catch (...) {
@@ -46,7 +46,7 @@ Store<T>::Velue Store<T>::find(CN<Str> name) const {
 }
 
 template <class T>
-Store<T>::Velue& Store<T>::push(CN<Str> name, CN<Velue> res) {
+Store<T>::Velue& Store<T>::push(cr<Str> name, cr<Velue> res) {
   detailed_log("Store.push: " << name << "\n");
   res->set_path(name);
   if (m_table.count(name) != 0)
@@ -57,7 +57,7 @@ Store<T>::Velue& Store<T>::push(CN<Str> name, CN<Velue> res) {
 }
 
 template <class T>
-Store<T>::Velue& Store<T>::move(CN<Str> name, Velue&& res) {
+Store<T>::Velue& Store<T>::move(cr<Str> name, Velue&& res) {
   detailed_log("Store.move: " << name << "\n");
   res->set_path(name);
   if (m_table.count(name) != 0)

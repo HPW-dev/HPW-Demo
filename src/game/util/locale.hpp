@@ -9,7 +9,7 @@ class Locale final: public Resource {
 public:
   utf32 str {};
   
-  inline Locale(CN<utf32> in): str{in} {}
+  inline Locale(cr<utf32> in): str{in} {}
   Locale() = default;
   ~Locale() = default;
 };

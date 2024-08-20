@@ -16,6 +16,6 @@ struct Collidable_info {
   bool ignore_master {};
   bool ignore_player {};
 
-  void load(CN<Yaml> node);
+  void load(cr<Yaml> node);
   void accept(Collidable& dst);
 };

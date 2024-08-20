@@ -144,7 +144,7 @@ void calibrate_delay(const Seconds target) {
   }
 
   // найти самый точный таймер
-  CP<Timer_stat> best_timer = &statistic.at(0);
+  cp<Timer_stat> best_timer = &statistic.at(0);
   double min_error = best_timer->delay_error;
   for (crauto stat: statistic)
     if (min_error > stat.delay_error) {
@@ -157,7 +157,7 @@ void calibrate_delay(const Seconds target) {
   hpw_log("коррекция таймера: " << n2s(g_delay_error, 14) << " сек.\n");
 } // calibrate_delay
 
-void set_timer(CN<Str> name) {
+void set_timer(cr<Str> name) {
   static const std::unordered_map<Str, Delay_pf> table {
     {"std_delay", &std_delay},
     {"std_delay_nop", &std_delay_nop},

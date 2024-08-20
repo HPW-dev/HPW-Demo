@@ -8,7 +8,7 @@ struct Ability_speedup::Impl {
   nocopy(Impl);
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {}
+  inline explicit Impl(cr<Player> player) {}
   inline void update(Player& player, const Delta_time dt) {}
   inline void power_up() {}
   inline utf32 name() const { return get_locale_str("plyaer.ability.speedup.name"); }
@@ -21,12 +21,12 @@ struct Ability_speedup::Impl {
     return {};
   }
 
-  inline CP<Sprite> icon() const {
+  inline cp<Sprite> icon() const {
     return {}; // TODO
   }
 }; // Impl
 
-Ability_speedup::Ability_speedup(CN<Player> player)
+Ability_speedup::Ability_speedup(cr<Player> player)
   : Ability {typeid(Ability_speedup).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_speedup::~Ability_speedup() {}
@@ -34,4 +34,4 @@ void Ability_speedup::update(Player& player, const Delta_time dt) { impl->update
 void Ability_speedup::power_up() { impl->power_up(); }
 utf32 Ability_speedup::name() const { return impl->name(); }
 utf32 Ability_speedup::desc() const { return impl->desc(); }
-CP<Sprite> Ability_speedup::icon() const { return impl->icon(); }
+cp<Sprite> Ability_speedup::icon() const { return impl->icon(); }

@@ -43,7 +43,7 @@ Ability* Player::move_ability(Shared<Ability>&& ability) {
 Ability* Player::find_ability(const std::size_t type_id) const {
   crauto it = std::find_if (
     capabilities.begin(), capabilities.end(),
-    [type_id](CN<decltype(capabilities)::value_type> ability)
+    [type_id](cr<decltype(capabilities)::value_type> ability)
       { return ability->type_id() == type_id; }
   );
   if (it != capabilities.end())

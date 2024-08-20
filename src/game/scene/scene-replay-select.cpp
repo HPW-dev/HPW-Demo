@@ -90,7 +90,7 @@ struct Scene_replay_select::Impl {
       try {
         cauto info = Replay::get_info(replay_file);
         m_replay_info_table.push_back(info);
-      } catch (CN<hpw::Error> error) {
+      } catch (cr<hpw::Error> error) {
         hpw_log("не удалось загрузить один из реплеев: " << error.what() << "\n");
       } catch (...) {
         hpw_log("не удалось загрузить один из реплеев\n");
@@ -99,7 +99,7 @@ struct Scene_replay_select::Impl {
   } // load_replays
 
   // для сравнения времени создания реплея
-  inline static bool date_comparator(CN<Replay::Info> a, CN<Replay::Info> b) {
+  inline static bool date_comparator(cr<Replay::Info> a, cr<Replay::Info> b) {
     // год
     if (a.date.year < b.date.year) return false;
     if (a.date.year > b.date.year) return true;

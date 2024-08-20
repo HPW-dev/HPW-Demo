@@ -60,7 +60,7 @@ void Enemy_snake_tail::update(const Delta_time dt) {
 struct Enemy_snake_head::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     m_info.speed = pps( config.get_real("speed") );
 
     cauto tail_node = config["tail"];
@@ -87,7 +87,7 @@ struct Enemy_snake_head::Loader::Impl {
 struct Enemy_snake_tail::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(CN<Yaml> config) {;
+  inline explicit Impl(cr<Yaml> config) {;
     m_info.start_motion_radius = config.get_real("start_motion_radius");
     assert(m_info.start_motion_radius >= 0 && m_info.start_motion_radius <= 100'000);
   }
@@ -143,7 +143,7 @@ Entity* Enemy_snake_tail::Loader::operator()
   return ret;
 }
 
-Enemy_snake_head::Loader::Loader(CN<Yaml> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
-Enemy_snake_tail::Loader::Loader(CN<Yaml> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
+Enemy_snake_head::Loader::Loader(cr<Yaml> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
+Enemy_snake_tail::Loader::Loader(cr<Yaml> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
 Enemy_snake_head::Loader::~Loader() {}
 Enemy_snake_tail::Loader::~Loader() {}

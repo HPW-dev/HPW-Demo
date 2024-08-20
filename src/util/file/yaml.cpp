@@ -15,7 +15,7 @@
 class Yaml::Impl: public Resource {
   YAML::Node self {};
 
-  inline void get_kv_table_helper(vkv_t &v_kv, CN<Str> key, CN<decltype(self)> v_node) const {
+  inline void get_kv_table_helper(vkv_t &v_kv, cr<Str> key, cr<decltype(self)> v_node) const {
     if (v_node.size() == 0) {
       v_kv.push_back(kv_t{ .key=str_tolower(key), .value=v_node.as<Str>() });
     } else {
@@ -24,7 +24,7 @@ class Yaml::Impl: public Resource {
     }
   }
 
-  inline void get_kv32_table_helper(vkvu32_t &v_kv32, CN<Str> key, CN<decltype(self)> v_node) const {
+  inline void get_kv32_table_helper(vkvu32_t &v_kv32, cr<Str> key, cr<decltype(self)> v_node) const {
     if (v_node.size() == 0) {
       using utf8_to_utf32 = std::codecvt_utf8<char32_t>;
       std::wstring_convert<utf8_to_utf32, char32_t> conv;
@@ -39,14 +39,14 @@ class Yaml::Impl: public Resource {
   } // get_kv32_table_helper
 
   template <class T>
-  inline void set_v(CN<Str> name, CN<Vector<T>> val) {
+  inline void set_v(cr<Str> name, cr<Vector<T>> val) {
     cfor (i, val.size())
       self[name][i] = val[i];
   }
 
   // helper for get value from YAML
   template <class T>
-  inline T _get(CN<Str> name, CN<T> default_val) const {
+  inline T _get(cr<Str> name, cr<T> default_val) const {
     try {
       return self[name].as<T>();
     } catch (...) {
@@ -58,7 +58,7 @@ class Yaml::Impl: public Resource {
   } // _get
 
   // версия для utf8 строк
-  inline utf8 _get_utf8(CN<Str> name, CN<utf8> default_val) const {
+  inline utf8 _get_utf8(cr<Str> name, cr<utf8> default_val) const {
     try {
       return sconv<utf8>(self[name].as<Str>());
     } catch (...) {
@@ -70,7 +70,7 @@ class Yaml::Impl: public Resource {
   } // _get utf8
 
   template <class T>
-  inline Vector<T> _get_v(CN<Str> name, CN<Vector<T>> default_val) const {
+  inline Vector<T> _get_v(cr<Str> name, cr<Vector<T>> default_val) const {
     try {
       Vector<T> ret;
       auto items = self[name];
@@ -89,7 +89,7 @@ class Yaml::Impl: public Resource {
 public:
   inline Impl(): Resource() {}
   
-  inline Impl(CN<Impl> other) noexcept: self {other.self}
+  inline Impl(cr<Impl> other) noexcept: self {other.self}
     { Resource::operator = (other); }
 
   inline Impl(Impl&& other) noexcept: self {std::move(other.self)}
@@ -103,7 +103,7 @@ public:
 
     try {
       self = YAML::LoadFile(fname);
-    } catch (CN<YAML::BadFile> ex) { // если файла нет, то создать его с нуля
+    } catch (cr<YAML::BadFile> ex) { // если файла нет, то создать его с нуля
       if (make_if_not_exist) {
         hpw_log("файл \"" << fname << "\" отсутствует. Пересоздание\n")
         std::ofstream file(fname);
@@ -113,21 +113,21 @@ public:
     }
   } // c-tor(fname, make_if_not_exist)
 
-  inline Impl(CN<File> file)
+  inline Impl(cr<File> file)
   : Resource(file.get_path()) {
     detailed_log("Yaml: loading from memory \"" << file.get_path() << "\"\n");
     self = YAML::Load({file.data.begin(), file.data.end()});
   }
 
-  inline Impl(CN<Yaml> other) { this->operator=(other); }
+  inline Impl(cr<Yaml> other) { this->operator=(other); }
   inline Impl(Yaml&& other) { this->operator=(std::move(other)); }
 
-  inline Impl(CN<YAML::Node> node, CN<Str> new_path)
+  inline Impl(cr<YAML::Node> node, cr<Str> new_path)
   : Resource(new_path)
   , self(node)
   {}
 
-  inline Impl& operator = (CN<Yaml> other) {
+  inline Impl& operator = (cr<Yaml> other) {
     if (std::addressof(self) != std::addressof(other.impl->self)) {
       self = other.impl->self;
       Resource::operator=(other);
@@ -155,28 +155,28 @@ public:
 
   inline void clear() { self = {}; }
 
-  inline Yaml make_node(CN<Str> name) {
+  inline Yaml make_node(cr<Str> name) {
     self[name] = YAML::Node(YAML::NodeType::Null);
     return Impl(self[name], Resource::get_path());
   }
 
-  inline Yaml make_node_if_not_exist(CN<Str> name) {
+  inline Yaml make_node_if_not_exist(cr<Str> name) {
     if (auto node = Impl(self[name], Resource::get_path()); node.check())
       return node;
     return make_node(name);
   }
 
-  inline void delete_node(CN<Str> name) { self.remove(name); }
+  inline void delete_node(cr<Str> name) { self.remove(name); }
 
-  inline void set_int(CN<Str> name, int val) { self[name] = val; }
-  inline void set_real(CN<Str> name, real val) { self[name] = val; }
-  inline void set_bool(CN<Str> name, bool val) { self[name] = val; }
-  inline void set_str(CN<Str> name, CN<Str> val) { self[name] = val; }
-  inline void set_utf8(CN<Str> name, CN<utf8> val) { self[name] = sconv<Str>(val); }
-  inline void set_v_int(CN<Str> name, CN<Vector<int>> val) { set_v(name, val); }
-  inline void set_v_str(CN<Str> name, CN<Vector<Str>> val) { set_v(name, val); }
-  inline void set_v_real(CN<Str> name, CN<Vector<real>> val) { set_v(name, val); }
-  inline Yaml operator[] (CN<Str> name) const {
+  inline void set_int(cr<Str> name, int val) { self[name] = val; }
+  inline void set_real(cr<Str> name, real val) { self[name] = val; }
+  inline void set_bool(cr<Str> name, bool val) { self[name] = val; }
+  inline void set_str(cr<Str> name, cr<Str> val) { self[name] = val; }
+  inline void set_utf8(cr<Str> name, cr<utf8> val) { self[name] = sconv<Str>(val); }
+  inline void set_v_int(cr<Str> name, cr<Vector<int>> val) { set_v(name, val); }
+  inline void set_v_str(cr<Str> name, cr<Vector<Str>> val) { set_v(name, val); }
+  inline void set_v_real(cr<Str> name, cr<Vector<real>> val) { set_v(name, val); }
+  inline Yaml operator[] (cr<Str> name) const {
     try {
       auto node = self[name];
       iferror(!node, "!node");
@@ -187,14 +187,14 @@ public:
     }
     return {};
   }
-  inline Str get_str(CN<Str> name, CN<Str> def) const { return _get(name, def); }
-  inline int get_int(CN<Str> name, int def) const { return _get(name, def); }
-  inline real get_real(CN<Str> name, real def) const { return _get(name, def); }
-  inline bool get_bool(CN<Str> name, bool def) const { return _get(name, def); }
-  inline utf8 get_utf8(CN<Str> name, CN<utf8> def) const  { return _get_utf8(name, def); }
-  inline Vector<Str> get_v_str(CN<Str> name, CN<Vector<Str>> def) const { return _get_v(name, def); }
-  inline Vector<int> get_v_int(CN<Str> name, CN<Vector<int>> def) const { return _get_v(name, def); }
-  inline Vector<real> get_v_real(CN<Str> name, CN<Vector<real>> def) const { return _get_v(name, def); }
+  inline Str get_str(cr<Str> name, cr<Str> def) const { return _get(name, def); }
+  inline int get_int(cr<Str> name, int def) const { return _get(name, def); }
+  inline real get_real(cr<Str> name, real def) const { return _get(name, def); }
+  inline bool get_bool(cr<Str> name, bool def) const { return _get(name, def); }
+  inline utf8 get_utf8(cr<Str> name, cr<utf8> def) const  { return _get_utf8(name, def); }
+  inline Vector<Str> get_v_str(cr<Str> name, cr<Vector<Str>> def) const { return _get_v(name, def); }
+  inline Vector<int> get_v_int(cr<Str> name, cr<Vector<int>> def) const { return _get_v(name, def); }
+  inline Vector<real> get_v_real(cr<Str> name, cr<Vector<real>> def) const { return _get_v(name, def); }
 
   inline Yaml::vkv_t get_kv_table() const {
     vkv_t v_kv;
@@ -226,7 +226,7 @@ Yaml::Yaml(Str fname, bool make_if_not_exist)
   Resource::operator=(*impl);
 }
 
-Yaml::Yaml(CN<File> file)
+Yaml::Yaml(cr<File> file)
 : impl {new_unique<Impl>(file)}
 {
   Resource::operator=(*impl);
@@ -242,13 +242,13 @@ Yaml::Yaml()
 : impl {new_unique<Impl>()}
 {}
 
-Yaml::Yaml(CN<Yaml> other)
+Yaml::Yaml(cr<Yaml> other)
 : impl {new_unique<Impl>(other)}
 {
   Resource::operator=(other);
 }
 
-Yaml::Yaml(CN<Impl> new_impl)
+Yaml::Yaml(cr<Impl> new_impl)
 : impl {new_unique<Impl>(new_impl)}
 {
   Resource::operator=(*impl);
@@ -257,7 +257,7 @@ Yaml::Yaml(CN<Impl> new_impl)
 // деструктор должен бытьв .cpp файле, а то не выйдет запихнуть реализаццию в unique_ptr
 Yaml::~Yaml() {}
 
-Yaml& Yaml::operator = (CN<Yaml> other) {
+Yaml& Yaml::operator = (cr<Yaml> other) {
   if (this != std::addressof(other)) {
     impl->operator =(other);
     Resource::operator=(*impl);
@@ -275,26 +275,26 @@ Yaml& Yaml::operator = (Yaml&& other) noexcept {
 
 void Yaml::save(Str fname) const { impl->save(fname); }
 void Yaml::clear() { impl->clear(); }
-Yaml Yaml::make_node(CN<Str> name) { return impl->make_node(name); }
-Yaml Yaml::make_node_if_not_exist(CN<Str> name) { return impl->make_node_if_not_exist(name); }
-void Yaml::delete_node(CN<Str> name) { impl->delete_node(name); }
-void Yaml::set_int(CN<Str> name, int val) { impl->set_int(name, val); }
-void Yaml::set_real(CN<Str> name, real val) { impl->set_real(name, val); }
-void Yaml::set_bool(CN<Str> name, bool val) { impl->set_bool(name, val); }
-void Yaml::set_str(CN<Str> name, CN<Str> val) { impl->set_str(name, val); }
-void Yaml::set_utf8(CN<Str> name, CN<utf8> val) { impl->set_utf8(name, val); }
-void Yaml::set_v_int(CN<Str> name, CN<Vector<int>> val) { impl->set_v_int(name, val); }
-void Yaml::set_v_str(CN<Str> name, CN<Vector<Str>> val) { impl->set_v_str(name, val); }
-void Yaml::set_v_real(CN<Str> name, CN<Vector<real>> val) { impl->set_v_real(name, val); }
-Yaml Yaml::operator[] (CN<Str> name) const { return impl->operator[](name); }
-Str Yaml::get_str(CN<Str> name, CN<Str> def) const { return impl->get_str(name, def); }
-int Yaml::get_int(CN<Str> name, int def) const { return impl->get_int(name, def); }
-real Yaml::get_real(CN<Str> name, real def) const { return impl->get_real(name, def); }
-bool Yaml::get_bool(CN<Str> name, bool def) const { return impl->get_bool(name, def); }
-utf8 Yaml::get_utf8(CN<Str> name, CN<utf8> def) const { return impl->get_utf8(name, def); }
-Vector<Str> Yaml::get_v_str(CN<Str> name, CN<Vector<Str>> def) const { return impl->get_v_str(name, def); }
-Vector<int> Yaml::get_v_int(CN<Str> name, CN<Vector<int>> def) const { return impl->get_v_int(name, def); }
-Vector<real> Yaml::get_v_real(CN<Str> name, CN<Vector<real>> def) const { return impl->get_v_real(name, def); }
+Yaml Yaml::make_node(cr<Str> name) { return impl->make_node(name); }
+Yaml Yaml::make_node_if_not_exist(cr<Str> name) { return impl->make_node_if_not_exist(name); }
+void Yaml::delete_node(cr<Str> name) { impl->delete_node(name); }
+void Yaml::set_int(cr<Str> name, int val) { impl->set_int(name, val); }
+void Yaml::set_real(cr<Str> name, real val) { impl->set_real(name, val); }
+void Yaml::set_bool(cr<Str> name, bool val) { impl->set_bool(name, val); }
+void Yaml::set_str(cr<Str> name, cr<Str> val) { impl->set_str(name, val); }
+void Yaml::set_utf8(cr<Str> name, cr<utf8> val) { impl->set_utf8(name, val); }
+void Yaml::set_v_int(cr<Str> name, cr<Vector<int>> val) { impl->set_v_int(name, val); }
+void Yaml::set_v_str(cr<Str> name, cr<Vector<Str>> val) { impl->set_v_str(name, val); }
+void Yaml::set_v_real(cr<Str> name, cr<Vector<real>> val) { impl->set_v_real(name, val); }
+Yaml Yaml::operator[] (cr<Str> name) const { return impl->operator[](name); }
+Str Yaml::get_str(cr<Str> name, cr<Str> def) const { return impl->get_str(name, def); }
+int Yaml::get_int(cr<Str> name, int def) const { return impl->get_int(name, def); }
+real Yaml::get_real(cr<Str> name, real def) const { return impl->get_real(name, def); }
+bool Yaml::get_bool(cr<Str> name, bool def) const { return impl->get_bool(name, def); }
+utf8 Yaml::get_utf8(cr<Str> name, cr<utf8> def) const { return impl->get_utf8(name, def); }
+Vector<Str> Yaml::get_v_str(cr<Str> name, cr<Vector<Str>> def) const { return impl->get_v_str(name, def); }
+Vector<int> Yaml::get_v_int(cr<Str> name, cr<Vector<int>> def) const { return impl->get_v_int(name, def); }
+Vector<real> Yaml::get_v_real(cr<Str> name, cr<Vector<real>> def) const { return impl->get_v_real(name, def); }
 Yaml::vkv_t Yaml::get_kv_table() const { return impl->get_kv_table(); }
 Yaml::vkvu32_t Yaml::get_kvu32_table() const { return impl->get_kvu32_table(); }
 Strs Yaml::root_tags() const { return impl->root_tags(); }

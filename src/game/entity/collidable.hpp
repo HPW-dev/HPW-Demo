@@ -14,8 +14,8 @@ class Collidable: public Entity {
   Str m_explosion_name {}; // имя анимации взрыва
   mutable omp::mutex m_mutex {};
   mutable real m_old_deg {-999}; // для кэширования хитбокса
-  mutable CP<Anim> m_old_anim {}; // для кэширования хитбокса
-  mutable CP<Hitbox> m_old_hitbox {}; // кэшированный хитбокс
+  mutable cp<Anim> m_old_anim {}; // для кэширования хитбокса
+  mutable cp<Hitbox> m_old_hitbox {}; // кэшированный хитбокс
 
   void draw_hitbox(Image& dst, const Vec offset) const;
   // обработка смерти от потери хп. Ret true если умерли
@@ -26,7 +26,7 @@ class Collidable: public Entity {
 public:
   void draw(Image& dst, const Vec offset) const override;
   void update(const Delta_time dt) override;
-  CP<Hitbox> get_hitbox() const override;
+  cp<Hitbox> get_hitbox() const override;
   void kill() override;
 
   // нанесение урона
@@ -36,8 +36,8 @@ public:
   inline hp_t get_hp() const { return m_hp; }
   inline hp_t get_dmg() const { return m_dmg; }
   // имя взрыва
-  inline CN<Str> get_explosion_name() const { return m_explosion_name; }
-  inline void set_explosion_name(CN<Str> name) { m_explosion_name = name; }
+  inline cr<Str> get_explosion_name() const { return m_explosion_name; }
+  inline void set_explosion_name(cr<Str> name) { m_explosion_name = name; }
   // проверить что с таким объетом уже было столкновение
   bool collided_with(Collidable* other) const;
   // обработать столкновение с другим объектом. True - если было
@@ -49,7 +49,7 @@ public:
   // определяет, что столкновение хитбоксов состоялось ранее
   bool is_collided_with(Collidable* other) const;
   // проверить столкновения хитбоксов
-  bool hitbox_test(CN<Collidable> other) const;
+  bool hitbox_test(cr<Collidable> other) const;
 
   Collidable();
   ~Collidable() = default;

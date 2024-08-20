@@ -22,7 +22,7 @@
 
 static Uid m_entity_uid = 0;
 
-void add_anim(Entity& dst, CN<Str> anim_name) {
+void add_anim(Entity& dst, cr<Str> anim_name) {
   assert(hpw::anim_mgr);
   dst.anim_ctx = {};
   auto anim = hpw::anim_mgr->find_anim(anim_name);
@@ -135,7 +135,7 @@ Uid get_entity_uid() { return ++m_entity_uid; }
 void clear_entity_uid() { m_entity_uid = 0; }
 
 // @return false if flag success
-inline bool check_flag_ignore_master(CN<Entity> a, CN<Entity> b) {
+inline bool check_flag_ignore_master(cr<Entity> a, cr<Entity> b) {
   return ( !(
     (a.status.ignore_master && a.master == std::addressof(b)) ||
     (b.status.ignore_master && b.master == std::addressof(a))
@@ -143,7 +143,7 @@ inline bool check_flag_ignore_master(CN<Entity> a, CN<Entity> b) {
 }
 
 // @return false if flag success
-inline bool check_flag_ignore_enemy(CN<Entity> a, CN<Entity> b) {
+inline bool check_flag_ignore_enemy(cr<Entity> a, cr<Entity> b) {
   return ( !(
     (a.status.ignore_enemy && b.status.is_enemy) ||
     (b.status.ignore_enemy && a.status.is_enemy)
@@ -151,7 +151,7 @@ inline bool check_flag_ignore_enemy(CN<Entity> a, CN<Entity> b) {
 }
 
 // @return false if flag success
-inline bool check_flag_ignore_player(CN<Entity> a, CN<Entity> b) {
+inline bool check_flag_ignore_player(cr<Entity> a, cr<Entity> b) {
   return ( !(
     (a.status.ignore_player && b.type == ENTITY_TYPE(Player)) ||
     (b.status.ignore_player && a.type == ENTITY_TYPE(Player))
@@ -159,21 +159,21 @@ inline bool check_flag_ignore_player(CN<Entity> a, CN<Entity> b) {
 }
 
 // @return false if flag success
-inline bool check_flag_ignore_self_type(CN<Entity> a, CN<Entity> b) {
+inline bool check_flag_ignore_self_type(cr<Entity> a, cr<Entity> b) {
   return ( !(
     (a.status.ignore_self_type || b.status.ignore_self_type) && (a.type == b.type)
   ) );
 }
 
 // @return false if flag success
-inline bool check_flag_ignore_bullet(CN<Entity> a, CN<Entity> b) {
+inline bool check_flag_ignore_bullet(cr<Entity> a, cr<Entity> b) {
   return ( !(
     (a.status.ignore_bullet && b.status.is_bullet) ||
     (b.status.ignore_bullet && a.status.is_bullet)
   ) );
 }
 
-bool cld_flag_compat(CN<Entity> a, CN<Entity> b) {
+bool cld_flag_compat(cr<Entity> a, cr<Entity> b) {
   // live и collidable уже проверен в QTree
 
   // если хотя бы один флаг стрельнёт, то объекты не смогут столкнуться
@@ -185,29 +185,29 @@ bool cld_flag_compat(CN<Entity> a, CN<Entity> b) {
   ;
 } // cld_flag_compat
 
-real need_deg_to_target(CN<Entity> self, CN<Entity> target)
+real need_deg_to_target(cr<Entity> self, cr<Entity> target)
   { return need_deg_to_target(self, target.phys.get_pos()); }
 
-real need_deg_to_target(CN<Entity> self, const Vec target) {
+real need_deg_to_target(cr<Entity> self, const Vec target) {
   auto motion = self.phys.get_pos() - target;
   return ring_deg( vec_to_deg(motion) - self.phys.get_deg() );
 }
 
-bool need_rotate_right(CN<Entity> self, const Vec target) {
+bool need_rotate_right(cr<Entity> self, const Vec target) {
   auto deg_to = need_deg_to_target(self, target);
   return deg_to > 180.0;
 }
 
-bool need_rotate_right(CN<Entity> self, CN<Entity> target)
+bool need_rotate_right(cr<Entity> self, cr<Entity> target)
   { return need_rotate_right(self, target.phys.get_pos()); }
 
-real deg_to_target(CN<Entity> self, const Vec target)
+real deg_to_target(cr<Entity> self, const Vec target)
   { return vec_to_deg( target - self.phys.get_pos() ); }
 
-real deg_to_target(CN<Entity> self, CN<Entity> target)
+real deg_to_target(cr<Entity> self, cr<Entity> target)
   { return deg_to_target(self, target.phys.get_pos()); }
 
-Vec predict(CN<Entity> self_, CN<Entity> target_, Delta_time dt) {
+Vec predict(cr<Entity> self_, cr<Entity> target_, Delta_time dt) {
   crauto self = self_.phys;
   crauto target = target_.phys;
 
@@ -259,7 +259,7 @@ void Timed_kill_if_master_death::operator()
   m_master_death = true;
 }
 
-Bound_off_screen::Bound_off_screen(CN<Entity> src) {
+Bound_off_screen::Bound_off_screen(cr<Entity> src) {
   // получить размеры игрока
   auto anim = src.get_anim();
   assert(anim);

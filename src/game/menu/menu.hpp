@@ -27,15 +27,15 @@ protected:
   void prev_item(); // перейти к предыдущему элементу
 
 public:
-  explicit Menu(CN<Menu_items> items);
+  explicit Menu(cr<Menu_items> items);
   virtual ~Menu();
   virtual void draw(Image& dst) const = 0;
   virtual void update(const Delta_time dt);
   std::size_t get_cur_item_id() const;
-  CN<decltype(m_items)::value_type> get_cur_item() const;
-  CN<decltype(m_items)> get_items() const;
+  cr<decltype(m_items)::value_type> get_cur_item() const;
+  cr<decltype(m_items)> get_items() const;
   bool item_selected() const; // проверить что был выбран один из пунктов меню
-  void set_select_callback(CN<Menu_select_callback> callback);
-  void set_move_cursor_callback(CN<Menu_select_callback> callback);
+  void set_select_callback(cr<Menu_select_callback> callback);
+  void set_move_cursor_callback(cr<Menu_select_callback> callback);
   void reset_sticking(); // сброс залипания выбора
 }; // Menu

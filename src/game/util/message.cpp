@@ -61,7 +61,7 @@ struct Message_mgr::Impl {
   } // draw
 
   // проверяет сообщение на валидность
-  inline void test_message(CN<Message> msg) const {
+  inline void test_message(cr<Message> msg) const {
     assert(!msg.text.empty() || msg.text_gen);
     assert(msg.blink_delay < 1000u);
     assert(msg.blink_delay == 0 || msg.blink_delay > 1);
@@ -71,7 +71,7 @@ struct Message_mgr::Impl {
 
   inline void clear() { m_messages.clear(); }
   inline void set_visible(const bool enable) { m_visible = enable; }
-  inline CN<Messages> messages() const { return m_messages; }
+  inline cr<Messages> messages() const { return m_messages; }
 }; // Impl
 
 Message_mgr::Message_mgr(): impl{new_unique<Impl>()} {}
@@ -81,4 +81,4 @@ void Message_mgr::update(const Delta_time dt) { impl->update(dt); }
 void Message_mgr::draw(Image& dst) const { impl->draw(dst); }
 void Message_mgr::clear() { impl->clear(); }
 void Message_mgr::set_visible(const bool enable) { impl->set_visible(enable); }
-CN<Message_mgr::Messages> Message_mgr::messages() const { return impl->messages(); }
+cr<Message_mgr::Messages> Message_mgr::messages() const { return impl->messages(); }

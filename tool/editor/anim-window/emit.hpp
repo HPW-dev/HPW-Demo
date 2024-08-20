@@ -27,14 +27,14 @@ class Emit_wnd: public Window {
   void draw_spawner_types();
   void draw_anim_list();
   void make_new_anim();
-  void delete_anim_by_name(CN<Str> name);
-  void select_anim_by_name(CN<Str> name);
+  void delete_anim_by_name(cr<Str> name);
+  void select_anim_by_name(cr<Str> name);
   void draw_entity_flags();
   void heat_distort_edit();
   void heat_distort_flags_edit(Heat_distort& heat_distort);
   void light_edit();
   void reset();
-  void save_to_clipboard(CN<Heat_distort> src);
+  void save_to_clipboard(cr<Heat_distort> src);
   Str get_avaliable_first_anim() const;
 
 public:

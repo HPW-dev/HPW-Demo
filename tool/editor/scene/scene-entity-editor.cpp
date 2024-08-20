@@ -42,7 +42,7 @@ struct Scene_entity_editor::Impl {
       hpw::scene_mgr->add(new_shared<Scene_cmd>());
 
     // удалить выключенные окна
-    std::erase_if(m_emitters, [](CN<decltype(m_emitters)::value_type> window) {
+    std::erase_if(m_emitters, [](cr<decltype(m_emitters)::value_type> window) {
       return !window->active();
     });
 

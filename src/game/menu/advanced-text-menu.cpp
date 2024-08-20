@@ -19,7 +19,7 @@ struct Advanced_text_menu::Impl {
   constx real SCROLL_SPEED {8.0}; // скорость прокрутки текста в меню
   real m_items_h_offset {}; // для плавной прокрутки по тексту
 
-  inline explicit Impl(Menu* base, CN<utf32> title, const Rect rect)
+  inline explicit Impl(Menu* base, cr<utf32> title, const Rect rect)
   : m_base {base}
   , m_title {title}
   , m_rect {rect}
@@ -116,7 +116,7 @@ struct Advanced_text_menu::Impl {
 
 }; // impl
 
-Advanced_text_menu::Advanced_text_menu(CN<utf32> title, CN<Menu_items> items,
+Advanced_text_menu::Advanced_text_menu(cr<utf32> title, cr<Menu_items> items,
 const Rect rect)
 : Menu {items}
 , impl {new_unique<Impl>(this, title, rect)}

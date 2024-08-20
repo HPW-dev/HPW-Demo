@@ -17,7 +17,7 @@ void conv_sep(Str& str, char bad_separator, char good_separator) {
 
 void conv_sep_for_archive(Str& str) { conv_sep(str, '\\', '/'); }
 
-Strs split_str(CN<Str> str, char separator) {
+Strs split_str(cr<Str> str, char separator) {
   if (str.empty())
     return {};
   Strs ret = {};
@@ -39,7 +39,7 @@ Str str_tolower(Str str) {
   return str;
 }
 
-Str get_word(CN<Str> src, char tag1, char tag2) {
+Str get_word(cr<Str> src, char tag1, char tag2) {
   std::size_t tag1_pos = src.find(tag1);
   std::size_t tag2_pos = src.rfind(tag2);
   if (tag1_pos == str_npos || tag2_pos == str_npos)
@@ -48,7 +48,7 @@ Str get_word(CN<Str> src, char tag1, char tag2) {
   return src.substr(tag1_pos, tag2_pos - 1);
 }
 
-std::pair<Str, Str> get_param_value(CN<Str> src, char op_ch, char cut_ch) {
+std::pair<Str, Str> get_param_value(cr<Str> src, char op_ch, char cut_ch) {
   if (src.empty())
     return {};
   std::pair<Str, Str> ret = {};
@@ -77,7 +77,7 @@ std::pair<Str, Str> get_param_value(CN<Str> src, char op_ch, char cut_ch) {
 void remove_all(Str& str, char ch)
   { str.erase(std::remove(str.begin(), str.end(), ch), str.end()); }
 
-void delete_all(Str& str, CN<Str> val) {
+void delete_all(Str& str, cr<Str> val) {
   while (1) {
     if (cauto pos = str.find(val); pos != str_npos)
       str.erase(pos, val.length());
@@ -86,7 +86,7 @@ void delete_all(Str& str, CN<Str> val) {
   }
 } // delete_all
 
-void replace_all(Str& str, CN<Str> val, CN<Str> new_) {
+void replace_all(Str& str, cr<Str> val, cr<Str> new_) {
 #ifdef DEBUG
   iferror(val == str, "replace_all: need different args \"" + val +
     "\", \"" + new_ + "\"");
@@ -101,7 +101,7 @@ void replace_all(Str& str, CN<Str> val, CN<Str> new_) {
   }
 } // replace_all
 
-Vector<Cstr> sv_to_cv_fast(CN<Strs> sv) {
+Vector<Cstr> sv_to_cv_fast(cr<Strs> sv) {
   auto size {sv.size()};
   Vector<Cstr> cv(size);
   cfor (i, size)
@@ -109,15 +109,15 @@ Vector<Cstr> sv_to_cv_fast(CN<Strs> sv) {
   return cv;
 }
 
-Str strs_to_null_terminated(CN<Strs> strs) {
+Str strs_to_null_terminated(cr<Strs> strs) {
   Str ret;
   for (crauto str: strs)
     ret += str + '\0';
   return ret;
 }
 
-Str addr_hash_to_str(CP<void> addr) {
-  return n2s(std::hash<CP<void>>{}(addr));
+Str addr_hash_to_str(cp<void> addr) {
+  return n2s(std::hash<cp<void>>{}(addr));
 }
 
 Str cstr_to_cxxstr(Cstr cstr) { return Str(cstr, cstr + std::strlen(cstr)); }

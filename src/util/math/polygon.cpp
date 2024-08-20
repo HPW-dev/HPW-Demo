@@ -12,7 +12,7 @@
 #endif
 
 bool Polygon::collided_with(const Vec this_center, const Vec other_center,
-CN<Polygon> other) const {
+cr<Polygon> other) const {
   // добавить смещения
 	auto this_offset = offset + this_center;
   auto this_poly = *this;
@@ -30,11 +30,11 @@ CN<Polygon> other) const {
 
   static_assert(sizeof(vec2) == sizeof(Vec));
   return gjk (
-    cptr2ptr<CP<vec2>>(this_poly.points.data()), this_poly.points.size(),
-    cptr2ptr<CP<vec2>>(other_poly.points.data()), other_poly.points.size() );
+    cptr2ptr<cp<vec2>>(this_poly.points.data()), this_poly.points.size(),
+    cptr2ptr<cp<vec2>>(other_poly.points.data()), other_poly.points.size() );
 } // collided_with
 
-bool Polygon::operator ==(CN<Polygon> other) const {
+bool Polygon::operator ==(cr<Polygon> other) const {
   if (this->offset != other.offset)
     return false;
 
@@ -50,7 +50,7 @@ bool Polygon::operator ==(CN<Polygon> other) const {
   return true;
 } // op ==
 
-bool Polygon::operator !=(CN<Polygon> other) const
+bool Polygon::operator !=(cr<Polygon> other) const
   { return !( operator==(other) ); }
 
 Polygon::operator bool() const { 

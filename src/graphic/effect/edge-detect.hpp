@@ -4,4 +4,4 @@
 
 class Image;
 
-[[nodiscard]] Image edge_detect(CN<Image> src, const real sensivity=0.5);
+[[nodiscard]] Image edge_detect(cr<Image> src, const real sensivity=0.5);

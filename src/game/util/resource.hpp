@@ -9,11 +9,11 @@ class Resource {
 
 public:
   Resource() = default;
-  inline Resource(CN<Str> _path, bool _generated=false) noexcept
+  inline Resource(cr<Str> _path, bool _generated=false) noexcept
     : path(_path), generated(_generated)
     {}
-  inline CN<decltype(path)> get_path() const noexcept { return path; }
-  inline CN<decltype(generated)> is_generated() const noexcept { return generated; }
-  inline void set_path(CN<decltype(path)> val) noexcept { path = val; }
-  inline void set_generated(CN<decltype(generated)> val) noexcept { generated = val; }
+  inline cr<decltype(path)> get_path() const noexcept { return path; }
+  inline cr<decltype(generated)> is_generated() const noexcept { return generated; }
+  inline void set_path(cr<decltype(path)> val) noexcept { path = val; }
+  inline void set_generated(cr<decltype(generated)> val) noexcept { generated = val; }
 }; // Resource

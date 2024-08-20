@@ -50,7 +50,7 @@ struct Ability_power_shoot::Impl {
   Heat_distort m_heat_distort {};
   Light m_light {};
 
-  inline explicit Impl(CN<Player> player) {
+  inline explicit Impl(cr<Player> player) {
     load_config(player);
     test_config();
   }
@@ -88,7 +88,7 @@ struct Ability_power_shoot::Impl {
     return {};
   }
 
-  inline void load_config(CN<Player> player) {
+  inline void load_config(cr<Player> player) {
     assert(hpw::archive);
     cauto config_file = hpw::archive->get_file("config/ability.yml");
     cauto config = Yaml(config_file);
@@ -198,10 +198,10 @@ struct Ability_power_shoot::Impl {
 
   // спавнер осколков для ведущего снаряда
   struct Spawner_small_bullets final {
-    CP<Impl> m_master {};
+    cp<Impl> m_master {};
     Timer m_delay {}; // задержка спавна
 
-    inline explicit Spawner_small_bullets(CP<Impl> master): m_master {master} {
+    inline explicit Spawner_small_bullets(cp<Impl> master): m_master {master} {
       m_delay = Timer(m_master->m_small_bullet_delay);
       m_delay.randomize_stable();
     }
@@ -231,7 +231,7 @@ struct Ability_power_shoot::Impl {
     } // op ()
   }; // Spawner_small_bullets
 
-  inline CP<Sprite> icon() const {
+  inline cp<Sprite> icon() const {
     return {}; // TODO
   }
 
@@ -248,7 +248,7 @@ struct Ability_power_shoot::Impl {
   }
 }; // Impl
 
-Ability_power_shoot::Ability_power_shoot(CN<Player> player)
+Ability_power_shoot::Ability_power_shoot(cr<Player> player)
   : Ability {typeid(Ability_power_shoot).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_power_shoot::~Ability_power_shoot() {}
@@ -256,4 +256,4 @@ void Ability_power_shoot::update(Player& player, const Delta_time dt) { impl->up
 void Ability_power_shoot::power_up() { impl->power_up(); }
 utf32 Ability_power_shoot::name() const { return impl->name(); }
 utf32 Ability_power_shoot::desc() const { return impl->desc(); }
-CP<Sprite> Ability_power_shoot::icon() const { return impl->icon(); }
+cp<Sprite> Ability_power_shoot::icon() const { return impl->icon(); }

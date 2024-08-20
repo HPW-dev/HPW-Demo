@@ -16,8 +16,8 @@ struct Table_menu::Impl {
   uint m_row_height {};
   utf32 m_elems_empty_txt {}; // табличка, которую покажут при отсутсвтии элементов списка
 
-  inline explicit Impl(Menu* base, CN<utf32> title, CN<Rows> rows,
-  const uint row_height, CN<utf32> elems_empty_txt)
+  inline explicit Impl(Menu* base, cr<utf32> title, cr<Rows> rows,
+  const uint row_height, cr<utf32> elems_empty_txt)
   : m_base {base}
   , m_title {title}
   , m_rows {rows}
@@ -33,7 +33,7 @@ struct Table_menu::Impl {
     #ifdef DEBUG
       cauto items = base->get_items();
       for (crauto item: items) {
-        cauto ptr = dcast< CP<Menu_item_table_row> >(item.get());
+        cauto ptr = dcast< cp<Menu_item_table_row> >(item.get());
         assert(ptr);
       }
     #endif
@@ -80,7 +80,7 @@ struct Table_menu::Impl {
 
       pos.x = 0;
       // геттеры получают контент в строках таблицы
-      cauto item_row = dcast<CP<Menu_item_table_row>>(item.get());
+      cauto item_row = dcast<cp<Menu_item_table_row>>(item.get());
       assert(item_row);
       crauto content_getters = item_row->get_content_getters();
       
@@ -112,8 +112,8 @@ struct Table_menu::Impl {
   } // draw_table
 }; // impl
 
-Table_menu::Table_menu(CN<utf32> title, CN<Rows> rows, const uint row_height,
-CN<Menu_items> items, CN<utf32> elems_empty_txt)
+Table_menu::Table_menu(cr<utf32> title, cr<Rows> rows, const uint row_height,
+cr<Menu_items> items, cr<utf32> elems_empty_txt)
 : Menu {items}
 , impl {new_unique<Impl>(this, title, rows, row_height, elems_empty_txt)}
 {}

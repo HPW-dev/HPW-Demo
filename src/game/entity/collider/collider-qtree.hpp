@@ -20,9 +20,9 @@ class Collider_qtree final: public Collider {
   // проверка хитбоксов на пересеченияCollidableя
   void test_collide_pair(Collidable& a, Collidable& b);
   // фильтрует список объектов для проверки по возможности сталкиваться
-  Collidables update_qtree(CN<Entities> entities);
+  Collidables update_qtree(cr<Entities> entities);
   // обновляет список пар столкновений
-  void update_pairs(CN<Collidables> entities);
+  void update_pairs(cr<Collidables> entities);
 
 public:
   using Collision_pair = std::pair<Collidable*, Collidable*>;
@@ -52,7 +52,7 @@ public:
   * @param Y высота пространства */
   explicit Collider_qtree(uint depth, uint entity_limit, std::size_t X, std::size_t Y);
   ~Collider_qtree();
-  void operator()(CN<Entities> entities, Delta_time dt) override;
+  void operator()(cr<Entities> entities, Delta_time dt) override;
   // рисует сетку разделений для дебага
   void debug_draw(Image& dst, const Vec camera_offset) override;
 }; // Collider_qtree

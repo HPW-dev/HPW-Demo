@@ -37,7 +37,7 @@ class Timed_cmd final: public Task {
 
 public:
   inline explicit Timed_cmd(Cmd& console, Delta_time delay,
-  CN<Str> cmd_with_args)
+  cr<Str> cmd_with_args)
   : m_console {console}
   , m_cmd_with_args {cmd_with_args}
   , m_delay {delay}
@@ -56,7 +56,7 @@ public:
   inline void on_end() override { m_console.exec(m_cmd_with_args); }
 }; // Timed_cmd
 
-void timed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void timed(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 3, "в команде timed недостаточно аргументов");
   cauto delay = s2n<real>(args[1]);
   // объединить строки в команду для отложенного запуска
@@ -70,14 +70,14 @@ void timed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   #endif
 }
 
-void set_seed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void set_seed(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде seed не задан параметр");
   crauto seed = s2n<std::uint32_t>(args[1]);
   set_rnd_seed(seed);
   console.print("новый сид рандома = " + n2s(seed));
 }
 
-void set_fps_limit(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void set_fps_limit(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "не указано количество FPS в команде");
   cauto new_fps = s2n<int>(args[1]);
 
@@ -91,12 +91,12 @@ void set_fps_limit(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   }
 }
 
-void config_reload(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void config_reload(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   load_config(); 
   console.print("конфиг перезагружен");
 }
 
-void enable_render(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void enable_render(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "у команды "
     + command.name() + " не задан параметр");
   const bool yesno = s2n<int>(args[1]) == 0 ? false : true;
@@ -104,7 +104,7 @@ void enable_render(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print(Str("рендер ") + (yesno ? "включён" : "выключен"));
 }
 
-void set_tickrate(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void set_tickrate(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "не указано количество UPS в команде");
   cauto new_ups = s2n<int>(args[1]);
   set_target_ups(new_ups);
@@ -130,7 +130,7 @@ class Task_state_saver final: public Task {
   std::chrono::steady_clock::time_point m_sample_delay_start {};
 
 public:
-  inline explicit Task_state_saver(CN<Str> fname, const Delta_time timeout,
+  inline explicit Task_state_saver(cr<Str> fname, const Delta_time timeout,
   const Delta_time sample_delay, Cmd& console)
   : m_fname {fname}
   , m_console {console}
@@ -208,7 +208,7 @@ namespace {
 Shared<Task> g_state_saver_task {};
 }
 
-void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void end_stat_record(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   if (::g_state_saver_task) {
     ::g_state_saver_task->kill();
     ::g_state_saver_task = {};
@@ -219,7 +219,7 @@ void end_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     "так как она и не начиналась");
 }
 
-void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void start_stat_record(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 4, "в команде stat задано мало параметров");
   crauto filename = args[1];
   crauto seconds = s2n<Delta_time>(args[2]);
@@ -234,7 +234,7 @@ void start_stat_record(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 }
 
 // повторяет команды
-void repeat(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void repeat(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() == 1, "в команде repeat не задано число повторений");
   iferror(args.size() < 3, "в команде repeat не задана команда для повторения");
   crauto times = s2n<int>(args[1]);
@@ -250,12 +250,12 @@ void repeat(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     console.exec(cmd_with_args);
 }
 
-void clear_tasks(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void clear_tasks(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   hpw::task_mgr.clear();
   console.print("все задачи удалены");
 }
 
-void set_direction(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void set_direction(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде direct мало аргументов");
   cauto uid_a = s2n<Uid>(args[1]);
   cauto uid_b = s2n<Uid>(args[2]);
@@ -274,7 +274,7 @@ void set_direction(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     + "\" направлен на объект \"" + name_b + "\"");
 }
 
-void set_speed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void set_speed(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде speed мало аргументов");
   cauto uid = s2n<Uid>(args[1]);
   auto speed = s2n<real>(args[2]);
@@ -288,7 +288,7 @@ void set_speed(Cmd_maker& command, Cmd& console, CN<Strs> args) {
     + "\" назначена скорость " + n2s(speed, 2));
 }
 
-void draw_hitboxes(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void draw_hitboxes(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде мало аргументов");
   cauto yesno = (args.at(1) == "0" ? false : true);
   #ifdef DEBUG
@@ -300,7 +300,7 @@ void draw_hitboxes(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("режим показа хитбоксов " + Str(yesno ? "включён" : "выключен"));
 }
 
-void draw_grids(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void draw_grids(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде мало аргументов");
   cauto yesno = (args.at(1) == "0" ? false : true);
   graphic::show_grids = yesno;
@@ -319,7 +319,7 @@ static std::unordered_map<Str, Collider_maker> g_colliders {
   {"2d-tree", []{ return new_shared<Collider_2d_tree>(); }},
 };
 
-void set_collider(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+void set_collider(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "need more parameters for collider command");
   crauto collider_name = args.at(1);
   crauto maker = g_colliders.at(collider_name);
@@ -328,7 +328,7 @@ void set_collider(Cmd_maker& command, Cmd& console, CN<Strs> args) {
   console.print("selected \"" + collider_name + "\" collision resolver");
 }
 
-Strs set_collider_matches(Cmd_maker& command, Cmd& console, CN<Strs> args) {
+Strs set_collider_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   Strs ret;
   cauto cmd_name = args.at(0);
   if (args.size() < 2) {
@@ -340,14 +340,14 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, CN<Strs> args) {
 
   // по вводу определить что взять из списка автодополнения
   cauto arg_name = args.at(1); // имя колайдер ресолвера
-  cauto name_filter = [&](CN<decltype(g_colliders)::value_type> it)
+  cauto name_filter = [&](cr<decltype(g_colliders)::value_type> it)
     { return it.first.find(arg_name) == 0; };
   for (crauto [collider_name, maker]: g_colliders | std::views::filter(name_filter))
     ret.push_back(cmd_name + ' ' + collider_name);
   return ret;
 }
 
-void call_abort(Cmd_maker&, Cmd&, CN<Strs>) { std::abort(); }
+void call_abort(Cmd_maker&, Cmd&, cr<Strs>) { std::abort(); }
 
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \

@@ -18,7 +18,7 @@ struct Ability_invise::Impl {
   3 - чёрный экран */
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {}
+  inline explicit Impl(cr<Player> player) {}
 
   inline void update(Player& player, const Delta_time dt) {
     switch (m_power) {
@@ -95,12 +95,12 @@ struct Ability_invise::Impl {
     return {};
   }
 
-  inline CP<Sprite> icon() const {
+  inline cp<Sprite> icon() const {
     return {}; // TODO
   }
 }; // Impl
 
-Ability_invise::Ability_invise(CN<Player> player)
+Ability_invise::Ability_invise(cr<Player> player)
   : Ability {typeid(Ability_invise).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_invise::~Ability_invise() {}
@@ -108,4 +108,4 @@ void Ability_invise::update(Player& player, const Delta_time dt) { impl->update(
 void Ability_invise::power_up() { impl->power_up(); }
 utf32 Ability_invise::name() const { return impl->name(); }
 utf32 Ability_invise::desc() const { return impl->desc(); }
-CP<Sprite> Ability_invise::icon() const { return impl->icon(); }
+cp<Sprite> Ability_invise::icon() const { return impl->icon(); }

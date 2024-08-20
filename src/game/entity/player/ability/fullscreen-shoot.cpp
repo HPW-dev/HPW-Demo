@@ -24,7 +24,7 @@ struct Ability_fullscreen_shoot::Impl {
   bool m_need_clear {}; // true - уничтожить все пули
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {
+  inline explicit Impl(cr<Player> player) {
     load_config();
   }
 
@@ -70,7 +70,7 @@ struct Ability_fullscreen_shoot::Impl {
     return {};
   }
 
-  inline CP<Sprite> icon() const {
+  inline cp<Sprite> icon() const {
     return {}; // TODO
   }
 
@@ -83,7 +83,7 @@ struct Ability_fullscreen_shoot::Impl {
   }
 
   // чем медленнее объект, тем чаще будет выпадать true 
-  inline bool check_bullet_chance(CN<Entity> bullet) const {
+  inline bool check_bullet_chance(cr<Entity> bullet) const {
     cauto speed_ratio = std::min<real>(
       bullet.phys.get_speed() / m_high_speed_threshold, 1);
     return rndr() >= m_clone_chance * speed_ratio;
@@ -124,7 +124,7 @@ struct Ability_fullscreen_shoot::Impl {
   }
 }; // Impl
 
-Ability_fullscreen_shoot::Ability_fullscreen_shoot(CN<Player> player)
+Ability_fullscreen_shoot::Ability_fullscreen_shoot(cr<Player> player)
   : Ability {typeid(Ability_fullscreen_shoot).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_fullscreen_shoot::~Ability_fullscreen_shoot() {}
@@ -132,4 +132,4 @@ void Ability_fullscreen_shoot::update(Player& player, const Delta_time dt) { imp
 void Ability_fullscreen_shoot::power_up() { impl->power_up(); }
 utf32 Ability_fullscreen_shoot::name() const { return impl->name(); }
 utf32 Ability_fullscreen_shoot::desc() const { return impl->desc(); }
-CP<Sprite> Ability_fullscreen_shoot::icon() const { return impl->icon(); }
+cp<Sprite> Ability_fullscreen_shoot::icon() const { return impl->icon(); }

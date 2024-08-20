@@ -165,7 +165,7 @@ void test_overplay() {
   }
 } // test_overplay
 
-void test_file(CN<Str> fname) {
+void test_file(cr<Str> fname) {
   std::cout << "\nAudio test: loading file \"" << fname << "\"" << std::endl;
   cauto track = load_audio(fname);
   Sound_mgr_oal sound_mgr;

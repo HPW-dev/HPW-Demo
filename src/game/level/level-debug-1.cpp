@@ -100,7 +100,7 @@ void Level_debug_1::draw_bg(Image& dst) const {
   }
 }
 
-void Level_debug_1::draw_obj(CN<Phys> obj, Image& dst) const {
+void Level_debug_1::draw_obj(cr<Phys> obj, Image& dst) const {
   auto color = Pal8::white;
   real direct_len = 60; // длинна стрелки показывающей вектор движения
   auto pos = obj.get_pos();

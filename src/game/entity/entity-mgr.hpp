@@ -42,7 +42,7 @@ public:
   void set_visible(const bool mode);
 
   // задать обработчик столкновений
-  void set_collider(CN<Shared<Collider>> new_collider);
+  void set_collider(cr<Shared<Collider>> new_collider);
   // вызвать это перед использованием make
   void register_types();
   /** Создаёт объкт в памяти на указанном месте
@@ -50,16 +50,16 @@ public:
   @param name имя объекта из базы
   @param pos соспавнить объект на этой позиции
   @return по возможности верёт объект, для последующего изменения извне */
-  Entity* make(Entity* master, CN<Str> name, const Vec pos);
+  Entity* make(Entity* master, cr<Str> name, const Vec pos);
   // найти объект по его UID. Null при ошибке
   Entity* find(const Uid uid) const;
   // создать волну от взрыва расталкивающую объекты
-  void add_scatter(CN<Scatter> scatter);
+  void add_scatter(cr<Scatter> scatter);
   Mem_pool& get_phys_pool();
   Mem_pool& get_hitbox_pool();
   Mem_pool& get_entity_pool();
   // получить массив всех объектов
-  CN<Entities> get_entities() const;
+  cr<Entities> get_entities() const;
   uint lives() const; // сколько сейчас активных объектов
   // ссылка на игрока
   Player* get_player() const;

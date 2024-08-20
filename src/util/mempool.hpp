@@ -29,7 +29,7 @@
     : ptr {other} {}
 
     template <class T2>
-    inline _Pool_ptr* operator =(CN<_Pool_ptr<T2>> other) noexcept
+    inline _Pool_ptr* operator =(cr<_Pool_ptr<T2>> other) noexcept
     { ptr = other.get(); return this; }
 
     template <class T2>
@@ -37,7 +37,7 @@
     { ptr = other.get(); other = {}; return this; }
 
     template <class T2>
-    inline _Pool_ptr(CN<_Pool_ptr<T2>> other) noexcept
+    inline _Pool_ptr(cr<_Pool_ptr<T2>> other) noexcept
     : ptr {other.get()} {}
 
     template <class T2>

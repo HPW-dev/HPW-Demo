@@ -56,7 +56,7 @@ void Frame_wnd::imgui_exec() {
   }
 } // imgui_exec
 
-void Frame_wnd::draw_info(CN<Frame> frame) {
+void Frame_wnd::draw_info(cr<Frame> frame) {
   Str name = "name: " + frame.get_name();
   Str duration = "duration: " + n2s(frame.duration, 3);
   ImGui::Text(name.c_str());
@@ -113,7 +113,7 @@ void Frame_wnd::draw_path_edit(Frame& frame) {
   if (ImGui::Button("+")) {
     hpw::scene_mgr->add(
       new_shared<Sprite_select>(
-        [this, &frame](Shared<Sprite> sprite, CN<Str> path) {
+        [this, &frame](Shared<Sprite> sprite, cr<Str> path) {
           detailed_log("new sprite selected for frame \"" << frame.get_name() << "\"\n");
           auto new_ctx = frame.source_ctx;
           new_ctx.direct_0.sprite = sprite;

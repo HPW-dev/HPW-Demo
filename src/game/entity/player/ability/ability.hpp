@@ -22,7 +22,7 @@ public:
   // описание способности
   inline virtual utf32 desc() const = 0;
   // значок со способностью (берётся из банка)
-  inline virtual CP<Sprite> icon() const = 0;
+  inline virtual cp<Sprite> icon() const = 0;
 
 private:
   nocopy(Ability);

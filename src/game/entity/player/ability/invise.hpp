@@ -10,12 +10,12 @@ class Ability_invise final: public Ability {
   Unique<Impl> impl {};
 
 public:
-  explicit Ability_invise(CN<Player> player);
+  explicit Ability_invise(cr<Player> player);
   ~Ability_invise();
   void update(Player& player, const Delta_time dt) override;
   inline void draw(Image& dst, const Vec offset) const override {}
   void power_up() override;
   utf32 name() const override;
   utf32 desc() const override;
-  CP<Sprite> icon() const override;
+  cp<Sprite> icon() const override;
 };

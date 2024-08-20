@@ -4,7 +4,7 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/file/yaml.hpp"
 
-void Collidable_info::load(CN<Yaml> node) {
+void Collidable_info::load(cr<Yaml> node) {
   hp = node.get_int("hp");
   dmg = node.get_int("dmg");
   exolosion_name = node.get_str("explosion");

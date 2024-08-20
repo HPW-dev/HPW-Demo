@@ -20,7 +20,7 @@ struct Ability_home::Impl {
   3 - игрок становится длинно в экран */
   uint m_power {};
 
-  inline explicit Impl(CN<Player> player) {
+  inline explicit Impl(cr<Player> player) {
     //hpw::entity_mgr->make("")
   }
 
@@ -49,12 +49,12 @@ struct Ability_home::Impl {
     return {};
   }
 
-  inline CP<Sprite> icon() const {
+  inline cp<Sprite> icon() const {
     return {}; // TODO
   }
 }; // Impl
 
-Ability_home::Ability_home(CN<Player> player)
+Ability_home::Ability_home(cr<Player> player)
   : Ability {typeid(Ability_home).hash_code()}
   , impl {new_unique<Impl>(player)} {}
 Ability_home::~Ability_home() {}
@@ -62,5 +62,5 @@ void Ability_home::update(Player& player, const Delta_time dt) { impl->update(pl
 void Ability_home::power_up() { impl->power_up(); }
 utf32 Ability_home::name() const { return impl->name(); }
 utf32 Ability_home::desc() const { return impl->desc(); }
-CP<Sprite> Ability_home::icon() const { return impl->icon(); }
+cp<Sprite> Ability_home::icon() const { return impl->icon(); }
 void Ability_home::draw(Image& dst, const Vec offset) const { impl->draw(dst, offset); }

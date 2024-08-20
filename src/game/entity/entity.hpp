@@ -41,7 +41,7 @@ public:
   mutable Anim_ctx anim_ctx {}; // анимация
   Shared<Heat_distort> heat_distort {}; // эффект искажения воздуха
   Shared<Light> light {}; // эффект вспышки
-  using Master_p = CP<Entity>;
+  using Master_p = cp<Entity>;
   Master_p master {}; // объект создатель
   Uid uid {};
   mutable Entity_status status {}; // флаги
@@ -55,18 +55,18 @@ public:
   virtual void update(const Delta_time dt);
   virtual void kill();
   void set_pos(const Vec pos);
-  void add_update_callback(CN<Update_callback> callback);
-  void add_kill_callback(CN<Kill_callback> callback);
+  void add_update_callback(cr<Update_callback> callback);
+  void add_kill_callback(cr<Kill_callback> callback);
   void move_update_callback(Update_callback&& callback);
   void move_kill_callback(Kill_callback&& callback);
   void accept_kill_callbacks();
   void clear_callbacks();
   void set_master(Master_p new_master);
-  inline CN<Master_p> get_master() const { return master; }
+  inline cr<Master_p> get_master() const { return master; }
   // узнать какой сейчас хитбокс
-  inline virtual CP<Hitbox> get_hitbox() const { return {}; }
+  inline virtual cp<Hitbox> get_hitbox() const { return {}; }
   // безопасно получить свою анимацию
-  CP<Anim> get_anim() const;
-  inline CN<Str> name() const { return m_name; }
-  inline void set_name(CN<Str> new_name) { m_name = new_name; }
+  cp<Anim> get_anim() const;
+  inline cr<Str> name() const { return m_name; }
+  inline void set_name(cr<Str> new_name) { m_name = new_name; }
 }; // Entity

@@ -1,7 +1,7 @@
 #include "logo.hpp"
 #include "util/math/random.hpp"
 
-CN<Strs> get_all_logos() {
+cr<Strs> get_all_logos() {
   sconst Strs table_logo {
     R"( |  | +--+ | | | )" "\n"
     R"( +--+ +--+ | | | )" "\n"

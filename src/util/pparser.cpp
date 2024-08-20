@@ -25,7 +25,7 @@ void Pparser::operator ()(int argc, char** argv) const {
   } // for v_param
 } // op (argv)
 
-void Pparser::operator ()(CN<Str> opts) const {
+void Pparser::operator ()(cr<Str> opts) const {
   if (opts.empty() && !skip_empty) {
     print_info();
     std::exit(EXIT_FAILURE);
@@ -46,7 +46,7 @@ void Pparser::operator ()(CN<Str> opts) const {
   } // for v_param
 } // op (str)
 
-std::optional<Str> Pparser::get_option(Strs tokens, CN<Str> option) const {
+std::optional<Str> Pparser::get_option(Strs tokens, cr<Str> option) const {
   auto itr {std::find(tokens.begin(), tokens.end(), option)};
   if (itr != tokens.end()) { // найден ключ
     if (++itr != tokens.end()) // найдена команда после ключа
@@ -57,7 +57,7 @@ std::optional<Str> Pparser::get_option(Strs tokens, CN<Str> option) const {
 }
 
 std::optional<Str> Pparser::get_options(Strs tokens,
-CN<Strs> options) const {
+cr<Strs> options) const {
   for (auto va: options) {
     auto ret {get_option(tokens, va)};
     if (ret)
@@ -73,7 +73,7 @@ Strs Pparser::get_tokens(int argc, char** argv) const {
   return tokens;
 }
 
-Strs Pparser::get_tokens(CN<Str> opts) const {
+Strs Pparser::get_tokens(cr<Str> opts) const {
   std::stringstream ss(opts);
   Str str;
   Strs tokens;

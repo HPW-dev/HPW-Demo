@@ -2,7 +2,7 @@
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 
-void write(CN<Str> fname) {
+void write(cr<Str> fname) {
   Yaml root;
   auto test_1 = root["test_1"];
   test_1.set_real("float_val", 9.7997f);
@@ -17,7 +17,7 @@ void write(CN<Str> fname) {
   root.save(fname);
 } // write
 
-void read(CN<Str> fname) {
+void read(cr<Str> fname) {
   auto root = Yaml(fname);
   auto node_1 = root["test_1"];
   std::cout << "\nnode 1:\n";

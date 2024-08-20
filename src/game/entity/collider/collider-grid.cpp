@@ -31,7 +31,7 @@ struct Collider_grid::Impl {
   }
 
   // получить список объектов доступных для столкновения
-  inline Collidables collidable_filter(CN<Entities> entities) const {
+  inline Collidables collidable_filter(cr<Entities> entities) const {
     Collidables ret;
     for (crauto ent: entities) {
       assert(ent);
@@ -57,7 +57,7 @@ struct Collider_grid::Impl {
   }
 
   // подготовить сетку
-  inline void config_grid(CN<Collidables> entities) {
+  inline void config_grid(cr<Collidables> entities) {
     clear_grid();
     return_if(entities.size() < 2);
 
@@ -163,7 +163,7 @@ struct Collider_grid::Impl {
     }
   } // debug_draw
 
-  inline void operator()(CN<Entities> entities, Delta_time dt) {
+  inline void operator()(cr<Entities> entities, Delta_time dt) {
     auto collidables = collidable_filter(entities);
     config_grid(collidables);
     for (crauto entity: collidables)
@@ -174,5 +174,5 @@ struct Collider_grid::Impl {
 
 Collider_grid::Collider_grid(int grid_sz): impl {new_unique<Impl>(grid_sz)} {}
 Collider_grid::~Collider_grid() {}
-void Collider_grid::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
+void Collider_grid::operator()(cr<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_grid::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }

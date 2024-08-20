@@ -16,19 +16,19 @@ class Anim_mgr final {
 public:
   Anim_mgr();
   ~Anim_mgr();
-  void add_anim(CN<Str> str, CN<Shared<Anim>> new_anim);
-  void remove_anim(CN<Str> str);
+  void add_anim(cr<Str> str, cr<Shared<Anim>> new_anim);
+  void remove_anim(cr<Str> str);
   // получить анимацию по её имени
-  CN<Shared<Anim>> find_anim(CN<Str> name);
+  cr<Shared<Anim>> find_anim(cr<Str> name);
   // узнать id анимации по её имени
-  std::size_t get_id(CN<Str> name) const;
+  std::size_t get_id(cr<Str> name) const;
   // узнать что есть объект с таким именем (true если есть)
-  bool name_exist (CN<Str> name) const;
+  bool name_exist (cr<Str> name) const;
   // получить развороты конкретного фрейма
-  CP<Direct> get_direct(CN<Str> str, uint frame_num, real degree);
+  cp<Direct> get_direct(cr<Str> str, uint frame_num, real degree);
   Strs names() const;
   // проверить наличие анимации по имени
-  bool exist(CN<Str> str) const;
+  bool exist(cr<Str> str) const;
   Anims get_anims() const;
   void clear();
   std::size_t anim_count() const;

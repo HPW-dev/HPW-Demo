@@ -10,7 +10,7 @@
 #include "util/math/mat.hpp"
 #include "util/log.hpp"
 
-Image mirror_h(CN<Image> src) {
+Image mirror_h(cr<Image> src) {
   assert(src);
   Image ret(src.X, src.Y);
   cfor (y, ret.Y)
@@ -19,7 +19,7 @@ Image mirror_h(CN<Image> src) {
   return ret;
 }
 
-Image mirror_v(CN<Image> src) {
+Image mirror_v(cr<Image> src) {
   assert(src);
   Image ret(src.X, src.Y);
   cfor (y, ret.Y)
@@ -28,7 +28,7 @@ Image mirror_v(CN<Image> src) {
   return ret;
 }
 
-Sprite mirror_h(CN<Sprite> src) {
+Sprite mirror_h(cr<Sprite> src) {
   assert(src);
   Sprite ret;
   ret.move_image( mirror_h(src.image()) );
@@ -36,7 +36,7 @@ Sprite mirror_h(CN<Sprite> src) {
   return ret;
 }
 
-Sprite mirror_v(CN<Sprite> src) {
+Sprite mirror_v(cr<Sprite> src) {
   assert(src);
   Sprite ret;
   ret.move_image( mirror_v(src.image()) );
@@ -44,7 +44,7 @@ Sprite mirror_v(CN<Sprite> src) {
   return ret;
 }
 
-Image rotate_180(CN<Image> src) {
+Image rotate_180(cr<Image> src) {
   Image dst{src.X, src.Y};
   cfor(y, dst.Y)
   cfor(x, dst.X)
@@ -52,7 +52,7 @@ Image rotate_180(CN<Image> src) {
   return dst;
 }
 
-Image rotate_270(CN<Image> src) {
+Image rotate_270(cr<Image> src) {
   Image dst{src.Y, src.X};
   cfor(y, dst.Y)
   cfor(x, dst.X)
@@ -60,7 +60,7 @@ Image rotate_270(CN<Image> src) {
   return dst;
 }
 
-Image rotate_90(CN<Image> src, uint pass) {
+Image rotate_90(cr<Image> src, uint pass) {
   if (!src) {
     hpw_log("WARNING: rotate_90 src is empty\n");
     return {};
@@ -81,7 +81,7 @@ Image rotate_90(CN<Image> src, uint pass) {
   return dst;
 }
 
-Sprite rotate_90(CN<Sprite> src, uint pass) {
+Sprite rotate_90(cr<Sprite> src, uint pass) {
   if (!src) {
     hpw_log("WARNING: rotate_90 src is empty\n");
     return {};
@@ -92,7 +92,7 @@ Sprite rotate_90(CN<Sprite> src, uint pass) {
   return dst;
 }
 
-void rotate(CN<Image> src, Image& dst, const Vec center,
+void rotate(cr<Image> src, Image& dst, const Vec center,
 const Vec offset, real degree) {
   assert(src);
   assert(dst);
@@ -126,7 +126,7 @@ const Vec offset, real degree) {
   } // for y, x
 } // rotate (image)
 
-void rotate(CN<Sprite> src, Sprite &dst, const Vec center,
+void rotate(cr<Sprite> src, Sprite &dst, const Vec center,
 const Vec offset, real degree) {
   if (!src || !dst) {
     hpw_log("WARNING: rotate_90 src or dst is empty\n");

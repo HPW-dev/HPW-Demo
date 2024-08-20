@@ -37,9 +37,9 @@ struct Pal8 {
   value_t val {black};
 
   Pal8() = default;
-  Pal8(CN<Pal8>) = default;
+  Pal8(cr<Pal8>) = default;
   inline constexpr Pal8(value_t nval) noexcept: val(nval) {}
-  Pal8& operator = (CN<Pal8>) = default;
+  Pal8& operator = (cr<Pal8>) = default;
   Pal8& operator = (value_t nval);
   bool operator == (auto other) const { return val == Pal8(other).val; }
   bool operator != (auto other) const { return val ^ Pal8(other).val; }

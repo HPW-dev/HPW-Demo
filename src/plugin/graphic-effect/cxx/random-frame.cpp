@@ -67,7 +67,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
     g_dst, g_buffers.at(idx).size() * sizeof(Pal8) );
   // отрисовка случайного буффера
   cauto rnd_idx = rndu_fast(g_length - 1);
-  std::memcpy( g_dst, cptr2ptr<CP<Pal8>>(g_buffers.at(rnd_idx).data()),
+  std::memcpy( g_dst, cptr2ptr<cp<Pal8>>(g_buffers.at(rnd_idx).data()),
     g_buffers.at(rnd_idx).size() * sizeof(Pal8) );
 } // plugin_apply
 

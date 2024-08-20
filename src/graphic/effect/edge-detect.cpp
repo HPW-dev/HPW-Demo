@@ -2,7 +2,7 @@
 #include "edge-detect.hpp"
 #include "graphic/image/image.hpp"
 
-Image edge_detect(CN<Image> src, const real sensivity) {
+Image edge_detect(cr<Image> src, const real sensivity) {
   assert(src.X > 2);
   assert(src.Y > 2);
   assert(sensivity >= 0);

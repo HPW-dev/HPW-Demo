@@ -18,7 +18,7 @@ struct Particle_loader::Impl {
   real m_lifetime {}; // частица умрёт через время
   real m_force {};
 
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     m_anim_info.load(config["animation"]);
     m_rand_deg          = config.get_bool("rand_deg");
     m_kill_by_end_anim  = config.get_bool("kill_by_end_anim", true);
@@ -46,6 +46,6 @@ struct Particle_loader::Impl {
   } // op ()
 }; // Impl
 
-Particle_loader::Particle_loader(CN<Yaml> config): impl{new_unique<Impl>(config)} {}
+Particle_loader::Particle_loader(cr<Yaml> config): impl{new_unique<Impl>(config)} {}
 Particle_loader::~Particle_loader() {}
 Entity* Particle_loader::operator()(Entity* master, const Vec pos, Entity* parent) { return impl->operator()(master, pos, parent); }

@@ -96,7 +96,7 @@ void zoom_x8(Sprite& dst) {
   zoom_x8(dst.mask());
 }
 
-Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf) {
+Image pixel_downscale_x3(cr<Image> src, Color_get_pattern cgp, Color_compute ccf) {
   return_if (!src, src);
 
   sconst std::unordered_map<Color_get_pattern, decltype(color_get_cross)*> cgp_table {
@@ -126,7 +126,7 @@ Image pixel_downscale_x3(CN<Image> src, Color_get_pattern cgp, Color_compute ccf
   return dst;
 } // pixel_downscale_x3
 
-Sprite pixel_upscale_x3(CN<Sprite> src) {
+Sprite pixel_upscale_x3(cr<Sprite> src) {
   if (!src) {
     hpw_log("WARNING: pixel_upscale_x3 empty src\n")
     return src;
@@ -137,7 +137,7 @@ Sprite pixel_upscale_x3(CN<Sprite> src) {
   return dst;
 }
 
-Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute ccf) {
+Sprite pixel_downscale_x3(cr<Sprite> src, Color_get_pattern cgp, Color_compute ccf) {
   if ( !src) {
     hpw_log("WARNING: pixel_downscale_x3 empty src\n")
     return src;
@@ -148,7 +148,7 @@ Sprite pixel_downscale_x3(CN<Sprite> src, Color_get_pattern cgp, Color_compute c
   return dst;
 }
 
-Image pixel_upscale_x3(CN<Image> src) {
+Image pixel_upscale_x3(cr<Image> src) {
   Image dst(src.X * 3, src.Y * 3);
 
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
@@ -235,7 +235,7 @@ Pal8 average_col(const Pack9 colors) {
   return Pal8::from_real(ret / colors_sz, is_red);
 }
 
-Pack9 color_get_cross(CN<Image> src, int x, int y) {
+Pack9 color_get_cross(cr<Image> src, int x, int y) {
   Pack9 ret;
   ret.size = 5;
   constexpr static const auto mode = Image_get::MIRROR;
@@ -247,7 +247,7 @@ Pack9 color_get_cross(CN<Image> src, int x, int y) {
   return ret;
 }
 
-Pack9 color_get_box(CN<Image> src, int x, int y) {
+Pack9 color_get_box(cr<Image> src, int x, int y) {
   Pack9 ret;
   ret.size = 9;
   constexpr static const auto mode = Image_get::MIRROR;
@@ -280,7 +280,7 @@ Str convert(Color_get_pattern cgp) {
   return table.at(cgp);
 }
 
-Color_compute convert_to_ccf(CN<Str> name) {
+Color_compute convert_to_ccf(cr<Str> name) {
   std::unordered_map<Str, Color_compute> table {
     {"most common", Color_compute::most_common},
     {"max", Color_compute::max},
@@ -290,7 +290,7 @@ Color_compute convert_to_ccf(CN<Str> name) {
   return table.at(name);
 }
 
-Color_get_pattern convert_to_cgp(CN<Str> name) {
+Color_get_pattern convert_to_cgp(cr<Str> name) {
   std::unordered_map<Str, Color_get_pattern> table {
     {"cross", Color_get_pattern::cross},
     {"box", Color_get_pattern::box},
@@ -303,7 +303,7 @@ real c11, real tx, real ty) {
   return std::lerp(std::lerp(c00, c10, tx), std::lerp(c01, c11, tx), ty);
 }
 
-Image resize_bilinear(CN<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
+Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
   assert(src);
   return_if(NEW_SIZE_X == scast<uint>(src.X) && NEW_SIZE_Y == scast<uint>(src.Y), src);
 

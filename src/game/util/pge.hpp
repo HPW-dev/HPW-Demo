@@ -18,7 +18,7 @@ struct Param_pge {
   enum class Type { base, param_int, param_real, param_bool };
   Type type {Type::base};
   virtual void save(Yaml& dst) const;
-  virtual void load(CN<Yaml> dst);
+  virtual void load(cr<Yaml> dst);
 };
 
 struct Param_pge_int: public Param_pge {
@@ -28,7 +28,7 @@ struct Param_pge_int: public Param_pge {
   std::int32_t speed_step {1};
   inline explicit Param_pge_int() { type = Param_pge::Type::param_int; }
   void save(Yaml& dst) const override;
-  void load(CN<Yaml> dst) override;
+  void load(cr<Yaml> dst) override;
 };
 
 struct Param_pge_real: public Param_pge {
@@ -38,21 +38,21 @@ struct Param_pge_real: public Param_pge {
   real speed_step {1};
   inline explicit Param_pge_real() { type = Param_pge::Type::param_real; }
   void save(Yaml& dst) const override;
-  void load(CN<Yaml> dst) override;
+  void load(cr<Yaml> dst) override;
 };
 
 struct Param_pge_bool: public Param_pge {
   bool* value {};
   inline explicit Param_pge_bool() { type = Param_pge::Type::param_bool; }
   void save(Yaml& dst) const override;
-  void load(CN<Yaml> dst) override;
+  void load(cr<Yaml> dst) override;
 };
 
 // грузить графический эффект из .dll/.so файл
 void load_pge(Str libname);
 // загрузка графического эффекта из кода
 void load_embeded_pge(decltype(plugin_init)* init_f, decltype(plugin_apply)* apply_f,
-  decltype(plugin_finalize)* finalize_f, CN<Str> name);
+  decltype(plugin_finalize)* finalize_f, cr<Str> name);
 // применяет графический эффект к кадру
 void apply_pge(const uint32_t state);
 // выключает текущий графический эффект
@@ -60,9 +60,9 @@ void disable_pge();
 void load_pge_from_config();
 void save_pge_to_config();
 // получить настраиваемые параметры из граф-о эффекта
-CN< Vector<Shared<Param_pge>> > get_pge_params();
-CN<Str> get_cur_pge_path();
-CN<Str> get_cur_pge_name();
-CN<Str> get_cur_pge_description();
-CN<Str> get_cur_pge_author();
+cr< Vector<Shared<Param_pge>> > get_pge_params();
+cr<Str> get_cur_pge_path();
+cr<Str> get_cur_pge_name();
+cr<Str> get_cur_pge_description();
+cr<Str> get_cur_pge_author();
 bool pge_loaded();

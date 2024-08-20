@@ -10,7 +10,7 @@ class Bullet_loader final: public Entity_loader {
   Unique<Impl> impl {};
 
 public:
-  explicit Bullet_loader(CN<Yaml> config);
+  explicit Bullet_loader(cr<Yaml> config);
   ~Bullet_loader();
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
 };

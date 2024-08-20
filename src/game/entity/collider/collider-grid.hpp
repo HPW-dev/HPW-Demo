@@ -13,6 +13,6 @@ class Collider_grid final: public Collider {
 public:
   explicit Collider_grid(int grid_sz=26);
   ~Collider_grid();
-  void operator()(CN<Entities> entities, Delta_time dt) override;
+  void operator()(cr<Entities> entities, Delta_time dt) override;
   void debug_draw(Image& dst, const Vec camera_offset) override;
 };

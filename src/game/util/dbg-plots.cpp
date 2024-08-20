@@ -26,7 +26,7 @@ public:
   @param h высота окна с графиком
   @param len разрешение графика. Если = 0, разрешение станет = w
   @param offset с каким смещением будет отрисовано окно графика */
-  inline explicit Plotter(CN<utf32> title, Getter&& getter, uint w, uint h, uint len, const Vec offset)
+  inline explicit Plotter(cr<utf32> title, Getter&& getter, uint w, uint h, uint len, const Vec offset)
   : m_title {title}
   , m_getter {std::move(getter)}
   , m_w {w}

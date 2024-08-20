@@ -18,7 +18,7 @@ private:
   std::size_t m_selected {};
 
 public:
-  explicit Menu_list_item(CN<utf32> title, CN<Items> items,
+  explicit Menu_list_item(cr<utf32> title, cr<Items> items,
     const std::size_t default_selected = 0);
   void enable() override;
   utf32 to_text() const override;

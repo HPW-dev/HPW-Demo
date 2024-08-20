@@ -10,7 +10,7 @@ public:
     return "load and execute commands from .txt file. "
       "example: script build/debug.txt"; 
   }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };
 
 // выполняет команды из файла за один апдейт
@@ -21,5 +21,5 @@ public:
   inline Str description() const override {
     return "script_instant <file.txt> - мгновенно выполняет команды из файла"; 
   }
-  void exec(CN<Strs> cmd_and_args) override;
+  void exec(cr<Strs> cmd_and_args) override;
 };

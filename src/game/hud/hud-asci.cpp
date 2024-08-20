@@ -84,7 +84,7 @@ struct Hud_asci::Impl {
   }
 
   // рисует прозрачный текст с чёрными контурами
-  inline void draw_expanded_text(Image& dst, CN<utf32> txt, const Vec pos) const {
+  inline void draw_expanded_text(Image& dst, cr<utf32> txt, const Vec pos) const {
     // рендер в буфферы под текст
     Image hp_overlay(graphic::font->text_width(txt) + 2,
       graphic::font->text_height(txt) + 2, Pal8::black);

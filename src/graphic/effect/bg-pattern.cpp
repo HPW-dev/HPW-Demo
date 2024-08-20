@@ -76,7 +76,7 @@ public:
     } // for freq
   }
 
-  inline void overlay(CN<Image> dst) {
+  inline void overlay(cr<Image> dst) {
     assert(scast<std::size_t>(dst.size) <= m_grid.size());
 
     cfor (i, dst.size)

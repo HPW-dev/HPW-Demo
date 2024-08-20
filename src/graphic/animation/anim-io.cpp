@@ -17,7 +17,7 @@
 #include "graphic/sprite/sprite.hpp"
 #include "util/log.hpp"
 
-inline void save_hitbox(CP<Anim> anim, Yaml& root) {
+inline void save_hitbox(cp<Anim> anim, Yaml& root) {
   auto hitbox_source = anim->get_hitbox_source();
   return_if (!hitbox_source);
   return_if (!scast<bool>(*hitbox_source));
@@ -47,7 +47,7 @@ inline void save_hitbox(CP<Anim> anim, Yaml& root) {
   } // for polygons
 } // save_hitbox
 
-inline void load_hitbox(Anim& anim, CN<Yaml> hitbox_node) {
+inline void load_hitbox(Anim& anim, cr<Yaml> hitbox_node) {
   return_if( !hitbox_node.check());
   assert(hpw::entity_mgr);
   auto hitbox_source = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>();
@@ -79,7 +79,7 @@ inline void load_hitbox(Anim& anim, CN<Yaml> hitbox_node) {
     anim.update_hitbox(hitbox_source);
 } // save_hitbox
 
-void read_anims(CN<Yaml> src) {
+void read_anims(cr<Yaml> src) {
   detailed_log("read all anims\n");
 
   // прочитать все анимации
@@ -95,7 +95,7 @@ void read_anims(CN<Yaml> src) {
   } // root tags
 } // read_anims
 
-Shared<Anim> read_anim(CN<Yaml> anim_node) {
+Shared<Anim> read_anim(cr<Yaml> anim_node) {
   // анимация будет сохранена в Anim_mgr
   auto anim = new_shared<Anim>();
 

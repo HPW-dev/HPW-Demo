@@ -30,7 +30,7 @@ inline Str decode_oal_error(const ALenum error_enum) {
   return "unknown OAL error";
 }
 
-inline void check_oal_error(CN<Str> func_name) {
+inline void check_oal_error(cr<Str> func_name) {
   if (cauto error = alGetError(); error != AL_NO_ERROR)
     error("error in OAL function: " + func_name + " - " + decode_oal_error(error));
 }
@@ -42,9 +42,9 @@ struct Sound_mgr_oal::Impl {
     Vector<ALuint> oal_buffer_ids {};
     ALuint oal_source_id {};
     Shared<Packet_decoder> packet_decoder {}; // выдаёт поблочно данные аудио файла
-    CP<Audio> sound {}; // прикреплённый звук из банка
+    cp<Audio> sound {}; // прикреплённый звук из банка
     #ifndef SOUND_WITHOUT_ENTITY
-    CP<Entity> entity {}; // привязанный объект
+    cp<Entity> entity {}; // привязанный объект
     #endif
     Audio_id audio_id {BAD_AUDIO}; // ID для управления звуком
 
@@ -98,7 +98,7 @@ struct Sound_mgr_oal::Impl {
   std::atomic_bool m_update_thread_live {}; // false - завершить m_update_thread
   mutable std::mutex m_mutex {}; // блокирует доступ к внутренностям
 
-  inline explicit Impl(CN<Sound_mgr_config> config): m_config {config} {
+  inline explicit Impl(cr<Sound_mgr_config> config): m_config {config} {
     assert(config.buffer_sz >= 1024 * 8);
     assert(config.buffers > 2);
     assert(config.sounds >= 8);
@@ -113,7 +113,7 @@ struct Sound_mgr_oal::Impl {
     close_oal();
   }
 
-  inline Audio_id play(CN<Str> sound_name, const Vec3 source_position,
+  inline Audio_id play(cr<Str> sound_name, const Vec3 source_position,
   const Vec3 source_velocity, const real amplify, const bool repeat) {
     // звуки с нулевой громкостью не запускать
     return_if (amplify <= 0, BAD_AUDIO);
@@ -174,7 +174,7 @@ struct Sound_mgr_oal::Impl {
     return id;
   } // play
 
-  inline Audio_id attach_and_play(CN<Str> sound_name, CP<Entity> entity,
+  inline Audio_id attach_and_play(cr<Str> sound_name, cp<Entity> entity,
   const real amplify, const bool repeat) {
     #ifndef SOUND_WITHOUT_ENTITY
       assert(entity);
@@ -293,13 +293,13 @@ struct Sound_mgr_oal::Impl {
     }
   }
 
-  inline void add_audio(CN<Str> sound_name, CN<Audio> sound) {
+  inline void add_audio(cr<Str> sound_name, cr<Audio> sound) {
     check_audio(sound);
     std::lock_guard lock(m_mutex);
     m_store[sound_name] = sound;
   }
 
-  inline void move_audio(CN<Str> sound_name, Audio&& sound) {
+  inline void move_audio(cr<Str> sound_name, Audio&& sound) {
     check_audio(sound);
     std::lock_guard lock(m_mutex);
     m_store[sound_name] = std::move(sound);
@@ -328,7 +328,7 @@ struct Sound_mgr_oal::Impl {
   }
 
   // проверить что звук корректно создан
-  inline void check_audio(CN<Audio> sound) const {
+  inline void check_audio(cr<Audio> sound) const {
     assert(sound.channels != 0);
     assert(sound.channels <= 8);
     assert(sound.compression != Audio::Compression::opus); // need impl
@@ -338,7 +338,7 @@ struct Sound_mgr_oal::Impl {
     assert(sound.frequency != 0);
   }
 
-  inline CN<Audio> find_audio(CN<Str> sound_name) const {
+  inline cr<Audio> find_audio(cr<Str> sound_name) const {
     try {
       std::lock_guard lock(m_mutex);
       return m_store.at(sound_name);
@@ -390,7 +390,7 @@ struct Sound_mgr_oal::Impl {
     }
   }
 
-  using Sound_buffer_converter = std::function<Bytes (CN<Bytes>, const std::size_t)>;
+  using Sound_buffer_converter = std::function<Bytes (cr<Bytes>, const std::size_t)>;
 
   struct Format_game_to_oal {
     uint channel {};
@@ -400,37 +400,37 @@ struct Sound_mgr_oal::Impl {
     uint bytes_per_sample {};
   };
 
-  inline static Bytes conv_mono_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
+  inline static Bytes conv_mono_f32_to_s16(cr<Bytes> src, const std::size_t samples) {
     return_if (samples == 0, {});
     using src_t = float;
     using dst_t = std::int16_t;
     Bytes ret(samples * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
-    auto src_p = rcast<CP<src_t>>(src.data());
+    auto src_p = rcast<cp<src_t>>(src.data());
     cfor (i, samples)
       dst_p[i] = src_p[i] * 0x7FFF;
     return ret;
   }
 
-  inline static Bytes conv_mono_s16_to_s16(CN<Bytes> src, const std::size_t samples) { return src; }
-  inline static Bytes conv_mono_u8_to_u8(CN<Bytes> src, const std::size_t samples) { return src; }
+  inline static Bytes conv_mono_s16_to_s16(cr<Bytes> src, const std::size_t samples) { return src; }
+  inline static Bytes conv_mono_u8_to_u8(cr<Bytes> src, const std::size_t samples) { return src; }
 
-  inline static Bytes conv_stereo_f32_to_s16(CN<Bytes> src, const std::size_t samples) {
+  inline static Bytes conv_stereo_f32_to_s16(cr<Bytes> src, const std::size_t samples) {
     return_if (samples == 0, {});
     using src_t = float;
     using dst_t = std::int16_t;
     Bytes ret(samples * 2 * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
-    auto src_p = rcast<CP<src_t>>(src.data());
+    auto src_p = rcast<cp<src_t>>(src.data());
     cfor (i, samples * 2)
       dst_p[i] = src_p[i] * 0x7FFF;
     return ret;
   }
 
-  inline static Bytes conv_stereo_s16_to_s16(CN<Bytes> src, const std::size_t samples) { return src; }
-  inline static Bytes conv_stereo_u8_to_u8(CN<Bytes> src, const std::size_t samples) { return src; }
+  inline static Bytes conv_stereo_s16_to_s16(cr<Bytes> src, const std::size_t samples) { return src; }
+  inline static Bytes conv_stereo_u8_to_u8(cr<Bytes> src, const std::size_t samples) { return src; }
 
-  inline CN<Format_game_to_oal> to_compatible_oal_format(CN<Audio> sound) const {
+  inline cr<Format_game_to_oal> to_compatible_oal_format(cr<Audio> sound) const {
     static const Vector<Format_game_to_oal> format_table {
       {.channel = 1, .sound_format = Audio::Format::pcm_f32,     .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_f32_to_s16,   .bytes_per_sample = 4},
       {.channel = 1, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_MONO16,   .converter = &conv_mono_s16_to_s16,   .bytes_per_sample = 2},
@@ -466,7 +466,7 @@ struct Sound_mgr_oal::Impl {
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
-      [this](CN<decltype(m_audio_infos)::value_type> audio_info_pair)->bool {
+      [this](cr<decltype(m_audio_infos)::value_type> audio_info_pair)->bool {
         crauto audio_info = audio_info_pair.second; // allias
         ALint state;
         alGetSourcei(audio_info.oal_source_id, AL_SOURCE_STATE, &state);
@@ -487,7 +487,7 @@ struct Sound_mgr_oal::Impl {
     );
   } // update
 
-  static inline Shared<Packet_decoder> make_packet_decoder(CN<Audio> sound) {
+  static inline Shared<Packet_decoder> make_packet_decoder(cr<Audio> sound) {
     switch (sound.compression) {
       default:
       case Audio::Compression::raw: return new_shared<Packet_decoder_raw>(sound); break;
@@ -549,9 +549,9 @@ Strs parse_raw_list(Cstr raw_list) {
   return {};
 } // get_audio_devices
 
-Sound_mgr_oal::Sound_mgr_oal(CN<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
+Sound_mgr_oal::Sound_mgr_oal(cr<Sound_mgr_config> config): impl {new_unique<Impl>(config)} {}
 Sound_mgr_oal::~Sound_mgr_oal() {}
-Audio_id Sound_mgr_oal::play(CN<Str> sound_name, const Vec3 source_position, const Vec3 source_velocity,
+Audio_id Sound_mgr_oal::play(cr<Str> sound_name, const Vec3 source_position, const Vec3 source_velocity,
 const real amplify, const bool repeat)
   { return impl->play(sound_name, source_position, source_velocity, amplify, repeat); }
 void Sound_mgr_oal::set_listener_pos(const Vec3 listener_pos) { impl->set_listener_pos(listener_pos); }
@@ -561,18 +561,18 @@ void Sound_mgr_oal::set_amplify(const Audio_id sound_id, const real amplify) { i
 void Sound_mgr_oal::set_position(const Audio_id sound_id, const Vec3 new_pos) { impl->set_position(sound_id, new_pos); }
 void Sound_mgr_oal::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { impl->set_velocity(sound_id, new_vel); }
 void Sound_mgr_oal::stop(const Audio_id sound_id) { impl->stop(sound_id); }
-void Sound_mgr_oal::add_audio(CN<Str> sound_name, CN<Audio> sound) { impl->add_audio(sound_name, sound); }
-void Sound_mgr_oal::move_audio(CN<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
+void Sound_mgr_oal::add_audio(cr<Str> sound_name, cr<Audio> sound) { impl->add_audio(sound_name, sound); }
+void Sound_mgr_oal::move_audio(cr<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
 void Sound_mgr_oal::set_pitch(const Audio_id sound_id, const real pitch) { impl->set_pitch(sound_id, pitch); }
 void Sound_mgr_oal::set_master_gain(const real gain) { impl->set_master_gain(gain); }
 void Sound_mgr_oal::set_doppler_factor(const real doppler_factor) { impl->set_doppler_factor(doppler_factor); }
 void Sound_mgr_oal::disable(const Audio_id sound_id) { impl->disable(sound_id); }
-CN<Audio> Sound_mgr_oal::find_audio(CN<Str> sound_name) const { return impl->find_audio(sound_name); }
-Audio_id Sound_mgr_oal::attach_and_play(CN<Str> sound_name, CP<Entity> entity, const real amplify, const bool repeat)
+cr<Audio> Sound_mgr_oal::find_audio(cr<Str> sound_name) const { return impl->find_audio(sound_name); }
+Audio_id Sound_mgr_oal::attach_and_play(cr<Str> sound_name, cp<Entity> entity, const real amplify, const bool repeat)
   { return impl->attach_and_play(sound_name, entity, amplify, repeat); }
 void Sound_mgr_oal::shutup() { impl->shutup(); }
 
-CN<Audio> Sound_mgr_nosound::find_audio(CN<Str> sound_name) const {
+cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
   error("called find_audio in nosound mode");
   return *rcast<Audio*>(0); // заглушка для анализатора
 }

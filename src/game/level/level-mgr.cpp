@@ -16,7 +16,7 @@
 #include "util/safecall.hpp"
 #include "util/math/vec.hpp"
 
-Level_mgr::Level_mgr(CN<Makers> _makers)
+Level_mgr::Level_mgr(cr<Makers> _makers)
 : m_makers(_makers) {
   iflog(m_makers.empty(), "Генераторы уровней не заданы\n");
 }
@@ -111,7 +111,7 @@ Str Level_mgr::level_name() const {
 
 void Level_mgr::set_visible(bool mode) { m_visible = mode; }
 
-void Level_mgr::set(CN<Level_mgr::Maker> maker) { 
+void Level_mgr::set(cr<Level_mgr::Maker> maker) { 
   assert(maker);
   if (m_level)
     on_end_level();

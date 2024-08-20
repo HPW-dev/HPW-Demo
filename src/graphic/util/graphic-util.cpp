@@ -14,13 +14,13 @@
 #include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
 
-void insert_fast(Image& dst, CN<Image> src) {
+void insert_fast(Image& dst, cr<Image> src) {
   return_if(!dst);
   assert(dst.size >= src.size);
   memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8));
 }
 
-void insert(Image& dst, CN<Image> src, Vec pos, blend_pf bf,
+void insert(Image& dst, cr<Image> src, Vec pos, blend_pf bf,
 int optional) {
   assert(src);
   assert(dst);
@@ -83,10 +83,10 @@ Pal8 rand_color_graphic(bool red) {
   return {val};
 }
 
-Vec center_point(CN<Image> src)
+Vec center_point(cr<Image> src)
   { return Vec(src.X / 2.0, src.Y / 2.0); }
 
-Vec center_point(CN<Sprite> src) {
+Vec center_point(cr<Sprite> src) {
   if (!src) {
     hpw_log("WARNING: center_point src is empty\n");
     return {};
@@ -94,10 +94,10 @@ Vec center_point(CN<Sprite> src) {
   return Vec{src.X() / 2.0, src.Y() / 2.0};
 }
 
-Vec center_point(CN<Image> src, CN<Image> dst)
+Vec center_point(cr<Image> src, cr<Image> dst)
   { return Vec(src.X / 2.0 - dst.X / 2.0, src.Y / 2.0 - dst.Y / 2.0); }
 
-Vec center_point(CN<Image> src, CN<Sprite> dst) {
+Vec center_point(cr<Image> src, cr<Sprite> dst) {
   if (!dst)
     return Vec(src.X / 2.0, src.Y / 2.0);
   return Vec(src.X / 2.0 - dst.X() / 2.0,
@@ -107,7 +107,7 @@ Vec center_point(CN<Image> src, CN<Sprite> dst) {
 Vec center_point(const Vec src, const Vec dst)
   { return Vec(src.x / 2.0 - dst.x / 2.0, src.y / 2.0 - dst.y / 2.0); }
 
-Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
+Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my) {
   assert(src);
   Image dst(mx, my);
   cauto ex {sx + mx};
@@ -119,7 +119,7 @@ Image fast_cut(CN<Image> src, int sx, int sy, int mx, int my) {
   return dst;
 }
 
-Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
+Image cut(cr<Image> src, cr<Rect> rect_, Image_get mode) {
   assert(src);
   return_if (rect_.size.x <= 0 || rect_.size.y <= 0, {});
 
@@ -136,7 +136,7 @@ Image cut(CN<Image> src, CN<Rect> rect_, Image_get mode) {
   return ret;
 }
 
-Sprite optimize_size(CN<Sprite> src, Vec& offset) {
+Sprite optimize_size(cr<Sprite> src, Vec& offset) {
   return_if (!src, Sprite{});
   
   crauto mask = src.mask();
@@ -170,7 +170,7 @@ Sprite optimize_size(CN<Sprite> src, Vec& offset) {
   return ret;
 } // optimize_size
 
-void insert_x2(Image& dst, CN<Image> src, Vec pos) {
+void insert_x2(Image& dst, cr<Image> src, Vec pos) {
   if (!dst || !src) {
     hpw_log("WARNING: insert_x2 dst or src is empty\n");
     return;
@@ -193,8 +193,8 @@ void insert_x2(Image& dst, CN<Image> src, Vec pos) {
   insert(dst, insert_x2_buf, pos);
 } // insert_x2
 
-Rect get_insertion_bound(CN<Image> dst, const Vec pos,
-CN<Image> src) {
+Rect get_insertion_bound(cr<Image> dst, const Vec pos,
+cr<Image> src) {
   Rect bound( Vec{}, Vec(src.X, src.Y) );
 
   // уход за право/низ
@@ -220,7 +220,7 @@ CN<Image> src) {
   return bound;
 } // insert_bound
 
-void insert(Image& dst, CN<Sprite> src, Vec pos, blend_pf bf,
+void insert(Image& dst, cr<Sprite> src, Vec pos, blend_pf bf,
 int optional) {
   if (!src || !dst) {
     hpw_log("WARNING: center_point src or dst is empty\n");
@@ -276,7 +276,7 @@ int optional) {
   }
 } // insert image sprite bf
 
-void blend(Image& dst, CN<Image> src, const Vec pos, real alpha,
+void blend(Image& dst, cr<Image> src, const Vec pos, real alpha,
 blend_pf bf, int optional) {
   error("test it");
   return_if (!dst || !src);
@@ -298,7 +298,7 @@ blend_pf bf, int optional) {
   }
 }
 
-void blend(Image& dst, CN<Sprite> src, const Vec pos, real alpha,
+void blend(Image& dst, cr<Sprite> src, const Vec pos, real alpha,
 blend_pf bf, int optional) {
   return_if (!src || !dst);
   return_if (alpha <= 0);
@@ -322,7 +322,7 @@ blend_pf bf, int optional) {
   }
 }
 
-void draw_polygon(Image& dst, const Vec pos, CN<Polygon> poly,
+void draw_polygon(Image& dst, const Vec pos, cr<Polygon> poly,
 const Pal8 color) {
   auto max_points = poly.points.size();
   cfor (i, max_points) {
@@ -391,7 +391,7 @@ void expand_color_8(Image& dst, const Pal8 color) {
   }
 } // expand_color_8
 
-void insert_blured(Image& dst, CN<Sprite> src,
+void insert_blured(Image& dst, cr<Sprite> src,
 const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
 
   auto traveled = distance(old_pos, cur_pos);
@@ -425,7 +425,7 @@ const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
 
 } // insert_blured
 
-blend_pf find_blend_f(CN<Str> name) {
+blend_pf find_blend_f(cr<Str> name) {
   static const std::unordered_map<Str, blend_pf> table {
     {"blend_none", &blend_none},
     {"blend_rotate", &blend_rotate},

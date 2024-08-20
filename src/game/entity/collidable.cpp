@@ -50,7 +50,7 @@ bool Collidable::kill_by_damage() {
   return true;
 }
 
-bool Collidable::hitbox_test(CN<Collidable> other) const {
+bool Collidable::hitbox_test(cr<Collidable> other) const {
   // столкновение с собой не проверять
   return_if (this == std::addressof(other), false);
 
@@ -65,7 +65,7 @@ bool Collidable::hitbox_test(CN<Collidable> other) const {
   return this_hitbox->is_collided_with(this_pos, other_pos, *other_hitbox);
 } // hitbox_test
 
-CP<Hitbox> Collidable::get_hitbox() const {
+cp<Hitbox> Collidable::get_hitbox() const {
   cauto deg = phys.get_deg();
 
   // если угол не менялся, то вернуть кешированный результат

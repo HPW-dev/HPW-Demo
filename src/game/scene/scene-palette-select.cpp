@@ -33,7 +33,7 @@ struct Scene_palette_select::Impl {
     // загрузить имена всех файлов с палитрой
     auto file_list = hpw::archive->get_all_names(false);
     // фильтр списка
-    std::erase_if(file_list, [](CN<Str> src) {
+    std::erase_if(file_list, [](cr<Str> src) {
       return src.find("resource/image/palettes/") == Str::npos; });
     m_palette_files = file_list;
 

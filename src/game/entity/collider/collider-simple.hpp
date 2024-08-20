@@ -13,6 +13,6 @@ class Collider_simple final: public Collider {
 public:
   Collider_simple();
   ~Collider_simple();
-  void operator()(CN<Entities> entities, Delta_time dt) override;
+  void operator()(cr<Entities> entities, Delta_time dt) override;
   void debug_draw(Image& dst, const Vec camera_offset) override;
 };

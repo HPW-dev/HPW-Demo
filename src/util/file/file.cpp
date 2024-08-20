@@ -26,7 +26,7 @@ Bytes mem_from_file(Str fname) {
   return mem;
 } // mem_from_file
 
-inline void all_names_in_dir_helper(Strs& v_name, CN<Str> dir) {
+inline void all_names_in_dir_helper(Strs& v_name, cr<Str> dir) {
   for (crauto entry: std::filesystem::directory_iterator(dir)) {
     auto path = entry.path().string();
     v_name.emplace_back(path);
@@ -42,12 +42,12 @@ Strs all_names_in_dir(Str dir) {
   return ret;
 }
 
-void mem_to_file(CN<Bytes> data, Str fname) {
+void mem_to_file(cr<Bytes> data, Str fname) {
   iferror(fname.empty(), "name is empty");
   conv_sep(fname);
   std::ofstream file(fname, std::ios_base::binary);
   iferror( !file, "file \"" << fname << "\" not opened for save\n");
   iferror( data.empty(), "saving data is empty");
   // RAW данные в файл
-  file.write(cptr2ptr<CP<char>>(data.data()), data.size());
+  file.write(cptr2ptr<cp<char>>(data.data()), data.size());
 }

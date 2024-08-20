@@ -11,7 +11,7 @@ class Scene_msgbox_enter final: public Scene {
   using Action = std::function<void ()>;
 
 public:
-  explicit Scene_msgbox_enter(CN<utf32> msg, CN<utf32> title={}, CN<Action> action={});
+  explicit Scene_msgbox_enter(cr<utf32> msg, cr<utf32> title={}, cr<Action> action={});
   ~Scene_msgbox_enter();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;

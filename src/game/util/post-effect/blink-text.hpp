@@ -12,7 +12,7 @@ class Blink_text: public Effect_mgr::Effect {
 public:
   Blink_text() = default;
   ~Blink_text();
-  explicit Blink_text(const Delta_time timeout, CN<utf32> txt);
+  explicit Blink_text(const Delta_time timeout, cr<utf32> txt);
   bool update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

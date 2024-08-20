@@ -5,7 +5,7 @@
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-mgr.hpp"
 
-Input_scene::Input_scene(CN<Str> new_title, CN<callback_t> new_callback)
+Input_scene::Input_scene(cr<Str> new_title, cr<callback_t> new_callback)
 : title{new_title}, callback{new_callback}
 { charbuf[0] = '\0'; }
 

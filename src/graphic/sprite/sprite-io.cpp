@@ -17,7 +17,7 @@
 
 /** делает контур картинки жирнее
 Нужен для картинки в rotsprite, чтобы при повороте не было артефактов */
-inline void expand_contour(Image& image, CN<Image> mask) {
+inline void expand_contour(Image& image, cr<Image> mask) {
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, image.Y)
   cfor (x, image.X) {
@@ -34,12 +34,12 @@ inline void expand_contour(Image& image, CN<Image> mask) {
   } // for y, x
 } // expand_contour
 
-inline void _data_to_sprite(Sprite &dst, CN<File> file) {
+inline void _data_to_sprite(Sprite &dst, cr<File> file) {
   iferror(file.data.empty(), "_data_to_sprite: file is empty");
   // декодирование:
   int x, y;
   int comp; // сколько цветовых каналов
-  stbi_uc *decoded = stbi_load_from_memory( scast<CP<stbi_uc>>(file.data.data()),
+  stbi_uc *decoded = stbi_load_from_memory( scast<cp<stbi_uc>>(file.data.data()),
     file.data.size(), &x, &y, &comp, STBI_rgb_alpha );
   iferror( !decoded, "_data_to_image: image data is not decoded. File: \"" << file.get_path() << "\"");
 // переносим данные в спрайт:
@@ -68,23 +68,23 @@ inline void _data_to_sprite(Sprite &dst, CN<File> file) {
   dst.move_mask(std::move(mask));
 } // _data_to_sprite
 
-void load(Sprite &dst, CN<File> file) {
+void load(Sprite &dst, cr<File> file) {
   detailed_log("Sprite.load_file \"" << file.get_path() << "\"\n");
   _data_to_sprite(dst, file);
 } // load
 
-void load(Sprite &dst, CN<Str> name) {
+void load(Sprite &dst, cr<Str> name) {
   detailed_log("Sprite.load_file(F) \"" << name << "\"\n");
   File file {mem_from_file(name), name};
   _data_to_sprite(dst, file);
 } // load
 
-void load(CN<File> file, Sprite &dst) {
+void load(cr<File> file, Sprite &dst) {
   iferror( file.data.empty(), "load sprite(M): file is empty");
   _data_to_sprite(dst, file);
 }
 
-void save(CN<Sprite> src, Str file_name) {
+void save(cr<Sprite> src, Str file_name) {
   assert(src);
   assert(!file_name.empty());
   

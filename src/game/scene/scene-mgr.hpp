@@ -18,7 +18,7 @@ class Scene_mgr final {
   Повышает безопасность вызова add и back в любом месте */ 
   Vector<Job> jobs {};
   
-  void _add(CN<Shared<Scene>> scene);
+  void _add(cr<Shared<Scene>> scene);
   void _back();
   void lazy_scene_update();
 
@@ -36,6 +36,6 @@ public:
   bool update(const Delta_time dt);
   void draw(Image& dst) const;
   Scene* get_current() const;
-  void add(CN<Shared<Scene>> scene); // добавить новую сцену
+  void add(cr<Shared<Scene>> scene); // добавить новую сцену
   void back(uint count=1); // вернуться обратно по стеку сцен <count> раз
 }; // Scene_mgr

@@ -3,7 +3,7 @@
 #include "util/path.hpp"
 #include "util/log.hpp"
 
-void print_raw(CN<Bytes> raw) {
+void print_raw(cr<Bytes> raw) {
   if (raw.empty())
     return;
   Str str(raw.begin(), raw.end());

@@ -35,11 +35,11 @@ void Task::restart() {
 
 void Task_mgr::process_killed() {
   // удалить всех неактивных
-  std::erase_if(m_tasks, [](CN<Shared<Task>> task)
+  std::erase_if(m_tasks, [](cr<Shared<Task>> task)
     { return !task || !task->is_active(); });
 }
 
-Shared<Task> Task_mgr::add(CN<Shared<Task>> task) {
+Shared<Task> Task_mgr::add(cr<Shared<Task>> task) {
   iferror(!task, "bad task ptr");
   m_tasks.push_back(task);
   task->on_start();

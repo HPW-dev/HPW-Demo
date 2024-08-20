@@ -6,10 +6,10 @@ struct File;
 class Sprite;
 
 // load from mem
-void load(Sprite &dst, CN<File> file);
+void load(Sprite &dst, cr<File> file);
 // load from file
-void load(Sprite &dst, CN<Str> name);
+void load(Sprite &dst, cr<Str> name);
 // load from memory
-void load(CN<File> file, Sprite &dst);
+void load(cr<File> file, Sprite &dst);
 // save to file
-void save(CN<Sprite> src, Str file_name);
+void save(cr<Sprite> src, Str file_name);

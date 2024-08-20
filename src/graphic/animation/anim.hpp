@@ -23,31 +23,31 @@ class Anim final {
 public:
   Anim();
   ~Anim() = default;
-  Anim* operator =(CN<Anim> other);
-  Anim(CN<Anim> other) = delete;
+  Anim* operator =(cr<Anim> other);
+  Anim(cr<Anim> other) = delete;
   Anim(Anim&& other) = delete;
   Anim* operator =(Anim&& other) = delete;
 
-  void add_frame (CN<Shared<Frame>> frame);
-  void insert(std::size_t pos, CN<Shared<Frame>> frame);
+  void add_frame (cr<Shared<Frame>> frame);
+  void insert(std::size_t pos, cr<Shared<Frame>> frame);
   void remove_frame (std::size_t frame_num);
   void swap_frame (std::size_t a, std::size_t b);
-  void set_name (CN<Str> new_name);
+  void set_name (cr<Str> new_name);
   
-  inline Anim (CN<Frames> in): frames(in) {}
-  CP<Frame> get_frame (std::size_t frame_num) const;
+  inline Anim (cr<Frames> in): frames(in) {}
+  cp<Frame> get_frame (std::size_t frame_num) const;
   Shared<Frame> get_frame_shared(std::size_t frame_num) const;
   inline bool frame_empty() const { return frames.empty(); }
   inline auto frame_count() const { return frames.size(); }
   inline crauto get_frames() const { return frames; }
-  inline CN<Str> get_name() const { return name; }
+  inline cr<Str> get_name() const { return name; }
 
   // получить хитбокс анимации по иуглу
-  CP<Hitbox> get_hitbox(real degree=0) const;
+  cp<Hitbox> get_hitbox(real degree=0) const;
   /** назначить новых хитбокс
   @param _hitbox хитбокс для эталона
   @param _directions число разворотов хитбокса */
-  void update_hitbox(CN<Pool_ptr(Hitbox)> _hitbox, uint _directions=64);
+  void update_hitbox(cr<Pool_ptr(Hitbox)> _hitbox, uint _directions=64);
   uint get_gitbox_directions() const;
-  CN<decltype(source_hitbox)> get_hitbox_source() const;
+  cr<decltype(source_hitbox)> get_hitbox_source() const;
 }; // Anim

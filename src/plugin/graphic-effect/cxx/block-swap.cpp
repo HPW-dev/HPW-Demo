@@ -136,7 +136,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
   update_block_map();
   assert( !g_buffer.empty() && g_buffer.size() == g_w * g_h);
   // buffer <- dst
-  memcpy(ptr2ptr<void*>(g_buffer.data()), cptr2ptr<CP<void>>(g_dst),
+  memcpy(ptr2ptr<void*>(g_buffer.data()), cptr2ptr<cp<void>>(g_dst),
     sizeof(Pal8) * g_w * g_h);
 
   // TODO исправить

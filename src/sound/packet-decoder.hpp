@@ -19,7 +19,7 @@ class NAME: public Packet_decoder { \
   struct Impl; \
   Unique<Impl> impl {}; \
 public: \
-  explicit NAME(CN<Audio> sound); \
+  explicit NAME(cr<Audio> sound); \
   ~NAME(); \
   Bytes decode(const uint needed_sz) override; \
 };

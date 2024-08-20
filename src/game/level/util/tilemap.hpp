@@ -15,15 +15,15 @@ class Tilemap final {
 
 public:
   Tilemap();
-  Tilemap(CN<Tilemap> other) = delete;
+  Tilemap(cr<Tilemap> other) = delete;
   Tilemap(Tilemap&& other);
-  Tilemap* operator=(CN<Tilemap> other) = delete;
+  Tilemap* operator=(cr<Tilemap> other) = delete;
   Tilemap* operator=(Tilemap&& other) = delete;
-  Tilemap(CN<Str> fname);
+  Tilemap(cr<Str> fname);
   ~Tilemap();
   
-  void load(CN<Yaml> config);
-  void load_from_archive(CN<Str> fname);
+  void load(cr<Yaml> config);
+  void load_from_archive(cr<Str> fname);
   void draw(const Vec pos, Image& dst, blend_pf bf=&blend_past, int optional=0) const;
   int get_original_w() const;
   int get_original_h() const;

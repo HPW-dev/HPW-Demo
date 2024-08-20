@@ -10,14 +10,14 @@ class Sprite;
 // меню выбора и просмотра ресурсов
 class Sprite_select: public Editor_scene_base {
   // колбэк получит поинтер на выбранный спрайт и путь к нему
-  std::function<void (Shared<Sprite>, CN<Str>)> callback {};
+  std::function<void (Shared<Sprite>, cr<Str>)> callback {};
   Str sel_spr {};
   Strs _list {};
   std::array<char, 400> filter {};
 
   void enable();
   Strs get_list() const;
-  int get_cur_list_idx(CN<Str> name, CN<Strs> list) const;
+  int get_cur_list_idx(cr<Str> name, cr<Strs> list) const;
 
 public:
   explicit Sprite_select(decltype(callback) new_callback={});

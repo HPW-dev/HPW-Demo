@@ -14,7 +14,7 @@
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
 
-Anim_ctx::Anim_ctx(CP<Anim> new_anim): m_anim {new_anim} { assert(m_anim); }
+Anim_ctx::Anim_ctx(cp<Anim> new_anim): m_anim {new_anim} { assert(m_anim); }
 
 void Anim_ctx::update(const Delta_time dt, Entity& entity) {
   // при проблемах, старый код тут: b90e158115e53482c1fafe95990249a89f796dd7
@@ -98,7 +98,7 @@ void Anim_ctx::goto_prev_frame(Entity& entity) {
 void Anim_ctx::goto_rnd_frame()
   { m_frame_idx = rndu(m_anim->frame_count()-1); }
 
-void Anim_ctx::draw(Image& dst, CN<Entity> entity, const Vec offset) {
+void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) {
   // TODO сделать межкадровый дизеринг
 
   // взять текущий кадр анимации
@@ -161,12 +161,12 @@ Vec Anim_ctx::get_interpolated_pos() const {
   );
 }
 
-void Anim_ctx::set_anim(CP<Anim> new_anim) {
+void Anim_ctx::set_anim(cp<Anim> new_anim) {
   *this = {};
   m_anim = new_anim;
 }
 
-void Anim_ctx::set_contour(CP<Anim> val) {
+void Anim_ctx::set_contour(cp<Anim> val) {
   assert(val);
   iferror(!m_anim, "m_anim не задан, поэтому контур "
     "может быть удалён при set_anim");
@@ -181,7 +181,7 @@ void Anim_ctx::randomize_cur_frame_safe() {
   m_frame_idx = rndu(m_anim->frame_count() - 1);
 }
 
-real Anim_ctx::get_degree_with_flags(real src, CN<Entity> entity) const {
+real Anim_ctx::get_degree_with_flags(real src, cr<Entity> entity) const {
   auto status = entity.status;
   // если угол фиксирован
   if (status.fixed_deg)
@@ -206,7 +206,7 @@ void Anim_ctx::set_last_frame() {
   m_frame_idx = std::max<int>(0, scast<int>(m_anim->frame_count()) - 1);
 }
 
-CP<Frame> Anim_ctx::get_cur_frame() const {
+cp<Frame> Anim_ctx::get_cur_frame() const {
   if (!m_anim)
     return nullptr;
   auto idx = get_cur_frame_idx();

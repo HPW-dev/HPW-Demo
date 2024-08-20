@@ -32,7 +32,7 @@ struct Player_dark::Loader::Impl {
   real m_percent_level_for_blink {};
   real m_window_star_len {};
 
-  inline explicit Impl(CN<Yaml> config) {
+  inline explicit Impl(cr<Yaml> config) {
     m_collidable_info.load(config);
 
     cauto anim_node = config["animation"];
@@ -114,7 +114,7 @@ struct Player_dark::Loader::Impl {
   } // op ()
 }; // Impl
 
-Player_dark::Loader::Loader(CN<Yaml> config)
+Player_dark::Loader::Loader(cr<Yaml> config)
   : impl{new_unique<Impl>(config)} {}
 
 Player_dark::Loader::~Loader() {}

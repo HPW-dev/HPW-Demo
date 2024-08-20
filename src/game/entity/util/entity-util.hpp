@@ -16,7 +16,7 @@ Uid get_entity_uid();
 // для синхронизации в реплеях
 void clear_entity_uid();
 // безопасно добавить анимацию к объекту
-void add_anim(Entity& dst, CN<Str> anim_name);
+void add_anim(Entity& dst, cr<Str> anim_name);
 // каст частицу (с проверкой)
 Particle* to_particle(Entity& src);
 // каст сталкиваемый объект (с проверкой)
@@ -24,7 +24,7 @@ Collidable* to_collidable(Entity& src);
 // для отскока от экрана
 void bounce_off_screen(Entity& entity, Delta_time dt);
 // проверить что a и b могут сталкиваться вместе
-bool cld_flag_compat(CN<Entity> a, CN<Entity> b);
+bool cld_flag_compat(cr<Entity> a, cr<Entity> b);
 
 class Kill_by_timeout final {
   Delta_time m_timeout {};
@@ -94,28 +94,28 @@ public:
 void kill_if_master_death(Entity& entity, Delta_time dt);
 
 // на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
-real need_deg_to_target(CN<Entity> self, CN<Entity> target);
+real need_deg_to_target(cr<Entity> self, cr<Entity> target);
 // надо ли поворачивать вправо, чтобы моделька смотрела на target?
-bool need_rotate_right(CN<Entity> self, CN<Entity> target);
+bool need_rotate_right(cr<Entity> self, cr<Entity> target);
 // на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
-real need_deg_to_target(CN<Entity> self, const Vec target);
+real need_deg_to_target(cr<Entity> self, const Vec target);
 // надо ли поворачивать вправо, чтобы моделька смотрела на target?
-bool need_rotate_right(CN<Entity> self, const Vec target);
+bool need_rotate_right(cr<Entity> self, const Vec target);
 // угол поворота к цели
-real deg_to_target(CN<Entity> self, CN<Entity> target);
+real deg_to_target(cr<Entity> self, cr<Entity> target);
 // угол поворота к цели
-real deg_to_target(CN<Entity> self, const Vec target);
+real deg_to_target(cr<Entity> self, const Vec target);
 
 /** найти точку упреждения движения
 * @param self позиция стреляющего объекта
 * @param target движущаяся цель, в которую стреляют */
-Vec predict(CN<Entity> self, CN<Entity> target, Delta_time dt);
+Vec predict(cr<Entity> self, cr<Entity> target, Delta_time dt);
 
 // ограничитель позиции игрока в пределах экрана
 struct Bound_off_screen {
   Vec screen_lu {}; // ограничение слева сверху
   Vec screen_rd {}; // ограничение справа снизу
 
-  explicit Bound_off_screen(CN<Entity> src);
+  explicit Bound_off_screen(cr<Entity> src);
   void operator()(Entity& dst, const Delta_time dt);
 }; // Bound_off_screen

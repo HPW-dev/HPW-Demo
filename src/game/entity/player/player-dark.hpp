@@ -59,7 +59,7 @@ class Player_dark::Loader final: public Entity_loader {
   Unique<Impl> impl {};
 
 public:
-  explicit Loader(CN<Yaml> config);
+  explicit Loader(cr<Yaml> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Loader();
 };

@@ -54,7 +54,7 @@ class Cosmic::Loader final: public Proto_enemy::Loader {
 
 public:
   Loader() = default;
-  explicit Loader(CN<Yaml> config);
+  explicit Loader(cr<Yaml> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Loader();
 };

@@ -310,7 +310,7 @@ void Scene_main_menu::draw_text(Image& dst) const {
   insert<&blend_max>(dst, text_layer);
 } // draw_text
 
-Unique<Sprite> Scene_main_menu::prepare_logo(CN<Str> name) const {
+Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
   auto finded_sprite = hpw::store_sprite->find(name);
   assert(finded_sprite && scast<bool>(*finded_sprite));
   auto logo = new_unique<Sprite>(*finded_sprite);

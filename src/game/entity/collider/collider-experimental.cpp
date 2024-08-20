@@ -34,7 +34,7 @@ struct Collider_experimental::Impl {
     a_collidable.resolve_collision(b_collidable);
   }
 
-  inline void operator()(CN<Entities> entities, Delta_time dt) {
+  inline void operator()(cr<Entities> entities, Delta_time dt) {
     m_areas.clear();
     for (rauto ent: entities)
       insert(ent.get());
@@ -68,7 +68,7 @@ struct Collider_experimental::Impl {
   } // insert
 
   // создаёт прямоугольник оборачивающий хитбокс
-  inline Rect make_rect(CN<Entity> ent) const {
+  inline Rect make_rect(cr<Entity> ent) const {
     cauto hitbox = ent.get_hitbox();
     assert(hitbox);
     cauto sz = hitbox->simple.r * 2;
@@ -78,7 +78,7 @@ struct Collider_experimental::Impl {
     };
   }
 
-  inline static Rect expand_rect(CN<Rect> a, CN<Rect> b) {
+  inline static Rect expand_rect(cr<Rect> a, cr<Rect> b) {
     Rect ret;
     ret.pos.x = std::min(a.pos.x, b.pos.x);
     ret.pos.y = std::min(a.pos.y, b.pos.y);
@@ -93,7 +93,7 @@ struct Collider_experimental::Impl {
   }
 
   // проверить столкновения в области
-  inline void process_collisions(CN<Area> area) {
+  inline void process_collisions(cr<Area> area) {
     cauto entitys_sz = area.entities.size();
     return_if(entitys_sz <= 1);
 
@@ -115,5 +115,5 @@ struct Collider_experimental::Impl {
 
 Collider_experimental::Collider_experimental(): impl {new_unique<Impl>()} {}
 Collider_experimental::~Collider_experimental() {}
-void Collider_experimental::operator()(CN<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
+void Collider_experimental::operator()(cr<Entities> entities, Delta_time dt) { impl->operator()(entities, dt); }
 void Collider_experimental::debug_draw(Image& dst, const Vec camera_offset) { impl->debug_draw(dst, camera_offset); }

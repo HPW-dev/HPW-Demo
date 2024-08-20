@@ -8,7 +8,7 @@
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 
-void Anim_info::load(CN<Yaml> node) {
+void Anim_info::load(cr<Yaml> node) {
   if ( !node.check()) {
     detailed_log("пустая нода с анимацией, выход из функции");
     return;

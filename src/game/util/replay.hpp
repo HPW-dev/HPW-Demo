@@ -19,13 +19,13 @@ class Replay final {
 public:
   struct Info;
 
-  explicit Replay(CN<Str> path, bool write_mode);
+  explicit Replay(cr<Str> path, bool write_mode);
   ~Replay();
   void close();
-  void push(CN<Key_packet> key_packet);
+  void push(cr<Key_packet> key_packet);
   std::optional<Key_packet> pop(); // будет возвращать нажатые клавиши, пока не кончатся
-  CP<Impl> get_impl() const;
-  static Info get_info(CN<Str> path);
+  cp<Impl> get_impl() const;
+  static Info get_info(cr<Str> path);
 }; // Replay
 
 struct Date {

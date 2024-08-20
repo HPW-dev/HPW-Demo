@@ -10,7 +10,7 @@
 #include "util/math/vec-util.hpp"
 
 bool Hitbox::is_collided_with(const Vec this_pos, const Vec other_pos,
-CN<Hitbox> other) const {
+cr<Hitbox> other) const {
   // если внешние упрощённые хитбоксы столкнулись
   if (simple.is_collided(this_pos, other_pos, other.simple)) {
     // то проверить все внутренние полигоны до первого столкновения
@@ -62,7 +62,7 @@ void Hitbox::rotate(real degree) {
   }
 }
 
-bool Hitbox::operator ==(CN<Hitbox> other) const {
+bool Hitbox::operator ==(cr<Hitbox> other) const {
   // если число полигонов не совпадает, сразу выход
   auto polygons_count = this->polygons.size();
   if (polygons_count != other.polygons.size())
@@ -79,7 +79,7 @@ bool Hitbox::operator ==(CN<Hitbox> other) const {
   return true;
 } // op ==
 
-bool Hitbox::operator !=(CN<Hitbox> other) const
+bool Hitbox::operator !=(cr<Hitbox> other) const
   { return !( operator==(other) ); }
 
 Hitbox::operator bool() const {

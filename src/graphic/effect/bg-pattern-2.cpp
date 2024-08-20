@@ -399,7 +399,7 @@ void bgp_tiles_2(Image& dst, const int bg_state) {
     assert(hpw::store_sprite);
     // найти тайлы из нужной папки
     cauto list = hpw::archive->get_all_names(false);;
-    cauto tile_name_filter = [](CN<Str> name)
+    cauto tile_name_filter = [](cr<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
       auto tile = hpw::store_sprite->find(tile_name);
@@ -449,7 +449,7 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
     assert(hpw::store_sprite);
     // найти тайлы из нужной папки
     cauto list = hpw::archive->get_all_names(false);
-    cauto tile_name_filter = [](CN<Str> name)
+    cauto tile_name_filter = [](cr<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
       auto tile = hpw::store_sprite->find(tile_name);

@@ -34,7 +34,7 @@ class Collider_qtree::Qtree final {
     { return std::max(b, std::min(a, c)); }
 
   // https://www.tutorialspoint.com/circle-and-rectangle-overlapping-in-cplusplus
-  static inline bool intersect(CN<Rect> a, CN<Circle> b) {
+  static inline bool intersect(cr<Rect> a, cr<Circle> b) {
     auto cx = b.offset.x;
     auto cy = b.offset.y;
     auto r = b.r;
@@ -61,7 +61,7 @@ public:
 
   ~Qtree() = default;
 
-  inline Qtree(CN<Rect> _bound, std::size_t _depth, std::size_t _max_depth,
+  inline Qtree(cr<Rect> _bound, std::size_t _depth, std::size_t _max_depth,
   std::size_t _entity_limit)
   : bound( _bound )
   , depth( _depth )
@@ -165,7 +165,7 @@ public:
   } // draw
 
   // найти соседей в области area
-  inline void find(CN<Circle> area, Collidables& list) const {
+  inline void find(cr<Circle> area, Collidables& list) const {
     if (intersect(this->bound, area)) {
       // так быстрее, чем std::copy или list.insert
       for (crauto en: m_entitys)
@@ -213,7 +213,7 @@ std::size_t X, std::size_t Y) {
   root->m_master = this;
 }
 
-void Collider_qtree::operator()(CN<Entities> entities, Delta_time dt) {
+void Collider_qtree::operator()(cr<Entities> entities, Delta_time dt) {
   auto filtered_entitys = update_qtree(entities);
   update_pairs(filtered_entitys);
 
@@ -242,7 +242,7 @@ void Collider_qtree::debug_draw(Image& dst, const Vec camera_offset) {
   root->draw(dst, camera_offset);
 }
 
-Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
+Collidables Collider_qtree::update_qtree(cr<Entities> entities) {
   Collidables ret; // объекты пригодные к сталкиванию
 
   #ifdef ECOMEM
@@ -271,7 +271,7 @@ Collidables Collider_qtree::update_qtree(CN<Entities> entities) {
   return ret;
 } // update_qtree
 
-void Collider_qtree::update_pairs(CN<Collidables> entities) {
+void Collider_qtree::update_pairs(cr<Collidables> entities) {
   collision_pairs.clear();
 
   if (entities.size() >= MAX_ENTS_FOR_MULTY_UPDATE) {

@@ -59,7 +59,7 @@ Anim* get_anim() {
   return ccast<Anim*>(anim);
 }
 
-void Flag_editor::emplace(get_flag_pf&& get_f, set_flag_pf&& set_f, CN<Str> name) {
+void Flag_editor::emplace(get_flag_pf&& get_f, set_flag_pf&& set_f, cr<Str> name) {
   assert(get_f);
   assert(set_f);
   m_flags.emplace_back( Flag {

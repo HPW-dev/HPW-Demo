@@ -22,7 +22,7 @@ constexpr static const Pal8 COMENT_COLOR = Pal8::from_real(0.45);
 //constexpr static const Pal8 BORDER_COLOR = Pal8::black;
 //constexpr static const Pal8 COMENT_COLOR = TEXT_COLOR;
 
-inline Str prepare_seach_dir(CN<Str> path) {
+inline Str prepare_seach_dir(cr<Str> path) {
   Str ret = path;
   if (ret.empty())
     ret = "./";
@@ -32,7 +32,7 @@ inline Str prepare_seach_dir(CN<Str> path) {
 }
 
 // true если имя файла подходит по маске
-inline bool check_file_masks(CN<Str> fname, CN<Strs> masks) {
+inline bool check_file_masks(cr<Str> fname, cr<Strs> masks) {
   for (crauto mask: masks)
     if (std::filesystem::path(fname).extension() == mask)
       return true;
@@ -40,7 +40,7 @@ inline bool check_file_masks(CN<Str> fname, CN<Strs> masks) {
 }
 
 inline void recursive_find_helper(Strs& dst,
-CN<std::filesystem::directory_iterator> dir, CN<Strs> masks) {
+cr<std::filesystem::directory_iterator> dir, cr<Strs> masks) {
   for (crauto file: dir) {
     if (file.is_directory())
       recursive_find_helper(
@@ -56,7 +56,7 @@ CN<std::filesystem::directory_iterator> dir, CN<Strs> masks) {
 
 /* репурсивно ищет имена файлов подходящие по шаблону
 в masks по всем папкам в search_dir */
-Strs recursive_find(CN<Str> search_dir, CN<Strs> masks) {
+Strs recursive_find(cr<Str> search_dir, cr<Strs> masks) {
   Strs ret;
   cauto dir = std::filesystem::directory_iterator(search_dir);
   recursive_find_helper(ret, dir, masks);
@@ -64,8 +64,8 @@ Strs recursive_find(CN<Str> search_dir, CN<Strs> masks) {
 }
 
 // убирает файлы соответствующие маске
-void exclude_mask(Strs& dst, CN<Strs> masks) {
-  std::erase_if(dst, [&](CN<Str> fname) {
+void exclude_mask(Strs& dst, cr<Strs> masks) {
+  std::erase_if(dst, [&](cr<Str> fname) {
     for (crauto mask: masks)
       if (fname.find(mask) != Str::npos)
         return true;
@@ -73,7 +73,7 @@ void exclude_mask(Strs& dst, CN<Strs> masks) {
   });
 }
 
-Image text_to_image(CN<Str> fname) {
+Image text_to_image(cr<Str> fname) {
   std::ifstream file(fname);
   iferror(!file.is_open(), "error while openin file \"" << fname << "\"");
 
@@ -131,7 +131,7 @@ Image text_to_image(CN<Str> fname) {
 inline void prepare_image_list(Images& image_list) {
   assert(!image_list.empty());
   // сортировка по размеру
-  std::sort(image_list.begin(), image_list.end(), [](CN<Image> a, CN<Image> b) {
+  std::sort(image_list.begin(), image_list.end(), [](cr<Image> a, cr<Image> b) {
     // при одинаковых размерах сортировать по ширине
     if (a.size == b.size)
       return a.X > b.X;
@@ -143,7 +143,7 @@ using Rects = Vector<Rect>;
 
 /* перебирать каждый пиксель, пока не найдётся
 свободная область или не хватит места под картинку */
-void inser_to_free_space(Image& dst, CN<Image> src, Rects& occupied) {
+void inser_to_free_space(Image& dst, cr<Image> src, Rects& occupied) {
   cauto mx = dst.X;
   cauto my = dst.Y;
 
@@ -171,7 +171,7 @@ void inser_to_free_space(Image& dst, CN<Image> src, Rects& occupied) {
   } // for y
 }
 
-Image make_atlas(CN<Images> images, int w, int h) {
+Image make_atlas(cr<Images> images, int w, int h) {
   assert(!images.empty());
   Rects occupied {}; // занятые области
   Image dst(w, h, {BG_COLOR});

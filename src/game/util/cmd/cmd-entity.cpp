@@ -16,12 +16,12 @@ namespace {
 Uid g_last_uid {}; // последний соспавненный объект
 }
 
-inline Uid get_uid(CN<Str> str) {
+inline Uid get_uid(cr<Str> str) {
   return_if (str_tolower(str) == "u", ::g_last_uid);
   return s2n<Uid>(str);
 }
 
-void spawn(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "не задано имя объекта в команде spawn");
   crauto entity_name = args[1];
 
@@ -49,7 +49,7 @@ Strs get_entity_names() {
 }
 
 // предложить имена всего что можно соспавнить
-Strs spawn_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+Strs spawn_matches(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   return_if(args.size() > 2, Strs{});
   Strs ret;
   cauto cmd_name = ctx.name();
@@ -58,7 +58,7 @@ Strs spawn_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   // отфильтровать пользоватеьский ввод
   if (args.size() == 2) {
     crauto entity_name = args.at(1);
-    cauto name_filter = [&](CN<Str> it)
+    cauto name_filter = [&](cr<Str> it)
       { return it.find(entity_name) == 0; };
     for (crauto name: entity_names | std::views::filter(name_filter))
       ret.push_back(cmd_name + ' ' + name);
@@ -71,12 +71,12 @@ Strs spawn_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   return ret;
 }
 
-void kill(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void kill(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
   crauto entity_uid = get_uid(args[1]);
   crauto entities = hpw::entity_mgr->get_entities();
   cauto it = std::find_if(entities.begin(), entities.end(),
-    [&](CN<Entities::value_type> entity) {
+    [&](cr<Entities::value_type> entity) {
       return entity->uid == entity_uid;
     }
   );
@@ -102,7 +102,7 @@ Strs get_lived_str_uid() {
 }
 
 // предложить uid'ы всего того, что можно убить
-Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+Strs kill_matches(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   return_if(args.size() > 2, Strs{});
   Strs ret;
   cauto cmd_name = ctx.name();
@@ -111,7 +111,7 @@ Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   // отфильтровать пользоватеьский ввод
   if (args.size() == 2) {
     crauto entity_name = args.at(1);
-    cauto name_filter = [&](CN<Str> it)
+    cauto name_filter = [&](cr<Str> it)
       { return it.find(entity_name) == 0; };
     for (crauto name: str_uids | std::views::filter(name_filter))
       ret.push_back(cmd_name + ' ' + name);
@@ -125,17 +125,17 @@ Strs kill_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 }
 
 // убирает всех противников
-void clear_entities(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void clear_entities(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   hpw::entity_mgr->clear_entities();
   console.print("all entities erased");
 }
 
-void print_lives(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void print_lives(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   cauto lives = hpw::entity_mgr->lives();
   console.print("активных объектов: " + n2s(lives));
 }
 
-void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void make_copy(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
 
   // найти кого копируем
@@ -164,7 +164,7 @@ void make_copy(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + n2s(dst->uid));
 }
 
-void teleport(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void teleport(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
 
   // найти кого телепортим
@@ -188,7 +188,7 @@ void teleport(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + n2s(pos.x, 2) + ", " + n2s(pos.y, 2) + "}");
 }
 
-void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void entity_hp(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
 
   // find raw entity
@@ -215,7 +215,7 @@ void entity_hp(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + n2s(new_hp) + " HP");
 }
 
-void entity_dmg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void entity_dmg(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
 
   // find raw entity
@@ -242,7 +242,7 @@ void entity_dmg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + n2s(new_dmg) + " DMG");
 }
 
-void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void entity_deg(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
   cauto deg = (args.size() >= 3 ? s2n<real>(args[2]) : rndr(0, 360));
@@ -253,7 +253,7 @@ void entity_deg(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + n2s(deg, 2) + " градусов");
 }
 
-void entity_force(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void entity_force(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 3, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
   cauto force = s2n<real>(args[2]);
@@ -318,7 +318,7 @@ static Vector<Flag_struct> g_entity_flags {
 }; // Entity_flags
 } // empty ns
 
-void print_collided(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void print_collided(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   crauto entities = hpw::entity_mgr->get_entities();
   uint total {};
   for (crauto ent: entities)
@@ -326,7 +326,7 @@ void print_collided(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
   console.print("столкновений " + n2s(total));
 }
 
-void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void print_flags(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
   auto ent = hpw::entity_mgr->find(uid);
@@ -338,7 +338,7 @@ void print_flags(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
       console.print("* " + entity_flag.name);
 }
 
-void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+void set_flag(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 4, "недостаточно параметров");
   cauto uid = get_uid(args[1]);
   crauto flag_name = args[2];
@@ -349,7 +349,7 @@ void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 
   auto finded_flag = std::find_if (
     ::g_entity_flags.begin(), ::g_entity_flags.end(),
-    [&](CN<decltype(::g_entity_flags)::value_type> it)
+    [&](cr<decltype(::g_entity_flags)::value_type> it)
       { return it.name == flag_name; }
   );
 
@@ -361,7 +361,7 @@ void set_flag(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
     + ent->name() + "\" = " + n2s(yesno));
 }
 
-Strs set_flag_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
+Strs set_flag_matches(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   return_if(args.size() < 2, Strs{});
   cauto cmd_name = ctx.name();
   cauto uid = args.at(1);
@@ -369,7 +369,7 @@ Strs set_flag_matches(Cmd_maker& ctx, Cmd& console, CN<Strs> args) {
 
   if (args.size() == 3) {
     cauto flag_name = args.at(2);
-    cauto name_filter = [&](CN<decltype(::g_entity_flags)::value_type> it)
+    cauto name_filter = [&](cr<decltype(::g_entity_flags)::value_type> it)
       { return it.name.find(flag_name) == 0; };
     for (crauto flag: ::g_entity_flags | std::views::filter(name_filter))
       ret.push_back(cmd_name + ' ' + uid + ' ' + flag.name + ' ');

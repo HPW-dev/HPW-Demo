@@ -33,8 +33,8 @@ public:
   ~Heat_distort() = default;
 
   void set_duration(real new_duration);
-  inline CN<real> get_max_duration() const { return max_duration; }
-  inline CN<real> get_cur_duration() const { return cur_duration; }
+  inline cr<real> get_max_duration() const { return max_duration; }
+  inline cr<real> get_cur_duration() const { return cur_duration; }
 
   void update(const Delta_time dt);
   void draw(Image& dst, const Vec offset);
