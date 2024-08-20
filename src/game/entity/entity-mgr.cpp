@@ -32,7 +32,6 @@
 #include "game/entity/enemy/illaen.hpp"
 #include "game/entity/enemy/snake.hpp"
 #include "game/entity/enemy/enemy-tutorial.hpp"
-#include "game/entity/player/ability/invise.hpp"
 
 struct Entity_mgr::Impl {
   // за пределами этого расстояние пули за экраном умирают в шмап-моде
@@ -329,10 +328,9 @@ struct Entity_mgr::Impl {
   Vec target_for_enemy() const {
     // если игрок есть
     if (cauto player = get_player(); player) {
-      // если игрок не невидимый
-      if (!player->find_ability(Ability_invise(*player).type_id())) {
+      // если игрок не невидимый TODO
+      //if (!player->find_ability(Ability_invise(*player).type_id()))
         return player->phys.get_pos();
-      }
     }
     
     // если игрока не нашли, стрелять куда попало
