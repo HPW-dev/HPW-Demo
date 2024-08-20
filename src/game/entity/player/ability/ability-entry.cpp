@@ -1,54 +1,75 @@
+#include <cassert>
+#include <unordered_map>
 #include "ability-entry.hpp"
+#include "ability-util.hpp"
+#include "ability.hpp"
 
 struct Ability_entry::Impl {
+  using Abilities = std::unordered_map<Ability_id, Unique<Ability>>;
+  Abilities _abilities {};
   Player& _player;
 
   inline explicit Impl(Player& player): _player{player} {}
 
   inline void update(Delta_time dt) {
-    // TODO
+    for (crauto [_, ability]: _abilities)
+      ability->update(dt);
   }
 
   inline void draw_bg(Image& dst, const Vec offset) const {
-    // TODO
+    for (crauto [_, ability]: _abilities)
+      ability->draw_bg(dst, offset);
   }
 
   inline void draw_fg(Image& dst, const Vec offset) const {
-    // TODO
+    for (crauto [_, ability]: _abilities)
+      ability->draw_fg(dst, offset);
   }
 
-  inline void clear() {
-    // TODO
-  }
+  inline void clear() { _abilities.clear(); }
 
   inline void give(Ability_id id, uint lvl) {
-    // TODO
+    _abilities[id] = make_ability(id, lvl);
   }
 
   inline void give_or_upgrade(Ability_id id, uint lvl) {
-    // TODO
+    if (exist(id))
+      upgrade(id, lvl);
+    else
+      give(id, lvl);
   }
 
   inline uint level(Ability_id id) const {
-    // TODO
-    return {};
+    try {
+      rauto ability = _abilities.at(id);
+      return_if (ability, ability->level());
+    } catch (...) {}
+
+    return 0;
   }
 
-  inline void remove(Ability_id id) {
-    // TODO
-  }
+  inline void remove(Ability_id id) { _abilities.erase(id); }
 
   inline void downgrade(Ability_id id, uint lvl) {
-    // TODO
+    try {
+      rauto ability = _abilities.at(id);
+      return_if (!ability);
+      cfor(i, lvl)
+        ability->on_downgrade();
+    } catch (...) {}
   }
 
   inline void upgrade(Ability_id id, uint lvl) {
-    // TODO
+    try {
+      rauto ability = _abilities.at(id);
+      return_if (!ability);
+      cfor(i, lvl)
+        ability->on_upgrade();
+    } catch (...) {}
   }
 
   inline bool exist(Ability_id id) const { 
-    // TODO
-    return false;
+    return _abilities.find(id) != _abilities.end();
   }
 }; // Impl
 

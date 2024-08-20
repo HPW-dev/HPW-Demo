@@ -24,6 +24,7 @@ public:
   void give(Ability_id id, uint lvl=1);
   // добавит способность, но если она уже есть, повысит её уровень
   void give_or_upgrade(Ability_id id, uint lvl=1);
+  // узнать уровень способности. Если её нет, то 0
   uint level(Ability_id id) const;
   void remove(Ability_id id);
   void downgrade(Ability_id id, uint lvl=1);

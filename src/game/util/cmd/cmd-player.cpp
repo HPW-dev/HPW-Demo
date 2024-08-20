@@ -1,5 +1,6 @@
 #include "cmd-player.hpp"
 #include "cmd-util.hpp"
+#include "util/error.hpp"
 
 void give_ability(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   // TODO
@@ -15,8 +16,7 @@ void cmd_player_init(Cmd& cmd) {
       Cmd_maker::Func_command_matches{MATCH_F}) );
 
   MAKE_CMD("give", "give <ability_name> <level> - give ability for player", &give_ability, &give_ability_matches)
-  //Cmd_resurect
-  //Cmd_abilities
-  //Cmd_give_ability
+  // resurect
+  // abilities
   #undef MAKE_CMD
 } // cmd_core_init

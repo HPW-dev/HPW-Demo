@@ -1,4 +1,5 @@
 #include <ranges>
+#include <cassert>
 #include "ability-util.hpp"
 #include "util/vector-types.hpp"
 #include "util/error.hpp"
@@ -32,4 +33,12 @@ Strs get_ability_names() {
   for (crauto [_, name]: g_id_and_names)
     ret.push_back(name);
   return ret;
+}
+
+Unique<Ability> make_ability(Ability_id id, uint lvl) {
+  assert(lvl > 0);
+  switch (id) {
+    default: error("незарегистрированный id способности (" << scast<int>(id) << ")");
+  }
+  return {};
 }
