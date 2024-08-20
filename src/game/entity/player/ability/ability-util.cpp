@@ -26,3 +26,10 @@ Ability_id get_id(cr<Str> name) {
   iferror(ret == g_id_and_names.end(), "не удалось найти id способности с именем \"" << name << "\"");
   return ret->id;
 }
+
+Strs get_ability_names() {
+  Strs ret;
+  for (crauto [_, name]: g_id_and_names)
+    ret.push_back(name);
+  return ret;
+}

@@ -5,3 +5,4 @@
 
 Str get_name(Ability_id id);
 Ability_id get_id(cr<Str> name);
+Strs get_ability_names();
