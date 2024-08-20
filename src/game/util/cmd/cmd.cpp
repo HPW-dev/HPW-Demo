@@ -43,6 +43,7 @@ Cmd::Cmd() {
   cmd_core_init(*this); // cmd-core.hpp
   cmd_entity_init(*this); // cmd-entity.hpp
   cmd_common_init(*this); // cmd-common.hpp
+  cmd_player_init(*this); // cmd-player.hpp
 
   //cmd-entity.hpp
   //move(new_unique<Cmd_entities>());
@@ -59,11 +60,6 @@ Cmd::Cmd() {
   //move(new_unique<Cmd_force>());
   //move(new_unique<Cmd_direct>());
   //move(new_unique<Cmd_direct_to>());
-
-  //cmd-player.hpp
-  //move(new_unique<Cmd_resurect>());
-  //move(new_unique<Cmd_abilities>());
-  //move(new_unique<Cmd_give_ability>());
 
   sort_commands();
 } // Cmd c-tor

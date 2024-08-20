@@ -4,18 +4,53 @@ struct Ability_entry::Impl {
   Player& _player;
 
   inline explicit Impl(Player& player): _player{player} {}
-  inline void update(Delta_time dt) {}
-  inline void draw_bg(Image& dst, const Vec offset) const {}
-  inline void draw_fg(Image& dst, const Vec offset) const {}
-  inline void clear() {}
-  inline void give(Ability_id id, uint lvl) {}
-  inline void give_or_upgrade(Ability_id id, uint lvl) {}
-  inline uint level(Ability_id id) const { return {}; }
-  inline void remove(Ability_id id) {}
-  inline void downgrade(Ability_id id, uint lvl) {}
-  inline void upgrade(Ability_id id, uint lvl) {}
-  inline bool exist(Ability_id id) const { return false; }
-};
+
+  inline void update(Delta_time dt) {
+    // TODO
+  }
+
+  inline void draw_bg(Image& dst, const Vec offset) const {
+    // TODO
+  }
+
+  inline void draw_fg(Image& dst, const Vec offset) const {
+    // TODO
+  }
+
+  inline void clear() {
+    // TODO
+  }
+
+  inline void give(Ability_id id, uint lvl) {
+    // TODO
+  }
+
+  inline void give_or_upgrade(Ability_id id, uint lvl) {
+    // TODO
+  }
+
+  inline uint level(Ability_id id) const {
+    // TODO
+    return {};
+  }
+
+  inline void remove(Ability_id id) {
+    // TODO
+  }
+
+  inline void downgrade(Ability_id id, uint lvl) {
+    // TODO
+  }
+
+  inline void upgrade(Ability_id id, uint lvl) {
+    // TODO
+  }
+
+  inline bool exist(Ability_id id) const { 
+    // TODO
+    return false;
+  }
+}; // Impl
 
 Ability_entry::Ability_entry(Player& player): impl{new_unique<Impl>(player)} {}
 Ability_entry::~Ability_entry() {}
