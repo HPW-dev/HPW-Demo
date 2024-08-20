@@ -5,6 +5,7 @@
 #include "util/str-util.hpp"
 #include "util/unicode.hpp"
 #include "game/core/entities.hpp"
+#include "game/util/game-util.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/player/ability/ability-util.hpp"
 
@@ -52,6 +53,15 @@ void print_abilities(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   console.print(txt);
 }
 
+void resurect(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  if (cauto player = hpw::entity_mgr->get_player(); player) {
+    console.print("игрок и так живой");
+  } else {
+    hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
+    console.print("игрок воскрешён");
+  }
+}
+
 void cmd_player_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -60,6 +70,7 @@ void cmd_player_init(Cmd& cmd) {
   MAKE_CMD("give", "give <ability_name> <level> - даёт игроку способность", &give_ability, &give_ability_matches)
   MAKE_CMD("clear_abilities", "убирает все способности у игрока", &clear_abilities, {})
   MAKE_CMD("abilities", "показать все способности, которые сейчас есть у игрока", &print_abilities, {})
+  MAKE_CMD("resurect", "воскрешает игрока", &resurect, {})
   // resurect
   #undef MAKE_CMD
 } // cmd_core_init
