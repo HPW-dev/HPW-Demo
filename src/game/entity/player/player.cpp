@@ -33,7 +33,7 @@ void Player::draw(Image& dst, const Vec offset) const {
 
 void Player::kill() {
   Collidable::kill();
-  Ability_entry::clear();
+  clear_abilities();
   // тряхнуть камерой при смерти
   graphic::camera->add_shake(999);
 }

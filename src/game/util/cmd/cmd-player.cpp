@@ -27,12 +27,21 @@ Strs give_ability_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   return {}; // TODO
 }
 
+void clear_abilities(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  assert(hpw::entity_mgr);
+  auto player = hpw::entity_mgr->get_player();
+  iferror(!player, "нужен игрок");
+  player->clear_abilities();
+  console.print("все способности игрока удалены");
+}
+
 void cmd_player_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
       Cmd_maker::Func_command_matches{MATCH_F}) );
 
   MAKE_CMD("give", "give <ability_name> <level> - give ability for player", &give_ability, &give_ability_matches)
+  MAKE_CMD("clear_abilities", "erase all player abilities", &clear_abilities, {})
   // resurect
   // abilities
   #undef MAKE_CMD

@@ -14,13 +14,13 @@ class Ability_entry {
 
 protected:
   void update(Delta_time dt);
-  void clear(); // убрать все способности
   void draw_bg(Image& dst, const Vec offset) const;
   void draw_fg(Image& dst, const Vec offset) const;
 
 public:
   explicit Ability_entry(Player& player);
   ~Ability_entry();
+  void clear_abilities(); // убрать все способности
   void give(Ability_id id, uint lvl=1);
   // добавит способность, но если она уже есть, повысит её уровень
   void give_or_upgrade(Ability_id id, uint lvl=1);
