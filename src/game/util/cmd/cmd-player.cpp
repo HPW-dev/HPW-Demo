@@ -1,3 +1,4 @@
+#include <ranges>
 #include <cassert>
 #include "cmd-player.hpp"
 #include "cmd-util.hpp"
@@ -30,7 +31,23 @@ void give_ability(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 }
 
 Strs give_ability_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
-  return {}; // TODO
+  cauto cmd_name = args.at(0);
+  Strs ret;
+  cauto ability_names = get_ability_names();
+
+  if (args.size() < 2) {
+    // предложить названия способностей из списка
+    for (crauto ability_name: ability_names)
+      ret.push_back(cmd_name + ' ' + ability_name);
+    return ret;
+  }
+
+  // по вводу определить что взять из списка автодополнения
+  cauto arg_name = args.at(1); // имя способности введённое юзером
+  cauto name_filter = [&](cr<Str> it) { return it.find(arg_name) == 0; };
+  for (crauto ability_name: ability_names | std::views::filter(name_filter))
+    ret.push_back(cmd_name + ' ' + ability_name);
+  return ret;
 }
 
 void clear_abilities(Cmd_maker& command, Cmd& console, cr<Strs> args) {
@@ -54,6 +71,7 @@ void print_abilities(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 }
 
 void resurect(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  assert(hpw::entity_mgr);
   if (cauto player = hpw::entity_mgr->get_player(); player) {
     console.print("игрок и так живой");
   } else {
