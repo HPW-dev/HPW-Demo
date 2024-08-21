@@ -17,6 +17,10 @@
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 
+#ifndef DEBUG
+#include "game/scene/scene-graphic.hpp"
+#endif
+
 int get_scancode(const hpw::keycode keycode) {
   if(hpw::keys_info.keys.empty())
     return -1;
@@ -106,6 +110,10 @@ void load_config() {
     path_node.set_str("screenshots", "./screenshots/");
     path_node.set_str("data", "./data.zip");
     path_node.set_str("locale", "resource/locale/ru.yml");
+    #ifndef DEBUG
+      // поставить хороший графон
+      set_high_quality();
+    #endif
   }
   // сделать папки, если их нет
   make_dir_if_not_exist(hpw::cur_dir + path_node.get_str("screenshots"));
