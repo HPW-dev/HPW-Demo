@@ -72,7 +72,8 @@ struct Wnd_ent_edit_opts::Impl {
     ImGui::PopItemWidth();
 
     // wait frame
-    ImGui::Checkbox("ждать конца кадра", &graphic::wait_frame);
+    if (ImGui::Checkbox("ждать конца кадра", &graphic::wait_frame))
+      graphic::wait_frame_bak = graphic::wait_frame;
 
     // frame limit
     auto is_disable_frame_limit = graphic::get_disable_frame_limit();
