@@ -48,6 +48,12 @@
       "args": ["script/build-editor-release.py"]
     },
     {
+      "label": "build editor (fast)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-editor-fast.py"]
+    },
+    {
       "label": "build game (debug)",
       "type": "shell",
       "command": "python",
