@@ -5,7 +5,9 @@
 #include "cmd-util.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "util/math/timer.hpp"
 #include "game/core/messages.hpp"
+#include "game/core/tasks.hpp"
 #include "game/util/version.hpp"
 #include "host/command.hpp"
 
@@ -113,12 +115,60 @@ void print_ver(Cmd_maker& command, Cmd& console, cr<Strs> args) {
     + get_game_creation_date() + " " + get_game_creation_time());
 }
 
+class Task_drep final: public Task {
+  Cmd& _console;
+  int _times {};
+  Timer _delay {};
+  Str _cmd_with_args {};
+
+public:
+  inline explicit Task_drep(Cmd& console, int times, Delta_time delay, cr<Str> cmd_with_args)
+  : _console {console}
+  , _times {times}
+  , _delay (delay)
+  , _cmd_with_args {cmd_with_args}
+  {
+    // все проверки уже сделаны в drep
+  }
+
+  inline void update(const Delta_time dt) override {
+    cfor (_, _delay.update(dt)) {
+      _console.exec(_cmd_with_args);
+      --_times;
+    }
+
+    if (_times <= 0)
+      deactivate();
+  }  
+}; // Task_drep
+
+void drep(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  iferror(args.size() == 1, "не задано число повторений");
+  iferror(args.size() == 2, "не задана задержка");
+  iferror(args.size() < 4, "не задана команда для повторения");
+  cauto times = s2n<int>(args[1]);
+  iferror(times < 1, "число повторений не должно быть меньше 1");
+  iferror(times > 4'000'000, "число повторений не должно быть больше 4M");
+  cauto delay = s2n<Delta_time>(args[2]);
+  iferror(delay < 0, "задержка должна быть положительной");
+
+  // соединить оставшиеся аргументы в команду чтобы запустить их
+  Str cmd_with_args;
+  for (std::size_t i = 3; i < args.size(); ++i)
+    cmd_with_args += args[i] + ' ';
+
+  hpw::task_mgr.add(new_shared<Task_drep>(console, times, delay, cmd_with_args));
+  console.print("команда \"" + cmd_with_args + "\" поставлена на повторение " +
+    n2s(times) + " раз каждые " + n2s(delay, 3) + " секунд");
+}
+
 void cmd_common_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
       Cmd_maker::Func_command_matches{MATCH_F}) );
 
   MAKE_CMD("version", "print game version", &print_ver, {})
+  MAKE_CMD("drep", " drep <n> <delay_sec> <cmd> <args...> - delayed repeating of command", &drep, {})
 
   #undef MAKE_CMD
 }

@@ -237,7 +237,7 @@ void start_stat_record(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 void repeat(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() == 1, "в команде repeat не задано число повторений");
   iferror(args.size() < 3, "в команде repeat не задана команда для повторения");
-  crauto times = s2n<int>(args[1]);
+  cauto times = s2n<int>(args[1]);
   iferror(times < 1, "число повторений не должно быть меньше 1");
   iferror(times > 4'000'000, "число повторений не должно быть больше 4M");
 

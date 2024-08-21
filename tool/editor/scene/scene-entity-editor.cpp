@@ -10,6 +10,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/tasks.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/anims.hpp"
@@ -47,8 +48,11 @@ struct Scene_entity_editor::Impl {
     });
 
     if (!m_ctx.pause) {
+      hpw::task_mgr.update(dt);
       hpw::entity_mgr->update(dt);
       graphic::camera->update(dt);
+      hpw::message_mgr->update(dt);
+      
       for (crauto window: m_windows)
         window->update(dt);
       for (crauto window: m_emitters)
@@ -60,6 +64,8 @@ struct Scene_entity_editor::Impl {
   inline void draw(Image& dst) const {
     draw_bg(dst);
     hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
+    hpw::task_mgr.draw(dst);
+    hpw::message_mgr->draw(dst);
     for (crauto window: m_windows)
       window->draw(dst);
     for (crauto window: m_emitters)

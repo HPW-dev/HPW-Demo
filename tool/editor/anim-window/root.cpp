@@ -11,6 +11,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/util/sync.hpp"
+#include "game/core/tasks.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/anims.hpp"
 #include "game/core/entities.hpp"
@@ -50,6 +51,7 @@ void Root_wnd::draw(Image& dst) const {
     draw_cross_bg(dst);
   cppfor(wnds, draw(dst));
   hpw::entity_mgr->draw(*graphic::canvas, graphic::camera->get_offset());
+  hpw::task_mgr.draw(dst);
   if (editor::use_draw_cross && (graphic::frame_count & 0b100))
     draw_cross_fg(dst);
   if (editor::is_pause)
@@ -70,8 +72,10 @@ void Root_wnd::update(const Delta_time dt) {
   }
 
   cppfor(wnds, update(dt));
-  if ( !editor::is_pause)
+  if ( !editor::is_pause) {
+    hpw::task_mgr.update(dt);
     hpw::entity_mgr->update(dt);
+  }
   
   other_bg_pos += dt * 30;
 }
