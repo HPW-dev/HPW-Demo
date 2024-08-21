@@ -165,12 +165,6 @@ void Host_glfw::reshape(int w, int h) {
 }
 
 void Host_glfw::set_window_pos(int x, int y) {
-  if (x <= m_w || y <= m_h) {
-    hpw_log("Wanring: окно передвинуто за пределы экрана: x = "
-      << x << ", y = " << y << '\n');
-    return;
-  }
-
   glfwSetWindowPos(m_window, x, y);
   Host_ogl::set_window_pos(x, y);
 }
