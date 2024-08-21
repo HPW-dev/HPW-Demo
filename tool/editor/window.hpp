@@ -7,7 +7,7 @@ class Image;
 class Window {
 public:
   virtual ~Window() = default;
-  virtual void draw(Image& dst) const = 0;
-  virtual void update(const Delta_time dt) = 0;
+  inline virtual void draw(Image& dst) const {};
+  inline virtual void update(const Delta_time dt) {};
   virtual void imgui_exec() = 0;
 }; // Window

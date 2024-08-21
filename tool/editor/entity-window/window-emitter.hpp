@@ -16,7 +16,6 @@ public:
   explicit Window_emitter(Scene_entity_editor& master, Entity_editor_ctx& ctx);
   ~Window_emitter();
   void imgui_exec() override;
-  inline void draw(Image& dst) const override {}
   void update(const Delta_time dt) override;
   inline bool active() const { return m_active; }
 };
