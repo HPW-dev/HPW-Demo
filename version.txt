@@ -13,7 +13,7 @@ dr_mp3: v0.6.39
 YAML-cpp: commit hash 35b4498026b6293bfadc75f9ee325cb16d6975af (24 jul. 2023)
 Miniz: v1.15
 hash_sha256: (30 mar. 2023)
-GCC (Windows): v14.1.0 MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r2
-MinGW-w64: i686-ucrt-mcf-dwarf, built by Brecht Sanders
+GCC (Windows x32): v14.1.0.r2 MinGW-W64 xi686-ucrt-posix-dwarf, built by Brecht Sanders
+GCC (Windows x64): v14.2.0.r1 MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders
 SCons: v4.7.0
 UPX: v4.2.3
