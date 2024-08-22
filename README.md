@@ -5,7 +5,7 @@
 ![demo](info/preview.gif)
 
 ### Компиляция
-[см. инструкцию по сборке](script/how-to-build-ru.md).
+[см. инструкцию по сборке](info/how-to-build-ru.md).
 
 Протестировано на GCC/Clang/MinGW64.
 
