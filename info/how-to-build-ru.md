@@ -26,7 +26,7 @@
 
 #### Команды на скачивание и сборку игры:
 ```
-git clone --depth=2 https://github.com/HPW-dev/HPW-Demo
+git clone --depth=1 https://github.com/HPW-dev/HPW-Demo
 cd HPW-Demo
 python "script/build-game-release.py"
 ```
