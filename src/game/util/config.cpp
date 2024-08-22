@@ -17,10 +17,6 @@
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 
-#ifndef DEBUG
-#include "game/scene/scene-graphic.hpp"
-#endif
-
 int get_scancode(const hpw::keycode keycode) {
   if(hpw::keys_info.keys.empty())
     return -1;
@@ -31,6 +27,7 @@ int get_scancode(const hpw::keycode keycode) {
 
 void save_config() {
   auto& config = *hpw::config;
+  config.set_bool("first_start", hpw::first_start);
   config.set_bool("enable_replay", hpw::enable_replay);
   config.set_bool("need_tutorial", hpw::need_tutorial);
   config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
@@ -94,6 +91,7 @@ void load_config() {
   init_shared(hpw::config, hpw::cur_dir + "config.yml", true);
 
   auto& config = *hpw::config;
+  hpw::first_start = config.get_bool("first_start", true);
   hpw::enable_replay = config.get_bool("enable_replay", hpw::enable_replay);
   hpw::need_tutorial = config.get_bool("need_tutorial", hpw::need_tutorial);
   hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
@@ -110,10 +108,6 @@ void load_config() {
     path_node.set_str("screenshots", "./screenshots/");
     path_node.set_str("data", "./data.zip");
     path_node.set_str("locale", "resource/locale/ru.yml");
-    #ifndef DEBUG
-      // поставить хороший графон
-      set_high_quality();
-    #endif
   }
   // сделать папки, если их нет
   make_dir_if_not_exist(hpw::cur_dir + path_node.get_str("screenshots"));

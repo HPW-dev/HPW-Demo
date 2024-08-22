@@ -13,6 +13,7 @@ inline Str exe_sha256 {}; // чексумма для экзешника игры
 inline Str data_sha256 {}; // чексумма для данных игры
 // играя первый раз, предлагать туториал первым в списке
 inline bool need_tutorial {true};
+inline bool first_start {};
 inline bool save_last_replay {}; // сохранить последний реплей в именной файл?
 // true, если не удалось инициализировать звуковую систему
 inline bool sound_mgr_init_error {};

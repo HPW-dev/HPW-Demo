@@ -59,6 +59,8 @@
 //#include "game/level/level-debug-2.hpp"
 //#include "game/level/level-debug-3.hpp"
 //#include "game/level/level-debug-bullets.hpp"
+#else
+#include "game/scene/scene-graphic.hpp"
 #endif
 
 void Scene_game::init_levels() {
@@ -144,6 +146,12 @@ Scene_game::Scene_game(const bool start_tutorial)
   hpw::sound_mgr->shutup();
   init_unique(hpw::message_mgr);
   startup_script();
+  #ifndef DEBUG
+  // поставить хороший графон в релизной версии
+  if (hpw::first_start)
+    set_high_quality();
+  #endif
+  hpw::first_start = false;
 } // c-tor
 
 Scene_game::~Scene_game() {
