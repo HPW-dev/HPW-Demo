@@ -4,6 +4,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/locales.hpp"
 #include "game/core/common.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/palette.hpp"
@@ -27,11 +28,17 @@ int get_scancode(const hpw::keycode keycode) {
 
 void save_config() {
   auto& config = *hpw::config;
+
   config.set_bool("first_start", hpw::first_start);
   config.set_bool("enable_replay", hpw::enable_replay);
   config.set_bool("need_tutorial", hpw::need_tutorial);
   config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   config.set_bool("collider_autoopt", hpw::collider_autoopt);
+
+  auto path_node = config.make_node("path");
+  path_node.set_str("locale", hpw::locale_path);
+  path_node.set_str("screenshots", hpw::screenshots_path);
+  path_node.set_str("data", hpw::data_path);
 
   auto debug = config.make_node("debug");
   debug.set_bool("empty_level_first", hpw::empty_level_first);
@@ -107,7 +114,7 @@ void load_config() {
     path_node = config.make_node("path");
     path_node.set_str("screenshots", "./screenshots/");
     path_node.set_str("data", "./data.zip");
-    path_node.set_str("locale", "resource/locale/ru.yml");
+    path_node.set_str("locale", hpw::fallback_font_path);
   }
   // сделать папки, если их нет
   make_dir_if_not_exist(hpw::cur_dir + path_node.get_str("screenshots"));

@@ -68,5 +68,5 @@ Strs Archive::get_all_names(bool width_folders) const {
 } // get_all_names
 
 void Archive::_zip_check(int errcode, cr<Str> fname) const {
-  iferror(errcode < 0, fname << ":" << zip_strerror(errcode));
+  iferror(errcode < 0, fname << ": " << zip_strerror(errcode));
 }

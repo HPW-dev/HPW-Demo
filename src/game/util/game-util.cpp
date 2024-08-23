@@ -545,3 +545,24 @@ void save_screenshot(cr<Image> image) {
   oss << "-" + n2s(rndu_fast(100'000)) + ".png";
   save(image, oss.str());
 } // save_screenshot
+
+void load_locale(cr<Str> user_path) {
+  hpw_log("загрузка локализации...\n");
+  assert(hpw::config);
+  File mem; 
+  cauto path = user_path.empty()
+    ? (*hpw::config)["path"].get_str("locale", hpw::fallback_font_path)
+    : user_path;
+
+  try {
+    mem = hpw::archive->get_file(path);
+  } catch (...) {
+    hpw_log("ошибка при загрузке перевода \"" << path << "\". Попытка загрузить перевод \""
+      << hpw::fallback_font_path << "\"\n");
+    mem = hpw::archive->get_file(hpw::fallback_font_path);
+  }
+
+  hpw::locale_path = mem.get_path();
+  auto yml = Yaml(mem);
+  load_locales_to_store(yml);
+}

@@ -1,5 +1,6 @@
 #pragma once
 #include "util/mem-types.hpp"
+#include "util/unicode.hpp"
 #include "scene.hpp"
 
 // окно смены языка
@@ -13,3 +14,7 @@ public:
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };
+
+namespace hpw {
+inline utf32 locale_select_title = U"Язык • Language • 言語 • 언어";
+}

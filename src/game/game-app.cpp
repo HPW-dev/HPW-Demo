@@ -13,14 +13,12 @@
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/debug.hpp"
-#include "game/core/locales.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/common.hpp"
 #include "game/util/pge.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
-#include "game/util/locale.hpp"
 #include "game/util/game-archive.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/util/util-templ.hpp"
@@ -111,15 +109,6 @@ void Game_app::draw_game_frame() const {
 
 void Game_app::draw_border(Image& dst) const
   { draw_rect(dst, Rect{0,0, dst.X, dst.Y}, Pal8::white); }
-
-void Game_app::load_locale() {
-  hpw_log("загрузка локализации...\n");
-  assert(hpw::config);
-  auto path = (*hpw::config)["path"].get_str("locale", "resource/locale/en.yml");
-  auto mem = hpw::archive->get_file(path);
-  auto yml = Yaml(mem);
-  load_locales_to_store(yml);
-}
 
 void Game_app::load_fonts() {
   hpw_log("загрузка шрифтов...\n");

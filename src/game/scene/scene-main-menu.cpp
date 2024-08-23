@@ -138,6 +138,10 @@ void Scene_main_menu::update(const Delta_time dt) {
   bg_state += dt;
   menu->update(dt);
   update_bg_order(dt);
+
+  // чтобы перезагрузить локализацию строк
+  if (hpw::scene_mgr->status.came_back)
+    init_menu();
 }
 
 void Scene_main_menu::draw_bg(Image& dst) const {
@@ -203,7 +207,7 @@ void Scene_main_menu::init_menu() {
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),
         []{ hpw::scene_mgr->add(new_shared<Scene_difficulty>()); }),
       // смена языка
-      new_shared<Menu_text_item>(get_locale_str("scene.locale_select.title"),
+      new_shared<Menu_text_item>(hpw::locale_select_title,
         []{ hpw::scene_mgr->add(new_shared<Scene_locale_select>()); }),
       // сменить фон
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
