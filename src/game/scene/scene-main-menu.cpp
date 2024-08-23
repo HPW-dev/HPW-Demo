@@ -300,9 +300,12 @@ void Scene_main_menu::draw_text(Image& dst) const {
 
   // показать версию игры  
   cauto game_ver = prepare_game_ver();
-  graphic::font->draw(text_layer, {140, 306},
-    get_locale_str("common.game_version") + U": " + game_ver);
-
+  const Vec game_ver_txt_pos {
+    dst.X - graphic::font->text_width(game_ver) - 7,
+    dst.Y - graphic::font->text_height(game_ver) - 4,
+  };
+  graphic::font->draw(text_layer, game_ver_txt_pos, game_ver);
+  
   // нарисовать тень от текста
   Image shadow_layer(text_layer);
   insert_fast(shadow_layer, text_layer);
