@@ -4,6 +4,7 @@
 #include "scene-options.hpp"
 #include "scene-loading.hpp"
 #include "scene-difficulty.hpp"
+#include "scene-locale.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
@@ -201,6 +202,9 @@ void Scene_main_menu::init_menu() {
       // старт
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),
         []{ hpw::scene_mgr->add(new_shared<Scene_difficulty>()); }),
+      // смена языка
+      new_shared<Menu_text_item>(get_locale_str("scene.locale_select.title"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_locale_select>()); }),
       // сменить фон
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
         [this]{ next_bg(); }),
