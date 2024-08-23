@@ -3,6 +3,7 @@
 #include "scene-input.hpp"
 #include "scene-graphic.hpp"
 #include "scene-game-options.hpp"
+#include "scene-locale.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/keybits.hpp"
@@ -35,6 +36,8 @@ void Scene_options::init_menu() {
         []{ hpw::scene_mgr->add(new_shared<Scene_graphic>()); }),
       new_shared<Menu_text_item>(get_locale_str("scene.options.input"),
         []{ hpw::scene_mgr->add(new_shared<Scene_input>()); }),
+      new_shared<Menu_text_item>(get_locale_str("scene.locale_select.title"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_locale_select>()); }),
       new_shared<Menu_text_item>(get_locale_str("scene.game_opts.title"),
         []{ hpw::scene_mgr->add(new_shared<Scene_game_options>()); }),
       /* TODO

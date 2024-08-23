@@ -16,8 +16,14 @@ public:
   };
   using Rows = Vector<Row>;
 
-  ~Table_menu();
+  /** Создаёт прокручиваемую интерактивную таблицу
+  @param title название окна, можно пустое
+  @param rows хедер таблицы
+  @param row_height высота строки таблицы
+  @param items контент таблицы
+  @param elems_empty_txt табличка, которую покажут при отсутсвтии элементов списка */
   explicit Table_menu(cr<utf32> title, cr<Rows> rows, const uint row_height,
     cr<Menu_items> items, cr<utf32> elems_empty_txt={});
+  ~Table_menu();
   void draw(Image& dst) const override;
 };

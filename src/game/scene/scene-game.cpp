@@ -146,12 +146,6 @@ Scene_game::Scene_game(const bool start_tutorial)
   hpw::sound_mgr->shutup();
   init_unique(hpw::message_mgr);
   startup_script();
-  #ifndef DEBUG
-  // поставить хороший графон в релизной версии
-  if (hpw::first_start)
-    set_high_quality();
-  #endif
-  hpw::first_start = false;
 } // c-tor
 
 Scene_game::~Scene_game() {

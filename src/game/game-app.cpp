@@ -3,6 +3,7 @@
 #include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
+#include "game/scene/scene-locale.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
@@ -58,7 +59,18 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
     hpw::scene_mgr->add( new_shared<Scene_game>() );
   } else {
     hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
+    // спросить о языке при первом запуске
+    if (hpw::first_start) {
+      hpw::scene_mgr->add( new_shared<Scene_locale_select>() );
+    }
   }
+
+  #ifndef DEBUG
+    // поставить хороший графон в релизной версии
+    if (hpw::first_start)
+      set_high_quality();
+  #endif
+  hpw::first_start = false;
 
   hpw_log("загрузка завершена\n");
 } // c-tor
