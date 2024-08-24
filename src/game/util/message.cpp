@@ -10,6 +10,7 @@
 #include "graphic/util/graphic-util.hpp"
 
 struct Message_mgr::Impl {
+  constx uint LINE_LIMIT = 22;
   Messages m_messages {};
   bool m_visible {true};
 
@@ -36,17 +37,20 @@ struct Message_mgr::Impl {
 
     // определить какую область занимают все сообщения
     utf32 concated;
-    for (crauto msg: m_messages) {
+    for (uint i {}; crauto msg: m_messages) {
       concated += msg.text;
       if (msg.text_gen)
         concated += msg.text_gen();
       concated += U'\n';
+      
+      ++i;
+      break_if(i >= LINE_LIMIT);
     }
     Vec pos = center_point(
       {dst.X, dst.Y}, graphic::font->text_size(concated));
 
     // нарисовать каждую строку со своими настройками
-    for (crauto msg: m_messages) {
+    for (uint i {}; crauto msg: m_messages) {
       auto text = msg.text;
       if (msg.text_gen)
         text += msg.text_gen();
@@ -57,6 +61,9 @@ struct Message_mgr::Impl {
       if (draw_text)
         graphic::font->draw(dst, pos, text, msg.bf, graphic::frame_count);
       pos.y += graphic::font->text_height(text);
+      
+      ++i;
+      break_if(i >= LINE_LIMIT);
     }
   } // draw
 
