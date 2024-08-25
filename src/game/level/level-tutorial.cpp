@@ -7,6 +7,7 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/core.hpp"
 #include "game/core/common.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/fonts.hpp"
@@ -29,6 +30,7 @@ struct Level_tutorial::Impl {
   utf32 bg_text {}; // текст, который показывается на фоне
   Vec bg_offset {};
   bool enable_epilepsy_bg {}; // пыточный фон для последней секции
+  Delta_time bg_state {};
 
   inline explicit Impl(Level_tutorial* _master): master{_master}
     { restart(); }
@@ -47,6 +49,7 @@ struct Level_tutorial::Impl {
 
   inline void update(const Vec vel, Delta_time dt) {
     bg_offset = vel;
+    bg_state += hpw::real_dt;
     execute_tasks(tasks, dt);
   }
 
@@ -100,9 +103,10 @@ struct Level_tutorial::Impl {
   } // init_tasks
 
   inline void draw_bg(Image& dst) const {
-    const int v = graphic::frame_count >> 2;
+    const int v = bg_state * 15.0;
     const int ox = bg_offset.x;
     const int oy = bg_offset.y;
+
     cfor (y, dst.Y)
     cfor (x, dst.X) {
       int pix =
@@ -117,10 +121,12 @@ struct Level_tutorial::Impl {
       tmp |= v;
       pix2 &= v;
       pix2 ^= tmp;
+
       if (enable_epilepsy_bg)
         pix |= pix2;
       else
         pix &= pix2;
+
       dst(x, y) = pix;
     }
     apply_brightness(dst, -140);
