@@ -7,27 +7,12 @@
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
 #include "game/entity/util/entity-util.hpp"
-//#include "game/entity/player/player.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {
     set_default_collider();
-
-    // TODO
-    /*auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center());
-    ent->add_update_callback( Kill_by_timeout(5) );
-    ent->add_kill_callback([](Entity& ent){ hpw_log("test entity " << ent.uid << " killed cb 1\n"); });
-    ent->add_kill_callback([](Entity& ent){ hpw_log("test entity " << ent.uid << " killed cb 2\n"); });*/
-
-    // TODO
-    /*hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
-    if (auto player = hpw::entity_mgr->get_player(); player) {
-      player->give(Ability_id::dummy, 2);
-      //player->downgrade(Ability_id::dummy);
-      //player->remove(Ability_id::invise);
-    }*/
   }
 
   inline void update(const Vec vel, Delta_time dt) {
