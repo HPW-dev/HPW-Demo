@@ -2,6 +2,7 @@
 #include <cmath>
 #include "advanced-text-menu.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/font/font-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "item/item.hpp"
@@ -94,8 +95,7 @@ struct Advanced_text_menu::Impl {
   inline void draw_decription(Image& dst) const {
     auto item = m_base->get_cur_item();
     assert(item);
-    graphic::font->draw(dst, m_desc_rect.pos + Vec(9, 11),
-      item->get_description());
+    text_bordered(dst, item->get_description(), graphic::font.get(), m_desc_rect, {9, 11});
   }
   
   // скроллинг по тексту пунктов
