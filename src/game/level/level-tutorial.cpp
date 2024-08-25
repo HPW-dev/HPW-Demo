@@ -36,9 +36,11 @@ struct Level_tutorial::Impl {
     { restart(); }
 
   inline void restart() {
-    hpw::entity_mgr->clear();
-    hpw::shmup_mode = true;
     bg_text = {};
+    bg_state = 0;
+    enable_epilepsy_bg = false;
+    hpw::shmup_mode = true;
+    hpw::entity_mgr->clear();
     init_collider();
     make_player();
     init_tasks();
