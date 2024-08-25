@@ -8,6 +8,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
+#include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/fonts.hpp"
@@ -51,7 +52,7 @@ struct Level_tutorial::Impl {
 
   inline void update(const Vec vel, Delta_time dt) {
     bg_offset = vel;
-    bg_state += hpw::real_dt;
+    bg_state += graphic::render_lag ? dt : hpw::real_dt;
     execute_tasks(tasks, dt);
   }
 
@@ -277,7 +278,7 @@ struct Level_tutorial::Impl {
     constx real spawn_delay {0.1}; // сколько ждать перед спавном следующей пули
 
     Impl& master;
-    uint repeats {3}; // сколько раз спавнить волны
+    uint repeats {2}; // сколько раз спавнить волны
     real spawn_height {}; // высота спавна волны
     bool reverse {true}; // спавнить волны снизу вверх
     real wave_speed {}; // скорость пуль
@@ -304,13 +305,13 @@ struct Level_tutorial::Impl {
           reverse = false;
           spawn_height = -30;
           delay_timer = Timer(delay);
-          --repeats;
         }
         // полна дошла до низа
         if (!reverse && spawn_height >= graphic::height - 50) {
           reverse = true;
           spawn_height = graphic::height + 30;
           delay_timer = Timer(delay);
+          --repeats;
         }
 
         cauto anim_speed_scale = reverse ? 2.0 : 0.9;
@@ -383,7 +384,7 @@ struct Level_tutorial::Impl {
     }
   }; // Spawner_enemy_noshoot
 
-  // создаёт стреляющий противников по бокам
+  // создаёт стреляющих противников по бокам
   struct Spawner_enemy_shoot {
     Impl& master;
     Timer spawn_timer {0.8}; // через сколько спавнить противника
@@ -436,12 +437,12 @@ struct Level_tutorial::Impl {
   struct Energy_test {
     Impl& master;
     Timer spawn_delay {0.3666}; // сколько ждать между спавном
-    constx uint WAVES {8}; // сколько волн врагов в пачке
+    constx uint WAVES {8}; // сколько строк врагов в пачке
     constx real ENEMY_SPEED {2.5_pps};
     uint wave {WAVES};
     bool delay_state {false}; // не спавнить врагов, когда true
     Timer wave_delay {3.0}; // задержка перед волнами
-    uint repeats {4}; // сколько повторять волны
+    uint repeats {3}; // сколько повторять волны
 
     inline explicit Energy_test(Impl& _master): master {_master} {}
 
