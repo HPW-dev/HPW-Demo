@@ -1,6 +1,7 @@
 #pragma once
 #include <utility>
 #include <functional>
+#include <deque>
 #include "util/math/num-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/unicode.hpp"
@@ -26,7 +27,7 @@ struct Message {
 class Message_mgr {
   struct Impl;
   Unique<Impl> impl {};
-  using Messages = Vector<Message>;
+  using Messages = std::deque<Message>;
 
 public:
   Message_mgr();

@@ -16,6 +16,10 @@ struct Message_mgr::Impl {
 
   inline void move(Message&& msg) {
     test_message(msg);
+    // показывать только определённое число сообщений на экране и не показывать старые
+    if (m_messages.size() >= LINE_LIMIT) {
+      m_messages.pop_front();
+    }
     m_messages.emplace_back( std::move(msg) );
   }
 
@@ -37,20 +41,17 @@ struct Message_mgr::Impl {
 
     // определить какую область занимают все сообщения
     utf32 concated;
-    for (uint i {}; crauto msg: m_messages) {
+    for (crauto msg: m_messages) {
       concated += msg.text;
       if (msg.text_gen)
         concated += msg.text_gen();
       concated += U'\n';
-      
-      ++i;
-      break_if(i >= LINE_LIMIT);
     }
     Vec pos = center_point(
       {dst.X, dst.Y}, graphic::font->text_size(concated));
 
     // нарисовать каждую строку со своими настройками
-    for (uint i {}; crauto msg: m_messages) {
+    for (crauto msg: m_messages) {
       auto text = msg.text;
       if (msg.text_gen)
         text += msg.text_gen();
@@ -61,9 +62,6 @@ struct Message_mgr::Impl {
       if (draw_text)
         graphic::font->draw(dst, pos, text, msg.bf, graphic::frame_count);
       pos.y += graphic::font->text_height(text);
-      
-      ++i;
-      break_if(i >= LINE_LIMIT);
     }
   } // draw
 
