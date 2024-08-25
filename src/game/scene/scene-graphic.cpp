@@ -403,7 +403,7 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("scene.graphic_menu.auto_frame_skip"),
         []{ return graphic::auto_frame_skip; },
         [](bool val){ graphic::auto_frame_skip = val; },
-        get_locale_str("scene.graphic_menu.description.auto_frame_skipmeskip")
+        get_locale_str("scene.graphic_menu.description.auto_frame_skip")
       ),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.enable_motion_interp"),
