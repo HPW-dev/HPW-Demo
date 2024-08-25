@@ -18,6 +18,7 @@ void text_bordered(Image& dst, cr<utf32> txt, cp<hpw::Font> font,
 const Rect border, const Vec offset, blend_pf bf, int opt) {
   assert(dst);
   assert(font);
+  assert(bf);
   return_if(txt.empty());
   return_if(border.size.is_zero());
   assert(border.size.x >= 0);
