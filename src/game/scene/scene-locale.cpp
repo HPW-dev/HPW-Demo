@@ -2,6 +2,7 @@
 #include <cassert>
 #include "scene-locale.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/menu/table-menu.hpp"
@@ -59,10 +60,14 @@ struct Scene_locale_select::Impl {
     cauto title = U"Язык • Language • 言語 • 언어";
     cauto row_height = 25u;
     cauto elems_empty_txt = get_locale_str("common.empty");
-    Table_menu::Rows rows {
-      {get_locale_str("scene.locale_select.translation"), 330},
-      {get_locale_str("common.author"), 0},
-    };
+    utf32 translation_str = U"Перевод • Translation • 翻訳";
+    utf32 author_str = U"Автор • Author • 著者";
+    // переопределить строки хедера, если язык уже выбран
+    if (!hpw::first_start) {
+      translation_str = get_locale_str("scene.locale_select.translation");
+      author_str = get_locale_str("common.author");
+    }
+    Table_menu::Rows rows {{translation_str, 330}, {author_str, 0}};
     Menu_items items;
     for (crauto info: _locale_infos) {
       auto item = new_shared<Menu_item_table_row>(
