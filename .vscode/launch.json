@@ -7,7 +7,7 @@
       "targetArchitecture": "x64",
       "request": "launch",
       "name": "gdb x64",
-      "program": "${workspaceRoot}/build/HPW.exe",
+      "program": "${workspaceRoot}/build/bin/HPW.exe",
       "cwd": "${workspaceRoot}/",
     },
     {
@@ -16,7 +16,7 @@
       "targetArchitecture": "x64",
       "request": "launch",
       "name": "gdb x64 editor",
-      "program": "${workspaceRoot}/build/editor.exe",
+      "program": "${workspaceRoot}/build/bin/editor.exe",
       "cwd": ".",
     },
     {
@@ -25,7 +25,7 @@
       "targetArchitecture": "x86",
       "request": "launch",
       "name": "gdb x32",
-      "program": "${workspaceRoot}/build/HPW.exe",
+      "program": "${workspaceRoot}/build/bin/HPW.exe",
       "cwd": ".",
     },
     {
@@ -34,7 +34,7 @@
       "targetArchitecture": "x86",
       "request": "launch",
       "name": "gdb x32 editor",
-      "program": "${workspaceRoot}/build/editor.exe",
+      "program": "${workspaceRoot}/build/bin/editor.exe",
       "cwd": ".",
     }
   ]
