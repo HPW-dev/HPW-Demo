@@ -22,6 +22,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/effect/bg-pattern.hpp"
 #include "graphic/effect/bg-pattern-2.hpp"
+#include "graphic/effect/bg-pattern-3.hpp"
 #include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
@@ -35,7 +36,7 @@ void bg_copy_4(Image& dst, const int state);
 void Scene_main_menu::init_bg() {
   sconst Rnd_table<decltype(bg_pattern_pf)> bg_patterns {{
   // Пак 1:
-  #if 1
+  #if 0
     &bgp_hpw_text_lines,
     &bgp_bit_1,
     &bgp_bit_2,
@@ -78,7 +79,7 @@ void Scene_main_menu::init_bg() {
     #endif
   #endif
   // Пак 2:
-  #if 1
+  #if 0
     &bgp_self_code,
     &bgp_noise,
     &bgp_tile_corruption,
@@ -114,9 +115,10 @@ void Scene_main_menu::init_bg() {
     &bgp_tiles_4,
     &bgp_tiles_4,
     &bgp_zoom_dst,
-    #ifndef ECOMEM
-      //...
-    #endif
+  #endif
+  // Пак 3:
+  #if 1
+    &bgp_liquid,
   #endif
   }}; // bg_patterns table
   bg_pattern_pf = bg_patterns.rnd_fast();
