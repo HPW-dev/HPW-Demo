@@ -24,5 +24,6 @@ inline Str screenshots_path = "./../screenshots/";
 inline Str replays_path = "./../replays/";
 inline Str data_path = "./../data.zip";
 inline Str config_path = "./../config.yml";
+inline Str plugin_path = "./../plugin/";
 
 } // hpw ns
