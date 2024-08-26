@@ -64,6 +64,7 @@ void Scene_main_menu::init_bg() {
       &bgp_3d_rain_waves,
       &bgp_3d_waves,
       &bgp_3d_terrain,
+      &bgp_3d_terrain_ps1,
       &bgp_3d_flat_stars,
       &bg_copy_1,
       &bg_copy_2,
