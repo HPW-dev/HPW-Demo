@@ -95,7 +95,7 @@ void save_config() {
 
 void load_config() {
   hpw_log("чтение конфига...\n");
-  init_shared(hpw::config, hpw::cur_dir + "config.yml", true);
+  init_shared(hpw::config, hpw::cur_dir + hpw::config_path, true);
 
   auto& config = *hpw::config;
   hpw::first_start = config.get_bool("first_start", true);
@@ -112,13 +112,13 @@ void load_config() {
   // добавить инфу о путях, если конфиг сделан в первый раз
   if ( !path_node.check()) {
     path_node = config.make_node("path");
-    path_node.set_str("screenshots", "./screenshots/");
-    path_node.set_str("data", "./data.zip");
+    path_node.set_str("screenshots", hpw::screenshots_path);
+    path_node.set_str("data", hpw::data_path);
     path_node.set_str("locale", hpw::fallback_font_path);
   }
   // сделать папки, если их нет
   make_dir_if_not_exist(hpw::cur_dir + path_node.get_str("screenshots"));
-  make_dir_if_not_exist(hpw::cur_dir + "replays/");
+  make_dir_if_not_exist(hpw::cur_dir + hpw::replays_path);
 
   cauto graphic_node = config["graphic"];
   cauto canvas_size = graphic_node.get_v_int("canvas_size", {graphic::width, graphic::height});

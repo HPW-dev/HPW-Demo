@@ -27,6 +27,9 @@ _tmp_version_ text
 *.webp binary
 *.zip binary
 *.exe binary
+*.elf binary
+*.elf32 binary
+*.elf64 binary
 *.dll binary
 *.xz binary
 *.zst binary
