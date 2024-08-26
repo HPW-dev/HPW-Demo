@@ -9,6 +9,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/sounds.hpp"
+#include "game/core/core.hpp"
 #include "game/core/sprites.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/version.hpp"
@@ -135,7 +136,7 @@ void Scene_main_menu::update(const Delta_time dt) {
     hpw::scene_mgr->back();
 #endif
 
-  bg_state += dt;
+  bg_state += hpw::real_dt;
   menu->update(dt);
   update_bg_order(dt);
 
@@ -145,7 +146,7 @@ void Scene_main_menu::update(const Delta_time dt) {
 }
 
 void Scene_main_menu::draw_bg(Image& dst) const {
-  bg_pattern_pf(dst, std::floor(pps(bg_state)));
+  bg_pattern_pf(dst, std::floor(bg_state * 7));
 }
 
 void Scene_main_menu::init_logo() {
