@@ -20,7 +20,9 @@ inline bool sound_mgr_init_error {};
 inline bool multiple_apps {}; // true - два и более окна с игрой запущено
 inline bool rnd_pal_after_death {}; // true - менять палитру при проигрыше
 inline bool collider_autoopt {true}; // перебирать разные варианты детекторов коллизий при лагах
-inline Str screenshots_path = "./screenshots/";
-inline Str data_path = "./data.zip";
+inline Str screenshots_path = "./../screenshots/";
+inline Str replays_path = "./../replays/";
+inline Str data_path = "./../data.zip";
+inline Str config_path = "./../config.yml";
 
 } // hpw ns

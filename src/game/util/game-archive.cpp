@@ -7,6 +7,6 @@
 void init_archive() {
   return_if (hpw::archive);
   assert(hpw::config);
-  auto data_path = (*hpw::config)["path"].get_str("data", "data.zip");
+  auto data_path = (*hpw::config)["path"].get_str("data", hpw::data_path);
   init_unique(hpw::archive, hpw::cur_dir + data_path);
 }

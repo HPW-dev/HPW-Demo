@@ -84,7 +84,7 @@ struct Scene_replay_select::Impl {
   } // generate_rows
 
   inline void load_replays() {
-    cauto replay_files = files_in_dir(hpw::cur_dir + "replays/");
+    cauto replay_files = files_in_dir(hpw::cur_dir + hpw::replays_path);
     return_if(replay_files.empty());
     for (crauto replay_file: replay_files) {
       try {

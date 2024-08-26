@@ -125,7 +125,7 @@ if not is_debug:
 
 # билд игры
 env.Program(
-  target = build_dir + prog_name,
+  target = build_dir + "bin/" + prog_name,
   source = sources,
   LIBPATH = lib_path,
   LIBS = used_libs,

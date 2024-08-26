@@ -351,8 +351,8 @@ void Scene_game::save_named_replay() {
     replay->close();
     if (hpw::save_last_replay) {
       // открыть файл последнего реплея и скопировать в именной файл
-      std::ifstream source(hpw::cur_dir + "replays/last_replay.hpw_replay", std::ios::binary);
-      std::ofstream dest(hpw::cur_dir + "replays/" + get_random_replay_name(), std::ios::binary);
+      std::ifstream source(hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", std::ios::binary);
+      std::ofstream dest(hpw::cur_dir + hpw::replays_path + get_random_replay_name(), std::ios::binary);
       dest << source.rdbuf();
     }
   } catch (...) {
