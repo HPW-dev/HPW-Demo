@@ -34,8 +34,12 @@ public:
   inline Value_cref rnd_stable() const
     { return m_values.at( rndu(m_values.size()-1) ); }
   
-  inline Value_cref rnd_fast() const
-    { return m_values.at( rndu_fast(m_values.size()-1) ); }
+  inline Value_cref rnd_fast() const {
+    cauto sz = m_values.size();
+    if (sz == 1)
+      return m_values[0];
+    return m_values.at( rndu_fast(sz-1) );
+  }
 
 private:
   Values m_values {};
