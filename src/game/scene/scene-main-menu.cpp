@@ -118,7 +118,8 @@ void Scene_main_menu::init_bg() {
   #endif
   // Пак 3:
   #if 1
-    &bgp_liquid,
+    //&bgp_liquid,
+    &bgp_liquid_gray,
   #endif
   }}; // bg_patterns table
   bg_pattern_pf = bg_patterns.rnd_fast();
