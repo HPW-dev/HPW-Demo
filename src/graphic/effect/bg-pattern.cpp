@@ -533,6 +533,70 @@ void bgp_3d_terrain(Image& dst, const int bg_state) {
   }
 } // bgp_3d_terrain
 
+// снижает точность координаты
+Vec3 down_precission(const Vec3 src) {
+  constexpr int shift = 4;
+  constexpr real mul = 1'000.0;
+  return Vec3(
+    ((scast<int>(src.x * mul) >> shift) << shift) / mul,
+    ((scast<int>(src.y * mul) >> shift) << shift) / mul,
+    ((scast<int>(src.z * mul) >> shift) << shift) / mul
+  );
+}
+
+void bgp_3d_terrain_ps1(Image& dst, const int bg_state) {
+  constexpr real scale = 550.0;
+  const real rot_speed = bg_state / 240.0;
+  cauto center = center_point(dst);
+  constexpr uint terrain_y = 30;
+  constexpr uint terrain_x = 30;
+  // карта высот
+  static Vector<real> terrain(terrain_x * terrain_y, 0);
+  static bool generate_once {true};
+  if (generate_once) {
+    // сгенерить ландшафт
+    for (rauto height: terrain)
+      height = rndr_fast(0, 0.04);
+    generate_once = false;
+  }
+
+  dst.fill(Pal8::black);
+  cfor (y, terrain_y - 1)
+  cfor (x, terrain_x - 1) {
+    Vec3 p00 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at(y * terrain_x + x),
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p01 {
+      .x = scast<real>((x + 1 - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at(y * terrain_x + x + 1),
+      .z = scast<real>((y - terrain_y / 2.0) / terrain_y) };
+    Vec3 p10 {
+      .x = scast<real>((x - terrain_x / 2.0) / terrain_x),
+      .y = terrain.at((y + 1) * terrain_x + x),
+      .z = scast<real>((y + 1 - terrain_y / 2.0) / terrain_y) };
+    p00 = down_precission(p00);
+    p01 = down_precission(p01);
+    p10 = down_precission(p10);
+    p00 = rotate(p00, -rot_speed, 0, 0);
+    p01 = rotate(p01, -rot_speed, 0, 0);
+    p10 = rotate(p10, -rot_speed, 0, 0);
+    // огрубить координаты
+    p00 = down_precission(p00);
+    p01 = down_precission(p01);
+    p10 = down_precission(p10);
+    // делать дальние точки темнее
+    auto color = Pal8::from_real( 1.0 - ((p00.z + 0.5) * 0.75), true);
+    cauto p00_2d = conv_3d_to_2d_isometry(p00, scale) + center;
+    cauto p01_2d = conv_3d_to_2d_isometry(p01, scale) + center;
+    cauto p10_2d = conv_3d_to_2d_isometry(p10, scale) + center;
+    // составить полигоны из линий
+    draw_line<&blend_max>(dst, p00_2d, p01_2d, color);
+    draw_line<&blend_max>(dst, p00_2d, p10_2d, color);
+    draw_line<&blend_max>(dst, p10_2d, p01_2d, color);
+  }
+}
+
 void bgp_3d_flat_stars(Image& dst, const int bg_state) {
   const real motion_speed = bg_state * 1.0;
   const real rot_speed = bg_state / 240.0;

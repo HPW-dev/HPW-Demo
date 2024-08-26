@@ -28,6 +28,8 @@ void bgp_labyrinth_2(Image& dst, const int bg_state);
 void bgp_3d_atomar_cube(Image& dst, const int bg_state);
 // 3D ландшафт
 void bgp_3d_terrain(Image& dst, const int bg_state);
+// 3D ландшафт (грубая версия)
+void bgp_3d_terrain_ps1(Image& dst, const int bg_state);
 // 3D звёздочки на земле
 void bgp_3d_flat_stars(Image& dst, const int bg_state);
 // 3D волны
