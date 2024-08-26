@@ -6,4 +6,4 @@ script = "test/graphic/SConscript"
 compiler = "g++"
 is_debug = 1
 helper.exec_cmd(f'scons -j16 -Q debug={is_debug} -Q script={script} -Q compiler={compiler}')
-helper.exec_cmd('build/HPW')
+helper.exec_cmd('build/bin/HPW')

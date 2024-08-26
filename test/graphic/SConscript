@@ -95,7 +95,7 @@ if not is_debug and not is_linux:
 env.Append(CPPDEFINES = defines)
 env.Append(CXXFLAGS = cpp_flags)
 env.Program(
-  target = build_dir + prog_name,
+  target = build_dir + "bin/" + prog_name,
   source = sources,
   CXX = compiler,
   CXXFLAGS = cpp_flags,
