@@ -159,37 +159,41 @@ struct Scene_pge::Impl {
   } // init_menu
 
   inline void init_plugins() {
-    // загрузить пути к эффектам
-    auto path = hpw::cur_dir + "plugin/effect/";
-    conv_sep(path);
-    m_effects = files_in_dir(path);
-    return_if(m_effects.empty());
-    // оставить только .so/.dll имена
-    std::erase_if(m_effects, [](cr<Str> fname)->bool {
-      cauto ext = std::filesystem::path(fname).extension().string();
-      return !(ext == ".so" || ext == ".dll"); // допустимые форматы для плагина
-    });
-    // чтобы в списке можно было выбирать пустой плагин
-    m_effects.push_back({});
-    std::swap(*m_effects.begin(), *(m_effects.end()-1));
+    try {
+      // загрузить пути к эффектам
+      auto path = hpw::cur_dir + hpw::plugin_path + "effect/";
+      conv_sep(path);
+      m_effects = files_in_dir(path);
+      return_if(m_effects.empty());
+      // оставить только .so/.dll имена
+      std::erase_if(m_effects, [](cr<Str> fname)->bool {
+        cauto ext = std::filesystem::path(fname).extension().string();
+        return !(ext == ".so" || ext == ".dll"); // допустимые форматы для плагина
+      });
+      // чтобы в списке можно было выбирать пустой плагин
+      m_effects.push_back({});
+      std::swap(*m_effects.begin(), *(m_effects.end()-1));
 
-    cauto pge_name = get_cur_pge_name();
+      cauto pge_name = get_cur_pge_name();
 
-    if (pge_name.empty()) {
-      m_selected_effect = 0;
-    } else {
-      // докрутить индекс до выбранного эффекта
-      for (uint idx = 0; auto effect: m_effects) {
-        effect = get_filename(effect);
-        if (effect == pge_name) {
-          m_selected_effect = idx;
-          break;
+      if (pge_name.empty()) {
+        m_selected_effect = 0;
+      } else {
+        // докрутить индекс до выбранного эффекта
+        for (uint idx = 0; auto effect: m_effects) {
+          effect = get_filename(effect);
+          if (effect == pge_name) {
+            m_selected_effect = idx;
+            break;
+          }
+          ++idx;
         }
-        ++idx;
-      }
 
-      if ( !pge_loaded()) // не грузить плагин, если уже загружен
-        load_pge( get_current_effect() );
+        if ( !pge_loaded()) // не грузить плагин, если уже загружен
+          load_pge( get_current_effect() );
+      }
+    } catch (...) {
+      hpw_log("произошла ошибка при загрузке плагинов. Загрузка отменена\n");
     }
   } // init_plugins
 
