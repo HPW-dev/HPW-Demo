@@ -6,6 +6,7 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/keybits.hpp"
 #include "graphic/util/graphic-util.hpp"
+#include "graphic/font/font-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/blur.hpp"
 
@@ -63,9 +64,9 @@ struct Scene_msgbox_enter::Impl {
     draw_rect_filled<&blend_alpha>(m_bg, window, Pal8::black, 200);
     draw_rect(m_bg, border, Pal8::gray);
 
-    cauto text_pos = center_point(Vec(m_bg.X, m_bg.Y), graphic::font->text_size(m_msg));
-    graphic::font->draw(m_bg, window.pos + Vec(6, 6), m_title, &blend_avr);
-    graphic::font->draw(m_bg, text_pos + Vec(0, 12), m_msg);
+    // текст сообщений
+    graphic::font->draw(m_bg, window.pos + Vec(15, 10), m_title, &blend_avr);
+    text_bordered(m_bg, m_msg, graphic::font.get(), window, {15, 28});
   } // make_bg
 }; // Impl
 

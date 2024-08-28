@@ -103,7 +103,6 @@ void Game_app::draw_game_frame() const {
   if (graphic::draw_border) // рамка по краям
     draw_border(*graphic::canvas);
   apply_pge(graphic::frame_count);
-  Host_class::draw_game_frame();
   hpw::global_task_mgr.draw(*graphic::canvas);
 
   graphic::soft_draw_time = get_time() - st;
