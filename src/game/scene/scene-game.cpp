@@ -302,7 +302,7 @@ void Scene_game::replay_init() {
   if (hpw::replay_read_mode)
     init_unique(replay, hpw::cur_replay_file_name, false);
   elif (hpw::enable_replay)
-    init_unique(replay, hpw::cur_dir + "replays/last_replay.hpw_replay", true);
+    init_unique(replay, hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", true);
 } // replay_init
 
 void Scene_game::replay_save_keys() {

@@ -68,10 +68,11 @@ public:
   inline explicit Save_error(cr<Str> path): _path {path} {}
 
   inline void update(const Delta_time dt) override {
-    const utf32 msg = utf32(U"не удалось записать реплей в") + U" \"" + sconv<utf32>(_path) + U"\"";
-    const utf32 title = get_locale_str("common.error");
+    cauto msg = Str("не удалось записать реплей в") + " \"" + (_path) + "\"";
+    hpw_log("Error: " << msg << '\n');
+    cauto title = get_locale_str("common.error");
     assert(hpw::scene_mgr);
-    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(msg, title));
+    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(utf8_to_32(msg), title));
     this->deactivate();
   }
 };
