@@ -1,10 +1,7 @@
 #pragma once
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
-
-#ifdef DEBUG
 #include "util/str.hpp"
-#endif
 
 struct Vec;
 
@@ -25,9 +22,8 @@ Vec make_rand_by_radius_stable(const Vec pos, real r);
 // получить случайную точку вокруг pos в радиусе r
 Vec make_rand_by_radius_graphic(const Vec pos, real r);
 
-#ifdef DEBUG
 Str to_str(const Vec src);
-#endif
+Str to_str(const Vec src, real prec);
 
 // единичный вектор направления по углу
 Vec deg_to_vec(real deg);

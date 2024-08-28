@@ -36,7 +36,7 @@ void bg_copy_4(Image& dst, const int state);
 void Scene_main_menu::init_bg() {
   sconst Rnd_table<decltype(bg_pattern_pf)> bg_patterns {{
   // Пак 1:
-  #if 1
+  #if 0
     &bgp_hpw_text_lines,
     &bgp_bit_1,
     &bgp_bit_2,
@@ -79,7 +79,7 @@ void Scene_main_menu::init_bg() {
     #endif
   #endif
   // Пак 2:
-  #if 1
+  #if 0
     &bgp_self_code,
     &bgp_noise,
     &bgp_tile_corruption,
@@ -118,8 +118,9 @@ void Scene_main_menu::init_bg() {
   #endif
   // Пак 3:
   #if 1
-    &bgp_liquid,
-    &bgp_liquid_gray,
+    //&bgp_liquid,
+    //&bgp_liquid_gray,
+    &bgp_trajectory,
   #endif
   }}; // bg_patterns table
   bg_pattern_pf = bg_patterns.rnd_fast();

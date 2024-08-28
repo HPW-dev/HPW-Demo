@@ -5,10 +5,7 @@
 #include "vec.hpp"
 #include "mat.hpp"
 #include "random.hpp"
-
-#ifdef DEBUG
 #include "util/str-util.hpp"
-#endif
 
 real length(const Vec src) {
   return std::sqrt(pow2(src.x) + pow2(src.y));
@@ -48,10 +45,11 @@ Vec make_rand_by_radius_stable(const Vec pos, real r)
 Vec make_rand_by_radius_graphic(const Vec pos, real r)
   { return pos + (deg_to_vec(rndr_fast(0, 360)) * rndr_fast(0, r)); }
 
-#ifdef DEBUG
 Str to_str(const Vec src)
   { return Str("{") + n2s(src.x) + ", " + n2s(src.y) + "}"; }
-#endif
+
+Str to_str(const Vec src, real prec)
+  { return Str("{") + n2s(src.x, prec) + ", " + n2s(src.y, prec) + "}"; }
 
 Vec deg_to_vec(real deg) {
   return { std::cos(deg_to_rad(deg)), std::sin(deg_to_rad(deg)) };
