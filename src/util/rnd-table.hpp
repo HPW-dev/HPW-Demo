@@ -32,13 +32,13 @@ public:
   constexpr inline Values_cref values() const { return m_values; }
 
   inline Value_cref rnd_stable() const
-    { return m_values.at( rndu(m_values.size()-1) ); }
+    { return m_values.at( rndu(m_values.size()) ); }
   
   inline Value_cref rnd_fast() const {
     cauto sz = m_values.size();
     if (sz == 1)
       return m_values[0];
-    return m_values.at( rndu_fast(sz-1) );
+    return m_values.at( rndu_fast(sz) );
   }
 
 private:
