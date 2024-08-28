@@ -10,33 +10,7 @@
 // вверх этот хедер не таскать, иначе всё развалится
 #include "host-glfw-common.hpp"
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-  hpw::any_key_pressed = true;
-  assert(g_instance);
-  cauto key_mapper = g_instance.load()->m_key_mapper.get();
-  assert(key_mapper);
-  rauto keymap_table = key_mapper->get_table();
-
-  // режим ребинда клавиши
-  if (g_rebind_key_mode) {
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      key_mapper->bind(g_key_for_rebind, scancode);
-      hpw::keys_info = key_mapper->get_info();
-      g_rebind_key_mode = false;
-      return; // чтобы нажатие не применилось в игровой логике
-    }
-  }
-
-  // проверить нажатия на игровые клавиши
-  for (crauto [hpw_key, key]: keymap_table) {
-    if (key.scancode == scancode) {
-      if (action == GLFW_PRESS || action == GLFW_REPEAT)
-        press(hpw_key);
-      else // GLFW_RELEASE
-        release(hpw_key);
-    }
-  }
-
+static void hotkey_process(GLFWwindow* window, int key, int scancode, int action, int mods) {
   // альтернативная кнопка скриншота
   if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
     hpw::make_screenshot();
@@ -65,7 +39,37 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
       hpw::text_input_pos = 0;
     }
   }
-} // key_callback
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+  hpw::any_key_pressed = true;
+  assert(g_instance);
+  cauto key_mapper = g_instance.load()->m_key_mapper.get();
+  assert(key_mapper);
+  rauto keymap_table = key_mapper->get_table();
+
+  // режим ребинда клавиши
+  if (g_rebind_key_mode) {
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+      key_mapper->bind(g_key_for_rebind, scancode);
+      hpw::keys_info = key_mapper->get_info();
+      g_rebind_key_mode = false;
+      return; // чтобы нажатие не применилось в игровой логике
+    }
+  }
+
+  // проверить нажатия на игровые клавиши
+  for (crauto [hpw_key, key]: keymap_table) {
+    if (key.scancode == scancode) {
+      if (action == GLFW_PRESS || action == GLFW_REPEAT)
+        press(hpw_key);
+      else // GLFW_RELEASE
+        release(hpw_key);
+    }
+  }
+
+  hotkey_process(window, key, scancode, action, mods);
+}
 
 // колбэк для ошибок нужен для GLFW
 void error_callback(int error, Cstr description) {
