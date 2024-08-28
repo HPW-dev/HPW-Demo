@@ -49,7 +49,6 @@ protected:
   void _set_double_buffering(bool enable);
   virtual void init_window();
   void init_commands();
-  virtual void update(const Delta_time dt);
   virtual void init();
   Delta_time get_time() const override;
   // определить какой кадр надо скипать

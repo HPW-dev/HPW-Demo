@@ -4,7 +4,8 @@
 #include "util/unicode.hpp"
 #include "game/scene/scene.hpp"
 
-// Окно с текстом. Для выхода нажать Enable/Enter
+/* Окно с текстом. Для выхода нажать Enable/Enter.
+Безопаснее создавать окно об ошибках через таск */
 class Scene_msgbox_enter final: public Scene {
   struct Impl;
   Unique<Impl> impl {};

@@ -9,6 +9,7 @@
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
+#include "game/core/tasks.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
@@ -95,6 +96,7 @@ void Game_app::update(const Delta_time dt) {
 } // update
 
 void Game_app::draw_game_frame() const {
+  assert(graphic::canvas);
   cauto st = get_time();
 
   hpw::scene_mgr->draw(*graphic::canvas);
@@ -102,6 +104,7 @@ void Game_app::draw_game_frame() const {
     draw_border(*graphic::canvas);
   apply_pge(graphic::frame_count);
   Host_class::draw_game_frame();
+  hpw::global_task_mgr.draw(*graphic::canvas);
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
