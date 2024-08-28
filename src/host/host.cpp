@@ -6,6 +6,7 @@
 #include "host-resize.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/tasks.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
@@ -94,4 +95,8 @@ void Host::free_app_mutex() {
 #else
   #pragma message("need impl for free_app_mutex() on Linux")
 #endif
+}
+
+void Host::update(const Delta_time dt) {
+  hpw::global_task_mgr.update(dt);
 }

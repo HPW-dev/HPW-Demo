@@ -434,8 +434,6 @@ void Host_glfw::_set_mouse_cursour_mode(bool enable) {
     enable ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
-void Host_glfw::update(const Delta_time dt) {}
-
 void Host_glfw::check_frame_skip() {
   graphic::skip_cur_frame = false;
 

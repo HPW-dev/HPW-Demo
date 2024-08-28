@@ -25,7 +25,7 @@ protected:
   virtual void set_gamma(const double gamma) = 0;
   // получить текущее время в секундах
   virtual Delta_time get_time() const = 0;
-  inline virtual void draw_game_frame() const {}
+  virtual void draw_game_frame() const = 0;
   void init_app_mutex();
   void free_app_mutex();
 
@@ -33,5 +33,5 @@ public:
   explicit Host(int argc, char** argv);
   virtual ~Host();
   inline virtual void run() {}
-  inline virtual void update(const Delta_time dt) {}
+  virtual void update(const Delta_time dt);
 }; // Host

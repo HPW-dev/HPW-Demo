@@ -1,9 +1,10 @@
 #pragma once
+#include <functional>
 #include "math/num-types.hpp"
 
 // вызывает функцию при деструкторе и конструкторе (для областей видимости)
 class Scope final {
-  using Func = void (*)();
+  using Func = std::function<void ()>;
   Func m_ctor_fn {}; // функция при конструировании
   Func m_dtor_fn {}; // функция при деструкторе
   

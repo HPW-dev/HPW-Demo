@@ -8,16 +8,21 @@
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
+#include "game/util/game-util.hpp"
 #include "game/core/core.hpp"
 #include "game/core/common.hpp"
 #include "game/core/replays.hpp"
 #include "game/core/user.hpp"
 #include "game/core/difficulty.hpp"
 #include "game/core/levels.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/tasks.hpp"
+#include "game/scene/msgbox/msgbox-enter.hpp"
 #include "util/file/file.hpp"
-#include "util/vector-types.hpp"
-#include "util/error.hpp"
 #include "util/math/random.hpp"
+#include "util/vector-types.hpp"
+#include "util/hpw-util.hpp"
+#include "util/error.hpp"
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 #include "util/platform.hpp"
@@ -55,6 +60,21 @@ struct Stream {
   inline bool eof() const { return pos >= data.size(); }
 };
 #endif
+
+// создаст окно с ошибкой при сохранении реплея
+class Save_error final: public Task {
+  Str _path {};
+public:
+  inline explicit Save_error(cr<Str> path): _path {path} {}
+
+  inline void update(const Delta_time dt) override {
+    const utf32 msg = utf32(U"не удалось записать реплей в") + U" \"" + sconv<utf32>(_path) + U"\"";
+    const utf32 title = get_locale_str("common.error");
+    assert(hpw::scene_mgr);
+    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(msg, title));
+    this->deactivate();
+  }
+};
 
 enum class Platform: byte {
   error=0,
@@ -302,11 +322,19 @@ struct Replay::Impl {
       m_file.close();
     #else
       return_if(m_nosave); // не сейвить в файл
+      return_if(m_file.data.empty());
+
+      // чтоб два раза не вызвать close
+      Scope _({}, [this]{ m_file.data.clear(); });
 
       // запись с буффера на диск
       std::ofstream file(m_path, std::ios_base::binary);
-      iferror(!file || file.bad(), "не удалось записать реплей по пути \""
-        << m_path << "\"");
+
+      if (!file.is_open()) {
+        hpw::global_task_mgr.add(new_shared<Save_error>(m_path));
+        return;
+      }
+
       file.write(m_file.data.data(), m_file.data.size());
     #endif
   }
