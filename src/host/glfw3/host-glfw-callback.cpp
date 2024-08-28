@@ -10,7 +10,7 @@
 // вверх этот хедер не таскать, иначе всё развалится
 #include "host-glfw-common.hpp"
 
-void key_callback(GLFWwindow* /*m_window*/, int key, int scancode, int action, int mods) {
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
   hpw::any_key_pressed = true;
   assert(g_instance);
   cauto key_mapper = g_instance.load()->m_key_mapper.get();
@@ -40,10 +40,30 @@ void key_callback(GLFWwindow* /*m_window*/, int key, int scancode, int action, i
   // альтернативная кнопка скриншота
   if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
     hpw::make_screenshot();
+  
   // альтернативная кнопка фуллскрина
   if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
     assert(hpw::set_fullscreen);
     hpw::set_fullscreen(!graphic::fullscreen);
+  }
+  
+  // вставка текста из буффера (Ctrl + V)
+  if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {
+    if (hpw::text_input_mode) {
+      const Str buffer = glfwGetClipboardString(window);
+      if (!buffer.empty()) {
+        hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
+        hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(), hpw::text_input.size());
+      }
+    }
+  }
+
+  // снос всей введёной строки текста (Ctrl + U)
+  if (action == GLFW_PRESS && key == GLFW_KEY_U && mods == GLFW_MOD_CONTROL) {
+    if (hpw::text_input_mode) {
+      hpw::text_input.clear();
+      hpw::text_input_pos = 0;
+    }
   }
 } // key_callback
 
