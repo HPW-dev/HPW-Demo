@@ -101,7 +101,6 @@ void bgp_trajectory(Image& dst, const int bg_state) {
     graphic::font->draw(dst, point, sconv<utf32>(to_str(point, 0)));
 }
 
-
 void bgp_fading_grid(Image& dst, const int bg_state) {
   constx uint GRID_SZ = 32;
   cauto SPEED = bg_state * 4;
@@ -139,6 +138,47 @@ void bgp_fading_grid(Image& dst, const int bg_state) {
       dst.set(x * GRID_SZ + gx, y * GRID_SZ + gy, Pal8::from_real(gradient, is_red));
   }
 }
+
+void bgp_fading_grid_dithered(Image& dst, const int bg_state) {
+  constx uint GRID_SZ = 16;
+  cauto SPEED = bg_state;
+  cauto GRID_X = dst.X / GRID_SZ;
+  cauto GRID_Y = dst.Y / GRID_SZ;
+  xorshift128_state seed {
+    .a = 0x2451,
+    .b = 0xBEAF,
+    .c = 0xDADA,
+    .d = 0x2AAF,
+  };
+
+  struct Cell {
+    bool is_red {};
+    real gradient {};
+  };
+  Vector<Cell> cells(GRID_X * GRID_Y);
+  for (rauto cell: cells) {
+    cell.is_red = xorshift128(seed) % 2u;
+    cell.gradient = std::fmod(xorshift128(seed) + SPEED, 1'000) / 1'000.f;
+    // подъём и спад яркости
+    if (cell.gradient > 0.5f)
+      cell.gradient = 0.5f - (cell.gradient - 0.5f);
+    cell.gradient *= 2.f;
+  }
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, GRID_Y)
+  cfor (x, GRID_X) {
+    cauto cell = cells[y * GRID_X + x];
+    cauto is_red = cell.is_red;
+    cauto gradient = cell.gradient;
+    cfor (gy, GRID_SZ)
+    cfor (gx, GRID_SZ)
+      dst.set(x * GRID_SZ + gx, y * GRID_SZ + gy, Pal8::from_real(gradient, is_red));
+  }
+
+  dither_bayer16x16_1bit(dst);
+}
+
 
 void bgp_fading_grid_black(Image& dst, const int bg_state) {
   constx uint GRID_SZ = 16;
