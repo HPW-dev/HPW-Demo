@@ -90,8 +90,8 @@ void bgp_trajectory(Image& dst, const int bg_state) {
   Vector<Vec> points(20);
   for (rauto point: points)
     point = Vec(
-      (xorshift128(seed) | bg_state) % dst.X,
-      (xorshift128(seed) | bg_state) % dst.Y
+      (xorshift128(seed) & bg_state) % dst.X,
+      (xorshift128(seed) & bg_state) % dst.Y
     );
 
   cfor (i, points.size()-3)
