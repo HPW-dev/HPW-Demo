@@ -14,3 +14,4 @@ void bgp_fading_grid(Image& dst, const int bg_state);
 void bgp_fading_grid_black(Image& dst, const int bg_state);
 // медленно сменяющая цвет плитка (красная)
 void bgp_fading_grid_red(Image& dst, const int bg_state);
+void bgp_fading_grid_red_small(Image& dst, const int bg_state);

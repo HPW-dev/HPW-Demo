@@ -199,3 +199,26 @@ void bgp_fading_grid_red(Image& dst, const int bg_state) {
       dst.set(x * GRID_SZ + gx, y * GRID_SZ + gy, Pal8::from_real(cells[y * GRID_X + x], true));
   }
 }
+
+void bgp_fading_grid_red_small(Image& dst, const int bg_state) {
+  cauto SPEED = bg_state * 12;
+  xorshift128_state seed {
+    .a = 0x2451,
+    .b = 0xBEAF,
+    .c = 0xDADA,
+    .d = 0x2AAF,
+  };
+
+  Vector<real> cells(dst.size);
+  for (rauto cell: cells) {
+    cell = ((xorshift128(seed) + SPEED) % 1'000) / 1'000.f;
+    // подъём и спад яркости
+    if (cell > 0.5f)
+      cell = 0.5f - (cell - 0.5f);
+    cell *= 2.f;
+  }
+
+  #pragma omp parallel for simd
+  cfor (i, dst.size)
+    dst[i] = Pal8::from_real(cells[i], true);
+}

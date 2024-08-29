@@ -123,7 +123,8 @@ void Scene_main_menu::init_bg() {
     //&bgp_trajectory,
     //&bgp_fading_grid,
     //&bgp_fading_grid_2,
-    &bgp_fading_grid_red,
+    //&bgp_fading_grid_red,
+    &bgp_fading_grid_red_small,
   #endif
   }}; // bg_patterns table
   bg_pattern_pf = bg_patterns.rnd_fast();
