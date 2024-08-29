@@ -13,6 +13,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "util/math/xorshift.hpp"
 #include "util/math/vec-util.hpp"
+#include "util/math/mat.hpp"
 
 void bgp_liquid(Image& dst, const int bg_state) {
   cauto state = bg_state * 2;
@@ -179,7 +180,6 @@ void bgp_fading_grid_dithered(Image& dst, const int bg_state) {
   dither_bayer16x16_1bit(dst);
 }
 
-
 void bgp_fading_grid_black(Image& dst, const int bg_state) {
   constx uint GRID_SZ = 16;
   cauto SPEED = bg_state * 3;
@@ -293,5 +293,49 @@ void bgp_striped_spheres(Image& dst, const int bg_state) {
       color = (std::abs(x - SPEEd) % 160) > 80 ? Pal8::red : Pal8::black;
     rauto pix = dst(x, y);
     pix = blend_diff(color, pix);
+  }
+}
+
+void bgp_rotating_moire(Image& dst, const int bg_state) {
+  constexpr uint LINES = 90;
+  cauto center = center_point(dst);
+  cauto center_2 = center + Vec(4, 9);
+  cauto LINE_LEN = dst.Y - 20;
+  cauto SPEED = bg_state / 200.f;
+  cauto BG = Pal8::white;
+  cauto FG = Pal8::black;
+
+  dst.fill(BG);
+
+  cfor (i, LINES) {
+    cauto rad = deg_to_rad((360.f / LINES) * i);
+    Vec p1(std::cos(rad), std::sin(rad));
+    Vec p2(std::cos(rad + SPEED), std::sin(rad + SPEED));
+    p1 *= LINE_LEN / 2;
+    p2 *= LINE_LEN / 2;
+    draw_line(dst, center, center + p1, FG);
+    draw_line(dst, center_2, center_2 + p2, FG);
+  }
+}
+
+void bgp_rotating_moire_more_lines(Image& dst, const int bg_state) {
+  constexpr uint LINES = 180;
+  cauto center = center_point(dst);
+  cauto center_2 = center + Vec(2, 5);
+  cauto LINE_LEN = dst.Y - 20;
+  cauto SPEED = bg_state / 700.f;
+  cauto BG = Pal8::white;
+  cauto FG = Pal8::black;
+
+  dst.fill(BG);
+
+  cfor (i, LINES) {
+    cauto rad = deg_to_rad((360.f / LINES) * i);
+    Vec p1(std::cos(rad), std::sin(rad));
+    Vec p2(std::cos(rad + SPEED), std::sin(rad + SPEED));
+    p1 *= LINE_LEN / 2;
+    p2 *= LINE_LEN / 2;
+    draw_line(dst, center, center + p1, FG);
+    draw_line(dst, center_2, center_2 + p2, FG);
   }
 }

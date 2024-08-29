@@ -20,3 +20,7 @@ void bgp_fading_grid_red_small(Image& dst, const int bg_state);
 void bgp_fading_grid_dithered(Image& dst, const int bg_state);
 // ширики в зебру c XOR (https://pin.it/15XSTrGE6)
 void bgp_striped_spheres(Image& dst, const int bg_state);
+// вращающийся муар (https://pin.it/1iugapuvu)
+void bgp_rotating_moire(Image& dst, const int bg_state);
+// как bgp_rotating_moire, но больше линий
+void bgp_rotating_moire_more_lines(Image& dst, const int bg_state);
