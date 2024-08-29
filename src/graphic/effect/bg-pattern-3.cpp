@@ -139,3 +139,63 @@ void bgp_fading_grid(Image& dst, const int bg_state) {
       dst.set(x * GRID_SZ + gx, y * GRID_SZ + gy, Pal8::from_real(gradient, is_red));
   }
 }
+
+void bgp_fading_grid_black(Image& dst, const int bg_state) {
+  constx uint GRID_SZ = 16;
+  cauto SPEED = bg_state * 3;
+  cauto GRID_X = dst.X / GRID_SZ;
+  cauto GRID_Y = dst.Y / GRID_SZ;
+  xorshift128_state seed {
+    .a = 0x2451,
+    .b = 0xBEAF,
+    .c = 0xDADA,
+    .d = 0x2AAF,
+  };
+
+  Vector<real> cells(GRID_X * GRID_Y);
+  for (rauto cell: cells) {
+    cell = ((xorshift128(seed) + SPEED) % 1'000) / 1'000.f;
+    // подъём и спад яркости
+    if (cell > 0.5f)
+      cell = 0.5f - (cell - 0.5f);
+    cell *= 0.25f;
+  }
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, GRID_Y)
+  cfor (x, GRID_X) {
+    cfor (gy, GRID_SZ)
+    cfor (gx, GRID_SZ)
+      dst.set(x * GRID_SZ + gx, y * GRID_SZ + gy, Pal8::from_real(cells[y * GRID_X + x]));
+  }
+}
+
+void bgp_fading_grid_red(Image& dst, const int bg_state) {
+  constx uint GRID_SZ = 16;
+  cauto SPEED = bg_state * 2;
+  cauto GRID_X = dst.X / GRID_SZ;
+  cauto GRID_Y = dst.Y / GRID_SZ;
+  xorshift128_state seed {
+    .a = 0x2451,
+    .b = 0xBEAF,
+    .c = 0xDADA,
+    .d = 0x2AAF,
+  };
+
+  Vector<real> cells(GRID_X * GRID_Y);
+  for (rauto cell: cells) {
+    cell = ((xorshift128(seed) + SPEED) % 1'000) / 1'000.f;
+    // подъём и спад яркости
+    if (cell > 0.5f)
+      cell = 0.5f - (cell - 0.5f);
+    cell *= 2.f;
+  }
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, GRID_Y)
+  cfor (x, GRID_X) {
+    cfor (gy, GRID_SZ)
+    cfor (gx, GRID_SZ)
+      dst.set(x * GRID_SZ + gx, y * GRID_SZ + gy, Pal8::from_real(cells[y * GRID_X + x], true));
+  }
+}
