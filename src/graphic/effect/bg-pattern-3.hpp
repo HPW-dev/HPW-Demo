@@ -8,3 +8,5 @@ void bgp_liquid(Image& dst, const int bg_state);
 void bgp_liquid_gray(Image& dst, const int bg_state);
 // сплайны с подписями кордов
 void bgp_trajectory(Image& dst, const int bg_state);
+// медленно сменяющая цвет плитка
+void bgp_fading_grid(Image& dst, const int bg_state);

@@ -120,7 +120,8 @@ void Scene_main_menu::init_bg() {
   #if 1
     //&bgp_liquid,
     //&bgp_liquid_gray,
-    &bgp_trajectory,
+    //&bgp_trajectory,
+    &bgp_fading_grid,
   #endif
   }}; // bg_patterns table
   bg_pattern_pf = bg_patterns.rnd_fast();
