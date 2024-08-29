@@ -18,3 +18,5 @@ void bgp_fading_grid_red(Image& dst, const int bg_state);
 void bgp_fading_grid_red_small(Image& dst, const int bg_state);
 // медленно сменяющая цвет плитка (с дизерингом)
 void bgp_fading_grid_dithered(Image& dst, const int bg_state);
+// ширики в зебру c XOR (https://pin.it/15XSTrGE6)
+void bgp_striped_spheres(Image& dst, const int bg_state);

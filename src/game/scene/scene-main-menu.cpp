@@ -125,7 +125,8 @@ void Scene_main_menu::init_bg() {
     //&bgp_fading_grid_2,
     //&bgp_fading_grid_red,
     //&bgp_fading_grid_red_small,
-    &bgp_fading_grid_dithered,
+    //&bgp_fading_grid_dithered,
+    &bgp_striped_spheres,
   #endif
   }}; // bg_patterns table
   bg_pattern_pf = bg_patterns.rnd_fast();

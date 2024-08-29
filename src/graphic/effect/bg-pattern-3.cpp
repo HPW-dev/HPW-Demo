@@ -262,3 +262,36 @@ void bgp_fading_grid_red_small(Image& dst, const int bg_state) {
   cfor (i, dst.size)
     dst[i] = Pal8::from_real(cells[i], true);
 }
+
+void bgp_striped_spheres(Image& dst, const int bg_state) {
+  cauto SPEEd = (bg_state + 600) / 2;
+  dst.fill({});
+
+  xorshift128_state seed {
+    .a = 0x2451,
+    .b = 0xBEAF,
+    .c = 0xDADA,
+    .d = 0x2AAF,
+  };
+
+  // круги
+  cfor (_, 18) {
+    const Vec pos (
+      xorshift128(seed) % dst.X,
+      xorshift128(seed) % dst.Y );
+    const real r = ((xorshift128(seed) % 1000) / 1000.f) * 100.f;
+    draw_circle_filled(dst, pos, r, Pal8::red);
+  }
+
+  // инвертирующая полоска
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    Pal8 color;
+    if (y >= dst.Y / 2)
+      color = ((x + SPEEd) % 160) > 80 ? Pal8::red : Pal8::black;
+    else
+      color = (std::abs(x - SPEEd) % 160) > 80 ? Pal8::red : Pal8::black;
+    rauto pix = dst(x, y);
+    pix = blend_diff(color, pix);
+  }
+}
