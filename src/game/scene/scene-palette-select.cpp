@@ -2,6 +2,7 @@
 #include "scene-palette-select.hpp"
 #include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/image/palette.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
@@ -35,6 +36,7 @@ struct Scene_palette_select::Impl {
     // фильтр списка
     std::erase_if(file_list, [](cr<Str> src) {
       return src.find("resource/image/palettes/") == Str::npos; });
+    sort_by_color(file_list);
     m_palette_files = file_list;
 
     if ( !m_palette_files.empty()) {
@@ -130,6 +132,70 @@ struct Scene_palette_select::Impl {
     draw_rect(dst, Rect(pos - Vec(2, 2), Vec(test.X(), test.Y()) + Vec(4, 4)), Pal8::white);
   }
 
+  // сортирует список палитр по цветам
+  inline static void sort_by_color(Strs& dst_list) {
+    assert(hpw::archive);
+    cauto comp = [](cr<Str> a, cr<Str> b) {
+      cauto a_colors = colors_from_pal24(hpw::archive->get_file(a));
+      cauto b_colors = colors_from_pal24(hpw::archive->get_file(b));
+      cauto a_score = pal24_score(a_colors);
+      cauto b_score = pal24_score(b_colors);
+      return a_score > b_score;
+    };
+    std::sort(dst_list.begin(), dst_list.end(), comp);
+  }
+
+  // создаёт код для сравнения цветовых палитр
+  inline static uint pal24_score(cr<Vector<Rgb24>> pal24) {
+    assert(pal24.size() >= 256);
+    // взять часть серого сектора и вычислить среднюю цветность
+    const std::size_t ED = Pal8::gray_end * 0.9;
+    const std::size_t ST = Pal8::gray_end * 0.4;
+    cauto LEN = ED - ST;
+    real avg_hue {};
+    for (std::size_t i = ST; i < ED; ++i) {
+      cauto rgb24 = pal24.at(i);
+      avg_hue += rgb24_to_hue(rgb24);
+    }
+    avg_hue /= LEN;
+
+    // средняя яркость конца палитры тоже повлияет на результат
+    cauto a = pal24.at(ED * 0.85);
+    cauto b = pal24.at(Pal8::gray_end);
+    cauto a_max = std::max(std::max(a.r, a.g), a.b);
+    cauto b_max = std::max(std::max(b.r, b.g), b.b);
+    cauto ratio = (a_max + b_max) / 2.f;
+
+    return avg_hue * 1'000 + ratio * 100'000;
+  }
+
+  inline static real rgb24_to_hue(cr<Rgb24> src) {
+    const real r = src.r / 255.f;
+    const real g = src.g / 255.f;
+    const real b = src.b / 255.f;
+    real min = r < g ? r : g;
+    min = min < b ? min : b;
+    real max = r > g ? r : g;
+    max = max > b ? max : b;
+    cauto delta = max - min;
+
+    // undefined, maybe nan?
+    return_if (delta < 0.00001f, 0);
+    return_if(max == 0, 0);
+
+    real hue {};
+    if(r >= max) // > is bogus, just keeps compilor happy
+      return (g - b) / delta; // between yellow & magenta
+    elif (g >= max)
+      hue = 2.0 + (b - r) / delta; // between cyan & yellow
+    else
+      hue = 4.0 + (r - g) / delta; // between magenta & cyan
+    hue *= 60.0; // degrees
+
+    if(hue < 0)
+      hue += 360;
+    return hue;
+  }
 }; // impl
 
 Scene_palette_select::Scene_palette_select(): impl {new_unique<Impl>()} {}

@@ -1,6 +1,10 @@
 #include <array>
+#include "stb/stb_image.h"
 #include "palette.hpp"
 #include "color.hpp"
+#include "util/file/file.hpp"
+#include "util/error.hpp"
+#include "util/hpw-util.hpp"
 
 constexpr static const std::array<Rgb24, 256> pal8_default_table {
   Rgb24{0, 0, 0, {}},
@@ -262,3 +266,28 @@ constexpr static const std::array<Rgb24, 256> pal8_default_table {
 }; // pal8_default_table
 
 Rgb24 to_palette_rgb24_default(const Pal8 x) { return pal8_default_table[x.val]; }
+
+Vector<Rgb24> colors_from_pal24(cr<File> src) {
+  iferror(src.data.empty(), "файл палитр пуст");
+  Vector<Rgb24> ret;
+
+  // декодирование:
+  int x, y;
+  int comp; // сколько цветовых каналов
+  auto decoded = stbi_load_from_memory( scast<cp<stbi_uc>>(src.data.data()),
+    src.data.size(), &x, &y, &comp, STBI_rgb);
+  iferror( !decoded, "_data_to_image: image data is not decoded");
+  Scope _({}, [&]{ stbi_image_free(decoded); });
+  
+  iferror(x < 256, "ширина картинки с палитрой должна быть >= 256 (\"" << src.get_path() << "\")");
+
+  for (uint i = 0; i < 256 * 3u; i += 3u)
+    ret.push_back(
+      Rgb24 {
+        decoded[i + 0],
+        decoded[i + 1],
+        decoded[i + 2]
+      }
+    );
+  return ret;
+}
