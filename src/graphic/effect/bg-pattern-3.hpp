@@ -28,3 +28,5 @@ void bgp_rotating_moire_more_lines(Image& dst, const int bg_state);
 void bgp_rotating_moire_rotated(Image& dst, const int bg_state);
 // как bgp_rotating_moire, но три колеса
 void bgp_rotating_moire_triple(Image& dst, const int bg_state);
+// крутятся параллельные прямые
+void bgp_moire_lines(Image& dst, const int bg_state);

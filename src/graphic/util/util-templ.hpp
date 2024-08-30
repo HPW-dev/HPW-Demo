@@ -280,23 +280,21 @@ int timer, int optional) {
 
 template<blend_pf bf>
 void draw_line(Image& dst, Vec _p1, const Vec _p2, Pal8 color) {
+  return_if( !dst);
+
   struct Veci { int x {}, y {}; };
   auto floored_p1 = floor(_p1);
   Veci p1 {.x = scast<int>(floored_p1.x), .y = scast<int>(floored_p1.y)};
   auto floored_p2 = floor(_p2);
   Veci p2 {.x = scast<int>(floored_p2.x), .y = scast<int>(floored_p2.y)};
   
-  // EFLA Variation E (Addition Fixed Point PreCalc)
-  return_if( !dst);
   // выход, если линия за пределами видимости
-  if (p1.x < 0 && p2.x < 0)
-    return;
-  if (p1.x >= dst.X && p2.x >= dst.X)
-    return;
-  if (p1.y < 0 && p2.y < 0)
-    return;
-  if (p1.y >= dst.Y && p2.y >= dst.Y)
-    return; 
+  return_if(p1.x < 0 && p2.x < 0);
+  return_if(p1.x >= dst.X && p2.x >= dst.X);
+  return_if(p1.y < 0 && p2.y < 0);
+  return_if(p1.y >= dst.Y && p2.y >= dst.Y);
+  
+  // EFLA Variation E (Addition Fixed Point PreCalc)
   bool yLonger = false;
   int shortLen = p2.y - p1.y;
   int longLen = p2.x - p1.x;

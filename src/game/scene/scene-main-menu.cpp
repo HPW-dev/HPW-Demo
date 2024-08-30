@@ -36,7 +36,7 @@ void bg_copy_4(Image& dst, const int state);
 void Scene_main_menu::init_bg() {
   sconst Rnd_table<decltype(bg_pattern_pf)> bg_patterns {{
   // Пак 1:
-  #if 0
+  #if 1
     &bgp_hpw_text_lines,
     &bgp_bit_1,
     &bgp_bit_2,
@@ -79,7 +79,7 @@ void Scene_main_menu::init_bg() {
     #endif
   #endif
   // Пак 2:
-  #if 0
+  #if 1
     &bgp_self_code,
     &bgp_noise,
     &bgp_tile_corruption,
@@ -118,19 +118,20 @@ void Scene_main_menu::init_bg() {
   #endif
   // Пак 3:
   #if 1
-    //&bgp_liquid,
-    //&bgp_liquid_gray,
-    //&bgp_trajectory,
-    //&bgp_fading_grid,
-    //&bgp_fading_grid_2,
-    //&bgp_fading_grid_red,
-    //&bgp_fading_grid_red_small,
-    //&bgp_fading_grid_dithered,
-    //&bgp_striped_spheres,
-    //&bgp_rotating_moire,
-    //&bgp_rotating_moire_more_lines,
-    //&bgp_rotating_moire_rotated,
+    &bgp_liquid,
+    &bgp_liquid_gray,
+    &bgp_trajectory,
+    &bgp_fading_grid,
+    &bgp_fading_grid_2,
+    &bgp_fading_grid_red,
+    &bgp_fading_grid_red_small,
+    &bgp_fading_grid_dithered,
+    &bgp_striped_spheres,
+    &bgp_rotating_moire,
+    &bgp_rotating_moire_more_lines,
+    &bgp_rotating_moire_rotated,
     &bgp_rotating_moire_triple,
+    &bgp_moire_lines,
   #endif
   }}; // bg_patterns table
 
