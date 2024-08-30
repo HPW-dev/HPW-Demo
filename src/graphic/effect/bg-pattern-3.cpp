@@ -366,3 +366,29 @@ void bgp_rotating_moire_rotated(Image& dst, const int bg_state) {
     draw_line(dst, center_2, center_2 + p2, FG);
   }
 }
+
+void bgp_rotating_moire_triple(Image& dst, const int bg_state) {
+  constexpr uint LINES = 200;
+  cauto center = center_point(dst);
+  cauto center_2 = center + Vec(6, 12);
+  cauto center_3 = center + Vec(-6, 12);
+  cauto LINE_LEN = dst.X * 1.5;
+  cauto SPEED = bg_state / 3'000.f;
+  cauto BG = Pal8::white;
+  cauto FG = Pal8::black;
+
+  dst.fill(BG);
+
+  cfor (i, LINES) {
+    cauto rad = deg_to_rad((360.f / LINES) * i);
+    Vec p1(std::cos(rad), std::sin(rad));
+    Vec p2(std::cos(rad + SPEED), std::sin(rad + SPEED));
+    Vec p3(std::cos(rad - SPEED/2), std::sin(rad - SPEED/2));
+    p1 *= LINE_LEN / 2;
+    p2 *= LINE_LEN / 2;
+    p3 *= LINE_LEN / 2;
+    draw_line(dst, center, center + p1, FG);
+    draw_line(dst, center_2, center_2 + p2, FG);
+    draw_line(dst, center_3, center_3 + p3, FG);
+  }
+}
