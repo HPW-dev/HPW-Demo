@@ -26,6 +26,7 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 #include "util/platform.hpp"
+#include "util/unicode.hpp"
 
 #ifdef ECOMEM
 using Stream = std::fstream;
@@ -68,7 +69,8 @@ public:
   inline explicit Save_error(cr<Str> path): _path {path} {}
 
   inline void update(const Delta_time dt) override {
-    cauto msg = Str("не удалось записать реплей в") + " \"" + (_path) + "\"";
+    cauto msg = utf32_to_8(get_locale_str("scene.replay.error.while_save_to"))
+      + " \"" + (_path) + "\"";
     hpw_log("Error: " << msg << '\n');
     cauto title = get_locale_str("common.error");
     assert(hpw::scene_mgr);

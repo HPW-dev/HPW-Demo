@@ -91,5 +91,7 @@ auto base = std::hex) {
   return ret;
 }
 
-// точное перекодирование из utf8 строки в utf32
+// перекодирование из utf8 строки в utf32
 utf32 utf8_to_32(cr<Str> text);
+// перекодирование из utf32 строки в utf8
+Str utf32_to_8(cr<utf32> text);
