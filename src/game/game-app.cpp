@@ -64,11 +64,13 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
     }
   }
 
-  #ifndef DEBUG
+  if (hpw::first_start) {
+    #ifndef DEBUG
     // поставить хороший графон в релизной версии
-    if (hpw::first_start)
-      set_high_quality();
-  #endif
+    set_high_quality();
+    #endif
+    hpw::set_resize_mode(graphic::default_resize_mode);
+  }
   hpw::first_start = false;
 
   hpw_log("загрузка завершена\n");
