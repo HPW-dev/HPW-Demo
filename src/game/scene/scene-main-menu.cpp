@@ -128,7 +128,8 @@ void Scene_main_menu::init_bg() {
     //&bgp_fading_grid_dithered,
     //&bgp_striped_spheres,
     //&bgp_rotating_moire,
-    &bgp_rotating_moire_more_lines,
+    //&bgp_rotating_moire_more_lines,
+    &bgp_rotating_moire_rotated,
   #endif
   }}; // bg_patterns table
 

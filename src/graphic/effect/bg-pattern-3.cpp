@@ -331,11 +331,38 @@ void bgp_rotating_moire_more_lines(Image& dst, const int bg_state) {
 
   cfor (i, LINES) {
     cauto rad = deg_to_rad((360.f / LINES) * i);
-    Vec p1(std::cos(rad), std::sin(rad));
+    Vec p1(std::cos(rad),         std::sin(rad));
     Vec p2(std::cos(rad + SPEED), std::sin(rad + SPEED));
     p1 *= LINE_LEN / 2;
     p2 *= LINE_LEN / 2;
     draw_line(dst, center, center + p1, FG);
+    draw_line(dst, center_2, center_2 + p2, FG);
+  }
+}
+
+void bgp_rotating_moire_rotated(Image& dst, const int bg_state) {
+  constexpr uint LINES = 180;
+  cauto center = center_point(dst);
+  cauto LINE_LEN = dst.Y - 20;
+  cauto SPEED = bg_state / 1'000.f;
+  cauto SPEED_2 = bg_state / 300.f;
+  cauto BG = Pal8::black;
+  cauto FG = Pal8::red;
+
+  dst.fill(BG);
+
+  auto center_2 = center + Vec(1, 3);
+  auto center_3 = center - Vec(1, 3);
+  center_2 = rotate_rad(center, center_2, SPEED_2);
+  center_3 = rotate_rad(center, center_3, SPEED_2);
+
+  cfor (i, LINES) {
+    cauto rad = deg_to_rad((360.f / LINES) * i);
+    Vec p1(std::cos(rad - SPEED), std::sin(rad - SPEED));
+    Vec p2(std::cos(rad + SPEED), std::sin(rad + SPEED));
+    p1 *= LINE_LEN / 2;
+    p2 *= LINE_LEN / 2;
+    draw_line(dst, center_3, center_3 + p1, FG);
     draw_line(dst, center_2, center_2 + p2, FG);
   }
 }
