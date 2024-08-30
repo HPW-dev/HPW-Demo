@@ -3,5 +3,5 @@
 
 namespace graphic {
 // текущий файл палитры, если пустой, то дефолтная генерация
-inline Str current_palette_file {};
+inline Str current_palette_file = "resource/image/palettes/default.png";
 }

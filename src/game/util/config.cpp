@@ -138,7 +138,7 @@ void load_config() {
   graphic::motion_blur_quality_reduct = graphic_node.get_bool("motion_blur_quality_reduct", graphic::motion_blur_quality_reduct);
   graphic::max_motion_blur_quality_reduct = graphic_node.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic::start_focused = graphic_node.get_bool("start_focused", graphic::start_focused);
-  safecall(hpw::init_palette_from_archive, graphic_node.get_str("palette"));
+  safecall(hpw::init_palette_from_archive, graphic_node.get_str("palette", graphic::current_palette_file));
   graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
   graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
   graphic::enable_heat_distort = graphic_node.get_bool("enable_heat_distort", graphic::enable_heat_distort);
