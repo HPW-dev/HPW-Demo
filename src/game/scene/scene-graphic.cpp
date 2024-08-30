@@ -316,17 +316,17 @@ void Scene_graphic::init_simple_menu() {
     Menu_items {
       get_palette_item(),
       get_plugin_item(),
-      get_fullscreen_item(),
       new_shared<Menu_text_item>(
         get_locale_str("scene.graphic_menu.pressets.name"),
         [this]{ cur_menu = preset_menu; }
       ),
+      get_fullscreen_item(),
       get_resize_type_item(),
       get_vsync_item(),
       get_frame_limit_item(),
       get_disable_frame_limit_item(),
-      get_epilepsy_item(),
       get_goto_detailed_item(),
+      get_epilepsy_item(),
       get_reset_item(),
       get_exit_item(),
     },

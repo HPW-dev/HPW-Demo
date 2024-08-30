@@ -36,10 +36,10 @@ void Scene_options::draw(Image& dst) const {
 void Scene_options::init_menu() {
   init_shared<Text_menu>( menu,
     Menu_items {
-      new_shared<Menu_text_item>(hpw::locale_select_title,
-        []{ hpw::scene_mgr->add(new_shared<Scene_locale_select>()); }),
       new_shared<Menu_text_item>(get_locale_str("scene.options.graphic"),
         []{ hpw::scene_mgr->add(new_shared<Scene_graphic>()); }),
+      new_shared<Menu_text_item>(hpw::locale_select_title,
+        []{ hpw::scene_mgr->add(new_shared<Scene_locale_select>()); }),
       new_shared<Menu_text_item>(get_locale_str("scene.options.input"),
         []{ hpw::scene_mgr->add(new_shared<Scene_input>()); }),
       new_shared<Menu_text_item>(get_locale_str("scene.game_opts.title"),
