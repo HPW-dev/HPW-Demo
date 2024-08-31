@@ -126,7 +126,7 @@ Entity* Enemy_snake_head::Loader::operator()
     }
     // как должна умирать змейка
     if (ret->m_info.kill_delay) {
-      last_tail->move_update_callback(
+      last_tail->add_update_callback(
         std::move(Timed_kill_if_master_death(ret->m_info.kill_delay)) );
     } else {
       last_tail->add_update_callback(&kill_if_master_death);

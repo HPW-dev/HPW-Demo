@@ -138,24 +138,24 @@ void Entity::debug_draw(Image& dst, const Vec offset) const {
   }
 }
 
-void Entity::move_update_callback(Update_callback&& callback) {
-  if (callback)
-    update_callbacks.emplace_back(std::move(callback));
+void Entity::add_update_callback(Update_callback&& callback) {
+  return_if(!callback);
+  update_callbacks.emplace_back(std::move(callback));
 }
 
 void Entity::add_update_callback(cr<Update_callback> callback) {
-  if (callback)
-    update_callbacks.push_back(callback);
+  return_if(!callback);
+  update_callbacks.push_back(callback);
 }
 
-void Entity::move_kill_callback(Kill_callback&& callback) {
-  if (callback)
-    kill_callbacks.emplace_back(std::move(callback));
+void Entity::add_kill_callback(Kill_callback&& callback) {
+  return_if(!callback);
+  kill_callbacks.emplace_back(std::move(callback));
 }
 
 void Entity::add_kill_callback(cr<Kill_callback> callback) {
-  if (callback)
-    kill_callbacks.push_back(callback);
+  return_if(!callback);
+  kill_callbacks.push_back(callback);
 }
 
 void Entity::clear_callbacks() {

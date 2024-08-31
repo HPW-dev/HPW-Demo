@@ -6,6 +6,7 @@
 #include "game/core/tasks.hpp"
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/task-util.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
@@ -13,6 +14,29 @@
 struct Level_empty::Impl {
   inline explicit Impl() {
     set_default_collider();
+
+    // постоять и умереть
+    {
+      auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center());
+      ent->add_kill_callback([](Entity& src) {
+        hpw_log("entity \"" << src.name() << "\" (id " << src.uid << ") killed\n");
+      });
+      hpw::task_mgr.add(new_shared<Task_timed>(5, [ent]{ ent->kill(); }));
+    }
+
+    // постоять и умереть (безопаснее)
+    {
+      auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() - Vec(40, 0));
+      cauto uid = ent->uid;
+      ent->add_kill_callback([uid](Entity& src) {
+        hpw_log("entity \"" << src.name() << "\" (id " << uid << ") killed\n");
+      });
+      hpw::task_mgr.add(new_shared<Task_timed>(4, [uid]{
+        auto ptr = hpw::entity_mgr->get_entity(uid);
+        if (ptr)
+          ptr->kill();
+      }));
+    }
   }
 
   inline void update(const Vec vel, Delta_time dt) {

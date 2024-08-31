@@ -56,9 +56,9 @@ public:
   virtual void kill();
   void set_pos(const Vec pos);
   void add_update_callback(cr<Update_callback> callback);
+  void add_update_callback(Update_callback&& callback);
   void add_kill_callback(cr<Kill_callback> callback);
-  void move_update_callback(Update_callback&& callback);
-  void move_kill_callback(Kill_callback&& callback);
+  void add_kill_callback(Kill_callback&& callback);
   void accept_kill_callbacks();
   void clear_callbacks();
   void set_master(Master_p new_master);

@@ -376,8 +376,8 @@ struct Level_tutorial::Impl {
 
     Collidable* spawn(const Vec pos) {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
-      enemy->move_update_callback(Zigzag_motion());
-      enemy->move_kill_callback([this](Entity&){ --live_count; });
+      enemy->add_update_callback(Zigzag_motion());
+      enemy->add_kill_callback([this](Entity&){ --live_count; });
       ++live_count;
       assert(enemy->status.collidable);
       return ptr2ptr<Collidable*>(enemy);
@@ -418,7 +418,7 @@ struct Level_tutorial::Impl {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
       enemy->phys.set_vel({0, 1_pps});
       // стрельба в игрока
-      enemy->move_update_callback([](Entity& self, Delta_time dt)->void {
+      enemy->add_update_callback([](Entity& self, Delta_time dt)->void {
         if (rndu(1'500) == 0) {
           auto bullet = hpw::entity_mgr->make(&self, "enemy.tutorial.bullet",
             self.phys.get_pos());
@@ -426,7 +426,7 @@ struct Level_tutorial::Impl {
           bullet->phys.set_deg( deg_to_target(*bullet, hpw::entity_mgr->target_for_enemy()) );
         }
       });
-      enemy->move_kill_callback([this](Entity&){ --live_count; });
+      enemy->add_kill_callback([this](Entity&){ --live_count; });
       ++live_count;
       assert(enemy->status.collidable);
       return ptr2ptr<Collidable*>(enemy);

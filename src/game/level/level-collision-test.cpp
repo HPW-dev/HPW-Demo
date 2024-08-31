@@ -44,7 +44,7 @@ Level_collision_test::Level_collision_test() {
     add_anim(*scast<Entity*>(entity), "anim.bullet.small.blinker.1");
     entity->anim_ctx.set_speed_scale(rndr());
     entity->anim_ctx.randomize_cur_frame_safe();
-    entity->move_update_callback( &bounce_off_screen );
+    entity->add_update_callback( &bounce_off_screen );
     entity->set_hp(100);
     entity->set_dmg(0);
 

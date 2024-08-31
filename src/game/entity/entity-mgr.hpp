@@ -63,6 +63,8 @@ public:
   uint lives() const; // сколько сейчас активных объектов
   // ссылка на игрока
   Player* get_player() const;
+  // получить объект по его UID, null если нету или мёртв
+  Entity* get_entity(const Uid uid) const;
   void set_player(Player* player);
   // сюда должны стрелять противники
   Vec target_for_enemy() const;

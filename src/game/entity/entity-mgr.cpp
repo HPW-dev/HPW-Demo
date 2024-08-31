@@ -362,6 +362,17 @@ struct Entity_mgr::Impl {
 
   bool update_lag() const { return m_update_lag; }
   Delta_time collider_time() const { return m_collider_time; }
+
+  Entity* get_entity(const Uid uid) const {
+    auto it = std::find_if(m_entities.begin(), m_entities.end(),
+      [uid](cr<decltype(m_entities)::value_type> ent) {
+        return_if(!ent, false);
+        return_if(!ent->status.live, false);
+        return ent->uid == uid;
+      }
+    );
+    return it == m_entities.end() ? nullptr : it->get();
+  }
 }; // Impl
 
 Entity_mgr::Entity_mgr(): impl {new_unique<Impl>(*this)} {}
@@ -390,3 +401,4 @@ uint Entity_mgr::lives() const { return impl->lives(); }
 std::size_t Entity_mgr::entity_loaders_sz() const { return impl->entity_loaders_sz(); }
 bool Entity_mgr::update_lag() const { return impl->update_lag(); }
 Delta_time Entity_mgr::collider_time() const { return impl->collider_time(); }
+Entity* Entity_mgr::get_entity(const Uid uid) const { return impl->get_entity(uid); }
