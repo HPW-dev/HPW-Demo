@@ -85,12 +85,13 @@ struct Entity_mgr::Impl {
   inline void update(const Delta_time dt) {
     cauto st = hpw::get_time();
 
-    m_collider_optimizer->update();
     accept_registrate_list();
+    bound_check();
+    update_kills();
     update_scatters();
-    update_entitys(dt);
 
     // просчёт столкновений
+    m_collider_optimizer->update();
     if (m_collision_resolver) {
       cauto cld_st = hpw::get_time();
       (*m_collision_resolver)(m_entities, dt);
@@ -99,13 +100,12 @@ struct Entity_mgr::Impl {
       m_collider_time = 0;
     }
 
-    bound_check();
-    update_kills();
+    update_entitys(dt);
 
     cauto ed = hpw::get_time();
     m_update_lag = (ed - st) >= hpw::target_update_time * 1.1;
   } // update
-
+  
   // применить список на добавление объектов из очереди m_registrate_list
   inline void accept_registrate_list() {
     m_entities.reserve(m_entities.size() + m_registrate_list.size());

@@ -29,6 +29,7 @@ void Collidable::draw(Image& dst, const Vec offset) const {
 }
 
 void Collidable::update(const Delta_time dt) {
+  process_collision_cbs();
   process_damage();
   return_if (kill_by_damage());
   Entity::update(dt);
@@ -139,4 +140,27 @@ bool Collidable::is_collided_with(Collidable* other) const {
   assert(other);
   omp::lock_guard lock(m_mutex);
   return m_collided.contains(other);
+}
+
+void Collidable::add_collision_cb(cr<Collidion_cb> cb) {
+  return_if(!cb);
+  _collidion_cbs.push_back(cb);
+}
+
+void Collidable::add_collision_cb(Collidion_cb&& cb) {
+  return_if(!cb);
+  _collidion_cbs.emplace_back(std::move(cb));
+}
+
+void Collidable::process_collision_cbs() {
+  return_if(_collidion_cbs.empty());
+  
+  for (auto other: m_collided) {
+    assert(other);
+    
+    for (rauto cb: _collidion_cbs) {
+      assert(cb);
+      cb(*this, *other);
+    }
+  }
 }

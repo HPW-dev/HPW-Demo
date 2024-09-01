@@ -17,16 +17,23 @@ class Collidable: public Entity {
   mutable cp<Anim> m_old_anim {}; // для кэширования хитбокса
   mutable cp<Hitbox> m_old_hitbox {}; // кэшированный хитбокс
 
+  // <self, other>
+  using Collidion_cb = std::function<void (Collidable&, Collidable&)>;
+  Vector<Collidion_cb> _collidion_cbs {}; // действия над объектами при столкновении
+
   void draw_hitbox(Image& dst, const Vec offset) const;
   // обработка смерти от потери хп. Ret true если умерли
   bool kill_by_damage();
   // нанести урон от всех, кто столкнулся в объект
   void process_damage();
+  void process_collision_cbs();
 
 public:
   void draw(Image& dst, const Vec offset) const override;
   void update(const Delta_time dt) override;
   cp<Hitbox> get_hitbox() const override;
+  void add_collision_cb(cr<Collidion_cb> cb);
+  void add_collision_cb(Collidion_cb&& cb);
   void process_kill() override;
 
   // нанесение урона
