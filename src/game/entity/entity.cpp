@@ -145,7 +145,7 @@ void Entity::debug_draw(Image& dst, const Vec offset) const {
     VAR.emplace_back(std::move(callback)); \
   }
 MAKE_CB_IMPL(add_kill_cb, Kill_cb, _kill_cbs)
-MAKE_CB_IMPL(add_update_cb, Update_cbs, _update_cbs)
+MAKE_CB_IMPL(add_update_cb, Update_cb, _update_cbs)
 MAKE_CB_IMPL(add_remove_cb, Remove_cb, _remove_cbs)
 MAKE_CB_IMPL(add_draw_bg_cb, Draw_bg_cb, _draw_bg_cbs)
 MAKE_CB_IMPL(add_draw_fg_cb, Draw_fg_cb, _draw_fg_cbs)

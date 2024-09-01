@@ -21,7 +21,7 @@ struct Vec;
 class Entity {
 public:
   // <self ptr, dt>
-  using Update_cbs = std::function<void (Entity&, const Delta_time)>;
+  using Update_cb = std::function<void (Entity&, const Delta_time)>;
   // <self ptr, dst, offset>
   using Draw_bg_cb = std::function<void (cr<Entity>, Image&, const Vec)>;
   using Draw_fg_cb = Draw_bg_cb;
@@ -54,7 +54,7 @@ public:
   #define MAKE_CB_DEF(FNAME, TYPE) \
     void FNAME(cr<TYPE> callback); \
     void FNAME(TYPE&& callback);
-  MAKE_CB_DEF(add_update_cb, Update_cbs)
+  MAKE_CB_DEF(add_update_cb, Update_cb)
   MAKE_CB_DEF(add_kill_cb, Kill_cb)
   MAKE_CB_DEF(add_draw_bg_cb, Draw_bg_cb)
   MAKE_CB_DEF(add_draw_fg_cb, Draw_fg_cb)
@@ -74,7 +74,7 @@ private:
   nocopy(Entity);
 
   Str _name {}; // имя, через которое соспавнили объект
-  Vector<Update_cbs> _update_cbs {}; // внешние колбэки на обработку апдейта
+  Vector<Update_cb> _update_cbs {}; // внешние колбэки на обработку апдейта
   Vector<Kill_cb> _kill_cbs {}; // внешние колбэки на обработку смерти
   Vector<Remove_cb> _remove_cbs {}; // колюэки при удалении из системы
   Vector<Draw_bg_cb> _draw_bg_cbs {}; // вызываются при отрисовке под объектом
