@@ -46,7 +46,17 @@ struct Level_empty::Impl {
       auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(40, 0));
       ent->add_kill_cb(kill_cb);
       ent->add_remove_cb(remove_cb);
-      hpw::task_mgr.add(new_shared<Task_timed>(6, [ent]{ ent->remove(); }));
+      hpw::task_mgr.add(new_shared<Task_timed>(6, [ent]{
+        ent->remove();
+        // проверить что у объектов удалились старые данные
+        hpw::task_mgr.add(new_shared<Task_timed>(1, []{
+          cfor (i, 3) {
+            auto local = hpw::entity_mgr->make({}, "enemy.tutorial",
+              get_screen_center() + Vec(i * 40 - 40, 30));
+            hpw::task_mgr.add(new_shared<Task_timed>(2, [local]{ local->kill(); }));
+          }
+        }));
+      }));
     }
   }
 
