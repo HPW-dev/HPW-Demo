@@ -167,23 +167,25 @@ struct Entity_mgr::Impl {
       m_entity_pool.release();
 
     for (rauto entity: m_entities) {
-      cont_if( !entity);
-      cont_if( !entity->status.live);
+      assert(entity);
+      cont_if(entity->status.removed);
 
-      // смерть от флага killed (нет жизней у объекта)
-      cauto is_killed = entity->status.killed;
       // смерть от конца анимации
-      cauto is_kill_by_end_anim = entity->status.kill_by_end_anim
+      cauto KILL_BY_END_ANIM = entity->status.kill_by_end_anim
         && entity->status.end_anim;
       // смерть от конца кадра
-      cauto is_kill_by_end_frame = entity->status.kill_by_end_frame
+      cauto KILL_BY_END_FRAME = entity->status.kill_by_end_frame
         && entity->status.end_frame;
-
-      if (is_killed || is_kill_by_end_anim || is_kill_by_end_frame)
+      if (KILL_BY_END_ANIM || KILL_BY_END_FRAME)
         entity->kill();
-    }
 
-    // TODO чистка в ECOMEM
+      // смерть от флага killme (нет жизней или конец анимации)
+      if (entity->status.killme)
+        entity->process_kill();
+      // удалить помеченные (removed) объекты
+      if (!entity->status.removed && entity->status.removeme)
+        entity->process_remove();
+    }
   } // update_kills
 
   inline void debug_draw(Image& dst) const {
@@ -306,9 +308,7 @@ struct Entity_mgr::Impl {
           entity_pos.y <= -bound ||
           entity_pos.y >= graphic::height + bound
         ) {
-          entity->status.live = false;
-          entity->status.killed = true;
-          entity->accept_kill_callbacks();
+          entity->remove();
         }
       } // if live
     } // for m_entities

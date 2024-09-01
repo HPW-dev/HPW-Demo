@@ -48,7 +48,7 @@ void entities_log() {
     assert(entity);
     std::clog << std::boolalpha << "status:\n";
     std::clog << std::boolalpha << "  live: " << entity->status.live << "\n";
-    std::clog << std::boolalpha << "  killed: " << entity->status.killed << "\n";
+    std::clog << std::boolalpha << "  killed: " << entity->status.killme << "\n";
     std::clog << std::boolalpha << "  collided: " << entity->status.collided << "\n";
 
     if (entity->status.collidable) {
@@ -73,7 +73,7 @@ void player_log() {
 
   std::clog << std::boolalpha << "status:\n";
   std::clog << std::boolalpha << "  live: " << player->status.live << "\n";
-  std::clog << std::boolalpha << "  killed: " << player->status.killed << "\n";
+  std::clog << std::boolalpha << "  killed: " << player->status.killme << "\n";
   std::clog << std::boolalpha << "  collided: " << player->status.collided << "\n";
 
   /* TODO

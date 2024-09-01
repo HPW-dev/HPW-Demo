@@ -15,12 +15,16 @@ struct Level_empty::Impl {
   inline explicit Impl() {
     set_default_collider();
 
+    cauto kill_cb = [](Entity& src)
+      { hpw_log("entity \"" << src.name() << "\" (id " << src.uid << ") killed\n"); };
+    cauto remove_cb = [](Entity& src)
+      { hpw_log("entity \"" << src.name() << "\" (id " << src.uid << ") removed\n"); };
+
     // постоять и умереть
     {
       auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center());
-      ent->add_kill_callback([](Entity& src) {
-        hpw_log("entity \"" << src.name() << "\" (id " << src.uid << ") killed\n");
-      });
+      ent->add_kill_cb(kill_cb);
+      ent->add_remove_cb(remove_cb);
       hpw::task_mgr.add(new_shared<Task_timed>(5, [ent]{ ent->kill(); }));
     }
 
@@ -28,14 +32,21 @@ struct Level_empty::Impl {
     {
       auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() - Vec(40, 0));
       cauto uid = ent->uid;
-      ent->add_kill_callback([uid](Entity& src) {
-        hpw_log("entity \"" << src.name() << "\" (id " << uid << ") killed\n");
-      });
+      ent->add_kill_cb(kill_cb);
+      ent->add_remove_cb(remove_cb);
       hpw::task_mgr.add(new_shared<Task_timed>(4, [uid]{
         auto ptr = hpw::entity_mgr->get_entity(uid);
         if (ptr)
           ptr->kill();
       }));
+    }
+  
+    // исчезнуть не через kill
+    {
+      auto ent = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(40, 0));
+      ent->add_kill_cb(kill_cb);
+      ent->add_remove_cb(remove_cb);
+      hpw::task_mgr.add(new_shared<Task_timed>(6, [ent]{ ent->remove(); }));
     }
   }
 

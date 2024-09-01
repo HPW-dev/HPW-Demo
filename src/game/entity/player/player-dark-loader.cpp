@@ -87,7 +87,7 @@ struct Player_dark::Loader::Impl {
     m_anim_info.accept(*entity);
     
     rauto it = *scast<Player_dark*>(entity);
-    it.add_update_callback( Bound_off_screen(it) );
+    it.add_update_cb( Bound_off_screen(it) );
     it.phys.set_force( pps(m_force) );
     it.default_force = pps(m_force);
     it.focus_force = pps(m_focus_force);

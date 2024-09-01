@@ -20,7 +20,7 @@ void Particle::lifetime_update(const Delta_time dt) {
     lifetime -= dt;
   } else {
     if (status.kill_by_timeout)
-      status.killed = true;
+      status.killme = true;
   }
 }
 

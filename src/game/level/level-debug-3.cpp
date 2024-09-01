@@ -109,7 +109,7 @@ void Level_debug_3::update(const Vec vel, Delta_time dt) {
     blt->phys.set_deg(-90 + rndr(-1, 1) * 10);
     blt->anim_ctx.randomize_cur_frame_safe();
     blt->status.layer_up = true;
-    blt->add_update_callback( Kill_by_timeout() );
+    blt->add_update_cb( Kill_by_timeout() );
     blt->status.ignore_self_type = true;
   }
   #endif
@@ -188,7 +188,7 @@ void Level_debug_3::make_dummy() {
     entity->status.rnd_deg = true;
     entity->status.kill_by_timeout = false;
     entity->anim_ctx.randomize_cur_frame_safe();
-    entity->add_update_callback(&bounce_off_screen);
+    entity->add_update_cb(&bounce_off_screen);
   }
   #endif
 
@@ -203,9 +203,9 @@ void Level_debug_3::make_dummy() {
     //entity->phys.set_rot_spd( rndr(0, 7_pps) );
     //entity->phys.set_rot_fc( rndr(0.5_pps, 3_pps) );
     entity->phys.set_force( 5_pps );
-    entity->add_update_callback( &bounce_off_screen );
-    entity->add_update_callback( Anim_speed_addiction(5_pps, 0, 3) );
-    entity->add_update_callback( Rotate_speed_addiction(5_pps, 0, 3, 8,
+    entity->add_update_cb( &bounce_off_screen );
+    entity->add_update_cb( Anim_speed_addiction(5_pps, 0, 3) );
+    entity->add_update_cb( Rotate_speed_addiction(5_pps, 0, 3, 8,
       scast<bool>(rndb() & 1)) );
   }
   #endif
@@ -233,8 +233,8 @@ void Level_debug_3::spawn_bullets(const Delta_time dt) {
     auto blt = hpw::entity_mgr->make({}, "bullet.sphere.gray", pos);
     blt->phys.set_speed( 4_pps );
     blt->phys.set_deg( rand_degree_stable() );
-    blt->add_update_callback(&bounce_off_screen);
-    blt->add_update_callback(Kill_by_timeout(5));
+    blt->add_update_cb(&bounce_off_screen);
+    blt->add_update_cb(Kill_by_timeout(5));
     blt->anim_ctx.blend_f = &blend_rotate_x16_safe;
   }
 } // spawn_bullets

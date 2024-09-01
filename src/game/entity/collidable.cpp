@@ -46,7 +46,7 @@ void Collidable::process_damage() {
 bool Collidable::kill_by_damage() {
   return_if (get_hp() > 0, false);
   return_if (status.ignore_damage, false);
-  status.killed = true;
+  kill();
   return true;
 }
 
@@ -98,8 +98,8 @@ void Collidable::sub_hp(hp_t incoming_dmg) {
   set_hp( get_hp() - incoming_dmg );
 }
 
-void Collidable::kill() {
-  Entity::kill();
+void Collidable::process_kill() {
+  Entity::process_kill();
   // запустить анимацию взрыва, если она есть
   if ( !m_explosion_name.empty())
     hpw::entity_mgr->make(this, m_explosion_name, phys.get_pos());

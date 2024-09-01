@@ -29,8 +29,8 @@ void Enemy_snake_head::update(const Delta_time dt) {
   phys.set_deg( deg_to_target(*this, hpw::entity_mgr->target_for_enemy()) );
 }
 
-void Enemy_snake_head::kill() {
-  Proto_enemy::kill();
+void Enemy_snake_head::process_kill() {
+  Proto_enemy::process_kill();
   /* узнать что начало хвоста ещё живо и вырезать из него
   инфу о мастере, чтобы запустить цепочку смерти */
   return_if (!m_info.tail_entity);
@@ -119,17 +119,17 @@ Entity* Enemy_snake_head::Loader::operator()
     }
     // разлетается ли змейка при смерти
     if (ret->m_info.enable_scatter_if_head_death) {
-      last_tail->add_update_callback([ret](Entity& it, const Delta_time dt) {
+      last_tail->add_update_cb([ret](Entity& it, const Delta_time dt) {
         return_if (ret && ret->status.live);
         it.status.ignore_scatter = false;
       }); 
     }
     // как должна умирать змейка
     if (ret->m_info.kill_delay) {
-      last_tail->add_update_callback(
+      last_tail->add_update_cb(
         std::move(Timed_kill_if_master_death(ret->m_info.kill_delay)) );
     } else {
-      last_tail->add_update_callback(&kill_if_master_death);
+      last_tail->add_update_cb(&kill_if_master_death);
     }
   }
   return ret;

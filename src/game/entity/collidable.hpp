@@ -27,7 +27,7 @@ public:
   void draw(Image& dst, const Vec offset) const override;
   void update(const Delta_time dt) override;
   cp<Hitbox> get_hitbox() const override;
-  void kill() override;
+  void process_kill() override;
 
   // нанесение урона
   virtual void sub_hp(hp_t incoming_dmg);

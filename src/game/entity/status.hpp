@@ -5,7 +5,9 @@ struct Entity_status {
   bool live: 1 {};             // объект жив и активен
   bool collidable: 1 {};       // можно сталкиваться
   bool collided: 1 {};         // минимум один раз в объект врезались
-  bool killed: 1 {};           // используется в update_kills для отложенной смерти
+  bool killme: 1 {};           // указывает что объект нужно убить в Entity_mgr
+  bool removeme: 1 {};         // готов к удалению из Entity_mgr
+  bool removed: 1 {};          // объект успешно удалён из Entity_mgr
   bool kill_by_end_anim: 1 {}; // убить объект концом анимации
   bool kill_by_end_frame: 1 {}; // убить объект в конце его кадра анимации
   bool kill_by_timeout: 1 {};  // убить объект концом времени жизни

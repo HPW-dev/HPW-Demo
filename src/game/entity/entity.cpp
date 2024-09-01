@@ -15,15 +15,7 @@
 #include "game/entity/util/entity-util.hpp"
 
 Entity::Entity()
-: update_callbacks {}
-, kill_callbacks {}
-, phys {}
-, anim_ctx {}
-, heat_distort {}
-, light {}
-, master {}
-, uid (get_entity_uid())
-, status {}
+: uid (get_entity_uid())
 , type {GET_SELF_TYPE}
 { status.live = true; }
 
@@ -31,22 +23,36 @@ Entity::Entity(Entity_type new_type): Entity() { type = new_type; }
 
 void Entity::kill() {
   status.live = false;
-  status.killed = true;
-  accept_kill_callbacks();
+  status.killme = true;
+  remove();
 }
 
-void Entity::accept_kill_callbacks() {
-  for (crauto callback: kill_callbacks)
-    callback(*this);
+void Entity::remove() {
+  status.live = false;
+  status.removeme = true;
+}
+
+void Entity::process_kill() {
+  status.killme = false;
+  process_kill_cbs();
+}
+
+void Entity::process_remove() {
+  status.removed = true;
+  process_remove_cbs();
 }
 
 void Entity::draw(Image& dst, const Vec offset) const {
   if (!status.disable_render) {
+    process_draw_bg_cbs(dst, offset);
+
     // отрисовка игрового объекта
     #ifdef DEBUG
     if (graphic::draw_entities)
     #endif
+    {
       anim_ctx.draw(dst, *this, offset);
+    }
 
     // вспышка
     if (light && graphic::enable_light && !status.disable_light)
@@ -54,10 +60,11 @@ void Entity::draw(Image& dst, const Vec offset) const {
       
     // искажение воздуха
     draw_haze(dst, offset);
+    process_draw_fg_cbs(dst, offset);
   } // if !disable_render
 
   debug_draw(dst, offset);
-} // draw
+}
 
 // искажение воздуха
 void Entity::draw_haze(Image& dst, const Vec offset) const {
@@ -80,14 +87,11 @@ void Entity::update(const Delta_time dt) {
     move_it(dt);
     
   anim_ctx.update(dt, *this);
+  process_update_cbs(dt);
 
-  // применить внешние колбэки
-  for (crauto callback: update_callbacks)
-    callback(*this, dt);
-
-  if (heat_distort && !status.disable_heat_distort)
+  if (heat_distort)
     heat_distort->update(dt);
-  if (light && !status.disable_light)
+  if (light)
     light->update(dt);
 }
 
@@ -96,17 +100,9 @@ void Entity::set_master(Master_p new_master) {
   master = new_master;
 }
 
-void Entity::move_it(const Delta_time dt) {
-  phys.update(dt);
-}
-
-void Entity::set_pos(const Vec pos) {
-  phys.set_pos(pos);
-}
-
-cp<Anim> Entity::get_anim() const {
-  return anim_ctx.get_anim();
-}
+void Entity::move_it(const Delta_time dt) { phys.update(dt); }
+void Entity::set_pos(const Vec pos) { phys.set_pos(pos); }
+cp<Anim> Entity::get_anim() const { return anim_ctx.get_anim(); }
 
 void Entity::draw_pos(Image& dst, const Vec offset) const {
   auto pos = phys.get_pos();
@@ -138,27 +134,44 @@ void Entity::debug_draw(Image& dst, const Vec offset) const {
   }
 }
 
-void Entity::add_update_callback(Update_callback&& callback) {
-  return_if(!callback);
-  update_callbacks.emplace_back(std::move(callback));
+#define MAKE_CB_IMPL(FNAME, TYPE, VAR) \
+  void Entity::FNAME(cr<TYPE> callback) { \
+    return_if(!callback); \
+    VAR.push_back(callback); \
+  } \
+  \
+  void Entity::FNAME(TYPE&& callback) { \
+    return_if(!callback); \
+    VAR.emplace_back(std::move(callback)); \
+  }
+MAKE_CB_IMPL(add_kill_cb, Kill_cb, _kill_cbs)
+MAKE_CB_IMPL(add_update_cb, Update_cbs, _update_cbs)
+MAKE_CB_IMPL(add_remove_cb, Remove_cb, _remove_cbs)
+MAKE_CB_IMPL(add_draw_bg_cb, Draw_bg_cb, _draw_bg_cbs)
+MAKE_CB_IMPL(add_draw_fg_cb, Draw_fg_cb, _draw_fg_cbs)
+#undef MAKE_CB_IMPL
+
+void Entity::process_remove_cbs() {
+  for (crauto cb: _remove_cbs)
+    cb(*this);
 }
 
-void Entity::add_update_callback(cr<Update_callback> callback) {
-  return_if(!callback);
-  update_callbacks.push_back(callback);
+void Entity::process_draw_fg_cbs(Image& dst, const Vec offset) const {
+  for (crauto cb: _draw_fg_cbs)
+    cb(*this, dst, offset);
 }
 
-void Entity::add_kill_callback(Kill_callback&& callback) {
-  return_if(!callback);
-  kill_callbacks.emplace_back(std::move(callback));
+void Entity::process_draw_bg_cbs(Image& dst, const Vec offset) const {
+  for (crauto cb: _draw_bg_cbs)
+    cb(*this, dst, offset);
 }
 
-void Entity::add_kill_callback(cr<Kill_callback> callback) {
-  return_if(!callback);
-  kill_callbacks.push_back(callback);
+void Entity::process_update_cbs(Delta_time dt) {
+  for (crauto cb: _update_cbs)
+    cb(*this, dt);
 }
 
-void Entity::clear_callbacks() {
-  update_callbacks.clear();
-  kill_callbacks.clear();
+void Entity::process_kill_cbs() {
+  for (crauto cb: _kill_cbs)
+    cb(*this);
 }

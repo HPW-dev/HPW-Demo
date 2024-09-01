@@ -21,7 +21,7 @@ public:
   Enemy_snake_head();
   ~Enemy_snake_head() = default;
   void update(const Delta_time dt) override;
-  void kill() override;
+  void process_kill() override;
 };
 
 // хвост змеи
