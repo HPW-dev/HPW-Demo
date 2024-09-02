@@ -8,7 +8,6 @@ struct Vec;
 // даёт игровым объектам дебажные функции
 class Entity_debug {
 public:
-  Entity& _master;
   inline explicit Entity_debug(Entity& master): _master {master} {}
 
 protected:
@@ -17,4 +16,5 @@ protected:
 
 private:
   nocopy(Entity_debug);
+  Entity& _master;
 };

@@ -11,7 +11,6 @@ struct Vec;
 // управляет колбэками игровых объектов
 class Entity_cbs {
 public:
-  Entity& _master;
 
   // <self ptr, dt>
   using Update_cb = std::function<void (Entity&, const Delta_time)>;
@@ -42,6 +41,7 @@ protected:
 
 private:
   nocopy(Entity_cbs);
+  Entity& _master;
   Vector<Update_cb> _update_cbs {}; // внешние колбэки на обработку апдейта
   Vector<Kill_cb> _kill_cbs {}; // внешние колбэки на обработку смерти
   Vector<Remove_cb> _remove_cbs {}; // колюэки при удалении из системы
