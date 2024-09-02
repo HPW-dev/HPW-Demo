@@ -78,13 +78,19 @@ void set_seed(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 }
 
 void set_fps_limit(Cmd_maker& command, Cmd& console, cr<Strs> args) {
-  iferror(args.size() < 2, "не указано количество FPS в команде");
+  // просто показать фпс
+  if (args.size() < 2) {
+    console.print("FPS: " + n2s(graphic::cur_fps));
+    return;
+  }
+
   cauto new_fps = s2n<int>(args[1]);
 
+  // отключить ограничение
   if (new_fps <= 0) {
     graphic::set_disable_frame_limit(true);
     console.print("лимит FPS выключен");
-  } else {
+  } else { // назначить новое ограничение
     graphic::set_disable_frame_limit(false);
     graphic::set_target_fps(new_fps);
     console.print("лимит FPS = " + n2s(new_fps));
@@ -356,7 +362,7 @@ void cmd_core_init(Cmd& cmd) {
 
   MAKE_CMD (
     "fps",
-    "fps <limit> - set fps limit. If limit = 0, disable limit",
+    "fps <limit> - set fps limit. If limit = 0, disable limit. If no args - print fps",
     &set_fps_limit, {} )
   MAKE_CMD (
     "render",
