@@ -63,6 +63,13 @@ struct Node {
       );
     } // set area
 
+    // проверить что половинки не слишком маленькие
+    constexpr real AREA_THRESHOLD = 10;
+    return_if(area_a.size.x <= AREA_THRESHOLD);
+    return_if(area_a.size.y <= AREA_THRESHOLD);
+    return_if(area_b.size.x <= AREA_THRESHOLD);
+    return_if(area_b.size.y <= AREA_THRESHOLD);
+
     // сделать две половинки и перенести туда объекты
     if (!a)
       init_unique(a);
