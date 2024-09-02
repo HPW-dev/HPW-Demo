@@ -4,6 +4,8 @@
 #include "cmd-entity.hpp"
 #include "cmd-util.hpp"
 #include "game/entity/collidable.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/game-util.hpp"
@@ -382,6 +384,14 @@ Strs set_flag_matches(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   return ret;
 }
 
+void set_draw_entities(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
+  iferror(args.size() < 2, "у команды "
+    + ctx.name() + " не задан параметр");
+  const bool yesno = s2n<int>(args[1]) == 0 ? false : true;
+  graphic::draw_entities = yesno;
+  console.print(Str("показ игровых объектов ") + (yesno ? "включён" : "выключен"));
+}
+
 void cmd_entity_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -443,6 +453,10 @@ void cmd_entity_init(Cmd& cmd) {
     "collided",
     "показывает число столкнувшихся объектов",
     &print_collided, {} )
+  MAKE_CMD (
+    "draw_entities",
+    "<1/0> 0 - выключит отрисовку противников",
+    &set_draw_entities, {} )
     
   #undef MAKE_CMD
 } // cmd_entity_init
