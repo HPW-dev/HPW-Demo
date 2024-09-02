@@ -40,14 +40,74 @@ struct Node {
     Vec lu, rd;
     define_dimension(lu, rd);
 
+    Rect area_a, area_b;
+    return_if(!find_axis_and_areas(lu, rd, area_a, area_b));
+
+    // сделать две половинки и перенести туда объекты
+    if (!a)
+      init_unique(a);
+    if (!b)
+      init_unique(b);
+    a->is_active = true;
+    b->is_active = true;
+    a->area = area_a;
+    b->area = area_b;
+
+    // поделить объекты по ветвям
+    for (cauto ent: list)
+      push_to_list(lu, rd, a, b, ent);
+
+    list.clear();
+    a->split(depth);
+    b->split(depth);
+  } // split
+
+  // добавляет объект в нужные ветви в зависимости от выбранной оси x_axis
+  inline void push_to_list(Vec lu, Vec rd,
+  cr<Unique<Node>> a, cr<Unique<Node>> b, Collidable* const ent) {
+    cauto pos = ent->phys.get_pos();
+    crauto hitbox = ent->get_hitbox();
+    assert(hitbox);
+
+    // учесть размеры хитбокса
+    lu.x = pos.x + hitbox->simple.offset.x - hitbox->simple.r;
+    lu.y = pos.y + hitbox->simple.offset.y - hitbox->simple.r;
+    rd.x = pos.x + hitbox->simple.offset.x + hitbox->simple.r;
+    rd.y = pos.y + hitbox->simple.offset.y + hitbox->simple.r;
+
+    if (this->x_axis) {
+      if (rd.x < a->area.pos.x + a->area.size.x) {
+        a->list.push_back(ent);
+      } else {
+        b->list.push_back(ent);
+        /* если объект залазит на чужую
+        территорию, то добавить его в списки там */
+        if (lu.x < a->area.pos.x + a->area.size.x)
+          a->list.push_back(ent);
+      }
+    } else {
+      if (rd.y < a->area.pos.y + a->area.size.y) {
+        a->list.push_back(ent);
+      } else {
+        b->list.push_back(ent);
+        /* если объект залазит на чужую
+        территорию, то добавить его в списки там */
+        if (lu.y < a->area.pos.y + a->area.size.y)
+          a->list.push_back(ent);
+      }
+    }
+  }
+
+  /* определит по какой оси лучше поделиться (изменит x_axis)
+  и вычислит размеы двух половинок. Вернёт false, если делить не нужно */
+  inline bool find_axis_and_areas(const Vec lu, const Vec rd, Rect& area_a, Rect& area_b) {
     // определить по какой оси лучше поделиться
     cauto diff = rd - lu;
-    x_axis = diff.x > diff.y;
+    this->x_axis = diff.x > diff.y;
     
     // определить размеры двух половинок
-    Rect area_a, area_b;
     real mid;
-    if (x_axis) {
+    if (this->x_axis) {
       mid = diff.x / 2;
       area_a = Rect(area.pos, Vec(mid, area.size.y));
       area_b = Rect(
@@ -65,59 +125,12 @@ struct Node {
 
     // проверить что половинки не слишком маленькие
     constexpr real AREA_THRESHOLD = 10;
-    return_if(area_a.size.x <= AREA_THRESHOLD);
-    return_if(area_a.size.y <= AREA_THRESHOLD);
-    return_if(area_b.size.x <= AREA_THRESHOLD);
-    return_if(area_b.size.y <= AREA_THRESHOLD);
-
-    // сделать две половинки и перенести туда объекты
-    if (!a)
-      init_unique(a);
-    if (!b)
-      init_unique(b);
-    a->is_active = true;
-    b->is_active = true;
-    a->area = area_a;
-    b->area = area_b;
-
-    // поделить объекты по ветвям
-    for (crauto ent: list) {
-      cauto pos = ent->phys.get_pos();
-      crauto hitbox = ent->get_hitbox();
-      assert(hitbox);
-      // учесть размеры хитбокса
-      lu.x = pos.x + hitbox->simple.offset.x - hitbox->simple.r;
-      lu.y = pos.y + hitbox->simple.offset.y - hitbox->simple.r;
-      rd.x = pos.x + hitbox->simple.offset.x + hitbox->simple.r;
-      rd.y = pos.y + hitbox->simple.offset.y + hitbox->simple.r;
-
-      if (x_axis) {
-        if (rd.x < area_a.pos.x + area_a.size.x) {
-          a->list.push_back(ent);
-        } else {
-          b->list.push_back(ent);
-          /* если объект залазит на чужую
-          территорию, то добавить его в списки там */
-          if (lu.x < area_a.pos.x + area_a.size.x)
-            a->list.push_back(ent);
-        }
-      } else {
-        if (rd.y < area_a.pos.y + area_a.size.y) {
-          a->list.push_back(ent);
-        } else {
-          b->list.push_back(ent);
-          /* если объект залазит на чужую
-          территорию, то добавить его в списки там */
-          if (lu.y < area_a.pos.y + area_a.size.y)
-            a->list.push_back(ent);
-        }
-      }
-    }
-
-    list.clear();
-    a->split(depth);
-    b->split(depth);
-  } // split
+    return_if(area_a.size.x <= AREA_THRESHOLD, false);
+    return_if(area_a.size.y <= AREA_THRESHOLD, false);
+    return_if(area_b.size.x <= AREA_THRESHOLD, false);
+    return_if(area_b.size.y <= AREA_THRESHOLD, false);
+    return true;
+  }
 
   inline void define_dimension(Vec& lu, Vec& rd) {
     // найти крайние точки слева сверху и справа снизу
