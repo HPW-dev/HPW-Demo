@@ -41,6 +41,7 @@ protected:
   void process_draw_bg_cbs(Image& dst, const Vec offset) const;
 
 private:
+  nocopy(Entity_cbs);
   Vector<Update_cb> _update_cbs {}; // внешние колбэки на обработку апдейта
   Vector<Kill_cb> _kill_cbs {}; // внешние колбэки на обработку смерти
   Vector<Remove_cb> _remove_cbs {}; // колюэки при удалении из системы

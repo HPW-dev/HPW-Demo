@@ -2,6 +2,7 @@
 #include "entity-cbs.hpp"
 #include "status.hpp"
 #include "entity-type.hpp"
+#include "entity-debug.hpp"
 #include "util/mem-types.hpp"
 #include "util/mempool.hpp"
 #include "util/str.hpp"
@@ -14,7 +15,10 @@ class Light;
 class Hitbox;
 
 // игровая сущность
-class Entity: public Entity_cbs {
+class Entity
+: public Entity_cbs
+, public Entity_debug
+{
 public:
   Phys phys {}; // физический контекст
   mutable Anim_ctx anim_ctx {}; // анимация
@@ -53,7 +57,5 @@ private:
   Str _name {}; // имя, через которое соспавнили объект
 
   void move_it(const Delta_time dt);
-  void draw_pos(Image& dst, const Vec offset) const;
-  void debug_draw(Image& dst, const Vec offset) const;
   void draw_haze(Image& dst, const Vec offset) const;
 }; // Entity
