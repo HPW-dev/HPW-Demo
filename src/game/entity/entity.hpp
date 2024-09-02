@@ -12,9 +12,9 @@ class Hitbox;
 // игровая сущность
 class Entity: public Entity_animated {
 public:
+  using Master = cp<Entity>;
+
   Phys phys {}; // физический контекст
-  using Master_p = cp<Entity>;
-  Master_p master {}; // объект создатель
   Uid uid {};
   mutable Entity_status status {}; // флаги
   Entity_type type {GET_SELF_TYPE};
@@ -30,8 +30,8 @@ public:
   virtual void process_remove(); // вызывается только в Entity_mgr
   virtual void process_kill(); // вызывается только в Entity_mgr
 
-  void set_master(Master_p new_master);
-  inline cr<Master_p> get_master() const { return master; }
+  void set_master(Master new_master);
+  inline cr<Master> get_master() const { return _master; }
   // узнать какой сейчас хитбокс
   inline virtual cp<Hitbox> get_hitbox() const { return {}; }
   
@@ -41,8 +41,8 @@ public:
 private:
   nocopy(Entity);
 
-  Str _name {}; // имя, через которое соспавнили объект
+  Str _name {}; // имя через которое соспавнили объект
+  Master _master {}; // объект - создатель
 
   void move_it(const Delta_time dt);
-  void draw_haze(Image& dst, const Vec offset) const;
 }; // Entity

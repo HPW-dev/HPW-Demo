@@ -137,8 +137,8 @@ void clear_entity_uid() { m_entity_uid = 0; }
 // @return false if flag success
 inline bool check_flag_ignore_master(cr<Entity> a, cr<Entity> b) {
   return ( !(
-    (a.status.ignore_master && a.master == std::addressof(b)) ||
-    (b.status.ignore_master && b.master == std::addressof(a))
+    (a.status.ignore_master && a.get_master() == std::addressof(b)) ||
+    (b.status.ignore_master && b.get_master() == std::addressof(a))
   ) );
 }
 
@@ -239,9 +239,9 @@ void Timed_visible::operator()(Entity& entity, Delta_time dt) {
 }
 
 void kill_if_master_death(Entity& entity, Delta_time dt) {
-  if (!entity.master) { // если нет инфы о создателе
+  if (!entity.get_master()) { // если нет инфы о создателе
     entity.kill();
-  } elif (!entity.master->status.live) { // если создатель умер
+  } elif (!entity.get_master()->status.live) { // если создатель умер
     entity.kill();
   }
 }
@@ -255,7 +255,7 @@ void Timed_kill_if_master_death::operator()
       entity.kill();
   }
 
-  return_if(entity.master && entity.master->status.live);
+  return_if(entity.get_master() && entity.get_master()->status.live);
   m_master_death = true;
 }
 

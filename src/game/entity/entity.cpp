@@ -45,9 +45,9 @@ void Entity::update(const Delta_time dt) {
   process_update_cbs(dt);
 }
 
-void Entity::set_master(Master_p new_master) {
+void Entity::set_master(Master new_master) {
   assert(new_master != this);
-  master = new_master;
+  _master = new_master;
 }
 
 void Entity::move_it(const Delta_time dt) { phys.update(dt); }

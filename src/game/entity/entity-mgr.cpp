@@ -154,7 +154,7 @@ struct Entity_mgr::Impl {
       if (entity->status.live) {
         // изменять время для игрока и его объектов
         cauto player = get_player();
-        if (entity.get() == player || entity->master == player)
+        if (entity.get() == player || entity->get_master() == player)
           entity->update(dt / hpw::time_scale);
         else // все остальные сущности
           entity->update(dt);
