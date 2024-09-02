@@ -15,7 +15,8 @@
 #include "game/entity/util/entity-util.hpp"
 
 Entity::Entity()
-: uid (get_entity_uid())
+: Entity_cbs (*this)
+, uid (get_entity_uid())
 , type {GET_SELF_TYPE}
 { status.live = true; }
 
@@ -132,46 +133,4 @@ void Entity::debug_draw(Image& dst, const Vec offset) const {
     utf32 hp_text = U"HP: " + n2s<utf32>(casted->get_hp());
     graphic::font->draw(dst, pos, hp_text, &blend_diff);
   }
-}
-
-#define MAKE_CB_IMPL(FNAME, TYPE, VAR) \
-  void Entity::FNAME(cr<TYPE> callback) { \
-    return_if(!callback); \
-    VAR.push_back(callback); \
-  } \
-  \
-  void Entity::FNAME(TYPE&& callback) { \
-    return_if(!callback); \
-    VAR.emplace_back(std::move(callback)); \
-  }
-MAKE_CB_IMPL(add_kill_cb, Kill_cb, _kill_cbs)
-MAKE_CB_IMPL(add_update_cb, Update_cb, _update_cbs)
-MAKE_CB_IMPL(add_remove_cb, Remove_cb, _remove_cbs)
-MAKE_CB_IMPL(add_draw_bg_cb, Draw_bg_cb, _draw_bg_cbs)
-MAKE_CB_IMPL(add_draw_fg_cb, Draw_fg_cb, _draw_fg_cbs)
-#undef MAKE_CB_IMPL
-
-void Entity::process_remove_cbs() {
-  for (crauto cb: _remove_cbs)
-    cb(*this);
-}
-
-void Entity::process_draw_fg_cbs(Image& dst, const Vec offset) const {
-  for (crauto cb: _draw_fg_cbs)
-    cb(*this, dst, offset);
-}
-
-void Entity::process_draw_bg_cbs(Image& dst, const Vec offset) const {
-  for (crauto cb: _draw_bg_cbs)
-    cb(*this, dst, offset);
-}
-
-void Entity::process_update_cbs(Delta_time dt) {
-  for (crauto cb: _update_cbs)
-    cb(*this, dt);
-}
-
-void Entity::process_kill_cbs() {
-  for (crauto cb: _kill_cbs)
-    cb(*this);
 }
