@@ -35,7 +35,7 @@ struct Scene_pge::Impl {
   bool m_reinit_menu {}; // вызовет повторную инициализацию меню
   Image m_ball {}; // скачет по экрану и нужен для оценки эффекта
   Vec m_ball_pos {};
-  constx real BALL_SPEED {2_pps};
+  constx real BALL_SPEED {2.0_pps};
   Vec m_ball_vel {BALL_SPEED, BALL_SPEED};
 
   inline Impl() {

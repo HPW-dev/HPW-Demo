@@ -416,13 +416,13 @@ struct Level_tutorial::Impl {
 
     Collidable* spawn(const Vec pos) {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
-      enemy->phys.set_vel({0, 1_pps});
+      enemy->phys.set_vel({0, 1.0_pps});
       // стрельба в игрока
       enemy->add_update_cb([](Entity& self, Delta_time dt)->void {
         if (rndu(1'500) == 0) {
           auto bullet = hpw::entity_mgr->make(&self, "enemy.tutorial.bullet",
             self.phys.get_pos());
-          bullet->phys.set_speed(2_pps);
+          bullet->phys.set_speed(2.0_pps);
           bullet->phys.set_deg( deg_to_target(*bullet, hpw::entity_mgr->target_for_enemy()) );
         }
       });

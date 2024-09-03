@@ -17,12 +17,6 @@ public:
 inline constexpr auto pps(auto in) { return in * 60; }
 // pixel per sec.
 inline constexpr long double operator""_pps(long double in) { return in * 60.0l; }
-// pixel per sec.
-#ifdef WINDOWS
-  inline constexpr std::uint64_t operator""_pps(std::uint64_t in) { return in * 60ull; }
-#else
-  inline constexpr unsigned long long int operator""_pps(unsigned long long int in) { return in * 60ull; }
-#endif
 
 // x -> время ожидания в кадрах
 inline constexpr Delta_time to_fps(Delta_time x) { return (1.0 / 60.0) * x; }
