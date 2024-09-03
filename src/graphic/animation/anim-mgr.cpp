@@ -31,11 +31,11 @@ struct Anim_mgr::Impl {
         detailed_log("анимация \"" << name <<
           "\" не загружена.\nзагрузка \"" << name << "\"\n");
 
+        add_anim(name, load_from_config(name));
         try {
-          add_anim(name, load_from_config(name));
           return table.at(str_tolower(name));
         } catch (...) {
-          error("не удалось загрузить");
+          error("не удалось загрузить \"" + name + "\"");
         }
       } else {
         error("Anim_mgr.find_anim: animation \"" <<

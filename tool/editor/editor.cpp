@@ -10,7 +10,7 @@
 #include "game/core/canvas.hpp"
 #include "host/command.hpp"
 
-#define ENTITY_EDITOR_DEBUG
+//#define ENTITY_EDITOR_DEBUG
 #ifdef ENTITY_EDITOR_DEBUG
 #include "scene/scene-entity-editor.hpp"
 #else

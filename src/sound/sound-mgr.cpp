@@ -12,6 +12,7 @@
 #include "packet-decoder.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
+#include "util/str-util.hpp"
 
 #ifndef SOUND_WITHOUT_ENTITY
 #include "game/entity/entity.hpp"

@@ -211,7 +211,7 @@ void save_anims(Yaml& dst) {
 
 Yaml get_anim_config() {
 #ifdef EDITOR
-  return Yaml(hpw::cur_dir + "config/animation.yml");
+  return Yaml(hpw::cur_dir + "../config/animation.yml");
 #else
   return Yaml(hpw::archive->get_file("config/animation.yml"));
 #endif

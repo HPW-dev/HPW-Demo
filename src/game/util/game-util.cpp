@@ -65,7 +65,7 @@ decltype(hpw::store_sprite)::element_type::Velue find_err_cb(cr<Str> _name) {
   assert(hpw::store_sprite);
   auto name {_name};
   #ifdef EDITOR
-    name = hpw::cur_dir + name;
+    name = hpw::cur_dir + "../" + name;
   #endif
   cauto spr = sprite_loader(name);
   detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
@@ -80,7 +80,7 @@ void load_resources() {
   init_unique(hpw::store_sprite);
 
   #ifdef EDITOR
-    auto names = all_names_in_dir(hpw::cur_dir);
+    auto names = all_names_in_dir(hpw::cur_dir + "../");
   #else
     auto names = hpw::archive->get_all_names();
   #endif
@@ -114,7 +114,7 @@ void load_resources() {
   for (auto &name: image_names) {
     auto sprite = sprite_loader(name);
     #ifdef EDITOR
-      delete_all(name, hpw::cur_dir);
+      delete_all(name, hpw::cur_dir + ".." + SEPARATOR);
       conv_sep_for_archive(name);
     #endif
     hpw::store_sprite->push(name, sprite);
@@ -314,7 +314,7 @@ void init_validation_info() {
   hpw::exe_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
   // DATA
-  path = hpw::cur_dir + "data.zip";
+  path = hpw::cur_dir + hpw::data_path;
   mem = mem_from_file(path);
   hpw::data_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
@@ -467,7 +467,7 @@ void load_sounds() {
   }
   
 #ifdef EDITOR
-  auto names = all_names_in_dir(hpw::cur_dir);
+  auto names = all_names_in_dir(hpw::cur_dir + "../");
 #else
   auto names = hpw::archive->get_all_names();
 #endif
@@ -493,7 +493,7 @@ void load_sounds() {
   for (auto &name: file_names) {
 #ifdef EDITOR
     auto sound = load_audio(name);
-    delete_all(name, hpw::cur_dir);
+    delete_all(name, hpw::cur_dir + ".." + SEPARATOR);
     conv_sep_for_archive(name);
 #else
     auto sound = load_audio_from_memory(hpw::archive->get_file(name));
@@ -536,8 +536,8 @@ void save_screenshot(cr<Image> image) {
   auto lt = *std::localtime(&t);
 #endif
 
-  auto screenshots_dir = hpw::cur_dir + 
-    (*hpw::config)["path"].get_str("screenshots", "screenshots") + SEPARATOR;
+  cauto screenshots_dir = hpw::cur_dir + 
+    (*hpw::config)["path"].get_str("screenshots", hpw::screenshots_path) + SEPARATOR;
   std::ostringstream oss;
   oss << screenshots_dir;
   make_dir_if_not_exist(oss.str());

@@ -18,7 +18,7 @@
 #include "scene/yn.hpp"
 
 inline void save_all_anims() {
-  Yaml file (hpw::cur_dir + "config/animation.yml");
+  Yaml file (hpw::cur_dir + "../config/animation.yml");
   save_anims(file);
 }
 
