@@ -36,16 +36,16 @@ void Cosmic_hunter::update(const Delta_time dt) {
     switch (rndu(3)) {
       default:
       case 0: { // упреждение
-        auto bullet_target = predict(*bullet, *player, dt);
-        deg_to = deg_to_target(*bullet, bullet_target);
+        auto bullet_target = predict(bullet->phys, player->phys, dt);
+        deg_to = deg_to_target(bullet->phys.get_pos(), bullet_target);
         break;
       }
       case 1: { // напрямую
-        deg_to = deg_to_target(*bullet, *player);
+        deg_to = deg_to_target(bullet->phys.get_pos(), player->phys.get_pos());
         break;
       }
       case 2: { // напрямую с отклоениями
-        deg_to = deg_to_target(*bullet, *player);
+        deg_to = deg_to_target(bullet->phys.get_pos(), player->phys.get_pos());
         deg_to += rndr(-m_info.shoot_deg, m_info.shoot_deg);
         break;
       }
@@ -80,7 +80,7 @@ struct Cosmic_hunter::Loader::Impl {
     it->m_info.shoot_timer.randomize_stable();
     it->phys.set_speed(m_info.speed);
     // при спавне сразу смотрим в сторону игрока
-    it->phys.set_deg( deg_to_target(*it, hpw::entity_mgr->target_for_enemy()) );
+    it->phys.set_deg( deg_to_target(it->phys.get_pos(), hpw::entity_mgr->target_for_enemy()) );
     return parent;
   } // op ()
 

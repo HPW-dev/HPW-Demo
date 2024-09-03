@@ -423,7 +423,7 @@ struct Level_tutorial::Impl {
           auto bullet = hpw::entity_mgr->make(&self, "enemy.tutorial.bullet",
             self.phys.get_pos());
           bullet->phys.set_speed(2.0_pps);
-          bullet->phys.set_deg( deg_to_target(*bullet, hpw::entity_mgr->target_for_enemy()) );
+          bullet->phys.set_deg(deg_to_target(bullet->phys.get_pos(), hpw::entity_mgr->target_for_enemy()));
         }
       });
       enemy->add_kill_cb([this](Entity&){ --live_count; });

@@ -26,7 +26,7 @@ Enemy_snake_tail::Enemy_snake_tail(): Proto_enemy(GET_SELF_TYPE) {}
 void Enemy_snake_head::update(const Delta_time dt) {
   Proto_enemy::update(dt);
   phys.set_speed(m_info.speed);
-  phys.set_deg( deg_to_target(*this, hpw::entity_mgr->target_for_enemy()) );
+  phys.set_deg( deg_to_target(this->phys.get_pos(), hpw::entity_mgr->target_for_enemy()) );
 }
 
 void Enemy_snake_head::process_kill() {
@@ -42,16 +42,17 @@ void Enemy_snake_tail::update(const Delta_time dt) {
   Proto_enemy::update(dt);
 
   // хвост следует за создателем
-  return_if(!get_master());
-  return_if(!get_master()->status.live);
+  cauto master = get_master();
+  return_if(!master);
+  return_if(!master->status.live);
   return_if(!status.ignore_scatter);
 
   // стоит ли хвост в пределах головы
-  if (distance(this->phys.get_pos(), get_master()->phys.get_pos())
+  if (distance(this->phys.get_pos(), master->phys.get_pos())
   > m_info.start_motion_radius) {
     // взять скорость головы
-    phys.set_speed( get_master()->phys.get_speed() );
-    phys.set_deg( deg_to_target(*this, *get_master()) );
+    phys.set_speed( master->phys.get_speed() );
+    phys.set_deg( deg_to_target(this->phys.get_pos(), master->phys.get_pos()) );
   } else { // если стоим в пределах головы, то не двигаться
     phys.set_speed(0);
   }

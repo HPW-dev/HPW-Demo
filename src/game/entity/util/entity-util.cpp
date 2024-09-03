@@ -201,19 +201,11 @@ bool need_rotate_right(cr<Entity> self, const Vec target) {
 bool need_rotate_right(cr<Entity> self, cr<Entity> target)
   { return need_rotate_right(self, target.phys.get_pos()); }
 
-real deg_to_target(cr<Entity> self, const Vec target)
-  { return vec_to_deg( target - self.phys.get_pos() ); }
+real deg_to_target(const Vec self, const Vec target)
+  { return vec_to_deg(target - self); }
 
-real deg_to_target(cr<Entity> self, cr<Entity> target)
-  { return deg_to_target(self, target.phys.get_pos()); }
-
-Vec predict(cr<Entity> self_, cr<Entity> target_, Delta_time dt) {
-  crauto self = self_.phys;
-  crauto target = target_.phys;
-
-  if (self.get_speed() <= 0)
-    return target.get_pos();
-
+Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt) {
+  return_if (self.get_speed() <= 0, target.get_pos());
   // определить растояние до цели
   cauto dist = distance(target.get_pos(), self.get_pos());
   // узнать за сколько времени мы окажемся у цели

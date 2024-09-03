@@ -102,14 +102,12 @@ real need_deg_to_target(cr<Entity> self, const Vec target);
 // надо ли поворачивать вправо, чтобы моделька смотрела на target?
 bool need_rotate_right(cr<Entity> self, const Vec target);
 // угол поворота к цели
-real deg_to_target(cr<Entity> self, cr<Entity> target);
-// угол поворота к цели
-real deg_to_target(cr<Entity> self, const Vec target);
+real deg_to_target(const Vec self, const Vec target);
 
 /** найти точку упреждения движения
 * @param self позиция стреляющего объекта
 * @param target движущаяся цель, в которую стреляют */
-Vec predict(cr<Entity> self, cr<Entity> target, Delta_time dt);
+Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt);
 
 // ограничитель позиции игрока в пределах экрана
 struct Bound_off_screen {

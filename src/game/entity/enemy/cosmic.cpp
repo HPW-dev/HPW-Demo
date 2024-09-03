@@ -80,9 +80,9 @@ void Cosmic::update(const Delta_time dt) {
       // либо стрелять в игрока, либо на упреждение
       real deg;
       if (rndb() & 1)
-        deg = deg_to_target(*bullet, predict(*bullet, *player, dt) );
+        deg = deg_to_target(bullet->phys.get_pos(), predict(bullet->phys, player->phys, dt) );
       else
-        deg = deg_to_target(*bullet, hpw::entity_mgr->target_for_enemy());
+        deg = deg_to_target(bullet->phys.get_pos(), hpw::entity_mgr->target_for_enemy());
       bullet->phys.set_deg(deg);
 
       bullet->phys.set_accel(m_info.bullet_accel);

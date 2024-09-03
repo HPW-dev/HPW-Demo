@@ -17,8 +17,8 @@ struct Level_empty::Impl {
 
     // TODO del:
     auto a = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() - Vec(0, 100));
-    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(100, 50));
-    b->phys.set_vel(Vec(-4.0_pps, 2.0_pps));
+    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(200, 0));
+    b->phys.set_vel({-4.0_pps, 2.0_pps});
   }
 
   inline void update(const Vec vel, Delta_time dt) {

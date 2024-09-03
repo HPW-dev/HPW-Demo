@@ -271,7 +271,7 @@ void set_direction(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(!a, "не удалось найти объект с UID = " << uid_a);
   iferror(!b, "не удалось найти объект с UID = " << uid_b);
 
-  cauto deg = deg_to_target(*a, *b);
+  cauto deg = deg_to_target(a->phys.get_pos(), b->phys.get_pos());
   a->phys.set_deg(deg);
 
   cauto name_a = a->name();
