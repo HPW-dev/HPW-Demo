@@ -10,9 +10,8 @@ public:
 
 protected:
   void ogl_post_init(); // вызывается в конце инита наследника
-  void ogl_draw(); // отрисовать кадр на текстуру
+  void draw_game_frame() const override; // отрисовать кадр на текстуру
   void check_max_gltex_sz();
-  virtual void draw(); // draw от main_f внутри execute
 
 private:
   uint m_screen_tex = 0; // OpenGL текстура экрана

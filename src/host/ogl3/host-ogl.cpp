@@ -27,11 +27,6 @@ Host_ogl::Host_ogl(int argc, char *argv[])
   #endif
 }
 
-void Host_ogl::draw() {
-  if (graphic::enable_render)
-    ogl_draw(); 
-}
-
 void Host_ogl::ogl_resize(int w, int h) {
   return_if (w <= 0 || h <= 0);
   m_window_ctx.resize_by_mode(w, h, m_w, m_h);
@@ -77,8 +72,9 @@ void Host_ogl::init_palette_loader() {
   };
 }
 
-// отрисовать кадр на текстуру
-void Host_ogl::ogl_draw() {
+void Host_ogl::draw_game_frame() const {
+  return_if (!graphic::enable_render);
+
   /* TODO пока не будут картинки по краям экрана, надо заливать чёрным,
   чтобы на линуксе не была эпилепсия */
   glClear(GL_COLOR_BUFFER_BIT);

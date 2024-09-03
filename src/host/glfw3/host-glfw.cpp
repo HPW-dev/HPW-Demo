@@ -324,7 +324,6 @@ void Host_glfw::game_frame(const Delta_time dt) {
     if (!graphic::skip_cur_frame) { // не рисовать кадр при этом флаге
       calc_lerp_alpha();
       draw_game_frame();
-      draw();
       glfwSwapBuffers(m_window);
       m_frame_drawn = true;
       apply_render_delay();

@@ -7,10 +7,10 @@ class Editor final: public Host_imgui {
 
 protected:
   void update(const Delta_time dt) override;
-  void draw() override;
-  void imgui_exec() override;
+  void imgui_exec() const override;
   void init() override;
   void init_graphic();
+  void draw_game_frame() const override;
 
 public:
   Editor(int argc, char *argv[]);

@@ -57,8 +57,8 @@ Host_imgui::~Host_imgui() {
   ImGui::DestroyContext();
 }
 
-void Host_imgui::draw() {
-  Host_ogl::draw();
+void Host_imgui::draw_game_frame() const {
+  Host_ogl::draw_game_frame();
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplGlfw_NewFrame();
   ImGui::NewFrame();

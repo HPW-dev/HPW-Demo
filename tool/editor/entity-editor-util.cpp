@@ -10,7 +10,7 @@
 #include "util/macro.hpp"
 
 namespace {
-Str g_entities_yml_path = "config/entities.yml";
+Str g_entities_yml_path = "../config/entities.yml";
 }
 
 void entity_editor_save(cr<Entity_editor_ctx> ctx) {

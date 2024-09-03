@@ -282,7 +282,7 @@ struct Entity_mgr::Impl {
 
   inline Yaml load_entity_config() const {
     #ifdef EDITOR
-      return Yaml(hpw::cur_dir + "config/entities.yml");
+      return Yaml(hpw::cur_dir + "../config/entities.yml");
     #else
       return Yaml(hpw::archive->get_file("config/entities.yml"));
     #endif

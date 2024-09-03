@@ -54,15 +54,15 @@ void Editor::update(const Delta_time dt) {
   hpw::tick_time = Editor::get_time() - st;
 }
 
-void Editor::draw() {
-  Host_imgui::draw();
+void Editor::draw_game_frame() const {
+  Host_imgui::draw_game_frame();
   auto st = Editor::get_time();
   hpw::scene_mgr->draw(*graphic::canvas);
   graphic::soft_draw_time = Editor::get_time() - st;
   graphic::check_autoopt();
 }
 
-void Editor::imgui_exec() {
+void Editor::imgui_exec() const {
   auto scene {hpw::scene_mgr->get_current()};
   return_if (!scene);
 
