@@ -109,6 +109,8 @@ void Game_app::draw_game_frame() const {
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
+
+  Host_class::draw_game_frame();
 }
 
 void Game_app::draw_border(Image& dst) const
