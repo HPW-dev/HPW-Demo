@@ -41,7 +41,7 @@ real deg_to_target(const Vec self, const Vec target);
 /** найти точку упреждения движения
 * @param self позиция стреляющего объекта
 * @param target движущаяся цель, в которую стреляют */
-Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt);
+Vec predict(cr<Phys> self, cr<Phys> target);
 
 class Kill_by_timeout final {
   Delta_time m_timeout {};

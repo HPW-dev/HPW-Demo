@@ -115,7 +115,7 @@ struct Level_space::Impl {
             }
             case 1: { // полететь на упреждение
               auto player = hpw::entity_mgr->get_player();
-              auto predict_point = predict(ret->phys, player->phys, hpw::target_update_time);
+              auto predict_point = predict(ret->phys, player->phys);
               spawn_pos.x = predict_point.x;
               break;
             }

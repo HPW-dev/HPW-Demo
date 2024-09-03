@@ -204,7 +204,8 @@ bool need_rotate_right(cr<Entity> self, cr<Entity> target)
 real deg_to_target(const Vec self, const Vec target)
   { return vec_to_deg(target - self); }
 
-Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt) {
+// простая версия поиска упреждающей точки
+static Vec rough_predict(cr<Phys> self, cr<Phys> target) {
   return_if (self.get_speed() <= 0, target.get_pos());
   // определить растояние до цели
   cauto dist = distance(target.get_pos(), self.get_pos());
@@ -212,6 +213,10 @@ Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt) {
   const real t = dist / self.get_speed();
   // узнать где будет цель за это же время
   return target.get_pos() + normalize_stable(target.get_vel()) * target.get_speed() * t;
+}
+
+Vec predict(cr<Phys> self, cr<Phys> target) {
+  return rough_predict(self, target);
 }
 
 Timed_visible::Timed_visible(const Delta_time timeout) {

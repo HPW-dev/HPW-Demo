@@ -12,6 +12,23 @@
 #include "util/math/timer.hpp"
 #include "util/math/mat.hpp"
 
+class Bullet_maker final {
+public:
+  inline explicit Bullet_maker(const real delay, const real bullet_speed)
+  : _delay(delay), _bullet_speed{bullet_speed} {}
+
+  inline void operator()(Entity& self, const Delta_time dt) {
+    cfor (_, _delay.update(dt)) {
+      auto blt = hpw::entity_mgr->make(&self, "bullet.placeholder.2", self.phys.get_pos());
+      blt->phys.set_speed(_bullet_speed);
+    }
+  }
+  
+private:
+  Timer _delay {};
+  real _bullet_speed {};
+};
+
 struct Level_empty::Impl {
   inline explicit Impl() {
     set_default_collider();
@@ -27,7 +44,7 @@ struct Level_empty::Impl {
     });
 
     cauto b_uid = b->uid;
-    constexpr real BULLET_SPEED = 2.0_pps;
+    constexpr real BULLET_SPEED = 3.0_pps;
 
     //auto b = hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
     //cauto b_uid = b->uid;
@@ -38,14 +55,10 @@ struct Level_empty::Impl {
       Phys bullet_phys;
       bullet_phys.set_pos(a->phys.get_pos());
       bullet_phys.set_speed(BULLET_SPEED);
-      return ent ? ent->phys.get_pos() : rnd_screen_pos_safe();
-      //return ent ? predict(bullet_phys, ent->phys, hpw::target_update_time) : rnd_screen_pos_safe();
+      //return ent ? ent->phys.get_pos() : rnd_screen_pos_safe();
+      return ent ? predict(bullet_phys, ent->phys) : rnd_screen_pos_safe();
     }, 100));
-    a->add_update_cb([=](Entity& self, const Delta_time dt) {
-      auto blt = hpw::entity_mgr->make(&self, "bullet.placeholder.2", self.phys.get_pos());
-      //blt->phys.set_deg(self.phys.get_deg());
-      blt->phys.set_speed(BULLET_SPEED);
-    });
+    a->add_update_cb(Bullet_maker(0.25, BULLET_SPEED));
   }
 
   inline void update(const Vec vel, Delta_time dt) {

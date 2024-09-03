@@ -36,7 +36,7 @@ void Cosmic_hunter::update(const Delta_time dt) {
     switch (rndu(3)) {
       default:
       case 0: { // упреждение
-        auto bullet_target = predict(bullet->phys, player->phys, dt);
+        auto bullet_target = predict(bullet->phys, player->phys);
         deg_to = deg_to_target(bullet->phys.get_pos(), bullet_target);
         break;
       }
