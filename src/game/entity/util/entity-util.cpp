@@ -6,6 +6,7 @@
 #include "game/core/anims.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/core.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/collidable.hpp"
@@ -216,6 +217,21 @@ static Vec rough_predict(cr<Phys> self, cr<Phys> target) {
 }
 
 Vec predict(cr<Phys> self, cr<Phys> target) {
+  cauto start = self.get_pos();
+  auto src = self;
+  auto dst = target;
+  dst.set_force(0); // иначе в игрока невозжможно будет попасть
+  constexpr uint TIMEOUT = 1'000; // макс число шагов
+
+  // двигать объекты пока src не достигнет радиуса попадания в dst
+  cfor (_, TIMEOUT) {
+    src.update(hpw::target_update_time);
+    dst.update(hpw::target_update_time);
+    if (length(src.get_pos() - start) >= length(dst.get_pos() - start))
+      return dst.get_pos();
+  }
+
+  // если ничего не вышло, провести грубый расчёт
   return rough_predict(self, target);
 }
 

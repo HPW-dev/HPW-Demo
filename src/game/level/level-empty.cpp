@@ -11,6 +11,7 @@
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/mat.hpp"
+#include "util/math/vec-util.hpp"
 
 class Bullet_maker final {
 public:
@@ -19,7 +20,7 @@ public:
 
   inline void operator()(Entity& self, const Delta_time dt) {
     cfor (_, _delay.update(dt)) {
-      auto blt = hpw::entity_mgr->make(&self, "bullet.placeholder.2", self.phys.get_pos());
+      auto blt = hpw::entity_mgr->make(&self, "bullet.placeholder.1", self.phys.get_pos());
       blt->phys.set_speed(_bullet_speed);
     }
   }
@@ -34,20 +35,27 @@ struct Level_empty::Impl {
     set_default_collider();
 
     // TODO del:
-    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(200, 50));
-    //b->phys.set_vel({-2.0_pps, 1.0_pps});
-    b->phys.set_vel({-2.0_pps, 0});
-    //b->phys.set_vel({-1.0_pps, 0.5_pps});
+    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center());
+    b->phys.set_vel({-3.0_pps, 0});
     b->add_update_cb([](Entity& self, const Delta_time dt) {
-      if (self.phys.get_pos().x <= 0)
-        self.phys.set_pos({graphic::width, self.phys.get_pos().y});
-    });
+      bool respawn {};
+      respawn |= self.phys.get_pos().x <= 0;
+      respawn |= self.phys.get_pos().y <= 0;
+      respawn |= self.phys.get_pos().x > graphic::width;
+      respawn |= self.phys.get_pos().y > graphic::height;
 
+      if (respawn) {
+        self.phys.set_pos(rnd_screen_pos_safe());
+        self.phys.set_deg(rand_degree_stable());
+        self.phys.set_speed(3.0_pps);
+      }
+    });
     cauto b_uid = b->uid;
-    constexpr real BULLET_SPEED = 3.0_pps;
 
     //auto b = hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
     //cauto b_uid = b->uid;
+
+    constexpr real BULLET_SPEED = 7.0_pps;
 
     auto a = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() - Vec(0, 100));
     a->add_update_cb(Rotate_to_target([=]{
@@ -55,10 +63,10 @@ struct Level_empty::Impl {
       Phys bullet_phys;
       bullet_phys.set_pos(a->phys.get_pos());
       bullet_phys.set_speed(BULLET_SPEED);
-      //return ent ? ent->phys.get_pos() : rnd_screen_pos_safe();
+      hpw_log("speed: " << ent->phys.get_speed() << '\n');
       return ent ? predict(bullet_phys, ent->phys) : rnd_screen_pos_safe();
-    }, 100));
-    a->add_update_cb(Bullet_maker(0.25, BULLET_SPEED));
+    }, 300));
+    a->add_update_cb(Bullet_maker(0.12, BULLET_SPEED));
   }
 
   inline void update(const Vec vel, Delta_time dt) {
