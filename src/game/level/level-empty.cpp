@@ -9,64 +9,10 @@
 #include "game/util/task-util.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
-#include "util/math/timer.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/vec-util.hpp"
-
-class Bullet_maker final {
-public:
-  inline explicit Bullet_maker(const real delay, const real bullet_speed)
-  : _delay(delay), _bullet_speed{bullet_speed} {}
-
-  inline void operator()(Entity& self, const Delta_time dt) {
-    cfor (_, _delay.update(dt)) {
-      auto blt = hpw::entity_mgr->make(&self, "bullet.placeholder.1", self.phys.get_pos());
-      blt->phys.set_speed(_bullet_speed);
-    }
-  }
-  
-private:
-  Timer _delay {};
-  real _bullet_speed {};
-};
 
 struct Level_empty::Impl {
   inline explicit Impl() {
     set_default_collider();
-
-    // TODO del:
-    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center());
-    b->phys.set_vel({-3.0_pps, 0});
-    b->add_update_cb([](Entity& self, const Delta_time dt) {
-      bool respawn {};
-      respawn |= self.phys.get_pos().x <= 0;
-      respawn |= self.phys.get_pos().y <= 0;
-      respawn |= self.phys.get_pos().x > graphic::width;
-      respawn |= self.phys.get_pos().y > graphic::height;
-
-      if (respawn) {
-        self.phys.set_pos(rnd_screen_pos_safe());
-        self.phys.set_deg(rand_degree_stable());
-        self.phys.set_speed(3.0_pps);
-      }
-    });
-    cauto b_uid = b->uid;
-
-    //auto b = hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
-    //cauto b_uid = b->uid;
-
-    constexpr real BULLET_SPEED = 7.0_pps;
-
-    auto a = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() - Vec(0, 100));
-    a->add_update_cb(Rotate_to_target([=]{
-      cauto ent = hpw::entity_mgr->find(b_uid);
-      Phys bullet_phys;
-      bullet_phys.set_pos(a->phys.get_pos());
-      bullet_phys.set_speed(BULLET_SPEED);
-      hpw_log("speed: " << ent->phys.get_speed() << '\n');
-      return ent ? predict(bullet_phys, ent->phys) : rnd_screen_pos_safe();
-    }, 300));
-    a->add_update_cb(Bullet_maker(0.12, BULLET_SPEED));
   }
 
   inline void update(const Vec vel, Delta_time dt) {
