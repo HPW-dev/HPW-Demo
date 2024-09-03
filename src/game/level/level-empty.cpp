@@ -10,15 +10,42 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
+#include "util/math/mat.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {
     set_default_collider();
 
     // TODO del:
+    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(200, 50));
+    //b->phys.set_vel({-2.0_pps, 1.0_pps});
+    b->phys.set_vel({-2.0_pps, 0});
+    //b->phys.set_vel({-1.0_pps, 0.5_pps});
+    b->add_update_cb([](Entity& self, const Delta_time dt) {
+      if (self.phys.get_pos().x <= 0)
+        self.phys.set_pos({graphic::width, self.phys.get_pos().y});
+    });
+
+    cauto b_uid = b->uid;
+    constexpr real BULLET_SPEED = 2.0_pps;
+
+    //auto b = hpw::entity_mgr->make({}, "player.boo.dark", get_screen_center());
+    //cauto b_uid = b->uid;
+
     auto a = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() - Vec(0, 100));
-    auto b = hpw::entity_mgr->make({}, "enemy.tutorial", get_screen_center() + Vec(200, 0));
-    b->phys.set_vel({-4.0_pps, 2.0_pps});
+    a->add_update_cb(Rotate_to_target([=]{
+      cauto ent = hpw::entity_mgr->find(b_uid);
+      Phys bullet_phys;
+      bullet_phys.set_pos(a->phys.get_pos());
+      bullet_phys.set_speed(BULLET_SPEED);
+      return ent ? ent->phys.get_pos() : rnd_screen_pos_safe();
+      //return ent ? predict(bullet_phys, ent->phys, hpw::target_update_time) : rnd_screen_pos_safe();
+    }, 100));
+    a->add_update_cb([=](Entity& self, const Delta_time dt) {
+      auto blt = hpw::entity_mgr->make(&self, "bullet.placeholder.2", self.phys.get_pos());
+      //blt->phys.set_deg(self.phys.get_deg());
+      blt->phys.set_speed(BULLET_SPEED);
+    });
   }
 
   inline void update(const Vec vel, Delta_time dt) {

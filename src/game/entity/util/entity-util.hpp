@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
@@ -25,6 +26,22 @@ Collidable* to_collidable(Entity& src);
 void bounce_off_screen(Entity& entity, Delta_time dt);
 // проверить что a и b могут сталкиваться вместе
 bool cld_flag_compat(cr<Entity> a, cr<Entity> b);
+// Убить объект, если создатель объекта мёртв
+void kill_if_master_death(Entity& entity, Delta_time dt);
+// на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
+real need_deg_to_target(cr<Entity> self, cr<Entity> target);
+// надо ли поворачивать вправо, чтобы моделька смотрела на target?
+bool need_rotate_right(cr<Entity> self, cr<Entity> target);
+// на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
+real need_deg_to_target(cr<Entity> self, const Vec target);
+// надо ли поворачивать вправо, чтобы моделька смотрела на target?
+bool need_rotate_right(cr<Entity> self, const Vec target);
+// угол поворота к цели
+real deg_to_target(const Vec self, const Vec target);
+/** найти точку упреждения движения
+* @param self позиция стреляющего объекта
+* @param target движущаяся цель, в которую стреляют */
+Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt);
 
 class Kill_by_timeout final {
   Delta_time m_timeout {};
@@ -90,30 +107,23 @@ public:
   void operator()(Entity& entity, Delta_time dt);
 };
 
-// Убить объект, если создатель объекта мёртв
-void kill_if_master_death(Entity& entity, Delta_time dt);
-
-// на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
-real need_deg_to_target(cr<Entity> self, cr<Entity> target);
-// надо ли поворачивать вправо, чтобы моделька смотрела на target?
-bool need_rotate_right(cr<Entity> self, cr<Entity> target);
-// на сколько надо перекрутиться, чтобы моделька смотрела на позицию target
-real need_deg_to_target(cr<Entity> self, const Vec target);
-// надо ли поворачивать вправо, чтобы моделька смотрела на target?
-bool need_rotate_right(cr<Entity> self, const Vec target);
-// угол поворота к цели
-real deg_to_target(const Vec self, const Vec target);
-
-/** найти точку упреждения движения
-* @param self позиция стреляющего объекта
-* @param target движущаяся цель, в которую стреляют */
-Vec predict(cr<Phys> self, cr<Phys> target, Delta_time dt);
-
 // ограничитель позиции игрока в пределах экрана
-struct Bound_off_screen {
+struct Bound_off_screen final {
   Vec screen_lu {}; // ограничение слева сверху
   Vec screen_rd {}; // ограничение справа снизу
 
   explicit Bound_off_screen(cr<Entity> src);
   void operator()(Entity& dst, const Delta_time dt);
-}; // Bound_off_screen
+};
+
+// поворачивает объект в стророну цели
+class Rotate_to_target final {
+public:
+  using Target_getter = std::function<Vec ()>;
+  explicit Rotate_to_target(cr<Target_getter> target_getter, const real rotate_speed);
+  void operator()(Entity& self, const Delta_time dt);
+
+private:
+  Target_getter _target_getter {};
+  real _rotate_speed {};
+};

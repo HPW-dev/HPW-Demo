@@ -294,3 +294,20 @@ void set_default_collider() {
   assert(hpw::entity_mgr);
   hpw::entity_mgr->set_collider( new_shared<Collider_2d_tree>() );
 }
+
+Rotate_to_target::Rotate_to_target(cr<Target_getter> target_getter, const real rotate_speed)
+: _target_getter {target_getter}
+, _rotate_speed {rotate_speed}
+{
+  assert(_target_getter);
+  assert(_rotate_speed > 0);
+}
+
+void Rotate_to_target::operator()(Entity& self, const Delta_time dt) {
+  cauto tgt = _target_getter();
+  cauto deg = deg_to_target(self.phys.get_pos(), tgt);
+  self.phys.set_rot_spd(_rotate_speed);
+  
+  cauto deg_diff = ring_deg(deg - self.phys.get_deg());
+  self.phys.set_invert_rotation(deg_diff > 180);
+}
