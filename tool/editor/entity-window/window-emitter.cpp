@@ -143,11 +143,11 @@ struct Window_emitter::Impl {
       pos.y = imgui_pos[1];
     }
     ImGui::SliderFloat("направление", &deg, 0, 360);
-    ImGui::SliderFloat("скорость", &speed, 0, 150_pps);
-    ImGui::SliderFloat("ускорение", &accel, 0, 150_pps);
-    ImGui::SliderFloat("торможение", &force, 0, 150_pps);
+    ImGui::SliderFloat("скорость", &speed, 0, 150.0_pps);
+    ImGui::SliderFloat("ускорение", &accel, 0, 150.0_pps);
+    ImGui::SliderFloat("торможение", &force, 0, 150.0_pps);
     ImGui::SliderFloat("ускор. вращ.", &rot_frc, 0, 720);
-    ImGui::SliderFloat("тормо. вращ.", &rot_acc, 0, 150_pps);
+    ImGui::SliderFloat("тормо. вращ.", &rot_acc, 0, 150.0_pps);
 
     dst.set_deg(deg);
     dst.set_speed(speed);
