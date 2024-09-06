@@ -34,11 +34,6 @@
 #include "game/entity/enemy/enemy-tutorial.hpp"
 
 struct Entity_mgr::Impl {
-  // за пределами этого расстояние пули за экраном умирают в шмап-моде
-  constx real shmup_bound_for_bullet = 34;
-  // за пределами этого расстояние объект за экраном умирает в шмап-моде
-  constx real shmup_bound = 250;
-
   Entities m_entities {}; // массив всех игровых объектов
   Shared<Collider> m_collision_resolver {}; // обработчик столкновений
   Mem_pool m_entity_pool {}; // мем-пул под объекты
@@ -299,7 +294,7 @@ struct Entity_mgr::Impl {
     for (rauto entity: m_entities) {
       if (entity->status.live && !entity->status.ignore_bound) {
         crauto entity_pos = entity->phys.get_pos();
-        auto bound = entity->status.is_bullet ? shmup_bound_for_bullet : shmup_bound;
+        auto bound = entity->status.is_bullet ? hpw::shmup_bound_for_bullet : hpw::shmup_bound_for_other;
 
         // тихо убить объект, если он вышел за пределы
         if (

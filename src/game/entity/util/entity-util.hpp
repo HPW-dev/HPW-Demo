@@ -42,6 +42,8 @@ real deg_to_target(const Vec self, const Vec target);
 * @param self позиция стреляющего объекта
 * @param target движущаяся цель, в которую стреляют */
 Vec predict(cr<Phys> self, cr<Phys> target);
+// проверяет что объект в пределах экрана
+bool bound_check_for_collisions(cr<Collidable> other);
 
 class Kill_by_timeout final {
   Delta_time m_timeout {};

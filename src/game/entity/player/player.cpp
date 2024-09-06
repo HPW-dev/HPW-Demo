@@ -47,6 +47,6 @@ void Player::update_sound() {
   // движение слушателя
   assert(hpw::sound_mgr);
   auto pos = to_sound_pos(phys.get_pos());
-  pos.z = -0.001f;
+  pos.z = -0.1f;
   hpw::sound_mgr->set_listener_pos(pos);
 }

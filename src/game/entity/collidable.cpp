@@ -107,6 +107,8 @@ void Collidable::process_kill() {
 }
 
 bool Collidable::collision_possible(Collidable& other) const {
+  // если объект далеко за экраном, можно его не обрабатывать
+  return_if (!bound_check_for_collisions(*this), false);
   // с собой не врезаться
   return_if (this == std::addressof(other), false);
   // надо быть живым

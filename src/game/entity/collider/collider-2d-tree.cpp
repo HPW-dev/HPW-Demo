@@ -202,6 +202,7 @@ struct Collider_2d_tree::Impl {
       cont_if (!ent->status.collidable);
       // при соблюдении условия выше можно смело кастовать
       auto collidable = ptr2ptr<Collidable*>(ent.get());
+      cont_if (!bound_check_for_collisions(*collidable));
       cont_if (!collidable->get_hitbox());
       ret.push_back(collidable);
     }

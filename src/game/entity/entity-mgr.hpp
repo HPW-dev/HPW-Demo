@@ -17,6 +17,15 @@ class Image;
 struct Vec;
 struct Scatter;
 
+namespace hpw {
+  // за пределами этого расстояние пули за экраном умирают в шмап-моде
+  constexpr real shmup_bound_for_bullet = 1'000;
+  // за пределами этого расстояние объект за экраном умирает в шмап-моде
+  constexpr real shmup_bound_for_other = shmup_bound_for_bullet;
+  // за пределами экрана физику не рассчитывать
+  constexpr real shmup_bound_for_collisions = 32;
+}
+
 // управление игровыми объектами
 class Entity_mgr final {
   nocopy(Entity_mgr);

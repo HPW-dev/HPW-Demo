@@ -3,6 +3,7 @@
 #include "entity-util.hpp"
 #include "phys.hpp"
 #include "anim-ctx.hpp"
+#include "game/core/common.hpp"
 #include "game/core/anims.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
@@ -331,4 +332,16 @@ void Rotate_to_target::operator()(Entity& self, const Delta_time dt) {
   
   cauto deg_diff = ring_deg(deg - self.phys.get_deg());
   self.phys.set_invert_rotation(deg_diff > 180);
+}
+
+bool bound_check_for_collisions(cr<Collidable> other) {
+  assert(hpw::shmup_mode); // для другого режима добавь новые константы
+  cauto bound = hpw::shmup_bound_for_collisions;
+  cauto pos = other.phys.get_pos();
+
+  return
+    pos.x > -bound &&
+    pos.x < graphic::width + bound &&
+    pos.y > -bound &&
+    pos.y < graphic::height + bound;
 }
