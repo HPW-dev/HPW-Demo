@@ -42,8 +42,6 @@ public:
     const real amplify=1.0, const bool repeat=false) = 0;
   // утсановить положение слушателя
   virtual void set_listener_pos(const Vec3 listener_pos) = 0;
-  // утсановить направление слушателя
-  virtual void set_listener_dir(const Vec3 listener_dir) = 0;
   // останавливает проигрывание звука
   virtual void stop(const Audio_id sound_id) = 0;
   // настроить громкость звука
@@ -84,7 +82,6 @@ public:
   Audio_id play(cr<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
     const real amplify=1.0, const bool repeat=false) override;
   void set_listener_pos(const Vec3 listener_pos) override;
-  void set_listener_dir(const Vec3 listener_dir) override;
   void stop(const Audio_id sound_id) override;
   void set_amplify(const Audio_id sound_id, const real amplify) override;
   void set_position(const Audio_id sound_id, const Vec3 new_pos) override;
@@ -111,7 +108,6 @@ public:
     const Vec3 source_velocity={}, const real amplify=1.0,
     const bool repeat=false) override { return BAD_AUDIO; }
   inline void set_listener_pos(const Vec3 listener_pos) override {}
-  inline void set_listener_dir(const Vec3 listener_dir) override {}
   inline void stop(const Audio_id sound_id) override {}
   inline void set_amplify(const Audio_id sound_id, const real amplify) override {}
   inline void set_position(const Audio_id sound_id, const Vec3 new_pos) override {}

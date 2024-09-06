@@ -190,13 +190,6 @@ struct Sound_mgr_oal::Impl {
     check_oal_error("alListenerf AL_GAIN");
   }
   
-  inline void set_listener_dir(const Vec3 listener_dir) {
-    const ALfloat ori [3] {listener_dir.x, listener_dir.y, listener_dir.z};
-    std::lock_guard lock(m_mutex);
-    alListenerfv(AL_ORIENTATION, ori);
-    check_oal_error("alListener3f AL_ORIENTATION");
-  }
-
   inline bool is_playing(const Audio_id sound_id) const {
     return_if (sound_id == BAD_AUDIO, false);
     std::lock_guard lock(m_mutex);
@@ -521,7 +514,6 @@ Audio_id Sound_mgr_oal::play(cr<Str> sound_name, const Vec3 source_position, con
 const real amplify, const bool repeat)
   { return impl->play(sound_name, source_position, source_velocity, amplify, repeat); }
 void Sound_mgr_oal::set_listener_pos(const Vec3 listener_pos) { impl->set_listener_pos(listener_pos); }
-void Sound_mgr_oal::set_listener_dir(const Vec3 listener_dir) { impl->set_listener_dir(listener_dir); }
 bool Sound_mgr_oal::is_playing(const Audio_id sound_id) const { return impl->is_playing(sound_id); }
 void Sound_mgr_oal::set_amplify(const Audio_id sound_id, const real amplify) { impl->set_amplify(sound_id, amplify); }
 void Sound_mgr_oal::set_position(const Audio_id sound_id, const Vec3 new_pos) { impl->set_position(sound_id, new_pos); }
