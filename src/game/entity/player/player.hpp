@@ -4,6 +4,7 @@
 
 class Player: public Collidable, public Ability_entry {
   nocopy(Player);
+  void update_sound();
 
 public:
   hp_t hp_max {};

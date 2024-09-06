@@ -3,7 +3,9 @@
 #include "player.hpp"
 #include "util/error.hpp"
 #include "game/core/entities.hpp"
+#include "game/core/sounds.hpp"
 #include "game/util/camera.hpp"
+#include "game/util/game-util.hpp"
 
 Player::Player(): Collidable(GET_SELF_TYPE), Ability_entry(*this) {
   hpw::entity_mgr->set_player(this);
@@ -23,6 +25,7 @@ void Player::update(const Delta_time dt) {
   // трясти камеру при столкновениях
   if (this->status.collided)
     graphic::camera->add_shake(999);
+  update_sound();
 }
 
 void Player::draw(Image& dst, const Vec offset) const {
@@ -39,3 +42,11 @@ void Player::process_kill() {
 }
 
 void Player::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }
+
+void Player::update_sound() {
+  // движение слушателя
+  assert(hpw::sound_mgr);
+  auto pos = to_sound_pos(phys.get_pos());
+  pos.z = -0.001f;
+  hpw::sound_mgr->set_listener_pos(pos);
+}
