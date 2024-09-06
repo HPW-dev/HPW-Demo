@@ -40,9 +40,6 @@ public:
   // проиграть звук
   virtual Audio_id play(cr<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
     const real amplify=1.0, const bool repeat=false) = 0;
-  // проиграть звук с привязкой к объекту
-  virtual Audio_id attach_and_play(cr<Str> sound_name, cp<Entity> entity,
-    const real amplify=1.0, const bool repeat=false) = 0;
   // утсановить положение слушателя
   virtual void set_listener_pos(const Vec3 listener_pos) = 0;
   // утсановить направление слушателя
@@ -86,8 +83,6 @@ public:
   ~Sound_mgr_oal();
   Audio_id play(cr<Str> sound_name, const Vec3 source_position={}, const Vec3 source_velocity={},
     const real amplify=1.0, const bool repeat=false) override;
-  Audio_id attach_and_play(cr<Str> sound_name, cp<Entity> entity,
-    const real amplify=1.0, const bool repeat=false) override;
   void set_listener_pos(const Vec3 listener_pos) override;
   void set_listener_dir(const Vec3 listener_dir) override;
   void stop(const Audio_id sound_id) override;
@@ -115,8 +110,6 @@ public:
   inline Audio_id play(cr<Str> sound_name, const Vec3 source_position={},
     const Vec3 source_velocity={}, const real amplify=1.0,
     const bool repeat=false) override { return BAD_AUDIO; }
-  inline Audio_id attach_and_play(cr<Str> sound_name, cp<Entity> entity,
-    const real amplify=1.0, const bool repeat=false) override { return BAD_AUDIO; }
   inline void set_listener_pos(const Vec3 listener_pos) override {}
   inline void set_listener_dir(const Vec3 listener_dir) override {}
   inline void stop(const Audio_id sound_id) override {}

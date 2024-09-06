@@ -14,10 +14,6 @@
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 
-#ifndef SOUND_WITHOUT_ENTITY
-#include "game/entity/entity.hpp"
-#endif
-
 inline Str decode_oal_error(const ALenum error_enum) {
   switch (error_enum) {
     default:
@@ -44,9 +40,6 @@ struct Sound_mgr_oal::Impl {
     ALuint oal_source_id {};
     Shared<Packet_decoder> packet_decoder {}; // выдаёт поблочно данные аудио файла
     cp<Audio> sound {}; // прикреплённый звук из банка
-    #ifndef SOUND_WITHOUT_ENTITY
-    cp<Entity> entity {}; // привязанный объект
-    #endif
     Audio_id audio_id {BAD_AUDIO}; // ID для управления звуком
 
     inline void update(Impl* master) {
@@ -58,17 +51,6 @@ struct Sound_mgr_oal::Impl {
       ALint buffers_processed = 0;
       alGetSourcei(oal_source_id, AL_BUFFERS_PROCESSED, &buffers_processed);
       check_oal_error("alGetSourcei AL_BUFFERS_PROCESSED");
-
-      #ifndef SOUND_WITHOUT_ENTITY
-        // пока объект жив, настраивать его позицию звука
-        if (entity && entity->status.live && !entity->status.no_sound) {
-          cauto pos = entity->phys.get_pos();
-          master->set_position(audio_id, Vec3(pos.x, pos.y, 0));
-          cauto vel = entity->phys.get_vel();
-          master->set_velocity(audio_id, Vec3(vel.x, vel.y, 0));
-        }
-      #endif
-
       crauto format = master->to_compatible_oal_format(*sound);
 
       while (buffers_processed > 0) {
@@ -174,18 +156,6 @@ struct Sound_mgr_oal::Impl {
     bind_audio(id, std::move(audio_info));
     return id;
   } // play
-
-  inline Audio_id attach_and_play(cr<Str> sound_name, cp<Entity> entity,
-  const real amplify, const bool repeat) {
-    #ifndef SOUND_WITHOUT_ENTITY
-      assert(entity);
-      cauto pos = entity->phys.get_pos();
-      cauto vel = entity->phys.get_vel();
-      return play(sound_name, Vec3(pos.x, pos.y, 0), Vec3(vel.x, vel.y, 0), amplify, repeat);
-    #else
-      return BAD_AUDIO;
-    #endif
-  }
 
   inline void make_update_thread() {
     m_update_thread_live = true;
@@ -478,11 +448,6 @@ struct Sound_mgr_oal::Impl {
           return true;
         }
 
-        #ifndef SOUND_WITHOUT_ENTITY
-        // мёртвый объект тоже удалить
-        return_if (audio_info.entity && !audio_info.entity->status.live, true);
-        #endif
-
         return false;
       }
     );
@@ -569,8 +534,6 @@ void Sound_mgr_oal::set_master_gain(const real gain) { impl->set_master_gain(gai
 void Sound_mgr_oal::set_doppler_factor(const real doppler_factor) { impl->set_doppler_factor(doppler_factor); }
 void Sound_mgr_oal::disable(const Audio_id sound_id) { impl->disable(sound_id); }
 cr<Audio> Sound_mgr_oal::find_audio(cr<Str> sound_name) const { return impl->find_audio(sound_name); }
-Audio_id Sound_mgr_oal::attach_and_play(cr<Str> sound_name, cp<Entity> entity, const real amplify, const bool repeat)
-  { return impl->attach_and_play(sound_name, entity, amplify, repeat); }
 void Sound_mgr_oal::shutup() { impl->shutup(); }
 
 cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
