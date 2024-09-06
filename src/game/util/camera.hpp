@@ -15,6 +15,7 @@ public:
   Vec get_offset() const; // узнать смещение для отрисовки
   void add_shake(real intense); // добавить тряску
   void update(const Delta_time dt);
+  bool shaked() const; // проверить трясётся ли камера
 };
 
 namespace graphic {

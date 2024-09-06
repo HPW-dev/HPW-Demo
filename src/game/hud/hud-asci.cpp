@@ -6,10 +6,11 @@
 #include "game/entity/player/player.hpp"
 #include "game/entity/player/player-dark.hpp"
 #include "game/util/score-table.hpp"
+#include "game/util/sync.hpp"
+#include "game/util/camera.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/difficulty.hpp"
 #include "util/math/mat.hpp"
@@ -147,11 +148,12 @@ struct Hud_asci::Impl {
 
   // убивает игрока, если его придавят полоски
   inline void check_crush(Player* player) const {
-    bool killme {false};
-    if (intersect(player_rect, en_rect) && intersect(player_rect, pts_rect))
-      killme = true;
+    bool killme = intersect(player_rect, en_rect) && intersect(player_rect, pts_rect);
     // не взрывать игрока на такой высоте
     if (player_rect.pos.y + player_rect.size.y <= en_rect.pos.y + 3)
+      killme = false;
+    // при взрыве не надо убивать игрока
+    if (graphic::camera && graphic::camera->shaked())
       killme = false;
     if (killme)
       player->sub_hp(player->get_hp());

@@ -46,10 +46,13 @@ struct Camera::Impl {
   inline void update(const Delta_time dt) {
     m_shake_time = std::max<Delta_time>(0, m_shake_time - dt);
   }
+
+  inline bool shaked() const { return m_shake_time > 0; }
 }; // Impl
 
 Camera::Camera(): impl {new_unique<Impl>()} {}
 Camera::~Camera() {}
 Vec Camera::get_offset() const { return impl->get_offset(); }
 void Camera::add_shake(real intense) { return impl->add_shake(intense); }
+bool Camera::shaked() const { return impl->shaked(); }
 void Camera::update(const Delta_time dt) { return impl->update(dt); }
