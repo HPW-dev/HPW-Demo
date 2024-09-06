@@ -14,6 +14,7 @@ class Locale;
 struct Circle;
 struct Polygon;
 struct Vec;
+struct Vec3;
 
 void load_locale(cr<Str> user_path={});
 void load_animations();
@@ -53,3 +54,7 @@ void load_sounds();
 void set_random_palette();
 // сохраняет скриншот в нужную папку с нужным именем
 void save_screenshot(cr<Image> image);
+// кновертирует ускорение игры в звуковое ускорение
+Vec3 to_sound_vel(const Vec src);
+// кновертирует корды игры в звуковые корды
+Vec3 to_sound_pos(const Vec src);
