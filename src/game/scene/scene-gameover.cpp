@@ -5,6 +5,7 @@
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/replays.hpp"
+#include "game/core/sounds.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/game-util.hpp"
@@ -23,6 +24,10 @@ struct Scene_gameover::Impl {
     // поменять палитру
     if (hpw::rnd_pal_after_death && !hpw::replay_read_mode)
       set_random_palette();
+    
+    // выключить звуки, что были до этого
+    assert(hpw::sound_mgr);
+    hpw::sound_mgr->shutup();
   }
 
   inline void update(const Delta_time dt) {
