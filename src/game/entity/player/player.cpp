@@ -5,7 +5,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/sounds.hpp"
 #include "game/util/camera.hpp"
-#include "game/util/game-util.hpp"
+#include "entity/util/entity-util.hpp"
 
 Player::Player(): Collidable(GET_SELF_TYPE), Ability_entry(*this) {
   hpw::entity_mgr->set_player(this);

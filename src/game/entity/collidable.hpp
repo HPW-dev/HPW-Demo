@@ -11,7 +11,7 @@ class Collidable: public Entity {
   std::unordered_set<Collidable*> m_collided {};
   hp_t m_hp {}; // жизни (можно сносить в минус)
   hp_t m_dmg {}; // урон от столкновения с объектом
-  Str m_explosion_name {}; // имя анимации взрыва
+  [[deprecated]] Str m_explosion_name {}; // имя анимации взрыва
   mutable omp::mutex m_mutex {};
   mutable real m_old_deg {-999}; // для кэширования хитбокса
   mutable cp<Anim> m_old_anim {}; // для кэширования хитбокса

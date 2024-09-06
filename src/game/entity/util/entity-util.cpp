@@ -8,6 +8,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
+#include "game/core/sounds.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/collidable.hpp"
@@ -344,4 +345,60 @@ bool bound_check_for_collisions(cr<Collidable> other) {
     pos.x < graphic::width + bound &&
     pos.y > -bound &&
     pos.y < graphic::height + bound;
+}
+
+Sound_attached::Sound_attached(Entity& ent, cr<Str> sound_name, bool repeat, real gain)
+: _entity {ent}
+{
+  assert(hpw::sound_mgr);
+  assert(_entity.status.live);
+  assert(!_entity.status.no_sound);
+  _audio_id = hpw::sound_mgr->play(
+    sound_name,
+    to_sound_pos(_entity.phys.get_pos()),
+    to_sound_vel(_entity.phys.get_vel()),
+    gain, repeat
+  );
+  iferror(_audio_id == BAD_AUDIO, "не удалось воспроизвести звук \"" + sound_name + "\"");
+  // при смерти выключить звук
+  cauto local_id = _audio_id;
+  ent.add_remove_cb([=](Entity& _){
+    assert(hpw::sound_mgr);
+    hpw::sound_mgr->disable(local_id);
+  });
+}
+
+void Sound_attached::operator()(Entity& ent, const Delta_time dt) {
+  assert(hpw::sound_mgr);
+  if (_entity.status.no_sound) {
+    hpw::sound_mgr->disable(_audio_id);
+    return;
+  }
+
+  cauto pos = to_sound_pos(_entity.phys.get_pos());
+  cauto vel = to_sound_vel(_entity.phys.get_vel());
+  hpw::sound_mgr->set_position(_audio_id, pos);
+  hpw::sound_mgr->set_velocity(_audio_id, vel);
+}
+
+Vec3 to_sound_vel(const Vec src) {
+  assert(graphic::width);
+  assert(graphic::height);
+
+  return Vec3(
+    (src.x * hpw::SOUND_POS_AMP) / graphic::width,
+    (src.y * hpw::SOUND_POS_AMP) / graphic::width,
+    0
+  );
+}
+
+Vec3 to_sound_pos(const Vec src) {
+  assert(graphic::width);
+  assert(graphic::height);
+
+  return Vec3(
+    (src.x * hpw::SOUND_VEL_AMP) / graphic::width,
+    (src.y * hpw::SOUND_VEL_AMP) / graphic::width,
+    0
+  );
 }

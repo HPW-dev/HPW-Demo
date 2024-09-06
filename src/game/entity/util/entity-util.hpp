@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include "sound/audio.hpp"
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
@@ -9,6 +10,8 @@ class Entity;
 class Particle;
 class Collidable;
 class Phys;
+struct Vec;
+struct Vec3;
 
 // рекомендуемый колижн ресолвер для шмап мода
 void set_default_collider();
@@ -44,6 +47,10 @@ real deg_to_target(const Vec self, const Vec target);
 Vec predict(cr<Phys> self, cr<Phys> target);
 // проверяет что объект в пределах экрана
 bool bound_check_for_collisions(cr<Collidable> other);
+// кновертирует ускорение игры в звуковое ускорение
+Vec3 to_sound_vel(const Vec src);
+// кновертирует корды игры в звуковые корды
+Vec3 to_sound_pos(const Vec src);
 
 class Kill_by_timeout final {
   Delta_time m_timeout {};
@@ -128,4 +135,14 @@ public:
 private:
   Target_getter _target_getter {};
   real _rotate_speed {};
+};
+
+// Приклеивает звук к объекту
+class Sound_attached final {
+  Entity& _entity;
+  Audio_id _audio_id {};
+
+public:
+  explicit Sound_attached(Entity& ent, cr<Str> sound_name, bool repeat=false, real gain=1.0);
+  void operator()(Entity& ent, const Delta_time dt);
 };

@@ -16,56 +16,6 @@
 #include "util/math/random.hpp"
 #include "util/error.hpp"
 
-// для остановки звука
-class Sound_stop final {
-  Audio_id _audio_id {};
-
-public:
-  explicit Sound_stop(Audio_id id): _audio_id {id} { assert(_audio_id != BAD_AUDIO); }
-
-  void operator()(Entity& _) {
-    assert(hpw::sound_mgr);
-    hpw::sound_mgr->disable(_audio_id);
-  }
-};
-
-// Приклеивает звук к объекту
-class Sound_attached final {
-  Entity& _entity;
-  Audio_id _audio_id {};
-
-public:
-  explicit Sound_attached(Entity& ent, cr<Str> sound_name, bool repeat=false, real gain=1.0)
-  : _entity {ent}
-  {
-    assert(hpw::sound_mgr);
-    assert(_entity.status.live);
-    assert(!_entity.status.no_sound);
-    _audio_id = hpw::sound_mgr->play(
-      sound_name,
-      to_sound_pos(_entity.phys.get_pos()),
-      to_sound_vel(_entity.phys.get_vel()),
-      gain, repeat
-    );
-    iferror(_audio_id == BAD_AUDIO, "не удалось воспроизвести звук \"" + sound_name + "\"");
-    // при смерти выключить звук
-    ent.add_remove_cb(Sound_stop(_audio_id));
-  }
-
-  void operator()(Entity& ent, const Delta_time dt) {
-    assert(hpw::sound_mgr);
-    if (_entity.status.no_sound) {
-      hpw::sound_mgr->disable(_audio_id);
-      return;
-    }
-
-    cauto pos = to_sound_pos(_entity.phys.get_pos());
-    cauto vel = to_sound_vel(_entity.phys.get_vel());
-    hpw::sound_mgr->set_position(_audio_id, pos);
-    hpw::sound_mgr->set_velocity(_audio_id, vel);
-  }
-};
-
 // TODO del:
 class Bullet_maker final {
 public:
