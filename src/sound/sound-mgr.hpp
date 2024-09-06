@@ -44,6 +44,12 @@ public:
   virtual void set_listener_pos(const Vec3 listener_pos) = 0;
   // останавливает проигрывание звука
   virtual void stop(const Audio_id sound_id) = 0;
+  // продолжает воспроизведение остановленного звука
+  virtual void continue_play(const Audio_id sound_id) = 0;
+  // ставит все звуки на паузу
+  virtual void stop_all() = 0;
+  // убирает все звуки с паузы
+  virtual void continue_all() = 0;
   // настроить громкость звука
   virtual void set_amplify(const Audio_id sound_id, const real amplify) = 0;
   // настроить позицию источника звука
@@ -83,6 +89,7 @@ public:
     const real amplify=1.0, const bool repeat=false) override;
   void set_listener_pos(const Vec3 listener_pos) override;
   void stop(const Audio_id sound_id) override;
+  void continue_play(const Audio_id sound_id) override;
   void set_amplify(const Audio_id sound_id, const real amplify) override;
   void set_position(const Audio_id sound_id, const Vec3 new_pos) override;
   void set_velocity(const Audio_id sound_id, const Vec3 new_vel) override;
@@ -95,6 +102,8 @@ public:
   void disable(const Audio_id sound_id) override;
   cr<Audio> find_audio(cr<Str> sound_name) const override;
   void shutup() override;
+  void stop_all() override;
+  void continue_all() override;
 }; // Sound_mgr_oal
 
 // Беззвучная заглушка
@@ -109,6 +118,7 @@ public:
     const bool repeat=false) override { return BAD_AUDIO; }
   inline void set_listener_pos(const Vec3 listener_pos) override {}
   inline void stop(const Audio_id sound_id) override {}
+  inline void continue_play(const Audio_id sound_id) override {}
   inline void set_amplify(const Audio_id sound_id, const real amplify) override {}
   inline void set_position(const Audio_id sound_id, const Vec3 new_pos) override {}
   inline void set_velocity(const Audio_id sound_id, const Vec3 new_vel) override {}
@@ -121,4 +131,6 @@ public:
   inline void disable(const Audio_id sound_id) override {}
   cr<Audio> find_audio(cr<Str> sound_name) const override;
   inline void shutup() override {}
+  inline void stop_all() override {}
+  inline void continue_all() override {}
 }; // Sound_mgr_nosound

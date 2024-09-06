@@ -209,8 +209,38 @@ struct Sound_mgr_oal::Impl {
         << sound_id << ")\n");
       return;
     }
+
     std::lock_guard lock(m_mutex);
-    // TODO
+    auto finded_audio_info = m_audio_infos.find(sound_id);
+    if (finded_audio_info != m_audio_infos.end()) {
+      cauto source = finded_audio_info->second.oal_source_id;
+      ALint state;
+
+      alGetSourcei(finded_audio_info->second.oal_source_id, AL_SOURCE_STATE, &state);
+      check_oal_error("alGetSourcei AL_SOURCE_STATE");
+
+      if (state == AL_PLAYING) {
+        alSourcePause(source);
+        check_oal_error("alSourcePause source");
+      }
+    }
+  }
+
+  inline void continue_play(const Audio_id sound_id) {
+    std::lock_guard lock(m_mutex);
+    auto finded_audio_info = m_audio_infos.find(sound_id);
+    if (finded_audio_info != m_audio_infos.end()) {
+      cauto source = finded_audio_info->second.oal_source_id;
+      ALint state;
+
+      alGetSourcei(source, AL_SOURCE_STATE, &state);
+      check_oal_error("alGetSourcei AL_SOURCE_STATE");
+
+      if (state == AL_PAUSED) {
+        alSourcePlay(source);
+        check_oal_error("alSourcePlay source");
+      }
+    }
   }
 
   inline void check_audio_ctx(const Audio_id sound_id) const {
@@ -224,7 +254,7 @@ struct Sound_mgr_oal::Impl {
       return;
     }
     std::lock_guard lock(m_mutex);
-    // TODO
+    error("need impl");
   }
 
   inline void set_position(const Audio_id sound_id, const Vec3 new_pos) {
@@ -435,7 +465,7 @@ struct Sound_mgr_oal::Impl {
         ALint state;
         alGetSourcei(audio_info.oal_source_id, AL_SOURCE_STATE, &state);
         
-        if (state != AL_PLAYING) {
+        if (state == AL_STOPPED) {
           alDeleteSources(1, &audio_info.oal_source_id);
           alDeleteBuffers(m_config.buffers, audio_info.oal_buffer_ids.data());
           return true;
@@ -470,6 +500,16 @@ struct Sound_mgr_oal::Impl {
     // выключить все звуки
     for (cauto id: ids_for_shutup)
       disable(id);
+  }
+
+  void stop_all() {
+    for (crauto audio_info: m_audio_infos)
+      stop(audio_info.second.audio_id);
+  }
+
+  void continue_all() {
+    for (crauto audio_info: m_audio_infos)
+      continue_play(audio_info.second.audio_id);
   }
 }; // Impl
 
@@ -519,6 +559,7 @@ void Sound_mgr_oal::set_amplify(const Audio_id sound_id, const real amplify) { i
 void Sound_mgr_oal::set_position(const Audio_id sound_id, const Vec3 new_pos) { impl->set_position(sound_id, new_pos); }
 void Sound_mgr_oal::set_velocity(const Audio_id sound_id, const Vec3 new_vel) { impl->set_velocity(sound_id, new_vel); }
 void Sound_mgr_oal::stop(const Audio_id sound_id) { impl->stop(sound_id); }
+void Sound_mgr_oal::continue_play(const Audio_id sound_id) { impl->continue_play(sound_id); }
 void Sound_mgr_oal::add_audio(cr<Str> sound_name, cr<Audio> sound) { impl->add_audio(sound_name, sound); }
 void Sound_mgr_oal::move_audio(cr<Str> sound_name, Audio&& sound) { impl->move_audio(sound_name, std::move(sound)); }
 void Sound_mgr_oal::set_pitch(const Audio_id sound_id, const real pitch) { impl->set_pitch(sound_id, pitch); }
@@ -527,6 +568,8 @@ void Sound_mgr_oal::set_doppler_factor(const real doppler_factor) { impl->set_do
 void Sound_mgr_oal::disable(const Audio_id sound_id) { impl->disable(sound_id); }
 cr<Audio> Sound_mgr_oal::find_audio(cr<Str> sound_name) const { return impl->find_audio(sound_name); }
 void Sound_mgr_oal::shutup() { impl->shutup(); }
+void Sound_mgr_oal::stop_all() { impl->stop_all(); }
+void Sound_mgr_oal::continue_all() { impl->continue_all(); }
 
 cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
   error("called find_audio in nosound mode");

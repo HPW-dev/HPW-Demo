@@ -2,6 +2,7 @@
 #include "scene-mgr.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/sounds.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
@@ -15,11 +16,14 @@
 
 Scene_game_pause::Scene_game_pause() {
   init_menu();
+  hpw::sound_mgr->stop_all();
 }
 
 void Scene_game_pause::update(const Delta_time dt) {
-  if (is_pressed_once(hpw::keycode::escape))
+  if (is_pressed_once(hpw::keycode::escape)) {
     hpw::scene_mgr->back(); // возврат в игру
+    hpw::sound_mgr->continue_all();
+  }
   menu->update(dt);
 }
 
