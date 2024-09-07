@@ -6,6 +6,7 @@
 #include "game/scene/scene-locale.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/scene/scene-game.hpp"
+#include "game/scene/scene-graphic.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
