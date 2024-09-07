@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import platform
 import sys
+from script.helper import copy_license
 
 sanitize = [
   #"-fsanitize=leak", "-fsanitize=address",
@@ -83,6 +84,8 @@ print("System: " +
 print(f"Host: {host}")
 print("Build mode: " + ("debug" if is_debug else "release"))
 print("Compiler: " + compiler)
+
+copy_license()
 
 env = Environment() # for SCons
 SConscript(

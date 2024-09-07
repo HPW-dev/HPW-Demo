@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+from script.helper import save_version
+
 Import([
   "env",
   "is_linux",
@@ -135,3 +137,5 @@ env.Program(
   LINKFLAGS = ld_flags,
   CPPPATH = inc_path,
 )
+
+save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, is_linux, is_64bit, host)

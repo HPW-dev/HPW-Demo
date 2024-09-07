@@ -58,7 +58,7 @@ def write_game_version():
     print("[!] Error when getting game version")
   
   # сгенерировать C++ файл
-  with open(file='src/game/util/version.cpp', mode='w', newline='\n') as file:
+  with open(file='src/game/util/version.cpp', mode='w', newline='\n', encoding="utf-8") as file:
     file.write (
       '#include "version.hpp"\n'
       '\n'
@@ -70,7 +70,26 @@ def write_game_version():
 def copy_license():
   "копирует файл LICENSE.txt в нужную папку"
   try:
-    #shutil.copyfile('source.txt', 'destination.txt')
-    pass
+    shutil.copyfile('LICENSE.txt', 'build/LICENSE.txt')
   except:
     print("error copying license file")
+
+def prepare_strs(strs: list[str]):
+  return ' '.join(filter(None, strs))
+
+def save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, is_linux, is_64bit, host):
+  "создаёт файл build_dir/VERSION.txt с инфой о компиляции"
+  try:
+    with open(file=f'{build_dir}VERSION.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
+      file.writelines([
+        "### H.P.W BUILD INFO\n",
+        f"* Compiler: {compiler}\n",
+        f"* OS: {"Linux" if is_linux else "Windows"} {"x64" if is_64bit else "x32"}\n",
+        f"* Host-render system: {host}\n",
+        f"* C/CXX defines: {prepare_strs(defines)}\n",
+        f"* C/CXX flags: {prepare_strs(cpp_flags)}\n",
+        f"* LD flags: {prepare_strs(ld_flags)}\n",
+        f"* Used LIB's: {prepare_strs(used_libs)}\n",
+      ])
+  except:
+    print("error generating build/VERSION.txt")
