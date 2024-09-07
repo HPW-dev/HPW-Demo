@@ -68,7 +68,7 @@ def write_game_version():
     )
 
 def copy_license():
-  "копирует файл LICENSE в нужную папку"
+  "копирует файл LICENSE.txt в нужную папку"
   try:
     #shutil.copyfile('source.txt', 'destination.txt')
     pass
