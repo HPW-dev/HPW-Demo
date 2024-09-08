@@ -377,7 +377,7 @@ struct Level_tutorial::Impl {
     Collidable* spawn(const Vec pos) {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
       enemy->add_update_cb(Zigzag_motion());
-      enemy->add_kill_cb([this](Entity&){ --live_count; });
+      enemy->add_remove_cb([this](Entity&){ --live_count; });
       ++live_count;
       assert(enemy->status.collidable);
       return ptr2ptr<Collidable*>(enemy);
@@ -426,7 +426,7 @@ struct Level_tutorial::Impl {
           bullet->phys.set_deg(deg_to_target(bullet->phys.get_pos(), hpw::entity_mgr->target_for_enemy()));
         }
       });
-      enemy->add_kill_cb([this](Entity&){ --live_count; });
+      enemy->add_remove_cb([this](Entity&){ --live_count; });
       ++live_count;
       assert(enemy->status.collidable);
       return ptr2ptr<Collidable*>(enemy);
