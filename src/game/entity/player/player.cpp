@@ -41,7 +41,10 @@ void Player::process_kill() {
   graphic::camera->add_shake(999);
 }
 
-void Player::sub_en(hp_t val) { energy = std::max<hp_t>(0, energy - val); }
+void Player::sub_en(hp_t val) {
+  energy = std::max<hp_t>(0,
+    energy - val * energy_consumption);
+}
 
 void Player::update_sound() {
   // движение слушателя

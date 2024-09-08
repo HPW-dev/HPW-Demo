@@ -52,9 +52,9 @@ struct Player_dark::Loader::Impl {
 
     cauto shoot_node = config["shoot"];
     assert( shoot_node.check() );
-    m_shoot_timer  = shoot_node.get_real("shoot_timer");
-    m_shoot_price  = shoot_node.get_int ("shoot_price");
-    m_energy_regen = shoot_node.get_int ("energy_regen");
+    m_shoot_timer = shoot_node.get_real("shoot_timer");
+    m_shoot_price = shoot_node.get_int("shoot_price");
+    m_energy_regen = shoot_node.get_int("energy_regen");
     m_percent_for_decrease_shoot_speed = shoot_node.get_real("percent_for_decrease_shoot_speed");
     m_decrease_shoot_speed_ratio = shoot_node.get_real("decrease_shoot_speed_ratio");
     m_default_shoot_count = shoot_node.get_int("default_shoot_count");
@@ -70,8 +70,7 @@ struct Player_dark::Loader::Impl {
     assert(m_fuel > 0);
     assert(m_energy_regen > 0);
     assert(m_energy_max > 0);
-    assert(m_percent_for_decrease_shoot_speed > 0 &&
-      m_percent_for_decrease_shoot_speed < 100);
+    assert(m_percent_for_decrease_shoot_speed > 0 && m_percent_for_decrease_shoot_speed < 100);
     assert(m_decrease_shoot_speed_ratio > 0);
     assert(m_default_shoot_count > 0);
     assert(m_shoot_speed > 0);
@@ -96,7 +95,7 @@ struct Player_dark::Loader::Impl {
     it.m_shoot_timer = m_shoot_timer;
     it.energy_max = m_energy_max;
     it.hp_max = it.get_hp();
-    it.m_fuel = it.m_fuel_max = m_fuel;
+    it.fuel = it.fuel_max = m_fuel;
     it.m_shoot_price = m_shoot_price;
     it.m_energy_regen = m_energy_regen;
     it.m_energy_level_for_decrease_shoot_speed = it.energy_max * (m_percent_for_decrease_shoot_speed / 100.0);
