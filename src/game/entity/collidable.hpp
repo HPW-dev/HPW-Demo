@@ -11,7 +11,6 @@ class Collidable: public Entity {
   std::unordered_set<Collidable*> m_collided {};
   hp_t m_hp {}; // жизни (можно сносить в минус)
   hp_t m_dmg {}; // урон от столкновения с объектом
-  [[deprecated]] Str m_explosion_name {}; // имя анимации взрыва
   mutable omp::mutex m_mutex {};
   mutable real m_old_deg {-999}; // для кэширования хитбокса
   mutable cp<Anim> m_old_anim {}; // для кэширования хитбокса
@@ -34,7 +33,6 @@ public:
   cp<Hitbox> get_hitbox() const override;
   void add_collision_cb(cr<Collidion_cb> cb);
   void add_collision_cb(Collidion_cb&& cb);
-  void process_kill() override;
 
   // нанесение урона
   virtual void sub_hp(hp_t incoming_dmg);
@@ -42,9 +40,6 @@ public:
   inline void set_dmg(hp_t val) { m_dmg = val; }
   inline hp_t get_hp() const { return m_hp; }
   inline hp_t get_dmg() const { return m_dmg; }
-  // имя взрыва
-  inline cr<Str> get_explosion_name() const { return m_explosion_name; }
-  inline void set_explosion_name(cr<Str> name) { m_explosion_name = name; }
   // проверить что с таким объетом уже было столкновение
   bool collided_with(Collidable* other) const;
   // обработать столкновение с другим объектом. True - если было

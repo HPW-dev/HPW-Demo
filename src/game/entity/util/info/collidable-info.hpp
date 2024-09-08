@@ -9,7 +9,7 @@ class Collidable;
 struct Collidable_info {
   hp_t hp {};
   hp_t dmg {};
-  Str exolosion_name {}; // с каким взрывом объект уничтожится
+  Str explosion_name {}; // с каким взрывом объект уничтожится
   bool ignore_enemy {};
   bool ignore_bullet {};
   bool ignore_self_type {};

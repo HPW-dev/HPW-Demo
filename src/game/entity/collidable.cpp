@@ -11,10 +11,6 @@
 
 Collidable::Collidable()
 : Entity(GET_SELF_TYPE)
-, m_collided {}
-, m_hp {}
-, m_dmg {}
-, m_explosion_name {}
 { status.collidable = true; }
 
 Collidable::Collidable(Entity_type new_type): Collidable()
@@ -97,13 +93,6 @@ void Collidable::sub_hp(hp_t incoming_dmg) {
   static_assert(std::is_signed<decltype(m_hp)>()); // иначе переделай момент с выходом за 0
   // вычесть дамаг, если кончились жизни - сдохнуть
   set_hp( get_hp() - incoming_dmg );
-}
-
-void Collidable::process_kill() {
-  Entity::process_kill();
-  // запустить анимацию взрыва, если она есть
-  if ( !m_explosion_name.empty())
-    hpw::entity_mgr->make(this, m_explosion_name, phys.get_pos());
 }
 
 bool Collidable::collision_possible(Collidable& other) const {
