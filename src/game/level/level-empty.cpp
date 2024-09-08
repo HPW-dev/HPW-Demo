@@ -26,7 +26,29 @@ struct Level_empty::Impl {
   }
 
   inline void draw(Image& dst) const {
-    dst.fill( Pal8::from_real(1.0 / 3.0, true) );
+    cauto color_bg     = Pal8::from_real(1. / 3., true);
+    cauto color_grid   = Pal8::from_real(1. / 2.333, true);
+    cauto color_grid_2 = Pal8::from_real(1. / 4., true);
+
+    dst.fill(color_bg);
+    // сетка (тень)
+    cfor (y, dst.Y)
+      if (y % 16 == 0)
+        cfor (x, dst.X)
+          dst(x, y) = color_grid;
+    cfor (x, dst.X)
+      if (x % 16 == 0)
+        cfor (y, dst.Y)
+          dst(x, y) = color_grid;
+    // сетка
+    cfor (y, dst.Y)
+      if (y % 16 == 8)
+        cfor (x, dst.X)
+          dst(x, y) = color_grid_2;
+    cfor (x, dst.X)
+      if (x % 16 == 8)
+        cfor (y, dst.Y)
+          dst(x, y) = color_grid_2;
   }
 }; // Impl
 
