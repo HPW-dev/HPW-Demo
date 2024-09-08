@@ -37,8 +37,6 @@ public:
   real m_focus_speed {}; // скорость при фокусировке
   hp_t m_shoot_price {}; // стоимсть за выстрел (энергия)
   hp_t m_energy_regen {}; // скорость восстановления энергии
-  hp_t m_energy_level_for_decrease_shoot_speed {}; // если энергия ниже этого урвоня, то замедлить стрельбу
-  real m_decrease_shoot_speed_ratio {}; // на сколько замедлить скорость стрельбы при нехватке энергии
   uint m_default_shoot_count {}; // сколько за раз выпустить пуль при обычной атаке
   real m_deg_spread_shoot {}; // угол разброса при обычном выстреле
   real m_deg_focused_shoot {}; // угол разброса при фокусировке

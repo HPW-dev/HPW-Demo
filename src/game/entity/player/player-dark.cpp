@@ -8,18 +8,15 @@
 #include "game/core/entities.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"
+#include "util/log.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/light.hpp"
 
 Player_dark::Player_dark(): Player() {}
 
 void Player_dark::shoot(const Delta_time dt) {
-  // стрелять менее часто, при нехватке энергии
-  auto local_dt = dt;
-  if (energy <= m_energy_level_for_decrease_shoot_speed)
-    local_dt *= m_decrease_shoot_speed_ratio;
-  sub_en(m_shoot_price);
-  default_shoot(local_dt);
+  // attack_cooldown_amp изменит задержку выстрела 
+  default_shoot(dt * attack_cooldown_amp);
 }
 
 void Player_dark::default_shoot(const Delta_time dt) {
@@ -27,6 +24,8 @@ void Player_dark::default_shoot(const Delta_time dt) {
   cfor (_, m_shoot_timer.update(dt)) {
     // пустить несколько пуль за раз
     cfor (bullet_count, m_default_shoot_count) {
+      cont_if(energy < m_shoot_price);
+      sub_en(m_shoot_price);
       // смещение пули при спавне
       cauto spawn_pos = phys.get_pos() + Vec(rndr(-7, 7), 0);
       auto bullet = hpw::entity_mgr->make(this,
@@ -35,7 +34,7 @@ void Player_dark::default_shoot(const Delta_time dt) {
       bullet->phys.set_deg(270);
       bullet->phys.set_speed(m_shoot_speed);
       // передача импульса
-      bullet->phys.set_vel(bullet->phys.get_vel() + phys.get_vel());
+      bullet->phys.set_vel((bullet->phys.get_vel() + phys.get_vel()) * bullet_speed_amp);
       // разброс
       auto deg_spread = is_pressed(hpw::keycode::focus)
         ? m_deg_focused_shoot

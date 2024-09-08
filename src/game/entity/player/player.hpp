@@ -15,6 +15,8 @@ public:
   real default_force {}; // сопротивление при обычном движении
   real focus_force {}; // сопротивление при фокусировке
   real energy_consumption {1.}; // множитель затрат энергии
+  real bullet_speed_amp {1.}; // множитель скорости пуль
+  real attack_cooldown_amp {1.}; // множитель скорости перезарядки
 
   Player();
   ~Player();
