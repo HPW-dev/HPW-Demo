@@ -36,6 +36,7 @@ void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
   }
 
   cauto entity = hpw::entity_mgr->make({}, entity_name, pos);
+  iferror(!entity, "не удалось получить управляющий объект для \"" + entity_name + "\"");
   ::g_last_uid = entity->uid;
   console.print("entity \"" + entity_name
     + "\" spawned at {" + n2s(pos.x, 2) + ", "
