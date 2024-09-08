@@ -42,8 +42,7 @@ void Player::process_kill() {
 }
 
 void Player::sub_en(hp_t val) {
-  energy = std::max<hp_t>(0,
-    energy - val * energy_consumption);
+  energy = std::max<hp_t>(0, energy - val * energy_consumption);
 }
 
 void Player::update_sound() {
