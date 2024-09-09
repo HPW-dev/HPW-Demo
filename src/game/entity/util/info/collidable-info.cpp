@@ -32,4 +32,3 @@ void Collidable_info::accept(Collidable& dst) {
       hpw::entity_mgr->make(&ent, explosion_name, ent.phys.get_pos());
     });
 }
-
