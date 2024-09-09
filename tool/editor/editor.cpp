@@ -23,6 +23,7 @@ Editor::Editor(int argc, char *argv[])
 void Editor::init() {
   Host_imgui::init();
   load_config(); // refresh config
+  load_sounds();
   init_scene_mgr();
   init_graphic();
   #ifdef ENTITY_EDITOR_DEBUG
