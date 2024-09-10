@@ -141,7 +141,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   if (graphic::light_quality == Light_quality::medium)
     cache_light_spheres();
   // TODO выбор HUD с конфига
-  init_shared<Hud_asci>(graphic::hud);
+  init_unique<Hud_asci>(graphic::hud);
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
   init_unique(hpw::message_mgr);
