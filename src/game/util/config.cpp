@@ -1,6 +1,7 @@
 #include <cassert>
 #include "config.hpp"
 #include "game/core/core.hpp"
+#include "game/core/huds.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
@@ -65,14 +66,15 @@ void save_config() {
   graphic_node.set_bool ("enable_heat_distort", graphic::enable_heat_distort);
   graphic_node.set_bool ("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   graphic_node.set_real ("gamma",               graphic::gamma);
+  graphic_node.set_str  ("hud",                 graphic::cur_hud);
 
   auto sync_node = graphic_node.make_node("sync");
-  sync_node.set_bool ("vsync",                 graphic::get_vsync());
-  sync_node.set_bool ("wait_frame",            graphic::wait_frame);
-  sync_node.set_int  ("target_fps",            graphic::get_target_fps());
-  sync_node.set_bool ("cpu_safe",              graphic::cpu_safe);
-  sync_node.set_real ("autoopt_timeout_max",   graphic::autoopt_timeout_max);
-  sync_node.set_bool("disable_frame_limit",    graphic::get_disable_frame_limit());
+  sync_node.set_bool ("vsync",               graphic::get_vsync());
+  sync_node.set_bool ("wait_frame",          graphic::wait_frame);
+  sync_node.set_int  ("target_fps",          graphic::get_target_fps());
+  sync_node.set_bool ("cpu_safe",            graphic::cpu_safe);
+  sync_node.set_real ("autoopt_timeout_max", graphic::autoopt_timeout_max);
+  sync_node.set_bool("disable_frame_limit",  graphic::get_disable_frame_limit());
 
   auto input_node = config.make_node("input");
   #define SAVE_KEY(name) input_node.set_int(#name, get_scancode(hpw::keycode::name));
@@ -144,6 +146,7 @@ void load_config() {
   graphic::enable_heat_distort = graphic_node.get_bool("enable_heat_distort", graphic::enable_heat_distort);
   graphic::disable_heat_distort_while_lag = graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
+  graphic::cur_hud = graphic_node.get_str("hud", graphic::cur_hud);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
