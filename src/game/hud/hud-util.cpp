@@ -5,6 +5,7 @@
 #include "hud-none.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
+#include "util/error.hpp"
 
 namespace {
 
@@ -13,6 +14,8 @@ using Hud_maker = std::function< Unique<Hud> () >;
 sconst std::unordered_map<Str, Hud_maker> g_huds {
   {"asci", []{ return new_unique<Hud_asci>(); }},
   {"none", []{ return new_unique<Hud_none>(); }},
+  {"minimal", []{ error("need impl for minimal hud"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }},
+  {"hex", []{ error("need impl for hex hud"); return Unique<Hud>{}; /*return new_unique<Hud_hex>();*/ }},
 };
 
 } // empty ns

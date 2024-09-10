@@ -20,7 +20,7 @@ struct Scene_hud_select::Impl {
   Unique<Advanced_text_menu> _menu {}; // менюшка выбора
 
   inline explicit Impl() {
-    const Rect MENU_WND(Vec(30, 30), Vec(210, 160));
+    const Rect MENU_WND(Vec(30, 30), Vec(210, 130));
     cauto TITLE = get_locale_str("scene.options.hud.title");
 
     Menu_items items;
@@ -38,9 +38,13 @@ struct Scene_hud_select::Impl {
         )
       );
     }
-    // дефол гуй
+    // дефолт гуй
     items.push_back(new_shared<Menu_text_item>(get_locale_str("scene.options.hud.default"),
-      []{ graphic::hud = make_hud("asci"); }));
+      [name = "asci"]{
+        graphic::cur_hud = name;
+        graphic::hud = make_hud(name); 
+      }
+    ));
     // выход из меню
     items.push_back(new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr->back(); }));
 
