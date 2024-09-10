@@ -25,6 +25,7 @@
 #include "game/core/huds.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/debug.hpp"
+#include "game/hud/hud-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
@@ -140,8 +141,7 @@ Scene_game::Scene_game(const bool start_tutorial)
   // на средних настройках закэшировать вспышки перед запуском игры
   if (graphic::light_quality == Light_quality::medium)
     cache_light_spheres();
-  // TODO выбор HUD с конфига
-  init_unique<Hud_asci>(graphic::hud);
+  graphic::hud = make_hud(graphic::cur_hud);
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
   init_unique(hpw::message_mgr);
