@@ -58,9 +58,23 @@ struct Scene_hud_select::Impl {
     _menu->update(dt);
   }
 
-  inline void draw(Image& dst) const {
-    dst.fill(Pal8::red);
+  inline void draw(Image& dst) const {  
+    draw_bg(dst);
     _menu->draw(dst);
+  }
+
+  inline void draw_bg(Image& dst) const {
+    // поискать фон с примером интерфейса
+    cauto bg = hpw::store_sprite->find("resource/image/HUD/" + graphic::cur_hud + ".png");
+    if (bg) {
+      insert_fast(dst, bg->image());
+      return;
+    }
+
+    // если нет фона с примером интерфейса, то показать пустую картинку
+    dst.fill(Pal8::black);
+    assert(graphic::font);
+    graphic::font->draw(dst, get_screen_center() - Vec(30, 0), get_locale_str("scene.options.hud.no_image"));
   }
 }; // Impl
 

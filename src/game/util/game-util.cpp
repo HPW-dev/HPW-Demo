@@ -51,14 +51,21 @@
 
 // грузит спрайт либо из файловой системы, либо из архива
 Shared<Sprite> sprite_loader(cr<Str> name) {
-  auto spr = new_shared<Sprite>();
   assert(hpw::archive);
-  #ifdef EDITOR
-    load(*spr, name);
-  #else
-    load(hpw::archive->get_file(name), *spr);
-  #endif
-  return spr;
+
+  try {
+    auto spr = new_shared<Sprite>();
+    #ifdef EDITOR
+      load(*spr, name);
+    #else
+      load(hpw::archive->get_file(name), *spr);
+    #endif
+    return spr;
+  } catch (...) {
+    detailed_log("не удалось найти спрайт с имененм \"" << name << "\"\n");
+  }
+  
+  return {};
 }
 
 decltype(hpw::store_sprite)::element_type::Velue find_err_cb(cr<Str> _name) {
