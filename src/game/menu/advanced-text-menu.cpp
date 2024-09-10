@@ -19,11 +19,13 @@ struct Advanced_text_menu::Impl {
   constx real ITEMS_DESC_RATIO {1.0 / 3.5}; // соотношение области пунктов и описания
   constx real SCROLL_SPEED {8.0}; // скорость прокрутки текста в меню
   real m_items_h_offset {}; // для плавной прокрутки по тексту
+  bool _without_desc {}; // не показывать часть миню с комментариями
 
-  inline explicit Impl(Menu* base, cr<utf32> title, const Rect rect)
+  inline explicit Impl(Menu* base, cr<utf32> title, const Rect rect, bool without_desc)
   : m_base {base}
   , m_title {title}
   , m_rect {rect}
+  , _without_desc {without_desc}
   {
     assert(m_rect.size.not_zero());
     assert(m_base);
@@ -34,15 +36,19 @@ struct Advanced_text_menu::Impl {
     assert(m_title_pos.x < m_rect.size.x);
     assert(m_title_pos.y < m_rect.size.y);
 
-    m_items_rect = Rect(m_rect.pos + Vec(0, 25),
-      m_rect.size - Vec(0, 30 + m_rect.size.y * ITEMS_DESC_RATIO));
+    m_items_rect = Rect(
+      m_rect.pos + Vec(0, 25),
+      m_rect.size - Vec(0, 25 + m_rect.size.y * (_without_desc ? 0 : ITEMS_DESC_RATIO))
+    );
     assert(m_items_rect.size.y >= 11);
     
-    m_desc_rect = Rect (
-      Vec(m_rect.pos.x, m_items_rect.pos.y + m_items_rect.size.y - 1),
-      Vec(m_rect.size.x, m_rect.size.y - m_items_rect.size.y - 24)
-    );
-    assert(m_desc_rect.size.y >= 11);
+    if (!_without_desc) {
+      m_desc_rect = Rect (
+        Vec(m_rect.pos.x, m_items_rect.pos.y + m_items_rect.size.y - 1),
+        Vec(m_rect.size.x, m_rect.size.y - m_items_rect.size.y - 24)
+      );
+      assert(m_desc_rect.size.y >= 11);
+    }
   } // Impl c-tor
 
   inline void draw(Image& dst) const {
@@ -60,7 +66,9 @@ struct Advanced_text_menu::Impl {
     draw_rect_filled(dst, m_rect, Pal8::black); // чёрный фон
     draw_rect(dst, m_rect, m_bound_color); // рамка меню
     draw_rect(dst, m_items_rect, m_bound_color); // рамка пунктов меню
-    draw_rect(dst, m_desc_rect, m_bound_color); // рамка описания
+
+    if (!_without_desc)
+      draw_rect(dst, m_desc_rect, m_bound_color); // рамка описания
   }
 
   inline void draw_title(Image& dst) const {
@@ -93,6 +101,7 @@ struct Advanced_text_menu::Impl {
   }
 
   inline void draw_decription(Image& dst) const {
+    return_if(_without_desc);
     auto item = m_base->get_cur_item();
     assert(item);
     text_bordered(dst, item->get_description(), graphic::font.get(), m_desc_rect, {9, 11});
@@ -117,9 +126,9 @@ struct Advanced_text_menu::Impl {
 }; // impl
 
 Advanced_text_menu::Advanced_text_menu(cr<utf32> title, cr<Menu_items> items,
-const Rect rect)
+const Rect rect, bool without_desc)
 : Menu {items}
-, impl {new_unique<Impl>(this, title, rect)}
+, impl {new_unique<Impl>(this, title, rect, without_desc)}
 {}
 
 void Advanced_text_menu::draw(Image& dst) const { impl->draw(dst); }

@@ -11,7 +11,7 @@ class Advanced_text_menu: public Menu {
 
 public:
   ~Advanced_text_menu();
-  explicit Advanced_text_menu(cr<utf32> title, cr<Menu_items> items, const Rect rect);
+  explicit Advanced_text_menu(cr<utf32> title, cr<Menu_items> items, const Rect rect, bool without_desc=false);
   void draw(Image& dst) const override;
   void update(const Delta_time dt) override;
 };
