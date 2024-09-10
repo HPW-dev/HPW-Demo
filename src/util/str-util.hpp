@@ -2,6 +2,7 @@
 #include <utility>
 #include <sstream>
 #include <cmath>
+#include <iomanip>
 #include "util/macro.hpp"
 #include "util/platform.hpp"
 #include "util/str.hpp"
@@ -63,8 +64,8 @@ Str n2s(T num, int prec) {
 template<typename T>
 Str n2hex(T num) {
   std::ostringstream out;
-  out << std::hex << num;
-  return out.str();
+  out << std::setfill('0') << std::setw(2 * sizeof(T)) << std::hex << num;
+  return "0x" + str_toupper(out.str());
 }
 
 template<typename T>

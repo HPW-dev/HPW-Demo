@@ -16,6 +16,7 @@
 #include "util/math/mat.hpp"
 
 struct Hud_asci::Impl {
+  Hud& _master;
   constx uint line_len {20};
   Rect hp_rect {};
   Rect en_rect {};
@@ -25,8 +26,9 @@ struct Hud_asci::Impl {
   Rect pts_rect_old {};
   Rect player_rect {};
 
-  inline Impl()
-  : hp_rect(0, 367, 27, graphic::height - 367)
+  inline Impl(Hud& master)
+  : _master{master}
+  , hp_rect(0, 367, 27, graphic::height - 367)
   , en_rect(186, 367, 16, graphic::height - 367)
   , pts_rect(361, 367, 31, graphic::height - 367)
   {
@@ -66,15 +68,15 @@ struct Hud_asci::Impl {
       utf32 en_txt = U"EN:";
       cfor (_, load_bar_sz(player->energy, player->energy_max, line_len))
         en_txt += U'#';
-      draw_expanded_text(dst, en_txt, {185, dst.Y - (graphic::font->h() + 2)});
+      Hud::draw_expanded_text(dst, en_txt, {185, dst.Y - (graphic::font->h() + 2)});
     }
 
     // напечатать очки
     utf32 pts_txt;
     pts_txt += U"PTS:" + n2s<utf32>(hpw::get_score());
 
-    draw_expanded_text(dst, hp_txt,  {10,  dst.Y - (graphic::font->h() + 2)});
-    draw_expanded_text(dst, pts_txt, {360, dst.Y - (graphic::font->h() + 2)});
+    Hud::draw_expanded_text(dst, hp_txt,  {10,  dst.Y - (graphic::font->h() + 2)});
+    Hud::draw_expanded_text(dst, pts_txt, {360, dst.Y - (graphic::font->h() + 2)});
 
     if (graphic::draw_hitboxes)
       debug_draw();
@@ -83,27 +85,6 @@ struct Hud_asci::Impl {
   inline int load_bar_sz(real val, real max, int size_bar) const {
     return std::ceil(safe_div<real, real>(val, max) * size_bar);
   }
-
-  // рисует прозрачный текст с чёрными контурами
-  inline void draw_expanded_text(Image& dst, cr<utf32> txt, const Vec pos) const {
-    // рендер в буфферы под текст
-    Image hp_overlay(graphic::font->text_width(txt) + 2,
-      graphic::font->text_height(txt) + 2, Pal8::black);
-    graphic::font->draw(hp_overlay, {1, 1}, txt);
-
-    // расширение контуров текста
-    Image hp_overlay_black(hp_overlay);
-    apply_invert(hp_overlay_black);
-    expand_color_8(hp_overlay_black, Pal8::black);
-
-    // вставка тёмного контура текста
-    insert_blink<&blend_min>(dst, hp_overlay_black, pos, graphic::frame_count);
-    // вставка текста
-    if (hpw::difficulty == Difficulty::easy)
-      insert_blink<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
-    else
-      insert<&blend_max>(dst, hp_overlay, pos, graphic::frame_count);
-  } // draw_expanded_text
 
   inline void debug_draw() const {
     assert(hpw::hitbox_layer);
@@ -176,5 +157,5 @@ struct Hud_asci::Impl {
 
 void Hud_asci::draw(Image& dst) const { impl->draw(dst); }
 void Hud_asci::update(const Delta_time dt) { impl->update(dt); }
-Hud_asci::Hud_asci(): impl{new_unique<Impl>()} {}
+Hud_asci::Hud_asci(): impl{new_unique<Impl>(*this)} {}
 Hud_asci::~Hud_asci() {}
