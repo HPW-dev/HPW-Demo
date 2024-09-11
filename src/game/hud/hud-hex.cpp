@@ -23,6 +23,10 @@ struct Hud_hex::Impl {
   Vec _pos_hp    {5,   graphic::height-17};
   Vec _pos_en    {190, graphic::height-17};
   Vec _pos_score {380, graphic::height-17};
+  Rect _en_rect {};
+  Rect _hp_rect {};
+  Rect _pts_rect {};
+  Rect _player_rect {};
 
   inline Impl(Hud& master)
   : _master{master}
@@ -30,11 +34,7 @@ struct Hud_hex::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    return_if (hpw::difficulty == Difficulty::easy);
-    cauto player = hpw::entity_mgr->get_player();
-    return_if (!player);
-
-
+    resolve_collisions();
   }
 
   inline void draw(Image& dst) const {
@@ -59,10 +59,36 @@ struct Hud_hex::Impl {
 
   inline void debug_draw() const {
     assert(hpw::hitbox_layer);
-    //draw_rect(*hpw::hitbox_layer, hp_rect, Pal8::white);
-    //draw_rect(*hpw::hitbox_layer, en_rect, Pal8::white);
-    //draw_rect(*hpw::hitbox_layer, pts_rect, Pal8::white);
-    //draw_rect(*hpw::hitbox_layer, player_rect, Pal8::white);
+    draw_rect(*hpw::hitbox_layer, _hp_rect, Pal8::white);
+    draw_rect(*hpw::hitbox_layer, _en_rect, Pal8::white);
+    draw_rect(*hpw::hitbox_layer, _pts_rect, Pal8::white);
+    draw_rect(*hpw::hitbox_layer, _player_rect, Pal8::white);
+  }
+
+  inline void resolve_collisions() {
+    return_if (hpw::difficulty == Difficulty::easy);
+    cauto player = hpw::entity_mgr->get_player();
+    return_if (!player);
+    // хитбокс игрока
+    auto player_pos = player->phys.get_pos();
+    _player_rect = Rect(player_pos - Vec(15, 2), Vec(31, 17));
+    // остальные хитбоксы
+    _hp_rect = Rect(_pos_hp, Vec(126, 12));
+    _en_rect = Rect(_pos_en, Vec(126, 12));
+    _pts_rect = Rect(_pos_score, Vec(126, 12));
+    // выталкивание игрока вверх
+    if (intersect(_player_rect, _hp_rect)) {
+      player_pos.y = _hp_rect.pos.y - _player_rect.size.y;
+      player->set_pos(player_pos);
+    }
+    if (intersect(_player_rect, _en_rect)) {
+      player_pos.y = _en_rect.pos.y - _player_rect.size.y;
+      player->set_pos(player_pos);
+    }
+    if (intersect(_player_rect, _pts_rect)) {
+      player_pos.y = _pts_rect.pos.y - _player_rect.size.y;
+      player->set_pos(player_pos);
+    }
   }
 }; // Impl
 
