@@ -119,6 +119,12 @@ build_plugin("posterize", [
   src_dir + "graphic/image/color.cpp",
 ] )
 
+build_plugin("autocontrast", [
+  src_plugin_dir + "autocontrast.cpp",
+  src_plugin_dir + "pge-util.cpp",
+  src_dir + "graphic/image/color.cpp",
+] )
+
 ''' TODO исправь эффект
 build_plugin("block-swap", [
   src_plugin_dir + "block-swap.cpp",
