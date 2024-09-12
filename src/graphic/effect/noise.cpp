@@ -31,7 +31,7 @@ const real STEP_MUL, const real AMPLIFY, const real SCALE) {
   assert(SCALE > 0);
 
   constexpr auto gen_noise = [](int x, int y)->real
-    { return ((((x * 125'245) ^ (y * 142'124)) + 124'534) % 10'000) / 5'000.f - 1.f; };
+    { return std::abs((((x * 125'245) ^ (y * 142'124)) + 124'534) % 10'000) / 5'000.f - 1.f; };
 
   real step = STEP_START;
   Vector<real> heightmap(dst.size, 0);
