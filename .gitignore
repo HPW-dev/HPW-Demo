@@ -60,7 +60,8 @@ build/bin/*
 build/*.txt
 build/editor
 build/LICENSE.txt
-build/VERSION.txt
+build/BUILD.txt
+build/NOTICE.txt
 build/plugin
 build/cmd-test-helper.txt
 build/cmd-test.txt

@@ -68,9 +68,10 @@ def write_game_version():
     )
 
 def copy_license():
-  "копирует файл LICENSE.txt в нужную папку"
+  "копирует файл LICENSE.txt и NOTICE.txt в нужную папку"
   try:
     shutil.copyfile('LICENSE.txt', 'build/LICENSE.txt')
+    shutil.copyfile('NOTICE.txt',  'build/NOTICE.txt')
   except:
     print("error copying license file")
 
@@ -78,9 +79,9 @@ def prepare_strs(strs: list[str]):
   return ' '.join(filter(None, strs))
 
 def save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, is_linux, is_64bit, host):
-  "создаёт файл build_dir/VERSION.txt с инфой о компиляции"
+  "создаёт файл build_dir/BUILD.txt с инфой о компиляции"
   try:
-    with open(file=f'{build_dir}VERSION.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
+    with open(file=f'{build_dir}BUILD.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
       file.writelines([
         "### H.P.W BUILD INFO\n",
         f"* Compiler: {compiler}\n",
@@ -92,4 +93,4 @@ def save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, i
         f"* Used LIB's: {prepare_strs(used_libs)}\n",
       ])
   except:
-    print("error generating build/VERSION.txt")
+    print("error generating build/BUILD.txt")
