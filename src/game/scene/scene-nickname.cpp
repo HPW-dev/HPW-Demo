@@ -79,9 +79,10 @@ struct Scene_nickname::Impl {
     assert(graphic::font);
     graphic::font->draw(dst, Vec(25, dst.Y/3 - 6), txt);
 
-    auto info_for_exit = get_locale_str("scene.nickname.press_key") + U" ";
-    info_for_exit += hpw::keys_info.find(hpw::keycode::enable)->name + U" ";
+    auto info_for_exit = get_locale_str("scene.nickname.press_key") + U" <";
+    info_for_exit += hpw::keys_info.find(hpw::keycode::enable)->name + U"> ";
     info_for_exit += get_locale_str("scene.nickname.for_exit");
+    info_for_exit += U"\n" + get_locale_str("scene.nickname.copy_paste");
     graphic::font->draw(dst, Vec(25, dst.Y/3 + 12), info_for_exit);
   }
 
