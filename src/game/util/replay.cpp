@@ -113,7 +113,6 @@ inline Bits get_bits() {
 
 inline void write_str(Stream& file, cr<Str> str) {
   const uint32_t sz = str.size();
-  assert(sz < 1'000);
   file.write(cptr2ptr<cp<char>>(&sz), sizeof(sz));
   if (sz > 0)
     file.write(cptr2ptr<cp<char>>(str.data()), sz * sizeof(Str::value_type));

@@ -240,7 +240,12 @@ cr<Shared<Anim>> make_light_mask(cr<Str> src, cr<Str> dst) {
 Str get_random_replay_name() {
   std::stringstream name;
   
-  name << utf32_to_8(hpw::player_name);
+  auto player_name = utf32_to_8(hpw::player_name);
+  // укоротить имя игрока, если оно большое
+  if (player_name.size() > 50) {
+    player_name = player_name.substr(0, 50) + "...";
+  }
+  name << player_name;
 
   auto t = std::time(nullptr);
   #ifdef LINUX

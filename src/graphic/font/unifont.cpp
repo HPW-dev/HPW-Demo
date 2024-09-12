@@ -104,7 +104,7 @@ bool Unifont::_load_glyph(char32_t ch) const {
   auto bitmap = stbtt_GetCodepointBitmap(info_.get(), scale_, scale_, ch,
     &bitmap_w, &bitmap_h, &bitmap_xoff, &bitmap_yoff);
   if ( !bitmap) {
-    hpw_log("stbtt_GetCodepointBitmap error ("<< std::hex << int(ch) << ")\n");
+    detailed_log("stbtt_GetCodepointBitmap error ("<< std::hex << int(ch) << ")\n");
     return false;
   }
   init_shared(glyph_table[ch]);

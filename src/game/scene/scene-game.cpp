@@ -354,14 +354,17 @@ void Scene_game::save_named_replay() {
       auto replay_name = hpw::cur_dir + hpw::replays_path + get_random_replay_name();
       conv_sep(replay_name);
       replay_name = to_safe_fname(replay_name);
-      
+
       hpw_log("сохранение файла реплея \"" << replay_name << "\"\n");
       std::ofstream dest(replay_name, std::ios::binary);
       iferror(!dest.is_open(), "не получилось переименовать реплей");
       dest << source.rdbuf();
     }
+  } catch (cr<hpw::Error> err) {
+    // TODO окно с ошибкой
+    hpw_log("ошибка при сохранении реплея: " << err.what() << "\n");
   } catch (...) {
     // TODO окно с ошибкой
-    hpw_log("ошибка при сохранении реплея\n");
+    hpw_log("неизвестная ошибка при сохранении реплея\n");
   }
 }
