@@ -66,6 +66,9 @@ blend_pf bf, const int optional) const {
       posx = pos.x;
       continue;
     }
+    // \r игнорить
+    cont_if (ch == '\r');
+
     auto glyph = _get_glyph(ch);
     if ( !glyph)
       continue;
