@@ -7,6 +7,7 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/scene/scene-graphic.hpp"
+#include "game/scene/scene-nickname.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
@@ -61,6 +62,9 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
     hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
     // спросить о языке при первом запуске
     if (hpw::first_start) {
+      // набрать никнейм
+      hpw::scene_mgr->add(new_shared<Scene_nickname>());
+      // выбрать язык
       hpw::scene_mgr->add( new_shared<Scene_locale_select>() );
     }
   }

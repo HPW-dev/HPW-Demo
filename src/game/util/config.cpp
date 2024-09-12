@@ -3,6 +3,7 @@
 #include "game/core/core.hpp"
 #include "game/core/huds.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/user.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/locales.hpp"
@@ -35,6 +36,7 @@ void save_config() {
   config.set_bool("need_tutorial", hpw::need_tutorial);
   config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   config.set_bool("collider_autoopt", hpw::collider_autoopt);
+  config.set_str("nickname", utf32_to_8(hpw::player_name));
 
   auto path_node = config.make_node("path");
   path_node.set_str("locale", hpw::locale_path);
@@ -105,6 +107,7 @@ void load_config() {
   hpw::need_tutorial = config.get_bool("need_tutorial", hpw::need_tutorial);
   hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   hpw::collider_autoopt = config.get_bool("collider_autoopt", hpw::collider_autoopt);
+  hpw::player_name = utf8_to_32(config.get_str("nickname", utf32_to_8(hpw::player_name)));
 
   cauto debug = config["debug"];
   hpw::empty_level_first = debug.get_bool("empty_level_first", hpw::empty_level_first);

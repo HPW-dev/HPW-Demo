@@ -1,5 +1,6 @@
 #include <cassert>
 #include "scene-game-options.hpp"
+#include "scene-nickname.hpp"
 #include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
@@ -36,26 +37,26 @@ struct Scene_game_options::Impl {
 
   inline void init_menu() {
     Menu_items menu_items {
-
+      new_shared<Menu_text_item>(
+        get_locale_str("scene.nickname.title"),
+        []{ hpw::scene_mgr->add(new_shared<Scene_nickname>()); }
+      ),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.game_opts.rnd_pal.title"),
         []{ return hpw::rnd_pal_after_death; },
         [](bool val) { hpw::rnd_pal_after_death = val; },
         get_locale_str("scene.game_opts.rnd_pal.desc")
       ),
-      
       new_shared<Menu_bool_item>(
         get_locale_str("scene.game_opts.collider_autoopt.title"),
         []{ return hpw::collider_autoopt; },
         [](bool val) { hpw::collider_autoopt = val; },
         get_locale_str("scene.game_opts.collider_autoopt.desc")
       ),
-
       new_shared<Menu_text_item>(
         get_locale_str("common.exit"),
         [this]{ goto_back(); }
       ),
-
     }; // menu_items
 
     init_unique( m_menu,
