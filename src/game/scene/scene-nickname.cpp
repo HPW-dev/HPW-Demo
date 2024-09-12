@@ -11,6 +11,8 @@
 #include "graphic/font/font-util.hpp"
 
 struct Scene_nickname::Impl {
+  cautox TEXT_DELETE_TIMEOUT = 120u;
+  uint m_text_delete_timer {};
 
   inline Impl() {
     hpw::text_input = hpw::player_name;
@@ -33,6 +35,20 @@ struct Scene_nickname::Impl {
           0, hpw::text_input.size());
         hpw::text_input.erase(hpw::text_input_pos, 1);
       }
+    }
+
+    // если зажали кнопку удаления текста
+    if (is_pressed(hpw::keycode::text_delete)) {
+      ++m_text_delete_timer;
+      if (m_text_delete_timer >= TEXT_DELETE_TIMEOUT) {
+        if (!hpw::text_input.empty() && ((m_text_delete_timer % 6u) == 0u)) {
+          hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos - 1,
+            0, hpw::text_input.size());
+          hpw::text_input.erase(hpw::text_input_pos, 1);
+        }
+      }
+    } else {
+      m_text_delete_timer = 0;
     }
 
     // перемещение текстового курсора ввода влево
@@ -58,8 +74,8 @@ struct Scene_nickname::Impl {
     dst.fill({});
     utf32 txt = get_locale_str("scene.nickname.enter_name") + U": ";
     txt += hpw::text_input;
-    if ((graphic::frame_count % 60) > 30)
-      txt += U"_";
+    if ((graphic::frame_count % 40) > 20)
+      txt += U"<";
     assert(graphic::font);
     graphic::font->draw(dst, Vec(25, dst.Y/3 - 6), txt);
 

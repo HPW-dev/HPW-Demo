@@ -32,8 +32,8 @@ static void hotkey_process(GLFWwindow* window, int key, int scancode, int action
     }
   }
 
-  // снос всей введёной строки текста (Ctrl + U)
-  if (action == GLFW_PRESS && key == GLFW_KEY_U && mods == GLFW_MOD_CONTROL) {
+  // снос всей введёной строки текста (Ctrl + C)
+  if (action == GLFW_PRESS && key == GLFW_KEY_C && mods == GLFW_MOD_CONTROL) {
     if (hpw::text_input_mode) {
       hpw::text_input.clear();
       hpw::text_input_pos = 0;
