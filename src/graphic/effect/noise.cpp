@@ -24,7 +24,7 @@ const real tx, const real ty) {
 void noise_2d(Image& dst, const Vec OFFSET, const int HARMONICS, const real STEP_START,
 const real STEP_MUL, const real AMPLIFY, const real SCALE) {
   assert(dst);
-  assert(HARMONICS > 1);
+  assert(HARMONICS >= 1);
   assert(STEP_START > 1);
   assert(STEP_MUL > 1);
   assert(AMPLIFY > 0);
