@@ -21,7 +21,7 @@ static void hotkey_process(GLFWwindow* window, int key, int scancode, int action
     hpw::set_fullscreen(!graphic::fullscreen);
   }
   
-  // вставка текста из буффера (Ctrl + V)
+  // вставка текста из буффера Ctrl + V
   if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {
     if (hpw::text_input_mode) {
       const Str buffer = glfwGetClipboardString(window);
@@ -37,6 +37,19 @@ static void hotkey_process(GLFWwindow* window, int key, int scancode, int action
     if (hpw::text_input_mode) {
       hpw::text_input.clear();
       hpw::text_input_pos = 0;
+    }
+  }
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+  // вставка текста из буффера при правой кнопке мыши
+  if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    if (hpw::text_input_mode) {
+      const Str buffer = glfwGetClipboardString(window);
+      if (!buffer.empty()) {
+        hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
+        hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(), hpw::text_input.size());
+      }
     }
   }
 }

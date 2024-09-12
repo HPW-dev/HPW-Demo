@@ -4,6 +4,7 @@
 
 struct GLFWwindow;
 
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 void key_callback(GLFWwindow* m_window, int key, int scancode, int action, int mods);
 void error_callback(int error, Cstr description);
 void reshape_callback(GLFWwindow* m_window, int w, int h);

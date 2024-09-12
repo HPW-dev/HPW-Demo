@@ -276,8 +276,9 @@ void Host_glfw::init_window() {
   clear_cur_keys();
   // для чтения юникод текста при вводе
   glfwSetCharCallback(m_window, &utf32_text_input_cb);
-  // режим показа курсора мыши
+  // настройка мыши
   _set_mouse_cursour_mode(graphic::show_mouse_cursour);
+  glfwSetMouseButtonCallback(m_window, &mouse_button_callback);
   // поставить иконку окну
   init_icon();
 } // init_window
