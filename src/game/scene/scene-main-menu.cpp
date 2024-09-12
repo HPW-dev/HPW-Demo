@@ -118,6 +118,8 @@ void Scene_main_menu::init_bg() {
   #endif
   // Пак 3:
   #if 1
+    &bgp_3d_sky
+    &bgp_perlin_noise
     &bgp_liquid,
     &bgp_liquid_gray,
     &bgp_trajectory,

@@ -7,6 +7,7 @@
 #include "game/core/fonts.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"
+#include "graphic/effect/noise.hpp"
 #include "graphic/util/blend.hpp"
 #include "graphic/util/blur.hpp"
 #include "graphic/util/util-templ.hpp"
@@ -413,4 +414,23 @@ void bgp_moire_lines(Image& dst, const int bg_state) {
     p2 = rotate_rad(CENTER, p2, -2.f * SPEED);
     draw_line(dst, p1, p2, FG);
   }
+}
+
+void bgp_perlin_noise(Image& dst, const int bg_state) {
+  const Vec OFFSET(bg_state / 3.f, bg_state / 4.f);
+  noise_2d(dst, OFFSET, 5, 3, 3, 0.333, 1);
+}
+
+void bgp_3d_sky(Image& dst, const int bg_state) {
+  const Vec OFFSET(bg_state / 6.f, -bg_state / 5.f);
+  
+  // слой 1
+  noise_2d(dst, OFFSET, 5, 3, 3, 0.1, 1);
+
+  // слой 2
+  Image layer(dst.X, dst.Y);
+  noise_2d(layer, OFFSET, 5, 2, 4, 0.3, 2);
+  insert_fast<&blend_max>(dst, layer);
+  
+  apply_brightness(dst, -70);
 }

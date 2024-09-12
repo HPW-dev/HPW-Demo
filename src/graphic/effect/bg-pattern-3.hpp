@@ -30,3 +30,7 @@ void bgp_rotating_moire_rotated(Image& dst, const int bg_state);
 void bgp_rotating_moire_triple(Image& dst, const int bg_state);
 // крутятся параллельные прямые
 void bgp_moire_lines(Image& dst, const int bg_state);
+// шум похожий на шум Перлена
+void bgp_perlin_noise(Image& dst, const int bg_state);
+// многослойные облака
+void bgp_3d_sky(Image& dst, const int bg_state);
