@@ -129,7 +129,6 @@ inline void write_key_packet(Stream& file, cr<Key_packet> key_packet) {
 inline Str read_str(Stream& file) {
   uint32_t sz {0};
   file.read(ptr2ptr<char*>(&sz), sizeof(sz));
-  assert(sz < 1'000);
   return_if (sz == 0, {});
 
   Vector<Str::value_type> data(sz);
