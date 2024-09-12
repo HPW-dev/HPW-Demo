@@ -119,7 +119,7 @@ void load_config() {
     path_node = config.make_node("path");
     path_node.set_str("screenshots", hpw::screenshots_path);
     path_node.set_str("data", hpw::data_path);
-    path_node.set_str("locale", hpw::fallback_font_path);
+    path_node.set_str("locale", hpw::fallback_locale_path);
   }
   // сделать папки, если их нет
   make_dir_if_not_exist(hpw::cur_dir + path_node.get_str("screenshots"));

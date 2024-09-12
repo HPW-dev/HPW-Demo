@@ -559,15 +559,15 @@ void load_locale(cr<Str> user_path) {
   assert(hpw::config);
   File mem; 
   cauto path = user_path.empty()
-    ? (*hpw::config)["path"].get_str("locale", hpw::fallback_font_path)
+    ? (*hpw::config)["path"].get_str("locale", hpw::fallback_locale_path)
     : user_path;
 
   try {
     mem = hpw::archive->get_file(path);
   } catch (...) {
     hpw_log("ошибка при загрузке перевода \"" << path << "\". Попытка загрузить перевод \""
-      << hpw::fallback_font_path << "\"\n");
-    mem = hpw::archive->get_file(hpw::fallback_font_path);
+      << hpw::fallback_locale_path << "\"\n");
+    mem = hpw::archive->get_file(hpw::fallback_locale_path);
   }
 
   hpw::locale_path = mem.get_path();
