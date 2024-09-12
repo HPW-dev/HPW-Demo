@@ -240,7 +240,7 @@ cr<Shared<Anim>> make_light_mask(cr<Str> src, cr<Str> dst) {
 Str get_random_replay_name() {
   std::stringstream name;
   
-  name << sconv<Str>(hpw::player_name);
+  name << utf32_to_8(hpw::player_name);
 
   auto t = std::time(nullptr);
   #ifdef LINUX

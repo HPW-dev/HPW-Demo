@@ -108,3 +108,6 @@ void to_null_ended(OUT &dst, cr<IN> src) {
 }
 
 Str addr_hash_to_str(cp<void> addr);
+
+// получение более пригодного имени файла для сохранения
+[[nodiscard]] Str to_safe_fname(cr<Str> utf8_str);

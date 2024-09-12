@@ -215,7 +215,7 @@ struct Replay::Impl {
     const uint32_t seed = get_rnd_seed();
     write_data(m_file, seed);
     // имя игрока
-    write_str(m_file, sconv<Str>(hpw::player_name));
+    write_str(m_file, utf32_to_8(hpw::player_name));
     // уровень сложности
     write_data(m_file, hpw::difficulty);
     // рекорд
@@ -282,7 +282,7 @@ struct Replay::Impl {
     cauto seed = read_data<uint32_t>(m_file);
     set_rnd_seed(seed);
     // имя игрока
-    cauto player_name = sconv<utf32>( read_str(m_file) );
+    cauto player_name = utf8_to_32(read_str(m_file));
     // уровень сложности
     cauto difficulty = read_data<Difficulty>(m_file);
     hpw::difficulty = difficulty;

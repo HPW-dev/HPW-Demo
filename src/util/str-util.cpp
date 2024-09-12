@@ -2,6 +2,7 @@
 #include <utility>
 #include <string>
 #include <cstring>
+#include "unicode.hpp"
 #include "str-util.hpp"
 #include "util/error.hpp"
 
@@ -121,3 +122,13 @@ Str addr_hash_to_str(cp<void> addr) {
 }
 
 Str cstr_to_cxxstr(Cstr cstr) { return Str(cstr, cstr + std::strlen(cstr)); }
+
+Str to_safe_fname(cr<Str> utf8_str) {
+  auto utf32_str = utf8_to_32(utf8_str);
+  for (rauto ch: utf32_str) {
+    if (ch > 127) {
+      ch = U'#';
+    }
+  }
+  return utf32_to_8(utf32_str);
+}
