@@ -37,14 +37,13 @@ const real STEP_MUL, const real AMPLIFY, const real SCALE) {
   Vector<real> heightmap(dst.size, 0);
 
   cfor (harmonic, HARMONICS) {
-    cauto scale_x = step / dst.X;
-    cauto scale_y = step / dst.Y;
+    cauto scale_xy = step / std::min(dst.X, dst.Y);
 
     #pragma omp parallel for simd collapse(2)
     cfor (y, dst.Y)
     cfor (x, dst.X) {
-      cauto xf = ((x / SCALE) + OFFSET.x) * scale_x;
-      cauto yf = ((y / SCALE) + OFFSET.y) * scale_y;
+      cauto xf = ((x / SCALE) + OFFSET.x) * scale_xy;
+      cauto yf = ((y / SCALE) + OFFSET.y) * scale_xy;
       const int xi = std::floor(xf);
       const int yi = std::floor(yf);
       cauto noise_00 = gen_noise(xi+0, yi+0) * AMPLIFY;
@@ -54,9 +53,11 @@ const real STEP_MUL, const real AMPLIFY, const real SCALE) {
       cauto height = bcoslerp(noise_00, noise_10, noise_01, noise_11, xf - xi, yf - yi);
       heightmap[y * dst.X + x] += height; 
     }
+
     step *= STEP_MUL;
   }
 
+  #pragma omp parallel for simd 
   cfor (i, heightmap.size()) {
     cauto luma = (heightmap[i] + 1.f) * 0.5f;
     cauto color = Pal8::from_real(luma);

@@ -12,5 +12,5 @@ class Image;
 * @param AMPLIFY огрубляет перепады высот
 * @param SCALE увеличивает узор
 * @param HARMONICS чем больше, тем детальнее */
-void noise_2d(Image& dst, const Vec OFFSET={}, const int HARMONICS=8, const real STEP_START=6,
-  const real STEP_MUL=1.5, const real AMPLIFY=0.5, const real SCALE=3);
+void noise_2d(Image& dst, const Vec OFFSET={}, const int HARMONICS=5, const real STEP_START=3,
+  const real STEP_MUL=3, const real AMPLIFY=0.333, const real SCALE=1);
