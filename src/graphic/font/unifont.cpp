@@ -59,7 +59,10 @@ blend_pf bf, const int optional) const {
   int posx = pos.x;
   int posy = pos.y;
   posy += h_ / 2 + 2; // компенсация оффсета
-  for (auto ch: text) {
+  for (uint limit = 0; auto ch: text) {
+    ++limit;
+    // столько текста на экран не влезет
+    break_if(limit >= 5'000);
     // пропуск строки
     if (ch == U'\n') {
       posy += h_ + space().y;
