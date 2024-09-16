@@ -77,15 +77,20 @@ struct Scene_gameover::Impl {
       get_locale_str("scene.game_opts.rnd_pal.desc")
     ) );
 
-    items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-      // cur->game->load screen->difficulty menu->main menu
-      hpw::scene_mgr->back(4); }) );
+    items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), [this]{ this->exit(); }) );
+    // понаделать кучу выходов со входом в секретку
+    if (hpw::difficulty != Difficulty::easy)
+      cfor (_, 27)
+        items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), [this]{ this->exit(); }) );
 
     init_unique<Advanced_text_menu>( menu,
       get_locale_str("scene.gameover.title"),
       items, Rect(0,0, graphic::width, graphic::height) );
   } // init_menu
 
+  inline void exit() {
+    hpw::scene_mgr->back(4); // cur -> game -> load screen -> difficulty menu -> main menu
+  }
 }; // impl
 
 Scene_gameover::Scene_gameover(): impl {new_unique<Impl>()} {}
