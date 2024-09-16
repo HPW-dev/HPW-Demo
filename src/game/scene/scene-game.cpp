@@ -313,9 +313,12 @@ void Scene_game::replay_init() {
 void Scene_game::save_named_replay() {
   assert(hpw::enable_replay);
   return_if(!hpw::replay);
+
   try {
     // реплей сейвится при закрытии
     hpw::replay->close();
+    hpw::replay = {};
+
     if (hpw::save_last_replay) {
       // открыть файл последнего реплея и скопировать в именной файл
       std::ifstream source(hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", std::ios::binary);
@@ -329,10 +332,8 @@ void Scene_game::save_named_replay() {
       dest << source.rdbuf();
     }
   } catch (cr<hpw::Error> err) {
-    // TODO окно с ошибкой
-    hpw_log("ошибка при сохранении реплея: " << err.what() << "\n");
+    hpw::user_warnings = U"ошибка при сохранении реплея: " + utf8_to_32(err.what()) + U"\n";
   } catch (...) {
-    // TODO окно с ошибкой
-    hpw_log("неизвестная ошибка при сохранении реплея\n");
+    hpw::user_warnings = U"неизвестная ошибка при сохранении реплея\n";
   }
 }

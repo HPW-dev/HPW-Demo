@@ -341,7 +341,12 @@ struct Replay::Impl {
       return_if(m_file.data.empty());
 
       // чтоб два раза не вызвать close
-      Scope _({}, [this]{ m_file.data.clear(); });
+      Scope _({}, [this]{
+        m_file.data.clear();
+        hpw::replay_read_mode = false;
+        this->m_info = {};
+        this->m_path = {};
+      });
 
       // запись с буффера на диск
       std::ofstream file(m_path, std::ios_base::binary);
