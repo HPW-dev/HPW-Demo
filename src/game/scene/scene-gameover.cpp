@@ -14,6 +14,7 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "graphic/image/image.hpp"
+#include "util/math/random.hpp"
 
 struct Scene_gameover::Impl {
   Unique<Menu> menu {};
@@ -80,7 +81,7 @@ struct Scene_gameover::Impl {
     items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), [this]{ this->exit(); }) );
     // понаделать кучу выходов со входом в секретку
     if (hpw::difficulty != Difficulty::easy)
-      cfor (_, 27)
+      cfor (_, 26)
         items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), [this]{ this->exit(); }) );
 
     init_unique<Advanced_text_menu>( menu,
@@ -89,6 +90,14 @@ struct Scene_gameover::Impl {
   } // init_menu
 
   inline void exit() {
+    if (hpw::difficulty != Difficulty::easy) {
+      if (rndr() <= (1.f / 6.f)) {
+        hpw_log("вам повезло зайти в секретный уровень, но он ещё не реализован!\n");
+        // TODO call scene secret_level
+        // return;
+      }
+    }
+
     hpw::scene_mgr->back(4); // cur -> game -> load screen -> difficulty menu -> main menu
   }
 }; // impl
