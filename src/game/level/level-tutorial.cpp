@@ -337,7 +337,7 @@ struct Level_tutorial::Impl {
     Timer spawn_timer {0.5}; // через сколько спавнить противника
     Timer lifetime {}; // сколько времени будет работать спавнер
     bool check_death {}; // начать проверять, что все соспавненные объекты умерли
-    uint live_count {}; // сколько объектов сейчас живы
+    Vector<Uid> spawned_list {}; // все кого соспавнили
 
     explicit Spawner_enemy_noshoot(Impl& _master, const real _total_time=1.0)
     : master {_master}
@@ -357,8 +357,17 @@ struct Level_tutorial::Impl {
 
       if (lifetime.update(dt))
         check_death = true;
-      if (check_death)
-        return live_count == 0 || live_count >= 100'000u;
+
+      if (check_death) {
+        uint lived {};
+        // если хоть один противник жив или на экране, то не заканчиваем
+        for (cauto uid: spawned_list)
+          if (cauto ent = hpw::entity_mgr->find(uid); ent)
+            if (ent->status.live && !ent->status.out_of_screen)
+              ++lived;
+        return lived == 0;
+      }
+
       return false;
     } // op ()
 
@@ -377,8 +386,8 @@ struct Level_tutorial::Impl {
     Collidable* spawn(const Vec pos) {
       auto enemy = hpw::entity_mgr->make({}, "enemy.tutorial", pos);
       enemy->add_update_cb(Zigzag_motion());
-      enemy->add_remove_cb([this](Entity&){ --live_count; });
-      ++live_count;
+      spawned_list.push_back(enemy->uid);
+      enemy->status.remove_by_out_of_screen = true;
       assert(enemy->status.collidable);
       return ptr2ptr<Collidable*>(enemy);
     }
@@ -390,7 +399,7 @@ struct Level_tutorial::Impl {
     Timer spawn_timer {0.8}; // через сколько спавнить противника
     Timer lifetime {}; // сколько времени будет работать спавнер
     bool check_death {}; // начать проверять, что все соспавненные объекты умерли
-    uint live_count {}; // сколько объектов сейчас живы
+    Vector<Uid> spawned_list {}; // все кого соспавнили
 
     explicit Spawner_enemy_shoot(Impl& _master, const real _total_time=1.0)
     : master {_master}
@@ -409,8 +418,17 @@ struct Level_tutorial::Impl {
 
       if (lifetime.update(dt))
         check_death = true;
-      if (check_death)
-        return live_count == 0 || live_count >= 100'000u;
+        
+      if (check_death) {
+        uint lived {};
+        // если хоть один противник жив или на экране, то не заканчиваем
+        for (cauto uid: spawned_list)
+          if (cauto ent = hpw::entity_mgr->find(uid); ent)
+            if (ent->status.live && !ent->status.out_of_screen)
+              ++lived;
+        return lived == 0;
+      }
+
       return false;
     } // op ()
 
@@ -426,8 +444,8 @@ struct Level_tutorial::Impl {
           bullet->phys.set_deg(deg_to_target(bullet->phys.get_pos(), hpw::entity_mgr->target_for_enemy()));
         }
       });
-      enemy->add_remove_cb([this](Entity&){ --live_count; });
-      ++live_count;
+      spawned_list.push_back(enemy->uid);
+      enemy->status.remove_by_out_of_screen = true;
       assert(enemy->status.collidable);
       return ptr2ptr<Collidable*>(enemy);
     }

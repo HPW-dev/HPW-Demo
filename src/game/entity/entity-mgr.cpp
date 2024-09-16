@@ -292,20 +292,25 @@ struct Entity_mgr::Impl {
   // удаление объектов за экраном
   inline void bound_check() {
     for (rauto entity: m_entities) {
-      if (entity->status.live && !entity->status.ignore_bound) {
-        crauto entity_pos = entity->phys.get_pos();
-        auto bound = entity->status.is_bullet ? hpw::shmup_bound_for_bullet : hpw::shmup_bound_for_other;
+      cont_if(!entity->status.live);
+      cont_if(entity->status.ignore_bound);
 
+      crauto entity_pos = entity->phys.get_pos();
+      auto bound = entity->status.is_bullet
+        ? hpw::shmup_bound_for_bullet
+        : hpw::shmup_bound_for_other;
+
+      if (
+        // тихо убить объект за экраном
+        (entity->status.remove_by_out_of_screen && entity->status.out_of_screen) ||
         // тихо убить объект, если он вышел за пределы
-        if (
-          entity_pos.x <= -bound ||
-          entity_pos.x >= graphic::width + bound ||
-          entity_pos.y <= -bound ||
-          entity_pos.y >= graphic::height + bound
-        ) {
-          entity->remove();
-        }
-      } // if live
+        entity_pos.x <= -bound ||
+        entity_pos.x >= graphic::width + bound ||
+        entity_pos.y <= -bound ||
+        entity_pos.y >= graphic::height + bound
+      ) {
+        entity->remove();
+      }
     } // for m_entities
   } // bound_check
 

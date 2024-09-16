@@ -302,6 +302,7 @@ static Vector<Flag_struct> g_entity_flags {
   MAKE_FLAG (stop_anim)
   MAKE_FLAG (ignore_player)
   MAKE_FLAG (ignore_master)
+  MAKE_FLAG (out_of_screen)
   MAKE_FLAG (ignore_bullet)
   MAKE_FLAG (ignore_self_type)
   MAKE_FLAG (ignore_bound)

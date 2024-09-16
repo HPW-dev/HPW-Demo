@@ -5,6 +5,7 @@
 #include "game/core/core.hpp"
 #include "game/entity/entity-mgr.hpp"
 #include "game/entity/util/entity-util.hpp"
+#include "game/core/canvas.hpp"
 
 Entity::Entity()
 : Entity_animated (*this)
@@ -42,12 +43,24 @@ void Entity::update(const Delta_time dt) {
 
   if (!status.disable_motion)
     move_it(dt);
+
   process_update_cbs(dt);
+  check_out_of_screen();
 }
 
 void Entity::set_master(Master new_master) {
   assert(new_master != this);
   _master = new_master;
+}
+
+void Entity::check_out_of_screen() {
+  cauto pos = phys.get_pos();
+  constexpr real BOUND = 50;
+  status.out_of_screen =
+    (pos.x <= -BOUND) ||
+    (pos.x >= graphic::width + BOUND) ||
+    (pos.y <= -BOUND) ||
+    (pos.y >= graphic::height + BOUND);
 }
 
 void Entity::move_it(const Delta_time dt) { phys.update(dt); }

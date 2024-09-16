@@ -45,4 +45,5 @@ private:
   Master _master {}; // объект - создатель
 
   void move_it(const Delta_time dt);
+  void check_out_of_screen();
 }; // Entity
