@@ -11,6 +11,7 @@
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
+#include "game/core/replays.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
@@ -94,13 +95,20 @@ void Game_app::update(const Delta_time dt) {
   Host_class::update(dt);
 
   auto st = get_time();
+
+  if (hpw::replay_read_mode)
+    replay_load_keys();
+  elif (hpw::enable_replay)
+    replay_save_keys();
+
   if ( !hpw::scene_mgr->update(dt) ) {
     detailed_log("scenes are over, call soft_exit\n");
     hpw::soft_exit();
   }
+
   check_errors();
   hpw::tick_time = get_time() - st;
-} // update
+}
 
 void Game_app::draw_game_frame() const {
   assert(graphic::canvas);
@@ -155,3 +163,46 @@ void Game_app::check_errors() {
     ));
   }
 } // check_errors
+
+void Game_app::replay_save_keys() {
+  return_if(!hpw::replay);
+  Key_packet packet;
+
+  #define check_key(key) if (is_pressed(key)) \
+    packet.emplace_back(key);
+  check_key(hpw::keycode::up)
+  check_key(hpw::keycode::down)
+  check_key(hpw::keycode::left)
+  check_key(hpw::keycode::right)
+  check_key(hpw::keycode::escape)
+  check_key(hpw::keycode::enable)
+  check_key(hpw::keycode::focus)
+  check_key(hpw::keycode::mode)
+  check_key(hpw::keycode::bomb)
+  check_key(hpw::keycode::shoot)
+  #undef check_key
+
+  hpw::replay->push( std::move(packet) );
+}
+
+void Game_app::replay_load_keys() {
+  return_if(!hpw::replay);
+  // сбросить свои клавиши
+  clear_cur_keys();
+  hpw::any_key_pressed = false;
+
+  // прочитать клавиши с реплея
+  auto key_packet = hpw::replay->pop();
+  if (key_packet) {
+    for (crauto key: *key_packet) {
+      press(key);
+      hpw::any_key_pressed = true;
+    }
+  } else {
+    // по завершению реплея выходить из сцены обратно
+    hpw_log("replay end\n");
+    hpw::replay_read_mode = false;
+    hpw::replay = {};
+    //hpw::scene_mgr->back(); TODO?
+  }
+}

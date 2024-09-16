@@ -14,8 +14,6 @@ class Scene_game final: public Scene {
   void init_levels();
   void init_entitys();
   void replay_init();
-  void replay_save_keys();
-  void replay_load_keys();
   void post_draw(Image& dst) const;
   void draw_border(Image& dst) const; // рамка по краям экрана
   Vec get_level_vel() const; // безопасно получить сдвиг кординат уровня

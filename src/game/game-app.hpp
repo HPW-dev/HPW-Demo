@@ -25,6 +25,8 @@ class Game_app: public Host_class {
   void draw_border(Image& dst) const;
   void draw_game_frame() const override;
   void check_errors();
+  void replay_save_keys();
+  void replay_load_keys();
 
 public:
   explicit Game_app(int argc, char *argv[]);

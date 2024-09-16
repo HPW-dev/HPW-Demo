@@ -175,11 +175,6 @@ void Scene_game::update(const Delta_time dt) {
     graphic::set_fast_forward( !graphic::get_fast_forward() );
   #endif
 
-  if (hpw::replay_read_mode)
-    replay_load_keys();
-  elif (hpw::enable_replay)
-    replay_save_keys();
-
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
     hpw::scene_mgr->back(3); // cur->loading screen->diffuculty->main menu
@@ -302,45 +297,6 @@ void Scene_game::replay_init() {
   elif (hpw::enable_replay)
     init_unique(hpw::replay, hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", true);
 } // replay_init
-
-void Scene_game::replay_save_keys() {
-  Key_packet packet;
-
-  #define check_key(key) if (is_pressed(key)) \
-    packet.emplace_back(key);
-  check_key(hpw::keycode::up)
-  check_key(hpw::keycode::down)
-  check_key(hpw::keycode::left)
-  check_key(hpw::keycode::right)
-  check_key(hpw::keycode::enable)
-  check_key(hpw::keycode::focus)
-  check_key(hpw::keycode::mode)
-  check_key(hpw::keycode::bomb)
-  check_key(hpw::keycode::shoot)
-  #undef check_key
-
-  hpw::replay->push( std::move(packet) );
-}
-
-void Scene_game::replay_load_keys() {
-  // сбросить свои клавиши
-  clear_cur_keys();
-  hpw::any_key_pressed = false;
-
-  // прочитать клавиши с реплея
-  auto key_packet = hpw::replay->pop();
-  if (key_packet) {
-    for (crauto key: *key_packet) {
-      press(key);
-      hpw::any_key_pressed = true;
-    }
-  } else {
-    // по завершению реплея выходить из сцены обратно
-    hpw_log("replay end\n");
-    hpw::replay_read_mode = false;
-    hpw::scene_mgr->back();
-  }
-} // replay_load_keys
 
 void Scene_game::save_named_replay() {
   assert(hpw::enable_replay);
