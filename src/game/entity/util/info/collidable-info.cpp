@@ -27,8 +27,8 @@ void Collidable_info::accept(Collidable& dst) {
 
   // добавить колбэк на создание взрыва при смерти
   if (!explosion_name.empty())
-    dst.add_kill_cb([=](Entity& ent) {
+    dst.add_kill_cb([_expl_name=explosion_name](Entity& ent) {
       assert(hpw::entity_mgr);
-      hpw::entity_mgr->make(&ent, explosion_name, ent.phys.get_pos());
+      hpw::entity_mgr->make(&ent, _expl_name, ent.phys.get_pos());
     });
 }
