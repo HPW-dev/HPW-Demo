@@ -26,6 +26,7 @@ public:
   std::optional<Key_packet> pop(); // будет возвращать нажатые клавиши, пока не кончатся
   cp<Impl> get_impl() const;
   static Info get_info(cr<Str> path);
+  utf32 warnings() const; // посмотреть проблемы с реплеем, если они есть
 }; // Replay
 
 struct Date {

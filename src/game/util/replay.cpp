@@ -172,6 +172,8 @@ void write_data(Stream& file, const T&& data) {
 struct Replay::Impl {
   Str m_ver {"v3.3"};
   Str m_path {};
+  // здесь собираются сообщения с проблемами в реплее
+  std::basic_stringstream<char32_t> _warnings {};
   Str _old_hud {};
   bool _use_hud_backup {false};
   Stream m_file {};
@@ -243,40 +245,37 @@ struct Replay::Impl {
 
     // версия реплея
     auto ver = read_str(m_file);
-    iferror(ver != m_ver, "версия реплея несовместима с игрой");
+    //iferror(ver != m_ver, "версия реплея несовместима с игрой");
+    if (ver != m_ver)
+      _warnings << U"версия реплея несовместима с игрой\n";
+
     // версия игры
     auto cur_game_ver = cstr_to_cxxstr(get_game_version());
     auto rep_game_ver = read_str(m_file);
     if (cur_game_ver != rep_game_ver) {
-      // TODO показывать окно с ворнингом
-      hpw_log("версия реплея не совпадает с версией игры\n");
-      hpw_log("  текущая версия игры: " << cur_game_ver << '\n');
-      hpw_log("  версия игры в реплее: " << rep_game_ver << '\n');
-      hpw_log("  файл реплея: \"" << m_path << "\"\n");
+      _warnings << U"версия реплея не совпадает с версией игры\n";
+      _warnings << U"  текущая версия игры: " << utf8_to_32(cur_game_ver) << U'\n';
+      _warnings << U"  версия игры в реплее: " << utf8_to_32(rep_game_ver) << U'\n';
+      _warnings << U"  файл реплея: \"" << utf8_to_32(m_path) << U"\"\n";
     }
     
     // платформа
     cauto platform = read_data<Platform>(m_file);
     cauto bits = read_data<Bits>(m_file);
-    if (bits != get_bits()) {
-      hpw_log("реплей записан на системе с разрядностью отличающейся от вашей\n");
-      // TODO окно с предупреждением
-    }
-    if (platform != get_platform()) {
-      hpw_log("реплей записан на системе отличающейся от вашей\n");
-      // TODO окно с предупреждением
-    }
+    if (bits != get_bits())
+      _warnings << U"реплей записан на системе с разрядностью отличающейся от вашей\n";
+    if (platform != get_platform())
+      _warnings << U"реплей записан на системе отличающейся от вашей\n";
     // SHA256
     auto exe_sha256 = read_str(m_file);
     auto data_sha256 = read_str(m_file);
     if (exe_sha256 != hpw::exe_sha256
     || data_sha256 != hpw::data_sha256) {
-      hpw_log("чексуммы в реплее не совпадают\n");
-      hpw_log("SHA256 EXE игры: " << hpw::exe_sha256 << '\n');
-      hpw_log("SHA256 EXE реплея: " << exe_sha256 << '\n');
-      hpw_log("SHA256 DATA игры: " << hpw::data_sha256 << '\n');
-      hpw_log("SHA256 DATA реплея: " << data_sha256 << '\n');
-      // TODO вызов окна с надписью
+      _warnings << U"чексуммы в реплее не совпадают\n";
+      _warnings << U"SHA256 EXE игры: " << utf8_to_32(hpw::exe_sha256) << U'\n';
+      _warnings << U"SHA256 EXE реплея: " << utf8_to_32(exe_sha256) << U'\n';
+      _warnings << U"SHA256 DATA игры: " << utf8_to_32(hpw::data_sha256) << U'\n';
+      _warnings << U"SHA256 DATA реплея: " << utf8_to_32(data_sha256) << U'\n';
     }
     // UPS
     cauto target_ups = read_data<uint32_t>(m_file);
@@ -298,11 +297,13 @@ struct Replay::Impl {
     // начальный уровень - туториал?
     hpw::first_level_is_tutorial = read_data<decltype(hpw::first_level_is_tutorial)>(m_file);
     // с каким интерфейсом начали игру
-    _old_hud = graphic::cur_hud;
-    graphic::cur_hud = read_str(m_file);
-    graphic::hud = make_hud(graphic::cur_hud);
-    if (_old_hud != graphic::cur_hud)
-      _use_hud_backup = true;
+    if (hpw::replay_read_mode) {
+      _old_hud = graphic::cur_hud;
+      graphic::cur_hud = read_str(m_file);
+      graphic::hud = make_hud(graphic::cur_hud);
+      if (_old_hud != graphic::cur_hud)
+        _use_hud_backup = true;
+    }
 
     m_info.path = m_path;
     m_info.date_str = date;
@@ -397,6 +398,8 @@ struct Replay::Impl {
     iferror(ret.second > 59, "неправильная секунда (" << n2s(ret.second) << ")");
     return ret;
   } // to_date
+
+  inline utf32 warnings() const { return _warnings.str(); }
 }; // Impl
 
 Replay::Replay(cr<Str> path, bool write_mode)
@@ -407,3 +410,5 @@ void Replay::push(cr<Key_packet> key_packet) { impl->push(key_packet); }
 std::optional<Key_packet> Replay::pop() { return impl->pop(); }
 cp<Replay::Impl> Replay::get_impl() const { return impl.get(); }
 Replay::Info Replay::get_info(cr<Str> path) { return Impl::get_info(path); }
+utf32 Replay::warnings() const { return impl->warnings(); }
+

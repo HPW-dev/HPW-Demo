@@ -11,8 +11,10 @@
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
-#include "game/core/common.hpp"
+#include "util/log.hpp"
 #include "game/core/core.hpp"
+#include "game/core/user.hpp"
+#include "game/core/common.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
@@ -292,14 +294,25 @@ void Scene_game::replay_init() {
     detailed_log("назначен новый сид рандома: " << seed << '\n');
   #endif
 
-  if (hpw::replay_read_mode)
-    init_unique(hpw::replay, hpw::cur_replay_file_name, false);
-  elif (hpw::enable_replay)
-    init_unique(hpw::replay, hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", true);
+  Str rep_path;
+  if (hpw::replay_read_mode) {
+    rep_path = hpw::cur_replay_file_name;
+    init_unique(hpw::replay, rep_path, false);
+  } elif (hpw::enable_replay) {
+    rep_path = hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay";
+    init_unique(hpw::replay, rep_path, true);
+  }
+  
+  // если есть ошибки, показать их
+  if (cauto warnings = hpw::replay->warnings(); !warnings.empty()) {
+    hpw_log("проблемы с реплеем \"" << rep_path << "\":\n" << utf32_to_8(warnings));
+    hpw::user_warnings += warnings;
+  }
 } // replay_init
 
 void Scene_game::save_named_replay() {
   assert(hpw::enable_replay);
+  return_if(!hpw::replay);
   try {
     // реплей сейвится при закрытии
     hpw::replay->close();

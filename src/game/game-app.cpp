@@ -14,6 +14,7 @@
 #include "game/core/replays.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/user.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/debug.hpp"
@@ -161,6 +162,12 @@ void Game_app::check_errors() {
       get_locale_str("common.multiapp_warning"),
       get_locale_str("common.warning")
     ));
+  }
+
+  // пользовательские сообщения
+  if (!hpw::user_warnings.empty()) {
+    hpw::scene_mgr->add( new_shared<Scene_msgbox_enter>(hpw::user_warnings, get_locale_str("common.warning")) );
+    hpw::user_warnings.clear();
   }
 } // check_errors
 
