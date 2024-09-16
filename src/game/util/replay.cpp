@@ -172,6 +172,8 @@ void write_data(Stream& file, const T&& data) {
 struct Replay::Impl {
   Str m_ver {"v3.3"};
   Str m_path {};
+  Str _old_hud {};
+  bool _use_hud_backup {false};
   Stream m_file {};
   bool m_write_mode {};
   Info m_info {};
@@ -296,8 +298,11 @@ struct Replay::Impl {
     // начальный уровень - туториал?
     hpw::first_level_is_tutorial = read_data<decltype(hpw::first_level_is_tutorial)>(m_file);
     // с каким интерфейсом начали игру
+    _old_hud = graphic::cur_hud;
     graphic::cur_hud = read_str(m_file);
     graphic::hud = make_hud(graphic::cur_hud);
+    if (_old_hud != graphic::cur_hud)
+      _use_hud_backup = true;
 
     m_info.path = m_path;
     m_info.date_str = date;
@@ -347,6 +352,10 @@ struct Replay::Impl {
 
       file.write(m_file.data.data(), m_file.data.size());
     #endif
+
+    // применить бэкап HUD
+    if (_use_hud_backup)
+      graphic::hud = make_hud(_old_hud);
   }
 
   inline void push(cr<Key_packet> key_packet) {
