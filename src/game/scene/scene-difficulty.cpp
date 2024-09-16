@@ -8,7 +8,6 @@
 #include "game/core/common.hpp"
 #include "game/core/replays.hpp"
 #include "game/core/difficulty.hpp"
-#include "game/util/replay.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"

@@ -6,7 +6,6 @@
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/replay.hpp"
 #include "game/core/replays.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"

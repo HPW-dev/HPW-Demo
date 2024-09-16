@@ -3,11 +3,9 @@
 #include "util/mem-types.hpp"
 
 struct Vec;
-class Replay;
 
 // сцена игрового процесса
 class Scene_game final: public Scene {
-  Unique<Replay> replay {};
   bool m_start_tutorial {false};
   struct Impl;
   Unique<Impl> m_impl {};

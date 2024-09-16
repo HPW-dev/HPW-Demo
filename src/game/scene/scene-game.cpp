@@ -31,7 +31,6 @@
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"
-#include "game/util/replay.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
 #include "game/util/post-effect/post-effects.hpp"
@@ -299,9 +298,9 @@ void Scene_game::replay_init() {
   #endif
 
   if (hpw::replay_read_mode)
-    init_unique(replay, hpw::cur_replay_file_name, false);
+    init_unique(hpw::replay, hpw::cur_replay_file_name, false);
   elif (hpw::enable_replay)
-    init_unique(replay, hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", true);
+    init_unique(hpw::replay, hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", true);
 } // replay_init
 
 void Scene_game::replay_save_keys() {
@@ -320,7 +319,7 @@ void Scene_game::replay_save_keys() {
   check_key(hpw::keycode::shoot)
   #undef check_key
 
-  replay->push( std::move(packet) );
+  hpw::replay->push( std::move(packet) );
 }
 
 void Scene_game::replay_load_keys() {
@@ -329,7 +328,7 @@ void Scene_game::replay_load_keys() {
   hpw::any_key_pressed = false;
 
   // прочитать клавиши с реплея
-  auto key_packet = replay->pop();
+  auto key_packet = hpw::replay->pop();
   if (key_packet) {
     for (crauto key: *key_packet) {
       press(key);
@@ -347,7 +346,7 @@ void Scene_game::save_named_replay() {
   assert(hpw::enable_replay);
   try {
     // реплей сейвится при закрытии
-    replay->close();
+    hpw::replay->close();
     if (hpw::save_last_replay) {
       // открыть файл последнего реплея и скопировать в именной файл
       std::ifstream source(hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", std::ios::binary);
