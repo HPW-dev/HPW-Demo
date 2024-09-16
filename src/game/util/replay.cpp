@@ -9,7 +9,9 @@
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/game-util.hpp"
+#include "game/hud/hud-util.hpp"
 #include "game/core/core.hpp"
+#include "game/core/huds.hpp"
 #include "game/core/common.hpp"
 #include "game/core/replays.hpp"
 #include "game/core/user.hpp"
@@ -168,7 +170,7 @@ void write_data(Stream& file, const T&& data) {
 }
 
 struct Replay::Impl {
-  Str m_ver {"v3.2"};
+  Str m_ver {"v3.3"};
   Str m_path {};
   Stream m_file {};
   bool m_write_mode {};
@@ -220,8 +222,10 @@ struct Replay::Impl {
     write_data(m_file, hpw::get_score());
     // дата
     write_str(m_file, get_data_str());
-    // начальный уровень туториал?
+    // начальный уровень - туториал?
     write_data(m_file, hpw::first_level_is_tutorial);
+    // с каким интерфейсом начали игру
+    write_str(m_file, graphic::cur_hud);
   } // write_header
 
   // чтение заголовка
@@ -248,6 +252,7 @@ struct Replay::Impl {
       hpw_log("  версия игры в реплее: " << rep_game_ver << '\n');
       hpw_log("  файл реплея: \"" << m_path << "\"\n");
     }
+    
     // платформа
     cauto platform = read_data<Platform>(m_file);
     cauto bits = read_data<Bits>(m_file);
@@ -290,6 +295,9 @@ struct Replay::Impl {
     cauto date = read_str(m_file);
     // начальный уровень - туториал?
     hpw::first_level_is_tutorial = read_data<decltype(hpw::first_level_is_tutorial)>(m_file);
+    // с каким интерфейсом начали игру
+    graphic::cur_hud = read_str(m_file);
+    graphic::hud = make_hud(graphic::cur_hud);
 
     m_info.path = m_path;
     m_info.date_str = date;
@@ -298,6 +306,7 @@ struct Replay::Impl {
     m_info.difficulty = difficulty;
     m_info.score = score;
     m_info.player_name = player_name;
+    m_info.hud_name = graphic::cur_hud;
   } // read_header
 
   inline Str get_data_str() const {
