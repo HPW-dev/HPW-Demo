@@ -83,11 +83,14 @@ struct Level_space::Impl {
       ? player_pos_from_prev_level
       : get_screen_center();
     hpw::entity_mgr->make({}, "player.boo.dark", pos);
-    // на этом уорвне у игрока гравитация снижена
-    auto player = hpw::entity_mgr->get_player();
-    assert(player);
-    player->default_force *= 0.004;
-    player->focus_force *= 0.02;
+
+    // на этом уорвне у игрока гравитация снижена (не в изи режиме)
+    if (hpw::difficulty != Difficulty::easy) {
+      auto player = hpw::entity_mgr->get_player();
+      assert(player);
+      player->default_force *= 0.004;
+      player->focus_force *= 0.02;
+    }
   }
 
   inline void init_collider() {
