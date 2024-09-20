@@ -63,7 +63,7 @@ struct Level_space::Impl {
 
   inline void update(const Vec vel, Delta_time dt) {
     auto vel_inverted = vel * -1.0;
-    execute_tasks(tasks, dt);
+    execute_tasks(tasks, {}, dt);
 
     if (enable_bg_layer)
       update_layers(vel_inverted, dt);

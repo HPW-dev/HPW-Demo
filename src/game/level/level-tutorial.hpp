@@ -19,4 +19,5 @@ public:
   void draw(Image& dst) const override;
   void draw_upper_layer(Image& dst) const override;
   Str level_name() const override;
+  void on_player_death(const Delta_time dt) override;
 };

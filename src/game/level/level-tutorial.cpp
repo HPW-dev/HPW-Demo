@@ -32,9 +32,17 @@ struct Level_tutorial::Impl {
   Vec bg_offset {};
   bool enable_epilepsy_bg {}; // пыточный фон для последней секции
   Delta_time bg_state {};
+  int _completed_tasks {}; // сколько секций выполнено
+  Level_task_complete_cbs _level_complete_cbs {};
 
-  inline explicit Impl(Level_tutorial& _master): master{_master}
-    { restart(); }
+  inline explicit Impl(Level_tutorial& _master): master{_master} {
+    restart();
+
+    // при выполненном задании уровня увеличивать счётчик
+    _level_complete_cbs.push_back([this](const Delta_time dt) {
+      ++_completed_tasks;
+    });
+  }
 
   inline void restart() {
     bg_text = {};
@@ -53,7 +61,7 @@ struct Level_tutorial::Impl {
   inline void update(const Vec vel, Delta_time dt) {
     bg_offset = vel;
     bg_state += graphic::render_lag ? dt : hpw::real_dt;
-    execute_tasks(tasks, dt);
+    execute_tasks(tasks, _level_complete_cbs, dt);
   }
 
   inline void draw(Image& dst) const {
@@ -103,6 +111,10 @@ struct Level_tutorial::Impl {
       }),
       &exit_from_level,
     }; // Level_tasks c-tor
+
+    // скипнуть уже выполненные задания
+    cfor (_, _completed_tasks)
+      tasks.pop_front();
   } // init_tasks
 
   inline void draw_bg(Image& dst) const {
@@ -576,6 +588,11 @@ struct Level_tutorial::Impl {
       }
     } // spwan_hatch
   }; // Focus_test
+
+  inline void on_player_death(const Delta_time dt) {
+    // вернуться на одну секцию назад при перезапуске уровня
+    _completed_tasks = std::max(_completed_tasks - 1, 0);
+  }
 }; // Impl
 
 Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(*this)} {}
@@ -591,3 +608,7 @@ void Level_tutorial::update(const Vec vel, Delta_time dt) {
 void Level_tutorial::draw(Image& dst) const { impl->draw(dst); }
 void Level_tutorial::draw_upper_layer(Image& dst) const { impl->draw_upper_layer(dst); }
 Str Level_tutorial::level_name() const { return Str{Level_tutorial::NAME}; }
+void Level_tutorial::on_player_death(const Delta_time dt) {
+  Level::on_player_death(dt);
+  impl->on_player_death(dt);
+}
