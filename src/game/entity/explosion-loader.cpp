@@ -38,6 +38,7 @@ struct Explosion_loader::Impl {
     assert(m_particle_count > 0);
     m_entity_names = config.get_v_str("names");
     assert(!m_entity_names.empty());
+    assert(m_entity_names.size() < 10'000u);
     if (auto heat_distort_node = config["heat_distort"]; heat_distort_node.check())
       m_heat_distort = load_heat_distort(heat_distort_node);
   }
@@ -53,8 +54,9 @@ struct Explosion_loader::Impl {
 
     // создать частицы
     cfor (particle_idx, m_particle_count) {
+      break_if (m_entity_names.empty());
       // определить чё соспавнить
-      auto entity_name = m_entity_names.at(rndu() % m_entity_names.size());
+      auto entity_name = m_entity_names.at( rndu(m_entity_names.size()-1) );
       auto it = hpw::entity_mgr->make(master, entity_name, pos);
       m_anim_info.accept(*it);
       // инит флагов

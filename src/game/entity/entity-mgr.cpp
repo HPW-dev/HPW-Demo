@@ -240,13 +240,17 @@ struct Entity_mgr::Impl {
     auto entity_node = config[name];
     auto type = entity_node.get_str("type", "error type");
     m_entity_loaders[name] = make_entity_loader(type, entity_node);
-        
+    Entity_loader* loader;
+      
     try {
-      return ( *m_entity_loaders.at(name) )(master, pos);
+      cauto ptr = m_entity_loaders.at(name);
+      loader = ptr.get();
     } catch (cr<std::out_of_range> ex) {
       error("нет инициализатора для \"" << name << "\"");
     }
-    return {};
+
+    assert(loader);
+    return (*loader)(master, pos);
   }
 
   inline Entity* make(Entity* master, cr<Str> name, const Vec pos) {
@@ -265,11 +269,11 @@ struct Entity_mgr::Impl {
         ret->set_name(name);
       return ret;
     } catch (cr<std::out_of_range> ex) {
-      #ifdef ECOMEM
+      //#ifdef ECOMEM
         return load_unknown_entity(master, name, pos);
-      #else
-        error("нет инициализатора для \"" << name << "\"");
-      #endif
+      //#else
+        //error("нет инициализатора для \"" << name << "\"");
+      //#endif
     }
     
     return {};

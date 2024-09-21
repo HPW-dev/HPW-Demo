@@ -1,6 +1,6 @@
 #pragma once
 
-#define RND_LOG
+//#define RND_LOG
 #ifdef RND_LOG
 #include <source_location>
 #endif
