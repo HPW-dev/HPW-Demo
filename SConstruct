@@ -9,7 +9,6 @@ System = Enum('System', ['windows', 'linux'])
 Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
 Opt_level = Enum('Opt_level', ['fast', 'debug', 'optimized_debug', 'stable', 'x86_64_v1', 'x86_64_v4', 'ecomem'])
 Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
-Link_mode = Enum('Link_mode', ['static', 'shared'])
 Log_mode = Enum('Log_mode', ['detailed', 'debug', 'release'])
 
 # управляющие переменные:
@@ -19,14 +18,14 @@ system = System.windows
 compiler = Compiler.gcc
 opt_level = Opt_level.debug
 host = Host.glfw3
-link_mode = Link_mode.shared
 log_mode = Log_mode.debug
 enable_omp = False
 enable_asan = False
+static_link = False
 build_script = ""
 
-# парс параметров
 def parse_args():
+  '''аргументы запуска скрипта конвертятся в управляющие параметры'''
   enable_omp = bool(int(ARGUMENTS.get("enable_omp", 0)))
   enable_asan = bool(int(ARGUMENTS.get("enable_asan", 0)))
   build_script = ARGUMENTS.get("script", "test/graphic/SConscript")
@@ -34,24 +33,42 @@ def parse_args():
   _architecture = architecture()
   bitness = Bitness.x64 if _architecture[0] == "64bit" else Bitness.x32
   system = System.linux if _architecture[1] == "ELF" else System.windows
-  match ARGUMENTS.get("host", "glfw3"):
+  match ARGUMENTS.get("host", "glfw3").lower():
     case "glfw3": host = Host.glfw3
     case "asci": host = Host.asci
     case "sdl2": host = Host.sdl2
     case "none": host = Host.none
     case _: host = Host.glfw3
+  match ARGUMENTS.get("compiler", "gcc").lower():
+    case "clang": compiler = Compiler.clang
+    case "gcc": compiler = Compiler.gcc
+    case _: compiler = Compiler.gcc
+  match ARGUMENTS.get("opt_level", "stable").lower():
+    case "optimized_debug": opt_level = Opt_level.optimized_debug
+    case "fast": opt_level = Opt_level.fast
+    case "ecomem": opt_level = Opt_level.ecomem
+    case "x86_64_v1": opt_level = Opt_level.x86_64_v1
+    case "x86_64_v4": opt_level = Opt_level.x86_64_v4
+    case "debug": opt_level = Opt_level.debug
+    case "stable": opt_level = Opt_level.stable
+    case _: opt_level = Opt_level.stable
+  match ARGUMENTS.get("log_mode", "debug").lower():
+    case "detailed": log_mode = Log_mode.detailed
+    case "release": log_mode = Log_mode.release
+    case "debug": log_mode = Log_mode.debug
+    case _: log_mode = Log_mode.debug
 
-# отображение параметров билда
 def print_params():
-  print(f"Optimization level: {opt_level.name}")
+  '''отображение параметров билда'''
   print(f"Build script: \"{build_script}\"")
-  print(f"ASAN checks: {"enabled" if enable_asan else "disabled"}")
-  print(f"Link mode: {link_mode.name}")
-  print(f"Log mode: {log_mode.name}")
-  print(f"Compiler: {compiler.name}")
-  print(f"OpenMP: {"enabled" if enable_omp else "disabled"}");
   print(f"Target: {system.name} {bitness.name}")
   print(f"Host: {host.name}")
+  print(f"Compiler: {compiler.name}")
+  print(f"Optimization level: {opt_level.name}")
+  print(f"Static link: {"enabled" if static_link else "disabled"}")
+  print(f"OpenMP: {"enabled" if enable_omp else "disabled"}");
+  print(f"ASAN checks: {"enabled" if enable_asan else "disabled"}")
+  print(f"Log mode: {log_mode.name}")
 
 # main section:
 parse_args()
