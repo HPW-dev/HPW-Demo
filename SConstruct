@@ -12,7 +12,6 @@ Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
 Log_mode = Enum('Log_mode', ['detailed', 'debug', 'release'])
 
 # управляющие переменные:
-
 bitness = Bitness.x64
 system = System.windows
 compiler = Compiler.gcc
@@ -23,6 +22,11 @@ enable_omp = False
 enable_asan = False
 static_link = False
 build_script = ""
+
+# опции билда C++:
+cxx_defines = []
+cxx_ldflags = []
+cxx_flags = []
 
 def parse_args():
   '''аргументы запуска скрипта конвертятся в управляющие параметры'''
@@ -70,13 +74,48 @@ def print_params():
   print(f"ASAN checks: {"enabled" if enable_asan else "disabled"}")
   print(f"Log mode: {log_mode.name}")
 
+def accept_params():
+  '''применение параметров к опциям билда C++'''
+
+  # билтность системы
+  cxx_flags.extend(["-m32" if bitness == Bitness.x32 else "-m64"])
+
+  # система
+  cxx_defines.extend(["-DWINDOWS" if system == System.windows else "-DLINUX"]);
+
+  # хост
+  # ... TODO
+
+  # оптимизации
+  #cxx_flags.
+
+  # OpenMP
+  if enable_omp:
+    cxx_flags.extend(["-fopenmp"])
+    cxx_ldflags.extend(["-fopenmp"])
+
+  # ASAN
+  if enable_asan:
+    _asan_opts = [
+      "-fsanitize=leak", "-fsanitize=address",
+      "-fsanitize=undefined", "-fsanitize=float-divide-by-zero",
+      "-fsanitize=float-cast-overflow", "-fno-sanitize=null", "-fno-sanitize=alignment",
+      "-fno-omit-frame-pointer"
+    ]
+    cxx_flags.extend([_asan_opts])
+    cxx_flags.extend([_asan_opts])
+
+def build():
+  '''сборка проекта'''
+  pass # TODO
+
 # main section:
 parse_args()
 print_params()
+accept_params()
+build()
 
-
-
-
+# TODO del
 '''
 sanitize = [
   #"-fsanitize=leak", "-fsanitize=address",
