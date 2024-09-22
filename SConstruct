@@ -107,6 +107,13 @@ def accept_params():
   global cxx_ldflags
   global cxx_defines
 
+  # общие параметры:
+  cxx_flags.extend([
+    '-std=c++23',
+    '-Wall', '-Wfatal-errors', # останавливать компиляцию при первой ошибке
+    '-finput-charset=UTF-8', '-fextended-identifiers', # поддержка UTF-8
+  ])
+
   # билтность системы
   cxx_flags.extend(['-m32' if bitness == Bitness.x32 else '-m64'])
 
@@ -178,9 +185,9 @@ parse_args()
 print_params()
 accept_params()
 build()
-#print(f'ld_flags: {cxx_ldflags}')  # TODO delme
-#print(f'flags: {cxx_flags}')  # TODO delme
-#print(f'defines: {cxx_defines}')  # TODO delme
+print(f'ld_flags: {cxx_ldflags}')  # TODO delme
+print(f'flags: {cxx_flags}')  # TODO delme
+print(f'defines: {cxx_defines}')  # TODO delme
 
 # TODO delme
 '''
