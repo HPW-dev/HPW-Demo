@@ -3,6 +3,15 @@ import time
 import subprocess
 import glob
 import shutil
+from enum import Enum
+
+Bitness = Enum('Bitness', ['x32', 'x64'])
+System = Enum('System', ['windows', 'linux'])
+Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
+Opt_level = Enum('Opt_level', ['fast', 'debug', 'optimized_debug', 'stable',
+  'x86_64_v1', 'x86_64_v4', 'ecomem', 'core2'])
+Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
+Log_mode = Enum('Log_mode', ['detailed', 'debug', 'release'])
 
 def set_work_dir(path):
   "cd"
@@ -78,14 +87,14 @@ def copy_license():
 def prepare_strs(strs: list[str]):
   return ' '.join(filter(None, strs))
 
-def save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, is_linux, is_64bit, host):
+def save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, system, bitness, host):
   "создаёт файл build_dir/BUILD.txt с инфой о компиляции"
   try:
     with open(file=f'{build_dir}BUILD.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
       file.writelines([
         "### H.P.W BUILD INFO\n",
         f"* Compiler: {compiler}\n",
-        f"* OS: {"Linux" if is_linux else "Windows"} {"x64" if is_64bit else "x32"}\n",
+        f"* OS: {system} {bitness}\n",
         f"* Host-render system: {host}\n",
         f"* C/CXX defines: {prepare_strs(defines)}\n",
         f"* C/CXX flags: {prepare_strs(cpp_flags)}\n",

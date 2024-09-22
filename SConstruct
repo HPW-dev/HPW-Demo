@@ -2,22 +2,13 @@
 from platform import architecture
 #import sys
 from os import environ
-from script.helper import copy_license
-from enum import Enum
+from script.helper import *
 
 class Terminal_color:
   GREEN = '\033[92m'
   RED = '\033[91m'
   YELOW = '\033[33m'
   DEFAULT = '\033[0m'
-
-Bitness = Enum('Bitness', ['x32', 'x64'])
-System = Enum('System', ['windows', 'linux'])
-Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
-Opt_level = Enum('Opt_level', ['fast', 'debug', 'optimized_debug', 'stable',
-  'x86_64_v1', 'x86_64_v4', 'ecomem', 'core2'])
-Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
-Log_mode = Enum('Log_mode', ['detailed', 'debug', 'release'])
 
 class Hpw_config:
   # управляющие переменные:
@@ -64,9 +55,9 @@ def parse_args():
     case 'sdl2': hpw_config.host = Host.sdl2
     case 'none': hpw_config.host = Host.none
     case _: hpw_config.host = Host.glfw3
-  match ARGUMENTS.get('compiler', 'gcc').lower():
-    case 'clang': hpw_config.compiler = Compiler.clang
-    case 'gcc': hpw_config.compiler = Compiler.gcc
+  match ARGUMENTS.get('compiler', 'g++').lower():
+    case 'clang++': hpw_config.compiler = Compiler.clang
+    case 'g++': hpw_config.compiler = Compiler.gcc
     case _: hpw_config.compiler = Compiler.gcc
   match ARGUMENTS.get('opt_level', 'stable').lower():
     case 'optimized_debug': hpw_config.opt_level = Opt_level.optimized_debug
