@@ -4,6 +4,12 @@ from platform import architecture
 from script.helper import copy_license
 from enum import Enum
 
+class Terminal_color:
+  GREEN = '\033[92m'
+  RED = '\033[91m'
+  YELOW = '\033[33m'
+  DEFAULT = '\033[0m'
+
 Bitness = Enum('Bitness', ['x32', 'x64'])
 System = Enum('System', ['windows', 'linux'])
 Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
@@ -19,7 +25,7 @@ compiler = Compiler.gcc
 opt_level = Opt_level.debug
 host = Host.glfw3
 log_mode = Log_mode.debug
-enable_omp = False
+enable_omp = True
 enable_asan = False
 static_link = False
 build_script = ''
@@ -29,9 +35,28 @@ cxx_defines = []
 cxx_ldflags = []
 cxx_flags = []
 
+def yn2s(cond: bool):
+  '''enabled/disabled с покрасом строки'''
+  _ret = Terminal_color.GREEN + 'enabled' if cond else Terminal_color.RED + 'disabled'
+  return _ret + Terminal_color.DEFAULT
+
+def yelow_text(text: str):
+  return Terminal_color.YELOW + text + Terminal_color.DEFAULT
+
 def parse_args():
   '''аргументы запуска скрипта конвертятся в управляющие параметры'''
-  enable_omp = bool(int(ARGUMENTS.get('enable_omp', 0)))
+  global bitness
+  global system
+  global compiler
+  global opt_level
+  global host
+  global log_mode
+  global enable_omp
+  global enable_asan
+  global static_link
+  global build_script
+
+  enable_omp = bool(int(ARGUMENTS.get('enable_omp', 1)))
   enable_asan = bool(int(ARGUMENTS.get('enable_asan', 0)))
   build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
   assert build_script, 'path to build script needed'
@@ -66,18 +91,21 @@ def parse_args():
 
 def print_params():
   '''отображение параметров билда'''
-  print(f'Build script: \"{build_script}\"')
-  print(f'Target: {system.name} {bitness.name}')
-  print(f'Host: {host.name}')
-  print(f'Compiler: {compiler.name}')
-  print(f'Optimization level: {opt_level.name}')
-  print(f'Static link: {'enabled' if static_link else 'disabled'}')
-  print(f'OpenMP: {'enabled' if enable_omp else 'disabled'}');
-  print(f'ASAN checks: {'enabled' if enable_asan else 'disabled'}')
-  print(f'Log mode: {log_mode.name}')
+  print(f'Build script: \"{yelow_text(build_script)}\"')
+  print(f'Target: {yelow_text(system.name + ' ' + bitness.name)}')
+  print(f'Host: {yelow_text(host.name)}')
+  print(f'Compiler: {yelow_text(compiler.name)}')
+  print(f'Optimization level: {yelow_text(opt_level.name)}')
+  print(f'Static link: {yn2s(static_link)}')
+  print(f'OpenMP: {yn2s(enable_omp)}');
+  print(f'ASAN checks: {yn2s(enable_asan)}')
+  print(f'Log mode: {yelow_text(log_mode.name)}')
 
 def accept_params():
   '''применение параметров к опциям билда C++'''
+  global cxx_flags
+  global cxx_ldflags
+  global cxx_defines
 
   # билтность системы
   cxx_flags.extend(['-m32' if bitness == Bitness.x32 else '-m64'])
@@ -92,22 +120,29 @@ def accept_params():
   match opt_level:
     case Opt_level.fast:
       cxx_flags.extend(['-O0', '-g0'])
+      cxx_defines.extend({'-DDEBUG'})
     case Opt_level.debug:
       cxx_flags.extend(['-O0', '-g'])
+      cxx_defines.extend({'-DDEBUG'})
     case Opt_level.optimized_debug:
       cxx_flags.extend(['-O2', '-g'])
+      cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.stable:
       cxx_flags.extend(['-O2', '-flto=auto'])
       cxx_ldflags.extend(['-s'])
+      cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.core2:
       cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=core2'])
       cxx_ldflags.extend(['-s'])
+      cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.x86_64_v1:
       cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64'])
       cxx_ldflags.extend(['-s'])
+      cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.x86_64_v4:
       cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64-v4'])
       cxx_ldflags.extend(['-s'])
+      cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.ecomem: raise ValueError('Need implementation for ecomem optimization mode')
     case _: raise ValueError
   #cxx_flags.
@@ -129,7 +164,10 @@ def accept_params():
     cxx_flags.extend([_asan_opts])
 
   # Log mode
-  # ... TODO
+  match log_mode:
+    case Log_mode.detailed: cxx_defines.extend({'-DDETAILED_LOG'})
+    case Log_mode.release: pass
+    case Log_mode.debug: pass
 
 def build():
   '''сборка проекта'''
