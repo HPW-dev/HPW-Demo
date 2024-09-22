@@ -121,7 +121,11 @@ def accept_params():
   cxx_defines.extend(['-DWINDOWS' if system == System.windows else '-DLINUX']);
 
   # хост
-  # ... TODO
+  match host:
+    case Host.glfw3: cxx_defines.extend(["-DHOST_GLFW3"])
+    case Host.asci: cxx_defines.extend(["-DHOST_ASCI"])
+    case Host.sdl2: ValueError('need impl. for SDL2 host')
+    case Host.none: ValueError('need impl. for none-host')
 
   # оптимизации
   match opt_level:
@@ -136,19 +140,19 @@ def accept_params():
       cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.stable:
       cxx_flags.extend(['-O2', '-flto=auto'])
-      cxx_ldflags.extend(['-s'])
+      cxx_ldflags.extend(['-s', '-mwindows'])
       cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.core2:
       cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=core2'])
-      cxx_ldflags.extend(['-s'])
+      cxx_ldflags.extend(['-s', '-mwindows'])
       cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.x86_64_v1:
       cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64'])
-      cxx_ldflags.extend(['-s'])
+      cxx_ldflags.extend(['-s', '-mwindows'])
       cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.x86_64_v4:
       cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64-v4'])
-      cxx_ldflags.extend(['-s'])
+      cxx_ldflags.extend(['-s', '-mwindows'])
       cxx_defines.extend({'-DNDEBUG'})
     case Opt_level.ecomem: raise ValueError('Need implementation for ecomem optimization mode')
     case _: raise ValueError
