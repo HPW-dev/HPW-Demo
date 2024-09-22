@@ -1,11 +1,13 @@
 #!/usr/bin/env python
 import helper
 
-script = "src/game/SConscript"
-plugin_script = "src/plugin/graphic-effect/cxx/SConscript"
-is_debug = 0
-helper.write_game_version()
-helper.exec_cmd(f'scons -j16 -Q debug={is_debug} -Q script={script}')
-helper.exec_cmd(f'scons -j16 -Q debug={is_debug} -Q script={plugin_script}')
-if not is_debug:
-  helper.rem_all("build/plugin/effect/*.a") # удалить ненужные .a файлы
+opts = \
+  ' -Q enable_omp=1' \
+  ' -Q enable_asan=0' \
+  ' -Q host=glfw3' \
+  ' -Q compiler=gcc' \
+  ' -Q opt_level=stable' \
+  ' -Q log_mode=release'
+helper.exec_cmd('scons -j15 -Q script=src/game/SConscript' + opts)
+helper.exec_cmd('scons -j15 -Q script=src/plugin/graphic-effect/cxx/SConscript' + opts)
+helper.rem_all("build/plugin/effect/*.a") # удалить ненужные .a файлы

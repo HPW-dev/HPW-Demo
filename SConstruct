@@ -55,9 +55,9 @@ def parse_args():
     case 'sdl2': hpw_config.host = Host.sdl2
     case 'none': hpw_config.host = Host.none
     case _: hpw_config.host = Host.glfw3
-  match ARGUMENTS.get('compiler', 'g++').lower():
-    case 'clang++': hpw_config.compiler = Compiler.clang
-    case 'g++': hpw_config.compiler = Compiler.gcc
+  match ARGUMENTS.get('compiler', 'gcc').lower():
+    case 'clang': hpw_config.compiler = Compiler.clang
+    case 'gcc': hpw_config.compiler = Compiler.gcc
     case _: hpw_config.compiler = Compiler.gcc
   match ARGUMENTS.get('opt_level', 'stable').lower():
     case 'optimized_debug': hpw_config.opt_level = Opt_level.optimized_debug
@@ -183,4 +183,5 @@ parse_args()
 print_params()
 accept_params()
 copy_license()
+write_game_version()
 build()
