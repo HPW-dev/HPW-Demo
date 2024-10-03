@@ -35,7 +35,7 @@ def accept_config():
       inc_path.extend([thirdparty_dir + "include/_windows_only"])
       used_libs.extend(["OpenAL32.dll"])
       lib_path.extend([
-        thirdparty_dir + "lib/yaml-cpp/",
+        thirdparty_dir + "lib/yaml-cpp/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
         thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
       ])
     case System.linux:

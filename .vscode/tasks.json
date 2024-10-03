@@ -66,6 +66,12 @@
       "args": ["script/build-game-debug-x32.py"]
     },
     {
+      "label": "build game x32 (release)",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/build-game-release-x32.py"]
+    },
+    {
       "label": "build game (fast)",
       "type": "shell",
       "command": "python",

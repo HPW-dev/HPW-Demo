@@ -38,6 +38,10 @@ inline void std_sleep_until(const Seconds seconds)
 inline void win_sleep(const Seconds seconds) { ::Sleep(seconds * 1'000); }
 
 inline void win_htimer(const Seconds seconds) {
+#ifdef is_x32
+  // TODO x32 версия таймера
+  win_sleep(seconds);
+#else // x64
   ::LARGE_INTEGER ft;
   ft.QuadPart = -static_cast<std::int64_t>(seconds * 10'000'000);  // '-' using relative time
   ::HANDLE timer = ::CreateWaitableTimerExW(NULL, NULL,
@@ -45,6 +49,7 @@ inline void win_htimer(const Seconds seconds) {
   ::SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
   ::WaitForSingleObject(timer, INFINITE);
   ::CloseHandle(timer);
+#endif
 }
 
 inline void win_bussy_loop(const Seconds seconds, const double scale) {
