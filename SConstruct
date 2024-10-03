@@ -47,8 +47,11 @@ def parse_args():
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
   assert hpw_config.build_script, 'path to build script needed'
   _architecture = architecture()
-  hpw_config.bitness = Bitness.x64 if _architecture[0] == '64bit' else Bitness.x32
   hpw_config.system = System.linux if _architecture[1] == 'ELF' else System.windows
+  match ARGUMENTS.get('bitness', 'auto').lower():
+    case 'x32': hpw_config.bitness = Bitness.x32
+    case 'x64': hpw_config.bitness = Bitness.x64
+    case 'auto': hpw_config.bitness = Bitness.x64 if _architecture[0] == '64bit' else Bitness.x32
   match ARGUMENTS.get('host', 'glfw3').lower():
     case 'glfw3': hpw_config.host = Host.glfw3
     case 'asci': hpw_config.host = Host.asci
