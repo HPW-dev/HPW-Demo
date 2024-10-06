@@ -107,7 +107,7 @@ def accept_params():
   # система
   hpw_config. cxx_defines.extend(['-DWINDOWS' if hpw_config.system == System.windows else '-DLINUX'])
   if hpw_config.system == System.linux:
-    cxx_flags.extend(['-fdiagnostics-color=always'])
+    hpw_config.cxx_flags.extend(['-fdiagnostics-color=always'])
 
   # хост
   match hpw_config.host:
@@ -121,31 +121,46 @@ def accept_params():
     case Opt_level.fast:
       hpw_config.cxx_flags.extend(['-O0', '-g0'])
       hpw_config.cxx_defines.extend({'-DDEBUG'})
+      
     case Opt_level.debug:
       hpw_config.cxx_flags.extend(['-O0', '-g'])
       hpw_config.cxx_defines.extend({'-DDEBUG'})
+
     case Opt_level.optimized_debug:
       hpw_config.cxx_flags.extend(['-O2', '-g'])
       hpw_config.cxx_defines.extend({'-DNDEBUG'})
+
     case Opt_level.stable:
       hpw_config.cxx_flags.extend(['-O2', '-flto=auto'])
-      hpw_config.cxx_ldflags.extend(['-s', '-mwindows'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
       hpw_config.cxx_defines.extend({'-DNDEBUG'})
+
     case Opt_level.core2:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=core2'])
-      hpw_config.cxx_ldflags.extend(['-s', '-mwindows'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
       hpw_config.cxx_defines.extend({'-DNDEBUG'})
+
     case Opt_level.x86_64_v1:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64'])
-      hpw_config.cxx_ldflags.extend(['-s', '-mwindows'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
       hpw_config.cxx_defines.extend({'-DNDEBUG'})
+
     case Opt_level.x86_64_v4:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64-v4'])
-      hpw_config.cxx_ldflags.extend(['-s', '-mwindows'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
       hpw_config.cxx_defines.extend({'-DNDEBUG'})
+
     case Opt_level.ecomem: raise ValueError('Need implementation for ecomem optimization mode')
+
     case _: raise ValueError
-  #cxx_flags.
 
   # OpenMP
   if hpw_config.enable_omp:
