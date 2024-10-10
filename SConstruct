@@ -105,7 +105,7 @@ def accept_params():
   hpw_config.cxx_flags.extend(['-m32' if hpw_config.bitness == Bitness.x32 else '-m64'])
 
   # система
-  hpw_config. cxx_defines.extend(['-DWINDOWS' if hpw_config.system == System.windows else '-DLINUX'])
+  hpw_config.cxx_defines.extend(['-DWINDOWS' if hpw_config.system == System.windows else '-DLINUX'])
   if hpw_config.system == System.linux:
     hpw_config.cxx_flags.extend(['-fdiagnostics-color=always'])
 
