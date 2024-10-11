@@ -103,3 +103,11 @@ def save_version(build_dir, used_libs, compiler, defines, cpp_flags, ld_flags, s
       ])
   except:
     print("error generating build/BUILD.txt")
+
+def get_max_threads():
+  '''позволяет узнать сколько доступно потоков процессора'''
+  try:
+    return os.cpu_count()
+  except:
+    print('ошибка при получении числа потоков процессора; Будет использоваться 1 по умолчанию')
+    return 1
