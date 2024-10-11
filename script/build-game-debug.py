@@ -11,5 +11,4 @@ opts = \
 NUM_THREADS = helper.get_max_threads()
 helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=src/game/SConscript' + opts)
 helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=src/plugin/graphic-effect/cxx/SConscript' + opts)
-helper.rem_all("build/plugin/effect/*.a") # удалить ненужные .a файлы
 helper.exec_cmd('build/bin/HPW')
