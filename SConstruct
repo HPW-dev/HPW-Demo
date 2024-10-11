@@ -73,7 +73,8 @@ def parse_args():
     case 'optimized_debug': hpw_config.opt_level = Opt_level.optimized_debug
     case 'fast': hpw_config.opt_level = Opt_level.fast
     case 'ecomem': hpw_config.opt_level = Opt_level.ecomem
-    case 'core2': hpw_config.opt_level = Opt_level.ecomem
+    case 'core2': hpw_config.opt_level = Opt_level.core2
+    case 'atom': hpw_config.opt_level = Opt_level.atom
     case 'x86_64_v1': hpw_config.opt_level = Opt_level.x86_64_v1
     case 'x86_64_v4': hpw_config.opt_level = Opt_level.x86_64_v4
     case 'debug': hpw_config.opt_level = Opt_level.debug
@@ -137,35 +138,42 @@ def accept_params():
 
     case Opt_level.optimized_debug:
       hpw_config.cxx_flags.extend(['-O2', '-g'])
-      hpw_config.cxx_defines.extend({'-DNDEBUG'})
+      hpw_config.cxx_defines.extend({'-DDEBUG'})
 
     case Opt_level.stable:
       hpw_config.cxx_flags.extend(['-O2', '-flto=auto'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
-      hpw_config.cxx_defines.extend({'-DNDEBUG'})
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
 
     case Opt_level.core2:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=core2'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
-      hpw_config.cxx_defines.extend({'-DNDEBUG'})
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
+
+    case Opt_level.atom:
+      hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=atom'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
 
     case Opt_level.x86_64_v1:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
-      hpw_config.cxx_defines.extend({'-DNDEBUG'})
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
 
     case Opt_level.x86_64_v4:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64-v4'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
-      hpw_config.cxx_defines.extend({'-DNDEBUG'})
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
 
     case Opt_level.ecomem: raise ValueError('Need implementation for ecomem optimization mode')
 

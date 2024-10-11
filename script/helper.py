@@ -9,7 +9,7 @@ Bitness = Enum('Bitness', ['x32', 'x64'])
 System = Enum('System', ['windows', 'linux'])
 Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
 Opt_level = Enum('Opt_level', ['fast', 'debug', 'optimized_debug', 'stable',
-  'x86_64_v1', 'x86_64_v4', 'ecomem', 'core2'])
+  'x86_64_v1', 'x86_64_v4', 'ecomem', 'core2', 'atom'])
 Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
 Log_mode = Enum('Log_mode', ['detailed', 'debug', 'release'])
 
