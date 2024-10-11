@@ -22,6 +22,8 @@ class Hpw_config:
   enable_asan = False
   static_link = False
   build_script = ''
+  custom_cxx: str
+  custom_cc: str
 
   # опции билда C++:
   cxx_defines = []
@@ -38,10 +40,15 @@ def yn2s(cond: bool):
 def yelow_text(text: str):
   return Terminal_color.YELOW + text + Terminal_color.DEFAULT
 
+def green_text(text: str):
+  return Terminal_color.GREEN + text + Terminal_color.DEFAULT
+
 def parse_args():
   '''аргументы запуска скрипта конвертятся в управляющие параметры'''
   global hpw_config
 
+  hpw_config.custom_cxx = ARGUMENTS.get('cxx', '')
+  hpw_config.custom_cc = ARGUMENTS.get('cc', '')
   hpw_config.enable_omp = bool(int(ARGUMENTS.get('enable_omp', 1)))
   hpw_config.enable_asan = bool(int(ARGUMENTS.get('enable_asan', 0)))
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
@@ -89,6 +96,8 @@ def print_params():
   print(f'OpenMP: {yn2s(hpw_config.enable_omp)}');
   print(f'ASAN checks: {yn2s(hpw_config.enable_asan)}')
   print(f'Log mode: {yelow_text(hpw_config.log_mode.name)}')
+  print(f'CXX: {green_text(hpw_config.custom_cxx) if hpw_config.custom_cxx else yelow_text('default')}')
+  print(f'CC: {green_text(hpw_config.custom_cc) if hpw_config.custom_cc else yelow_text('default')}')
 
 def accept_params():
   '''применение параметров к опциям билда C++'''
@@ -194,6 +203,10 @@ def build():
   env = Environment(ENV=environ.copy())
   # скопировать нужные переменные для экспорта
   env['hpw_config'] = hpw_config
+  if hpw_config.custom_cxx:
+    env['CXX'] = hpw_config.custom_cxx
+  if hpw_config.custom_cc:
+    env['CC'] = hpw_config.custom_cc
   SConscript(hpw_config.build_script, exports=['env'], must_exist=True)
 
 # main section:
