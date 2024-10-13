@@ -127,6 +127,4 @@ def build():
 accept_config()
 init_sources()
 build()
-save_version(build_dir, used_libs, hpw_config.compiler.name,
-  hpw_config.cxx_defines, hpw_config.cxx_flags, hpw_config.cxx_ldflags,
-  hpw_config.system.name, hpw_config.bitness.name, hpw_config.host.name)
+save_version(build_dir, used_libs, hpw_config, env['CXX'], env['CC'])

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 from script.helper import *
-check_python_version()
+print(f'python version: {check_python_version()}')
 
 from platform import architecture
 #import sys
@@ -11,26 +11,6 @@ class Terminal_color:
   RED = '\033[91m'
   YELOW = '\033[33m'
   DEFAULT = '\033[0m'
-
-class Hpw_config:
-  # управляющие переменные:
-  bitness = Bitness.x64
-  system = System.windows
-  compiler = Compiler.gcc
-  opt_level = Opt_level.debug
-  host = Host.glfw3
-  log_mode = Log_mode.debug
-  enable_omp = True
-  enable_asan = False
-  static_link = False
-  build_script = ''
-  custom_cxx: str
-  custom_cc: str
-
-  # опции билда C++:
-  cxx_defines = []
-  cxx_ldflags = []
-  cxx_flags = []
 
 hpw_config = Hpw_config()
 
@@ -91,7 +71,7 @@ def parse_args():
 def print_params():
   '''отображение параметров билда'''
   print(f'Build script: \"{yelow_text(hpw_config.build_script)}\"')
-  print(f'Target: {yelow_text(hpw_config.system.name + ' ' + hpw_config.bitness.name)}')
+  print(f'Target OS: {yelow_text(hpw_config.system.name + ' ' + hpw_config.bitness.name)}')
   print(f'Host: {yelow_text(hpw_config.host.name)}')
   print(f'Compiler: {yelow_text(hpw_config.compiler.name)}')
   print(f'Optimization level: {yelow_text(hpw_config.opt_level.name)}')
