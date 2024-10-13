@@ -1,8 +1,10 @@
 #!/usr/bin/env python
+from script.helper import *
+check_python_version()
+
 from platform import architecture
 #import sys
 from os import environ
-from script.helper import *
 
 class Terminal_color:
   GREEN = '\033[92m'

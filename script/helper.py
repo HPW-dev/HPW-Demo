@@ -1,3 +1,4 @@
+import sys
 import os
 import time
 import subprocess
@@ -111,3 +112,14 @@ def get_max_threads():
   except:
     print('ошибка при получении числа потоков процессора; Будет использоваться 1 по умолчанию')
     return 1
+
+def check_python_version():
+  '''проверка нужной версии интерпритатора'''
+  try:
+    ver = sys.version_info
+    if ver < (3,12,0):
+      print('WARNING: требуется версия python не ниже 3.12.0')
+    else:
+      print(f'Python version: {ver.major}.{ver.minor}.{ver.micro}')
+  except:
+    print(f'error while getting version of python')
