@@ -41,8 +41,8 @@ void Scene_debug::init_menu() {
   init_shared<Text_menu>( menu,
     Menu_items {
       new_shared<Menu_bool_item>(U"отладочные тайминги",
-        [] { return graphic::show_debug_info; },
-        [] (bool new_val) { graphic::show_debug_info = new_val; }
+        [] { return graphic::show_fps; },
+        [] (bool new_val) { graphic::show_fps = new_val; }
       ),
       new_shared<Menu_bool_item>(U"отладочные графики",
         [] { return graphic::draw_plots; },

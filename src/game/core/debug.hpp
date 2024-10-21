@@ -27,16 +27,16 @@ inline bool empty_level_first {}; // запустить при старте иг
 } // hpw ns
 
 namespace graphic {
-inline bool show_debug_info     {false}; // отображать инфу о dt и fps
-inline bool show_grids          {false}; // сетка для разбиения пространства
-inline bool draw_hitboxes       {false}; // показать хитбокс
-inline bool draw_plots          {false}; // игровые данные в виде графиков
-inline bool draw_full_hitboxes  {false}; // показать ещё и покрывающий круг с крестом
-inline bool draw_entity_pos     {false};
-inline bool draw_entities        {true};
-inline bool draw_level          {true};  // рисовать фон уровня
-inline bool draw_controls       {false}; // показать что за кнопки нажимаются
-inline bool draw_entity_hp      {false}; // показать жизни у объекта
+inline bool show_fps           {}; // отображать инфу о dt и fps
+inline bool show_grids         {}; // сетка для разбиения пространства
+inline bool draw_hitboxes      {}; // показать хитбокс
+inline bool draw_plots         {}; // игровые данные в виде графиков
+inline bool draw_full_hitboxes {}; // показать ещё и покрывающий круг с крестом
+inline bool draw_entity_pos    {};
+inline bool draw_entities      {true};
+inline bool draw_level         {true}; // рисовать фон уровня
+inline bool draw_controls      {}; // показать что за кнопки нажимаются
+inline bool draw_entity_hp     {}; // показать жизни у объекта
 }
 
 #ifdef STABLE_REPLAY

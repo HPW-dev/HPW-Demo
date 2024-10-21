@@ -231,7 +231,7 @@ void Scene_game::post_draw(Image& dst) const {
   }
   if (graphic::show_grids) // сетки системы коллизий
     hpw::entity_mgr->debug_draw(dst);
-  if (graphic::show_debug_info) // отобразить фпс
+  if (graphic::show_fps) // отобразить фпс
     draw_debug_info(dst);
   if (graphic::draw_controls) // нажимаемые кнопки
     draw_controls(dst);
