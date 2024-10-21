@@ -4,6 +4,7 @@
 
 namespace omp {
 
+#ifdef _OPENMP
 //! мютекс из OMP
 class mutex final {
 private:
@@ -14,7 +15,11 @@ public:
   void lock() { omp_set_lock(&writelock); }
   void unlock() { omp_unset_lock(&writelock); }
 }; // mutex
-  
-using lock_guard = std::lock_guard<omp::mutex>;
 
+#else // std
+//! заглушка при выключенном omp
+using mutex = std::mutex;
+#endif
+
+using lock_guard = std::lock_guard<omp::mutex>;
 } // omp ns
