@@ -10,7 +10,6 @@ class Scene_game final: public Scene {
   struct Impl;
   Unique<Impl> m_impl {};
 
-  void draw_debug_info(Image& dst) const;
   void init_levels();
   void init_entitys();
   void replay_init();

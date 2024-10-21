@@ -25,6 +25,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/dbg-plots.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
@@ -116,6 +117,7 @@ void Game_app::draw_game_frame() const {
   cauto st = get_time();
 
   hpw::scene_mgr->draw(*graphic::canvas);
+  post_draw(*graphic::canvas);
   if (graphic::draw_border) // рамка по краям
     draw_border(*graphic::canvas);
   apply_pge(graphic::frame_count);
@@ -212,4 +214,9 @@ void Game_app::replay_load_keys() {
     hpw::replay = {};
     //hpw::scene_mgr->back(); TODO?
   }
+}
+
+void Game_app::post_draw(Image& dst) const {
+  if (graphic::show_fps) // отобразить фпс
+    draw_fps_info(dst);
 }

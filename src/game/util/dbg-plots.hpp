@@ -15,3 +15,6 @@ public:
   void draw(Image& dst) const;
   void update(Delta_time dt);
 };
+
+// отображает текущий FPS и Dt
+void draw_fps_info(Image& dst);

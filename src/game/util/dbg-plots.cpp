@@ -1,17 +1,19 @@
 #include <algorithm>
 #include <cassert>
+#include <sstream>
 #include <deque>
 #include <cmath>
 #include <utility>
 #include <functional>
 #include "dbg-plots.hpp"
+#include "util/str-util.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
+#include "game/util/sync.hpp"
+#include "game/core/graphic.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "game/util/sync.hpp"
-#include "game/core/graphic.hpp"
 
 // рисует графики
 class Plotter {
@@ -125,3 +127,30 @@ Dbg_plots::Dbg_plots(): impl{new_unique<Impl>()} {}
 Dbg_plots::~Dbg_plots() {}
 void Dbg_plots::draw(Image& dst) const { impl->draw(dst); }
 void Dbg_plots::update(Delta_time dt) { impl->update(dt); }
+
+void draw_fps_info(Image& dst) {
+  std::stringstream txt;
+  txt << "real dt: " << n2s(hpw::real_dt, 12);
+  txt << "\nsafe dt: " << n2s(hpw::safe_dt, 12);
+  txt << "\ndraw time: " << n2s(graphic::soft_draw_time, 12);
+  txt << "\nupdate time: " << n2s(hpw::tick_time, 12);
+  txt << "\nups: " << n2s(hpw::cur_ups, 1);
+  txt << "\nfps: " << n2s(graphic::cur_fps, 1);
+  auto str_u32 = sconv<utf32>(txt.str());
+  // нарисовать чёрный прямоуг под текст
+  auto pos_x = 20;
+  auto pos_y = 20;
+  auto border = 8;
+  static int w; // чтоб по ширине не дёргалось окно
+  w = std::max(w, graphic::font->text_width(str_u32));
+  int h = graphic::font->text_height(str_u32);
+  Rect rect {
+    pos_x - border,
+    pos_y - border,
+    w + border + 6,
+    h + border + 12
+  };
+  draw_rect_filled<&blend_158>(dst, rect, Pal8::black);
+  draw_rect<&blend_diff>(dst, rect, Pal8::white);
+  graphic::font->draw(dst, {pos_x, pos_y}, str_u32);
+} // draw_debug_info
