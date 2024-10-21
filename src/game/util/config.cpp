@@ -69,6 +69,7 @@ void save_config() {
   graphic_node.set_bool ("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   graphic_node.set_real ("gamma",               graphic::gamma);
   graphic_node.set_str  ("hud",                 graphic::cur_hud);
+  graphic_node.set_bool ("show_fps",            graphic::show_fps);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool ("vsync",               graphic::get_vsync());
@@ -150,6 +151,7 @@ void load_config() {
   graphic::disable_heat_distort_while_lag = graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
   graphic::cur_hud = graphic_node.get_str("hud", graphic::cur_hud);
+  graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
