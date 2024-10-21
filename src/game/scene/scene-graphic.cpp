@@ -301,6 +301,7 @@ Shared<Menu_text_item> Scene_graphic::get_reset_item() {
     hpw::set_resize_mode(graphic::default_resize_mode);
     hpw::set_gamma(1.0);
     graphic::set_disable_frame_limit(false);
+    graphic::show_fps = false;
     disable_pge();
     set_default();
   } );
