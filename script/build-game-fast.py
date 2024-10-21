@@ -2,7 +2,7 @@
 import helper
 
 opts = \
-  ' -Q enable_omp=0' \
+  ' -Q enable_omp=1' \
   ' -Q enable_asan=0' \
   ' -Q host=glfw3' \
   ' -Q compiler=gcc' \
