@@ -34,3 +34,5 @@ void bgp_moire_lines(Image& dst, const int bg_state);
 void bgp_perlin_noise(Image& dst, const int bg_state);
 // многослойные облака
 void bgp_3d_sky(Image& dst, const int bg_state);
+// случайные клеточные симуляции
+void bgp_rand_cellular_simul(Image& dst, const int bg_state);

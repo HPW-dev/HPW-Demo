@@ -10,6 +10,7 @@
 #include "graphic/effect/noise.hpp"
 #include "graphic/util/blend.hpp"
 #include "graphic/util/blur.hpp"
+#include "graphic/util/resize.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "util/math/xorshift.hpp"
@@ -433,4 +434,50 @@ void bgp_3d_sky(Image& dst, const int bg_state) {
   insert_fast<&blend_max>(dst, layer);
   
   apply_brightness(dst, -70);
+}
+
+class Cellular_simul final {
+  nocopy(Cellular_simul);
+  constexpr sconst Pal8 COLOR_BG = Pal8::black;
+  int _mx {}, _my {}; // размеры клеточного мира
+
+public:
+  inline explicit Cellular_simul(int mx, int my)
+  : _mx {mx}
+  , _my {my}
+  {
+    assert(_mx > 0);
+    assert(_my > 0);
+    reset();
+  }
+
+  inline void update() {
+
+  }
+
+  inline void draw(Image& dst) const {
+    assert(_mx <= dst.X);
+    assert(_my <= dst.Y);
+    dst.fill(COLOR_BG);
+
+
+  }
+
+  inline void reset() {
+
+  }
+}; // Cellular_simul
+
+void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
+  constexpr int SCALE = 2;
+  static Cellular_simul simul(dst.X/SCALE, dst.Y/SCALE);
+  Image buffer(dst.X/SCALE, dst.Y/SCALE);
+  simul.update();
+  simul.draw(buffer);
+  assert(SCALE == 2);
+  zoom_x2(buffer);
+  insert_fast(dst, buffer);
+
+  if (bg_state % 1000)
+    simul.reset();
 }
