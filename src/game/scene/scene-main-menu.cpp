@@ -10,6 +10,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/sprites.hpp"
+#include "game/core/graphic.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/version.hpp"
 #include "game/util/game-util.hpp"
@@ -24,9 +25,9 @@
 #include "graphic/effect/bg-pattern-2.hpp"
 #include "graphic/effect/bg-pattern-3.hpp"
 #include "util/hpw-util.hpp"
+#include "util/rnd-table.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
-#include "util/rnd-table.hpp"
 
 void bg_copy_1(Image& dst, const int state);
 void bg_copy_2(Image& dst, const int state);
@@ -198,13 +199,10 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
   Rect rect(120, 50, 270, 280);
   auto for_blur = fast_cut(dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 
-  #ifdef DEBUG
+  if (graphic::fast_blur)
     blur_fast(for_blur, 5);
-  #elifdef ECOMEM
-    blur_fast(for_blur, 5);
-  #else
+  else
     adaptive_blur(for_blur, 5);
-  #endif
 
   // мягкий контраст
   apply_contrast(for_blur, 0.5);

@@ -14,6 +14,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
+#include "game/core/graphic.hpp"
 #include "util/math/random.hpp"
 #include "util/math/xorshift.hpp"
 #include "game/util/game-archive.hpp"
@@ -32,11 +33,10 @@ void bgp_warabimochi(Image& dst, const int bg_state) {
   assert(warabimochi);
   insert_fast(dst, warabimochi->image());
   // размыть и затенить фон
-  #ifdef DEBUG
+  if (graphic::fast_blur)
     blur_fast(dst, 7);
-  #else
+  else
     adaptive_blur(dst, 5);
-  #endif
 
   // комменты
   static const Vector<utf32> comments {
@@ -660,11 +660,10 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
 void bgp_zoom_dst(Image& dst, const int bg_state) {
   Image copy(dst);
   zoom_x2(copy);
-  #ifdef DEBUG
+  if (graphic::fast_blur)
     blur_fast(copy, 5);
-  #else
+  else
     adaptive_blur(copy, 5);
-  #endif
   apply_brightness(copy, -48);
   insert(dst, copy, center_point(dst, copy));
 }
