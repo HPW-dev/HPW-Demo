@@ -36,7 +36,7 @@ void save_config() {
   config.set_bool("need_tutorial", hpw::need_tutorial);
   config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   config.set_bool("collider_autoopt", hpw::collider_autoopt);
-  config.set_str("nickname", utf32_to_8(hpw::player_name));
+  config.set_str ("nickname", utf32_to_8(hpw::player_name));
 
   auto path_node = config.make_node("path");
   path_node.set_str("locale", hpw::locale_path);
@@ -45,7 +45,7 @@ void save_config() {
 
   auto debug = config.make_node("debug");
   debug.set_bool("empty_level_first", hpw::empty_level_first);
-  debug.set_str("start_script", hpw::start_script);
+  debug.set_str ("start_script", hpw::start_script);
 
   auto graphic_node = config.make_node("graphic");
   graphic_node.set_v_int("canvas_size",        {graphic::width, graphic::height} );
@@ -70,14 +70,15 @@ void save_config() {
   graphic_node.set_real ("gamma",               graphic::gamma);
   graphic_node.set_str  ("hud",                 graphic::cur_hud);
   graphic_node.set_bool ("show_fps",            graphic::show_fps);
+  graphic_node.set_bool ("fast_blur",           graphic::fast_blur);
 
   auto sync_node = graphic_node.make_node("sync");
-  sync_node.set_bool ("vsync",               graphic::get_vsync());
-  sync_node.set_bool ("wait_frame",          graphic::wait_frame);
-  sync_node.set_int  ("target_fps",          graphic::get_target_fps());
-  sync_node.set_bool ("cpu_safe",            graphic::cpu_safe);
-  sync_node.set_real ("autoopt_timeout_max", graphic::autoopt_timeout_max);
-  sync_node.set_bool("disable_frame_limit",  graphic::get_disable_frame_limit());
+  sync_node.set_bool("vsync",               graphic::get_vsync());
+  sync_node.set_bool("wait_frame",          graphic::wait_frame);
+  sync_node.set_int ("target_fps",          graphic::get_target_fps());
+  sync_node.set_bool("cpu_safe",            graphic::cpu_safe);
+  sync_node.set_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
+  sync_node.set_bool("disable_frame_limit", graphic::get_disable_frame_limit());
 
   auto input_node = config.make_node("input");
   #define SAVE_KEY(name) input_node.set_int(#name, get_scancode(hpw::keycode::name));
@@ -135,23 +136,30 @@ void load_config() {
   graphic::draw_border = graphic_node.get_bool("draw_border", graphic::draw_border);
   graphic::show_mouse_cursour = graphic_node.get_bool("show_mouse_cursour", graphic::show_mouse_cursour);
   graphic::resize_mode = scast<decltype(graphic::resize_mode)> (
-    graphic_node.get_int("resize_mode", scast<int>(graphic::default_resize_mode)) );
-  graphic::light_quality = scast<decltype(graphic::light_quality)>(graphic_node.get_int("light_quality", scast<int>(graphic::light_quality)));
+    graphic_node.get_int("resize_mode", scast<int>(graphic::default_resize_mode))
+  );
+  graphic::light_quality = scast<decltype(graphic::light_quality)>(
+    graphic_node.get_int("light_quality", scast<int>(graphic::light_quality))
+  );
   graphic::enable_motion_blur = graphic_node.get_bool("enable_motion_blur", graphic::enable_motion_blur);
   graphic::blur_quality_mul = graphic_node.get_real("blur_quality_mul", graphic::blur_quality_mul);
   graphic::blink_particles = graphic_node.get_bool("blink_particles", graphic::blink_particles);
   graphic::blink_motion_blur = graphic_node.get_bool("blink_motion_blur", graphic::blink_motion_blur);
-  graphic::motion_blur_quality_reduct = graphic_node.get_bool("motion_blur_quality_reduct", graphic::motion_blur_quality_reduct);
-  graphic::max_motion_blur_quality_reduct = graphic_node.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
+  graphic::motion_blur_quality_reduct =
+    graphic_node.get_bool("motion_blur_quality_reduct", graphic::motion_blur_quality_reduct);
+  graphic::max_motion_blur_quality_reduct =
+    graphic_node.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic::start_focused = graphic_node.get_bool("start_focused", graphic::start_focused);
   safecall(hpw::init_palette_from_archive, graphic_node.get_str("palette", graphic::current_palette_file));
   graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
   graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
   graphic::enable_heat_distort = graphic_node.get_bool("enable_heat_distort", graphic::enable_heat_distort);
-  graphic::disable_heat_distort_while_lag = graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
+  graphic::disable_heat_distort_while_lag =
+    graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
   graphic::cur_hud = graphic_node.get_str("hud", graphic::cur_hud);
   graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
+  graphic::fast_blur = graphic_node.get_bool("fast_blur", graphic::fast_blur);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
