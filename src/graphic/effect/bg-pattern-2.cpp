@@ -8,7 +8,7 @@
 #include "bg-pattern-2.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"
-#include "graphic/util/blur.hpp"
+#include "graphic/effect/blur.hpp"
 #include "graphic/util/resize.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
