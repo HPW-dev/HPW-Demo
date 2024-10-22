@@ -21,7 +21,7 @@ class Scene_main_menu final: public Scene {
   Delta_time bg_state {}; // чтобы менять узор на фоне
   // функция рисующая фон
   std::function<void (Image& dst, const int bg_state)> bg_pattern_pf {};
-  Timer change_bg_timer {12}; // таймер сменяющий фон
+  Timer change_bg_timer {50}; // таймер сменяющий фон
 
   void draw_bg(Image& dst) const;
   void init_menu();
