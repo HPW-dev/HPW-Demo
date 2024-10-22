@@ -2,6 +2,7 @@
 #include <array>
 #include <cmath>
 #include <cassert>
+#include <functional>
 #include <algorithm>
 #include "bg-pattern-3.hpp"
 #include "game/core/fonts.hpp"
@@ -16,6 +17,7 @@
 #include "util/math/xorshift.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
+#include "util/math/random.hpp"
 
 void bgp_liquid(Image& dst, const int bg_state) {
   cauto state = bg_state * 2;
@@ -437,11 +439,36 @@ void bgp_3d_sky(Image& dst, const int bg_state) {
 }
 
 class Cellular_simul final {
-  nocopy(Cellular_simul);
-  constexpr sconst Pal8 COLOR_BG = Pal8::black;
-  int _mx {}, _my {}; // размеры клеточного мира
-
 public:
+  struct Cell;
+  using move_pf = std::function<void (Cell&, Cellular_simul& world)>;
+
+  struct Cell {
+    bool active {};
+    Pal8 color {};
+    int x {}, y {};
+    real mutation_factor {}; // (0..1) каждый ход симуляции будет проверяться возможность мутировать move_funcs
+    Vector<move_pf> move_funcs {};
+
+    inline void update(Cellular_simul& world) {
+      for (crauto f: move_funcs) {
+        assert(f);
+        f(*this, world);
+      }
+      prove_mutation();
+    }
+
+    inline void draw(Image& dst) const {
+      assert(x >= 0 && x < dst.X);
+      assert(y >= 0 && y < dst.Y);
+      dst(x, y) = color;
+    }
+
+    inline void prove_mutation() {
+      return_if(rndr_fast() > mutation_factor);
+    }
+  }; // Cell
+
   inline explicit Cellular_simul(int mx, int my)
   : _mx {mx}
   , _my {my}
@@ -452,7 +479,11 @@ public:
   }
 
   inline void update() {
-
+    for (rauto cell: _cells)
+      if (cell.active)
+        cell.update(*this);
+    // убить мертвецов
+    std::erase_if(_cells, [](cr<Cell> cell) { return !cell.active; });
   }
 
   inline void draw(Image& dst) const {
@@ -460,12 +491,34 @@ public:
     assert(_my <= dst.Y);
     dst.fill(COLOR_BG);
 
-
+    for (crauto cell: _cells)
+      if (cell.active)
+        cell.draw(dst);
   }
 
   inline void reset() {
-
+    _cells.clear();
+    const uint CELLS = 150 + rndu_fast(1000);
+    cfor (_, CELLS) {
+      Cell cell;
+      cell.active = true;
+      cell.mutation_factor = rndr_fast(0, 0.75);
+      cell.x = rndu_fast(_mx-1);
+      cell.y = rndu_fast(_my-1);
+      const bool IS_RED = rndb_fast() % 2;
+      const real COLOR_LUMA = rndr_fast(0.5, 1);
+      cell.color = Pal8::from_real(COLOR_LUMA, IS_RED);
+      _cells.emplace_back(std::move(cell));
+    }
   }
+
+  inline Vector<Cell>& get_cells() { return _cells; }
+
+private:
+  nocopy(Cellular_simul);
+  constexpr sconst Pal8 COLOR_BG = Pal8::black;
+  int _mx {}, _my {}; // размеры клеточного мира
+  Vector<Cell> _cells {};
 }; // Cellular_simul
 
 void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
@@ -478,6 +531,6 @@ void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
   zoom_x2(buffer);
   insert_fast(dst, buffer);
 
-  if (bg_state % 1000)
+  if (bg_state % 1000 == 0)
     simul.reset();
 }

@@ -214,9 +214,9 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
 
 void Scene_main_menu::draw(Image& dst) const {
   draw_bg(dst);
-  draw_wnd(dst);
-  draw_logo(dst);
-  draw_text(dst);
+  //draw_wnd(dst);
+  //draw_logo(dst);
+  //draw_text(dst);
 }
 
 void Scene_main_menu::init_menu() {
