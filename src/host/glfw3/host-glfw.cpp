@@ -346,7 +346,7 @@ void Host_glfw::game_update(const Delta_time dt) {
   return_if (dt <= 0 || dt >= 10);
   process_fast_forward();
 
-  while (m_update_time >= hpw::target_update_time) {
+  while (m_update_time >= hpw::target_update_time && m_is_ran) {
     m_update_time -= hpw::target_update_time;
     m_start_update_time = get_time();
     glfwPollEvents();
