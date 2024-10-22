@@ -423,6 +423,12 @@ void Scene_graphic::init_detailed_menu() {
         [] (bool new_val) { graphic::show_fps = new_val; },
         get_locale_str("scene.graphic_menu.show_fps.desc")
       ),
+      new_shared<Menu_bool_item>(
+        get_locale_str("scene.graphic_menu.fast_blur.title"),
+        [] { return graphic::fast_blur; },
+        [] (bool new_val) { graphic::fast_blur = new_val; },
+        get_locale_str("scene.graphic_menu.fast_blur.desc")
+      ),
       get_reset_item(),
       new_shared<Menu_text_item>(
         get_locale_str("common.back"),
