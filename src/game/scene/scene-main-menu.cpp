@@ -200,7 +200,7 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
   auto for_blur = fast_cut(dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 
   if (graphic::fast_blur)
-    blur_fast(for_blur, 5);
+    blur_fast(for_blur, Image(for_blur), 5);
   else
     adaptive_blur(for_blur, 5);
 

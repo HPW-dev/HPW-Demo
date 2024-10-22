@@ -50,24 +50,6 @@ void adaptive_blur_fat_red(Image& dst, int window_sz) {
   }
 } // adaptive_blur_fat_red
 
-void blur_fast(Image& dst, int window_sz) {
-  assert(dst);
-  window_sz *= 2;
-  assert(window_sz >= 1);
-  assert(dst.size > window_sz);
-  const real accum_mul = 1.0 / window_sz;
-
-  cfor (i, dst.size - window_sz) {
-    real accum {0};
-    cfor (wi, window_sz)
-      accum += dst[i + wi].to_real();
-    accum *= accum_mul;
-
-    rauto dst_pix = dst[i];
-    dst_pix = Pal8::from_real(accum, dst_pix.is_red());
-  }
-} // blur_fast
-
 void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst);
   assert(src);
@@ -124,6 +106,35 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
   for (int y = src.Y - window_sz; y < src.Y; ++y)
   for (int x = 0; x < src.X; ++x)
     dst(x, y) = dst(x, src.Y - window_sz - 1);
+  // horizontal:
+  for (int y = 0; y < src.Y; ++y)
+  for (int x = 0; x < window_sz; ++x)
+    dst(x, y) = dst(window_sz, y);
+  for (int y = 0; y < src.Y; ++y)
+  for (int x = src.X - window_sz; x < src.X; ++x)
+    dst(x, y) = dst(src.X - window_sz - 1, y);
+}
+
+void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
+  assert(dst);
+  assert(src);
+  assert(std::addressof(dst) != std::addressof(src));
+  assert(dst.size == src.size);
+  assert(window_sz >= 1);
+
+  const int KERNEL_LEN = window_sz * 2 + 1;
+  assert(dst.X > KERNEL_LEN);
+
+  #pragma omp parallel for simd
+  cfor (y, src.Y)
+  for (int x = window_sz; x < src.X - window_sz; ++x) {
+    int sum {};
+    for (int wx = -window_sz; wx < window_sz; ++wx)
+      sum += src(x + wx, y).val;
+    dst(x, y) = sum / KERNEL_LEN;
+  }
+
+  // добить края изображения растягиванием
   // horizontal:
   for (int y = 0; y < src.Y; ++y)
   for (int x = 0; x < window_sz; ++x)

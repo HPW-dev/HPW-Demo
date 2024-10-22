@@ -34,7 +34,7 @@ void bgp_warabimochi(Image& dst, const int bg_state) {
   insert_fast(dst, warabimochi->image());
   // размыть и затенить фон
   if (graphic::fast_blur)
-    blur_fast(dst, 7);
+    blur_fast(dst, Image(dst), 7);
   else
     adaptive_blur(dst, 5);
 
@@ -661,7 +661,7 @@ void bgp_zoom_dst(Image& dst, const int bg_state) {
   Image copy(dst);
   zoom_x2(copy);
   if (graphic::fast_blur)
-    blur_fast(copy, 5);
+    blur_fast(copy, Image(copy), 5);
   else
     adaptive_blur(copy, 5);
   apply_brightness(copy, -48);

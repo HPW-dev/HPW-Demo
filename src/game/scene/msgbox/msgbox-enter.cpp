@@ -74,7 +74,7 @@ struct Scene_msgbox_enter::Impl {
     // заблюрить часть фона под окном
     auto for_blur = fast_cut(m_bg, window.pos.x, window.pos.y, window.size.x, window.size.y);
     if (graphic::fast_blur)
-      blur_fast(for_blur, 5);
+      blur_fast(for_blur, Image(for_blur), 5);
     else
       adaptive_blur(for_blur, 5);
     insert(m_bg, for_blur, window.pos);
