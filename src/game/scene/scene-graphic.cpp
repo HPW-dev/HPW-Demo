@@ -418,9 +418,10 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("scene.graphic_menu.description.enable_motion_interp")
       ),
       new_shared<Menu_bool_item>(
-        get_locale_str("scene.game_opts.show_fps"),
+        get_locale_str("scene.graphic_menu.show_fps.title"),
         [] { return graphic::show_fps; },
-        [] (bool new_val) { graphic::show_fps = new_val; }
+        [] (bool new_val) { graphic::show_fps = new_val; },
+        get_locale_str("scene.graphic_menu.show_fps.desc")
       ),
       get_reset_item(),
       new_shared<Menu_text_item>(
