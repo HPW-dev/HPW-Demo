@@ -71,6 +71,8 @@ void apply_invert(Image& dst);
 void to_red(Image& dst);
 // превратить все оттенки в серый
 void to_gray(Image& dst);
+// как to_gray, но правильно перевдит красный канал в серый
+void to_gray_accurate(Image& dst, cr<Image> src);
 
 // распространение пикселей от цвета color в 4-х направлениях
 void expand_color_4(Image& dst, const Pal8 color);

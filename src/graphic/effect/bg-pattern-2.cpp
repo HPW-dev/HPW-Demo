@@ -36,7 +36,7 @@ void bgp_warabimochi(Image& dst, const int bg_state) {
   if (graphic::fast_blur)
     blur_fast(dst, Image(dst), 7);
   else
-    blur_hq(dst, 5);
+    blur_hq(dst, Image(dst), 5);
 
   // комменты
   static const Vector<utf32> comments {
@@ -663,7 +663,7 @@ void bgp_zoom_dst(Image& dst, const int bg_state) {
   if (graphic::fast_blur)
     blur_fast(copy, Image(copy), 5);
   else
-    blur_hq(copy, 5);
+    blur_hq(copy, Image(copy), 5);
   apply_brightness(copy, -48);
   insert(dst, copy, center_point(dst, copy));
 }

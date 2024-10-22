@@ -354,6 +354,24 @@ void to_red(Image& dst) {
     pix = Pal8::from_real(pix.to_real(), true);
 }
 
+void to_gray_accurate(Image& dst, cr<Image> src) {
+  assert(src);
+  assert(dst);
+  assert(std::addressof(dst) != std::addressof(src));
+  assert(src.size == dst.size);
+
+  cfor (i, src.size) {
+    cauto pix = src[i];
+    cauto is_red = pix.is_red();
+    auto val = pix.to_real();
+    if (is_red)
+      val *= 1.f / 3.f;
+    if (val == Pal8::white)
+      val = Pal8::gray_end;
+    dst[i] = Pal8::from_real(val, false);
+  }
+}
+
 void to_gray(Image& dst) {
   for (rauto pix: dst)
     pix = Pal8::from_real(pix.to_real(), false);

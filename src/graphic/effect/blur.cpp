@@ -2,53 +2,10 @@
 #include <cassert>
 #include "blur.hpp"
 #include "graphic/image/image.hpp"
-
-void adaptive_blur(Image& dst, int window_sz) {
-  assert(dst);
-  assert(window_sz >= 1);
-
-  Image src (dst);
-  real accum_mul = 1.0 / ((window_sz * 2) * (window_sz * 2));
-
-  #pragma omp parallel for simd collapse(2)
-  cfor (y, dst.Y)
-  cfor (x, dst.X) {
-    real accum {0};
-
-    for (int wx = -window_sz; wx < window_sz; ++wx)
-    for (int wy = -window_sz; wy < window_sz; ++wy)
-      accum += src.get(x + wx, y + wy, Image_get::MIRROR).to_real();
-
-    accum *= accum_mul;
-    rauto dst_pix = dst(x, y);
-    dst_pix = Pal8::from_real(accum, dst_pix.is_red());
-  }
-} // adaptive_blur
-
-void adaptive_blur_fat_red(Image& dst, int window_sz) {
-  assert(dst);
-  assert(window_sz >= 1);
-
-  Image src (dst);
-  real accum_mul = 1.0 / ((1 + window_sz * 2) * (1 + window_sz * 2));
-
-  #pragma omp parallel for simd collapse(2)
-  cfor (y, dst.Y)
-  cfor (x, dst.X) {
-    bool is_red {false};
-    real accum {0};
-
-    for (int wx = -window_sz; wx < window_sz; ++wx)
-    for (int wy = -window_sz; wy < window_sz; ++wy) {
-      cauto src_pix = src.get(x + wx, y + wy, Image_get::MIRROR);
-      accum += src_pix.to_real();
-      is_red |= src_pix.is_red();
-    }
-
-    accum *= accum_mul;
-    dst(x, y) = Pal8::from_real(accum, is_red);
-  }
-} // adaptive_blur_fat_red
+#include "graphic/util/graphic-util.hpp"
+#include "util/math/vec.hpp"
+#include "util/math/vec-util.hpp"
+#include "util/math/mat.hpp"
 
 void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst);
@@ -58,8 +15,7 @@ void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
   assert(window_sz >= 1);
 
   const int KERNEL_LEN = window_sz * 2 + 1;
-  const int KERNEL_SZ = KERNEL_LEN * KERNEL_LEN;
-  const real MUL = 1.f / KERNEL_SZ;
+  const real MUL = 1.f / (KERNEL_LEN * KERNEL_LEN + 2);
 
   #pragma omp parallel for simd collapse(2)
   cfor (y, src.Y)
@@ -76,6 +32,7 @@ void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
     dst(x, y) = Pal8::from_real(sum);
   }
 }
+
 void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst);
   assert(src);
@@ -86,33 +43,34 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
   const int KERNEL_LEN = window_sz * 2 + 1;
   assert(dst.X > KERNEL_LEN);
   assert(dst.Y > KERNEL_LEN);
-  const int KERNEL_SZ = KERNEL_LEN * KERNEL_LEN;
+  Image src_gray(src.X, src.Y);
+  to_gray_accurate(src_gray, src);
 
   #pragma omp parallel for simd collapse(2)
-  for (int y = window_sz; y < src.Y - window_sz; ++y)
-  for (int x = window_sz; x < src.X - window_sz; ++x) {
+  for (int y = window_sz; y < src_gray.Y - window_sz; ++y)
+  for (int x = window_sz; x < src_gray.X - window_sz; ++x) {
     int sum {};
     for (int wy = -window_sz; wy < window_sz; ++wy)
     for (int wx = -window_sz; wx < window_sz; ++wx)
-      sum += src(x + wx, y + wy).val;
-    dst(x, y) = sum / KERNEL_SZ;
+      sum += src_gray(x + wx, y + wy).val;
+    dst(x, y) = sum / (KERNEL_LEN * KERNEL_LEN + 2);
   }
 
   // добить края изображения растягиванием
   // vertical:
   for (int y = 0; y < window_sz; ++y)
-  for (int x = 0; x < src.X; ++x)
+  for (int x = 0; x < src_gray.X; ++x)
     dst(x, y) = dst(x, window_sz);
-  for (int y = src.Y - window_sz; y < src.Y; ++y)
-  for (int x = 0; x < src.X; ++x)
-    dst(x, y) = dst(x, src.Y - window_sz - 1);
+  for (int y = src_gray.Y - window_sz; y < src_gray.Y; ++y)
+  for (int x = 0; x < src_gray.X; ++x)
+    dst(x, y) = dst(x, src_gray.Y - window_sz - 1);
   // horizontal:
-  for (int y = 0; y < src.Y; ++y)
+  for (int y = 0; y < src_gray.Y; ++y)
   for (int x = 0; x < window_sz; ++x)
     dst(x, y) = dst(window_sz, y);
-  for (int y = 0; y < src.Y; ++y)
-  for (int x = src.X - window_sz; x < src.X; ++x)
-    dst(x, y) = dst(src.X - window_sz - 1, y);
+  for (int y = 0; y < src_gray.Y; ++y)
+  for (int x = src_gray.X - window_sz; x < src_gray.X; ++x)
+    dst(x, y) = dst(src_gray.X - window_sz - 1, y);
 }
 
 void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
@@ -124,22 +82,68 @@ void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz
 
   const int KERNEL_LEN = window_sz * 2 + 1;
   assert(dst.X > KERNEL_LEN);
+  Image src_gray(src.X, src.Y);
+  to_gray_accurate(src_gray, src);
 
   #pragma omp parallel for simd
-  cfor (y, src.Y)
-  for (int x = window_sz; x < src.X - window_sz; ++x) {
+  cfor (y, src_gray.Y)
+  for (int x = window_sz; x < src_gray.X - window_sz; ++x) {
     int sum {};
     for (int wx = -window_sz; wx < window_sz; ++wx)
-      sum += src(x + wx, y).val;
-    dst(x, y) = sum / KERNEL_LEN;
+      sum += src_gray(x + wx, y).val;
+    dst(x, y) = sum / (KERNEL_LEN + 2);
   }
 
   // добить края изображения растягиванием
   // horizontal:
-  for (int y = 0; y < src.Y; ++y)
+  for (int y = 0; y < src_gray.Y; ++y)
   for (int x = 0; x < window_sz; ++x)
     dst(x, y) = dst(window_sz, y);
-  for (int y = 0; y < src.Y; ++y)
-  for (int x = src.X - window_sz; x < src.X; ++x)
-    dst(x, y) = dst(src.X - window_sz - 1, y);
+  for (int y = 0; y < src_gray.Y; ++y)
+  for (int x = src_gray.X - window_sz; x < src_gray.X; ++x)
+    dst(x, y) = dst(src_gray.X - window_sz - 1, y);
+}
+
+void blur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
+  assert(dst);
+  assert(src);
+  assert(std::addressof(dst) != std::addressof(src));
+  assert(dst.size == src.size);
+  assert(window_sz >= 1);
+
+  const int KERNEL_LEN = window_sz * 2 + 1;
+  const int KERNEL_SZ = KERNEL_LEN * KERNEL_LEN;
+  // создание ядра с линейным градиентом
+  Vector<real> kernel(KERNEL_SZ);
+  cauto MID = KERNEL_LEN / 2.f;
+  const Vec CENTER (MID, MID);
+  real kernel_sum {};
+
+  cfor (y, KERNEL_LEN)
+  cfor (x, KERNEL_LEN) {
+    cauto len = distance(CENTER, Vec(x, y));
+    cauto val = 1.f - std::clamp(len / MID, 0.f, 1.f);
+    kernel_sum += val;
+    kernel[y * KERNEL_LEN + x] = val;
+  }
+
+  // нормализация ядра размытия
+  const real KERNEL_MUL = safe_div(1.f, kernel_sum);
+  cfor (i, KERNEL_SZ)
+    kernel[i] *= KERNEL_MUL;
+
+  #pragma omp parallel for simd collapse(2)
+  cfor (y, src.Y)
+  cfor (x, src.X) {
+    real sum {};
+    for (int wy = -window_sz; wy < window_sz + 1; ++wy)
+    for (int wx = -window_sz; wx < window_sz + 1; ++wx) {
+      cauto wcolor = src.get(x + wx, y + wy, Image_get::MIRROR);
+      const bool is_red = wcolor.is_red();
+      real luma = wcolor.to_real();
+      luma = is_red ? luma / 3.f : luma;
+      sum += luma * kernel[(wy + window_sz) * KERNEL_LEN + (wx + window_sz)];
+    }
+    dst(x, y) = Pal8::from_real(sum);
+  }
 }

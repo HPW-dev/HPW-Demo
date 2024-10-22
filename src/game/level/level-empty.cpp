@@ -10,9 +10,6 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
 
-#include "graphic/image/image-io.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/effect/blur.hpp"
 // #include "game/core/sounds.hpp"
 // #include "util/math/vec-util.hpp"
 // #include "util/math/timer.hpp"
@@ -24,16 +21,11 @@ struct Level_empty::Impl {
 
   inline explicit Impl() {
     set_default_collider();
-    load(screen, hpw::cur_dir + "delme.png");
   }
 
-  inline void update(const Vec vel, Delta_time dt) {
-    //...
-  }
+  inline void update(const Vec vel, Delta_time dt) {}
 
-  inline void draw(Image& dst) const {
-    boxblur_horizontal_gray_fast(dst, screen, 5);
-  }
+  inline void draw(Image& dst) const {}
 }; // Impl
 
 Level_empty::Level_empty(): impl {new_unique<Impl>()} {}

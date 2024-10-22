@@ -202,7 +202,7 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
   if (graphic::fast_blur)
     blur_fast(for_blur, Image(for_blur), 5);
   else
-    blur_hq(for_blur, 5);
+    blur_hq(for_blur, Image(for_blur), 5);
 
   // мягкий контраст
   apply_contrast(for_blur, 0.5);
