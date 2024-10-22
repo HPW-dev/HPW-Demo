@@ -1,6 +1,7 @@
 #include <omp.h>
 #include <array>
 #include <cmath>
+#include <utility>
 #include <cassert>
 #include <functional>
 #include <algorithm>
@@ -18,6 +19,7 @@
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
+#include "util/rnd-table.hpp"
 
 void bgp_liquid(Image& dst, const int bg_state) {
   cauto state = bg_state * 2;
@@ -441,49 +443,128 @@ void bgp_3d_sky(Image& dst, const int bg_state) {
 class Cellular_simul final {
 public:
   struct Cell;
-  using move_pf = std::function<void (Cell&, Cellular_simul& world)>;
+  using move_pf = std::function<void (Cell& self, Cellular_simul& world)>;
 
   struct Cell {
     bool active {};
+    bool completed_step {};
     Pal8 color {};
-    int x {}, y {};
-    real mutation_factor {}; // (0..1) каждый ход симуляции будет проверяться возможность мутировать move_funcs
-    Vector<move_pf> move_funcs {};
+    struct Flags {
+      bool attack : 1 {};
+      bool attack_self : 1 {};
+      bool clone : 1 {};
+      bool clone_more : 1 {};
+      bool mutate : 1 {};
+      bool mutate_more : 1 {};
+      bool move_hv : 1 {}; // horizontal + vertical
+      bool move_diagonal : 1 {};
+    };
+    Flags flags {};
 
-    inline void update(Cellular_simul& world) {
-      for (crauto f: move_funcs) {
-        assert(f);
-        f(*this, world);
+    inline Cell* find_neighbor(int x, int y, Cellular_simul& world) {
+      if (auto cell = world.get_cell(x-1, y-1); cell && cell->active) return cell;
+      if (auto cell = world.get_cell(x+0, y-1); cell && cell->active) return cell;
+      if (auto cell = world.get_cell(x+1, y-1); cell && cell->active) return cell;
+
+      if (auto cell = world.get_cell(x-1, y+0); cell && cell->active) return cell;
+      //if (auto cell = world.get_cell(x+0, y+0); cell && cell->active) return cell; self
+      if (auto cell = world.get_cell(x+1, y+0); cell && cell->active) return cell;
+
+      if (auto cell = world.get_cell(x-1, y+1); cell && cell->active) return cell;
+      if (auto cell = world.get_cell(x+0, y+1); cell && cell->active) return cell;
+      if (auto cell = world.get_cell(x+1, y+1); cell && cell->active) return cell;
+      return nullptr;
+    }
+
+    inline void update(int x, int y, Cellular_simul& world) {
+      if (flags.attack) {
+        auto neighbor = find_neighbor(x, y, world);
+        if (neighbor && !neighbor->flags.attack)
+          neighbor->active = false;
       }
-      prove_mutation();
+
+      if (flags.attack_self) {
+        auto neighbor = find_neighbor(x, y, world);
+        if (neighbor)
+          neighbor->active = false;
+      }
+
+      if (flags.move_hv) {
+        int dir_x = 0;
+        int dir_y = 0;
+        if (rndu_fast() % 2)
+          dir_x = rnd_fast() % 2 ? -1 : 1;
+        else
+          dir_y = rnd_fast() % 2 ? -1 : 1;
+        if (world.check_empty(x + dir_x, y + dir_y)) {
+          Cell copy = world.get_cell_fast(x, y);
+          world.set_cell_fast(x + dir_x, y + dir_y, copy);
+          world.set_cell_fast(x, y, {});
+        }
+      }
+
+      if (flags.move_diagonal) {
+        int dir_x = rnd_fast() % 2 ? -1 : 1;
+        int dir_y = rnd_fast() % 2 ? -1 : 1;
+        if (world.check_empty(x + dir_x, y + dir_y)) {
+          Cell copy = world.get_cell_fast(x, y);
+          world.set_cell_fast(x + dir_x, y + dir_y, copy);
+          world.set_cell_fast(x, y, {});
+        }
+      }
+
+      if ((flags.clone && rndr_fast() <= 0.02) || (flags.clone_more && rndr_fast() <= 0.05)) {
+        int dir_x = rnd_fast(-1, 1);
+        int dir_y = rnd_fast(-1, 1);
+        if (world.check_empty(x + dir_x, y + dir_y)) {
+          Cell copy = world.get_cell_fast(x, y);
+          if ((flags.mutate && rndr_fast() <= 0.2) || (flags.mutate_more && rndr_fast() <= 0.5))
+            mutate(copy);
+          world.set_cell_fast(x + dir_x, y + dir_y, copy);
+        }
+      }
     }
 
-    inline void draw(Image& dst) const {
-      assert(x >= 0 && x < dst.X);
-      assert(y >= 0 && y < dst.Y);
-      dst(x, y) = color;
-    }
-
-    inline void prove_mutation() {
-      return_if(rndr_fast() > mutation_factor);
+    inline static void mutate(Cell& cell) {
+      switch (rndu_fast() % 8) {
+        case 0: cell.flags.attack = !cell.flags.attack; break;
+        case 1: cell.flags.attack_self = !cell.flags.attack_self; break;
+        case 2: cell.flags.clone = !cell.flags.clone; break;
+        case 3: cell.flags.clone_more = !cell.flags.clone_more; break;
+        case 4: cell.flags.mutate = !cell.flags.mutate; break;
+        case 5: cell.flags.mutate_more = !cell.flags.mutate_more; break;
+        case 6: cell.flags.move_hv = !cell.flags.move_hv; break;
+        case 7: cell.flags.move_diagonal = !cell.flags.move_diagonal; break;
+      }
+      cell.color = Pal8::from_real(cell.color.to_real() + rndr_fast(-0.1, 0.1), cell.color.is_red());
     }
   }; // Cell
 
-  inline explicit Cellular_simul(int mx, int my)
+  inline explicit Cellular_simul(int mx, int my, int min_cells, int max_cells)
   : _mx {mx}
   , _my {my}
+  , _min_cells {min_cells}
+  , _max_cells {max_cells}
   {
     assert(_mx > 0);
     assert(_my > 0);
+    assert(_max_cells > 0);
+    assert(_max_cells > _min_cells);
     reset();
   }
 
   inline void update() {
+    cfor (y, _my)
+    cfor (x, _mx) {
+      rauto cell = get_cell_fast(x, y);
+      if (cell.active && cell.completed_step == false) {
+        cell.update(x, y, *this);
+        cell.completed_step = true;
+      }
+    }
+
     for (rauto cell: _cells)
-      if (cell.active)
-        cell.update(*this);
-    // убить мертвецов
-    std::erase_if(_cells, [](cr<Cell> cell) { return !cell.active; });
+      cell.completed_step = false;
   }
 
   inline void draw(Image& dst) const {
@@ -491,39 +572,89 @@ public:
     assert(_my <= dst.Y);
     dst.fill(COLOR_BG);
 
-    for (crauto cell: _cells)
+    cfor (y, _my)
+    cfor (x, _mx) {
+      crauto cell = cget_cell_fast(x, y);
       if (cell.active)
-        cell.draw(dst);
+        dst(x, y) = cell.color;
+    }
   }
 
   inline void reset() {
     _cells.clear();
-    const uint CELLS = 150 + rndu_fast(1000);
+    _cells.resize(_mx * _my);
+    std::fill(_cells.begin(), _cells.end(), Cell{});
+
+    const uint CELLS = _min_cells + rndu_fast(_max_cells);
     cfor (_, CELLS) {
-      Cell cell;
-      cell.active = true;
-      cell.mutation_factor = rndr_fast(0, 0.75);
-      cell.x = rndu_fast(_mx-1);
-      cell.y = rndu_fast(_my-1);
+      const int x = rndu_fast(_mx-1);
+      const int y = rndu_fast(_my-1);
+      Cell& cell = get_cell_fast(x, y);
+
       const bool IS_RED = rndb_fast() % 2;
       const real COLOR_LUMA = rndr_fast(0.5, 1);
       cell.color = Pal8::from_real(COLOR_LUMA, IS_RED);
-      _cells.emplace_back(std::move(cell));
+
+      cell.active = true;
+      cell.completed_step = false;
+      cell.flags.attack = rndu_fast() % 2;
+      cell.flags.attack_self = rndu_fast() % 2;
+      cell.flags.clone = rndu_fast() % 2;
+      cell.flags.clone_more = rndu_fast() % 2;
+      cell.flags.move_diagonal = rndu_fast() % 2;
+      cell.flags.move_hv = rndu_fast() % 2;
+      cell.flags.mutate = rndu_fast() % 2;
+      cell.flags.mutate_more = rndu_fast() % 2;
     }
   }
 
+  inline Cell* get_cell(int x, int y) {
+    if (x >= 0 && x < _mx && y >= 0 && y < _my)
+      return &_cells[y * _mx + x];
+    return nullptr;
+  }
+
+  inline cp<Cell> cget_cell(int x, int y) const {
+    if (x >= 0 && x < _mx && y >= 0 && y < _my)
+      return &_cells[y * _mx + x];
+    return nullptr;
+  }
+
+  inline bool check_empty(int x, int y) const {
+    cauto cell = cget_cell(x, y);
+    return cell && !cell->active;
+  }
+  
+  inline void set_cell_fast(int x, int y, cr<Cell> cell) { get_cell_fast(x, y) = cell; }
+  inline Cell& get_cell_fast(int x, int y) { return _cells[y * _mx + x]; }
+  inline cr<Cell> cget_cell_fast(int x, int y) const { return _cells[y * _mx + x]; }
   inline Vector<Cell>& get_cells() { return _cells; }
 
 private:
   nocopy(Cellular_simul);
   constexpr sconst Pal8 COLOR_BG = Pal8::black;
   int _mx {}, _my {}; // размеры клеточного мира
+  int _min_cells {}, _max_cells {};
   Vector<Cell> _cells {};
 }; // Cellular_simul
 
-void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
+void bgp_rand_cellular_simul_x4(Image& dst, const int bg_state) {
+  constexpr int SCALE = 4;
+  static Cellular_simul simul(dst.X/SCALE, dst.Y/SCALE, 1'000, 5'000);
+  Image buffer(dst.X/SCALE, dst.Y/SCALE);
+  simul.update();
+  simul.draw(buffer);
+  assert(SCALE == 4);
+  zoom_x4(buffer);
+  insert_fast(dst, buffer);
+
+  if (bg_state % 2'000 == 0)
+    simul.reset();
+}
+
+void bgp_rand_cellular_simul_x2(Image& dst, const int bg_state) {
   constexpr int SCALE = 2;
-  static Cellular_simul simul(dst.X/SCALE, dst.Y/SCALE);
+  static Cellular_simul simul(dst.X/SCALE, dst.Y/SCALE, 10'000, 50'000);
   Image buffer(dst.X/SCALE, dst.Y/SCALE);
   simul.update();
   simul.draw(buffer);
@@ -531,6 +662,15 @@ void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
   zoom_x2(buffer);
   insert_fast(dst, buffer);
 
-  if (bg_state % 1000 == 0)
+  if (bg_state % 2'000 == 0)
+    simul.reset();
+}
+
+void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
+  static Cellular_simul simul(dst.X, dst.Y, 25'000, 150'000);
+  simul.update();
+  simul.draw(dst);
+
+  if (bg_state % 2'000 == 0)
     simul.reset();
 }

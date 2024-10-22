@@ -36,3 +36,7 @@ void bgp_perlin_noise(Image& dst, const int bg_state);
 void bgp_3d_sky(Image& dst, const int bg_state);
 // случайные клеточные симуляции
 void bgp_rand_cellular_simul(Image& dst, const int bg_state);
+// случайные клеточные симуляции
+void bgp_rand_cellular_simul_x2(Image& dst, const int bg_state);
+// случайные клеточные симуляции
+void bgp_rand_cellular_simul_x4(Image& dst, const int bg_state);
