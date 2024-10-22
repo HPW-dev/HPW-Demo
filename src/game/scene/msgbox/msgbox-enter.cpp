@@ -76,7 +76,7 @@ struct Scene_msgbox_enter::Impl {
     if (graphic::fast_blur)
       blur_fast(for_blur, Image(for_blur), 5);
     else
-      adaptive_blur(for_blur, 5);
+      blur_hq(for_blur, 5);
     insert(m_bg, for_blur, window.pos);
 
     // нарисовать окно с рамкой

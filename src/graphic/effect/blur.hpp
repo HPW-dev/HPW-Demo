@@ -15,3 +15,5 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz=1);
 void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz=1);
 // текущая быстрая реализация размытия
 constexpr static const auto blur_fast = &boxblur_horizontal_gray_fast;
+// текущая красивая реализация размытия
+constexpr static const auto blur_hq = &adaptive_blur;
