@@ -73,6 +73,11 @@ void set_default() {
   graphic::frame_skip = 2;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = true;
+  #ifdef DEBUG
+    graphic::fast_blur = true;
+  #else
+    graphic::fast_blur = false;
+  #endif
 } // set_default
 
 void set_high_plus_stream() {
@@ -94,6 +99,7 @@ void set_high_plus_stream() {
   graphic::frame_skip = 1;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = true;
+  graphic::fast_blur = false;
 } // set_high_plus_stream
 
 void set_low_pc() {
@@ -112,6 +118,7 @@ void set_low_pc() {
   graphic::frame_skip = 5;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = false;
+  graphic::fast_blur = true;
 } // set_low_pc
 
 void set_high_quality() {
@@ -132,6 +139,7 @@ void set_high_quality() {
   graphic::frame_skip = 0;
   graphic::auto_frame_skip = false;
   graphic::enable_motion_interp = true;
+  graphic::fast_blur = false;
 } // set_high_quality
 
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
