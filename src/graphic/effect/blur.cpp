@@ -105,15 +105,30 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst.X > KERNEL_LEN);
   assert(dst.Y > KERNEL_LEN);
   const int KERNEL_SZ = KERNEL_LEN * KERNEL_LEN;
-  const real MUL = 1.f / KERNEL_SZ;
 
   #pragma omp parallel for simd collapse(2)
   for (int y = window_sz; y < src.Y - window_sz; ++y)
   for (int x = window_sz; x < src.X - window_sz; ++x) {
-    real sum {};
+    int sum {};
     for (int wy = -window_sz; wy < window_sz; ++wy)
     for (int wx = -window_sz; wx < window_sz; ++wx)
-      sum += src(x + wx, y + wy).to_real() * MUL;
-    dst(x, y) = Pal8::from_real(sum);
+      sum += src(x + wx, y + wy).val;
+    dst(x, y) = sum / KERNEL_SZ;
   }
+
+  // добить края изображения растягиванием
+  // vertical:
+  for (int y = 0; y < window_sz; ++y)
+  for (int x = 0; x < src.X; ++x)
+    dst(x, y) = dst(x, window_sz);
+  for (int y = src.Y - window_sz; y < src.Y; ++y)
+  for (int x = 0; x < src.X; ++x)
+    dst(x, y) = dst(x, src.Y - window_sz - 1);
+  // horizontal:
+  for (int y = 0; y < src.Y; ++y)
+  for (int x = 0; x < window_sz; ++x)
+    dst(x, y) = dst(window_sz, y);
+  for (int y = 0; y < src.Y; ++y)
+  for (int x = src.X - window_sz; x < src.X; ++x)
+    dst(x, y) = dst(src.X - window_sz - 1, y);
 }
