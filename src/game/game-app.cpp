@@ -26,7 +26,6 @@
 #include "game/util/config.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/dbg-plots.hpp"
-#include "graphic/font/unifont.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
 #include "sound/sound-mgr.hpp"
@@ -131,13 +130,6 @@ void Game_app::draw_game_frame() const {
 
 void Game_app::draw_border(Image& dst) const
   { draw_rect(dst, Rect{0,0, dst.X, dst.Y}, Pal8::white); }
-
-void Game_app::load_fonts() {
-  hpw_log("загрузка шрифтов...\n");
-  assert(hpw::archive);
-  auto mem = hpw::archive->get_file("resource/font/unifont-13.0.06.ttf");
-  init_unique<Unifont>(graphic::font, mem, 16, true);
-}
 
 void Game_app::update_graphic_autoopt(const Delta_time dt) {
   using timeout_t = decltype(graphic::autoopt_timeout);

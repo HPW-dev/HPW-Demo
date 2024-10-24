@@ -4,6 +4,7 @@
 int hpw::Font::text_width(cr<utf32> text) const {
   int chars = 0;
   int idx = 0;
+
   for (auto ch: text) {
     if (ch == U'\n') {
       idx = 0;
@@ -11,8 +12,9 @@ int hpw::Font::text_width(cr<utf32> text) const {
     }
     ++idx;
   }
+  
   chars = std::max(chars, idx);
-  return chars * space_.x * w_;
+  return chars * (space_.x + w_);
 }
 
 int hpw::Font::text_height(cr<utf32> text) const {

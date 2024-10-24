@@ -15,6 +15,7 @@ struct Circle;
 struct Polygon;
 struct Vec;
 
+void load_fonts();
 void load_locale(cr<Str> user_path={});
 void load_animations();
 void load_resources();

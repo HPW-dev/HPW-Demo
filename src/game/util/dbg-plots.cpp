@@ -142,8 +142,8 @@ void draw_fps_info(Image& dst) {
   auto pos_y = 20;
   auto border = 8;
   static int w; // чтоб по ширине не дёргалось окно
-  w = std::max(w, graphic::font->text_width(str_u32));
-  int h = graphic::font->text_height(str_u32);
+  w = std::max(w, graphic::system_mono->text_width(str_u32));
+  int h = graphic::system_mono->text_height(str_u32);
   Rect rect {
     pos_x - border,
     pos_y - border,
@@ -152,5 +152,5 @@ void draw_fps_info(Image& dst) {
   };
   draw_rect_filled<&blend_158>(dst, rect, Pal8::black);
   draw_rect<&blend_diff>(dst, rect, Pal8::white);
-  graphic::font->draw(dst, {pos_x, pos_y}, str_u32);
+  graphic::system_mono->draw(dst, {pos_x, pos_y}, str_u32);
 } // draw_debug_info

@@ -19,7 +19,6 @@ class Game_app: public Host_class {
   nocopy(Game_app);
   
   void update(const Delta_time dt) override;
-  void load_fonts();
   void update_graphic_autoopt(const Delta_time dt);
   // полноэкранная рамка
   void draw_border(Image& dst) const;

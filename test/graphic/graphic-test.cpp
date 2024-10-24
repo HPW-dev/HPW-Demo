@@ -5,6 +5,7 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/image-io.hpp"
 #include "graphic/font/unifont.hpp"
+#include "graphic/font/unifont-mono.hpp"
 #include "util/error.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
@@ -56,8 +57,7 @@ void Graphic_test::init() {
     U"CH: 是我这来中\n"
     U"Symbols: 🍓+-/\\=:;.,|*&^%$#@!?\n"
     U"Nums: 0123456789\n";
-  auto font_mem {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
-  init_unique<Unifont>(graphic::font, font_mem, 16, false);
+  load_fonts();
 } // init
 
 void Graphic_test::update(const Delta_time dt) {

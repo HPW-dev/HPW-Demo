@@ -29,7 +29,7 @@ public:
   
 private:
   bool mono_ {};
-  mutable std::map<char32_t, Shared<Glyph>> glyph_table {}; // кэш символов
+  mutable std::map<char32_t, Shared<Glyph>> glyph_table_ {}; // кэш символов
   real scale_ {};
   Shared<stbtt_fontinfo> info_ {};
   Bytes font_file_mem_ {};
@@ -38,5 +38,8 @@ private:
   cp<Glyph> _get_glyph(char32_t ch) const;
 
 protected:
-  virtual Shared<Glyph> _load_glyph(char32_t ch) const; // грузит новый шрифт. ret loaded Glyph if success
+  Unifont() = default;
+  void init(cr<File> file, int height, bool mono);
+  // грузит новый шрифт. ret loaded Glyph if success
+  virtual Shared<Unifont::Glyph> _load_glyph(char32_t ch) const;
 }; // Unifont

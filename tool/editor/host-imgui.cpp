@@ -4,6 +4,7 @@
 #include "game/core/fonts.hpp"
 #include "game/util/game-archive.hpp"
 #include "graphic/font/unifont.hpp"
+#include "graphic/font/unifont-mono.hpp"
 #include "util/error.hpp"
 #include "util/file/file.hpp"
 #include "game/util/game-util.hpp"
@@ -33,8 +34,7 @@ void Host_imgui::init_window() {
   //io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 // загрузка шрифта
   init_archive();
-  auto font_file {hpw::archive->get_file("resource/font/unifont-13.0.06.ttf")};
-  init_unique<Unifont>(graphic::font, font_file, 16);
+  load_fonts();
   ImFontConfig font_cfg;
   // без этого шрифт нормально не грузится из памяти
   font_cfg.FontDataOwnedByAtlas = false;

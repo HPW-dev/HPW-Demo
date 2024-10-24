@@ -44,6 +44,8 @@
 #include "graphic/animation/anim-io.hpp"
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
+#include "graphic/font/unifont.hpp"
+#include "graphic/font/unifont-mono.hpp"
 #include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "sound/sound.hpp"
@@ -578,4 +580,12 @@ void load_locale(cr<Str> user_path) {
   hpw::locale_path = mem.get_path();
   auto yml = Yaml(mem);
   load_locales_to_store(yml);
+}
+
+void load_fonts() {
+  hpw_log("загрузка шрифтов...\n");
+  assert(hpw::archive);
+  auto mem = hpw::archive->get_file("resource/font/unifont-13.0.06.ttf");
+  init_unique<Unifont>(graphic::font, mem, 16, true);
+  init_unique<Unifont_mono>(graphic::system_mono, mem, 8, 16, true);
 }

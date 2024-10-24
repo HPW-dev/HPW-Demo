@@ -14,14 +14,16 @@ extern "C" {
 #include "util/file/file.hpp"
 
 Unifont::Unifont(cr<Str> fname, int height, bool mono)
-: Unifont( File{mem_from_file(fname), fname}, height, mono) {
-  detailed_log("Unifont: loading (file):\""<< fname <<"\"\n");
+: Unifont( File{mem_from_file(fname), fname}, height, mono) {}
+
+Unifont::Unifont(cr<File> file, int height, bool mono) {
+  init(file, height, mono);
 }
 
-Unifont::Unifont(cr<File> file, int height, bool mono)
-: mono_(mono), font_file_mem_(file.data) {
-  detailed_log("Unifont.c-tor: loading font\n");
-  w_ = 0; // auto
+void Unifont::init(cr<File> file, int height, bool mono) {
+  detailed_log("loading font \"" << file.get_path() <<"\"\n");
+  mono_ = mono;
+  font_file_mem_ = file.data;
   h_ = height;
   space_ = {1, 1};
   init_shared(info_);
@@ -31,29 +33,32 @@ Unifont::Unifont(cr<File> file, int height, bool mono)
   // предзагрузка ASCI:
   for (int i = 21; i < 128; ++i)
     _load_glyph(i);
-} // Unifontmem  c-tor
+}
 
 int Unifont::text_width(cr<utf32> text) const {
   int size = 0;
   int max_size = 0;
+
   for (auto ch: text) {
     if (ch == U'\n') {
       max_size = std::max(size, max_size);
       size = 0;
     }
-    size += _get_glyph(ch)->image.X() + space_.x;
+
+    const int glyph_w = Font::w_ == 0 ? _get_glyph(ch)->image.X() : Font::w_;
+    size += glyph_w + space_.x;
   }
+
   max_size = std::max(size, max_size);
   return max_size + 1;
-  
-} // text_width
-
+}
 
 void Unifont::draw(Image& dst, const Vec pos, cr<utf32> text,
 blend_pf bf, const int optional) const {
   int posx = pos.x;
   int posy = pos.y;
   posy += h_ / 2 + 2; // компенсация оффсета
+  
   for (uint limit = 0; auto ch: text) {
     ++limit;
     // столько текста на экран не влезет
@@ -65,11 +70,13 @@ blend_pf bf, const int optional) const {
       continue;
     }
     // \r игнорить
-    cont_if (ch == '\r');
+    if (ch == '\r') {
+      posx = pos.x;
+      continue;
+    }
 
     auto glyph = _get_glyph(ch);
-    if ( !glyph)
-      continue;
+    continue_if( !glyph);
     insert(dst, glyph->image, {posx + glyph->xoff, posy + glyph->yoff}, bf, optional);
     posx += glyph->image.X() + space().x;
   } // for text size
@@ -78,12 +85,12 @@ blend_pf bf, const int optional) const {
 cp<Unifont::Glyph> Unifont::_get_glyph(char32_t ch) const {
   // найти символ в кэше
   try {
-    return glyph_table.at(ch).get();
+    return glyph_table_.at(ch).get();
   }
   // если нет символа, загрузить или вернуть null
   catch (...) {
     return_if (!_load_glyph(ch), nullptr);
-    return glyph_table.at(ch).get();
+    return glyph_table_.at(ch).get();
   }
   return {};
 } // _get_glyph
@@ -93,8 +100,8 @@ Shared<Unifont::Glyph> Unifont::_load_glyph(char32_t ch) const {
   if (ch == U' ') {
     int ax, lsb;
     stbtt_GetCodepointHMetrics(info_.get(), ' ', &ax, &lsb);
-    init_shared(glyph_table[ch]);
-    auto& glyph = glyph_table.at(ch);
+    init_shared(glyph_table_[ch]);
+    auto& glyph = glyph_table_.at(ch);
     glyph->image.init(ax * scale_, 1);
     glyph->image.image().fill(Pal8::black);
     glyph->yoff = -1;
@@ -109,8 +116,8 @@ Shared<Unifont::Glyph> Unifont::_load_glyph(char32_t ch) const {
     return {};
   }
 
-  init_shared(glyph_table[ch]);
-  auto& glyph = glyph_table.at(ch);
+  init_shared(glyph_table_[ch]);
+  auto& glyph = glyph_table_.at(ch);
   glyph->image.init(bitmap_w, bitmap_h);
   glyph->image.image().fill(Pal8::black);
   glyph->xoff = 0; // мне не нравится с bitmap_xoff
