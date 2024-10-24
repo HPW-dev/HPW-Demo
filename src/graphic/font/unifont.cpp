@@ -13,11 +13,6 @@ extern "C" {
 #include "util/str-util.hpp"
 #include "util/file/file.hpp"
 
-struct Glyph {
-  Sprite image {};
-  int xoff {}, yoff {};
-};
-
 Unifont::Unifont(cr<Str> fname, int height, bool mono)
 : Unifont( File{mem_from_file(fname), fname}, height, mono) {
   detailed_log("Unifont: loading (file):\""<< fname <<"\"\n");
@@ -80,7 +75,7 @@ blend_pf bf, const int optional) const {
   } // for text size
 } // draw
 
-cp<Glyph> Unifont::_get_glyph(char32_t ch) const {
+cp<Unifont::Glyph> Unifont::_get_glyph(char32_t ch) const {
   // найти символ в кэше
   try {
     return glyph_table.at(ch).get();
@@ -93,7 +88,7 @@ cp<Glyph> Unifont::_get_glyph(char32_t ch) const {
   return {};
 } // _get_glyph
 
-Shared<Glyph> Unifont::_load_glyph(char32_t ch) const {
+Shared<Unifont::Glyph> Unifont::_load_glyph(char32_t ch) const {
   // пробел - просто путая картинка
   if (ch == U' ') {
     int ax, lsb;
