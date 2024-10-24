@@ -87,14 +87,13 @@ cp<Glyph> Unifont::_get_glyph(char32_t ch) const {
   }
   // если нет символа, загрузить или вернуть null
   catch (...) {
-    if ( !_load_glyph(ch))
-      return {};
+    return_if (!_load_glyph(ch), nullptr);
     return glyph_table.at(ch).get();
   }
   return {};
 } // _get_glyph
 
-bool Unifont::_load_glyph(char32_t ch) const {
+Shared<Glyph> Unifont::_load_glyph(char32_t ch) const {
   // пробел - просто путая картинка
   if (ch == U' ') {
     int ax, lsb;
@@ -104,21 +103,24 @@ bool Unifont::_load_glyph(char32_t ch) const {
     glyph->image.init(ax * scale_, 1);
     glyph->image.image().fill(Pal8::black);
     glyph->yoff = -1;
-    return true;
+    return glyph;
   }
+
   int bitmap_w, bitmap_h, bitmap_xoff, bitmap_yoff;
   auto bitmap = stbtt_GetCodepointBitmap(info_.get(), scale_, scale_, ch,
     &bitmap_w, &bitmap_h, &bitmap_xoff, &bitmap_yoff);
   if ( !bitmap) {
     detailed_log("stbtt_GetCodepointBitmap error ("<< std::hex << int(ch) << ")\n");
-    return false;
+    return {};
   }
+
   init_shared(glyph_table[ch]);
   auto& glyph = glyph_table.at(ch);
   glyph->image.init(bitmap_w, bitmap_h);
   glyph->image.image().fill(Pal8::black);
   glyph->xoff = 0; // мне не нравится с bitmap_xoff
   glyph->yoff = bitmap_yoff;
+
   if (mono_) {
     cfor (y, bitmap_h)
     cfor (x, bitmap_w) {
@@ -134,6 +136,7 @@ bool Unifont::_load_glyph(char32_t ch) const {
       glyph->image.mask().fast_set(x, y, Pal8::mask_visible, {});
     }
   }
+
   free(bitmap);
-  return true;
+  return glyph;
 } // _load_glyph

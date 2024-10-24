@@ -11,7 +11,7 @@ struct Glyph;
 class Sprite;
 
 // шрифт для unifont.ttf
-class Unifont final: public hpw::Font {
+class Unifont: public hpw::Font {
   bool mono_ {};
   mutable std::map<char32_t, Shared<Glyph>> glyph_table {}; // кэш символов
   real scale_ {};
@@ -20,10 +20,12 @@ class Unifont final: public hpw::Font {
 
   // возвращает картинку символа. если её нет в кэше, то добавляет туда
   cp<Glyph> _get_glyph(char32_t ch) const;
-  bool _load_glyph(char32_t ch) const; // грузит новый шрифт. ret 1 if success
+  virtual Shared<Glyph> _load_glyph(char32_t ch) const; // грузит новый шрифт. ret loaded Glyph if success
 
 public:
+  // @param mono enable black/white color
   explicit Unifont(cr<Str> fname, int height=12, bool mono=true);
+  // @param mono enable black/white color
   explicit Unifont(cr<File> file, int height=12, bool mono=true);
   ~Unifont() = default;
   // узнать ширину текста
