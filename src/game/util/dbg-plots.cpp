@@ -137,7 +137,6 @@ void draw_fps_info(Image& dst) {
   txt << "\nTick time       " << n2s(hpw::tick_time, 7);
   txt << "   UPS   " << n2s(hpw::cur_ups, 1);
   txt << "\nFPS             " << n2s(graphic::cur_fps, 1);
-  txt << "\nSkip cur. frame [" << (graphic::skip_cur_frame ? '#' : ' ') << "]";
 
   auto str_u32 = sconv<utf32>(txt.str());
   // нарисовать чёрный прямоуг под текст
