@@ -130,12 +130,14 @@ void Dbg_plots::update(Delta_time dt) { impl->update(dt); }
 
 void draw_fps_info(Image& dst) {
   std::stringstream txt;
-  txt << "real dt: " << n2s(hpw::real_dt, 12);
-  txt << "\nsafe dt: " << n2s(hpw::safe_dt, 12);
-  txt << "\ndraw time: " << n2s(graphic::soft_draw_time, 12);
-  txt << "\nupdate time: " << n2s(hpw::tick_time, 12);
-  txt << "\nups: " << n2s(hpw::cur_ups, 1);
-  txt << "\nfps: " << n2s(graphic::cur_fps, 1);
+  txt <<   "Dt real         " << n2s(hpw::real_dt, 7);
+  txt << "   Safe  " << n2s(hpw::safe_dt, 7);
+  txt << "\nDraw time Soft. " << n2s(graphic::soft_draw_time, 7);
+  txt << "   Hard. " << n2s(graphic::hard_draw_time, 7);
+  txt << "\nTick time       " << n2s(hpw::tick_time, 7);
+  txt << "   UPS   " << n2s(hpw::cur_ups, 1);
+  txt << "\nFPS             " << n2s(graphic::cur_fps, 1);
+  txt << "\nSkip cur. frame [" << (graphic::skip_cur_frame ? '#' : ' ') << "]";
 
   auto str_u32 = sconv<utf32>(txt.str());
   // нарисовать чёрный прямоуг под текст
