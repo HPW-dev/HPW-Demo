@@ -15,6 +15,7 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/hud/hud-util.hpp"
 #include "util/error.hpp"
+#include "util/str-util.hpp"
 
 struct Scene_hud_select::Impl {
   Unique<Advanced_text_menu> _menu {}; // менюшка выбора
@@ -30,8 +31,8 @@ struct Scene_hud_select::Impl {
       items.push_back(
         new_shared<Menu_bool_item>(
           utf8_to_32(hud_name),
-          [name = hud_name]{ return graphic::cur_hud == name; },
-          [name = hud_name](bool _){
+          [name = str_tolower(hud_name)]{ return str_tolower(graphic::cur_hud) == name; },
+          [name = str_tolower(hud_name)](bool _){
             graphic::cur_hud = name;
             graphic::hud = make_hud(name);
           }
