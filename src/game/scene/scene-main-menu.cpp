@@ -320,8 +320,9 @@ void bg_copy_4(Image& dst, const int state) {
 
 void Scene_main_menu::draw_text(Image& dst) const {
   // нарисовать текст меню в маленькое окошко
-  Image text_layer(dst.X, dst.Y, Pal8::black);
-  menu->draw(text_layer);
+  Image menu_text_layer(dst.X, dst.Y, Pal8::black);
+  Image game_ver_layer(dst.X, dst.Y, Pal8::black);
+  menu->draw(menu_text_layer);
 
   // показать версию игры  
   cauto game_ver = prepare_game_ver();
@@ -329,18 +330,22 @@ void Scene_main_menu::draw_text(Image& dst) const {
     dst.X - graphic::font->text_width(game_ver) - 7,
     dst.Y - graphic::font->text_height(game_ver) - 4,
   };
-  graphic::font->draw(text_layer, game_ver_txt_pos, game_ver);
-  
+  graphic::font->draw(game_ver_layer, game_ver_txt_pos, game_ver);
+
   // нарисовать тень от текста
-  Image shadow_layer(text_layer);
-  insert_fast(shadow_layer, text_layer);
+  Image shadow_layer(menu_text_layer);
+  Image shadow_layer_game_ver(game_ver_layer);
   apply_invert(shadow_layer);
-  expand_color_8(shadow_layer, Pal8::black);
+  apply_invert(shadow_layer_game_ver);
   expand_color_4(shadow_layer, Pal8::black);
+  expand_color_8(shadow_layer_game_ver, Pal8::black);
+  expand_color_4(shadow_layer_game_ver, Pal8::black);
+  insert<&blend_min>(dst, shadow_layer_game_ver);
   insert<&blend_min>(dst, shadow_layer);
 
-  // нарисовать текст повер тени
-  insert<&blend_max>(dst, text_layer);
+  // нарисовать текст поверх тени
+  insert<&blend_max>(dst, menu_text_layer);
+  insert<&blend_max>(dst, game_ver_layer);
 } // draw_text
 
 Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
@@ -360,10 +365,11 @@ Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
 }
 
 utf32 Scene_main_menu::prepare_game_ver() const {
-  auto game_ver = sconv<utf32>( get_game_version() );
   auto game_date = sconv<utf32>( get_game_creation_date() );
+  auto game_ver = sconv<utf32>( get_game_version() );
   if (game_ver.empty())
     game_ver = U"v???";
+
   game_ver += U" (";
 
   #ifdef DETAILED_LOG
