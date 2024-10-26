@@ -136,6 +136,7 @@ void draw_fps_info(Image& dst) {
   txt << "\nupdate time: " << n2s(hpw::tick_time, 12);
   txt << "\nups: " << n2s(hpw::cur_ups, 1);
   txt << "\nfps: " << n2s(graphic::cur_fps, 1);
+
   auto str_u32 = sconv<utf32>(txt.str());
   // нарисовать чёрный прямоуг под текст
   auto pos_x = 20;
@@ -150,6 +151,7 @@ void draw_fps_info(Image& dst) {
     w + border + 6,
     h + border + 12
   };
+  
   draw_rect_filled<&blend_158>(dst, rect, Pal8::black);
   draw_rect<&blend_diff>(dst, rect, Pal8::white);
   graphic::system_mono->draw(dst, {pos_x, pos_y}, str_u32);

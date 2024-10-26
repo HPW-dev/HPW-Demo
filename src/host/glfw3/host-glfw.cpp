@@ -506,6 +506,7 @@ void Host_glfw::_set_fullscreen(bool enable) {
     glfwSetWindowMonitor(m_window, monitor, 0, 0,
       mode->width, mode->height, mode->refreshRate);
     graphic::set_vsync( graphic::get_vsync() );
+    hpw::set_gamma(graphic::gamma);
   } else { // переключение обратно в окно
     glfwSetWindowMonitor(m_window, nullptr, m_wnd_x, m_wnd_y,
       m_w, m_h, GLFW_DONT_CARE);
