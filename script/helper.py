@@ -69,9 +69,9 @@ def exec_cmd(cmd):
 
 def get_game_version():
   ''':return: version, last commit date, last commit time'''
-  version = "vMj.Mn.Mc"
-  date = "DD.MM.YYYY"
-  time = "HH:MM"
+  version = "v???"
+  date = "unknown last commit date"
+  time = "unknown last commit time"
 
   # получить версии
   try:

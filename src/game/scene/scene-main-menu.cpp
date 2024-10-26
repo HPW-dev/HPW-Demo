@@ -363,34 +363,43 @@ utf32 Scene_main_menu::prepare_game_ver() const {
   auto game_ver = sconv<utf32>( get_game_version() );
   auto game_date = sconv<utf32>( get_game_creation_date() );
   if (game_ver.empty())
-    game_ver = U"v?.?.?";
+    game_ver = U"v???";
+  game_ver += U" (";
 
-  // добавить инфу по платформе и билду:
-  #ifdef WINDOWS
-    game_ver += U" W";
+  #ifdef DETAILED_LOG
+    // добавить инфу по платформе и билду:
+    #ifdef WINDOWS
+      game_ver += U"Windows";
+    #else
+      game_ver += U"Linux";
+    #endif
+
+    #ifdef is_x64
+      game_ver += U" x64";
+    #else
+      game_ver += U" x32";
+    #endif
+
+    #ifdef DEBUG
+      game_ver += U" Debug";
+    #else
+      game_ver += U" Release";
+    #endif
+
+    #ifdef ECOMEM
+      game_ver += U" Ecomem";
+    #endif
+
+    if (!game_date.empty())
+      game_ver += U' ' + game_date;
   #else
-    game_ver += U" L";
+    if (!game_date.empty())
+      game_ver += game_date;
   #endif
 
-  #ifdef is_x64
-    game_ver += U"64";
-  #else
-    game_ver += U"32";
-  #endif
-
-  #ifdef DEBUG
-    game_ver += U'D';
-  #else
-    game_ver += U'R';
-  #endif
-
-  #ifdef ECOMEM
-    game_ver += U'E';
-  #endif
-
-  game_ver += U' ' + game_date;
+  game_ver += U')';
   return game_ver;
-} // prepare_game_ver
+}
 
 void Scene_main_menu::init_menu_sounds() {
   // звук при выборе пункта меню
