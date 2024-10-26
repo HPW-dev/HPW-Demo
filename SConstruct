@@ -130,14 +130,14 @@ def accept_params():
       hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
 
     case Opt_level.core2:
-      hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=core2'])
+      hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=core2', '-march=core2'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
       hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
 
     case Opt_level.atom:
-      hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=atom'])
+      hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=atom', '-march=atom'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
@@ -152,6 +152,24 @@ def accept_params():
 
     case Opt_level.x86_64_v4:
       hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=generic', '-march=x86-64-v4'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
+    
+    case Opt_level.i386_stable:
+      if hpw_config.bitness != Bitness.x32:
+        raise ValueError('Need x32 build options for i386 CPU')
+      hpw_config.cxx_flags.extend(['-O2', '-flto=auto', '-mtune=i386', '-march=i386'])
+      if hpw_config.system == System.windows:
+        hpw_config.cxx_ldflags.extend(['-mwindows'])
+      hpw_config.cxx_ldflags.extend(['-s'])
+      hpw_config.cxx_defines.extend({'-DNDEBUG', '-DRELEASE'})
+    
+    case Opt_level.i386:
+      if hpw_config.bitness != Bitness.x32:
+        raise ValueError('Need x32 build options for i386 CPU')
+      hpw_config.cxx_flags.extend(['-Ofast', '-flto=auto', '-mtune=i386', '-march=i386'])
       if hpw_config.system == System.windows:
         hpw_config.cxx_ldflags.extend(['-mwindows'])
       hpw_config.cxx_ldflags.extend(['-s'])
