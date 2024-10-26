@@ -95,7 +95,7 @@ void set_target_vsync_fps(int val) {
   m_target_vsync_fps = val;
   set_target_vsync_frame_time(1.0 / val);
   #ifndef DEBUG
-  calibrate_delay(1.0 / val);
+    calibrate_delay(1.0 / val);
   #endif
 }
 
