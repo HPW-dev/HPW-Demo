@@ -61,6 +61,8 @@ def parse_args():
     case 'x86_64_v4': hpw_config.opt_level = Opt_level.x86_64_v4
     case 'debug': hpw_config.opt_level = Opt_level.debug
     case 'stable': hpw_config.opt_level = Opt_level.stable
+    case 'i386_stable': hpw_config.opt_level = Opt_level.i386_stable
+    case 'i386': hpw_config.opt_level = Opt_level.i386
     case _: hpw_config.opt_level = Opt_level.stable
   match ARGUMENTS.get('log_mode', 'debug').lower():
     case 'detailed': hpw_config.log_mode = Log_mode.detailed
