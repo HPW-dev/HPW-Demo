@@ -340,6 +340,33 @@ void Scene_main_menu::draw_text(Image& dst) const {
   // отрисовка текста меню поверх теней на dst
   insert<&blend_max>(dst, menu_txt, MENU_TXT_RECT.pos);
 
+  // версия игры
+  cauto GAME_VER_TXT = prepare_game_ver();
+  // буффер текста меню
+  cauto GAME_VER_TXT_SZ = graphic::font->text_size(GAME_VER_TXT);
+  const Rect GAME_VER_TXT_RECT (
+    dst.X - GAME_VER_TXT_SZ.x - 7,
+    dst.Y - GAME_VER_TXT_SZ.y - 4,
+    GAME_VER_TXT_SZ.x + 6, GAME_VER_TXT_SZ.y + 6
+  );
+  static Image game_ver;
+  game_ver.init(GAME_VER_TXT_RECT.size.x, GAME_VER_TXT_RECT.size.y, Pal8::black);
+  // нарисовать надписи меню
+  graphic::font->draw(game_ver, {3, 3}, GAME_VER_TXT);
+  // буффер тени текста меню
+  static Image game_ver_shadows;
+  game_ver_shadows.init(game_ver);
+  apply_invert(game_ver_shadows);
+  // расширить контуры теней текста меню
+  static Image game_ver_shadows_expand_buf;
+  game_ver_shadows_expand_buf.init(game_ver_shadows);
+  expand_color_8_buf(game_ver_shadows, game_ver_shadows_expand_buf, Pal8::black);
+  game_ver_shadows_expand_buf = game_ver_shadows;
+  expand_color_4_buf(game_ver_shadows, game_ver_shadows_expand_buf, Pal8::black);
+  // наложение теней контуров текста меню на dst
+  insert<&blend_min>(dst, game_ver_shadows, GAME_VER_TXT_RECT.pos);
+  // отрисовка текста меню поверх теней на dst
+  insert<&blend_max>(dst, game_ver, GAME_VER_TXT_RECT.pos);
 
   /*
   // нарисовать текст меню в маленькое окошко
