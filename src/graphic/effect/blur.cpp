@@ -78,30 +78,45 @@ void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz
   assert(src);
   assert(std::addressof(dst) != std::addressof(src));
   assert(dst.size == src.size);
+  
+  Image src_gray(src.X, src.Y);
+  to_gray_accurate(src_gray, src);
+  boxblur_horizontal_fast(dst, src_gray, window_sz);
+}
+
+void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) {
+  assert(dst);
+  assert(src);
+  assert(std::addressof(dst) != std::addressof(src));
+  assert(dst.size == src.size);
   assert(window_sz >= 1);
 
   const int KERNEL_LEN = window_sz * 2 + 1;
   assert(dst.X > KERNEL_LEN);
-  Image src_gray(src.X, src.Y);
-  to_gray_accurate(src_gray, src);
 
   #pragma omp parallel for simd
-  cfor (y, src_gray.Y)
-  for (int x = window_sz; x < src_gray.X - window_sz; ++x) {
-    int sum {};
-    for (int wx = -window_sz; wx < window_sz; ++wx)
-      sum += src_gray(x + wx, y).val;
-    dst(x, y) = sum / (KERNEL_LEN + 2);
+  cfor (y, src.Y) {
+    auto* src_ptr = &src.fast_get(window_sz, y);
+
+    for (int x = window_sz; x < src.X - window_sz; ++x) {
+      int sum {};
+
+      for (int wx = -window_sz; wx < window_sz; ++wx)
+        sum += (src_ptr + wx)->val;
+        
+      dst(x, y) = sum / (KERNEL_LEN + 2);
+      ++src_ptr;
+    }
   }
 
   // добить края изображения растягиванием
   // horizontal:
-  for (int y = 0; y < src_gray.Y; ++y)
+  for (int y = 0; y < src.Y; ++y)
   for (int x = 0; x < window_sz; ++x)
     dst(x, y) = dst(window_sz, y);
-  for (int y = 0; y < src_gray.Y; ++y)
-  for (int x = src_gray.X - window_sz; x < src_gray.X; ++x)
-    dst(x, y) = dst(src_gray.X - window_sz - 1, y);
+  for (int y = 0; y < src.Y; ++y)
+  for (int x = src.X - window_sz; x < src.X; ++x)
+    dst(x, y) = dst(src.X - window_sz - 1, y);
 }
 
 void blur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {

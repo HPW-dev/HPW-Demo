@@ -375,9 +375,9 @@ void to_red(Image& dst) {
 void to_gray_accurate(Image& dst, cr<Image> src) {
   assert(src);
   assert(dst);
-  assert(std::addressof(dst) != std::addressof(src));
   assert(src.size == dst.size);
 
+  #pragma omp parallel for simd if (dst.size >= 64 * 64)
   cfor (i, src.size) {
     cauto pix = src[i];
     cauto is_red = pix.is_red();

@@ -8,6 +8,8 @@ void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz=1);
 // размытие по алгоритму BoxBlur (быстрый вариант)
 void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz=1);
 // размытие по алгоритму BoxBlur (быстрый вариант; только горизонтальные пиксели)
+void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz=1);
+// размытие по алгоритму BoxBlur (быстрый вариант; только горизонтальные пиксели; делает картинку серой)
 void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz=1);
 // красивое размытие (для серых изображений; ядро с линейным градиентом)
 void blur_gray_accurate(Image& dst, cr<Image> src, const int window_sz=1);

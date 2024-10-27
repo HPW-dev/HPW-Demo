@@ -42,6 +42,7 @@ public:
   inline const Pal8 operator [](int i) const noexcept { return pix[i]; }
   // TODO в новом стандарте заменить на []
   inline const Pal8 operator ()(int x, int y) const noexcept { return pix[y * X + x]; }
+  inline cr<Pal8> fast_get(int x, int y) const noexcept { return pix[y * X + x]; }
 
   [[gnu::const]] inline auto begin() noexcept { return pix.begin(); }
   [[gnu::const]] inline auto begin() const noexcept { return pix.begin(); }

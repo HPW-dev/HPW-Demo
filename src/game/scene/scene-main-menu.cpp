@@ -179,7 +179,7 @@ void Scene_main_menu::init_logo() {
   assert(!m_logo_names.empty());
 
   // случайный выбор логотипа из списка
-  cauto idx = rndu_fast(m_logo_names.size());
+  cauto idx = rndu_fast(m_logo_names.size()-1);
   cauto logo_name = m_logo_names.at(idx);
   logo = prepare_logo(logo_name);
 
@@ -200,12 +200,14 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
   static Image for_blur(rect.size.x, rect.size.y);
   fast_cut_2(for_blur, dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 
-  if (graphic::fast_blur)
-    blur_fast(for_blur, Image(for_blur), 5);
-  else
+  if (graphic::fast_blur) {
+    to_gray_accurate(for_blur, for_blur);
+    boxblur_horizontal_fast(for_blur, Image(for_blur), 5);
+  } else {
     blur_hq(for_blur, Image(for_blur), 5);
+  }
 
-  // мягкий контраст
+  // мягкий контраст  
   apply_contrast(for_blur, 0.5);
   // затенение
   sub_brightness(for_blur, Pal8::from_real(0.33333));
