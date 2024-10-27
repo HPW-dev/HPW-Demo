@@ -80,6 +80,7 @@ void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) {
   const int rect_sz_y = std::round(rect.size.y);
   cauto ex = rect_pos_x + rect_sz_x;
   cauto ey = rect_pos_y + rect_sz_y;
+  
   // рисование линий по два раза:
   for (int x = rect_pos_x; x < ex; ++x) {
     dst.set<bf>(x, rect_pos_y, col);

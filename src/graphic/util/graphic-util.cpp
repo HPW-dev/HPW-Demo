@@ -113,9 +113,11 @@ Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my) {
   cauto ex {sx + mx};
   cauto ey {sy + my};
 
-  for (auto y {sy}; y < ey; ++y)
-  for (auto x {sx}; x < ex; ++x)
+  #pragma omp parallel for simd collapse(2) if (dst.size >= 64 * 64)
+  for (auto y = sy; y < ey; ++y)
+  for (auto x = sx; x < ex; ++x)
     dst.fast_set(x - sx, y - sy, src(x, y), {});
+
   return dst;
 }
 
