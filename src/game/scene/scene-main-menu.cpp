@@ -323,8 +323,10 @@ void bg_copy_4(Image& dst, const int state) {
 
 void Scene_main_menu::draw_text(Image& dst) const {
   // нарисовать текст меню в маленькое окошко
-  Image menu_text_layer(dst.X, dst.Y, Pal8::black);
-  Image game_ver_layer(dst.X, dst.Y, Pal8::black);
+  static Image menu_text_layer;
+  static Image game_ver_layer;
+  menu_text_layer.init(dst.X, dst.Y, Pal8::black);
+  game_ver_layer.init(dst.X, dst.Y, Pal8::black);
   menu->draw(menu_text_layer);
 
   // показать версию игры  
