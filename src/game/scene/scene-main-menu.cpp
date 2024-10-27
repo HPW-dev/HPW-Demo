@@ -336,8 +336,10 @@ void Scene_main_menu::draw_text(Image& dst) const {
   graphic::font->draw(game_ver_layer, game_ver_txt_pos, game_ver);
 
   // нарисовать тень от текста
-  Image shadow_layer(menu_text_layer);
-  Image shadow_layer_game_ver(game_ver_layer);
+  static Image shadow_layer;
+  static Image shadow_layer_game_ver;
+  shadow_layer = menu_text_layer;
+  shadow_layer_game_ver = game_ver_layer;
   apply_invert(shadow_layer);
   apply_invert(shadow_layer_game_ver);
   expand_color_4(shadow_layer, Pal8::black);
