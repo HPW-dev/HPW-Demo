@@ -7,6 +7,6 @@ class Text_menu final: public Menu {
   Vec draw_pos {};
 
 public:
-  Text_menu(cr<Menu_items> _items, const Vec _draw_pos);
+  Text_menu(cr<Menu_items> _items, const Vec _draw_pos={});
   void draw(Image& dst) const override;
 };

@@ -249,8 +249,7 @@ void Scene_main_menu::init_menu() {
       // выйти из игры
       new_shared<Menu_text_item>(get_locale_str("common.exit"),
         []{ hpw::scene_mgr->back(); }),
-    },
-    Vec{140, 200}
+    }
   ); // init menu
 
   init_menu_sounds();
@@ -322,6 +321,27 @@ void bg_copy_4(Image& dst, const int state) {
 }
 
 void Scene_main_menu::draw_text(Image& dst) const {
+  // буффер текста меню
+  constexpr Rect MENU_TXT_RECT (140, 200, 270, 280);
+  static Image menu_txt;
+  menu_txt.init(MENU_TXT_RECT.size.x, MENU_TXT_RECT.size.y, Pal8::black);
+  // нарисовать надписи меню
+  menu->draw(menu_txt);
+  // буффер тени текста меню
+  static Image menu_txt_shadows;
+  menu_txt_shadows.init(menu_txt);
+  apply_invert(menu_txt_shadows);
+  // расширить контуры теней текста меню
+  static Image menu_txt_shadows_expand_buf;
+  menu_txt_shadows_expand_buf.init(menu_txt_shadows);
+  expand_color_4_buf(menu_txt_shadows, menu_txt_shadows_expand_buf, Pal8::black);
+  // наложение теней контуров текста меню на dst
+  insert<&blend_min>(dst, menu_txt_shadows, MENU_TXT_RECT.pos);
+  // отрисовка текста меню поверх теней на dst
+  insert<&blend_max>(dst, menu_txt, MENU_TXT_RECT.pos);
+
+
+  /*
   // нарисовать текст меню в маленькое окошко
   static Image menu_text_layer;
   static Image game_ver_layer;
@@ -342,7 +362,7 @@ void Scene_main_menu::draw_text(Image& dst) const {
   static Image shadow_layer_game_ver;
   shadow_layer = menu_text_layer;
   shadow_layer_game_ver = game_ver_layer;
-
+  
   apply_invert(shadow_layer);
   apply_invert(shadow_layer_game_ver);
 
@@ -360,6 +380,7 @@ void Scene_main_menu::draw_text(Image& dst) const {
   // нарисовать текст поверх тени
   insert<&blend_max>(dst, menu_text_layer);
   insert<&blend_max>(dst, game_ver_layer);
+  */
 } // draw_text
 
 Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
