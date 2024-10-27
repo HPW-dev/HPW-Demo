@@ -196,8 +196,9 @@ void Scene_main_menu::draw_logo(Image& dst) const {
 
 void Scene_main_menu::draw_wnd(Image& dst) const {
   // вырезаем часть фона и блюрим
-  Rect rect(120, 50, 270, 280);
-  auto for_blur = fast_cut(dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
+  constexpr const Rect rect(120, 50, 270, 280);
+  static Image for_blur(rect.size.x, rect.size.y);
+  fast_cut_2(for_blur, dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 
   if (graphic::fast_blur)
     blur_fast(for_blur, Image(for_blur), 5);

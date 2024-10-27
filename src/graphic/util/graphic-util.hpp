@@ -34,6 +34,8 @@ void insert_x2(Image& dst, cr<Image> src, Vec pos);
 
 // вырезание области без проверко границ
 [[nodiscard]] Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my);
+// вариант fast_cut, где буффер dst уже выделен
+void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my);
 
 // вырезание области (безопасное)
 [[nodiscard]] Image cut(cr<Image> src, cr<Rect> rect,

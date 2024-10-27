@@ -109,6 +109,8 @@ Vec center_point(const Vec src, const Vec dst)
 
 Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my) {
   assert(src);
+  assert(mx > 0);
+  assert(my > 0);
   Image dst(mx, my);
   cauto ex {sx + mx};
   cauto ey {sy + my};
@@ -119,6 +121,20 @@ Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my) {
     dst.fast_set(x - sx, y - sy, src(x, y), {});
 
   return dst;
+}
+
+void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my) {
+  assert(src);
+  assert(dst.size >= mx * my);
+  assert(mx > 0);
+  assert(my > 0);
+  cauto ex {sx + mx};
+  cauto ey {sy + my};
+
+  #pragma omp parallel for simd collapse(2) if (dst.size >= 64 * 64)
+  for (auto y = sy; y < ey; ++y)
+  for (auto x = sx; x < ex; ++x)
+    dst.fast_set(x - sx, y - sy, src(x, y), {});
 }
 
 Image cut(cr<Image> src, cr<Rect> rect_, Image_get mode) {
