@@ -13,6 +13,7 @@ struct Ring_buffer {
 
   inline explicit Ring_buffer() {
     static_assert(std::is_arithmetic_v<T> == true);
+    static_assert(MAX_SAMPLES > 0);
   }
 
   // добавить значение

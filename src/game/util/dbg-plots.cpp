@@ -7,6 +7,8 @@
 #include <functional>
 #include "dbg-plots.hpp"
 #include "util/str-util.hpp"
+#include "util/math/mat.hpp"
+#include "util/math/average.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"
@@ -129,6 +131,12 @@ void Dbg_plots::draw(Image& dst) const { impl->draw(dst); }
 void Dbg_plots::update(Delta_time dt) { impl->update(dt); }
 
 void draw_fps_info(Image& dst) {
+  // прогнозируемая производительность FPS без VSync
+  cauto GAME_PERFOMANCE = safe_div(1.0,
+    std::clamp<real>(hpw::tick_time + graphic::soft_draw_time, 0.0002, 10));
+  static Average<real, 60> game_perfomance_avr;
+  game_perfomance_avr.push(GAME_PERFOMANCE);
+
   std::stringstream txt;
   txt <<   "Dt real         " << n2s(hpw::real_dt, 7);
   txt << "   Safe  " << n2s(hpw::safe_dt, 7);
@@ -137,6 +145,8 @@ void draw_fps_info(Image& dst) {
   txt << "\nTick time       " << n2s(hpw::tick_time, 7);
   txt << "   UPS   " << n2s(hpw::cur_ups, 1);
   txt << "\nFPS             " << n2s(graphic::cur_fps, 1);
+  txt << "\nPerfomance      " << n2s(GAME_PERFOMANCE, 1);
+  txt << "\nPerfomance avr. " << n2s(std::floor(game_perfomance_avr()), 0);
   txt << "\nRender lag      [" << (graphic::render_lag ? '#' : ' ') << "]";
 
   auto str_u32 = sconv<utf32>(txt.str());
