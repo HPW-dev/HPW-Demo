@@ -352,19 +352,24 @@ const Pal8 color) {
 
 void add_brightness(Image& dst, const Pal8 brightness) {
   return_if (brightness == 0);
-  for (rauto pix: dst)
-    pix = blend_add_safe(brightness, pix);
+
+  #pragma omp parallel for simd if (dst.size >= 64 * 64)
+  cfor (i, dst.size)
+    dst[i] = blend_sub_safe(brightness, dst[i]);
 }
 
 void sub_brightness(Image& dst, const Pal8 brightness) {
   return_if (brightness == 0);
-  for (rauto pix: dst)
-    pix = blend_sub_safe(brightness, pix);
+
+  #pragma omp parallel for simd if (dst.size >= 64 * 64)
+  cfor (i, dst.size)
+    dst[i] = blend_sub_safe(brightness, dst[i]);
 }
 
 void apply_invert(Image& dst) {
-  for (rauto pix: dst)
-    pix.apply_invert();
+  #pragma omp parallel for simd if (dst.size >= 64 * 64)
+  cfor (i, dst.size)
+    dst[i].apply_invert();
 }
 
 void to_red(Image& dst) {
