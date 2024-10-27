@@ -35,14 +35,14 @@ public:
     cauto sz = m_values.size();
     if (sz == 1)
       return m_values[0];
-    return m_values.at( rndu(sz) ); 
+    return m_values.at( rndu(sz-1) ); 
   }
   
   inline Value_cref rnd_fast() const {
     cauto sz = m_values.size();
     if (sz == 1)
       return m_values[0];
-    return m_values.at( rndu_fast(sz) );
+    return m_values.at( rndu_fast(sz-1) );
   }
 
 private:

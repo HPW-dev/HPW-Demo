@@ -87,7 +87,7 @@ struct result_t* result) {
 } // plugin_init
 
 inline Block::Rotation get_rnd_rotation() {
-  switch (rndu_fast(4)) {
+  switch (rndu_fast(3)) {
     default:
     case 0: return Block::Rotation::deg0; break;
     case 1: return Block::Rotation::deg90; break;

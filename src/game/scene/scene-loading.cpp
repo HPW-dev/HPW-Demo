@@ -23,7 +23,7 @@ Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
     return src.find("resource/image/loading logo/") == Str::npos; });
   assert(!bg_names.empty());
 
-  cauto bg_name = bg_names.at(rndu_fast(bg_names.size()));
+  cauto bg_name = bg_names.at( rndu_fast(bg_names.size()-1) );
   bg = hpw::store_sprite->find(bg_name).get();
   assert(bg);
 }

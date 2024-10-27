@@ -152,7 +152,7 @@ void Graphic_test::draw_gradient(Image& dst) const {
 
 void Graphic_test::draw_noise(Image& dst) const {
   for (rauto pix: dst)
-    pix.set(rndu_fast());
+    pix.set(rndu_fast(255));
 }
 
 void Graphic_test::draw_bit_effect_3(Image& dst) const {

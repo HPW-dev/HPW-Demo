@@ -585,7 +585,7 @@ public:
     _cells.resize(_mx * _my);
     std::fill(_cells.begin(), _cells.end(), Cell{});
 
-    const uint CELLS = _min_cells + rndu_fast(_max_cells);
+    const uint CELLS = _min_cells + rndu_fast(_max_cells-1);
     cfor (_, CELLS) {
       const int x = rndu_fast(_mx-1);
       const int y = rndu_fast(_my-1);

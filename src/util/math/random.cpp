@@ -185,7 +185,7 @@ int32_t rnd_fast(int32_t rmin, int32_t rmax) {
   return (rnd_fast() % (rmax + std::abs(rmin) + 1)) - std::abs(rmin);
 }
 std::uint32_t rndu_fast(std::uint32_t rmax) {
-  return rndu_fast() % rmax;
+  return rndu_fast() % (rmax + 1);
 }
 real rndr_fast(real rmin, real rmax) {
   return (rndr_fast() * (rmax + std::abs(rmin))) - std::abs(rmin);
