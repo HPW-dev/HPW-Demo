@@ -3,6 +3,7 @@
 #define cauto const auto
 #define scauto static const auto
 #define crauto const auto&
+#define cpauto const auto*
 #define rauto auto&
 #define sconst static const
 #define constx constexpr static const

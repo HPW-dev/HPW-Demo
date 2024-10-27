@@ -342,11 +342,18 @@ void Scene_main_menu::draw_text(Image& dst) const {
   static Image shadow_layer_game_ver;
   shadow_layer = menu_text_layer;
   shadow_layer_game_ver = game_ver_layer;
+
   apply_invert(shadow_layer);
   apply_invert(shadow_layer_game_ver);
-  expand_color_4(shadow_layer, Pal8::black);
-  expand_color_8(shadow_layer_game_ver, Pal8::black);
-  expand_color_4(shadow_layer_game_ver, Pal8::black);
+
+  static Image expand_buffer;
+  expand_buffer = shadow_layer;
+  expand_color_4_buf(shadow_layer, expand_buffer, Pal8::black);
+
+  expand_buffer = shadow_layer_game_ver;
+  expand_color_8_buf(shadow_layer_game_ver, expand_buffer, Pal8::black);
+  expand_color_4_buf(shadow_layer_game_ver, expand_buffer, Pal8::black);
+
   insert<&blend_min>(dst, shadow_layer_game_ver);
   insert<&blend_min>(dst, shadow_layer);
 

@@ -78,8 +78,12 @@ void to_gray_accurate(Image& dst, cr<Image> src);
 
 // распространение пикселей от цвета color в 4-х направлениях
 void expand_color_4(Image& dst, const Pal8 color);
+// версия expand_color_4 с внешним tmp буффером
+void expand_color_4_buf(Image& dst, Image& tmp, const Pal8 color);
 // распространение пикселей от цвета color в 8-и направлениях
 void expand_color_8(Image& dst, const Pal8 color);
+// версия expand_color_8 с внешним tmp буффером
+void expand_color_8_buf(Image& dst, Image& tmp, const Pal8 color);
 
 void insert_blured(Image& dst, cr<Sprite> src, const Vec old_pos,
   const Vec cur_pos, blend_pf bf, Uid uid=0);

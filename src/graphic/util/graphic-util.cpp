@@ -402,24 +402,27 @@ void to_gray(Image& dst) {
 
 void expand_color_4(Image& dst, const Pal8 color) {
   Image buffer(dst);
+  cpauto buffer_ptr = buffer.data();
 
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    if (buffer(x, y) == color) {
+    if (*buffer_ptr == color) {
       dst.set(x+0, y-1, color);
       dst.set(x-1, y+0, color);
       dst.set(x+1, y+0, color);
       dst.set(x+0, y+1, color);
     }
+    ++buffer_ptr;
   }
-} // expand_color_4
+}
 
 void expand_color_8(Image& dst, const Pal8 color) {
   Image buffer(dst);
+  cpauto buffer_ptr = buffer.data();
 
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    if (buffer(x, y) == color) {
+    if (*buffer_ptr == color) {
       dst.set(x-1, y-1, color);
       dst.set(x+0, y-1, color);
       dst.set(x+1, y-1, color);
@@ -429,8 +432,45 @@ void expand_color_8(Image& dst, const Pal8 color) {
       dst.set(x+0, y+1, color);
       dst.set(x+1, y+1, color);
     }
+    ++buffer_ptr;
   }
-} // expand_color_8
+}
+
+void expand_color_4_buf(Image& dst, Image& tmp, const Pal8 color) {
+  assert(dst.size >= tmp.size);
+  cpauto tmp_ptr = tmp.data();
+
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    if (*tmp_ptr == color) {
+      dst.set(x+0, y-1, color);
+      dst.set(x-1, y+0, color);
+      dst.set(x+1, y+0, color);
+      dst.set(x+0, y+1, color);
+    }
+    ++tmp_ptr;
+  }
+}
+
+void expand_color_8_buf(Image& dst, Image& tmp, const Pal8 color) {
+  assert(dst.size >= tmp.size);
+  cpauto tmp_ptr = tmp.data();
+
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    if (*tmp_ptr == color) {
+      dst.set(x-1, y-1, color);
+      dst.set(x+0, y-1, color);
+      dst.set(x+1, y-1, color);
+      dst.set(x-1, y+0, color);
+      dst.set(x+1, y+0, color);
+      dst.set(x-1, y+1, color);
+      dst.set(x+0, y+1, color);
+      dst.set(x+1, y+1, color);
+    }
+    ++tmp_ptr;
+  }
+}
 
 void insert_blured(Image& dst, cr<Sprite> src,
 const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
