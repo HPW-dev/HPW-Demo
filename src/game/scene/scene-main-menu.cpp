@@ -142,7 +142,7 @@ void Scene_main_menu::init_bg() {
   #endif
   }}; // bg_patterns table
 
-  bg_pattern_pf = bg_patterns.rnd_fast();
+  bg_pattern_pf = bg_patterns.rnd_stable();
 } // init_bg
 
 Scene_main_menu::Scene_main_menu() {
