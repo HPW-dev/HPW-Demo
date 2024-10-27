@@ -70,7 +70,7 @@ void set_default() {
   graphic::enable_motion_blur = true;
   graphic::light_quality = Light_quality::medium;
   graphic::motion_blur_quality_reduct = true;
-  graphic::frame_skip = 2;
+  graphic::frame_skip = 3;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = true;
   #ifdef DEBUG

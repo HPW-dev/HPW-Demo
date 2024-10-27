@@ -28,7 +28,7 @@ inline bool enable_light         {true}; // отображает вспышки
 inline bool enable_heat_distort  {}; // отображает искажение воздуха
 inline bool disable_heat_distort_while_lag {true}; // выключать искажение воздуха при лагах
 inline Light_quality light_quality {Light_quality::medium}; // качество вcпышки
-inline uint frame_skip           {2}; // сколько кадров пропускать
+inline uint frame_skip           {3}; // сколько кадров пропускать
 inline bool auto_frame_skip      {true}; // пропускать кадры при тормозах игры
 inline bool fast_blur            {true}; // использовать оптимизированное размытие
 inline double gamma              {1}; // уровень гаммы
