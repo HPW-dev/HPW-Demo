@@ -140,6 +140,7 @@ void disable_pge() {
   g_plugin_init = {};
   g_lib_loader = {};
   g_pge_loaded = false;
+  save_pge_to_config();
 }
 
 // перенос значений с конфига в настройки плагина
