@@ -202,7 +202,9 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
 
   if (graphic::fast_blur) {
     to_gray_accurate(for_blur, for_blur);
-    boxblur_horizontal_fast(for_blur, Image(for_blur), 5);
+    static Image for_blur_tmp(rect.size.x, rect.size.y);
+    for_blur_tmp = for_blur;
+    boxblur_horizontal_fast(for_blur, for_blur_tmp, 5);
   } else {
     blur_hq(for_blur, Image(for_blur), 5);
   }
