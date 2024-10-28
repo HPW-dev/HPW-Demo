@@ -552,10 +552,12 @@ blend_pf find_blend_f(cr<Str> name) {
 void apply_contrast(Image& dst, real contrast) {
   assert(contrast >= 0);
 
-  for (rauto pix: dst) {
+  #pragma omp parallel for simd if (dst.size > 64 * 64)
+  cfor (i, dst.size) {
+    auto& pix = dst[i];
     cauto is_red = pix.is_red();
-    auto dst = (pix.to_real() - 0.5) * contrast;
-    dst += 0.5;
+    auto dst = (pix.to_real() - 0.5f) * contrast;
+    dst += 0.5f;
     pix = Pal8::from_real(dst, is_red);
   }
 }
