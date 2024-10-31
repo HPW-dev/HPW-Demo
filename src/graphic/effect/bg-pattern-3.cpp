@@ -681,7 +681,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     real height {};
   };
 
-  xorshift128_state random {
+  xorshift128_state seed {
     .a = 0x2452'AAAA,
     .b = 0x9799'7000,
     .c = 0x1234'5678,
@@ -697,7 +697,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     assert(*ret);
     return *ret;
   };
-  static crauto column_spr = load_and_check("resource/image/other/columns/4.png");
+  static crauto column_spr = load_and_check("resource/image/other/columns/2.png");
   // генерация градиента тени:
   static Image column_shadow;
   if (!column_shadow) {
@@ -712,22 +712,47 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
   }
 
   // генерация карты высот:
-  constexpr uint W = 4;
-  constexpr uint H = 3;
+  constexpr uint W = 100;
+  constexpr uint H = 100;
   static Vector<Column> columns (W * H);
+  for (auto& col: columns) {
+    constexpr real AMPLIFY_UP = 5.f;
+    constexpr real AMPLIFY_DOWN = 60.f;
+    col.height = ((xorshift128(seed) % 1'000) / 1'000.f) * AMPLIFY_UP;
+    col.height -= ((xorshift128(seed) % 1'000) / 1'000.f) * AMPLIFY_DOWN;
+  }
 
   // рендер
   scauto draw_column = [&](const Column src, const uint X, const uint Y) {
-    constexpr const Vec OFFSET(30, 150);
-    const Vec pos(
-      (X * 7) + (Y * 7),
-      -(X * 4 + src.height) + (Y * 4)
+    constexpr const Vec OFFSET(-350, 150);
+    constexpr const Vec SHIFT(6, 4);
+    const Vec shadow_pos(
+      (X * SHIFT.x) + (Y * SHIFT.x),
+      -(X * SHIFT.y) + (Y * SHIFT.y)
     );
-    insert(dst, column_spr, pos + OFFSET);
-    insert<&blend_sub_safe>(dst, column_shadow, pos + OFFSET);
+    const Vec column_pos(
+      (X * SHIFT.x) + (Y * SHIFT.x),
+      -(X * SHIFT.y + src.height) + (Y * SHIFT.y)
+    );
+    insert(dst, column_spr, column_pos + OFFSET);
+    insert<&blend_sub_safe>(dst, column_shadow, shadow_pos + OFFSET);
   };
 
   cfor (y, H)
   cfor (x, W)
     draw_column(columns[y * W + x], W - x - 1, y);
+  
+  // затенение и зернистость
+  static Image global_shadow;
+  if (!global_shadow) {
+    global_shadow.init(dst.X, dst.Y);
+    cfor (y, global_shadow.Y)
+    cfor (x, global_shadow.X) {
+      constexpr real POWER = 0.3;
+      real luma = (1.f - (y / scast<real>(global_shadow.Y))) * POWER;
+      luma += ((xorshift128(seed) % 1'000) / 1'000.f) * 0.1212f;
+      global_shadow(x, y) = Pal8::from_real(luma);
+    }
+  }
+  insert_fast<&blend_sub_safe>(dst, global_shadow);
 }
