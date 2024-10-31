@@ -448,6 +448,8 @@ uint size) {
 template <blend_pf bf>
 void insert_fast(Image& dst, cr<Image> src, int optional) {
   assert(dst.size >= src.size);
+
+  #pragma omp parallel for simd if (dst.size > 64 * 64)
   cfor (i, dst.size)
     dst[i] = bf(src[i], dst[i], optional);
 }

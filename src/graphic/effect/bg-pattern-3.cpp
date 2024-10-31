@@ -748,7 +748,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     global_shadow.init(dst.X, dst.Y);
     cfor (y, global_shadow.Y)
     cfor (x, global_shadow.X) {
-      constexpr real POWER = 0.3;
+      constexpr real POWER = 0.4;
       real luma = (1.f - (y / scast<real>(global_shadow.Y))) * POWER;
       luma += ((xorshift128(seed) % 1'000) / 1'000.f) * 0.1212f;
       global_shadow(x, y) = Pal8::from_real(luma);
