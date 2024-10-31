@@ -694,6 +694,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     cauto ptr = hpw::store_sprite->find(name);
     assert(ptr);
     cauto ret = ptr.get();
+    assert(*ret);
     return *ret;
   };
   static crauto column_spr = load_and_check("resource/image/other/columns/4.png");
@@ -710,23 +711,23 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     }
   }
 
-
   // генерация карты высот:
-  constexpr uint W = 1;
-  constexpr uint H = 1;
+  constexpr uint W = 4;
+  constexpr uint H = 3;
   static Vector<Column> columns (W * H);
 
   // рендер
   scauto draw_column = [&](const Column src, const uint X, const uint Y) {
     constexpr const Vec OFFSET(30, 150);
-    // src.height
-    const Vec pos(X, Y);
-    //insert(dst, column_spr, OFFSET + pos);
+    const Vec pos(
+      (X * 7) + (Y * 7),
+      -(X * 4 + src.height) + (Y * 4)
+    );
     insert(dst, column_spr, pos + OFFSET);
     insert<&blend_sub_safe>(dst, column_shadow, pos + OFFSET);
   };
 
   cfor (y, H)
   cfor (x, W)
-    draw_column(columns[y * W + x], x, y);
+    draw_column(columns[y * W + x], W - x - 1, y);
 }
