@@ -7,6 +7,7 @@
 #include <algorithm>
 #include "bg-pattern-3.hpp"
 #include "game/core/fonts.hpp"
+#include "core/sprites.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"
 #include "graphic/effect/noise.hpp"
@@ -673,4 +674,47 @@ void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
 
   if (bg_state % 2'000 == 0)
     simul.reset();
+}
+
+void bgp_nano_columns(Image& dst, const int bg_state) {
+  struct Column {
+    real height {};
+  };
+
+  xorshift128_state random {
+    .a = 0x2452'AAAA,
+    .b = 0x9799'7000,
+    .c = 0x1234'5678,
+    .d = 0x0F0C'6869
+  };
+
+  // ресурсы для рендера:
+  scauto load_and_check = [](cr<Str> name)->cr<Sprite> {
+    assert(hpw::store_sprite);
+    cauto ptr = hpw::store_sprite->find(name);
+    assert(ptr);
+    cauto ret = ptr.get();
+    return *ret;
+  };
+  static crauto column_spr = load_and_check("resource/image/other/columns/4.png");
+  // генерация градиента тени:
+
+
+  // генерация карты высот:
+  constexpr uint W = 1;
+  constexpr uint H = 1;
+  static Vector<Column> columns (W * H);
+
+  // рендер
+  scauto draw_column = [&](const Column src, const uint X, const uint Y) {
+    constexpr const Vec OFFSET(5, 150);
+    // src.height
+    const Vec pos(X, Y);
+    //insert(dst, column_spr, OFFSET + pos);
+    insert(dst, column_spr, pos + OFFSET);
+  };
+
+  cfor (y, H)
+  cfor (x, W)
+    draw_column(columns[y * W + x], x, y);
 }

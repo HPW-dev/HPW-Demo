@@ -40,3 +40,5 @@ void bgp_rand_cellular_simul(Image& dst, const int bg_state);
 void bgp_rand_cellular_simul_x2(Image& dst, const int bg_state);
 // случайные клеточные симуляции
 void bgp_rand_cellular_simul_x4(Image& dst, const int bg_state);
+// нано0столбики из узора с пинтереста
+void bgp_nano_columns(Image& dst, const int bg_state);
