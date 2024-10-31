@@ -20,6 +20,7 @@
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
+#include "util/str-util.hpp"
 #include "util/rnd-table.hpp"
 
 void bgp_liquid(Image& dst, const int bg_state) {
@@ -679,22 +680,20 @@ void bgp_rand_cellular_simul(Image& dst, const int bg_state) {
 void bgp_nano_columns(Image& dst, const int bg_state) {
   static Image prerender;
 
-  if (!prerender || ((bg_state % 700) == 0)) {
+  if (!prerender || ((bg_state % 200) == 0)) {
     prerender.init(dst.X, dst.Y);
 
-    struct Column {
-      real height {};
-    };
-
     xorshift128_state seed {
-      .a = 0x2452'AAAA + scast<uint>(bg_state),
-      .b = 0x9799'7000 + scast<uint>(bg_state),
-      .c = 0x1234'5678 + scast<uint>(bg_state),
-      .d = 0x0F0C'6869 + scast<uint>(bg_state)
+      .a = scast<uint>(bg_state + 0) + 0xAA11'BB22,
+      .b = scast<uint>(bg_state + 1) + 0x0007'9799,
+      .c = scast<uint>(bg_state + 2) + 0x1234'4321,
+      .d = scast<uint>(bg_state + 3) + 0xDEAD'BEEF,
     };
+    auto random = [&]{ return xorshift128(seed); };
+    auto randomf = [&]->real { return (random() % 10'000) / 10'000.f; };
 
     // ресурсы для рендера:
-    scauto load_and_check = [](cr<Str> name)->cr<Sprite> {
+    auto load_and_check = [](cr<Str> name)->cr<Sprite> {
       assert(hpw::store_sprite);
       cauto ptr = hpw::store_sprite->find(name);
       assert(ptr);
@@ -702,7 +701,8 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
       assert(*ret);
       return *ret;
     };
-    static crauto column_spr = load_and_check("resource/image/other/columns/2.png");
+    cauto num = random() % 5;
+    auto column_spr = load_and_check("resource/image/other/columns/" + n2s(num) + ".png");
     // генерация градиента тени:
     static Image column_shadow;
     if (!column_shadow) {
@@ -719,16 +719,19 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     // генерация карты высот:
     constexpr uint W = 100;
     constexpr uint H = 100;
+    struct Column {
+      real height {};
+    };
     Vector<Column> columns (W * H);
     for (auto& col: columns) {
       constexpr real AMPLIFY_UP = 5.f;
       constexpr real AMPLIFY_DOWN = 60.f;
-      col.height = ((xorshift128(seed) % 1'000) / 1'000.f) * AMPLIFY_UP;
-      col.height -= ((xorshift128(seed) % 1'000) / 1'000.f) * AMPLIFY_DOWN;
+      col.height =  randomf() * AMPLIFY_UP;
+      col.height -= randomf() * AMPLIFY_DOWN;
     }
 
     // рендер
-    scauto draw_column = [&](const Column src, const uint X, const uint Y) {
+    auto draw_column = [&](const Column src, const uint X, const uint Y) {
       constexpr const Vec OFFSET(-350, 150);
       constexpr const Vec SHIFT(6, 4);
       const Vec shadow_pos(
@@ -742,7 +745,6 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
       insert(prerender, column_spr, column_pos + OFFSET);
       insert<&blend_sub_safe>(prerender, column_shadow, shadow_pos + OFFSET);
     };
-
     cfor (y, H)
     cfor (x, W)
       draw_column(columns[y * W + x], W - x - 1, y);
@@ -753,7 +755,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
     cfor (x, global_shadow.X) {
       constexpr real POWER = 0.4;
       real luma = (1.f - (y / scast<real>(global_shadow.Y))) * POWER;
-      luma += ((xorshift128(seed) % 1'000) / 1'000.f) * 0.1212f;
+      luma += randomf() * 0.1212f;
       global_shadow(x, y) = Pal8::from_real(luma);
     }
     insert_fast<&blend_sub_safe>(prerender, global_shadow);
