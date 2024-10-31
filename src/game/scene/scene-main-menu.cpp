@@ -169,7 +169,7 @@ void Scene_main_menu::update(const Delta_time dt) {
     init_menu();
 }
 
-void Scene_main_menu::draw_bg(Image& dst) const {
+void Scene_main_menu::draw_bg(Image& dst) const noexcept {
   bg_pattern_pf(dst, std::floor(pps(bg_state)));
 }
 
@@ -191,11 +191,11 @@ void Scene_main_menu::init_logo() {
   logo_pos.y += 50;
 } // init_logo
 
-void Scene_main_menu::draw_logo(Image& dst) const {
+void Scene_main_menu::draw_logo(Image& dst) const noexcept {
   insert<&blend_diff>(dst, *logo, logo_pos);
 }
 
-void Scene_main_menu::draw_wnd(Image& dst) const {
+void Scene_main_menu::draw_wnd(Image& dst) const noexcept {
   // вырезаем часть фона и блюрим
   constexpr const Rect rect(120, 50, 270, 280);
   static Image for_blur(rect.size.x, rect.size.y);
@@ -220,7 +220,7 @@ void Scene_main_menu::draw_wnd(Image& dst) const {
   draw_rect<&blend_diff>(dst, rect, Pal8::white);
 } // draw_wnd
 
-void Scene_main_menu::draw(Image& dst) const {
+void Scene_main_menu::draw(Image& dst) const noexcept {
   draw_bg(dst);
   draw_wnd(dst);
   draw_logo(dst);
@@ -323,7 +323,7 @@ void bg_copy_4(Image& dst, const int state) {
   insert(dst, buffer, pos);
 }
 
-void Scene_main_menu::draw_text(Image& dst) const {
+void Scene_main_menu::draw_text(Image& dst) const noexcept {
   // буффер текста меню
   constexpr Rect MENU_TXT_RECT (140, 200, 270, 280);
   static Image menu_txt;

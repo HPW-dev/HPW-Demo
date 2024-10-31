@@ -23,13 +23,13 @@ class Scene_main_menu final: public Scene {
   std::function<void (Image& dst, const int bg_state)> bg_pattern_pf {};
   Timer change_bg_timer {50}; // таймер сменяющий фон
 
-  void draw_bg(Image& dst) const;
   void init_menu();
   void init_logo();
   void init_bg();
-  void draw_logo(Image& dst) const;
-  void draw_text(Image& dst) const;
-  void draw_wnd(Image& dst) const;
+  void draw_bg(Image& dst) const noexcept;
+  void draw_logo(Image& dst) const noexcept;
+  void draw_text(Image& dst) const noexcept;
+  void draw_wnd(Image& dst) const noexcept;
   void cache_logo_names();
   void next_bg();
   Unique<Sprite> prepare_logo(cr<Str> name) const;
@@ -40,6 +40,6 @@ class Scene_main_menu final: public Scene {
 public:
   Scene_main_menu();
   ~Scene_main_menu();
-  void update(const Delta_time dt) override;
-  void draw(Image& dst) const override;
+  void update(const Delta_time dt) override final;
+  void draw(Image& dst) const noexcept override final;
 };

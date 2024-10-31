@@ -26,9 +26,9 @@ Vec normalize_graphic(const Vec src) {
   return src / len;
 }
 
-Vec floor(const Vec src) { return Vec(std::floor(src.x), std::floor(src.y)); }
-Vec ceil(const Vec src) { return Vec(std::ceil(src.x), std::ceil(src.y)); }
-Vec abs(const Vec src) { return Vec(std::abs(src.x), std::abs(src.y)); }
+Vec floor(const Vec src) noexcept { return Vec(std::floor(src.x), std::floor(src.y)); }
+Vec ceil(const Vec src) noexcept { return Vec(std::ceil(src.x), std::ceil(src.y)); }
+Vec abs(const Vec src) noexcept { return Vec(std::abs(src.x), std::abs(src.y)); }
 
 real rad_between_vecs(const Vec a, const Vec b) {
   cauto dot = a.x * b.x + a.y * b.y; // dot product between [x1, y1] && [x2, y2]

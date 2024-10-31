@@ -123,7 +123,7 @@ Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my) {
   return dst;
 }
 
-void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my) {
+void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my) noexcept {
   assert(src);
   assert(dst.size >= mx * my);
   assert(mx > 0);
@@ -211,8 +211,7 @@ void insert_x2(Image& dst, cr<Image> src, Vec pos) {
   insert(dst, insert_x2_buf, pos);
 } // insert_x2
 
-Rect get_insertion_bound(cr<Image> dst, const Vec pos,
-cr<Image> src) {
+Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept {
   Rect bound( Vec{}, Vec(src.X, src.Y) );
 
   // уход за право/низ
@@ -350,7 +349,7 @@ const Pal8 color) {
   }
 }
 
-void add_brightness(Image& dst, const Pal8 brightness) {
+void add_brightness(Image& dst, const Pal8 brightness) noexcept {
   return_if (brightness == 0);
 
   #pragma omp parallel for simd if (dst.size >= 64 * 64)
@@ -358,7 +357,7 @@ void add_brightness(Image& dst, const Pal8 brightness) {
     dst[i] = blend_sub_safe(brightness, dst[i]);
 }
 
-void sub_brightness(Image& dst, const Pal8 brightness) {
+void sub_brightness(Image& dst, const Pal8 brightness) noexcept {
   return_if (brightness == 0);
 
   #pragma omp parallel for simd if (dst.size >= 64 * 64)
@@ -366,7 +365,7 @@ void sub_brightness(Image& dst, const Pal8 brightness) {
     dst[i] = blend_sub_safe(brightness, dst[i]);
 }
 
-void apply_invert(Image& dst) {
+void apply_invert(Image& dst) noexcept {
   #pragma omp parallel for simd if (dst.size >= 64 * 64)
   cfor (i, dst.size)
     dst[i].apply_invert();
@@ -377,7 +376,7 @@ void to_red(Image& dst) {
     pix = Pal8::from_real(pix.to_real(), true);
 }
 
-void to_gray_accurate(Image& dst, cr<Image> src) {
+void to_gray_accurate(Image& dst, cr<Image> src) noexcept {
   assert(src);
   assert(dst);
   assert(src.size == dst.size);
@@ -549,7 +548,7 @@ blend_pf find_blend_f(cr<Str> name) {
   return {};
 } // insert_blured
 
-void apply_contrast(Image& dst, real contrast) {
+void apply_contrast(Image& dst, real contrast) noexcept {
   assert(contrast >= 0);
 
   #pragma omp parallel for simd if (dst.size > 64 * 64)
@@ -562,8 +561,9 @@ void apply_contrast(Image& dst, real contrast) {
   }
 }
 
-void apply_brightness(Image& dst, const int val) {
+void apply_brightness(Image& dst, const int val) noexcept {
   assert(dst);
+  
   if (val < 0) {
     for (rauto pix: dst)
       pix.sub(val * -1);

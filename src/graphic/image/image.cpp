@@ -106,7 +106,7 @@ Pal8& Image::get(int x, int y, Image_get mode, Pal8& out_of_bound_val) noexcept 
   return out_of_bound_val;
 }
 
-bool Image::index_bound(int& x, int& y, Image_get mode) const {
+bool Image::index_bound(int& x, int& y, Image_get mode) const noexcept {
   switch (mode) {
     default:
     case Image_get::NONE: // fast ver of x >= 0 && x < X && y >= 0...:
@@ -146,7 +146,7 @@ bool Image::index_bound(int& x, int& y, Image_get mode) const {
   return true;
 } // index_bound x y
 
-bool Image::index_bound(int& i, Image_get mode) const {
+bool Image::index_bound(int& i, Image_get mode) const noexcept {
   if (X < 1 || Y < 1)
     return false;
   switch (mode) {
@@ -205,12 +205,12 @@ void Image::free() noexcept {
   ccast<int&>(size) = 0;
 }
 
-void Image::set(int i, const Pal8 col, blend_pf bf, int optional) {
+void Image::set(int i, const Pal8 col, blend_pf bf, int optional) noexcept {
   auto src = this->get(i);
   this->set(i, bf(col, src, optional));
 }
 
-void Image::set(int x, int y, const Pal8 col, blend_pf bf, int optional) {
+void Image::set(int x, int y, const Pal8 col, blend_pf bf, int optional) noexcept {
   auto src = this->get(x, y);
   this->set(x, y, bf(col, src, optional));
 }

@@ -35,7 +35,7 @@ void Unifont::init(cr<File> file, int height, bool mono) {
     _load_glyph(i);
 }
 
-int Unifont::text_width(cr<utf32> text) const {
+int Unifont::text_width(cr<utf32> text) const noexcept {
   int size = 0;
   int max_size = 0;
 

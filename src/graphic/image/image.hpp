@@ -26,8 +26,8 @@ public:
   Image& operator = (cr<Image> img) noexcept;
 
   inline operator bool() const noexcept { return !pix.empty(); }
-  inline Pal8* data() { return pix.data(); }
-  inline cp<Pal8> data() const { return pix.data(); }
+  inline Pal8* data() noexcept { return pix.data(); }
+  inline cp<Pal8> data() const noexcept { return pix.data(); }
 
   void init(int nx=0, int ny=0, std::optional<Pal8> col={}) noexcept;
   void init(cr<Image> img) noexcept;
@@ -61,39 +61,39 @@ public:
 
   // fast set without cheks
   template <blend_pf bf = &blend_past>
-  void fast_set(int i, const Pal8 col, int optional) {
+  void fast_set(int i, const Pal8 col, int optional) noexcept {
     auto &dst_pix {pix[i]};
     dst_pix = bf(col, dst_pix, optional);
   }
 
   // fast set without cheks
   template <blend_pf bf = &blend_past>
-  void fast_set(int x, int y, const Pal8 col, int optional) {
+  void fast_set(int x, int y, const Pal8 col, int optional) noexcept {
     auto& dst_pix = pix[y * X + x];
     dst_pix = bf(col, dst_pix, optional);
   }
   
   // fast set with cheks
   template <blend_pf bf = &blend_past> 
-  void set(int i, const Pal8 col, int optional=0) {
+  void set(int i, const Pal8 col, int optional=0) noexcept {
     if (uint(i) < uint(size))
       fast_set<bf>(i, col, optional);
   }
 
   // fast set with cheks
   template <blend_pf bf = &blend_past> 
-  void set(int x, int y, const Pal8 col, int optional=0) {
+  void set(int x, int y, const Pal8 col, int optional=0) noexcept {
     if (uint(x) < uint(X) && uint(y) < uint(Y))
       fast_set<bf>(x, y, col, optional);
   }
 
   // fast set with cheks + blend func
-  void set(int i, const Pal8 col, blend_pf bf, int optional);
+  void set(int i, const Pal8 col, blend_pf bf, int optional) noexcept;
   // fast set with cheks + blend func
-  void set(int x, int y, const Pal8 col, blend_pf bf, int optional);
+  void set(int x, int y, const Pal8 col, blend_pf bf, int optional) noexcept;
 
   // изменение индексов с учётом границ картинки
-  bool index_bound(int& x, int& y, Image_get mode = {}) const;
+  bool index_bound(int& x, int& y, Image_get mode = {}) const noexcept;
   // изменение индексов с учётом границ картинки
-  bool index_bound(int& i, Image_get mode = {}) const;
+  bool index_bound(int& i, Image_get mode = {}) const noexcept;
 }; // Image

@@ -36,7 +36,7 @@ void Sprite::init(int new_x, int new_y) noexcept {
   m_mask.init(new_x, new_y, Pal8::mask_invisible);
 }
 
-Sprite::operator bool() const {
+Sprite::operator bool() const noexcept {
   return_if(!m_image, false);
   return_if(!m_mask, false);
   return true;

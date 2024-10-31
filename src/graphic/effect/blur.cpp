@@ -73,7 +73,7 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
     dst(x, y) = dst(src_gray.X - window_sz - 1, y);
 }
 
-void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
+void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz) noexcept {
   assert(dst);
   assert(src);
   assert(std::addressof(dst) != std::addressof(src));
@@ -84,7 +84,7 @@ void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz
   boxblur_horizontal_fast(dst, src_gray, window_sz);
 }
 
-void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) {
+void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) noexcept {
   assert(dst);
   assert(src);
   assert(std::addressof(dst) != std::addressof(src));

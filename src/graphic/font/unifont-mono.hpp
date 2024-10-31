@@ -3,7 +3,7 @@
 
 // шрифт для unifont.ttf (моноширинный)
 class Unifont_mono final: public Unifont {
-  Shared<Unifont::Glyph> _load_glyph(char32_t ch) const override;
+  Shared<Unifont::Glyph> _load_glyph(char32_t ch) const override final;
 
 public: 
   // @param width if = 0 - use same as height

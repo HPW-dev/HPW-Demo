@@ -1,6 +1,6 @@
 #include "rect.hpp"
 
-bool intersect(const Rect a, const Rect b) {
+bool intersect(const Rect a, const Rect b) noexcept {
   cauto x1 = a.pos.x;
   cauto y1 = a.pos.y;
   cauto x2 = b.pos.x;

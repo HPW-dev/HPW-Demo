@@ -21,15 +21,15 @@ public:
   Font() = default;
   virtual ~Font() = default;
   // узнать ширину текста
-  virtual int text_width(cr<utf32> text) const;
+  virtual int text_width(cr<utf32> text) const noexcept;
   // узнать высоту текста
-  virtual int text_height(cr<utf32> text) const;
+  virtual int text_height(cr<utf32> text) const noexcept;
   // размер текста в 2D векторе
-  virtual Vec text_size(cr<utf32> text) const;
+  virtual Vec text_size(cr<utf32> text) const noexcept;
   // отобразить текст
   virtual void draw(Image& dst, const Vec pos, cr<utf32> text,
     blend_pf bf = &blend_past, const int optional = 0) const = 0;
-  inline crauto w() const { return w_; }
-  inline crauto h() const { return h_; }
-  inline crauto space() const { return space_; }
+  inline crauto w() const noexcept { return w_; }
+  inline crauto h() const noexcept { return h_; }
+  inline crauto space() const noexcept { return space_; }
 }; // Font

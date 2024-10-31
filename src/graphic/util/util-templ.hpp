@@ -13,11 +13,11 @@
 #include "util/math/rect.hpp"
 #include "util/error.hpp"
 
-extern Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src);
+extern Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept;
 
 // нарисовать прямоуг-к
 template <blend_pf bf = &blend_past>
-void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col);
+void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) noexcept;
 
 // нарисовать залитый прямоуг-к
 template <blend_pf bf = &blend_past>
@@ -30,7 +30,7 @@ void draw_circle_filled(Image& dst, const Vec pos,
 
 // копирует одну картинку в другую
 template <blend_pf bf = &blend_past>
-void insert(Image& dst, cr<Image> src, Vec pos={}, int optional=0);
+void insert(Image& dst, cr<Image> src, Vec pos={}, int optional=0) noexcept;
 
 // вставка с шахматным миганием
 template<blend_pf bf = &blend_past>
@@ -48,7 +48,7 @@ void draw_line(Image& dst, Vec p1, const Vec p2, Pal8 color);
 
 // копирует спрайт в картинку (шаблонная версия)
 template <blend_pf bf = &blend_past>
-void insert(Image& dst, cr<Sprite> src, Vec pos={}, int optional=0);
+void insert(Image& dst, cr<Sprite> src, Vec pos={}, int optional=0) noexcept;
 
 // круг без заливки
 template <blend_pf bf = &blend_past>
@@ -71,7 +71,7 @@ void insert_fast(Image& dst, cr<Image> src, int optional={});
 // ----------------------- impl ----------------------------------
 
 template <blend_pf bf>
-void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) {
+void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) noexcept {
   return_if( !dst);
   return_if(rect.size.x <= 2 || rect.size.y <= 2);
   const int rect_pos_x = std::round(rect.pos.x);
@@ -133,7 +133,7 @@ int radius, const Pal8 col) {
 } // draw_circle_filled
 
 template <blend_pf bf>
-void insert(Image& dst, cr<Image> src, Vec pos, int optional) {
+void insert(Image& dst, cr<Image> src, Vec pos, int optional) noexcept {
   return_if( !src || !dst);
   
   pos = floor(pos);
@@ -342,7 +342,7 @@ void draw_line(Image& dst, Vec _p1, const Vec _p2, Pal8 color) {
 } // draw_line
 
 template <blend_pf bf>
-void insert(Image& dst, cr<Sprite> src, Vec pos, int optional) {
+void insert(Image& dst, cr<Sprite> src, Vec pos, int optional) noexcept {
   return_if( !src || !dst);
   rauto src_image {src.image()};
   rauto src_mask {src.mask()};

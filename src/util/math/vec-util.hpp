@@ -10,9 +10,9 @@ Vec rotate_deg(const Vec center, const Vec src, real degree);
 real length(const Vec src);
 Vec normalize_stable(const Vec src);
 Vec normalize_graphic(const Vec src);
-[[nodiscard]] Vec floor(const Vec src);
-[[nodiscard]] Vec ceil(const Vec src);
-[[nodiscard]] Vec abs(const Vec src);
+[[nodiscard]] Vec floor(const Vec src) noexcept;
+[[nodiscard]] Vec ceil(const Vec src) noexcept;
+[[nodiscard]] Vec abs(const Vec src) noexcept;
 // угол между вектором в радианах
 real rad_between_vecs(const Vec a, const Vec b);
 // угол между вектором

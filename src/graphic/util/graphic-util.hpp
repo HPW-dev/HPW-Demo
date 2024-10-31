@@ -35,7 +35,7 @@ void insert_x2(Image& dst, cr<Image> src, Vec pos);
 // вырезание области без проверко границ
 [[nodiscard]] Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my);
 // вариант fast_cut, где буффер dst уже выделен
-void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my);
+void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my) noexcept;
 
 // вырезание области (безопасное)
 [[nodiscard]] Image cut(cr<Image> src, cr<Rect> rect,
@@ -66,15 +66,15 @@ void insert(Image& dst, cr<Sprite> src, Vec pos, blend_pf bf,
 // вставить картинку в картинку (быстро, без проверок)
 void insert_fast(Image& dst, cr<Image> src);
 
-void add_brightness(Image& dst, const Pal8 brightness);
-void sub_brightness(Image& dst, const Pal8 brightness);
-void apply_invert(Image& dst);
+void add_brightness(Image& dst, const Pal8 brightness) noexcept;
+void sub_brightness(Image& dst, const Pal8 brightness) noexcept;
+void apply_invert(Image& dst) noexcept;
 // превратить все цвета в красный
 void to_red(Image& dst);
 // превратить все оттенки в серый
 void to_gray(Image& dst);
 // как to_gray, но правильно перевдит красный канал в серый
-void to_gray_accurate(Image& dst, cr<Image> src);
+void to_gray_accurate(Image& dst, cr<Image> src) noexcept;
 
 // распространение пикселей от цвета color в 4-х направлениях
 void expand_color_4(Image& dst, const Pal8 color);
@@ -88,16 +88,15 @@ void expand_color_8_buf(Image& dst, Image& tmp, const Pal8 color);
 void insert_blured(Image& dst, cr<Sprite> src, const Vec old_pos,
   const Vec cur_pos, blend_pf bf, Uid uid=0);
 // определяет какую область src надо копировать в пределах dst
-[[nodiscard]] Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src);
+[[nodiscard]] Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept;
 // контраст (0 .. 1 .. inf)
-void apply_contrast(Image& dst, real contrast);
+void apply_contrast(Image& dst, real contrast) noexcept;
 // меняет яркость картинки
-void apply_brightness(Image& dst, const int val);
+void apply_brightness(Image& dst, const int val) noexcept;
 // рисует плавную кривую (сплайн)
 void draw_spline(Image& dst, const Vec a, const Vec b,
   const Vec c, const Vec d, const Pal8 color,
   const blend_pf bf=blend_past, const uint quality=30);
-
 // рисует линию между двумя точками
 void draw_line(Image& dst, Vec _p1, const Vec _p2,
   const Pal8 color, const blend_pf bf);

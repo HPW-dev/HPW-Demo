@@ -22,10 +22,10 @@ public:
   explicit Unifont(cr<File> file, int height=12, bool mono=true);
   ~Unifont() = default;
   // узнать ширину текста
-  int text_width(cr<utf32> text) const override;
+  int text_width(cr<utf32> text) const noexcept override final;
   // отобразить текст
   void draw(Image& dst, const Vec pos, cr<utf32> text,
-    blend_pf bf=&blend_diff, const int optional=0) const override;
+    blend_pf bf=&blend_diff, const int optional=0) const override final;
   
 private:
   bool mono_ {};
