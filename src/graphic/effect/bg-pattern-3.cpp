@@ -698,6 +698,17 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
   };
   static crauto column_spr = load_and_check("resource/image/other/columns/4.png");
   // генерация градиента тени:
+  static Image column_shadow;
+  if (!column_shadow) {
+    column_shadow.init(column_spr.X(), column_spr.Y());
+    assert(column_shadow.Y);
+    cfor (y, column_shadow.Y)
+    cfor (x, column_shadow.X) {
+      constexpr real POWER = 0.6;
+      const real luma = (y / scast<real>(column_shadow.Y)) * POWER;
+      column_shadow(x, y) = Pal8::from_real(luma);
+    }
+  }
 
 
   // генерация карты высот:
@@ -707,11 +718,12 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
 
   // рендер
   scauto draw_column = [&](const Column src, const uint X, const uint Y) {
-    constexpr const Vec OFFSET(5, 150);
+    constexpr const Vec OFFSET(30, 150);
     // src.height
     const Vec pos(X, Y);
     //insert(dst, column_spr, OFFSET + pos);
     insert(dst, column_spr, pos + OFFSET);
+    insert<&blend_sub_safe>(dst, column_shadow, pos + OFFSET);
   };
 
   cfor (y, H)
