@@ -195,7 +195,7 @@ def accept_params():
       '-fno-omit-frame-pointer'
     ]
     hpw_config.cxx_flags.extend([_asan_opts])
-    hpw_config.cxx_flags.extend([_asan_opts])
+    hpw_config.cxx_ldflags.extend([_asan_opts])
 
   # Log mode
   match hpw_config.log_mode:
