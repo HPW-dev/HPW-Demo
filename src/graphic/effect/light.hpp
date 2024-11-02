@@ -26,17 +26,18 @@ private:
   void draw_light_sphere(Image& dst, const Vec pos, const real tmp_radius) const;
   void draw_fullscreen_blink(Image& dst) const;
   void draw_light_star(Image& dst, const Vec pos, const real tmp_radius) const;
-  real get_new_radius() const; // получить радиус с учётом флагов
+  [[nodiscard]] real get_new_radius() const; // получить радиус с учётом флагов
+  [[nodiscard]] real effect_ratio() const; // вернет значение в 0..1 зависимости от оставшегося времени и флагов 
 
 public:
   struct Flags {
-    bool repeat: 1 {false};
-    bool decrease_radius: 1 {true};
-    bool invert_decrease_radius: 1 {false};
-    bool random_radius: 1 {true};
-    bool star: 1 {true}; // рисовать во вспышке обычную звёздочку
-    bool star_diagonal: 1 {true}; // рисовать во вспышке диагональную звёздочку
-    bool no_sphere: 1 {false}; // не рисовать круглую вспышку
+    bool repeat                 : 1 {};
+    bool decrease_radius        : 1 {true};
+    bool invert_decrease_radius : 1 {};
+    bool random_radius          : 1 {true};
+    bool star                   : 1 {true}; // рисовать во вспышке обычную звёздочку
+    bool star_diagonal          : 1 {true}; // рисовать во вспышке диагональную звёздочку
+    bool no_sphere              : 1 {}; // не рисовать круглую вспышку
   };
 
   blend_pf bf {&blend_max};

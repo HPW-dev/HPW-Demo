@@ -78,10 +78,12 @@ bool Light::update(const Delta_time dt) {
 
 void Light::draw(Image& dst, const Vec pos) const {
   assert(dst);
+  
   // выйти, если таймер вспышки кончился и она не бесконечная
   return_if (cur_duration <= 0 && !flags.repeat);
 
   cauto tmp_radius = get_new_radius();
+  return_if (tmp_radius <= 0);
 
   if (graphic::light_quality != Light_quality::low) {
     // когда вспышка слишком больгого размера, сверкает весь экран
@@ -143,13 +145,13 @@ void Light::draw_fullscreen_blink(Image& dst) const {
 }
 
 void Light::draw_light_star(Image& dst, const Vec pos, const real tmp_radius) const {
-  return_if(cur_duration <= 0);
-  assert(max_duration > 0);
+  assert(max_duration >= 0);
+  return_if(cur_duration <= 0 && !flags.repeat);
   // на низких настройках можно мигать при тормозах
   return_if (graphic::light_quality == Light_quality::low &&
     graphic::render_lag && ((graphic::frame_count & 1) == 0));
 
-  cauto ratio = scast<real>(cur_duration) / max_duration;
+  cauto ratio = effect_ratio();
   auto range = tmp_radius * 1.5;
   cauto ceiled_range = std::ceil(range);
   return_if (ceiled_range < 1);
@@ -193,10 +195,13 @@ void Light::make_lines(Image& dst) {
 }
 
 real Light::get_new_radius() const {
-  cauto ratio = safe_div(scast<real>(cur_duration), max_duration);
-  auto ret = radius;
+  cauto ratio = effect_ratio();
+
+  real ret;
   if (flags.random_radius)
     ret = rndr_fast(0, radius * ratio);
+  else
+    ret = radius;
 
   if (flags.decrease_radius) {
     if (flags.invert_decrease_radius)
@@ -206,4 +211,10 @@ real Light::get_new_radius() const {
   }
 
   return ret;
+}
+
+real Light::effect_ratio() const {
+  if (flags.repeat && max_duration == 0)
+    return 1;
+  return safe_div(scast<real>(cur_duration), max_duration);
 }
