@@ -23,7 +23,7 @@ private:
   real cur_duration {};
   real max_duration {};
 
-  void draw_light_sphere(Image& dst, const Vec pos, const real tmp_radius) const;
+  void draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const;
   void draw_fullscreen_blink(Image& dst) const;
   void draw_light_star(Image& dst, const Vec pos, const real tmp_radius) const;
   [[nodiscard]] real get_new_radius() const; // получить радиус с учётом флагов

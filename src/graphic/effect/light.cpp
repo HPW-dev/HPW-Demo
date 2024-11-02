@@ -31,15 +31,19 @@ void cache_light_spheres() {
   #pragma omp parallel for schedule(dynamic)
   cfor (i, count) {
     cauto R = (i + 1) * cache_spheres_steps;
-    // нарисовать сферический градиент на чёрной картинке
-    auto sphere_sz = std::ceil(R * 2);
-    auto center = Vec(R, R);
+    assert(R > 0);
+
+    // нарисовать сферический градиент на чёрном фоне
+    cauto sphere_sz = std::ceil(R * 2);
+    cauto center = Vec(R, R);
     Image sphere(sphere_sz, sphere_sz);
+
     cfor (y, sphere_sz)
     cfor (x, sphere_sz) {
-      auto dist = distance(center, Vec(x, y));
-      auto ratio = 1.0 - (dist / R);
-      sphere(x, y) = Pal8::from_real(ratio);
+      cauto dist = distance(center, Vec(x, y));
+      cauto ratio = 1.0f - (dist / R);
+      cauto light = std::pow(ratio * ratio, 2.2f); // гамма-коррекция + формула освещения
+      sphere(x, y) = Pal8::from_real(light);
     }
     Light::make_lines(sphere);
     #pragma omp critical (write_to_cached_spheres)
@@ -104,18 +108,25 @@ void Light::set_duration(real new_duration) {
   cur_duration = max_duration = new_duration;
 }
 
-void Light::draw_light_sphere(Image& dst, const Vec pos, const real tmp_radius) const {
+void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const {
+  return_if(tmp_radius <= 0);
+  // из-за гамма-коррекции свет может быть тусклее, поэтому он усиливается
+  constexpr real LIGHT_AMPLIFY = 2.3f;
+  static_assert(LIGHT_AMPLIFY > 0);
+  tmp_radius *= LIGHT_AMPLIFY;
+
   if (graphic::light_quality == Light_quality::high) {
-    return_if(tmp_radius <= 0);
     // нарисовать сферический градиент на чёрной картинке
-    auto sphere_sz = std::ceil(tmp_radius * 2);
-    auto center = Vec(tmp_radius, tmp_radius);
+    cauto sphere_sz = std::ceil(tmp_radius * 2);
+    cauto center = Vec(tmp_radius, tmp_radius);
     Image sphere(sphere_sz, sphere_sz);
+
     cfor (y, sphere_sz)
     cfor (x, sphere_sz) {
-      auto dist = distance(center, Vec(x, y));
-      auto ratio = 1.0 - (dist / tmp_radius);
-      sphere(x, y) = Pal8::from_real(ratio);
+      cauto dist = distance(center, Vec(x, y));
+      cauto ratio = 1.0 - (dist / tmp_radius);
+      cauto light = std::pow(ratio * ratio, 2.2f); // гамма-коррекция + формула освещения
+      sphere(x, y) = Pal8::from_real(light);
     }
     make_lines(sphere);
 
