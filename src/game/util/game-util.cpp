@@ -528,6 +528,14 @@ void load_sounds() {
   };
 }
 
+[[nodiscard]] Vec rnd_screen_pos_fast() {
+  assert(graphic::canvas);
+  return Vec {
+    rndr_fast(0, graphic::canvas->X),
+    rndr_fast(0, graphic::canvas->Y)
+  };
+}
+
 void set_random_palette() {
   cauto sprites = hpw::archive->get_all_names(false);;
   cauto filter = [](cr<Str> src) {

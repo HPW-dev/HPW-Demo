@@ -42,7 +42,7 @@ void cache_light_spheres() {
     cfor (x, sphere_sz) {
       cauto dist = distance(center, Vec(x, y));
       cauto ratio = 1.0f - (dist / R);
-      cauto light = std::pow(ratio * ratio, 2.2f); // гамма-коррекция + формула освещения
+      cauto light = std::pow(ratio * ratio, Light::GAMMA_CORR); // гамма-коррекция + формула освещения
       sphere(x, y) = Pal8::from_real(light);
     }
     Light::make_lines(sphere);
@@ -110,8 +110,6 @@ void Light::set_duration(real new_duration) {
 
 void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const {
   return_if(tmp_radius <= 0);
-  // из-за гамма-коррекции свет может быть тусклее, поэтому он усиливается
-  constexpr real LIGHT_AMPLIFY = 2.3333333f;
   static_assert(LIGHT_AMPLIFY > 0);
   tmp_radius *= LIGHT_AMPLIFY;
 
@@ -125,7 +123,7 @@ void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const 
     cfor (x, sphere_sz) {
       cauto dist = distance(center, Vec(x, y));
       cauto ratio = 1.0 - (dist / tmp_radius);
-      cauto light = std::pow(ratio * ratio, 2.2f); // гамма-коррекция + формула освещения
+      cauto light = std::pow(ratio * ratio, GAMMA_CORR); // гамма-коррекция + формула освещения
       sphere(x, y) = Pal8::from_real(light);
     }
     make_lines(sphere);
@@ -163,23 +161,25 @@ void Light::draw_light_star(Image& dst, const Vec pos, const real tmp_radius) co
     graphic::render_lag && ((graphic::frame_count & 1) == 0));
 
   cauto ratio = effect_ratio();
-  auto range = tmp_radius * 1.5;
+  auto range = tmp_radius * 1.5 * LIGHT_AMPLIFY;
   cauto ceiled_range = std::ceil(range);
   return_if (ceiled_range < 1);
 
   cauto floor_pos = floor(pos);
-  const int optional = ratio * 255.0; // для бленда звезды
+  const int ALPHA = ratio * 255.0f; // для пиксель-блендинга
   
   // TODO не рисовать за пределами
 
   // вертикальный и горизонтальный луч звезды
   if (flags.star) {
     cfor (i, ceiled_range) {
-      cauto color = Pal8::from_real((ceiled_range - i) / ceiled_range);
-      dst.set(floor_pos.x+i, floor_pos.y, color, bf_star, optional);
-      dst.set(floor_pos.x-i, floor_pos.y, color, bf_star, optional);
-      dst.set(floor_pos.x, floor_pos.y+i, color, bf_star, optional);
-      dst.set(floor_pos.x, floor_pos.y-i, color, bf_star, optional);
+      auto light = (ceiled_range - i) / ceiled_range;
+      light = std::pow(light * light, GAMMA_CORR); // гамма-коррекция + формула освещения
+      cauto color = Pal8::from_real(light);
+      dst.set(floor_pos.x+i, floor_pos.y, color, bf_star, ALPHA);
+      dst.set(floor_pos.x-i, floor_pos.y, color, bf_star, ALPHA);
+      dst.set(floor_pos.x, floor_pos.y+i, color, bf_star, ALPHA);
+      dst.set(floor_pos.x, floor_pos.y-i, color, bf_star, ALPHA);
     }
   }
 
@@ -187,11 +187,13 @@ void Light::draw_light_star(Image& dst, const Vec pos, const real tmp_radius) co
   return_if( !flags.star_diagonal);
   cauto ceiled_range_diagonal = std::ceil(ceiled_range * 0.5); // диагональные короче
   cfor (i, ceiled_range_diagonal) {
-    cauto color = Pal8::from_real((ceiled_range_diagonal - i) / ceiled_range_diagonal);
-    dst.set(floor_pos.x-i, floor_pos.y-i, color, bf_star, optional);
-    dst.set(floor_pos.x+i, floor_pos.y-i, color, bf_star, optional);
-    dst.set(floor_pos.x-i, floor_pos.y+i, color, bf_star, optional);
-    dst.set(floor_pos.x+i, floor_pos.y+i, color, bf_star, optional);
+    auto light = (ceiled_range_diagonal - i) / ceiled_range_diagonal;
+    light = std::pow(light * light, GAMMA_CORR); // гамма-коррекция + формула освещения
+    cauto color = Pal8::from_real(light);
+    dst.set(floor_pos.x-i, floor_pos.y-i, color, bf_star, ALPHA);
+    dst.set(floor_pos.x+i, floor_pos.y-i, color, bf_star, ALPHA);
+    dst.set(floor_pos.x-i, floor_pos.y+i, color, bf_star, ALPHA);
+    dst.set(floor_pos.x+i, floor_pos.y+i, color, bf_star, ALPHA);
   }
 }
 

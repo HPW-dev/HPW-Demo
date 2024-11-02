@@ -16,6 +16,9 @@ class Light final {
 public:
   // если вспышка превывает этот радиус, то загорается весь экран
   constx real MAX_LIGHT_RADIUS {400};
+  // из-за гамма-коррекции свет может быть тусклее, поэтому он усиливается
+  constx real LIGHT_AMPLIFY = 2.3333333f;
+  constx real GAMMA_CORR = 2.2f;
 
   static void make_lines(Image& dst); // создаёт полоски на сфере свечения
   
