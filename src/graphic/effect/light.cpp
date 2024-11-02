@@ -111,7 +111,7 @@ void Light::set_duration(real new_duration) {
 void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const {
   return_if(tmp_radius <= 0);
   // из-за гамма-коррекции свет может быть тусклее, поэтому он усиливается
-  constexpr real LIGHT_AMPLIFY = 2.3f;
+  constexpr real LIGHT_AMPLIFY = 2.3333333f;
   static_assert(LIGHT_AMPLIFY > 0);
   tmp_radius *= LIGHT_AMPLIFY;
 
