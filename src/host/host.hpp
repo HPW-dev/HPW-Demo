@@ -1,6 +1,7 @@
 #pragma once
 #include <atomic>
 #include "util/macro.hpp"
+#include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
 #include "host-resize.hpp"
 #include "command.hpp"
@@ -18,7 +19,6 @@ protected:
   void* m_app_mutex {};
   #endif
   
-  virtual void exit();
   virtual void _set_double_buffering(bool enable) = 0;
   virtual void _set_resize_mode(Resize_mode mode) = 0;
   virtual void _set_mouse_cursour_mode(bool mode) = 0;
@@ -34,4 +34,9 @@ public:
   virtual ~Host();
   inline virtual void run() {}
   virtual void update(const Delta_time dt);
+  virtual void exit();
+
+private:
+  struct Impl;
+  Unique<Impl> _impl {};
 }; // Host

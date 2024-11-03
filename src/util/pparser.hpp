@@ -7,8 +7,6 @@
 
 // parsing cmd line args
 class Pparser {
-  nocopy(Pparser);
-
 public:
   struct Param {
     Strs keys {};
@@ -19,7 +17,7 @@ public:
   using v_param_t = Vector<Param>;
   bool skip_empty {false}; ///< игнор пустого ввода
 
-  // @param in vector of: {{"-i", "--input", ...}, "description", lambda, is_needed}
+  // @param in vector of: {{"-i", "--input", ...}, "description", lambda <void (cr<Str>)>, is_needed}
   explicit Pparser(v_param_t&& in) noexcept;
   ~Pparser() = default;
   void operator ()(int argc, char** argv) const;

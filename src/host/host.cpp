@@ -13,6 +13,8 @@
 #include "game/util/game-util.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
+#include "util/pparser.hpp"
+#include "util/str-util.hpp"
 #include "util/math/random.hpp"
 #include "util/file/yaml.hpp"
 #include "graphic/image/color-table.hpp"
@@ -22,12 +24,52 @@
 #include <windows.h>
 #endif
 
+// отложенный выбор фуллскрина
+class Task_fullscreen final: public Task {
+  bool _mode {};
+
+public:
+  inline explicit Task_fullscreen(bool mode): _mode {mode} {}
+
+  inline void update(const Delta_time dt) override final {
+    assert(hpw::set_fullscreen);
+    hpw::set_fullscreen(_mode);
+    this->deactivate();
+  }
+};
+
+struct Host::Impl final {
+  nocopy(Impl);
+  Host& _master;
+  std::optional<uint32_t> custom_seed {};
+
+  explicit inline Impl(Host& master): _master {master} {}
+
+  inline void parse_args(int argc, char** argv) {
+    Pparser ret( Pparser::v_param_t {
+      {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
+      {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(false)); }},
+      {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(true)); }},
+      {{"-h", "--help", "--info"}, "print this help and close the game", [&](cr<Str> val){
+        ret.print_info();
+        std::exit(EXIT_SUCCESS);
+      }},
+    } );
+    ret.skip_empty = true;
+    ret(argc, argv);
+  }
+}; // Impl
+
 Host::Host(int argc, char** argv)
 : m_argc(argc)
 , m_argv(argv)
+, _impl (new_unique<Impl>(*this))
 {
+  // парс аргументов:
   hpw::argc = m_argc;
   hpw::argv = m_argv;
+  _impl->parse_args(hpw::argc, hpw::argv);
+
   init_app_mutex();
 
 #ifdef WINDOWS
@@ -36,7 +78,11 @@ Host::Host(int argc, char** argv)
 #endif
 
   // настроить генерацию рандома
-  uint32_t seed = time({});
+  uint32_t seed;
+  if (_impl->custom_seed.has_value())
+    seed = _impl->custom_seed.value();
+  else
+    seed = time({});
   set_rnd_seed(seed);
   detailed_log("Сид рандома: " << seed << '\n');
 
