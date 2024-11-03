@@ -8,6 +8,7 @@
       "request": "launch",
       "name": "gdb x64",
       "program": "${workspaceRoot}/build/bin/HPW.exe",
+      "args": ["-w"],
       "cwd": "${workspaceRoot}/",
     },
     {
@@ -17,6 +18,7 @@
       "request": "launch",
       "name": "gdb x64 editor",
       "program": "${workspaceRoot}/build/bin/editor.exe",
+      "args": ["-w"],
       "cwd": ".",
     },
     {
@@ -26,6 +28,7 @@
       "request": "launch",
       "name": "gdb x32",
       "program": "${workspaceRoot}/build/bin/HPW.exe",
+      "args": ["-w"],
       "cwd": ".",
     },
     {
@@ -35,6 +38,7 @@
       "request": "launch",
       "name": "gdb x32 editor",
       "program": "${workspaceRoot}/build/bin/editor.exe",
+      "args": ["-w"],
       "cwd": ".",
     }
   ]
