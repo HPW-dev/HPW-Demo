@@ -23,7 +23,7 @@ struct Scene_gameover::Impl {
     init_menu();
 
     // поменять палитру
-    if (hpw::rnd_pal_after_death && !hpw::replay_read_mode)
+    if (hpw::rnd_pal_after_death)
       set_random_palette();
     
     // выключить звуки, что были до этого
