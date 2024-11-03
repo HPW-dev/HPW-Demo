@@ -543,7 +543,7 @@ void set_random_palette() {
   };
   Rnd_table<Str> palettes( sprites | std::views::filter(filter)
     | std::ranges::to<Strs>() );
-  cauto palette_name = palettes.rnd();
+  cauto palette_name = palettes.rnd_stable();
   graphic::current_palette_file = palette_name;
   hpw::init_palette_from_archive (palette_name);
 }
