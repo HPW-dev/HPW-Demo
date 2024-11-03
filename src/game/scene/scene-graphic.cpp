@@ -53,7 +53,7 @@ void Scene_graphic::draw(Image& dst) const {
   cur_menu.lock()->draw(dst);
 }
 
-void set_default() {
+void set_adaptive() {
   graphic::set_vsync(false);
   graphic::set_disable_frame_limit(false);
   graphic::set_target_fps(graphic::get_target_vsync_fps());
@@ -78,7 +78,15 @@ void set_default() {
   #else
     graphic::fast_blur = false;
   #endif
-} // set_default
+}
+
+void set_default() {
+  #ifdef DEBUG
+    set_adaptive();
+  #else
+    set_high_quality();
+  #endif
+}
 
 void set_high_plus_stream() {
   graphic::set_vsync(false);
