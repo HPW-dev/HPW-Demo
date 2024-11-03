@@ -2,8 +2,8 @@
 #include <ctime>
 #include "host.hpp"
 #include "host-util.hpp"
-#include "command.hpp"
 #include "host-resize.hpp"
+#include "command.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/tasks.hpp"
@@ -11,6 +11,7 @@
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/version.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
 #include "util/pparser.hpp"
@@ -50,8 +51,15 @@ struct Host::Impl final {
       {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
       {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(false)); }},
       {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(true)); }},
-      {{"-h", "--help", "--info"}, "print this help and close the game", [&](cr<Str> val){
+      {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
         ret.print_info();
+        std::exit(EXIT_SUCCESS);
+      }},
+      {{"-v", "--version"}, "print game version and exit", [this](cr<Str> val){
+        cauto ver = get_game_version();
+        cauto creation_date = get_game_creation_date();
+        cauto creation_time = get_game_creation_time();
+        std::cout << "game version: " << ver << " (" << creation_date << " " << creation_time << ")" << std::endl;
         std::exit(EXIT_SUCCESS);
       }},
     } );
