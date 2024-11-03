@@ -1,4 +1,3 @@
-#include <iostream>
 #include <ctime>
 #include "host.hpp"
 #include "host-util.hpp"
@@ -59,7 +58,7 @@ struct Host::Impl final {
         cauto ver = get_game_version();
         cauto creation_date = get_game_creation_date();
         cauto creation_time = get_game_creation_time();
-        std::cout << "game version: " << ver << " (" << creation_date << " " << creation_time << ")" << std::endl;
+        hpw_log("game version: " << ver << " (" << creation_date << " " << creation_time << ")" << '\n');
         std::exit(EXIT_SUCCESS);
       }},
     } );
@@ -94,12 +93,7 @@ Host::Host(int argc, char** argv)
   set_rnd_seed(seed);
   detailed_log("Сид рандома: " << seed << '\n');
 
-  std::cout << '\n';
-  std::cout << get_random_logo();
-  std::cout << '\n';
-  std::cout << "Запуск H.P.W\n";
-  std::cout.flush();
-
+  hpw_log('\n' << get_random_logo() << "\nЗапуск H.P.W\n");
   callbacks_init();
 
   // узнать в какойо папке игра запущена
@@ -112,7 +106,7 @@ Host::Host(int argc, char** argv)
 Host::~Host() {
   save_config();
   free_app_mutex();
-  std::cout << "Корректное завершение H.P.W" << std::endl;
+  hpw_log("Корректное завершение H.P.W\n");
 }
 
 void Host::exit() {
