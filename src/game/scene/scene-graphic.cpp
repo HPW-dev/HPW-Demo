@@ -200,17 +200,17 @@ Shared<Menu_list_item> Scene_graphic::get_motion_blur_item() {
     Menu_list_item::Items {
       Menu_list_item::Item {
         get_locale_str("common.auto"),
-        get_locale_str("scene.graphic_menu.motion_blur_mode.autoopt.desc"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.autoopt_desc"),
         []{ graphic::motion_blur_mode = Motion_blur_mode::autoopt; }
       },
       Menu_list_item::Item {
         get_locale_str("common.on"),
-        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled.desc"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled_desc"),
         []{ graphic::motion_blur_mode = Motion_blur_mode::enabled; }
       },
       Menu_list_item::Item {
         get_locale_str("common.off"),
-        get_locale_str("scene.graphic_menu.motion_blur_mode.disabled.desc"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.disabled_desc"),
         []{ graphic::motion_blur_mode = Motion_blur_mode::disabled; }
       },
     } // items
@@ -223,17 +223,17 @@ Shared<Menu_list_item> Scene_graphic::get_blur_item() {
     Menu_list_item::Items {
       Menu_list_item::Item {
         get_locale_str("common.auto"),
-        get_locale_str("scene.graphic_menu.blur_mode.autoopt.desc"),
+        get_locale_str("scene.graphic_menu.blur_mode.autoopt_desc"),
         []{ graphic::blur_mode = Blur_mode::autoopt; }
       },
       Menu_list_item::Item {
-        get_locale_str("scene.graphic_menu.blur_mode.high.title"),
-        get_locale_str("scene.graphic_menu.blur_mode.high.desc"),
+        get_locale_str("common.high"),
+        get_locale_str("scene.graphic_menu.blur_mode.high_desc"),
         []{ graphic::blur_mode = Blur_mode::high; }
       },
       Menu_list_item::Item {
-        get_locale_str("scene.graphic_menu.blur_mode.low.title"),
-        get_locale_str("scene.graphic_menu.blur_mode.low.desc"),
+        get_locale_str("common.low"),
+        get_locale_str("scene.graphic_menu.blur_mode.low_desc"),
         []{ graphic::blur_mode = Blur_mode::low; }
       },
     } // items
