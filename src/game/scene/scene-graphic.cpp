@@ -61,7 +61,7 @@ void set_adaptive() {
   graphic::motion_blur_mode = Motion_blur_mode::autoopt;
   graphic::blur_mode = Blur_mode::autoopt;
   graphic::blink_particles = true;
-  graphic::blur_quality_mul = 1.0;
+  graphic::motion_blur_quality_mul = 1.0;
   graphic::cpu_safe = false;
   graphic::disable_heat_distort_while_lag = true;
   graphic::wait_frame_bak = graphic::wait_frame = true;
@@ -87,7 +87,7 @@ void set_high_plus_stream() {
   graphic::set_disable_frame_limit(false);
   graphic::set_target_fps(graphic::get_target_vsync_fps() + 15);
   graphic::blink_particles = false;
-  graphic::blur_quality_mul = 0.5;
+  graphic::motion_blur_quality_mul = 0.5;
   graphic::cpu_safe = false;
   graphic::disable_heat_distort_while_lag = false;
   graphic::wait_frame_bak = graphic::wait_frame = false;
@@ -124,7 +124,7 @@ void set_high_quality() {
   graphic::set_vsync(true);
   graphic::set_disable_frame_limit(false);
   graphic::blink_particles = false;
-  graphic::blur_quality_mul = 0.5;
+  graphic::motion_blur_quality_mul = 0.5;
   graphic::cpu_safe = true;
   graphic::disable_heat_distort_while_lag = false;
   graphic::wait_frame_bak = graphic::wait_frame = true;
@@ -397,23 +397,28 @@ void Scene_graphic::init_detailed_menu() {
   init_shared<Advanced_text_menu>( detailed_menu,
     U"Расширенные настройки графики", // TODO locale
     Menu_items {
+      new_shared<Menu_bool_item>(
+        get_locale_str("scene.graphic_menu.show_fps.title"),
+        [] { return graphic::show_fps; },
+        [] (bool new_val) { graphic::show_fps = new_val; },
+        get_locale_str("scene.graphic_menu.show_fps.desc")
+      ),
+      get_draw_border_item(),
+      get_mouse_cursour_item(),
+      get_gamma_item(),
       get_palette_item(),
       get_plugin_item(),
-      get_epilepsy_item(),
       get_fullscreen_item(),
+      get_resize_type_item(),
       get_vsync_item(),
-      get_gamma_item(),
-      get_draw_border_item(),
+      get_frame_limit_item(),
+      get_disable_frame_limit_item(),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.double_buffering"),
         []{ return graphic::double_buffering; },
         [](bool new_val) { hpw::set_double_buffering(new_val); },
         get_locale_str("scene.graphic_menu.description.double_buffering")
       ),
-      get_motion_blur_item(),
-      get_blur_item(),
-      get_mouse_cursour_item(),
-      get_disable_frame_limit_item(),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.wait_frame"),
         []{ return graphic::wait_frame; },
@@ -427,19 +432,10 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("scene.graphic_menu.description.cpu_safe")
       ),
       new_shared<Menu_bool_item>(
-        get_locale_str("scene.graphic_menu.blink_particles"),
-        []{ return graphic::blink_particles; },
-        [](bool new_val) { graphic::blink_particles = new_val; },
-        get_locale_str("scene.graphic_menu.description.blink_particles")
-      ),
-      get_frame_limit_item(),
-      get_resize_type_item(),
-      new_shared<Menu_double_item>(
-        get_locale_str("scene.graphic_menu.blur_quality_mul"),
-        [] { return graphic::blur_quality_mul; },
-        [] (double val) { graphic::blur_quality_mul = std::clamp(val, 0.5, 8.0); },
-        0.25, // step speed
-        get_locale_str("scene.graphic_menu.description.blur_quality_mul")
+        get_locale_str("scene.graphic_menu.auto_frame_skip"),
+        []{ return graphic::auto_frame_skip; },
+        [](bool val){ graphic::auto_frame_skip = val; },
+        get_locale_str("scene.graphic_menu.description.auto_frame_skip")
       ),
       new_shared<Menu_int_item>(
         get_locale_str("scene.graphic_menu.frame_skip"),
@@ -449,10 +445,19 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("scene.graphic_menu.description.frame_skip")
       ),
       new_shared<Menu_bool_item>(
-        get_locale_str("scene.graphic_menu.auto_frame_skip"),
-        []{ return graphic::auto_frame_skip; },
-        [](bool val){ graphic::auto_frame_skip = val; },
-        get_locale_str("scene.graphic_menu.description.auto_frame_skip")
+        get_locale_str("scene.graphic_menu.blink_particles"),
+        []{ return graphic::blink_particles; },
+        [](bool new_val) { graphic::blink_particles = new_val; },
+        get_locale_str("scene.graphic_menu.description.blink_particles")
+      ),
+      get_blur_item(),
+      get_motion_blur_item(),
+      new_shared<Menu_double_item>(
+        get_locale_str("scene.graphic_menu.motion_blur_quality_mul"),
+        [] { return graphic::motion_blur_quality_mul; },
+        [] (double val) { graphic::motion_blur_quality_mul = std::clamp(val, 0.5, 8.0); },
+        0.25, // step speed
+        get_locale_str("scene.graphic_menu.description.motion_blur_quality_mul")
       ),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.enable_motion_interp.title"),
@@ -460,12 +465,7 @@ void Scene_graphic::init_detailed_menu() {
         [] (bool new_val) { graphic::enable_motion_interp = new_val; },
         get_locale_str("scene.graphic_menu.enable_motion_interp.desc")
       ),
-      new_shared<Menu_bool_item>(
-        get_locale_str("scene.graphic_menu.show_fps.title"),
-        [] { return graphic::show_fps; },
-        [] (bool new_val) { graphic::show_fps = new_val; },
-        get_locale_str("scene.graphic_menu.show_fps.desc")
-      ),
+      get_epilepsy_item(),
       get_reset_item(),
       new_shared<Menu_text_item>(
         get_locale_str("common.back"),

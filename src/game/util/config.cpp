@@ -57,7 +57,7 @@ void save_config() {
   graphic_node.set_int  ("resize_mode",         scast<int>(graphic::resize_mode) );
   graphic_node.set_bool ("motion_blur_mode",    scast<int>(graphic::motion_blur_mode) );
   graphic_node.set_bool ("blur_mode",           scast<int>(graphic::blur_mode) );
-  graphic_node.set_real ("blur_quality_mul",    graphic::blur_quality_mul);
+  graphic_node.set_real ("motion_blur_quality_mul",    graphic::motion_blur_quality_mul);
   graphic_node.set_bool ("blink_particles",     graphic::blink_particles);
   graphic_node.set_real ("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic_node.set_bool ("start_focused",       graphic::start_focused);
@@ -141,7 +141,7 @@ void load_config() {
     graphic_node.get_int("motion_blur_mode", scast<int>(graphic::motion_blur_mode)) );
   graphic::blur_mode = scast<Blur_mode>(
     graphic_node.get_int("blur_mode", scast<int>(graphic::blur_mode)) );
-  graphic::blur_quality_mul = graphic_node.get_real("blur_quality_mul", graphic::blur_quality_mul);
+  graphic::motion_blur_quality_mul = graphic_node.get_real("motion_blur_quality_mul", graphic::motion_blur_quality_mul);
   graphic::blink_particles = graphic_node.get_bool("blink_particles", graphic::blink_particles);
   graphic::max_motion_blur_quality_reduct =
     graphic_node.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);

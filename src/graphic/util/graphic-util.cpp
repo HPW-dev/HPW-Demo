@@ -488,18 +488,18 @@ const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
     return;
   }
 
-  auto blur_quality_mul = graphic::blur_quality_mul;
+  auto motion_blur_quality_mul = graphic::motion_blur_quality_mul;
 
   // сменить качество блюра при автооптимизации
   if (graphic::motion_blur_mode == Motion_blur_mode::autoopt && graphic::render_lag)
-    blur_quality_mul = std::max(graphic::max_motion_blur_quality_reduct, graphic::blur_quality_mul);
+    motion_blur_quality_mul = std::max(graphic::max_motion_blur_quality_reduct, graphic::motion_blur_quality_mul);
 
   Vec pos = old_pos;
   Vec step = normalize_graphic(cur_pos - old_pos);
-  int blur_len = std::floor( safe_div(traveled, blur_quality_mul) );
+  int blur_len = std::floor( safe_div(traveled, motion_blur_quality_mul) );
   cfor (i, blur_len) {
     insert(dst, src, pos, bf, uid);
-    pos += step * blur_quality_mul;
+    pos += step * motion_blur_quality_mul;
   }
   insert(dst, src, pos, bf, uid);
   insert(dst, src, cur_pos, bf, uid);
