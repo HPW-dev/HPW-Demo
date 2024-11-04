@@ -55,11 +55,10 @@ void save_config() {
   graphic_node.set_bool ("draw_border",         graphic::draw_border);
   graphic_node.set_bool ("show_mouse_cursour",  graphic::show_mouse_cursour);
   graphic_node.set_int  ("resize_mode",         scast<int>(graphic::resize_mode) );
-  graphic_node.set_bool ("enable_motion_blur",  graphic::enable_motion_blur);
+  graphic_node.set_bool ("motion_blur_mode",    scast<int>(graphic::motion_blur_mode) );
+  graphic_node.set_bool ("blur_mode",           scast<int>(graphic::blur_mode) );
   graphic_node.set_real ("blur_quality_mul",    graphic::blur_quality_mul);
   graphic_node.set_bool ("blink_particles",     graphic::blink_particles);
-  graphic_node.set_bool ("blink_motion_blur",   graphic::blink_motion_blur);
-  graphic_node.set_bool ("motion_blur_quality_reduct", graphic::motion_blur_quality_reduct);
   graphic_node.set_real ("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic_node.set_bool ("start_focused",       graphic::start_focused);
   graphic_node.set_str  ("palette",             graphic::current_palette_file);
@@ -70,7 +69,6 @@ void save_config() {
   graphic_node.set_real ("gamma",               graphic::gamma);
   graphic_node.set_str  ("hud",                 graphic::cur_hud);
   graphic_node.set_bool ("show_fps",            graphic::show_fps);
-  graphic_node.set_bool ("fast_blur",           graphic::fast_blur);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool("vsync",               graphic::get_vsync());
@@ -136,17 +134,15 @@ void load_config() {
   graphic::draw_border = graphic_node.get_bool("draw_border", graphic::draw_border);
   graphic::show_mouse_cursour = graphic_node.get_bool("show_mouse_cursour", graphic::show_mouse_cursour);
   graphic::resize_mode = scast<decltype(graphic::resize_mode)> (
-    graphic_node.get_int("resize_mode", scast<int>(graphic::default_resize_mode))
-  );
+    graphic_node.get_int("resize_mode", scast<int>(graphic::default_resize_mode)) );
   graphic::light_quality = scast<decltype(graphic::light_quality)>(
-    graphic_node.get_int("light_quality", scast<int>(graphic::light_quality))
-  );
-  graphic::enable_motion_blur = graphic_node.get_bool("enable_motion_blur", graphic::enable_motion_blur);
+    graphic_node.get_int("light_quality", scast<int>(graphic::light_quality)) );
+  graphic::motion_blur_mode = scast<Motion_blur_mode>(
+    graphic_node.get_int("motion_blur_mode", scast<int>(graphic::motion_blur_mode)) );
+  graphic::blur_mode = scast<Blur_mode>(
+    graphic_node.get_int("blur_mode", scast<int>(graphic::blur_mode)) );
   graphic::blur_quality_mul = graphic_node.get_real("blur_quality_mul", graphic::blur_quality_mul);
   graphic::blink_particles = graphic_node.get_bool("blink_particles", graphic::blink_particles);
-  graphic::blink_motion_blur = graphic_node.get_bool("blink_motion_blur", graphic::blink_motion_blur);
-  graphic::motion_blur_quality_reduct =
-    graphic_node.get_bool("motion_blur_quality_reduct", graphic::motion_blur_quality_reduct);
   graphic::max_motion_blur_quality_reduct =
     graphic_node.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic::start_focused = graphic_node.get_bool("start_focused", graphic::start_focused);
@@ -159,7 +155,6 @@ void load_config() {
   safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
   graphic::cur_hud = graphic_node.get_str("hud", graphic::cur_hud);
   graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
-  graphic::fast_blur = graphic_node.get_bool("fast_blur", graphic::fast_blur);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );

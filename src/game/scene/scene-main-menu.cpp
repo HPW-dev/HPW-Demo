@@ -201,13 +201,13 @@ void Scene_main_menu::draw_wnd(Image& dst) const noexcept {
   static Image for_blur(rect.size.x, rect.size.y);
   fast_cut_2(for_blur, dst, rect.pos.x, rect.pos.y, rect.size.x, rect.size.y);
 
-  if (graphic::fast_blur) {
+  if (check_high_blur()) {
+    blur_hq(for_blur, Image(for_blur), 5);
+  } else {
     to_gray_accurate(for_blur, for_blur);
     static Image for_blur_tmp(rect.size.x, rect.size.y);
     for_blur_tmp = for_blur;
     boxblur_horizontal_fast(for_blur, for_blur_tmp, 5);
-  } else {
-    blur_hq(for_blur, Image(for_blur), 5);
   }
 
   // мягкий контраст  

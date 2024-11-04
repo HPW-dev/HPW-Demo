@@ -58,7 +58,8 @@ void set_adaptive() {
   graphic::set_disable_frame_limit(false);
   graphic::set_target_fps(graphic::get_target_vsync_fps());
   graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
-  graphic::blink_motion_blur = true;
+  graphic::motion_blur_mode = Motion_blur_mode::autoopt;
+  graphic::blur_mode = Blur_mode::autoopt;
   graphic::blink_particles = true;
   graphic::blur_quality_mul = 1.0;
   graphic::cpu_safe = false;
@@ -67,17 +68,10 @@ void set_adaptive() {
   graphic::double_buffering = true;
   graphic::enable_heat_distort = false;
   graphic::enable_light = true;
-  graphic::enable_motion_blur = true;
   graphic::light_quality = Light_quality::medium;
-  graphic::motion_blur_quality_reduct = true;
   graphic::frame_skip = 3;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = true;
-  #ifdef DEBUG
-    graphic::fast_blur = true;
-  #else
-    graphic::fast_blur = false;
-  #endif
 }
 
 void set_default() {
@@ -92,7 +86,6 @@ void set_high_plus_stream() {
   graphic::set_vsync(false);
   graphic::set_disable_frame_limit(false);
   graphic::set_target_fps(graphic::get_target_vsync_fps() + 15);
-  graphic::blink_motion_blur = false;
   graphic::blink_particles = false;
   graphic::blur_quality_mul = 0.5;
   graphic::cpu_safe = false;
@@ -101,14 +94,13 @@ void set_high_plus_stream() {
   graphic::double_buffering = true;
   graphic::enable_heat_distort = true;
   graphic::enable_light = true;
-  graphic::enable_motion_blur = true;
+  graphic::motion_blur_mode = Motion_blur_mode::enabled;
+  graphic::blur_mode = Blur_mode::high;
   graphic::light_quality = Light_quality::high;
-  graphic::motion_blur_quality_reduct = false;
   graphic::frame_skip = 1;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = true;
-  graphic::fast_blur = false;
-} // set_high_plus_stream
+}
 
 void set_low_pc() {
   graphic::set_vsync(false);
@@ -120,19 +112,17 @@ void set_low_pc() {
   graphic::double_buffering = true;
   graphic::enable_heat_distort = false;
   graphic::enable_light = false;
-  graphic::enable_motion_blur = false;
+  graphic::motion_blur_mode = Motion_blur_mode::disabled;
+  graphic::blur_mode = Blur_mode::low;
   graphic::light_quality = Light_quality::low;
-  graphic::motion_blur_quality_reduct = true;
   graphic::frame_skip = 5;
   graphic::auto_frame_skip = true;
   graphic::enable_motion_interp = false;
-  graphic::fast_blur = true;
-} // set_low_pc
+}
 
 void set_high_quality() {
   graphic::set_vsync(true);
   graphic::set_disable_frame_limit(false);
-  graphic::blink_motion_blur = false;
   graphic::blink_particles = false;
   graphic::blur_quality_mul = 0.5;
   graphic::cpu_safe = true;
@@ -141,14 +131,13 @@ void set_high_quality() {
   graphic::double_buffering = true;
   graphic::enable_heat_distort = true;
   graphic::enable_light = true;
-  graphic::enable_motion_blur = true;
   graphic::light_quality = Light_quality::high;
-  graphic::motion_blur_quality_reduct = false;
   graphic::frame_skip = 0;
   graphic::auto_frame_skip = false;
   graphic::enable_motion_interp = true;
-  graphic::fast_blur = false;
-} // set_high_quality
+  graphic::motion_blur_mode = Motion_blur_mode::enabled;
+  graphic::blur_mode = Blur_mode::high;
+}
 
 Shared<Menu_list_item> Scene_graphic::get_preset_item() {
   return new_shared<Menu_list_item>(
@@ -203,6 +192,52 @@ Shared<Menu_bool_item> Scene_graphic::get_draw_border_item() {
     [](bool new_val) { graphic::draw_border = new_val; },
     get_locale_str("scene.graphic_menu.description.draw_border")
   );
+}
+
+Shared<Menu_list_item> Scene_graphic::get_motion_blur_item() {
+  return new_shared<Menu_list_item>(
+    get_locale_str("scene.graphic_menu.motion_blur_mode.title"),
+    Menu_list_item::Items {
+      Menu_list_item::Item {
+        get_locale_str("common.auto"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.autoopt.desc"),
+        []{ graphic::motion_blur_mode = Motion_blur_mode::autoopt; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled.title"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled.desc"),
+        []{ graphic::motion_blur_mode = Motion_blur_mode::enabled; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.motion_blur_mode.disabled.title"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.disabled.desc"),
+        []{ graphic::motion_blur_mode = Motion_blur_mode::disabled; }
+      },
+    } // items
+  ); // menu list
+}
+
+Shared<Menu_list_item> Scene_graphic::get_blur_item() {
+  return new_shared<Menu_list_item>(
+    get_locale_str("scene.graphic_menu.blur_mode.title"),
+    Menu_list_item::Items {
+      Menu_list_item::Item {
+        get_locale_str("common.auto"),
+        get_locale_str("scene.graphic_menu.blur_mode.autoopt.desc"),
+        []{ graphic::blur_mode = Blur_mode::autoopt; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.blur_mode.high.title"),
+        get_locale_str("scene.graphic_menu.blur_mode.high.desc"),
+        []{ graphic::blur_mode = Blur_mode::high; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.blur_mode.low.title"),
+        get_locale_str("scene.graphic_menu.blur_mode.low.desc"),
+        []{ graphic::blur_mode = Blur_mode::low; }
+      },
+    } // items
+  ); // menu list
 }
 
 Shared<Menu_bool_item> Scene_graphic::get_mouse_cursour_item() {
@@ -375,12 +410,8 @@ void Scene_graphic::init_detailed_menu() {
         [](bool new_val) { hpw::set_double_buffering(new_val); },
         get_locale_str("scene.graphic_menu.description.double_buffering")
       ),
-      new_shared<Menu_bool_item>(
-        get_locale_str("scene.graphic_menu.enable_motion_blur"),
-        []{ return graphic::enable_motion_blur; },
-        [](bool new_val) { graphic::enable_motion_blur = new_val; },
-        get_locale_str("scene.graphic_menu.description.enable_motion_blur")
-      ),
+      get_motion_blur_item(),
+      get_blur_item(),
       get_mouse_cursour_item(),
       get_disable_frame_limit_item(),
       new_shared<Menu_bool_item>(
@@ -424,26 +455,10 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("scene.graphic_menu.description.auto_frame_skip")
       ),
       new_shared<Menu_bool_item>(
-        get_locale_str("scene.graphic_menu.enable_motion_interp"),
-        []{ return graphic::enable_motion_interp; },
-        [](bool val) {
-          if (!val)
-            graphic::enable_motion_blur = false;
-          graphic::enable_motion_interp = val;
-        },
-        get_locale_str("scene.graphic_menu.description.enable_motion_interp")
-      ),
-      new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.show_fps.title"),
         [] { return graphic::show_fps; },
         [] (bool new_val) { graphic::show_fps = new_val; },
         get_locale_str("scene.graphic_menu.show_fps.desc")
-      ),
-      new_shared<Menu_bool_item>(
-        get_locale_str("scene.graphic_menu.fast_blur.title"),
-        [] { return graphic::fast_blur; },
-        [] (bool new_val) { graphic::fast_blur = new_val; },
-        get_locale_str("scene.graphic_menu.fast_blur.desc")
       ),
       get_reset_item(),
       new_shared<Menu_text_item>(

@@ -56,3 +56,7 @@ void load_sounds();
 void set_random_palette();
 // сохраняет скриншот в нужную папку с нужным именем
 void save_screenshot(cr<Image> image);
+// блюр зависящий от настроек графики
+void hpw_blur(Image& dst, cr<Image> src, const int window_sz=1);
+// узнать, можно ли заюзать качественное размытие изображения
+bool check_high_blur();

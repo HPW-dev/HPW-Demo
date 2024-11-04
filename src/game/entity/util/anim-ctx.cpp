@@ -9,6 +9,7 @@
 #include "util/math/vec-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/entity/entity.hpp"
+#include "game/util/game-util.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/animation/anim.hpp"
@@ -136,7 +137,7 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) {
     if (m_old_interp_pos.is_zero())
       m_old_interp_pos = interp_pos;
 
-    if (graphic::enable_motion_blur) { // рендер с размытием
+    if (graphic::motion_blur_mode != Motion_blur_mode::disabled) { // рендер с размытием
       insert_blured( dst, *direct->sprite.lock(),
         m_old_interp_pos + direct->offset + offset,
         interp_pos + direct->offset + offset, blend_f, entity.uid );

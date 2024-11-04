@@ -473,15 +473,17 @@ void expand_color_8_buf(Image& dst, Image& tmp, const Pal8 color) {
 
 void insert_blured(Image& dst, cr<Sprite> src,
 const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
-
-  auto traveled = distance(old_pos, cur_pos);
+  cauto traveled = distance(old_pos, cur_pos);
+  // если мало прошли, то не блюрить
+  const bool small_len = traveled <= graphic::insert_blured_traveled_limit;
+  // условие для выключение блюра
+  bool disable_blur = false;
+  if (graphic::motion_blur_mode == Motion_blur_mode::disabled) // выключили в настройках
+    disable_blur = true;
+  else if (graphic::motion_blur_mode == Motion_blur_mode::autoopt) // для мигания при автооптимизации
+    disable_blur = graphic::render_lag && (uid + graphic::frame_count) & 1;
   
-  if (
-    // если мало прошли, то не блюрить
-    traveled <= graphic::insert_blured_traveled_limit ||
-    // для мигания при автооптимизации
-    (graphic::render_lag && graphic::blink_motion_blur && ((uid + graphic::frame_count) & 1))
-  ) {
+  if (small_len || disable_blur) {
     insert(dst, src, cur_pos, bf, uid);
     return;
   }
@@ -489,9 +491,8 @@ const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
   auto blur_quality_mul = graphic::blur_quality_mul;
 
   // сменить качество блюра при автооптимизации
-  if (graphic::motion_blur_quality_reduct && graphic::render_lag)
-    blur_quality_mul = std::max(
-      graphic::max_motion_blur_quality_reduct, graphic::blur_quality_mul);
+  if (graphic::motion_blur_mode == Motion_blur_mode::autoopt && graphic::render_lag)
+    blur_quality_mul = std::max(graphic::max_motion_blur_quality_reduct, graphic::blur_quality_mul);
 
   Vec pos = old_pos;
   Vec step = normalize_graphic(cur_pos - old_pos);

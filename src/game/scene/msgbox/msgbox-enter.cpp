@@ -7,10 +7,10 @@
 #include "game/core/canvas.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/game-util.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/font/font-util.hpp"
-#include "graphic/effect/blur.hpp"
 
 struct Scene_msgbox_enter::Impl {
   constx int WND_X = 375;
@@ -73,10 +73,7 @@ struct Scene_msgbox_enter::Impl {
     
     // заблюрить часть фона под окном
     auto for_blur = fast_cut(m_bg, window.pos.x, window.pos.y, window.size.x, window.size.y);
-    if (graphic::fast_blur)
-      blur_fast(for_blur, Image(for_blur), 5);
-    else
-      blur_hq(for_blur, Image(for_blur), 5);
+    hpw_blur(for_blur, Image(for_blur), 5);
     insert(m_bg, for_blur, window.pos);
 
     // нарисовать окно с рамкой

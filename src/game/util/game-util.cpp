@@ -24,6 +24,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/palette.hpp"
+#include "game/core/graphic.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
@@ -46,6 +47,7 @@
 #include "graphic/animation/frame.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/font/unifont-mono.hpp"
+#include "graphic/effect/blur.hpp"
 #include "sound/sound-mgr.hpp"
 #include "sound/audio-io.hpp"
 #include "sound/sound.hpp"
@@ -596,4 +598,29 @@ void load_fonts() {
   auto mem = hpw::archive->get_file("resource/font/unifont-13.0.06.ttf");
   init_unique<Unifont>(graphic::font, mem, 16, true);
   init_unique<Unifont_mono>(graphic::system_mono, mem, 8, 16, true);
+}
+
+void hpw_blur(Image& dst, cr<Image> src, const int window_sz) {
+  switch (graphic::blur_mode) {
+    default:
+    case Blur_mode::autoopt: {
+      if (graphic::render_lag)
+        blur_fast(dst, Image(dst), window_sz);
+      else
+        blur_hq(dst, Image(dst), window_sz);
+      break;
+    }
+    case Blur_mode::low: blur_fast(dst, Image(dst), window_sz); break;
+    case Blur_mode::high: blur_hq(dst, Image(dst), window_sz); break;
+  }
+}
+
+bool check_high_blur() {
+  switch (graphic::blur_mode) {
+    default:
+    case Blur_mode::autoopt: return !graphic::render_lag;
+    case Blur_mode::low: return false;
+    case Blur_mode::high: return true;
+  }
+  return false;
 }
