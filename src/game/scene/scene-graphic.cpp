@@ -204,12 +204,12 @@ Shared<Menu_list_item> Scene_graphic::get_motion_blur_item() {
         []{ graphic::motion_blur_mode = Motion_blur_mode::autoopt; }
       },
       Menu_list_item::Item {
-        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled.title"),
+        get_locale_str("common.on"),
         get_locale_str("scene.graphic_menu.motion_blur_mode.enabled.desc"),
         []{ graphic::motion_blur_mode = Motion_blur_mode::enabled; }
       },
       Menu_list_item::Item {
-        get_locale_str("scene.graphic_menu.motion_blur_mode.disabled.title"),
+        get_locale_str("common.off"),
         get_locale_str("scene.graphic_menu.motion_blur_mode.disabled.desc"),
         []{ graphic::motion_blur_mode = Motion_blur_mode::disabled; }
       },
@@ -453,6 +453,12 @@ void Scene_graphic::init_detailed_menu() {
         []{ return graphic::auto_frame_skip; },
         [](bool val){ graphic::auto_frame_skip = val; },
         get_locale_str("scene.graphic_menu.description.auto_frame_skip")
+      ),
+      new_shared<Menu_bool_item>(
+        get_locale_str("scene.graphic_menu.enable_motion_interp.title"),
+        [] { return graphic::enable_motion_interp; },
+        [] (bool new_val) { graphic::enable_motion_interp = new_val; },
+        get_locale_str("scene.graphic_menu.enable_motion_interp.desc")
       ),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.show_fps.title"),
