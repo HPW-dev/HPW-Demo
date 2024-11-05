@@ -30,8 +30,8 @@ void Unifont::init(cr<File> file, int height, bool mono) {
   iferror( !stbtt_InitFont(info_.get(), font_file_mem_.data(), 0),
     "Unifont: stbtt_InitFont error");
   scale_ = stbtt_ScaleForPixelHeight(info_.get(), height);
-  // предзагрузка ASCI:
-  for (int i = 21; i < 128; ++i)
+  // предзагрузка ASCI; 33 - символ после пробела (!):
+  for (int i = 33; i < 128; ++i)
     _load_glyph(i);
 }
 
