@@ -73,7 +73,7 @@ struct Hud_asci::Impl {
 
     // напечатать очки
     utf32 pts_txt;
-    pts_txt += U"PTS:" + n2s<utf32>(hpw::get_score());
+    pts_txt += U"PTS:" + n2s<utf32>(hpw::get_score_normalized());
 
     Hud::draw_expanded_text(dst, hp_txt,  {10,  dst.Y - (graphic::font->h() + 2)});
     Hud::draw_expanded_text(dst, pts_txt, {360, dst.Y - (graphic::font->h() + 2)});
@@ -149,7 +149,7 @@ struct Hud_asci::Impl {
     pts_rect_old = pts_rect;
     hp_rect = Rect(0, 367, 27 + hp_sz * ch_sz, graphic::height - 367);
     en_rect = Rect(186, 367, 16 + en_sz * ch_sz, graphic::height - 367);
-    pts_rect = Rect(361, 367, 24 + digits_number_i32(hpw::get_score()) * ch_sz,
+    pts_rect = Rect(361, 367, 24 + digits_number_i32(hpw::get_score_normalized()) * ch_sz,
       graphic::height - 367);
   } // update_hud_rects
 

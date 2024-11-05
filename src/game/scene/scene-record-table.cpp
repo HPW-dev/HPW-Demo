@@ -38,5 +38,5 @@ void Scene_record_table::draw(Image& dst) const {
   menu->draw(dst);
 
   // TODO locale
-  graphic::font->draw(dst, {30, 30}, U"Рекорд: " + n2s<utf32>(hpw::get_score()), &blend_max);
+  graphic::font->draw(dst, {30, 30}, U"Рекорд: " + n2s<utf32>(hpw::get_score_normalized()), &blend_max);
 }

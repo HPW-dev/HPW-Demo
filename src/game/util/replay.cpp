@@ -223,7 +223,7 @@ struct Replay::Impl {
     // уровень сложности
     write_data(m_file, hpw::difficulty);
     // рекорд
-    write_data(m_file, hpw::get_score());
+    write_data(m_file, hpw::get_score_normalized());
     // дата
     write_str(m_file, get_data_str());
     // начальный уровень - туториал?

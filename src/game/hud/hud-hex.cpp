@@ -51,7 +51,7 @@ struct Hud_hex::Impl {
     cauto en_ratio = safe_div(player.energy, scast<std::float128_t>(player.energy_max));
     const std::uint64_t hp_val = hp_ratio * 0xFFFF'FFFF'FFFF'FFFFu;
     const std::uint64_t en_val = en_ratio * 0xFFFF'FFFF'FFFF'FFFFu;
-    cauto score = hpw::get_score();
+    cauto score = hpw::get_score_normalized();
     Hud::draw_expanded_text(dst, utf8_to_32(n2hex(hp_val)), _pos_hp);
     Hud::draw_expanded_text(dst, utf8_to_32(n2hex(en_val)), _pos_en);
     Hud::draw_expanded_text(dst, utf8_to_32(n2hex(score)), _pos_score);
