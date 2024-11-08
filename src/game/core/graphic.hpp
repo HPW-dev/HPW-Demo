@@ -25,13 +25,13 @@ inline bool enable_motion_interp {true}; // плавное движение
 inline uint frame_skip      {3};    // сколько кадров пропускать
 inline bool auto_frame_skip {true}; // пропускать кадры при тормозах игры
 
-// autoopt:
+// авто-оптимизация при лагах:
 constx Delta_time default_autoopt_timeout {2.5};
 inline Delta_time autoopt_timeout_max     {default_autoopt_timeout}; // сколько секунд не сбрасывать render_lag
 inline Delta_time autoopt_timeout         {}; // сколько секунд не сбрасывать render_lag
 inline bool render_lag                    {}; // true, когда рендер лагает
 
-// blur:
+// размытие:
 inline real insert_blured_traveled_limit   {10}; // если объект проходит меньшее растояние, то не включать блюр
 inline real max_motion_blur_quality_reduct {16}; // как сильно снижать качество блюра при автооптимизации
 inline real motion_blur_quality_mul        {1};  // качество размытия (меньше - красивее, больше - быстрее)
@@ -40,7 +40,6 @@ inline Blur_mode blur_mode                 {};   // качество размы�
 
 // effects:
 inline bool blink_particles                {true}; // включает мигание спрайтов при render_lag
-inline bool enable_light                   {true}; // отображает вспышки
 inline bool enable_heat_distort            {};     // отображает искажение воздуха
 inline bool disable_heat_distort_while_lag {true}; // выключать искажение воздуха при лагах
 inline Light_quality light_quality         {Light_quality::medium}; // качество вcпышки

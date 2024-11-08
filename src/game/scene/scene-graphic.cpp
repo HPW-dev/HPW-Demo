@@ -67,7 +67,6 @@ void set_adaptive() {
   graphic::wait_frame_bak = graphic::wait_frame = true;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = false;
-  graphic::enable_light = true;
   graphic::light_quality = Light_quality::medium;
   graphic::frame_skip = 3;
   graphic::auto_frame_skip = true;
@@ -93,7 +92,6 @@ void set_high_plus_stream() {
   graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = true;
-  graphic::enable_light = true;
   graphic::motion_blur_mode = Motion_blur_mode::enabled;
   graphic::blur_mode = Blur_mode::high;
   graphic::light_quality = Light_quality::high;
@@ -111,7 +109,6 @@ void set_low_pc() {
   graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = false;
-  graphic::enable_light = false;
   graphic::motion_blur_mode = Motion_blur_mode::disabled;
   graphic::blur_mode = Blur_mode::low;
   graphic::light_quality = Light_quality::low;
@@ -130,7 +127,6 @@ void set_high_quality() {
   graphic::wait_frame_bak = graphic::wait_frame = true;
   graphic::double_buffering = true;
   graphic::enable_heat_distort = true;
-  graphic::enable_light = true;
   graphic::light_quality = Light_quality::high;
   graphic::frame_skip = 0;
   graphic::auto_frame_skip = false;

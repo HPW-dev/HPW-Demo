@@ -37,7 +37,10 @@ void Entity_animated::draw(Image& dst, const Vec offset) const {
     }
 
     // вспышка
-    if (light && graphic::enable_light && !_master.status.disable_light)
+    const bool VALID_LIGHT_PTR = scast<bool>(light);
+    const bool LIGHT_NOT_DISABLED = graphic::light_quality != Light_quality::disabled;
+    const bool LIGHT_NOT_DISABLED_IN_MASTER = !_master.status.disable_light;
+    if (VALID_LIGHT_PTR && LIGHT_NOT_DISABLED && LIGHT_NOT_DISABLED_IN_MASTER)
       light->draw(dst, _master.phys.get_pos() + offset);
       
     // искажение воздуха

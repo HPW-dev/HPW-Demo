@@ -6,6 +6,7 @@ class Image;
 struct Vec;
 
 enum class Light_quality {
+  disabled = 0, // играть без вспышек
   low, // рисовать только звёздочки
   medium, // обычный ровный градиент c премапом
   high // каждый кадр генерить градиент и полоски на нём

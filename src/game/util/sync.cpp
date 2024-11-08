@@ -50,7 +50,7 @@ void set_fast_forward(bool val) {
   static auto bak_fps_limit = graphic::get_target_fps();
   static auto bak_motion_blur_mode = graphic::motion_blur_mode;
   static auto bak_blur_mode = graphic::blur_mode;
-  static auto bak_enable_light = graphic::enable_light;
+  static auto bak_light_quality = graphic::light_quality;
   static auto bak_enable_heat_distort = graphic::enable_heat_distort;
 
   if (m_fast_forward) { // on
@@ -59,7 +59,7 @@ void set_fast_forward(bool val) {
     bak_fps_limit = graphic::get_target_fps();
     bak_motion_blur_mode = graphic::motion_blur_mode;
     bak_blur_mode = graphic::blur_mode;
-    bak_enable_light = graphic::enable_light;
+    bak_light_quality = graphic::light_quality;
     bak_enable_heat_distort = graphic::enable_heat_distort;
 
     set_disable_frame_limit(false);
@@ -67,7 +67,7 @@ void set_fast_forward(bool val) {
     graphic::render_lag = false; // в фреймскипе игра подумает что она лагает
     graphic::motion_blur_mode = Motion_blur_mode::disabled;
     graphic::blur_mode = Blur_mode::low;
-    graphic::enable_light = false;
+    graphic::light_quality = Light_quality::disabled;
     graphic::enable_heat_distort = false;
   } else { // off
     set_vsync(bak_vsync);
@@ -75,10 +75,10 @@ void set_fast_forward(bool val) {
     set_disable_frame_limit(bak_disable_frame_limit);
     graphic::motion_blur_mode = bak_motion_blur_mode;
     graphic::blur_mode = bak_blur_mode;
-    graphic::enable_light = bak_enable_light;
+    graphic::light_quality = bak_light_quality;
     graphic::enable_heat_distort = bak_enable_heat_distort;
   }
-} // set_fast_forward
+}
 
 void set_target_fps(int val) {
   assert(val > 0);
