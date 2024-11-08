@@ -359,6 +359,34 @@ Shared<Menu_text_item> Scene_graphic::get_gamma_item() {
     []{ hpw::scene_mgr->add(new_shared<Scene_gamma>()); } );
 }
 
+Shared<Menu_list_item> Scene_graphic::get_light_quality_item() {
+  return new_shared<Menu_list_item>(
+    get_locale_str("scene.graphic_menu.light_quality.title"),
+    Menu_list_item::Items {
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.light_quality.disabled.title"),
+        get_locale_str("scene.graphic_menu.light_quality.disabled.desc"),
+        []{ graphic::light_quality = Light_quality::disabled; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.light_quality.low.title"),
+        get_locale_str("scene.graphic_menu.light_quality.low.desc"),
+        []{ graphic::light_quality = Light_quality::low; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.light_quality.medium.title"),
+        get_locale_str("scene.graphic_menu.light_quality.medium.desc"),
+        []{ graphic::light_quality = Light_quality::medium; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("scene.graphic_menu.light_quality.high.title"),
+        get_locale_str("scene.graphic_menu.light_quality.high.desc"),
+        []{ graphic::light_quality = Light_quality::high; }
+      },
+    } // items
+  ); // menu list
+}
+
 void Scene_graphic::init_simple_menu() {
   init_shared<Advanced_text_menu>( simple_menu,
     get_locale_str("scene.graphic_menu.title"),
@@ -455,6 +483,7 @@ void Scene_graphic::init_detailed_menu() {
         0.25, // step speed
         get_locale_str("scene.graphic_menu.description.motion_blur_quality_mul")
       ),
+      get_light_quality_item(),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.enable_motion_interp.title"),
         [] { return graphic::enable_motion_interp; },

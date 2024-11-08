@@ -36,6 +36,7 @@ class Scene_graphic final: public Scene {
   Shared<Menu_text_item> get_gamma_item();
   Shared<Menu_list_item> get_motion_blur_item();
   Shared<Menu_list_item> get_blur_item();
+  Shared<Menu_list_item> get_light_quality_item();
 
 public:
   Scene_graphic();
