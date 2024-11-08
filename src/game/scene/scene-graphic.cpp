@@ -197,16 +197,17 @@ Shared<Menu_list_item> Scene_graphic::get_motion_blur_item() {
         []{ graphic::motion_blur_mode = Motion_blur_mode::autoopt; }
       },
       Menu_list_item::Item {
-        get_locale_str("common.on"),
-        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled_desc"),
-        []{ graphic::motion_blur_mode = Motion_blur_mode::enabled; }
-      },
-      Menu_list_item::Item {
         get_locale_str("common.off"),
         get_locale_str("scene.graphic_menu.motion_blur_mode.disabled_desc"),
         []{ graphic::motion_blur_mode = Motion_blur_mode::disabled; }
       },
-    } // items
+      Menu_list_item::Item {
+        get_locale_str("common.on"),
+        get_locale_str("scene.graphic_menu.motion_blur_mode.enabled_desc"),
+        []{ graphic::motion_blur_mode = Motion_blur_mode::enabled; }
+      },
+    }, // items
+    []{ return scast<std::size_t>(graphic::motion_blur_mode); }
   ); // menu list
 }
 
@@ -220,16 +221,17 @@ Shared<Menu_list_item> Scene_graphic::get_blur_item() {
         []{ graphic::blur_mode = Blur_mode::autoopt; }
       },
       Menu_list_item::Item {
-        get_locale_str("common.high"),
-        get_locale_str("scene.graphic_menu.blur_mode.high_desc"),
-        []{ graphic::blur_mode = Blur_mode::high; }
-      },
-      Menu_list_item::Item {
         get_locale_str("common.low"),
         get_locale_str("scene.graphic_menu.blur_mode.low_desc"),
         []{ graphic::blur_mode = Blur_mode::low; }
       },
-    } // items
+      Menu_list_item::Item {
+        get_locale_str("common.high"),
+        get_locale_str("scene.graphic_menu.blur_mode.high_desc"),
+        []{ graphic::blur_mode = Blur_mode::high; }
+      },
+    }, // items
+    []{ return scast<std::size_t>(graphic::blur_mode); }
   ); // menu list
 }
 
@@ -286,7 +288,7 @@ Shared<Menu_list_item> Scene_graphic::get_resize_type_item() {
         .action = []{ hpw::set_resize_mode(Resize_mode::full); }
       }
     }, // items
-    scast<std::size_t>(graphic::resize_mode)
+    []{ return scast<std::size_t>(graphic::resize_mode); }
   );
 }
 
@@ -380,7 +382,8 @@ Shared<Menu_list_item> Scene_graphic::get_light_quality_item() {
         get_locale_str("scene.graphic_menu.light_quality.high.desc"),
         []{ graphic::light_quality = Light_quality::high; }
       },
-    } // items
+    }, // items
+    []{ return scast<std::size_t>(graphic::light_quality); }
   ); // menu list
 }
 
@@ -403,7 +406,8 @@ Shared<Menu_list_item> Scene_graphic::get_heat_distort_mode_item() {
         get_locale_str("scene.graphic_menu.heat_distort_mode.enabled_desc"),
         []{ graphic::heat_distort_mode = Heat_distort_mode::enabled; }
       },
-    } // items
+    }, // items
+    []{ return scast<std::size_t>(graphic::heat_distort_mode); }
   ); // menu list
 }
 

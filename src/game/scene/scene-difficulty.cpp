@@ -52,22 +52,24 @@ void Scene_difficulty::init_menu() {
     new_shared<Menu_list_item>(get_locale_str("scene.difficulty_select.difficulty.title"),
       Menu_list_item::Items {
         Menu_list_item::Item {
-          .name = get_locale_str("scene.difficulty_select.difficulty.normal"),
-          .desc = get_locale_str("scene.difficulty_select.description.difficulty.normal"),
-          .action = []{ hpw::difficulty = Difficulty::normal; }
-        },
-        Menu_list_item::Item {
           .name = get_locale_str("scene.difficulty_select.difficulty.easy"),
           .desc = get_locale_str("scene.difficulty_select.description.difficulty.easy"),
           .action = []{ hpw::difficulty = Difficulty::easy; }
+        },
+        Menu_list_item::Item {
+          .name = get_locale_str("scene.difficulty_select.difficulty.normal"),
+          .desc = get_locale_str("scene.difficulty_select.description.difficulty.normal"),
+          .action = []{ hpw::difficulty = Difficulty::normal; }
         },
         Menu_list_item::Item {
           .name = get_locale_str("scene.difficulty_select.difficulty.hardcore"),
           .desc = get_locale_str("scene.difficulty_select.description.difficulty.hardcore"),
           .action = []{ hpw::difficulty = Difficulty::hardcore; }
         }
-      } // Items
-    ), // List items
+      }, // Items
+      []{ return scast<std::size_t>(hpw::difficulty); }
+    ), // List items (difficulty)
+
     new_shared<Menu_bool_item>(get_locale_str("scene.difficulty_select.write_replay"),
       []{ return hpw::enable_replay; },
       [](const bool val) { hpw::enable_replay = val; },
@@ -79,7 +81,6 @@ void Scene_difficulty::init_menu() {
         hpw::scene_mgr->add(new_shared<Scene_replay_select>());
       } ));
     }),
-    // TODO select difficulty item
     new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
       hpw::scene_mgr->back();
     }),

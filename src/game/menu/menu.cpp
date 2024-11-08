@@ -72,6 +72,10 @@ Menu::Menu(cr<Menu_items> items)
 
 void Menu::update(const Delta_time dt) {
   return_if(m_items.empty());
+
+  for (crauto item: m_items)
+    item->update(dt);
+
   m_sticking->update();
 
   if (m_sticking->check(hpw::keycode::enable, 60, 60)) {

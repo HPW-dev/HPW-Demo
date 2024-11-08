@@ -1,15 +1,15 @@
 #include <cassert>
 #include "list-item.hpp"
 #include "util/str-util.hpp"
+#include "util/log.hpp"
 
 Menu_list_item::Menu_list_item(cr<utf32> title, cr<Menu_list_item::Items> items,
-const std::size_t default_selected)
+cr<Default_select_getter> default_select_getter)
 : m_items {items}
 , m_title {title}
-, m_selected {default_selected}
+, _default_select_getter {default_select_getter}
 {
   assert( !m_items.empty());
-  assert(default_selected < m_items.size());
 }
 
 void Menu_list_item::enable() { plus(); }
@@ -30,3 +30,15 @@ utf32 Menu_list_item::to_text() const
   { return m_title + U" : " + sconv<utf32>( m_items.at(m_selected).name ); }
 
 utf32 Menu_list_item::get_description() const { return m_items.at(m_selected).desc; }
+
+void Menu_list_item::update(const Delta_time dt) {
+  if (_default_select_getter) {
+    cauto overrided_idx = _default_select_getter();
+    if (overrided_idx < m_items.size()) {
+      m_selected = overrided_idx;
+    } else {
+      hpw_log("WARNING: неверный id переопределённого элемента (" << overrided_idx << ")\n");
+      m_selected = overrided_idx % m_items.size();
+    }
+  }
+}

@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include "util/unicode.hpp"
+#include "util/math/num-types.hpp"
 
 using menu_item_ft = std::function<void ()>;
 
@@ -8,6 +9,7 @@ using menu_item_ft = std::function<void ()>;
 class Menu_item {
 public:
   virtual ~Menu_item() = default;
+  virtual inline void update(const Delta_time dt) {}
   virtual void enable(); // enable key
   virtual void plus(); // right key
   virtual void minus(); // left key
