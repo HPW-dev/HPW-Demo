@@ -28,6 +28,14 @@ int get_scancode(const hpw::keycode keycode) {
   return key_info->scancode;
 }
 
+static inline void load_light_quality(cr<Yaml> config) {
+  graphic::light_quality = scast<Light_quality>(
+    config.get_int("light_quality", scast<int>(graphic::light_quality)) );
+}
+
+static inline void save_light_quality(Yaml& config)
+  { config.set_int("light_quality", scast<int>(graphic::light_quality)); }
+
 void save_config() {
   auto& config = *hpw::config;
 
@@ -69,6 +77,7 @@ void save_config() {
   graphic_node.set_real ("gamma",               graphic::gamma);
   graphic_node.set_str  ("hud",                 graphic::cur_hud);
   graphic_node.set_bool ("show_fps",            graphic::show_fps);
+  save_light_quality(graphic_node);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool("vsync",               graphic::get_vsync());
@@ -155,6 +164,7 @@ void load_config() {
   safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
   graphic::cur_hud = graphic_node.get_str("hud", graphic::cur_hud);
   graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
+  load_light_quality(graphic_node);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
