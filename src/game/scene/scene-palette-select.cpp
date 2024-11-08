@@ -40,18 +40,7 @@ struct Scene_palette_select::Impl {
     m_palette_files = file_list;
 
     if ( !m_palette_files.empty()) {
-      // докрутить индекс до текущего выбранного файла
-      std::size_t idx = 0;
-      if ( !graphic::current_palette_file.empty()) {
-        for (crauto fname: m_palette_files) {
-          if (graphic::current_palette_file == fname) {
-            m_cur_palette_idx = idx;
-            break;
-          }
-          ++idx;
-        }
-      }
-
+      update_cur_palette_idx();
       // сразу применить палитру, как вошли в это окно
       hpw::init_palette_from_archive(cur_palette_file());
     }
@@ -76,6 +65,20 @@ struct Scene_palette_select::Impl {
     menu->draw(dst);
     draw_palette(dst, Vec(50, 120));
     draw_test_image(dst, Vec(50, 150));
+  }
+
+  // докрутить индекс до текущего выбранного файла
+  inline void update_cur_palette_idx() {
+    std::size_t idx = 0;
+    if ( !graphic::current_palette_file.empty()) {
+      for (crauto fname: m_palette_files) {
+        if (graphic::current_palette_file == fname) {
+          m_cur_palette_idx = idx;
+          break;
+        }
+        ++idx;
+      }
+    }
   }
 
   inline Str cur_palette_file() const
@@ -105,6 +108,12 @@ struct Scene_palette_select::Impl {
           }
         }),
 
+        new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
+          graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
+          update_cur_palette_idx();
+          hpw::init_palette_from_archive(cur_palette_file());
+        }),
+        
         new_shared<Menu_text_item>(get_locale_str("common.back"),
           []{ hpw::scene_mgr->back(); }),
       },

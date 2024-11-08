@@ -66,8 +66,8 @@ void Host_ogl::ogl_init() {
 } // ogl_init
 
 void Host_ogl::init_palette_loader() {
-  hpw::init_palette_from_archive = [this](const Str& fname) {
-    graphic::current_palette_file = fname;
+  hpw::init_palette_from_archive = [this](cr<Str> fname) {
+    graphic::current_palette_file = fname.empty() ? Str{graphic::DEFAULT_PALETTE_FILE} : fname;
     pal_tex_init();
   };
 }
