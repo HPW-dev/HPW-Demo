@@ -9,11 +9,11 @@
 // искажение воздуха
 void Entity_animated::draw_haze(Image& dst, const Vec offset) const {
   // не рисовать при лагах
-  const bool auto_opt = graphic::render_lag && graphic::disable_heat_distort_while_lag;
+  const bool auto_opt = graphic::render_lag && (graphic::heat_distort_mode == Heat_distort_mode::autoopt);
   return_if(auto_opt);
 
   // если включено в настройках графики
-  const bool graphic_enable = graphic::enable_heat_distort;
+  const bool graphic_enable = graphic::heat_distort_mode != Heat_distort_mode::disabled;
   const bool pointer_valid = scast<bool>(heat_distort);
   // если объектом не запрещено
   const bool entity_flag_enabled = !_master.status.disable_heat_distort;

@@ -51,7 +51,7 @@ void set_fast_forward(bool val) {
   static auto bak_motion_blur_mode = graphic::motion_blur_mode;
   static auto bak_blur_mode = graphic::blur_mode;
   static auto bak_light_quality = graphic::light_quality;
-  static auto bak_enable_heat_distort = graphic::enable_heat_distort;
+  static auto bak_heat_distort_mode = graphic::heat_distort_mode;
 
   if (m_fast_forward) { // on
     bak_disable_frame_limit = graphic::get_disable_frame_limit();
@@ -60,7 +60,7 @@ void set_fast_forward(bool val) {
     bak_motion_blur_mode = graphic::motion_blur_mode;
     bak_blur_mode = graphic::blur_mode;
     bak_light_quality = graphic::light_quality;
-    bak_enable_heat_distort = graphic::enable_heat_distort;
+    bak_heat_distort_mode = graphic::heat_distort_mode;
 
     set_disable_frame_limit(false);
     set_target_fps(25);
@@ -68,7 +68,7 @@ void set_fast_forward(bool val) {
     graphic::motion_blur_mode = Motion_blur_mode::disabled;
     graphic::blur_mode = Blur_mode::low;
     graphic::light_quality = Light_quality::disabled;
-    graphic::enable_heat_distort = false;
+    graphic::heat_distort_mode = Heat_distort_mode::disabled;
   } else { // off
     set_vsync(bak_vsync);
     set_target_fps(bak_fps_limit);
@@ -76,7 +76,7 @@ void set_fast_forward(bool val) {
     graphic::motion_blur_mode = bak_motion_blur_mode;
     graphic::blur_mode = bak_blur_mode;
     graphic::light_quality = bak_light_quality;
-    graphic::enable_heat_distort = bak_enable_heat_distort;
+    graphic::heat_distort_mode = bak_heat_distort_mode;
   }
 }
 

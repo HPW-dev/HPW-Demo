@@ -1,6 +1,7 @@
 #pragma once
 #include "graphic/effect/light.hpp"
 
+enum class Heat_distort_mode {autoopt = 0, disabled, enabled};
 enum class Motion_blur_mode {autoopt = 0, disabled, enabled};
 enum class Blur_mode {autoopt = 0, low, high};
 
@@ -40,8 +41,7 @@ inline Blur_mode blur_mode                 {};   // качество размы�
 
 // effects:
 inline bool blink_particles                {true}; // включает мигание спрайтов при render_lag
-inline bool enable_heat_distort            {};     // отображает искажение воздуха
-inline bool disable_heat_distort_while_lag {true}; // выключать искажение воздуха при лагах
-inline Light_quality light_quality         {Light_quality::medium}; // качество вcпышки
+inline Light_quality light_quality         {Light_quality::medium};      // качество вcпышки
+inline Heat_distort_mode heat_distort_mode {Heat_distort_mode::autoopt}; // качество искажения воздуха
 
 } // graphic ns

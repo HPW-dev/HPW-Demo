@@ -36,6 +36,14 @@ static inline void load_light_quality(cr<Yaml> config) {
 static inline void save_light_quality(Yaml& config)
   { config.set_int("light_quality", scast<int>(graphic::light_quality)); }
 
+static inline void load_heat_distort_mode(cr<Yaml> config) {
+  graphic::heat_distort_mode = scast<Heat_distort_mode>(
+    config.get_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)) );
+}
+
+static inline void save_heat_distort_mode(Yaml& config)
+  { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
+
 void save_config() {
   auto& config = *hpw::config;
 
@@ -72,12 +80,11 @@ void save_config() {
   graphic_node.set_str  ("palette",             graphic::current_palette_file);
   graphic_node.set_int  ("frame_skip",          graphic::frame_skip);
   graphic_node.set_bool ("auto_frame_skip",     graphic::auto_frame_skip);
-  graphic_node.set_bool ("enable_heat_distort", graphic::enable_heat_distort);
-  graphic_node.set_bool ("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   graphic_node.set_real ("gamma",               graphic::gamma);
   graphic_node.set_str  ("hud",                 graphic::cur_hud);
   graphic_node.set_bool ("show_fps",            graphic::show_fps);
   save_light_quality(graphic_node);
+  save_heat_distort_mode(graphic_node);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool("vsync",               graphic::get_vsync());
@@ -158,13 +165,11 @@ void load_config() {
   safecall(hpw::init_palette_from_archive, graphic_node.get_str("palette", graphic::current_palette_file));
   graphic::frame_skip = graphic_node.get_int("frame_skip", graphic::frame_skip);
   graphic::auto_frame_skip = graphic_node.get_bool("auto_frame_skip", graphic::auto_frame_skip);
-  graphic::enable_heat_distort = graphic_node.get_bool("enable_heat_distort", graphic::enable_heat_distort);
-  graphic::disable_heat_distort_while_lag =
-    graphic_node.get_bool("disable_heat_distort_while_lag", graphic::disable_heat_distort_while_lag);
   safecall(hpw::set_gamma, graphic_node.get_real("gamma", graphic::gamma));
   graphic::cur_hud = graphic_node.get_str("hud", graphic::cur_hud);
   graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
   load_light_quality(graphic_node);
+  load_heat_distort_mode(graphic_node);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );

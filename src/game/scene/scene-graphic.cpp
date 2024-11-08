@@ -63,10 +63,9 @@ void set_adaptive() {
   graphic::blink_particles = true;
   graphic::motion_blur_quality_mul = 1.0;
   graphic::cpu_safe = false;
-  graphic::disable_heat_distort_while_lag = true;
+  graphic::heat_distort_mode = Heat_distort_mode::autoopt;
   graphic::wait_frame_bak = graphic::wait_frame = true;
   graphic::double_buffering = true;
-  graphic::enable_heat_distort = false;
   graphic::light_quality = Light_quality::medium;
   graphic::frame_skip = 3;
   graphic::auto_frame_skip = true;
@@ -88,10 +87,9 @@ void set_high_plus_stream() {
   graphic::blink_particles = false;
   graphic::motion_blur_quality_mul = 0.5;
   graphic::cpu_safe = false;
-  graphic::disable_heat_distort_while_lag = false;
+  graphic::heat_distort_mode = Heat_distort_mode::enabled;
   graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::double_buffering = true;
-  graphic::enable_heat_distort = true;
   graphic::motion_blur_mode = Motion_blur_mode::enabled;
   graphic::blur_mode = Blur_mode::high;
   graphic::light_quality = Light_quality::high;
@@ -108,7 +106,7 @@ void set_low_pc() {
   graphic::cpu_safe = false;
   graphic::wait_frame_bak = graphic::wait_frame = false;
   graphic::double_buffering = true;
-  graphic::enable_heat_distort = false;
+  graphic::heat_distort_mode = Heat_distort_mode::disabled;
   graphic::motion_blur_mode = Motion_blur_mode::disabled;
   graphic::blur_mode = Blur_mode::low;
   graphic::light_quality = Light_quality::low;
@@ -123,10 +121,9 @@ void set_high_quality() {
   graphic::blink_particles = false;
   graphic::motion_blur_quality_mul = 0.5;
   graphic::cpu_safe = true;
-  graphic::disable_heat_distort_while_lag = false;
+  graphic::heat_distort_mode = Heat_distort_mode::enabled;
   graphic::wait_frame_bak = graphic::wait_frame = true;
   graphic::double_buffering = true;
-  graphic::enable_heat_distort = true;
   graphic::light_quality = Light_quality::high;
   graphic::frame_skip = 0;
   graphic::auto_frame_skip = false;
@@ -387,6 +384,29 @@ Shared<Menu_list_item> Scene_graphic::get_light_quality_item() {
   ); // menu list
 }
 
+Shared<Menu_list_item> Scene_graphic::get_heat_distort_mode_item() {
+  return new_shared<Menu_list_item>(
+    get_locale_str("scene.graphic_menu.heat_distort_mode.title"),
+    Menu_list_item::Items {
+      Menu_list_item::Item {
+        get_locale_str("common.auto"),
+        get_locale_str("scene.graphic_menu.heat_distort_mode.autoopts_desc"),
+        []{ graphic::heat_distort_mode = Heat_distort_mode::autoopt; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("common.off"),
+        get_locale_str("scene.graphic_menu.heat_distort_mode.disabled_desc"),
+        []{ graphic::heat_distort_mode = Heat_distort_mode::disabled; }
+      },
+      Menu_list_item::Item {
+        get_locale_str("common.on"),
+        get_locale_str("scene.graphic_menu.heat_distort_mode.enabled_desc"),
+        []{ graphic::heat_distort_mode = Heat_distort_mode::enabled; }
+      },
+    } // items
+  ); // menu list
+}
+
 void Scene_graphic::init_simple_menu() {
   init_shared<Advanced_text_menu>( simple_menu,
     get_locale_str("scene.graphic_menu.title"),
@@ -484,6 +504,7 @@ void Scene_graphic::init_detailed_menu() {
         get_locale_str("scene.graphic_menu.description.motion_blur_quality_mul")
       ),
       get_light_quality_item(),
+      get_heat_distort_mode_item(),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.graphic_menu.enable_motion_interp.title"),
         [] { return graphic::enable_motion_interp; },
