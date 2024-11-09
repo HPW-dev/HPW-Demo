@@ -264,7 +264,8 @@ void bgp_bounding_lines(Image& dst, const int bg_state) {
 } // bgp_bounding_lines
 
 void bgp_dither_wave(Image& dst, const int bg_state) {
-  const real state = bg_state * 3.2f;
+  const int SPEED = bg_state;
+  const real state = SPEED * (3.2f / 3.0f);
 
   #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
@@ -280,7 +281,8 @@ void bgp_dither_wave(Image& dst, const int bg_state) {
 }
 
 void bgp_dither_wave_2(Image& dst, const int bg_state) {
-  const real state = (bg_state % 2'000) * 0.0005f;
+  const int SPEED = bg_state / 2;
+  const real state = (SPEED % 2'000) * 0.0005f;
   const real mul_x = 1.0 / dst.X;
 
   #pragma omp parallel for simd collapse(2)
@@ -332,7 +334,8 @@ void bgp_epilepsy(Image& dst, const int bg_state)
 
 void bgp_red_gradient(Image& dst, const int bg_state) {
   const real alpha_mul = 1.f / dst.Y;
-  cauto gradient = (1.f + std::sin(bg_state * 0.009f)) * 0.5f;
+  const int SPEED = bg_state / 2;
+  cauto gradient = (1.f + std::sin(SPEED * 0.009f)) * 0.5f;
   cauto a = Pal8::from_real(gradient);
   cauto b = Pal8::black;
 
@@ -366,7 +369,7 @@ void bgp_red_gradient_2(Image& dst, const int bg_state) {
 
 void bgp_repeated_rectangles(Image& dst, const int bg_state) {
   constexpr real space = 15.f;
-  const real speed = bg_state * 0.015f;
+  const real speed = bg_state * 0.0075f;
   const real x = std::fmod(std::cos(speed) * 150.f, space);
   Rect rect(-x,-x, dst.X+x*2.f,dst.Y+x*2.f);
 
@@ -572,13 +575,13 @@ void bgp_tiles_3(Image& dst, const int bg_state) {
   Vector<std::size_t> tile_map(tile_map_x * tile_map_y);
 
   // генерация анимации на сетке
-  const real state = bg_state * 3.2f;
+  const real state = bg_state * 1.6f;
   cfor (y, tile_map_y)
   cfor (x, tile_map_x) {
-    const real zoom = 0.07f - std::cos(state * 0.0005f) * 0.07f;
+    const real zoom = 0.07f - std::cos(state * 0.5f * 0.0005f) * 0.07f;
     real color = std::cos((x + state) * zoom + y * zoom);
     color *= std::tan((-x + state) * zoom + y * zoom);
-    color *= 0.2f;
+    color *= 0.1f;
     const std::size_t idx = color * tiles.size();
     tile_map[y * tile_map_x + x] = idx % tiles.size();
   }
@@ -592,11 +595,13 @@ void bgp_tiles_3(Image& dst, const int bg_state) {
 
   // увеличение буффера
   zoom_x4(buffer);
-  apply_brightness(dst, -40);
+  apply_brightness(dst, -20);
   insert_fast<&blend_max>(dst, buffer);
 } // bgp_tiles_3
 
 void bgp_tiles_4(Image& dst, const int bg_state) {
+  const int SPEED = bg_state / 2;
+
   // тайлы
   static Vector<Image> tiles {};
   static std::once_flag init_once {};
@@ -633,7 +638,7 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
   cfor (x, tile_map_x) {
     std::size_t idx = x;
     idx ^= y;
-    idx += bg_state >> 3;
+    idx += SPEED >> 3;
     idx >>= 2;
     tile_map[y * tile_map_x + x] = idx % tiles.size();
   }
@@ -702,8 +707,9 @@ void bgp_deep_lines_2(Image& dst, const int bg_state) {
   constexpr int scale = 4;
   constexpr real bg_speed = 0.00171717f;
   constexpr real speed = 0.01f;
+  const int SPEED = bg_state / 3;
 
-  cauto bg_color = std::fmod(bg_state * bg_speed, 2.f);
+  cauto bg_color = std::fmod(SPEED * bg_speed, 2.f);
   Image buffer(
     dst.X / scale, dst.Y / scale,
     Pal8::from_real(
@@ -717,7 +723,7 @@ void bgp_deep_lines_2(Image& dst, const int bg_state) {
 
   cfor (layer, layer_max) {
     const real alpha = std::fmod(
-      layer * layer_mul + bg_state * speed, 2.f);
+      layer * layer_mul + SPEED * speed, 2.f);
     const Pal8 layer_color = Pal8::from_real (
       1.f - (
         alpha <= 1.f
@@ -793,8 +799,9 @@ void bgp_deep_lines_3(Image& dst, const int bg_state) {
   constexpr uint lines = 6;
   constexpr real bg_speed = 0.00171717f;
   constexpr real speed = 0.01f;
+  const int SPEED = bg_state / 3;
 
-  cauto bg_color = std::fmod(bg_state * bg_speed, 2.f);
+  cauto bg_color = std::fmod(SPEED * bg_speed, 2.f);
   dst.fill (
     Pal8::from_real(
       bg_color <= 1.f
@@ -807,7 +814,7 @@ void bgp_deep_lines_3(Image& dst, const int bg_state) {
 
   cfor (layer, layer_max) {
     const real alpha = std::fmod(
-      layer * layer_mul + bg_state * speed, 2.f);
+      layer * layer_mul + SPEED * speed, 2.f);
     const Pal8 layer_color = Pal8::from_real (
       1.f - (
         alpha <= 1.f
@@ -832,6 +839,7 @@ void bgp_deep_lines_red_2(Image& dst, const int bg_state) {
   constexpr uint layer_max = 20;
   constexpr uint lines = 2;
   constexpr real speed = 0.0075f;
+  const int STATE = bg_state / 2;
 
   // красный градиент на фоне
   cauto gradient_mul = 1.f / dst.Y;
@@ -847,7 +855,7 @@ void bgp_deep_lines_red_2(Image& dst, const int bg_state) {
 
   cfor (layer, layer_max) {
     const real alpha = std::fmod(
-      layer * layer_mul + bg_state * speed, 2.f);
+      layer * layer_mul + STATE * speed, 2.f);
     const Pal8 layer_color = Pal8::from_real (
       1.f - (
         alpha <= 1.f
@@ -873,6 +881,7 @@ void bgp_deep_lines_red_3(Image& dst, const int bg_state) {
   constexpr uint layer_max = 20;
   constexpr uint lines = 20;
   constexpr real speed = 0.005f;
+  const int STATE = bg_state / 2;
 
   dst.fill({});
   xorshift128_state seed;
@@ -880,7 +889,7 @@ void bgp_deep_lines_red_3(Image& dst, const int bg_state) {
 
   cfor (layer, layer_max) {
     const real alpha = std::fmod(
-      layer * layer_mul + bg_state * speed, 2.f);
+      layer * layer_mul + STATE * speed, 2.f);
     const Pal8 layer_color = Pal8::from_real (
       1.f - (
         alpha <= 1.f

@@ -309,7 +309,7 @@ void bgp_rotating_moire(Image& dst, const int bg_state) {
   cauto center = center_point(dst);
   cauto center_2 = center + Vec(4, 9);
   cauto LINE_LEN = dst.Y - 20;
-  cauto SPEED = bg_state / 200.f;
+  cauto SPEED = bg_state / 600.f;
   cauto BG = Pal8::white;
   cauto FG = Pal8::black;
 
@@ -331,7 +331,7 @@ void bgp_rotating_moire_more_lines(Image& dst, const int bg_state) {
   cauto center = center_point(dst);
   cauto center_2 = center + Vec(2, 5);
   cauto LINE_LEN = dst.Y - 20;
-  cauto SPEED = bg_state / 700.f;
+  cauto SPEED = bg_state / 2'100.f;
   cauto BG = Pal8::white;
   cauto FG = Pal8::black;
 
@@ -352,8 +352,8 @@ void bgp_rotating_moire_rotated(Image& dst, const int bg_state) {
   constexpr uint LINES = 180;
   cauto center = center_point(dst);
   cauto LINE_LEN = dst.Y - 20;
-  cauto SPEED = bg_state / 1'000.f;
-  cauto SPEED_2 = bg_state / 300.f;
+  cauto SPEED = bg_state / 3'000.f;
+  cauto SPEED_2 = bg_state / 900.f;
   cauto BG = Pal8::black;
   cauto FG = Pal8::red;
 
@@ -381,7 +381,7 @@ void bgp_rotating_moire_triple(Image& dst, const int bg_state) {
   cauto center_2 = center + Vec(6, 12);
   cauto center_3 = center + Vec(-6, 12);
   cauto LINE_LEN = dst.X * 1.5;
-  cauto SPEED = bg_state / 3'000.f;
+  cauto SPEED = bg_state / 6'000.f;
   cauto BG = Pal8::white;
   cauto FG = Pal8::black;
 

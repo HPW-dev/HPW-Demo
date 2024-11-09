@@ -114,7 +114,6 @@ void Scene_main_menu::init_bg() {
     &bgp_tiles_2,
     &bgp_tiles_3,
     &bgp_tiles_4,
-    &bgp_tiles_4,
     &bgp_zoom_dst,
   #endif
   // Пак 3:

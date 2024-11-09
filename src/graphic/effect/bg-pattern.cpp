@@ -179,6 +179,7 @@ inline Pal8 rnd_color_fast() { return Pal8::from_real(rndr_fast(), rndu_fast() &
 void bgp_pinterest_1(Image& dst, const int bg_state) {
   cautox MX = 12u;
   cautox ICONS = 5u;
+  const int SPEED = bg_state / 3;
 
   cfor (y, dst.Y) {
     cfor(x, dst.X)
@@ -188,9 +189,9 @@ void bgp_pinterest_1(Image& dst, const int bg_state) {
       Vector<Pal8> left_colors(ICONS);
       Vector<Pal8> right_colors(ICONS);
       std::generate(left_colors.begin(), left_colors.end(), [=]{
-        return rnd_color_fast().val - bg_state; });
+        return rnd_color_fast().val - SPEED; });
       std::generate(right_colors.begin(), right_colors.end(), [=]{
-        return rnd_color_fast().val + bg_state; });
+        return rnd_color_fast().val + SPEED; });
       cauto tmp_pos = pos;
       cfor (y2, 2) {
         pos = tmp_pos;
@@ -222,7 +223,8 @@ void bgp_rain_waves(Image& dst, const int bg_state) {
   if (bg_state % 1'200 == 0)
     waves.clean();
   waves.make_noise(7.5, 1);
-  waves.update();
+  if (bg_state % 2 == 0)
+    waves.update();
   waves.draw(dst);
 } // bgp_rain_waves
 
@@ -231,7 +233,7 @@ void bgp_line_waves(Image& dst, const int bg_state) {
   waves.update_size(dst.X, dst.Y);
   if (bg_state % 1'200 == 0)
     waves.clean();
-  if (bg_state % 15 == 0)
+  if (bg_state % 30 == 0)
     waves.make_random_lines(1.75, 300, 5);
   waves.update();
   waves.draw(dst);
@@ -254,8 +256,9 @@ const Pal8 color, Sprite& dst) {
 }
 
 void bgp_rotated_lines(Image& dst, const int bg_state) {
+  const int SPEED = bg_state / 2;
   // красный фон
-  cauto bg_color = Pal8::from_real(0.25 + std::fmod(bg_state * 0.003, 0.75), true);
+  cauto bg_color = Pal8::from_real(0.25 + std::fmod(SPEED * 0.003, 0.75), true);
   dst.fill(bg_color);
 
   // нарисовать несколько отрезков в буффере
@@ -266,11 +269,11 @@ void bgp_rotated_lines(Image& dst, const int bg_state) {
   #pragma omp parallel for
   cfor (line_id, max_lines) {
     cauto center = Vec(
-      (bg_state + line_id * 516262) % dst.X,
-      (bg_state + line_id * 15125126) % dst.Y
+      (SPEED + line_id * 516262) % dst.X,
+      (SPEED + line_id * 15125126) % dst.Y
     );
-    const real deg = ring_deg(bg_state + line_id * 35325326);
-    cauto color (Pal8::from_real(0.5 + std::fmod((((bg_state * 0.2) + (line_id * 1.65))), 0.5)));
+    const real deg = ring_deg(SPEED + line_id * 35325326);
+    cauto color (Pal8::from_real(0.5 + std::fmod((((SPEED * 0.2) + (line_id * 1.65))), 0.5)));
     bg_pattern_7_line(center, deg, color, lines);
   }
 
@@ -318,7 +321,7 @@ void bgp_random_lines_2(Image& dst, const int bg_state) {
 } // bgp_random_lines_2
 
 void bgp_labyrinth_1(Image& dst, const int bg_state) {
-  cauto state = bg_state / 95; // замедляет анимацию
+  cauto state = bg_state / 285; // замедляет анимацию
 
   // узоры
   constexpr auto block_sz = 11u;
@@ -598,8 +601,8 @@ void bgp_3d_terrain_ps1(Image& dst, const int bg_state) {
 }
 
 void bgp_3d_flat_stars(Image& dst, const int bg_state) {
-  const real motion_speed = bg_state * 1.0;
-  const real rot_speed = bg_state / 240.0;
+  const real motion_speed = bg_state * 0.75;
+  const real rot_speed = (bg_state / 240.0) * 0.9;
   cauto center = center_point(dst);
 
   dst.fill(Pal8::black);
@@ -704,25 +707,27 @@ void bgp_hpw_text_lines(Image& dst, const int bg_state) {
 
 void bgp_3d_rain_waves(Image& dst, const int bg_state) {
   constexpr real scale = 550.0;
-  const real rot_speed = bg_state * 0.0008;
+  const int SPEED = bg_state / 2;
+  const real rot_speed = SPEED * 0.0008;
   cauto center = center_point(dst);
 
   static Waves waves(0.35);
   constexpr uint terrain_y = 60;
   constexpr uint terrain_x = 60;
   waves.update_size(terrain_x, terrain_y);
-  if (bg_state % 1'200 == 0)
+  if (SPEED % 1'200 == 0)
     waves.clean();
   
   // создать капли в случайных местах
   bool is_drop {false};
   Vec drop_pos;
-  if (bg_state % 40 == 0) {
+  if (SPEED % 40 == 0) {
     is_drop = true;
     drop_pos = get_rand_pos_graphic(0, 0, terrain_x, terrain_y);
     waves.set_safe(drop_pos.x, drop_pos.y, 0.2);
   }
-  waves.update();
+  if (bg_state % 3 == 0)
+    waves.update();
 
   dst.fill(Pal8::black);
   cfor (y, terrain_y - 1)
