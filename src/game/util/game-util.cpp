@@ -72,8 +72,7 @@ Shared<Sprite> sprite_loader(cr<Str> name) {
   return {};
 }
 
-decltype(hpw::store_sprite)::element_type::Velue find_err_cb(cr<Str> _name) {
-  assert(hpw::store_sprite);
+decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
   auto name {_name};
   #ifdef EDITOR
     name = hpw::cur_dir + "../" + name;
@@ -82,13 +81,13 @@ decltype(hpw::store_sprite)::element_type::Velue find_err_cb(cr<Str> _name) {
   detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
   // закинуть недостающий ресурс в банк
   if (spr)
-    hpw::store_sprite->push(name, spr);
+    hpw::sprites.push(name, spr);
   return spr;
 }
 
 void load_resources() {
   hpw_log("загрузка ресурсов...\n");
-  init_unique(hpw::store_sprite);
+  hpw::sprites.clear();
 
   #ifdef EDITOR
     auto names = all_names_in_dir(hpw::cur_dir + "../");
@@ -98,7 +97,7 @@ void load_resources() {
 
   // колбек на отложенную загрузку
   if (hpw::lazy_load_sprite) {
-    hpw::store_sprite->move_find_err_cb(&find_err_cb);
+    hpw::sprites.move_find_err_cb(&find_err_cb);
     return;
   } // make fined err cb
 
@@ -128,7 +127,7 @@ void load_resources() {
       delete_all(name, hpw::cur_dir + ".." + SEPARATOR);
       conv_sep_for_archive(name);
     #endif
-    hpw::store_sprite->push(name, sprite);
+    hpw::sprites.push(name, sprite);
   }
 }
 
@@ -228,7 +227,7 @@ cr<Shared<Anim>> make_light_mask(cr<Str> src, cr<Str> dst) {
       crauto sprite_for_contour = *direct.sprite.lock();
 
       direct.offset += -Vec(1, 1);
-      direct.sprite =hpw::store_sprite->push (
+      direct.sprite =hpw::sprites.push (
         sprite_for_contour.get_path() + ".contour",
         new_shared<Sprite>(extract_contour(sprite_for_contour))
       );
@@ -368,7 +367,7 @@ std::size_t& idx, Sprite& buffer) {
     else
       --timeout;
 
-    cauto sprite = hpw::store_sprite->find(sprite_list.at(idx));
+    cauto sprite = hpw::sprites.find(sprite_list.at(idx));
     ++idx;
     cont_if (!sprite || !(*sprite));
 
@@ -397,9 +396,8 @@ std::size_t& idx, Sprite& buffer) {
 
 // фильтрует и сортирует имена спрайтов для save_all_sprites
 inline static void prepare_sprite_list(Strs& sprite_list) {
-  assert(hpw::store_sprite);
   constexpr auto name_filter = [](cr<Str> sprite_name) {
-    cauto sprite = hpw::store_sprite->find(sprite_name);
+    cauto sprite = hpw::sprites.find(sprite_name);
     const bool exist = sprite && *sprite;
     return sprite_name.find("tile") == str_npos // тайлы уровня не нужны
       && sprite_name.find("contour") == str_npos // контуры не нужны
@@ -413,8 +411,8 @@ inline static void prepare_sprite_list(Strs& sprite_list) {
 
   // сортировка спрайтов по размеру
   std::sort(sprite_list.begin(), sprite_list.end(), [](cr<Str> a, cr<Str> b) {
-    cauto sprite_a = hpw::store_sprite->find(a);
-    cauto sprite_b = hpw::store_sprite->find(b);
+    cauto sprite_a = hpw::sprites.find(a);
+    cauto sprite_b = hpw::sprites.find(b);
     // при одинаковых размерах сортировать по ширине
     if (sprite_a->size() == sprite_b->size())
       return sprite_a->X() > sprite_b->X();
@@ -425,9 +423,8 @@ inline static void prepare_sprite_list(Strs& sprite_list) {
 void save_all_sprites(cr<Str> save_dir, const int MX, const int MY) {
   assert(MX >= 256);
   assert(MY >= 256);
-  assert(hpw::store_sprite);
   make_dir_if_not_exist(save_dir);
-  auto sprite_list = hpw::store_sprite->list();
+  auto sprite_list = hpw::sprites.list();
   prepare_sprite_list(sprite_list);
   std::size_t idx {};
   uint time_out = 1'000;
@@ -447,12 +444,11 @@ void save_all_sprites(cr<Str> save_dir, const int MX, const int MY) {
 }
 
 std::size_t sizeof_all_sprites() {
-  if (!hpw::store_sprite)
-    return 0;
+  return_if (hpw::sprites.empty(), 0);
   std::size_t ret {};
-  cauto sprite_list = hpw::store_sprite->list();
+  cauto sprite_list = hpw::sprites.list();
   for (crauto sprite_name: sprite_list) {
-    cauto sprite = hpw::store_sprite->find(sprite_name);
+    cauto sprite = hpw::sprites.find(sprite_name);
     if (sprite) {
       ret += sizeof(Sprite); // размер класса под спрайт
       if (*sprite) // размер пикселей в маске и картинке

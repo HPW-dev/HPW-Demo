@@ -30,7 +30,7 @@ uint prng(uint& state) {
 
 void bgp_warabimochi(Image& dst, const int bg_state) {
   // фон с тачкой
-  cauto warabimochi = hpw::store_sprite->find("resource/image/loading logo/warabimochi.png");
+  cauto warabimochi = hpw::sprites.find("resource/image/loading logo/warabimochi.png");
   assert(warabimochi);
   insert_fast(dst, warabimochi->image());
   // размыть и затенить фон
@@ -321,7 +321,7 @@ void bgp_fast_lines_red(Image& dst, const int bg_state) {
 }
 
 void bgp_skyline(Image& dst, const int bg_state) {
-  cauto skyline = hpw::store_sprite->find(
+  cauto skyline = hpw::sprites.find(
     "resource/image/loading logo/skyline.png");
   assert(skyline);
   insert_fast(dst, skyline->image());
@@ -394,13 +394,12 @@ void bgp_tiles_2(Image& dst, const int bg_state) {
   static Vector<Image> tiles {};
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
-    assert(hpw::store_sprite);
     // найти тайлы из нужной папки
     cauto list = hpw::archive->get_all_names(false);;
     cauto tile_name_filter = [](cr<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
-      auto tile = hpw::store_sprite->find(tile_name);
+      auto tile = hpw::sprites.find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
     }
@@ -444,13 +443,12 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
   static Vector<Image> tiles {};
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
-    assert(hpw::store_sprite);
     // найти тайлы из нужной папки
     cauto list = hpw::archive->get_all_names(false);
     cauto tile_name_filter = [](cr<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
-      auto tile = hpw::store_sprite->find(tile_name);
+      auto tile = hpw::sprites.find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
     }
@@ -545,7 +543,6 @@ void bgp_tiles_3(Image& dst, const int bg_state) {
   static Vector<Image> tiles {};
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
-    assert(hpw::store_sprite);
     static const Strs list {
       "resource/image/other/bw tiles 4x4/black.png",
       "resource/image/other/bw tiles 4x4/pixel.png",
@@ -555,7 +552,7 @@ void bgp_tiles_3(Image& dst, const int bg_state) {
       "resource/image/other/bw tiles 4x4/white.png",
     };
     for (crauto tile_name: list) {
-      auto tile = hpw::store_sprite->find(tile_name);
+      auto tile = hpw::sprites.find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
     }
@@ -604,7 +601,6 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
   static Vector<Image> tiles {};
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
-    assert(hpw::store_sprite);
     static const Strs list {
       "resource/image/other/bw tiles 4x4/black.png",
       "resource/image/other/bw tiles 4x4/pixel.png",
@@ -613,7 +609,7 @@ void bgp_tiles_4(Image& dst, const int bg_state) {
       "resource/image/other/bw tiles 4x4/circle filled.png",
     };
     for (crauto tile_name: list) {
-      auto tile = hpw::store_sprite->find(tile_name);
+      auto tile = hpw::sprites.find(tile_name);
       assert(tile && *tile);
       tiles.push_back(tile->image());
     }
@@ -1034,7 +1030,7 @@ void bgp_noise(Image& dst, const int bg_state) {
 }
 
 void bgp_self_code(Image& dst, const int bg_state) {
-  cauto code_img = hpw::store_sprite->find(
+  cauto code_img = hpw::sprites.find(
     "resource/image/other/bgp_self_code.png");
   assert(code_img);
   insert_fast(dst, code_img->image());

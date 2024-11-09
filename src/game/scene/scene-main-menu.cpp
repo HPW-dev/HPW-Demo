@@ -414,7 +414,7 @@ void Scene_main_menu::draw_text(Image& dst) const noexcept {
 } // draw_text
 
 Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
-  auto finded_sprite = hpw::store_sprite->find(name);
+  auto finded_sprite = hpw::sprites.find(name);
   assert(finded_sprite && scast<bool>(*finded_sprite));
   auto logo = new_unique<Sprite>(*finded_sprite);
 

@@ -167,7 +167,7 @@ struct Scene_entity_editor::Impl {
     log_txt << "  lazy anim loading = " << hpw::lazy_load_anim << '\n';
     log_txt << "  lazy sprite loading = " << hpw::lazy_load_sprite << '\n';
     log_txt << "  anim's = " << hpw::anim_mgr->anim_count() << '\n';
-    log_txt << "  sprites = " << hpw::store_sprite->list().size() << '\n';
+    log_txt << "  sprites = " << hpw::sprites.list().size() << '\n';
     log_txt << "game:\n";
     log_txt << "  entity loaders = " << hpw::entity_mgr->entity_loaders_sz() << '\n';
     log_txt << "  shmup mode = " << std::boolalpha << hpw::shmup_mode << '\n';

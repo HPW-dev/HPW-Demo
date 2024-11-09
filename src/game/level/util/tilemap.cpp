@@ -52,7 +52,7 @@ struct Tilemap::Impl {
       auto sprite_fname = sprite_dir + fname;
       conv_sep_for_archive(sprite_fname);
 
-      auto sprite = hpw::store_sprite->find(sprite_fname);
+      auto sprite = hpw::sprites.find(sprite_fname);
       iferror(!sprite, "sprite \"" << sprite_fname << "\" not founded in sprite_store");
       m_tiles.emplace_back( std::move( Tile{
         .sprite = sprite,

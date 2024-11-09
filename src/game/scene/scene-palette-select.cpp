@@ -28,7 +28,7 @@ struct Scene_palette_select::Impl {
   inline Impl() {
     init_menu();
 
-    test_image = hpw::store_sprite->find("resource/image/other/palette test.png");
+    test_image = hpw::sprites.find("resource/image/other/palette test.png");
     assert(test_image);
 
     // загрузить имена всех файлов с палитрой

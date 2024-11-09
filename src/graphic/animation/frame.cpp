@@ -60,7 +60,7 @@ void Frame::reinit_directions_by_source() {
       direct.offset, source_ctx.rotate_offset, source_ctx.cgp, source_ctx.ccf)
     );
     new_sprite->set_generated(true);
-    direct.sprite = hpw::store_sprite->move(new_path, std::move(new_sprite));
+    direct.sprite = hpw::sprites.move(new_path, std::move(new_sprite));
     directions.emplace_back(direct);
   }
 } // init_directions
@@ -86,7 +86,7 @@ void Frame::init_quarters() {
     );
     new_sprite->set_generated(true);
     cauto new_path = source_ctx.direct_0.sprite.lock()->get_path() + "." + n2s(i);
-    direct.sprite = hpw::store_sprite->move(new_path, std::move(new_sprite));
+    direct.sprite = hpw::sprites.move(new_path, std::move(new_sprite));
     directions.emplace_back( std::move(direct) );
   }
   // оставшиеся четверти дополнить
@@ -102,7 +102,7 @@ void Frame::init_quarters() {
         new_sprite->set_generated(true);
         cauto new_path = src_direction.sprite.lock()->get_path()
           + "." + n2s(max_quarter + quarter * i);
-        direct.sprite = hpw::store_sprite->move(new_path, std::move(new_sprite));
+        direct.sprite = hpw::sprites.move(new_path, std::move(new_sprite));
         direct.offset = rotate_deg({}, src_direction.offset, 90);
         // коррекция повёрнутого оффсета
         direct.offset.x -= direct.sprite.lock()->X() - 1;

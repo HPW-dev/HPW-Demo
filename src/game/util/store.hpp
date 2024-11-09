@@ -13,24 +13,36 @@
 template <class T>
 class Store {
 public:
+  // элементы хранятся в смартпоинтерах
   using Velue = Shared<T>;
+  // действие при отсутствии искомого элемента
   using Find_err_cb = std::function<Velue (cr<Str> name)>;
 
   Store() = default;
   ~Store() = default;
+  // зарегистрировать элемент res по имени name
   Velue& push(cr<Str> name, cr<Velue> res);
+  // зарегистрировать элемент res по имени name (с перемещением)
   Velue& move(cr<Str> name, Shared<T>&& res);
+  // найти элемент с именем name. При ошибке вызвать функцию из move_find_err_cb
   Velue find(cr<Str> name) const;
+  // найти элемент с именем name. При ошибке вызвать функцию из move_find_err_cb
+  Velue operator[](cr<Str> name) const;
   // узнать названия всех ресурсов
   Strs list(bool without_generated=false) const;
+  // добавить лямбду при ошибках поиска элемента
   void move_find_err_cb(Find_err_cb&& cb);
+  // удалить все элементы
+  void clear();
+  // проверить что есть элементы
+  bool empty() const;
 
 private:
   nocopy(Store);
-  std::unordered_map<Str, Velue> m_table {};
+  std::unordered_map<Str, Velue> m_table {}; // имя-значение
   // если не удаётся найти ресурс, выполнить калбэк
   Find_err_cb m_find_err_cb {};
-}; // Store
+};
 
 // ----------------------- impl ------------------------------
 
@@ -43,6 +55,11 @@ Store<T>::Velue Store<T>::find(cr<Str> name) const {
     detailed_iflog( !name.empty(), "resource \"" << name << "\" not finded\n" );
   }
   return {};
+}
+
+template <class T>
+Store<T>::Velue Store<T>::operator[](cr<Str> name) const {
+  return this->find(name);
 }
 
 template <class T>
@@ -84,3 +101,12 @@ void Store<T>::move_find_err_cb(Find_err_cb&& cb) {
   assert(cb);
   m_find_err_cb = std::move(cb);
 }
+
+template <class T>
+void Store<T>::clear() {
+  m_table.clear();
+  m_find_err_cb = {};
+}
+
+template <class T>
+bool Store<T>::empty() const { return m_table.empty(); }

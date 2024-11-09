@@ -129,7 +129,7 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
     // прочитать источник кадра
     auto sprite_path = cur_frame_node.get_str("sprite path");
     if (!sprite_path.empty()) {
-      auto finded_sprite = hpw::store_sprite->find(sprite_path);
+      auto finded_sprite = hpw::sprites.find(sprite_path);
       if (finded_sprite)
         frame->source_ctx.direct_0.sprite = finded_sprite;
     }

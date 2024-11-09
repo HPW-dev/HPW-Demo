@@ -5,7 +5,7 @@
 namespace hpw {
 
 // все спрайты тут
-inline Unique<Store<Sprite>> store_sprite {};
+inline Store<Sprite> sprites {};
 
 // если true, грузить спрайты только по запросу по имени
 inline bool lazy_load_sprite {

@@ -694,8 +694,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
 
     // ресурсы для рендера:
     auto load_and_check = [](cr<Str> name)->cr<Sprite> {
-      assert(hpw::store_sprite);
-      cauto ptr = hpw::store_sprite->find(name);
+      cauto ptr = hpw::sprites[name];
       assert(ptr);
       cauto ret = ptr.get();
       assert(*ret);

@@ -28,7 +28,7 @@ struct Scene_gamma::Impl {
 
   inline explicit Impl() {
     init_menu();
-    test_image = hpw::store_sprite->find("resource/image/other/gamma test.png").get();
+    test_image = hpw::sprites["resource/image/other/gamma test.png"].get();
     assert(test_image);
     // тест надо проводить в масштабе 1:1 
     fullscreen_bak = graphic::fullscreen;

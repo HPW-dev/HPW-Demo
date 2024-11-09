@@ -17,7 +17,7 @@
 
 Sprite_select::Sprite_select(decltype(callback) new_callback)
 : callback(new_callback) {
-  _list = hpw::store_sprite->list(true);
+  _list = hpw::sprites.list(true);
 }
 
 void Sprite_select::update(const Delta_time dt) {
@@ -44,7 +44,7 @@ void Sprite_select::draw(Image& dst) const {
 
   return_if(sel_spr.empty());
 
-  if (auto sprite = hpw::store_sprite->find(sel_spr); sprite) {
+  if (auto sprite = hpw::sprites.find(sel_spr); sprite) {
     auto center = center_point(dst, *sprite);
     insert(dst, *sprite, center);
     auto text = sconv<utf32>(sel_spr);
@@ -100,7 +100,7 @@ void Sprite_select::enable() {
 
   if (callback) {
     auto path = sel_spr;
-    auto sprite = hpw::store_sprite->find(path);
+    auto sprite = hpw::sprites.find(path);
     callback(sprite, path);
   }
   hpw::scene_mgr->back();

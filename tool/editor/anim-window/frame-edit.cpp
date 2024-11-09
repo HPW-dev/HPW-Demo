@@ -138,7 +138,7 @@ void Frame_wnd::draw_path_edit(Frame& frame) {
     ImGuiInputTextFlags_EnterReturnsTrue)
   ) {
     auto new_path = from_null_ended<Str>(path_buffer);
-    auto sprite = hpw::store_sprite->find(new_path);
+    auto sprite = hpw::sprites.find(new_path);
     if (sprite) {
       frame.source_ctx.direct_0.sprite = sprite;
       frame.reinit_directions_by_source();
