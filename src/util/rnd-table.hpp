@@ -35,16 +35,29 @@ public:
     cauto sz = m_values.size();
     if (sz == 1)
       return m_values[0];
-    return m_values.at( rndu(sz-1) ); 
+    _last_idx = rndu(sz-1);
+    return m_values.at(_last_idx); 
   }
   
   inline Value_cref rnd_fast() const {
     cauto sz = m_values.size();
     if (sz == 1)
       return m_values[0];
-    return m_values.at( rndu_fast(sz-1) );
+    _last_idx = rndu_fast(sz-1);
+    return m_values.at(_last_idx);
+  }
+
+  // взять элемент по порядку
+  inline Value_cref next() const {
+    assert(!m_values.empty());
+    cauto sz = m_values.size();
+    if (sz == 1)
+      return m_values[0];
+    _last_idx = (_last_idx + 1) % sz;
+    return m_values.at(_last_idx);
   }
 
 private:
   Values m_values {};
+  mutable std::size_t _last_idx {}; // id предыдущего вернутого элемента
 };
