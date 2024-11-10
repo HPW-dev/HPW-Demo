@@ -601,13 +601,13 @@ void hpw_blur(Image& dst, cr<Image> src, const int window_sz) {
     default:
     case Blur_mode::autoopt: {
       if (graphic::render_lag)
-        blur_fast(dst, Image(dst), window_sz);
+        blur_fast(dst, src, window_sz);
       else
-        blur_hq(dst, Image(dst), window_sz);
+        blur_hq(dst, src, window_sz);
       break;
     }
-    case Blur_mode::low: blur_fast(dst, Image(dst), window_sz); break;
-    case Blur_mode::high: blur_hq(dst, Image(dst), window_sz); break;
+    case Blur_mode::low: blur_fast(dst, src, window_sz); break;
+    case Blur_mode::high: blur_hq(dst, src, window_sz); break;
   }
 }
 

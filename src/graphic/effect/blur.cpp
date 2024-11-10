@@ -40,7 +40,7 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst.size == src.size);
   assert(window_sz >= 1);
 
-  const int KERNEL_LEN = window_sz * 2 + 1;
+  const int KERNEL_LEN = window_sz * 2;
   assert(dst.X > KERNEL_LEN);
   assert(dst.Y > KERNEL_LEN);
   Image src_gray(src.X, src.Y);
@@ -53,7 +53,7 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
     for (int wy = -window_sz; wy < window_sz; ++wy)
     for (int wx = -window_sz; wx < window_sz; ++wx)
       sum += src_gray(x + wx, y + wy).val;
-    dst(x, y) = sum / (KERNEL_LEN * KERNEL_LEN + 2);
+    dst(x, y) = sum / (KERNEL_LEN * KERNEL_LEN);
   }
 
   // добить края изображения растягиванием
@@ -91,7 +91,7 @@ void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) noe
   assert(dst.size == src.size);
   assert(window_sz >= 1);
 
-  const int KERNEL_LEN = window_sz * 2 + 1;
+  const int KERNEL_LEN = window_sz * 2;
   assert(dst.X > KERNEL_LEN);
 
   #pragma omp parallel for simd
@@ -104,7 +104,7 @@ void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) noe
       for (int wx = -window_sz; wx < window_sz; ++wx)
         sum += (src_ptr + wx)->val;
         
-      dst(x, y) = sum / (KERNEL_LEN + 2);
+      dst(x, y) = sum / KERNEL_LEN;
       ++src_ptr;
     }
   }
