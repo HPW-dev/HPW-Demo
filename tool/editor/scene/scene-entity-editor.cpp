@@ -63,6 +63,7 @@ struct Scene_entity_editor::Impl {
 
   inline void draw(Image& dst) const {
     draw_bg(dst);
+    hpw::task_mgr.draw_post_bg(dst);
     hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
     hpw::task_mgr.draw(dst);
     hpw::message_mgr->draw(dst);

@@ -19,7 +19,8 @@ public:
   inline virtual void on_stop() {}
   inline virtual void on_unfreeze() {}
   inline virtual void update(const Delta_time dt) {}
-  inline virtual void draw(Image& dst) const {}
+  inline virtual void draw(Image& dst) const {} // рисоватьповерх всей сцены
+  inline virtual void draw_post_bg(Image& dst) const {} // рисовать поверх фона уровня
   virtual void stop();
   virtual void unfreeze();
   virtual void kill();
@@ -45,7 +46,8 @@ public:
   Shared<Task> add(cr<Shared<Task>> task);
   Shared<Task> add(Shared<Task>&& task);
   void update(const Delta_time dt);
-  void draw(Image& dst) const;
+  void draw(Image& dst) const; // рендер поверх всей сцены
+  void draw_post_bg(Image& dst) const; // рендер после отрисовки фона
   void reset_all();
   void stop_all();
   void unfreeze_all();

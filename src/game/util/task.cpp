@@ -70,6 +70,12 @@ void Task_mgr::draw(Image& dst) const {
       task->draw(dst);
 }
 
+void Task_mgr::draw_post_bg(Image& dst) const {
+  for (crauto task: m_tasks)
+    if (task->is_active())
+      task->draw_post_bg(dst);
+}
+
 void Task_mgr::reset_all() {
   for (rauto task: m_tasks)
     task->restart();

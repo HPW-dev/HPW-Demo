@@ -10,5 +10,5 @@ public:
   Shop_task();
   ~Shop_task();
   void update(const Delta_time dt) override;
-  void draw(Image& dst) const override;
+  void draw_post_bg(Image& dst) const override;
 };

@@ -10,6 +10,7 @@
 #include "game/util/game-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec.hpp"
+#include "util/math/timer.hpp"
 
 struct Shopping_item {
   hpw::Score_out price {}; // сколько стоит предмет
@@ -21,7 +22,10 @@ struct Shopping_item {
 struct Shop_task::Impl {
   constx hpw::Score_out FIRST_PRICE = 100; // первая цена, когда у игрока <= 0 очков
   constx std::size_t SHOPPING_ITEMS = 3; // сколько дают предметов на выбор
+  constx real SELECT_DELAY = 5; // столько секунд надо подождать, чтобы выбрать способность
+
   Vector<Shopping_item> _shopping_items {};
+  Timer _select_delay {};
 
   inline Impl() {
     init_prices();
@@ -32,7 +36,7 @@ struct Shop_task::Impl {
 
   inline void update(const Delta_time dt) {}
 
-  inline void draw(Image& dst) const {
+  inline void draw_post_bg(Image& dst) const {
     draw_items(dst);
   }
 
@@ -118,4 +122,4 @@ struct Shop_task::Impl {
 Shop_task::Shop_task(): impl{new_unique<Impl>()} {}
 Shop_task::~Shop_task() {}
 void Shop_task::update(const Delta_time dt) { impl->update(dt); }
-void Shop_task::draw(Image& dst) const { impl->draw(dst); }
+void Shop_task::draw_post_bg(Image& dst) const { impl->draw_post_bg(dst); }

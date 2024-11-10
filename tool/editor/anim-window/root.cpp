@@ -50,6 +50,7 @@ void Root_wnd::draw(Image& dst) const {
   if (editor::use_draw_cross)
     draw_cross_bg(dst);
   cppfor(wnds, draw(dst));
+  hpw::task_mgr.draw_post_bg(dst);
   hpw::entity_mgr->draw(*graphic::canvas, graphic::camera->get_offset());
   hpw::task_mgr.draw(dst);
   if (editor::use_draw_cross && (graphic::frame_count & 0b100))
