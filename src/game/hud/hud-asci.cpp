@@ -8,6 +8,7 @@
 #include "game/util/score-table.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/camera.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
@@ -44,9 +45,9 @@ struct Hud_asci::Impl {
     return_if (!player);
 
     update_hud_rects(player);
-    // хитбокс игрока
-    cauto player_pos = player->phys.get_pos();
-    player_rect = Rect(player_pos - Vec(15, 2), Vec(31, 17));
+    cauto _player_rect = get_player_rect();
+    return_if (!_player_rect);
+    player_rect = _player_rect.value();
 
     push_player(player);
     check_crush(player);

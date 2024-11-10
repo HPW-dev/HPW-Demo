@@ -402,3 +402,12 @@ Vec3 to_sound_pos(const Vec src) {
     0
   );
 }
+
+std::optional<Rect> get_player_rect() {
+  return_if(!hpw::entity_mgr, {});
+  cauto player = hpw::entity_mgr->get_player();
+  return_if(!player, {});
+
+  cauto player_pos = player->phys.get_pos();
+  return Rect(player_pos - Vec(15, 2), Vec(31, 17));
+}

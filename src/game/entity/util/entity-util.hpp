@@ -1,10 +1,12 @@
 #pragma once
 #include <functional>
+#include <optional>
 #include "sound/audio.hpp"
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
+#include "util/math/rect.hpp"
 
 class Entity;
 class Particle;
@@ -51,6 +53,8 @@ bool bound_check_for_collisions(cr<Collidable> other);
 Vec3 to_sound_vel(const Vec src);
 // кновертирует корды игры в звуковые корды
 Vec3 to_sound_pos(const Vec src);
+// хитбокс игрока в виде прямоугольника
+[[nodiscard]] std::optional<Rect> get_player_rect();
 
 class Kill_by_timeout final {
   Delta_time m_timeout {};
