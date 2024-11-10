@@ -27,6 +27,7 @@ public:
   virtual void restart();
   inline bool is_active() const { return m_active; }
   inline bool is_paused() const { return m_paused; }
+  // сигнал на завершение задачи
   inline void deactivate() { m_active = false; }
   inline void activate() { m_active = true; }
 };

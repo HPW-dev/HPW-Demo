@@ -8,7 +8,9 @@ using Score_in = int64_t; // int с имитацией float через умно
 using Score_out = int64_t; // вариант для отображения на экране и сохранении в реплее (делён на 100)
 
 // можно как добавить очки, так и отнять
-void add_score(Score_in val);
+void add_score_internal(Score_in val);
+// можно как добавить очки, так и отнять
+void add_score_normalized(Score_in val);
 // узнать сколько сейчас очков у игрока (во внутреннем представлении)
 Score_in get_score_internal();
 // узнать сколько сейчас очков у игрока (вариант для отображения на экране и сохранении в реплее)

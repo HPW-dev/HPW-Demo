@@ -5,7 +5,8 @@ namespace hpw {
 static Score_in _record = 0;
 static Score_in _scale = 100;
 
-void add_score(Score_in val) { _record += val; }
+void add_score_internal(const Score_in val) { _record += val; }
+void add_score_normalized(const Score_out val) { _record += val * 100; }
 void clear_score() { _record = 0; }
 void clear_score_scale() { _scale = 0; }
 Score_in get_score_internal() { return _record; }
