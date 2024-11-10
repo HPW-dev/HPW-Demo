@@ -8,6 +8,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
 #include "game/util/game-util.hpp"
+#include "game/entity/util/entity-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/timer.hpp"
@@ -17,15 +18,16 @@ struct Shopping_item {
   utf32 name {}; // название покупаемой способности
   Rect hitbox {}; // хитбокс окна
   bool selected {}; // текущий предметр выбран
+  Timer select_delay {};
 };
 
 struct Shop_task::Impl {
   constx hpw::Score_out FIRST_PRICE = 100; // первая цена, когда у игрока <= 0 очков
   constx std::size_t SHOPPING_ITEMS = 3; // сколько дают предметов на выбор
-  constx real SELECT_DELAY = 5; // столько секунд надо подождать, чтобы выбрать способность
+  constx real SELECT_DELAY = 4.5; // столько секунд надо подождать, чтобы выбрать способность
 
   Vector<Shopping_item> _shopping_items {};
-  Timer _select_delay {};
+  
 
   inline Impl() {
     init_prices();
@@ -34,7 +36,21 @@ struct Shop_task::Impl {
     assert(_shopping_items.size() == 3); // система рассчитана на 3 способности в списке
   };
 
-  inline void update(const Delta_time dt) {}
+  inline void update(const Delta_time dt) {
+    cauto PLAYER_RECT = get_player_rect();
+    return_if(!PLAYER_RECT);
+
+    // пока игрок стоит в одном из прямоугольников, можно начать засчитывать покупку
+    for (rauto item: _shopping_items) {
+      if (intersect(PLAYER_RECT.value(), item.hitbox)) {
+        item.select_delay.update(dt);
+        item.selected = true;
+      } else {
+        item.select_delay.reset();
+        item.selected = false;
+      }
+    }
+  }
 
   inline void draw_post_bg(Image& dst) const {
     draw_items(dst);
@@ -75,14 +91,20 @@ struct Shop_task::Impl {
 
   inline void draw_items(Image& dst) const {
     for (crauto item: _shopping_items) {
-      draw_item_wnd(dst, item.hitbox, item.selected);
+      draw_item_wnd(dst, item);
       draw_item_text(dst, item);
     }
   }
 
-  inline void draw_item_wnd(Image& dst, const Rect wnd, bool selected) const {
+  inline void draw_item_wnd(Image& dst, cr<Shopping_item> item) const {
+    cauto wnd = item.hitbox;
     assert(dst.X >= wnd.size.x + wnd.pos.x);
     assert(dst.Y >= wnd.size.y + wnd.pos.y);
+
+    // яркость кнопки
+    int light = -20;
+    if (item.selected)
+      light += (1.0 - item.select_delay.ratio()) * 120;
 
     static Image croped_bg;
     croped_bg.init(wnd.size.x, wnd.size.y);
@@ -93,29 +115,34 @@ struct Shop_task::Impl {
       static Image blured_bg;
       blured_bg.init(wnd.size.x, wnd.size.y);
       hpw_blur(blured_bg, croped_bg, 5);
-      apply_brightness(blured_bg, -20);
+      apply_brightness(blured_bg, light);
       insert(dst, blured_bg, wnd.pos);
     } else { // обойтись без блюра
-      apply_brightness(croped_bg, -20);
+      apply_brightness(croped_bg, light);
       insert(dst, croped_bg, wnd.pos);
     }
 
     const Rect RECT(wnd.pos - 1, wnd.size + 2);
-    draw_rect<blend_diff>(dst, RECT, selected ? Pal8::white : Pal8::gray);
+    draw_rect<blend_diff>(dst, RECT, item.selected ? Pal8::white : Pal8::gray);
   }
 
   inline void bind_hitboxes() {
     const Vec ITEM_SZ(graphic::width - 100, 70);
     const Vec OFFSET((graphic::width - ITEM_SZ.x) / 2, (graphic::height - (ITEM_SZ.y * 3)) / 2);
 
-    cfor (i, _shopping_items.size())
+    cfor (i, _shopping_items.size()) {
       _shopping_items[i].hitbox = Rect(OFFSET + Vec(0, ITEM_SZ.y * i - i), ITEM_SZ);
+      _shopping_items[i].select_delay = Timer(SELECT_DELAY);
+    }
   }
 
   inline void draw_item_text(Image& dst, cr<Shopping_item> item) const {
     cauto txt = item.name; // TODO сменяется на price
     const Vec TEXT_OFFSET(18, (item.hitbox.size.y - graphic::font_shop->h()) / 2);
-    text_bordered(dst, txt, graphic::font_shop.get(), item.hitbox, TEXT_OFFSET, &blend_max);
+    auto bf = &blend_max;
+    if (item.selected)
+      bf = rndu_fast() % 2 ? &blend_xor : &blend_max;
+    text_bordered(dst, txt, graphic::font_shop.get(), item.hitbox, TEXT_OFFSET, bf);
   }
 }; // Impl
 
