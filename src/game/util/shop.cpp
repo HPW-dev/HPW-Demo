@@ -3,8 +3,11 @@
 #include "score-table.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "graphic/font/font-util.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/graphic.hpp"
+#include "game/util/game-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/vec.hpp"
 
@@ -67,13 +70,34 @@ struct Shop_task::Impl {
   }
 
   inline void draw_items(Image& dst) const {
-    for (crauto item: _shopping_items)
-      draw_item_wnd(dst, item.hitbox, false);
+    for (crauto item: _shopping_items) {
+      draw_item_wnd(dst, item.hitbox, item.selected);
+      draw_item_text(dst, item);
+    }
   }
 
   inline void draw_item_wnd(Image& dst, const Rect wnd, bool selected) const {
-    // TODO blur
-    draw_rect<blend_diff>(dst, wnd, selected ? Pal8::white : Pal8::red_mid);
+    assert(dst.X >= wnd.size.x + wnd.pos.x);
+    assert(dst.Y >= wnd.size.y + wnd.pos.y);
+
+    static Image croped_bg;
+    croped_bg.init(wnd.size.x, wnd.size.y);
+
+    // фон затенить и заблюрить
+    fast_cut_2(croped_bg, dst, wnd.pos.x, wnd.pos.y, wnd.size.x, wnd.size.y);
+    if (check_high_blur()) {
+      static Image blured_bg;
+      blured_bg.init(wnd.size.x, wnd.size.y);
+      hpw_blur(blured_bg, croped_bg, 5);
+      apply_brightness(blured_bg, -20);
+      insert(dst, blured_bg, wnd.pos);
+    } else { // обойтись без блюра
+      apply_brightness(croped_bg, -20);
+      insert(dst, croped_bg, wnd.pos);
+    }
+
+    const Rect RECT(wnd.pos - 1, wnd.size + 2);
+    draw_rect<blend_diff>(dst, RECT, selected ? Pal8::white : Pal8::gray);
   }
 
   inline void bind_hitboxes() {
@@ -82,6 +106,12 @@ struct Shop_task::Impl {
 
     cfor (i, _shopping_items.size())
       _shopping_items[i].hitbox = Rect(OFFSET + Vec(0, ITEM_SZ.y * i - i), ITEM_SZ);
+  }
+
+  inline void draw_item_text(Image& dst, cr<Shopping_item> item) const {
+    cauto txt = item.name; // TODO сменяется на price
+    const Vec TEXT_OFFSET(18, (item.hitbox.size.y - graphic::font_shop->h()) / 2);
+    text_bordered(dst, txt, graphic::font_shop.get(), item.hitbox, TEXT_OFFSET, &blend_max);
   }
 }; // Impl
 

@@ -25,13 +25,14 @@ const Rect border, const Vec offset, blend_pf bf, int opt) {
   assert(border.size.y >= 0);
 
   cauto separated = split(txt, U' ');
-  const int needed_str_width = border.size.x - std::abs(offset.x) * 2;
-  const int needed_str_height = border.size.y - std::abs(offset.y) * 2;
+  const int needed_str_width = border.size.x - std::abs(offset.x);
+  const int needed_str_height = border.size.y - std::abs(offset.y);
   return_if(needed_str_width <= 0);
   return_if(needed_str_height <= 0);
   utf32 formated_txt;
   utf32 str;
   bool stop {}; // true - текст по высоте вышел за пределы
+
   // узнавать размер каждого слова и ставить EOL где нужно
   for (auto word: separated) {
     cauto str_width = font->text_width(str + word);
