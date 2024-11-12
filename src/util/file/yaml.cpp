@@ -10,6 +10,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "util/file/file.hpp"
 
 // Внутреннаяя реализация для Yaml
 class Yaml::Impl: public Resource {

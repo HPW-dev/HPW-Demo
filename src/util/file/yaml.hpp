@@ -1,39 +1,37 @@
 #pragma once
-#include "game/util/resource.hpp"
 #include "util/unicode.hpp"
 #include "util/mem-types.hpp"
-#include "util/file/file.hpp"
+#include "util/math/num-types.hpp"
+#include "game/util/resource.hpp"
+
+struct File;
 
 // парсер .yml файлов
 class Yaml final: public Resource {
-  class Impl;
+  struct Impl;
   Unique<Impl> impl {};
 
 public:
+  Yaml();
+  ~Yaml();
+  
   /** создать или открыть .yml файл
   * @param fname имя файла на диске
   * @param make_if_not_exist создать, если файла нету */
   Yaml(Str fname, bool make_if_not_exist=false);
-  // загрузить .yml из памяти файла
-  Yaml(cr<File> file);
+  Yaml(cr<File> file); // загрузить .yml из памяти файла
   Yaml(cr<Impl> new_impl);
-  Yaml();
-  ~Yaml();
   Yaml(cr<Yaml> other);
   Yaml(Yaml&& other) noexcept;
   Yaml& operator = (cr<Yaml> other);
   Yaml& operator = (Yaml&& other) noexcept;
 
-  // сохранить .yml на диск
-  void save(Str fname) const;
-  // стереть все данные
-  void clear();
-  // создать пустую ветвь
-  Yaml make_node(cr<Str> name);
+  void save(Str fname) const; // сохранить .yml на диск
+  void clear(); // стереть все данные
+  Yaml make_node(cr<Str> name); // создать пустую ветвь
   // не создаст пустую ветвь, если она уже есть с таким именем
   Yaml make_node_if_not_exist(cr<Str> name);
-  // удалить ветку
-  void delete_node(cr<Str> name);
+  void delete_node(cr<Str> name); // удалить ветку
 
   void set_int(cr<Str> name, int val);
   void set_real(cr<Str> name, real val);
@@ -68,12 +66,8 @@ public:
   using vkv_t = Vector<kv_t>; // vector of string keys and string values
   using vkvu32_t = Vector<kvu32_t>; // vector of string keys and utf32 values
 
-  // вернёт список ключей и значений: {"tag1.tag2.tag3", "value"}
-  vkv_t get_kv_table() const;
-  // вернёт список ключей и значений: {"tag1.tag2.tag3", U"value"}
-  vkvu32_t get_kvu32_table() const;
-  // получить название тегов рута (все верхние ноды)
-  Strs root_tags() const;
-  // проверяет валидность (не заменяй это на op-bool)
-  bool check() const;
+  vkv_t get_kv_table() const; // вернёт список ключей и значений: {"tag1.tag2.tag3", "value"}
+  vkvu32_t get_kvu32_table() const; // вернёт список ключей и значений: {"tag1.tag2.tag3", U"value"}
+  Strs root_tags() const; // получить название тегов рута (все верхние ноды)
+  bool check() const; // проверяет валидность (не заменяй это на op-bool)
 }; // Yaml
