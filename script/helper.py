@@ -64,12 +64,12 @@ def exec_cmd(cmd, without_print=False):
   cmd_tm_st = time.time()
   cmd = os.path.normpath (cmd) 
   print (cmd)
-  result = subprocess.run (cmd.split(), check=True, universal_newlines=True,
-    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  if without_print:
+    result = subprocess.run(cmd.split(), check=True, universal_newlines=True,
+      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  else:
+    result = subprocess.run(cmd.split(), check=True)
   cmd_tm_ed = time.time()
-  if not without_print:
-    print(result.stdout)
-    print(result.stderr)
   print (f'e.t: { round(cmd_tm_ed - cmd_tm_st, 1) }s')
   print()
   return result.stdout, result.stderr
