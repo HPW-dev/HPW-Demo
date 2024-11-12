@@ -14,9 +14,9 @@
 
 // Внутреннаяя реализация для Yaml
 class Yaml::Impl: public Resource {
-  YAML::Node self {};
+  YAML::Node root {};
 
-  inline void get_kv_table_helper(vkv_t &v_kv, cr<Str> key, cr<decltype(self)> v_node) const {
+  inline void get_kv_table_helper(vkv_t &v_kv, cr<Str> key, cr<decltype(root)> v_node) const {
     if (v_node.size() == 0) {
       v_kv.push_back(kv_t{ .key=str_tolower(key), .value=v_node.as<Str>() });
     } else {
@@ -25,7 +25,7 @@ class Yaml::Impl: public Resource {
     }
   }
 
-  inline void get_kv32_table_helper(vkvu32_t &v_kv32, cr<Str> key, cr<decltype(self)> v_node) const {
+  inline void get_kv32_table_helper(vkvu32_t &v_kv32, cr<Str> key, cr<decltype(root)> v_node) const {
     if (v_node.size() == 0) {
       using utf8_to_utf32 = std::codecvt_utf8<char32_t>;
       std::wstring_convert<utf8_to_utf32, char32_t> conv;
@@ -42,14 +42,14 @@ class Yaml::Impl: public Resource {
   template <class T>
   inline void set_v(cr<Str> name, cr<Vector<T>> val) {
     cfor (i, val.size())
-      self[name][i] = val[i];
+      root[name][i] = val[i];
   }
 
   // helper for get value from YAML
   template <class T>
   inline T _get(cr<Str> name, cr<T> default_val) const {
     try {
-      return self[name].as<T>();
+      return root[name].as<T>();
     } catch (...) {
       detailed_log("\nWARNING: Yaml._get: not finded \"" << name
         << "\" in file \"" << Resource::get_path()
@@ -61,7 +61,7 @@ class Yaml::Impl: public Resource {
   // версия для utf8 строк
   inline utf8 _get_utf8(cr<Str> name, cr<utf8> default_val) const {
     try {
-      return sconv<utf8>(self[name].as<Str>());
+      return sconv<utf8>(root[name].as<Str>());
     } catch (...) {
       detailed_log("\nWARNING: Yaml._get: not finded \"" << name
         << "\" in file \"" << Resource::get_path()
@@ -74,7 +74,7 @@ class Yaml::Impl: public Resource {
   inline Vector<T> _get_v(cr<Str> name, cr<Vector<T>> default_val) const {
     try {
       Vector<T> ret;
-      auto items = self[name];
+      auto items = root[name];
       iferror(items.size() == 0, "нет элементов с таким тегом");
       for (crauto str: items)
         ret.emplace_back(str.as<T>());
@@ -90,10 +90,10 @@ class Yaml::Impl: public Resource {
 public:
   inline Impl(): Resource() {}
   
-  inline Impl(cr<Impl> other) noexcept: self {other.self}
+  inline Impl(cr<Impl> other) noexcept: root {other.root}
     { Resource::operator = (other); }
 
-  inline Impl(Impl&& other) noexcept: self {std::move(other.self)}
+  inline Impl(Impl&& other) noexcept: root {std::move(other.root)}
     { Resource::operator = (std::move(other)); }
   inline ~Impl() = default;
 
@@ -103,21 +103,21 @@ public:
     detailed_log("Yaml: loading \"" << fname << "\"\n");
 
     try {
-      self = YAML::LoadFile(fname);
+      root = YAML::LoadFile(fname);
     } catch (cr<YAML::BadFile> ex) { // если файла нет, то создать его с нуля
       if (make_if_not_exist) {
         hpw_log("файл \"" << fname << "\" отсутствует. Пересоздание\n")
         std::ofstream file(fname);
         file.close();
       }
-      self = YAML::LoadFile(fname);
+      root = YAML::LoadFile(fname);
     }
   } // c-tor(fname, make_if_not_exist)
 
   inline Impl(cr<File> file)
   : Resource(file.get_path()) {
     detailed_log("Yaml: loading from memory \"" << file.get_path() << "\"\n");
-    self = YAML::Load({file.data.begin(), file.data.end()});
+    root = YAML::Load({file.data.begin(), file.data.end()});
   }
 
   inline Impl(cr<Yaml> other) { this->operator=(other); }
@@ -125,20 +125,20 @@ public:
 
   inline Impl(cr<YAML::Node> node, cr<Str> new_path)
   : Resource(new_path)
-  , self(node)
+  , root(node)
   {}
 
   inline Impl& operator = (cr<Yaml> other) {
-    if (std::addressof(self) != std::addressof(other.impl->self)) {
-      self = other.impl->self;
+    if (std::addressof(root) != std::addressof(other.impl->root)) {
+      root = other.impl->root;
       Resource::operator=(other);
     }
     return *this;
   }
 
   inline Impl& operator = (Yaml&& other) noexcept {
-    if (std::addressof(self) != std::addressof(other.impl->self)) {
-      self = std::move(other.impl->self);
+    if (std::addressof(root) != std::addressof(other.impl->root)) {
+      root = std::move(other.impl->root);
       Resource::operator=(std::move(other));
     }
     return *this;
@@ -150,36 +150,36 @@ public:
     detailed_log("save to file \"" << fname << "\"\n");
     std::ofstream file(fname, std::ios_base::trunc); // удалить старый файл
     YAML::Emitter emt;
-    emt << self;
+    emt << root;
     file << emt.c_str();
   }
 
-  inline void clear() { self = {}; }
+  inline void clear() { root = {}; }
 
   inline Yaml make_node(cr<Str> name) {
-    self[name] = YAML::Node(YAML::NodeType::Null);
-    return Impl(self[name], Resource::get_path());
+    root[name] = YAML::Node(YAML::NodeType::Null);
+    return Impl(root[name], Resource::get_path());
   }
 
   inline Yaml make_node_if_not_exist(cr<Str> name) {
-    if (auto node = Impl(self[name], Resource::get_path()); node.check())
+    if (auto node = Impl(root[name], Resource::get_path()); node.check())
       return node;
     return make_node(name);
   }
 
-  inline void delete_node(cr<Str> name) { self.remove(name); }
+  inline void delete_node(cr<Str> name) { root.remove(name); }
 
-  inline void set_int(cr<Str> name, int val) { self[name] = val; }
-  inline void set_real(cr<Str> name, real val) { self[name] = val; }
-  inline void set_bool(cr<Str> name, bool val) { self[name] = val; }
-  inline void set_str(cr<Str> name, cr<Str> val) { self[name] = val; }
-  inline void set_utf8(cr<Str> name, cr<utf8> val) { self[name] = sconv<Str>(val); }
+  inline void set_int(cr<Str> name, int val) { root[name] = val; }
+  inline void set_real(cr<Str> name, real val) { root[name] = val; }
+  inline void set_bool(cr<Str> name, bool val) { root[name] = val; }
+  inline void set_str(cr<Str> name, cr<Str> val) { root[name] = val; }
+  inline void set_utf8(cr<Str> name, cr<utf8> val) { root[name] = sconv<Str>(val); }
   inline void set_v_int(cr<Str> name, cr<Vector<int>> val) { set_v(name, val); }
   inline void set_v_str(cr<Str> name, cr<Vector<Str>> val) { set_v(name, val); }
   inline void set_v_real(cr<Str> name, cr<Vector<real>> val) { set_v(name, val); }
   inline Yaml operator[] (cr<Str> name) const {
     try {
-      auto node = self[name];
+      auto node = root[name];
       iferror(!node, "!node");
       return Impl(node, Resource::get_path());
     }  catch(...) {
@@ -199,26 +199,26 @@ public:
 
   inline Yaml::vkv_t get_kv_table() const {
     vkv_t v_kv;
-    for (auto node: self)
+    for (auto node: root)
       get_kv_table_helper(v_kv, node.first.as<Str>(), node.second);
     return v_kv;
   }
 
   inline Yaml::vkvu32_t get_kvu32_table() const {
     vkvu32_t ret;
-    for (auto node: self)
+    for (auto node: root)
       get_kv32_table_helper(ret, node.first.as<Str>(), node.second);
     return ret;
   }
 
   inline Strs root_tags() const {
     Strs ret;
-    for (auto node: self)
+    for (auto node: root)
       ret.push_back(node.first.as<Str>());
     return ret;
   }
 
-  inline bool check() const { return self && self.size(); }
+  inline bool check() const { return root && root.size(); }
 }; // Impl
 
 Yaml::Yaml(Str fname, bool make_if_not_exist)
