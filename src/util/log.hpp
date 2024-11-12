@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef DEBUG
+#ifdef DEBUG_
 #include <syncstream>
 #include <atomic>
 #include <mutex>

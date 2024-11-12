@@ -121,12 +121,12 @@ public:
   }
 
   inline Impl(Yaml& master, cr<Yaml> other) noexcept: _master{master} {
-    if (std::addressof(root) != std::addressof(other.impl->root))
+    if (std::addressof(_master) != std::addressof(other))
       root = other.impl->root;
   }
 
   inline Impl(Yaml& master, Yaml&& other) noexcept: _master{master} {
-    if (std::addressof(root) != std::addressof(other.impl->root))
+    if (std::addressof(_master) != std::addressof(other))
       root = std::move(other.impl->root);
   }
 
@@ -134,18 +134,14 @@ public:
     { _master.set_path(new_path); }
 
   inline Impl& operator = (cr<Yaml> other) noexcept {
-    if (std::addressof(root) != std::addressof(other.impl->root)) {
-      _master = other.impl->_master;
+    if (std::addressof(_master) != std::addressof(other))
       root = other.impl->root;
-    }
     return *this;
   }
 
   inline Impl& operator = (Yaml&& other) noexcept {
-    if (std::addressof(root) != std::addressof(other.impl->root)) {
-      _master = other.impl->_master;
+    if (std::addressof(_master) != std::addressof(other))
       root = std::move(other.impl->root);
-    }
     return *this;
   }
 
