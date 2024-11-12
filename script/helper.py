@@ -57,15 +57,22 @@ def rem_all(fname_mask):
   for fname in list:
     rem_if_exist (fname)
 
-def exec_cmd(cmd):
-  "выполнить команду"
+def exec_cmd(cmd, without_print=False):
+  '''выполнить команду
+  
+  :return: вывод команды stdout, stderr'''
   cmd_tm_st = time.time()
   cmd = os.path.normpath (cmd) 
   print (cmd)
-  subprocess.run (cmd.split(), check=True)
+  result = subprocess.run (cmd.split(), check=True, universal_newlines=True,
+    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   cmd_tm_ed = time.time()
+  if not without_print:
+    print(result.stdout)
+    print(result.stderr)
   print (f'e.t: { round(cmd_tm_ed - cmd_tm_st, 1) }s')
   print()
+  return result.stdout, result.stderr
 
 def get_game_version():
   ''':return: version, last commit date, last commit time'''
