@@ -92,6 +92,7 @@ def accept_params():
   hpw_config.cxx_flags.extend([
     '-std=c++23',
     '-Wall', '-Wfatal-errors', # останавливать компиляцию при первой ошибке
+    # '-Wextra', '-pedantic', '-Wno-unused-parameter', # больше ворнингов!
     '-finput-charset=UTF-8', '-fextended-identifiers', # поддержка UTF-8
   ])
 
