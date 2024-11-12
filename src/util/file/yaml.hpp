@@ -12,7 +12,7 @@ class Yaml final: public Resource {
   Unique<Impl> impl {};
 
 public:
-  Yaml();
+  Yaml() noexcept;
   ~Yaml();
   
   /** создать или открыть .yml файл
@@ -23,7 +23,7 @@ public:
   Yaml(cr<Impl> new_impl);
   Yaml(cr<Yaml> other);
   Yaml(Yaml&& other) noexcept;
-  Yaml& operator = (cr<Yaml> other);
+  Yaml& operator = (cr<Yaml> other) noexcept;
   Yaml& operator = (Yaml&& other) noexcept;
 
   void save(Str fname) const; // сохранить .yml на диск

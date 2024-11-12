@@ -14,6 +14,7 @@
 
 // Внутреннаяя реализация для Yaml
 class Yaml::Impl: public Resource {
+  Yaml& _master;
   YAML::Node root {};
 
   inline void get_kv_table_helper(vkv_t &v_kv, cr<Str> key, cr<decltype(root)> v_node) const {
@@ -88,16 +89,21 @@ class Yaml::Impl: public Resource {
   } // _get_v
 
 public:
-  inline Impl(): Resource() {}
+  inline Impl(Yaml& master) noexcept: _master{master}, Resource() {}
+  inline ~Impl() = default;
   
-  inline Impl(cr<Impl> other) noexcept: root {other.root}
+  inline Impl(Yaml& master, cr<Impl> other) noexcept
+  : _master{master}
+  , root{other.root}
     { Resource::operator = (other); }
 
-  inline Impl(Impl&& other) noexcept: root {std::move(other.root)}
+  inline Impl(Yaml& master, Impl&& other) noexcept
+  : _master{master}
+  , root{std::move(other.root)}
     { Resource::operator = (std::move(other)); }
-  inline ~Impl() = default;
 
-  inline Impl(Str fname, bool make_if_not_exist) {
+  inline Impl(Yaml& master, Str fname, bool make_if_not_exist)
+  : _master{master} {
     conv_sep(fname);
     Resource::set_path(fname);
     detailed_log("Yaml: loading \"" << fname << "\"\n");
@@ -114,22 +120,36 @@ public:
     }
   } // c-tor(fname, make_if_not_exist)
 
-  inline Impl(cr<File> file)
-  : Resource(file.get_path()) {
+  inline Impl(Yaml& master, cr<File> file)
+  : _master{master}
+  , Resource(file.get_path()) {
     detailed_log("Yaml: loading from memory \"" << file.get_path() << "\"\n");
     root = YAML::Load({file.data.begin(), file.data.end()});
   }
 
-  inline Impl(cr<Yaml> other) { this->operator=(other); }
-  inline Impl(Yaml&& other) { this->operator=(std::move(other)); }
+  inline Impl(Yaml& master, cr<Yaml> other) noexcept: _master{master} {
+    if (std::addressof(root) != std::addressof(other.impl->root)) {
+      root = other.impl->root;
+      Resource::operator=(other);
+    }
+  }
 
-  inline Impl(cr<YAML::Node> node, cr<Str> new_path)
-  : Resource(new_path)
+  inline Impl(Yaml& master, Yaml&& other) noexcept: _master{master} {
+    if (std::addressof(root) != std::addressof(other.impl->root)) {
+      root = std::move(other.impl->root);
+      Resource::operator=(std::move(other));
+    }
+  }
+
+  inline Impl(Yaml& master, cr<YAML::Node> node, cr<Str> new_path)
+  : _master{master}
+  , Resource(new_path)
   , root(node)
   {}
 
-  inline Impl& operator = (cr<Yaml> other) {
+  inline Impl& operator = (cr<Yaml> other) noexcept {
     if (std::addressof(root) != std::addressof(other.impl->root)) {
+      _master = other.impl->_master;
       root = other.impl->root;
       Resource::operator=(other);
     }
@@ -138,6 +158,7 @@ public:
 
   inline Impl& operator = (Yaml&& other) noexcept {
     if (std::addressof(root) != std::addressof(other.impl->root)) {
+      _master = other.impl->_master;
       root = std::move(other.impl->root);
       Resource::operator=(std::move(other));
     }
@@ -158,11 +179,11 @@ public:
 
   inline Yaml make_node(cr<Str> name) {
     root[name] = YAML::Node(YAML::NodeType::Null);
-    return Impl(root[name], Resource::get_path());
+    return Impl(_master, root[name], Resource::get_path());
   }
 
   inline Yaml make_node_if_not_exist(cr<Str> name) {
-    if (auto node = Impl(root[name], Resource::get_path()); node.check())
+    if (auto node = Impl(_master, root[name], Resource::get_path()); node.check())
       return node;
     return make_node(name);
   }
@@ -177,17 +198,19 @@ public:
   inline void set_v_int(cr<Str> name, cr<Vector<int>> val) { set_v(name, val); }
   inline void set_v_str(cr<Str> name, cr<Vector<Str>> val) { set_v(name, val); }
   inline void set_v_real(cr<Str> name, cr<Vector<real>> val) { set_v(name, val); }
+
   inline Yaml operator[] (cr<Str> name) const {
     try {
       auto node = root[name];
       iferror(!node, "!node");
-      return Impl(node, Resource::get_path());
+      return Impl(_master, node, Resource::get_path());
     }  catch(...) {
       detailed_log ("WARNING: node \"" << name << "\" not finded in yaml \""
         << Resource::get_path() << "\"\n");
     }
     return {};
   }
+
   inline Str get_str(cr<Str> name, cr<Str> def) const { return _get(name, def); }
   inline int get_int(cr<Str> name, int def) const { return _get(name, def); }
   inline real get_real(cr<Str> name, real def) const { return _get(name, def); }
@@ -221,44 +244,26 @@ public:
   inline bool check() const { return root && root.size(); }
 }; // Impl
 
-Yaml::Yaml(Str fname, bool make_if_not_exist)
-: impl {new_unique<Impl>(fname, make_if_not_exist)}
-{
-  Resource::operator=(*impl);
-}
+Yaml::Yaml(Str fname, bool make_if_not_exist): impl {new_unique<Impl>(*this, fname, make_if_not_exist)}
+  { Resource::operator=(*impl); }
 
-Yaml::Yaml(cr<File> file)
-: impl {new_unique<Impl>(file)}
-{
-  Resource::operator=(*impl);
-}
+Yaml::Yaml(cr<File> file): impl {new_unique<Impl>(*this, file)} { Resource::operator=(*impl); }
 
-Yaml::Yaml(Yaml&& other) noexcept
-: impl {new_unique<Impl>(other)}
-{
-  Resource::operator=(std::move(*impl));
-}
+Yaml::Yaml(Yaml&& other) noexcept: impl {new_unique<Impl>(*this, other)}
+  { Resource::operator=(std::move(*impl)); }
 
-Yaml::Yaml()
-: impl {new_unique<Impl>()}
-{}
+Yaml::Yaml() noexcept: impl {new_unique<Impl>(*this)} {}
 
-Yaml::Yaml(cr<Yaml> other)
-: impl {new_unique<Impl>(other)}
-{
-  Resource::operator=(other);
-}
+Yaml::Yaml(cr<Yaml> other): impl {new_unique<Impl>(*this, other)}
+  { Resource::operator=(other); }
 
-Yaml::Yaml(cr<Impl> new_impl)
-: impl {new_unique<Impl>(new_impl)}
-{
-  Resource::operator=(*impl);
-}
+Yaml::Yaml(cr<Impl> new_impl): impl {new_unique<Impl>(*this, new_impl)}
+  { Resource::operator=(*impl); }
 
 // деструктор должен бытьв .cpp файле, а то не выйдет запихнуть реализаццию в unique_ptr
 Yaml::~Yaml() {}
 
-Yaml& Yaml::operator = (cr<Yaml> other) {
+Yaml& Yaml::operator = (cr<Yaml> other) noexcept {
   if (this != std::addressof(other)) {
     impl->operator =(other);
     Resource::operator=(*impl);
