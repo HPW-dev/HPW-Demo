@@ -1,5 +1,4 @@
 #include <omp.h>
-#include <iostream>
 #include <random>
 #include <algorithm>
 #include <cassert>

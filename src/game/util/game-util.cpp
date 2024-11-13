@@ -1,6 +1,5 @@
 #include <ranges>
 #include <utility>
-#include <iostream>
 #include <ctime>
 #include <algorithm>
 #include <unordered_map>
@@ -473,8 +472,8 @@ void load_sounds() {
     // TODO применение настроек при создании
     init_unique<Sound_mgr_oal>(hpw::sound_mgr);
   } catch (cr<hpw::Error> err) {
-    hpw_log("Error while initialize OpenAL sound system. Sound disabled\n");
-    std::cerr << err.what() << std::endl;
+    hpw_log("Error while initialize OpenAL sound system. Sound disabled\n", Log_stream::warning);
+    hpw_log(Str("Details: ") + err.what() + '\n', Log_stream::warning);
     hpw::sound_mgr_init_error = true;
     init_unique<Sound_mgr_nosound>(hpw::sound_mgr);
   }
