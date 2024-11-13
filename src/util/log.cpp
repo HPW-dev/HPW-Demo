@@ -25,7 +25,7 @@ static void make_log_file(cr<std::string> fname) {
   try {
     ::g_log_file.open(fname);
     
-    if (::g_log_file)
+    if (::g_log_file.is_open())
       std::cout << "log file \"" << fname << "\" created\n";
     else
       throw;
@@ -65,10 +65,10 @@ const std::source_location location) noexcept {
   if (::g_config.to_file) {
     std::lock_guard lock(g_log_file_mu);
 
-    if (!::g_log_file)
+    if (g_log_file.is_open())
       make_log_file(::g_log_fname);
 
-    if (::g_log_file)
+    if (g_log_file.is_open())
       ::g_log_file << source << msg;
   }
 }

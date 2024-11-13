@@ -18,6 +18,7 @@ pgo/
 **/delme 2.txt
 **/test.hpw_replay
 **/*.hpw_replay
+**/log.txt
 **/*.lnk
 **/*.a
 **/*.opus
