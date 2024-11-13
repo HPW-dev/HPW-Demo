@@ -1,3 +1,4 @@
+#include <format>
 #include <cassert>
 #include <thread>
 #include <unordered_map>
@@ -110,8 +111,8 @@ struct Timer_stat {
 };
 
 void calibrate_delay(const Seconds target) {
-  detailed_log("калибровка таймера задержки...\n"); // TODO detailed
-  detailed_log("целевая задержка " << target << " сек.\n"); // TODO detailed
+  hpw_log("калибровка таймера задержки...\n", Log_stream::debug);
+  hpw_log(std::format("целевая задержка {} сек.\n", target), Log_stream::debug);
   assert(target >= 1.0 / 10'000.0 && target <= 1.0);
 
   Vector<Timer_stat> statistic {
@@ -145,7 +146,7 @@ void calibrate_delay(const Seconds target) {
     stat.delay_error = std::abs(avg - target);
     Str txt = "Неточность для таймера " + stat.name + " = ";
     txt += n2s(stat.delay_error, 14) + " сек.";
-    detailed_log(txt << '\n');
+    hpw_log(txt + '\n', Log_stream::debug);
   }
 
   // найти самый точный таймер
@@ -159,7 +160,7 @@ void calibrate_delay(const Seconds target) {
   set_timer(best_timer->name);
   g_delay_error = best_timer->delay_error;
   
-  hpw_log("коррекция таймера: " << n2s(g_delay_error, 14) << " сек.\n");
+  hpw_log( std::format("коррекция таймера: {} сек.\n", n2s(g_delay_error, 14)) );
 } // calibrate_delay
 
 void set_timer(cr<Str> name) {
@@ -183,7 +184,7 @@ void set_timer(cr<Str> name) {
     g_timer_name = "std_delay";
   }
 
-  hpw_log("выбран таймер: " << g_timer_name << '\n');
+  hpw_log("выбран таймер: " + g_timer_name + '\n');
 } // set_timer
 
 Str get_timer() { return g_timer_name; }

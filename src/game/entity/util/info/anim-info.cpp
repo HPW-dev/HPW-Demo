@@ -10,7 +10,7 @@
 
 void Anim_info::load(cr<Yaml> node) {
   if ( !node.check()) {
-    detailed_log("пустая нода с анимацией, выход из функции");
+    hpw_log("пустая нода с анимацией, выход из функции", Log_stream::debug);
     return;
   }
   
@@ -18,7 +18,7 @@ void Anim_info::load(cr<Yaml> node) {
   try {
     anim = hpw::anim_mgr->find_anim(anim_name).get();
   } catch (...) {
-    detailed_log("нет анимации с именем\"" << anim_name << "\"\n");
+    hpw_log("нет анимации с именем\"" + anim_name + "\"\n", Log_stream::debug);
   }
 
   fixed_deg           = node.get_bool  ("fixed_deg");

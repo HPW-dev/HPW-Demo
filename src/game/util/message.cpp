@@ -71,7 +71,8 @@ struct Message_mgr::Impl {
     assert(msg.blink_delay < 1000u);
     assert(msg.blink_delay == 0 || msg.blink_delay > 1);
     assert(msg.lifetime > 0);
-    iflog(msg.color != Pal8::white, "Message_mgr: need impl for other colors\n");
+    if (msg.color != Pal8::white)
+      hpw_log("Message_mgr: need impl for other colors\n");
   }
 
   inline void clear() { m_messages.clear(); }

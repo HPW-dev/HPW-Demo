@@ -1,4 +1,5 @@
 #include "ability-dummy.hpp"
+#include <format>
 #include "util/log.hpp"
 
 Ability_dummy:: Ability_dummy() {
@@ -30,10 +31,10 @@ void Ability_dummy::update(Delta_time dt) {
 
 void Ability_dummy::on_upgrade() {
   Ability::on_upgrade();
-  hpw_log("dummy upgraded. New lvl = " << level() << "\n");
+  hpw_log( std::format("dummy upgraded. New lvl = {}\n", level()) );
 }
 
 void Ability_dummy::on_downgrade() {
   Ability::on_downgrade();
-  hpw_log("dummy downgraded. New lvl = " << level() << "\n");
+  hpw_log( std::format("dummy downgraded. New lvl = {}\n", level()) );
 }

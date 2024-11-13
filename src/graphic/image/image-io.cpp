@@ -35,12 +35,12 @@ inline void _data_to_image(Image& dst, cr<Bytes> mem) {
 } // _data_to_image
 
 void load(Image& dst, cr<Bytes> mem) {
-  detailed_log("Image.load_file(M)\n");
+  hpw_log("Image.load_file(M)\n", Log_stream::debug);
   _data_to_image(dst, mem);
 } // load
 
 void load(Image& dst, cr<Str> name) {
-  detailed_log("Image.load_file(F) \"" << name << "\"\n");
+  hpw_log("Image.load_file(F) \"" + name + "\"\n", Log_stream::debug);
   auto mem = mem_from_file(name);
   _data_to_image(dst, mem);
   dst.set_path(name);
@@ -51,7 +51,7 @@ void save(cr<Image> src, Str name) {
   assert( !name.empty());
   
   conv_sep(name);
-  hpw_log("сохранение картинки \"" << name << "\"\n");
+  hpw_log("сохранение картинки \"" + name + "\"\n");
   // pal8 to rgb24
   constexpr uint comp = 3;
   auto rgb24_p = Vector<uint8_t>(src.size * comp);

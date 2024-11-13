@@ -194,7 +194,8 @@ void Image::assign_resize(int x, int y) noexcept {
 
 bool Image::size_check(int x, int y) const noexcept {
   const bool ret = x > 0 && x <= 1024 * 16 && y > 0 && y <= 1024 * 16;
-  detailed_iflog( !ret, "warning: bad sizes for image init\n");
+  if (!ret)
+    hpw_log("warning: bad sizes for image init\n", Log_stream::debug);
   return ret;
 }
 

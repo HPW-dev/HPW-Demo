@@ -3,6 +3,7 @@ extern "C" {
 #include <stb/stb_truetype.h>
 }
 #include <algorithm>
+#include <sstream>
 #include <memory>
 #include "unifont.hpp"
 #include "util/error.hpp"
@@ -21,7 +22,7 @@ Unifont::Unifont(cr<File> file, int height, bool mono) {
 }
 
 void Unifont::init(cr<File> file, int height, bool mono) {
-  detailed_log("loading font \"" << file.get_path() <<"\"\n");
+  hpw_log("loading font \"" + file.get_path() + "\"\n", Log_stream::debug);
   mono_ = mono;
   font_file_mem_ = file.data;
   h_ = height;
@@ -112,7 +113,9 @@ Shared<Unifont::Glyph> Unifont::_load_glyph(char32_t ch) const {
   auto bitmap = stbtt_GetCodepointBitmap(info_.get(), scale_, scale_, ch,
     &bitmap_w, &bitmap_h, &bitmap_xoff, &bitmap_yoff);
   if ( !bitmap) {
-    detailed_log("stbtt_GetCodepointBitmap error ("<< std::hex << int(ch) << ")\n");
+    std::stringstream ss;
+    ss << "stbtt_GetCodepointBitmap error (" << std::hex << int(ch) << ")\n";
+    hpw_log(ss.str(), Log_stream::debug);
     return {};
   }
 

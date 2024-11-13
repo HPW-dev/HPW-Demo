@@ -1,5 +1,4 @@
 #include <cassert>
-#include <iostream>
 #include <functional>
 #include <utility>
 #include "pge.hpp"
@@ -35,7 +34,7 @@ void load_pge_params_only();
 void load_embeded_pge(decltype(plugin_init)* init_f, decltype(plugin_apply)* apply_f,
 decltype(plugin_finalize)* finalize_f, cr<Str> name) {
   try {
-    std::cout << "загрузка встроенного плагина..." << std::endl;
+    hpw_log("загрузка встроенного плагина...\n");
     iferror(!init_f, "не удалось получить функцию plugin_init");
     iferror(!apply_f, "не удалось получить функцию plugin_apply");
     iferror(!finalize_f, "не удалось получить функцию plugin_finalize");
@@ -60,10 +59,10 @@ decltype(plugin_finalize)* finalize_f, cr<Str> name) {
     g_pge_name = name;
     // попытаться найти настройки плагина в конфиге
     load_pge_params_only();
-    std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
+    hpw_log("плагин " + g_pge_name + " успешно загружен.\n");
     g_pge_loaded = true;
   } catch (cr<hpw::Error> err) {
-    hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
+    hpw_log("ошибка загрузки плагина: " + err.get_msg() + '\n', Log_stream::warning);
     disable_pge();
   } catch (...) {
     hpw_log("неизвестная ошибка при загрузке плагина\n");
@@ -73,7 +72,7 @@ decltype(plugin_finalize)* finalize_f, cr<Str> name) {
 
 void load_pge(Str libname) {
   if (libname.empty()) {
-    detailed_log("loading empty plugin (ignore)\n");
+    hpw_log("loading empty plugin (ignore)\n", Log_stream::debug);
     disable_pge();
     return;
   }
@@ -82,7 +81,7 @@ void load_pge(Str libname) {
     disable_pge();
     conv_sep(libname);
 
-    std::cout << "загрузка плагина: " << libname << std::endl;
+    hpw_log("загрузка плагина: " + libname + '\n');
     init_shared<DyLib>(g_lib_loader, libname);
     g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");
     g_plugin_apply = g_lib_loader->getFunction<decltype(plugin_apply)>("plugin_apply");
@@ -110,10 +109,10 @@ void load_pge(Str libname) {
     g_pge_name = get_filename(g_pge_path);
     // попытаться найти настройки плагина в конфиге
     load_pge_params_only();
-    std::cout << "плагин " << g_pge_name << " успешно загружен." << std::endl;
+    hpw_log("плагин " + g_pge_name + " успешно загружен.\n");
     g_pge_loaded = true;
   } catch (cr<hpw::Error> err) {
-    hpw_log("ошибка загрузки плагина: " << err.get_msg() << '\n');
+    hpw_log("ошибка загрузки плагина: " + err.get_msg() + '\n', Log_stream::warning);
     disable_pge();
   } catch (...) {
     hpw_log("неизвестная ошибка при загрузке плагина\n");
@@ -127,7 +126,7 @@ void apply_pge(const uint32_t state) {
 }
 
 void disable_pge() {
-  detailed_log("отключение плагина " + get_cur_pge_name() + '\n');
+  hpw_log("отключение плагина " + get_cur_pge_name() + '\n', Log_stream::debug);
   g_pge_params.clear();
   g_pge_name.clear();
   g_pge_path.clear();

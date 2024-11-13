@@ -18,7 +18,8 @@
 
 Level_mgr::Level_mgr(cr<Makers> _makers)
 : m_makers(_makers) {
-  iflog(m_makers.empty(), "Генераторы уровней не заданы\n");
+  if (m_makers.empty())
+    hpw_log("Генераторы уровней не заданы\n");
 }
 
 void Level_mgr::update(const Vec vel, Delta_time dt) {
@@ -103,9 +104,8 @@ void Level_mgr::set_player_prev_pos(const Vec pos)
   { m_player_pos_from_prev_level = pos; }
 
 Str Level_mgr::level_name() const {
-  if (m_level)
-    return m_level->level_name();
-  detailed_log("empty m_level\n");
+  return_if (m_level, m_level->level_name());
+  hpw_log("empty m_level\n", Log_stream::debug);
   return {};
 }
 

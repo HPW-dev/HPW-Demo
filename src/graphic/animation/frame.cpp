@@ -31,7 +31,7 @@ void Frame::reinit_directions_by_source() {
   clear_directions();
   return_if (source_ctx.max_directions == 0);
   if (source_ctx.direct_0.sprite.expired()) {
-    detailed_log("ctx sprite is empty\n");
+    hpw_log("ctx sprite is empty\n", Log_stream::debug);
     return;
   }
   assert(source_ctx.max_directions <= 360);

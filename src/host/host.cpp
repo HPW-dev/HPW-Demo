@@ -1,3 +1,4 @@
+#include <format>
 #include <ctime>
 #include "host.hpp"
 #include "host-util.hpp"
@@ -58,7 +59,7 @@ struct Host::Impl final {
         cauto ver = get_game_version();
         cauto creation_date = get_game_creation_date();
         cauto creation_time = get_game_creation_time();
-        hpw_log("game version: " << ver << " (" << creation_date << " " << creation_time << ")" << '\n');
+        hpw_log(std::format("game version: {} ({} {})\n", ver, creation_date, creation_time));
         std::exit(EXIT_SUCCESS);
       }},
     } );
@@ -91,15 +92,15 @@ Host::Host(int argc, char** argv)
   else
     seed = time({});
   set_rnd_seed(seed);
-  detailed_log("Сид рандома: " << seed << '\n');
+  hpw_log(std::format("Сид рандома: {}\n", seed), Log_stream::debug);
 
-  hpw_log('\n' << get_random_logo() << "\nЗапуск H.P.W\n");
+  hpw_log('\n' + get_random_logo() + "\nЗапуск H.P.W\n");
   callbacks_init();
 
   // узнать в какойо папке игра запущена
   hpw::cur_dir = launch_dir_from_argv0(argv[0]);
 
-  detailed_log("Директория запуска игры: \"" << hpw::cur_dir << "\"\n");
+  hpw_log("Директория запуска игры: \"" + hpw::cur_dir + "\"\n", Log_stream::debug);
   load_config();
 } // c-tor
 

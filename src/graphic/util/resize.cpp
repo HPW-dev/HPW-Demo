@@ -128,7 +128,7 @@ Image pixel_downscale_x3(cr<Image> src, Color_get_pattern cgp, Color_compute ccf
 
 Sprite pixel_upscale_x3(cr<Sprite> src) {
   if (!src) {
-    hpw_log("WARNING: pixel_upscale_x3 empty src\n")
+    hpw_log("WARNING: pixel_upscale_x3 empty src\n");
     return src;
   }
   Sprite dst;
@@ -139,7 +139,7 @@ Sprite pixel_upscale_x3(cr<Sprite> src) {
 
 Sprite pixel_downscale_x3(cr<Sprite> src, Color_get_pattern cgp, Color_compute ccf) {
   if ( !src) {
-    hpw_log("WARNING: pixel_downscale_x3 empty src\n")
+    hpw_log("WARNING: pixel_downscale_x3 empty src\n");
     return src;
   }
   Sprite dst;

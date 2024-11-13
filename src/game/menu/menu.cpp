@@ -68,7 +68,10 @@ struct Menu::Sticking {
 Menu::Menu(cr<Menu_items> items)
 : m_sticking {new_unique<Sticking>()}
 , m_items(items)
-{ iflog(m_items.empty(), "m_items empty\n"); }
+{
+  if (m_items.empty())
+    hpw_log("m_items empty\n", Log_stream::warning);
+}
 
 void Menu::update(const Delta_time dt) {
   return_if(m_items.empty());
@@ -106,7 +109,8 @@ void Menu::update(const Delta_time dt) {
 
 void Menu::prev_item() {
   return_if(m_items.empty());
-  iflog(m_items.empty(), "Menu.prev_item: m_items is empty");
+  if (m_items.empty())
+    hpw_log("Menu.prev_item: m_items is empty\n", Log_stream::debug);
 
   if (m_cur_item == 0) {
     m_cur_item = m_items.size() - 1;
@@ -117,7 +121,8 @@ void Menu::prev_item() {
 
 void Menu::next_item() {
   return_if(m_items.empty());
-  iflog(m_items.empty(), "Menu.next_item: m_items is empty");
+  if (m_items.empty())
+    hpw_log("Menu.next_item: m_items is empty", Log_stream::warning);
   
   ++m_cur_item;
   if (m_cur_item >= m_items.size())

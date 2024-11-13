@@ -80,7 +80,7 @@ inline void load_hitbox(Anim& anim, cr<Yaml> hitbox_node) {
 } // save_hitbox
 
 void read_anims(cr<Yaml> src) {
-  detailed_log("read all anims\n");
+  hpw_log("read all anims\n", Log_stream::debug);
 
   // прочитать все анимации
   auto animations_node = src["animations"];

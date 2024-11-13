@@ -129,7 +129,7 @@ struct Entity_mgr::Impl {
   }
 
   inline void clear() {
-    detailed_log("Entity_mgr.clear\n");
+    hpw_log("Entity_mgr.clear\n", Log_stream::debug);
     m_collision_resolver = {};
     clear_entities();
   }

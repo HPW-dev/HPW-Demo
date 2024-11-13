@@ -1,7 +1,7 @@
 #include "log.hpp"
 #include <syncstream>
 #include <iostream>
-#include "str.hpp"
+#include <format>
 #include "macro.hpp"
 
 namespace { Log_config g_config {}; }
@@ -20,9 +20,9 @@ const std::source_location location) noexcept {
   return_if (!LOG_ENABLED);
   
   // добавить инфу о источнике
-  Str source;
+  std::string source;
   if (::g_config.print_source)
-    source = Str(location.file_name()) + ':' << location.line() + ": ";
+    source = std::format("{}:{}: ", location.file_name(), location.line());
   
   // определить в какой поток выводить
   if (::g_config.to_stdout) {

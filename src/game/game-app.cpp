@@ -103,7 +103,7 @@ void Game_app::update(const Delta_time dt) {
     replay_save_keys();
 
   if ( !hpw::scene_mgr->update(dt) ) {
-    detailed_log("scenes are over, call soft_exit\n");
+    hpw_log("scenes are over, call soft_exit\n", Log_stream::debug);
     hpw::soft_exit();
   }
 

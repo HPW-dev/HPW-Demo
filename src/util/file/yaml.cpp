@@ -1,5 +1,6 @@
 #define YAML_CPP_API
 #include <yaml-cpp/yaml.h>
+#include <format>
 #include <codecvt>
 #include <locale>
 #include <cassert>
@@ -52,9 +53,8 @@ class Yaml::Impl {
     try {
       return root[name].as<T>();
     } catch (...) {
-      detailed_log("\nWARNING: Yaml._get: not finded \"" << name
-        << "\" in file \"" << Resource::get_path()
-        << "\". Loaded default:" << default_val << "\n");
+      hpw_log(std::format("\nWARNING: Yaml._get: not finded \"{}\" in file \"{}\". Loaded default: {}\n",
+        name, _master.get_path(), default_val), Log_stream::debug);
       return default_val;
     }
   } // _get
@@ -64,9 +64,9 @@ class Yaml::Impl {
     try {
       return sconv<utf8>(root[name].as<Str>());
     } catch (...) {
-      detailed_log("\nWARNING: Yaml._get: not finded \"" << name
-        << "\" in file \"" << Resource::get_path()
-        << "\". Loaded default str\n");
+      hpw_log("\nWARNING: Yaml._get: not finded \"" + name
+        + "\" in file \"" + _master.get_path()
+        + "\". Loaded default str\n", Log_stream::debug);
       return default_val;
     }
   } // _get utf8
@@ -77,13 +77,14 @@ class Yaml::Impl {
       Vector<T> ret;
       auto items = root[name];
       iferror(items.size() == 0, "нет элементов с таким тегом");
+
       for (crauto str: items)
         ret.emplace_back(str.as<T>());
       return ret;
     } catch (...) {
-      detailed_log("\nWARNING: Yaml._get_v: not finded \"" << name
-        << "\" in file \"" << Resource::get_path()
-        << "\". Loaded default value\n");
+      hpw_log("\nWARNING: Yaml._get_v: not finded \"" + name
+        + "\" in file \"" + _master.get_path()
+        + "\". Loaded default value\n", Log_stream::debug);
     }
     return default_val;
   } // _get_v
@@ -100,13 +101,13 @@ public:
   : _master{master} {
     conv_sep(fname);
     _master.set_path(fname);
-    detailed_log("Yaml: loading \"" << fname << "\"\n");
+    hpw_log("Yaml: loading \"" + fname + "\"\n", Log_stream::debug);
 
     try {
       root = YAML::LoadFile(fname);
     } catch (cr<YAML::BadFile> ex) { // если файла нет, то создать его с нуля
       if (make_if_not_exist) {
-        hpw_log("файл \"" << fname << "\" отсутствует. Пересоздание\n")
+        hpw_log("файл \"" + fname + "\" отсутствует. Пересоздание\n");
         std::ofstream file(fname);
         file.close();
       }
@@ -116,7 +117,7 @@ public:
 
   inline Impl(Yaml& master, cr<File> file): _master{master} {
     _master.set_path(file.get_path());
-    detailed_log("Yaml: loading from memory \"" << file.get_path() << "\"\n");
+    hpw_log("Yaml: loading from memory \"" + file.get_path() + "\"\n", Log_stream::debug);
     root = YAML::Load({file.data.begin(), file.data.end()});
   }
 
@@ -148,7 +149,7 @@ public:
   inline void save(Str fname) const {
     assert( !fname.empty());
     conv_sep(fname);
-    detailed_log("save to file \"" << fname << "\"\n");
+    hpw_log("save to file \"" + fname + "\"\n", Log_stream::debug);
     std::ofstream file(fname, std::ios_base::trunc); // удалить старый файл
     YAML::Emitter emt;
     emt << root;
@@ -185,7 +186,8 @@ public:
       iferror(!node, "!node");
       return Impl(_master, node, _master.get_path());
     }  catch(...) {
-      detailed_log ("WARNING: node \"" << name << "\" not finded in yaml \"" << _master.get_path() << "\"\n");
+      hpw_log("WARNING: node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"\n",
+        Log_stream::debug);
     }
     return {};
   }

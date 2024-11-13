@@ -73,7 +73,7 @@ public:
   inline void update(const Delta_time dt) override {
     cauto msg = utf32_to_8(get_locale_str("scene.replay.error.while_save_to"))
       + " \"" + (_path) + "\"";
-    hpw_log("Error: " << msg << '\n');
+    hpw_log("Error: " + msg + '\n', Log_stream::warning);
     cauto title = get_locale_str("common.error");
     assert(hpw::scene_mgr);
     hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(utf8_to_32(msg), title));

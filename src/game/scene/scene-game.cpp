@@ -179,7 +179,7 @@ void Scene_game::update(const Delta_time dt) {
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
     hpw::scene_mgr->back(3); // cur->loading screen->diffuculty->main menu
-    detailed_log("уровни кончились, выход из сцены игры\n");
+    hpw_log("уровни кончились, выход из сцены игры\n", Log_stream::debug);
   }
   hpw::task_mgr.update(dt);
 
@@ -276,7 +276,7 @@ void Scene_game::replay_init() {
   
   // если есть ошибки, показать их
   if (cauto warnings = hpw::replay->warnings(); !warnings.empty()) {
-    hpw_log("проблемы с реплеем \"" << rep_path << "\":\n" << utf32_to_8(warnings));
+    hpw_log("проблемы с реплеем \"" + rep_path + "\":\n" + utf32_to_8(warnings), Log_stream::warning);
     hpw::user_warnings += warnings;
   }
 } // replay_init
@@ -297,7 +297,7 @@ void Scene_game::save_named_replay() {
       conv_sep(replay_name);
       replay_name = to_safe_fname(replay_name);
 
-      hpw_log("сохранение файла реплея \"" << replay_name << "\"\n");
+      hpw_log("сохранение файла реплея \"" + replay_name + "\"\n");
       std::ofstream dest(replay_name, std::ios::binary);
       iferror(!dest.is_open(), "не получилось переименовать реплей");
       dest << source.rdbuf();

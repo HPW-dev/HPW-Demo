@@ -18,9 +18,15 @@ struct Log_config {
   //bool to_screen      : 1 {true}; // вывод на экран игры TODO
   bool stream_info    : 1 {true}; // канал обычной инфы
   bool stream_warning : 1 {true}; // канал предупреждений
-  bool stream_debug   : 1 {};     // канал который видно только с дефайном DEBUG
   bool print_source   : 1 {true}; // показывать из какой строки кода и файла был вызва лог
-};
+  bool stream_debug   : 1 {       // канал который видно только с дефайном DEBUG
+    #ifdef DEBUG
+      true
+    #else
+      false
+    #endif
+  }; 
+}; // Log_config
 
 Log_config& log_get_config() noexcept;
 void log_set_config(const Log_config& cfg) noexcept;

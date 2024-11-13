@@ -67,12 +67,12 @@ Audio load_flac(cr<Bytes> mem, cr<Str> path) {
   ret.compression = Audio::Compression::flac;
   drflac_free(flac_info, {});
 
-  detailed_log("channels: "    << ret.channels << '\n');
-  detailed_log("compression: " << scast<int>(ret.compression) << '\n');
-  detailed_log("format: "      << scast<int>(ret.format) << '\n');
-  detailed_log("frequency: "   << ret.frequency << '\n');
-  detailed_log("data.sz: "     << ret.data.size() << '\n');
-  detailed_log("samples: "     << ret.samples << '\n');
+  hpw_log("channels: "    + ret.channels + '\n', Log_stream::debug);
+  hpw_log("compression: " + scast<int>(ret.compression) + '\n', Log_stream::debug);
+  hpw_log("format: "      + scast<int>(ret.format) + '\n', Log_stream::debug);
+  hpw_log("frequency: "   + ret.frequency + '\n', Log_stream::debug);
+  hpw_log("data.sz: "     + ret.data.size() + '\n', Log_stream::debug);
+  hpw_log("samples: "     + ret.samples + '\n', Log_stream::debug);
   return ret;
 }
 
@@ -100,12 +100,12 @@ Audio load_vorbis(cr<Bytes> mem, cr<Str> path) {
   ret.frequency = vorbis_info.sample_rate;
   ret.data = std::move(mem);
   ret.samples = stream_length_in_samples;
-  detailed_log("channels: "    << ret.channels << '\n');
-  detailed_log("compression: " << scast<int>(ret.compression) << '\n');
-  detailed_log("format: "      << scast<int>(ret.format) << '\n');
-  detailed_log("frequency: "   << ret.frequency << '\n');
-  detailed_log("data.sz: "     << ret.data.size() << '\n');
-  detailed_log("samples: "     << ret.samples << '\n');
+  hpw_log("channels: "    + n2s(ret.channels) + '\n', Log_stream::debug);
+  hpw_log("compression: " + n2s(scast<int>(ret.compression)) + '\n', Log_stream::debug);
+  hpw_log("format: "      + n2s(scast<int>(ret.format)) + '\n', Log_stream::debug);
+  hpw_log("frequency: "   + n2s(ret.frequency) + '\n', Log_stream::debug);
+  hpw_log("data.sz: "     + n2s(ret.data.size()) + '\n', Log_stream::debug);
+  hpw_log("samples: "     + n2s(ret.samples) + '\n', Log_stream::debug);
   return ret;
 } // load_vorbis
 

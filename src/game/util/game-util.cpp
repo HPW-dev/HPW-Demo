@@ -66,7 +66,7 @@ Shared<Sprite> sprite_loader(cr<Str> name) {
     #endif
     return spr;
   } catch (...) {
-    detailed_log("не удалось найти спрайт с имененм \"" << name << "\"\n");
+    hpw_log("не удалось найти спрайт с имененм \"" + name + "\"\n", Log_stream::debug);
   }
   
   return {};
@@ -78,7 +78,8 @@ decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
     name = hpw::cur_dir + "../" + name;
   #endif
   cauto spr = sprite_loader(name);
-  detailed_iflog(!spr, "sprite \"" << name << "\" not finded\n");
+  if (!spr)
+    hpw_log("sprite \"" + name + "\" not finded\n", Log_stream::debug);
   // закинуть недостающий ресурс в банк
   if (spr)
     hpw::sprites.push(name, spr);
@@ -145,9 +146,9 @@ cr<utf32> get_locale_str(cr<Str> key) {
   if (auto ret = hpw::store_locale->find(key); ret)
     return ret->str;
   else
-    detailed_log("not found string: \"" << key << "\"\n");
+    hpw_log("not found string: \"" + key + "\"\n", Log_stream::debug);
   static utf32 last_error;
-  detailed_log("not finded string \"" << key << "\"\n");
+  hpw_log("not finded string \"" + key + "\"\n", Log_stream::debug);
   last_error = U"_ERR_(" + sconv<utf32>(key) + U")";
   return last_error;
 }
@@ -181,7 +182,7 @@ Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0
 // создаёт спрайт только с белыми контурами по исходному спрайту
 Sprite extract_contour(cr<Sprite> src) {
   if (!src) {
-    hpw_log("WARNING: extract_contour src is empty\n");
+    hpw_log("extract_contour src is empty\n", Log_stream::warning);
     return {};
   }
   // расширение спрайта во все стороны на 1 пиксель (нужна только маска)
@@ -578,8 +579,8 @@ void load_locale(cr<Str> user_path) {
   try {
     mem = hpw::archive->get_file(path);
   } catch (...) {
-    hpw_log("ошибка при загрузке перевода \"" << path << "\". Попытка загрузить перевод \""
-      << hpw::fallback_locale_path << "\"\n");
+    hpw_log("ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
+      + hpw::fallback_locale_path + "\"\n", Log_stream::warning);
     mem = hpw::archive->get_file(hpw::fallback_locale_path);
   }
 

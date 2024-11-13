@@ -32,13 +32,14 @@ utf32 Menu_list_item::to_text() const
 utf32 Menu_list_item::get_description() const { return m_items.at(m_selected).desc; }
 
 void Menu_list_item::update(const Delta_time dt) {
-  if (_default_select_getter) {
-    cauto overrided_idx = _default_select_getter();
-    if (overrided_idx < m_items.size()) {
-      m_selected = overrided_idx;
-    } else {
-      hpw_log("WARNING: неверный id переопределённого элемента (" << overrided_idx << ")\n");
-      m_selected = overrided_idx % m_items.size();
-    }
+  return_if(!_default_select_getter);
+
+  cauto overrided_idx = _default_select_getter();
+  if (overrided_idx < m_items.size()) {
+    m_selected = overrided_idx;
+  } else {
+    hpw_log("WARNING: неверный id переопределённого элемента (" + n2s(overrided_idx) + ")\n"
+      , Log_stream::warning);
+    m_selected = overrided_idx % m_items.size();
   }
 }

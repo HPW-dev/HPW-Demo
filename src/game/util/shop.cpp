@@ -13,6 +13,7 @@
 #include "util/math/vec.hpp"
 #include "util/math/timer.hpp"
 #include "util/log.hpp" // TODO del
+#include "util/str-util.hpp" // TODO del
 
 struct Shopping_item {
   hpw::Score_out price {}; // сколько стоит предмет
@@ -156,8 +157,8 @@ struct Shop_task::Impl {
     for (crauto item: _shopping_items) {
       if (item.solded) {
         // TODO назначить игроку способность
-        hpw_log("куплена способность \"" << utf32_to_8(item.name) << "\" за "
-          << item.price << " (нужна реализация покупки)\n");
+        hpw_log("куплена способность \"" + utf32_to_8(item.name) + "\" за "
+          + n2s(item.price) + " (нужна реализация покупки)\n", Log_stream::debug);
         hpw::add_score_normalized(-item.price);
         _master.deactivate();
       }

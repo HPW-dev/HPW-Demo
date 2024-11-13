@@ -17,7 +17,7 @@ struct Anim_mgr::Impl {
   inline std::size_t anim_count() const { return table.size(); }
 
   inline void add_anim(cr<Str> str, cr<Shared<Anim>> new_anim) {
-    detailed_log("Anim_mgr.add_anim: \"" << str << "\"\n");
+    hpw_log("Anim_mgr.add_anim: \"" + str + "\"\n", Log_stream::debug);
     auto str_low = str_tolower(str);
     new_anim->set_name(str_low);
     table[str_low] = new_anim; 
@@ -28,8 +28,8 @@ struct Anim_mgr::Impl {
       return table.at(str_tolower(name));
     } catch (...) {
       if (hpw::lazy_load_anim) {
-        detailed_log("анимация \"" << name <<
-          "\" не загружена.\nзагрузка \"" << name << "\"\n");
+        hpw_log("анимация \"" + name + "\" не загружена.\nзагрузка \"" +
+          name + "\"\n", Log_stream::debug);
 
         add_anim(name, load_from_config(name));
         try {

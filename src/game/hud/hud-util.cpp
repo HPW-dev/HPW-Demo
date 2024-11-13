@@ -25,7 +25,8 @@ Unique<Hud> make_hud(cr<Str> name) {
   try {
     return ::g_huds.at(str_tolower(name)) ();
   } catch (...) {
-    hpw_log("не удалось создать интерфейс с именем \"" << name << "\". Будет создан Hud_asci по умолчанию\n");
+    hpw_log("не удалось создать интерфейс с именем \"" + name +
+      "\". Будет создан Hud_asci по умолчанию\n", Log_stream::warning);
   }
 
   return new_unique<Hud_asci>();

@@ -97,7 +97,7 @@ void Host_glfw::init_commands() {
   };
 
   hpw::set_vsync = [](const bool enable) {
-    detailed_log("vsync: " << enable << '\n');
+    hpw_log("vsync: " + n2s(enable) + '\n', Log_stream::debug);
     glfwSwapInterval(enable ? 1 : 0);
   };
 
@@ -154,7 +154,7 @@ void Host_glfw::reshape(int w, int h) {
   return_if (w == 0 || h == 0);
   if (w < 0 || h < 0) {
     hpw_log("Warning: при растягивании окна были неверно заданы параметры: w = "
-      << w << ", h = " << h << "\n");
+      + n2s(w) + ", h = " + n2s(h) + "\n", Log_stream::warning);
     return;
   }
 
@@ -177,7 +177,7 @@ void Host_glfw::game_set_dt(const Delta_time gameloop_time) {
 }
 
 void Host_glfw::_set_double_buffering(bool enable) {
-  detailed_log("Host_glfw._set_double_buffering: " << enable << "\n");
+  hpw_log("Host_glfw._set_double_buffering: " + n2s(enable) + "\n", Log_stream::debug);
   graphic::double_buffering = enable;
   init_window();
 }
@@ -238,8 +238,8 @@ void Host_glfw::init_window() {
   cauto ogl_ver_cstr = glGetString(GL_VERSION);
   iferror( !ogl_ver_cstr, "не удалось получить версию OpenGL\n");
   const Str ogl_ver( cptr2ptr<Cstr>(ogl_ver_cstr) );
-  detailed_log("OpenGL version: " << ogl_ver << "\n");
-  detailed_log("GLEW init\n");
+  hpw_log("OpenGL version: " + ogl_ver + "\n", Log_stream::debug);
+  hpw_log("GLEW init\n", Log_stream::debug);
   iferror(glewInit() != GLEW_OK, "GLEW init error");
   ogl_post_init();
   glfwSetWindowSizeCallback(m_window, reshape_callback);
@@ -487,16 +487,16 @@ void Host_glfw::init_icon() {
     iferror(channels != 4, "цветовых каналов в изображении " << n2s(channels) << ", а нужно 4");
     glfwSetWindowIcon(m_window, 1, &icon); 
   } catch (cr<hpw::Error> err) {
-    hpw_log("не удалось установить иконку для окна.\nОшибка: " << err.what() << "\n");
+    hpw_log(Str("не удалось установить иконку для окна.\nОшибка: ") + err.what() + "\n", Log_stream::warning);
   } catch (...) {
-    hpw_log("не удалось установить иконку для окна. Неизвестная ошибка\n");
+    hpw_log("не удалось установить иконку для окна. Неизвестная ошибка\n", Log_stream::warning);
   }
 
   stbi_image_free(icon.pixels);
 } // init_icon
 
 void Host_glfw::_set_fullscreen(bool enable) {
-  detailed_log("fullscreen mode: " << std::boolalpha << enable << '\n');
+  hpw_log("fullscreen mode: " + n2s(enable) + '\n', Log_stream::debug);
   graphic::fullscreen = enable;
   
   if (enable) {
