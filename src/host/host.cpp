@@ -94,7 +94,7 @@ Host::Host(int argc, char** argv)
   set_rnd_seed(seed);
   hpw_log(std::format("Сид рандома: {}\n", seed), Log_stream::debug);
 
-  hpw_log('\n' + get_random_logo() + "\nЗапуск H.P.W\n");
+  hpw_log('\n' + get_random_logo() + '\n');
   callbacks_init();
 
   // узнать в какойо папке игра запущена

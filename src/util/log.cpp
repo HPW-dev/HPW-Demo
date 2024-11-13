@@ -65,11 +65,13 @@ const std::source_location location) noexcept {
   if (::g_config.to_file) {
     std::lock_guard lock(g_log_file_mu);
 
-    if (g_log_file.is_open())
+    if (!g_log_file.is_open())
       make_log_file(::g_log_fname);
 
-    if (g_log_file.is_open())
+    if (g_log_file.is_open()) {
       ::g_log_file << source << msg;
+      ::g_log_file.flush();
+    }
   }
 }
 
