@@ -17,8 +17,6 @@
 // #include "util/error.hpp"
 
 struct Level_empty::Impl {
-  Image screen {};
-
   inline explicit Impl() {
     set_default_collider();
   }
