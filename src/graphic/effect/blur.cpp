@@ -15,18 +15,18 @@ void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
   assert(window_sz >= 1);
 
   const int KERNEL_LEN = window_sz * 2 + 1;
-  const real MUL = 1.f / (KERNEL_LEN * KERNEL_LEN + 2);
+  const real MUL = 1.f / (KERNEL_LEN * KERNEL_LEN);
 
   #pragma omp parallel for simd collapse(2)
   cfor (y, src.Y)
   cfor (x, src.X) {
     real sum {};
-    for (int wy = -window_sz; wy < window_sz; ++wy)
-    for (int wx = -window_sz; wx < window_sz; ++wx) {
+    for (int wy = -window_sz; wy < window_sz + 1; ++wy)
+    for (int wx = -window_sz; wx < window_sz + 1; ++wx) {
       cauto wcolor = src.get(x + wx, y + wy, Image_get::MIRROR);
       const bool is_red = wcolor.is_red();
       real luma = wcolor.to_real();
-      luma = is_red ? luma / 3.f : luma;
+      luma = is_red ? luma * 0.2989f : luma;
       sum += luma * MUL;
     }
     dst(x, y) = Pal8::from_real(sum);
@@ -40,18 +40,18 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst.size == src.size);
   assert(window_sz >= 1);
 
-  const int KERNEL_LEN = window_sz * 2;
+  const int KERNEL_LEN = window_sz * 2 + 1;
   assert(dst.X > KERNEL_LEN);
   assert(dst.Y > KERNEL_LEN);
   Image src_gray(src.X, src.Y);
   to_gray_accurate(src_gray, src);
 
   #pragma omp parallel for simd collapse(2)
-  for (int y = window_sz; y < src_gray.Y - window_sz; ++y)
-  for (int x = window_sz; x < src_gray.X - window_sz; ++x) {
+  for (int y = window_sz; y < src_gray.Y - window_sz - 1; ++y)
+  for (int x = window_sz; x < src_gray.X - window_sz - 1; ++x) {
     int sum {};
-    for (int wy = -window_sz; wy < window_sz; ++wy)
-    for (int wx = -window_sz; wx < window_sz; ++wx)
+    for (int wy = -window_sz; wy < window_sz + 1; ++wy)
+    for (int wx = -window_sz; wx < window_sz + 1; ++wx)
       sum += src_gray(x + wx, y + wy).val;
     dst(x, y) = sum / (KERNEL_LEN * KERNEL_LEN);
   }
@@ -91,18 +91,18 @@ void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) noe
   assert(dst.size == src.size);
   assert(window_sz >= 1);
 
-  const int KERNEL_LEN = window_sz * 2;
+  const int KERNEL_LEN = window_sz * 2 + 1;
   assert(dst.X > KERNEL_LEN);
 
   #pragma omp parallel for simd
   cfor (y, src.Y) {
     auto* src_ptr = &src.fast_get(window_sz, y);
 
-    for (int x = window_sz; x < src.X - window_sz; ++x) {
+    for (int x = window_sz; x < src.X - (window_sz + 1); ++x) {
       int sum {};
 
-      for (int wx = -window_sz; wx < window_sz; ++wx)
-        sum += (src_ptr + wx)->val;
+      cfor (wx, KERNEL_LEN)
+        sum += (src_ptr + wx - window_sz)->val;
         
       dst(x, y) = sum / KERNEL_LEN;
       ++src_ptr;
