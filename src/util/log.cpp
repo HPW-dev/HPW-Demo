@@ -22,7 +22,7 @@ const std::source_location location) noexcept {
   // добавить инфу о источнике
   Str source;
   if (::g_config.print_source)
-    source = location.file_name() << ':' << location.line() << ": ";
+    source = location.file_name() + ':' << location.line() + ": ";
   
   // определить в какой поток выводить
   if (::g_config.to_stdout) {
