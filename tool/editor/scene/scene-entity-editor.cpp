@@ -155,7 +155,6 @@ struct Scene_entity_editor::Impl {
     // слой отладки
     init_shared(hpw::hitbox_layer, graphic::width, graphic::height);
     // log:
-    #ifdef DETAILED_LOG
     std::stringstream log_txt;
     log_txt << "entity editor init info:\n";
     log_txt << "graphic:\n";
@@ -173,8 +172,7 @@ struct Scene_entity_editor::Impl {
     log_txt << "  entity loaders = " << hpw::entity_mgr->entity_loaders_sz() << '\n';
     log_txt << "  shmup mode = " << std::boolalpha << hpw::shmup_mode << '\n';
     log_txt << "  collider autoopt = " << std::boolalpha << hpw::collider_autoopt << '\n';
-    detailed_log(log_txt.str());
-    #endif
+    hpw_log(log_txt.str(), Log_stream::debug);
 
     // load entity editor data
     entity_editor_load(m_ctx);

@@ -33,9 +33,7 @@ public:
   }
 
   inline void on_end() {
-    #ifdef DETAILED_LOG
-      hpw::cmd.print("завершение скрипта \"" + m_fname + '\"');
-    #endif
+    hpw::cmd.print("завершение скрипта \"" + m_fname + '\"');
     m_fname.clear();
     m_file.close();
   }
@@ -86,10 +84,7 @@ public:
       
     kill();
     m_file.close();
-    
-    #ifdef DETAILED_LOG
-      hpw::cmd.print("завершение скрипта \"" + m_fname + '\"');
-    #endif
+    hpw::cmd.print("завершение скрипта \"" + m_fname + '\"');
   }
 }; // Exec_script_instant
 

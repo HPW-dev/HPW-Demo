@@ -260,10 +260,7 @@ void Scene_game::replay_init() {
   hpw::clear_score();
   // random
   set_rnd_seed( time({}) );
-  #ifdef DETAILED_LOG
-    uint32_t seed = get_rnd_seed();
-    detailed_log("назначен новый сид рандома: " << seed << '\n');
-  #endif
+  hpw_log("назначен новый сид рандома: " + n2s(get_rnd_seed()) + '\n', Log_stream::debug);
 
   Str rep_path;
   if (hpw::replay_read_mode) {

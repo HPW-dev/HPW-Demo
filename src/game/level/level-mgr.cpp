@@ -38,10 +38,8 @@ void Level_mgr::level_update(const Vec vel, Delta_time dt) {
 void Level_mgr::level_order_update() {
   return_if (m_level);
   accept_maker(); 
-  #ifdef DETAILED_LOG
   if (cauto name = level_name(); !name.empty())
-    detailed_log("выбран уровень: \"" << name << "\"\n");
-  #endif
+    hpw_log("выбран уровень: \"" + name + "\"\n", Log_stream::debug);
 }
 
 void Level_mgr::on_end_level() {

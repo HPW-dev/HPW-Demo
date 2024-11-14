@@ -12,7 +12,6 @@ Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
 Opt_level = Enum('Opt_level', ['fast', 'debug', 'optimized_debug', 'stable',
   'x86_64_v1', 'x86_64_v4', 'ecomem', 'core2', 'atom', 'i386_stable', 'i386'])
 Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
-Log_mode = Enum('Log_mode', ['detailed', 'debug', 'release'])
 
 class Hpw_config:
   '''хранит настройки билда'''
@@ -22,7 +21,6 @@ class Hpw_config:
   compiler = Compiler.gcc
   opt_level = Opt_level.debug
   host = Host.glfw3
-  log_mode = Log_mode.debug
   enable_omp = True
   enable_asan = False
   static_link = False
@@ -131,7 +129,6 @@ def save_version(build_dir, used_libs, hpw_config, cxx, cc):
       file.writelines([
         "H.P.W build info:\n",
         f'  ASAN checks: {hpw_config.enable_asan}\n',
-        f'  Log mode: {hpw_config.log_mode.name}\n',
         f'  Game ver: {game_ver}\n',
         f'    last commit date: {game_date}\n',
         f'    last commit time: {game_time}\n',

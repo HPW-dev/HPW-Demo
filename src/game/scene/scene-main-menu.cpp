@@ -436,7 +436,7 @@ utf32 Scene_main_menu::prepare_game_ver() const {
 
   game_ver += U" (";
 
-  #ifdef DETAILED_LOG
+  /*
     // добавить инфу по платформе и билду:
     #ifdef WINDOWS
       game_ver += U"Windows";
@@ -462,10 +462,10 @@ utf32 Scene_main_menu::prepare_game_ver() const {
 
     if (!game_date.empty())
       game_ver += U' ' + game_date;
-  #else
-    if (!game_date.empty())
-      game_ver += game_date;
-  #endif
+  */
+ 
+  if (!game_date.empty())
+    game_ver += game_date;
 
   game_ver += U')';
   return game_ver;

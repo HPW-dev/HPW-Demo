@@ -64,11 +64,6 @@ def parse_args():
     case 'i386_stable': hpw_config.opt_level = Opt_level.i386_stable
     case 'i386': hpw_config.opt_level = Opt_level.i386
     case _: hpw_config.opt_level = Opt_level.stable
-  match ARGUMENTS.get('log_mode', 'debug').lower():
-    case 'detailed': hpw_config.log_mode = Log_mode.detailed
-    case 'release': hpw_config.log_mode = Log_mode.release
-    case 'debug': hpw_config.log_mode = Log_mode.debug
-    case _: hpw_config.log_mode = Log_mode.debug
 
 def print_params():
   '''отображение параметров билда'''
@@ -80,7 +75,6 @@ def print_params():
   print(f'Static link: {yn2s(hpw_config.static_link)}')
   print(f'OpenMP: {yn2s(hpw_config.enable_omp)}');
   print(f'ASAN checks: {yn2s(hpw_config.enable_asan)}')
-  print(f'Log mode: {yelow_text(hpw_config.log_mode.name)}')
   print(f'CXX: {green_text(hpw_config.custom_cxx) if hpw_config.custom_cxx else yelow_text('default')}')
   print(f'CC: {green_text(hpw_config.custom_cc) if hpw_config.custom_cc else yelow_text('default')}')
 
@@ -197,12 +191,6 @@ def accept_params():
     ]
     hpw_config.cxx_flags.extend([_asan_opts])
     hpw_config.cxx_ldflags.extend([_asan_opts])
-
-  # Log mode
-  match hpw_config.log_mode:
-    case Log_mode.detailed: hpw_config.cxx_defines.extend({'-DDETAILED_LOG'})
-    case Log_mode.release: pass
-    case Log_mode.debug: pass
 
   if hpw_config.static_link:
     hpw_config.cxx_ldflags.extend(['-static-libgcc'])

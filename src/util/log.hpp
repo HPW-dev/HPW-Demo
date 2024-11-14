@@ -14,7 +14,7 @@ enum class Log_stream {
 struct Log_config {
   bool to_stdout      : 1 {true}; // вывод в консоль
   bool to_stderr      : 1 {};     // вывод в поток ошибок в консоли
-  bool to_file        : 1 {true}; // вывод логов в файл
+  bool to_file        : 1 {};     // вывод логов в файл
   //bool to_screen      : 1 {true}; // вывод на экран игры TODO
   bool stream_info    : 1 {true}; // канал обычной инфы
   bool stream_warning : 1 {true}; // канал предупреждений
