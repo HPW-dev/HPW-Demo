@@ -181,6 +181,14 @@ void Game_app::replay_save_keys() {
   check_key(hpw::keycode::mode)
   check_key(hpw::keycode::bomb)
   check_key(hpw::keycode::shoot)
+  check_key(hpw::keycode::fulscrn)
+  check_key(hpw::keycode::fps)
+  check_key(hpw::keycode::text_delete)
+  #ifdef DEBUG
+  check_key(hpw::keycode::reset)
+  check_key(hpw::keycode::console)
+  check_key(hpw::keycode::fast_forward)
+  #endif
   #undef check_key
 
   hpw::replay->push( std::move(packet) );
