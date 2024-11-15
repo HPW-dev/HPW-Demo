@@ -38,8 +38,10 @@ static void hotkey_process(GLFWwindow* window, int key, int scancode, int action
     hpw::global_task_mgr.add(new_shared<Lazy_press>(hpw::keycode::screenshot));
   
   // альтернативная кнопка фуллскрина
-  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
+  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
     hpw::global_task_mgr.add(new_shared<Lazy_press>(hpw::keycode::fulscrn));
+    release(hpw::keycode::enable);
+  }
   
   // вставка текста из буффера Ctrl + V
   if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {
