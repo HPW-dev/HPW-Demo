@@ -1,7 +1,43 @@
+#include <iostream>
 #include "game-app.hpp"
+#include "util/error.hpp"
+#include "util/platform.hpp"
+
+#ifdef WINDOWS
+#include <clocale>
+#include <cstdlib>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+// выводит окно с ошибкой
+static inline void draw_error_window(cr<Str> msg) {
+#ifdef WINDOWS
+  std::setlocale(LC_ALL, "en_US.utf8");
+  std::wstring msg_wstr;
+  msg_wstr.resize(msg.size());
+  std::mbstowcs(msg_wstr.data(), msg.data(), msg.size());
+  MessageBoxW(NULL, msg_wstr.c_str(), L"Error", MB_ICONERROR | MB_OK);
+#endif
+}
 
 int main(int argc, char *argv[]) {
-  Game_app app(argc, argv);
-  app.run();
-  return EXIT_SUCCESS;
+  try {
+    Game_app app(argc, argv);
+    app.run();
+    return EXIT_SUCCESS;
+  } catch(cr<hpw::Error> err) {
+    const Str err_str = err.what();
+    std::cerr << err_str << std::endl;
+    draw_error_window(err_str);
+  } catch(cr<std::exception> err) {
+    const Str err_str = err.what();
+    std::cerr << err_str << std::endl;
+    draw_error_window(err_str);
+  } catch(...) {
+    std::cerr << "Unknown error" << std::endl;
+    draw_error_window("Unknown error");
+  }
+
+  return EXIT_FAILURE;
 }
