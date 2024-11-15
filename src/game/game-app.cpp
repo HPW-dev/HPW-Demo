@@ -186,6 +186,7 @@ void Game_app::replay_save_keys() {
   check_key(hpw::keycode::text_delete)
   #ifdef DEBUG
   check_key(hpw::keycode::reset)
+  check_key(hpw::keycode::degub)
   check_key(hpw::keycode::console)
   check_key(hpw::keycode::fast_forward)
   #endif
