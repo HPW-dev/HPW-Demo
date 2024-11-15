@@ -5,7 +5,29 @@
 #include "game/core/common.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/user.hpp"
+#include "game/core/tasks.hpp"
 #include "util/error.hpp"
+
+// отложенное нажатие кнопки
+class Lazy_press final: public Task {
+  hpw::keycode _keycode {};
+  bool _kill_me_on_next_update {};
+
+public:
+  inline explicit Lazy_press(const hpw::keycode keycode): _keycode {keycode} {}
+
+  inline void update(const Delta_time dt) override final { 
+    if (!_kill_me_on_next_update) {
+      press(_keycode);
+      _kill_me_on_next_update = true;
+    } else
+      this->kill();
+  }
+
+  inline void on_end() {
+    release(_keycode);
+  }
+}; // Lazy_press
 
 // вверх этот хедер не таскать, иначе всё развалится
 #include "host-glfw-common.hpp"
@@ -13,13 +35,11 @@
 static void hotkey_process(GLFWwindow* window, int key, int scancode, int action, int mods) {
   // альтернативная кнопка скриншота
   if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
-    hpw::make_screenshot();
+    hpw::global_task_mgr.add(new_shared<Lazy_press>(hpw::keycode::screenshot));
   
   // альтернативная кнопка фуллскрина
-  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
-    assert(hpw::set_fullscreen);
-    hpw::set_fullscreen(!graphic::fullscreen);
-  }
+  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
+    hpw::global_task_mgr.add(new_shared<Lazy_press>(hpw::keycode::fulscrn));
   
   // вставка текста из буффера Ctrl + V
   if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {

@@ -19,7 +19,7 @@ struct Task_timed::Impl {
   inline void update(const Delta_time dt) {
     return_if (!_delay.update(dt));
     _action();
-    _master.deactivate();
+    _master.kill();
   }
 };
 

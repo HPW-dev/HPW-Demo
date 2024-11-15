@@ -348,21 +348,22 @@ void Host_glfw::game_update(const Delta_time dt) {
   while (m_update_time >= hpw::target_update_time && m_is_ran) {
     m_update_time -= hpw::target_update_time;
     m_start_update_time = get_time();
-    glfwPollEvents();
-    process_input();
 
-    // обновить игровое состояние
-    if (graphic::step_mode) { // пошагово
-      if (hpw::any_key_pressed)
-        update(hpw::target_update_time);
-    } else { // каждый раз
+    glfwPollEvents();
+    hpw::any_key_pressed = is_any_key_pressed();
+
+    bool need_update {true}; // true - нужно обновить игровое состояние
+    if (graphic::step_mode) // пошагово
+      need_update = hpw::any_key_pressed;
+    if (need_update) {
       update(hpw::target_update_time);
+      ++m_upf;
+      ++m_ups;
     }
 
-    hpw::any_key_pressed = false;
+    hpw::any_key_pressed = is_any_key_pressed();
+    process_input();
     keys_cur_to_prev();
-    ++m_upf;
-    ++m_ups;
     apply_update_delay();
   } // while update time
 } // game_update
@@ -525,8 +526,6 @@ void Host_glfw::process_input() {
     assert(hpw::make_screenshot);
     hpw::make_screenshot();
   }
-
-  hpw::any_key_pressed |= is_any_key_pressed();
 }
 
 void Host_glfw::process_fast_forward() {

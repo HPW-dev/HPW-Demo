@@ -77,7 +77,7 @@ public:
     cauto title = get_locale_str("common.error");
     assert(hpw::scene_mgr);
     hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(utf8_to_32(msg), title));
-    this->deactivate();
+    this->kill();
   }
 };
 

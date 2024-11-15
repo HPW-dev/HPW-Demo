@@ -160,7 +160,7 @@ struct Shop_task::Impl {
         hpw_log("куплена способность \"" + utf32_to_8(item.name) + "\" за "
           + n2s(item.price) + " (нужна реализация покупки)\n", Log_stream::debug);
         hpw::add_score_normalized(-item.price);
-        _master.deactivate();
+        _master.kill();
       }
     }
   }

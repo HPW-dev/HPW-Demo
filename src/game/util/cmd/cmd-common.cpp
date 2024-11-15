@@ -138,7 +138,7 @@ public:
     }
 
     if (_times <= 0)
-      deactivate();
+      this->kill();
   }  
 }; // Task_drep
 

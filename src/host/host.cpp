@@ -35,7 +35,7 @@ public:
   inline void update(const Delta_time dt) override final {
     assert(hpw::set_fullscreen);
     hpw::set_fullscreen(_mode);
-    this->deactivate();
+    this->kill();
   }
 };
 

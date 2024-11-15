@@ -302,13 +302,6 @@ struct Host_asci::Impl {
         release(it.hpw_key);
       }
     }
-
-    /*// альтернативная кнопка скриншота
-    if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
-      hpw::make_screenshot();
-    // альтернативная кнопка фуллскрина
-    if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT)
-      hpw::set_fullscreen( !graphic::fullscreen);*/
   }
 
   inline void set_update_time(const Delta_time dt) {
