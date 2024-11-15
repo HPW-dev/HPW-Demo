@@ -100,8 +100,8 @@ Host::Host(int argc, char** argv)
   // узнать в какойо папке игра запущена
   hpw::cur_dir = launch_dir_from_argv0(argv[0]);
 
-  hpw_log("Директория запуска игры: \"" + hpw::cur_dir + "\"\n", Log_stream::debug);
   load_config();
+  hpw_log("Директория запуска игры: \"" + hpw::cur_dir + "\"\n", Log_stream::debug);
 } // c-tor
 
 Host::~Host() {

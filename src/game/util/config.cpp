@@ -78,6 +78,16 @@ static inline void load_heat_distort_mode(cr<Yaml> config) {
 static inline void save_heat_distort_mode(Yaml& config)
   { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
 
+static inline void setup_log() {
+  // создавать лог-файлы по умолчанию
+  if (hpw::first_start) {
+    auto cfg = log_get_config();
+    cfg.to_file = true;
+    log_set_config(cfg);
+    log_set_filename(Str(hpw::cur_dir + "../log.txt").c_str());
+  }
+}
+
 void save_config() {
   auto& config = *hpw::config;
 
@@ -236,4 +246,6 @@ void load_config() {
     LOAD_KEY(fulscrn)
     #undef LOAD_KEY
   }
+
+  setup_log();
 } // load_config

@@ -8,6 +8,7 @@
 #include <format>
 #include "macro.hpp"
 #include "error.hpp"
+#include "str-util.hpp"
 
 namespace { 
   Log_config g_config {};
@@ -78,8 +79,11 @@ const std::source_location location) noexcept {
 
 void log_set_filename(cp<char> fname) noexcept {
   assert(fname);
+  cauto old_name = ::g_log_fname;
   ::g_log_fname = fname;
-  make_log_file(::g_log_fname);
+  conv_sep(::g_log_fname);
+  if (old_name != ::g_log_fname)
+    make_log_file(::g_log_fname);
 }
 
 cp<char> log_get_filename() noexcept { return g_log_fname.c_str(); }
