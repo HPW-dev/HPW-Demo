@@ -20,6 +20,40 @@
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 
+static inline void load_log_config(cr<Yaml> config) {
+  auto cfg = log_get_config();
+  cfg.print_source = config.get_bool("print_source", cfg.print_source);
+  log_set_filename( config.get_str("file_name", log_get_filename()).c_str() );
+  
+  auto output_node = config["output"];
+  cfg.to_file = output_node.get_bool("file", cfg.to_file);
+  cfg.to_stdout = output_node.get_bool("stdout", cfg.to_stdout);
+  cfg.to_stderr = output_node.get_bool("stderr", cfg.to_stderr);
+
+  auto streams_node = config["streams_enabled"];
+  cfg.stream_debug = streams_node.get_bool("debug", cfg.stream_debug);
+  cfg.stream_info = streams_node.get_bool("info", cfg.stream_info);
+  cfg.stream_warning = streams_node.get_bool("warning", cfg.stream_warning);
+
+  log_set_config(cfg);
+}
+
+static inline void save_log_config(Yaml& config) {
+  cauto cfg = log_get_config();
+  config.set_bool("print_source", cfg.print_source);
+  config.set_str("file_name", log_get_filename());
+  
+  auto output_node = config.make_node("output");
+  output_node.set_bool("file", cfg.to_file);
+  output_node.set_bool("stdout", cfg.to_stdout);
+  output_node.set_bool("stderr", cfg.to_stderr);
+
+  auto streams_node = config.make_node("streams_enabled");
+  streams_node.set_bool("debug", cfg.stream_debug);
+  streams_node.set_bool("info", cfg.stream_info);
+  streams_node.set_bool("warning", cfg.stream_warning);
+}
+
 int get_scancode(const hpw::keycode keycode) {
   if(hpw::keys_info.keys.empty())
     return -1;
@@ -85,6 +119,9 @@ void save_config() {
   graphic_node.set_bool ("show_fps",            graphic::show_fps);
   save_light_quality(graphic_node);
   save_heat_distort_mode(graphic_node);
+
+  auto log_node = config.make_node("log");
+  save_log_config(log_node);
 
   auto sync_node = graphic_node.make_node("sync");
   sync_node.set_bool("vsync",               graphic::get_vsync());
@@ -170,6 +207,9 @@ void load_config() {
   graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
   load_light_quality(graphic_node);
   load_heat_distort_mode(graphic_node);
+
+  cauto log_node = config["log"];
+  load_log_config(log_node);
 
   cauto sync_node = graphic_node["sync"];
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );

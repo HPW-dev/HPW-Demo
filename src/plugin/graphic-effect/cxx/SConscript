@@ -44,6 +44,7 @@ build_plugin("motion-blur", [
   src_dir + "graphic/image/color.cpp",
   src_dir + "graphic/util/convert.cpp",
   src_dir + "util/log.cpp",
+  src_dir + "util/error.cpp",
 ] )
 
 build_plugin("epilepsy", [

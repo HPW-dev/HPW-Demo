@@ -24,8 +24,8 @@ struct Log_config {
 
 Log_config& log_get_config() noexcept;
 void log_set_config(const Log_config& cfg) noexcept;
-void set_log_filename(const char* fname) noexcept;
-const char* get_log_filename() noexcept;
+void log_set_filename(const char* fname) noexcept;
+const char* log_get_filename() noexcept;
 
 // выводит лог в консоль или в файл
 void hpw_log(

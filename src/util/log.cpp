@@ -7,10 +7,11 @@
 #include <mutex>
 #include <format>
 #include "macro.hpp"
+#include "error.hpp"
 
 namespace { 
   Log_config g_config {};
-  std::string g_log_fname {"log.txt"};
+  std::string g_log_fname {};
   std::ofstream g_log_file {};
   std::recursive_mutex g_log_file_mu {};
 }
@@ -28,7 +29,7 @@ static void make_log_file(cr<std::string> fname) {
     if (::g_log_file.is_open())
       std::cout << "log file \"" << fname << "\" created\n";
     else
-      throw;
+      error("log file is not opened");
   } catch (...) {
     std::cerr << "error while creating log file (\"" << fname << "\")\n";
   }
@@ -75,10 +76,10 @@ const std::source_location location) noexcept {
   }
 }
 
-void set_log_filename(const char* fname) noexcept {
+void log_set_filename(cp<char> fname) noexcept {
   assert(fname);
   ::g_log_fname = fname;
   make_log_file(::g_log_fname);
 }
 
-const char* get_log_filename() noexcept { return g_log_fname.c_str(); }
+cp<char> log_get_filename() noexcept { return g_log_fname.c_str(); }
