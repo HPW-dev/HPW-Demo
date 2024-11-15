@@ -62,6 +62,7 @@ build/*.txt
 build/editor
 build/LICENSE.txt
 build/BUILD.txt
+build/version info.txt
 build/NOTICE.txt
 build/plugin
 build/cmd-test-helper.txt
