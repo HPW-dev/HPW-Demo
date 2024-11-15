@@ -23,7 +23,7 @@
 static inline void load_log_config(cr<Yaml> config) {
   auto cfg = log_get_config();
   cfg.print_source = config.get_bool("print_source", cfg.print_source);
-  log_set_filename( config.get_str("file_name", log_get_filename()).c_str() );
+  hpw::log_file_path = config.get_str("file_name", hpw::log_file_path);
   
   auto output_node = config["output"];
   cfg.to_file = output_node.get_bool("file", cfg.to_file);
@@ -41,7 +41,7 @@ static inline void load_log_config(cr<Yaml> config) {
 static inline void save_log_config(Yaml& config) {
   cauto cfg = log_get_config();
   config.set_bool("print_source", cfg.print_source);
-  config.set_str("file_name", log_get_filename());
+  config.set_str("file_name", hpw::log_file_path);
   
   auto output_node = config.make_node("output");
   output_node.set_bool("file", cfg.to_file);
@@ -79,13 +79,18 @@ static inline void save_heat_distort_mode(Yaml& config)
   { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
 
 static inline void setup_log() {
+  auto cfg = log_get_config();
   // создавать лог-файлы по умолчанию
   if (hpw::first_start) {
-    auto cfg = log_get_config();
     cfg.to_file = true;
+    #ifdef RELEASE
+    cfg.to_stderr = false;
+    cfg.to_stdout = false;
+    #endif
     log_set_config(cfg);
-    log_set_filename(Str(hpw::cur_dir + "../log.txt").c_str());
   }
+  if (cfg.to_file)
+    log_open_file(Str(hpw::cur_dir + hpw::log_file_path).c_str());
 }
 
 void save_config() {

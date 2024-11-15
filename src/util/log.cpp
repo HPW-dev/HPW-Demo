@@ -21,21 +21,6 @@ Log_config& log_get_config() noexcept { return ::g_config; }
 
 void log_set_config(cr<Log_config> cfg) noexcept { ::g_config = cfg; }
 
-static void make_log_file(cr<std::string> fname) {
-  std::lock_guard lock(g_log_file_mu);
-
-  try {
-    ::g_log_file.open(fname);
-    
-    if (::g_log_file.is_open())
-      std::cout << "log file \"" << fname << "\" created\n";
-    else
-      error("log file is not opened");
-  } catch (...) {
-    std::cerr << "error while creating log file (\"" << fname << "\")\n";
-  }
-}
-
 void hpw_log(const std::string_view msg, const Log_stream stream,
 const std::source_location location) noexcept {
   // фильтрация потоков
@@ -66,10 +51,6 @@ const std::source_location location) noexcept {
   // в файл
   if (::g_config.to_file) {
     std::lock_guard lock(g_log_file_mu);
-
-    if (!g_log_file.is_open())
-      make_log_file(::g_log_fname);
-
     if (g_log_file.is_open()) {
       ::g_log_file << source << msg;
       ::g_log_file.flush();
@@ -77,13 +58,26 @@ const std::source_location location) noexcept {
   }
 }
 
-void log_set_filename(cp<char> fname) noexcept {
-  assert(fname);
-  cauto old_name = ::g_log_fname;
-  ::g_log_fname = fname;
-  conv_sep(::g_log_fname);
-  if (old_name != ::g_log_fname)
-    make_log_file(::g_log_fname);
-}
+void log_open_file(const char* fname) noexcept {
+  try {
+    iferror(fname == nullptr || Str(fname).empty(), "fname is empty");
 
-cp<char> log_get_filename() noexcept { return g_log_fname.c_str(); }
+    std::lock_guard lock(g_log_file_mu);
+    cauto old_name = ::g_log_fname;
+    ::g_log_fname = fname;
+    conv_sep(::g_log_fname);
+
+    if (old_name != ::g_log_fname) {
+      ::g_log_file.open(::g_log_fname);
+        
+      if (::g_log_file.is_open())
+        std::cout << "log file \"" << ::g_log_fname << "\" created\n";
+      else
+        error("log file is not opened");
+    }
+  } catch (...) {
+    std::cerr << "error while creating log file (\"" << ::g_log_fname << "\")\n" <<
+      "Output to log file disabled\n";
+    g_config.to_file = false;
+  }
+}
