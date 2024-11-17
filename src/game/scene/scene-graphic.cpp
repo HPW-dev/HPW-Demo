@@ -366,6 +366,8 @@ struct Scene_graphic::Impl {
       graphic::show_fps = false;
       disable_pge();
       set_default();
+      hpw::scene_mgr->back();
+      save_config();
     } );
   }
 

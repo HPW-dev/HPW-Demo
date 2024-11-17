@@ -66,8 +66,13 @@ void Scene_input::init_menu() {
   AMI(mode);
 #undef AMI
 
-  menu_items.emplace_back (new_shared<Menu_text_item> (
-    get_locale_str("common.reset"), []{ hpw::reset_keymap(); } ) );
+  menu_items.emplace_back( new_shared<Menu_text_item> (
+    get_locale_str("common.reset"), []{
+      hpw::reset_keymap();
+      hpw::scene_mgr->back();
+      save_config();
+    }
+  ) );
 
   menu_items.emplace_back (
     new_shared<Menu_text_item>(get_locale_str("scene.input.exit_and_save"), []{
