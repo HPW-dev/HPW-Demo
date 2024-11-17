@@ -57,4 +57,5 @@ protected:
   void init_icon();
   void init_keymapper();
   void init_glfw();
+  Str get_window_name() const;
 }; // Host_glfw

@@ -18,6 +18,7 @@
 #include "game/core/core-window.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/user.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
 
@@ -222,7 +223,7 @@ void Host_glfw::init_window() {
       ? GL_TRUE
       : GL_FALSE
   ); 
-  m_window = glfwCreateWindow(m_w, m_h, rnd_window_name().c_str(), nullptr, nullptr);
+  m_window = glfwCreateWindow(m_w, m_h, get_window_name().c_str(), nullptr, nullptr);
   iferror(!m_window, "bad init GLFW m_window");
   glfwSetWindowPos(m_window, m_wnd_x, m_wnd_y);
   glfwMakeContextCurrent(m_window);
@@ -288,6 +289,13 @@ Delta_time Host_glfw::get_time() const {
   cauto _ed = std::chrono::steady_clock::now();
   using Seconds = std::chrono::duration<Delta_time, std::ratio<1, 1>>;
   return std::chrono::duration_cast<Seconds>(_ed - _st).count();*/
+}
+
+Str Host_glfw::get_window_name() const {
+  if (hpw::default_tile.empty())
+    return rnd_window_name();
+
+  return hpw::default_tile;
 }
 
 void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
