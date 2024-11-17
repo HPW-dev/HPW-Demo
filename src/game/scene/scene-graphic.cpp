@@ -1,6 +1,7 @@
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
 #include "scene-pge.hpp"
+#include "scene-epge.hpp"
 #include "scene-mgr.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
@@ -333,6 +334,15 @@ struct Scene_graphic::Impl {
     );
   }
 
+  inline Shared<Menu_text_item> get_epge_item() {
+    return new_shared<Menu_text_item>(
+      get_locale_str("scene.graphic_menu.epge.title"),
+      []{ hpw::scene_mgr->add(new_shared<Scene_epge>()); },
+      []->utf32 { return {}; },
+      get_locale_str("scene.graphic_menu.epge.desc")
+    );
+  }
+
   inline Shared<Menu_text_item> get_epilepsy_item() {
     return new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.epilepsy"), [] {
       hpw::init_palette_from_archive("resource/image/palettes/zebura.png");
@@ -422,6 +432,7 @@ struct Scene_graphic::Impl {
       get_locale_str("scene.graphic_menu.title"),
       Menu_items {
         get_palette_item(),
+        get_epge_item(),
         get_plugin_item(),
         new_shared<Menu_text_item>(
           get_locale_str("scene.graphic_menu.pressets.name"),
@@ -461,6 +472,7 @@ struct Scene_graphic::Impl {
         get_mouse_cursour_item(),
         get_gamma_item(),
         get_palette_item(),
+        get_epge_item(),
         get_plugin_item(),
         get_fullscreen_item(),
         get_resize_type_item(),
