@@ -385,14 +385,13 @@ void to_gray_accurate(Image& dst, cr<Image> src) noexcept {
   cfor (i, src.size) {
     cauto pix = src[i];
     cauto is_red = pix.is_red();
-    auto val = pix.to_real();
   
     if (is_red)
-      dst[i] = Pal8::from_real(val *= 0.2989f, false);
+      dst[i] = Pal8::from_real(pix.to_real() * 0.2989f, false);
     elif (pix == Pal8::white)
       dst[i] = Pal8::gray_end;
-    else
-      dst[i] = Pal8::from_real(val, false);
+    else // is gray
+      dst[i] = pix;
   }
 }
 
