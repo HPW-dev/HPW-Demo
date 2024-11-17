@@ -84,7 +84,6 @@ def init_sources():
     Glob(src_dir + "game/util/*.cpp"),
     Glob(src_dir + "game/util/post-effect/*.cpp"),
     Glob(src_dir + "game/util/cmd/*.cpp"),
-    Glob(src_dir + "game/util/embeded-pgr/*.cpp"),
     Glob(src_dir + "game/core/*.cpp"),
     Glob(src_dir + "game/hud/*.cpp"),
     Glob(src_dir + "game/entity/*.cpp"),

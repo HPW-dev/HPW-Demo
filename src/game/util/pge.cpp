@@ -31,45 +31,6 @@ void registrate_param_i32(cstr_t, cstr_t, std::int32_t*, const std::int32_t, con
 void registrate_param_bool(cstr_t, cstr_t, bool*);
 void load_pge_params_only();
 
-void load_embeded_pge(decltype(plugin_init)* init_f, decltype(plugin_apply)* apply_f,
-decltype(plugin_finalize)* finalize_f, cr<Str> name) {
-  try {
-    hpw_log("загрузка встроенного плагина...\n");
-    iferror(!init_f, "не удалось получить функцию plugin_init");
-    iferror(!apply_f, "не удалось получить функцию plugin_apply");
-    iferror(!finalize_f, "не удалось получить функцию plugin_finalize");
-    iferror(name.empty(), "пустое имя плагина");
-
-    auto context = new_shared<context_t>();
-    context->dst = ptr2ptr<pal8_t*>(graphic::canvas->data());
-    context->w = graphic::canvas->X;
-    context->h = graphic::canvas->Y;
-    context->registrate_param_f32 = &registrate_param_f32;
-    context->registrate_param_i32 = &registrate_param_i32;
-    context->registrate_param_bool = &registrate_param_bool;
-
-    auto result = new_shared<result_t>();
-    g_plugin_init(context.get(), result.get());
-    iferror( result->version != DEFAULT_EFFECT_API_VERSION,
-      "несовпадение версий плагина и API");
-    iferror( !result->init_succsess, result->error);
-    g_pge_description = result->description;
-    g_pge_author = result->author;
-    g_pge_path = "::embeded/" + name;
-    g_pge_name = name;
-    // попытаться найти настройки плагина в конфиге
-    load_pge_params_only();
-    hpw_log("плагин " + g_pge_name + " успешно загружен.\n");
-    g_pge_loaded = true;
-  } catch (cr<hpw::Error> err) {
-    hpw_log("ошибка загрузки плагина: " + err.get_msg() + '\n', Log_stream::warning);
-    disable_pge();
-  } catch (...) {
-    hpw_log("неизвестная ошибка при загрузке плагина\n");
-    disable_pge();
-  }
-} // load_embeded_pge
-
 void load_pge(Str libname) {
   if (libname.empty()) {
     hpw_log("loading empty plugin (ignore)\n", Log_stream::debug);

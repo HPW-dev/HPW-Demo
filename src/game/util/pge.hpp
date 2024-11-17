@@ -50,9 +50,6 @@ struct Param_pge_bool: public Param_pge {
 
 // грузить графический эффект из .dll/.so файл
 void load_pge(Str libname);
-// загрузка графического эффекта из кода
-void load_embeded_pge(decltype(plugin_init)* init_f, decltype(plugin_apply)* apply_f,
-  decltype(plugin_finalize)* finalize_f, cr<Str> name);
 // применяет графический эффект к кадру
 void apply_pge(const uint32_t state);
 // выключает текущий графический эффект
