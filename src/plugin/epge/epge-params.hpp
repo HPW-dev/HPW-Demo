@@ -8,10 +8,12 @@ namespace epge {
 
 // описание параметра для настроек плагина
 class Param {
-public:
-  Str title {}; // отображаемое название опции
-  Str desc {}; // коммент с пояснением параметра
+  Str _title {}; // отображаемое название опции
+  Str _desc {}; // коммент с пояснением параметра
 
+public:
+  explicit Param(cr<Str> title, cr<Str> desc);
+  virtual ~Param() = default;
   virtual void set_value(cr<Str> val) = 0;
   virtual Str get_value() const = 0;
   virtual inline void set_max(cr<Str> val) {} // максимальный предел параметра
@@ -27,19 +29,22 @@ public:
   virtual inline void plus_value_fast() {}
   virtual inline void minus_value_fast() {}
   virtual inline void enable() { plus_value(); }
+  inline cr<Str> title() const { return _title; }
+  inline cr<Str> desc() const { return _desc; }
 }; // Param
 
 using Params = Vector< Shared<Param> >;
 
 class Param_double final: public Param {
   double& _value;
-  double _min {-999'999};
   double _max {+999'999};
+  double _min {-999'999};
   double _step {0.01};
   double _fast_step {0.1};
 
 public:
-  explicit Param_double(double& value);
+  explicit Param_double(cr<Str> title, cr<Str> desc, double& value,
+    double max, double min, double step, double fast_step);
   void set_value(cr<Str> val) final;
   void set_max(cr<Str> val) final;
   void set_min(cr<Str> val) final;
@@ -58,13 +63,14 @@ public:
 
 class Param_int final: public Param {
   int& _value;
-  int _min {-999'999};
   int _max {+999'999};
+  int _min {-999'999};
   int _step {1};
   int _fast_step {4};
 
 public:
-  explicit Param_int(int& value);
+  explicit Param_int(cr<Str> title, cr<Str> desc, int& value,
+    int max, int min, int step, int fast_step);
   void set_value(cr<Str> val) final;
   void set_max(cr<Str> val) final;
   void set_min(cr<Str> val) final;
@@ -83,8 +89,9 @@ public:
 
 class Param_bool final: public Param {
   bool& _value;
+
 public:
-  explicit Param_bool(bool& value);
+  explicit Param_bool(cr<Str> title, cr<Str> desc, bool& value);
   void set_value(cr<Str> val) final;
   Str get_value() const final;
   Str get_max() const final;
