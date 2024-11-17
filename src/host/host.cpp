@@ -7,6 +7,7 @@
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/tasks.hpp"
+#include "game/core/user.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
@@ -49,6 +50,7 @@ struct Host::Impl final {
   inline void parse_args(int argc, char** argv) {
     Pparser ret( Pparser::v_param_t {
       {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
+      {{"-t", "--title"}, "set window title", [this](cr<Str> val){ hpw::default_tile = val; }},
       {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(false)); }},
       {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(true)); }},
       {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){

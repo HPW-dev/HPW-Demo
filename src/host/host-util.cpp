@@ -58,9 +58,6 @@ Rgb24 pal8_to_rgb24_by_file(const Pal8 x) {
 }
 
 Str rnd_window_name() {
-#if 0
-  return "H.P.W";
-#else
   sconst Strs window_names {
     "HPW",
     "H.P.W",
@@ -89,6 +86,6 @@ Str rnd_window_name() {
     "26.83.130.14",
     "int main() { return main(); }",
   }; // window_names
+
   return window_names.at(rndu_fast(window_names.size() - 1));
-#endif
-} // rnd_window_name
+}
