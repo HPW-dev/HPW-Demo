@@ -1,9 +1,6 @@
 #include <cassert>
 #include "scene-epge.hpp"
 #include "scene-epge-list.hpp"
-#include "scene-mgr.hpp"
-#include "graphic/image/image.hpp"
-#include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/epges.hpp"

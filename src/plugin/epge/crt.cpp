@@ -6,7 +6,7 @@ struct Epge_crt::Impl final {
   bool _delme_bool {};
 
   inline Str name() const noexcept { return "CRT"; }
-  inline Str desc() const noexcept { return "Simulation of pixels CRT display"; }
+  inline Str desc() const noexcept { return "Simulation of pixeled CRT display"; }
 
   inline void draw(Image& dst) const noexcept {
     // TODO
