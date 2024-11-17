@@ -4,9 +4,12 @@
 #include "graphic/image/image.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/epges.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/game-util.hpp"
+#include "plugin/epge/epge-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 
@@ -33,29 +36,17 @@ struct Scene_epge::Impl {
   inline static void exit_from_scene() {
     assert(hpw::scene_mgr);
     hpw::scene_mgr->back();
+    save_epges();
   }
 
   inline void init_menu() {
-    /*
     Menu_items menu_items {
-      new_shared<Menu_double_item>(
-        get_locale_str("scene.graphic_menu.gamma.gamma_value"),
-        []()->double { return graphic::gamma; },
-        [](const double val) { hpw::set_gamma(val); },
-        0.005,
-        get_locale_str("scene.graphic_menu.gamma.description.gamma_value")
-      ),
-      new_shared<Menu_text_item>( get_locale_str("common.reset"),
-        []{ hpw::set_gamma(1.0); } ),
-      new_shared<Menu_text_item>( get_locale_str("common.exit"),
-        []{ hpw::scene_mgr->back(); } ),
+      new_shared<Menu_text_item>( get_locale_str("common.reset"), []{ hpw::epges.clear(); exit_from_scene(); } ),
+      new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ),
     }; // menu_items
 
-    init_unique( m_menu,
-      get_locale_str("scene.graphic_menu.gamma.title"),
-      menu_items, Rect{0, 0, graphic::width, graphic::height}
-    );
-    */
+    init_unique(_menu, get_locale_str("scene.graphic_menu.epge.title"),
+      menu_items, Rect{0, 0, graphic::width, graphic::height} );
   }
 }; // Impl
 
