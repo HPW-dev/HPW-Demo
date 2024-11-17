@@ -1,5 +1,4 @@
 #include <cassert>
-#include "scene-epge.hpp"
 #include "scene-epge-list.hpp"
 #include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
@@ -14,7 +13,7 @@
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 
-struct Scene_epge::Impl {
+struct Scene_epge_list::Impl {
   Unique<Advanced_text_menu> _menu {};
 
   inline explicit Impl() {
@@ -53,7 +52,7 @@ struct Scene_epge::Impl {
   }
 }; // Impl
 
-Scene_epge::Scene_epge(): impl {new_unique<Impl>()} {}
-Scene_epge::~Scene_epge() {}
-void Scene_epge::update(const Delta_time dt) { impl->update(dt); }
-void Scene_epge::draw(Image& dst) const { impl->draw(dst); }
+Scene_epge_list::Scene_epge_list(): impl {new_unique<Impl>()} {}
+Scene_epge_list::~Scene_epge_list() {}
+void Scene_epge_list::update(const Delta_time dt) { impl->update(dt); }
+void Scene_epge_list::draw(Image& dst) const { impl->draw(dst); }
