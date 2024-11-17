@@ -19,7 +19,7 @@ struct Epge_crt::Impl final {
   inline epge::Params params() noexcept {
     return epge::Params {
       new_shared<epge::Param_int>("int", "test int value (-100..500)", _delme_int, -100, 500, 5, 10),
-      new_shared<epge::Param_double>("double", "test double value (-1..1)", _delme_double, -1, 1, 0.091, 0.1),
+      new_shared<epge::Param_double>("double", "test double value (-1..1)", _delme_double, -1, 1, 0.001, 0.1),
       new_shared<epge::Param_bool>("double", "test bool value", _delme_bool),
     };
   }

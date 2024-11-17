@@ -1,5 +1,6 @@
 #include <cassert>
 #include "scene-epge-list.hpp"
+#include "scene-epge-config.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/epges.hpp"
 #include "game/util/keybits.hpp"
@@ -27,6 +28,8 @@ struct Scene_epge_list::Impl {
   inline void draw(Image& dst) const {
     assert(_menu);
     _menu->draw(dst);
+
+    // TODO выбранный EPGE так же влияет на фон под меню 
   }
 
   inline static void exit_from_scene() {
@@ -46,7 +49,13 @@ struct Scene_epge_list::Impl {
 
       menu_items.push_back( new_shared<Menu_text_item>(
         utf8_to_32(name),
-        [_name=name]{ hpw::epges.emplace_back(make_epge(_name)); },
+        [_name=name]{
+          hpw::scene_mgr->back();
+          auto epge = make_epge(_name);
+          assert(epge);
+          hpw::scene_mgr->add( new_shared<Scene_epge_config>(epge.get()) );
+          hpw::epges.emplace_back(std::move(epge));
+        },
         []{ return utf32{}; },
         utf8_to_32(desc)
       ) );
