@@ -4,7 +4,7 @@
 #include "epge-util.hpp"
 #include "game/core/epges.hpp"
 #include "util/file/yaml.hpp"
-#include "crt.hpp"
+#include "scanline.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -28,7 +28,7 @@ inline void add_epge() {
 }
 
 inline static void init_epge_list() {
-  add_epge<Epge_crt>();
+  add_epge<epge::Scanline>();
 };
 
 Strs avaliable_epges() {

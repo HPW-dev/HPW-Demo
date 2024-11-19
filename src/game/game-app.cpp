@@ -11,6 +11,7 @@
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
+#include "game/core/epges.hpp"
 #include "game/core/replays.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/fonts.hpp"
@@ -112,20 +113,17 @@ void Game_app::update(const Delta_time dt) {
 }
 
 void Game_app::draw_game_frame() const {
-  assert(graphic::canvas);
   cauto st = get_time();
+  assert(graphic::canvas);
+  auto& dst = *graphic::canvas;
 
-  hpw::scene_mgr->draw(*graphic::canvas);
-  post_draw(*graphic::canvas);
-  if (graphic::draw_border) // рамка по краям
-    draw_border(*graphic::canvas);
-  apply_pge(graphic::frame_count);
-  hpw::global_task_mgr.draw(*graphic::canvas);
+  hpw::scene_mgr->draw(dst);
+  post_draw(dst);
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
 
-  Host_class::draw_game_frame();
+  Host_class::draw_game_frame(); // hardware draw
 }
 
 void Game_app::draw_border(Image& dst) const
@@ -220,4 +218,18 @@ void Game_app::replay_load_keys() {
 void Game_app::post_draw(Image& dst) const {
   if (graphic::show_fps) // отобразить фпс
     draw_fps_info(dst);
+  
+  if (graphic::draw_border) // рамка по краям
+    draw_border(dst);
+
+  hpw::global_task_mgr.draw(dst);
+
+  // EPGE effects:
+  for (crauto epge: hpw::epges) {
+    epge->update(hpw::real_dt);
+    epge->draw(dst);
+  }
+
+  // .DLL/.SO effects:
+  apply_pge(graphic::frame_count);
 }
