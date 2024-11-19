@@ -9,6 +9,45 @@
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 
+class Epge_menu_item final: public Menu_item {
+  Menu* _menu {};
+  epge::Param* _epge_param {};
+
+public:
+  inline explicit Epge_menu_item(Menu* menu, epge::Param* epge_param)
+  : _menu {menu}
+  , _epge_param {epge_param}
+  {
+    assert(_epge_param);
+  }
+
+  inline void enable() override { _epge_param->enable(); }
+
+  inline void plus() override {
+    assert(_menu);
+    if (_menu->holded())
+      _epge_param->plus_value_fast();
+    else
+      _epge_param->plus_value();
+  }
+
+  inline void minus() override {
+    assert(_menu);
+    if (_menu->holded())
+      _epge_param->minus_value_fast();
+    else
+      _epge_param->minus_value();
+  }
+
+  inline utf32 to_text() const override {
+    return {}; // TODO
+  }
+
+  inline utf32 get_description() const override {
+    return {}; // TODO
+  }
+}; // Epge_menu_item
+
 struct Scene_epge_config::Impl {
   epge::Base* _epge {};
   Unique<Advanced_text_menu> _menu {};
@@ -40,6 +79,8 @@ struct Scene_epge_config::Impl {
     Menu_items menu_items;
 
     // TODO перечислить настройки эффекта
+    for (crauto param: _epge->params())
+      menu_items.push_back(new_shared<Epge_menu_item>(_menu.get(), param.get()));
 
     // exit item
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ) );

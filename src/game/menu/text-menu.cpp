@@ -8,9 +8,9 @@ Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos)
 
 void Text_menu::draw(Image& dst) const {
   utf32 text;
-  for (auto item: m_items) {
+  for (auto item: Menu::get_items()) {
     text += item->to_text();
-    if (item == m_items[m_cur_item])
+    if (item == Menu::get_cur_item())
       text += U" <";
     text += U"\n";
   }
