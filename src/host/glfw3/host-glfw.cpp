@@ -370,7 +370,6 @@ void Host_glfw::game_update(const Delta_time dt) {
     }
 
     hpw::any_key_pressed = is_any_key_pressed();
-    process_input();
     keys_cur_to_prev();
     apply_update_delay();
   } // while update time
@@ -520,19 +519,6 @@ void Host_glfw::_set_fullscreen(bool enable) {
       m_w, m_h, GLFW_DONT_CARE);
     reshape(m_w, m_h);
     graphic::set_vsync( graphic::get_vsync() );
-  }
-}
-
-void Host_glfw::process_input() {
-  // обработка специальных кнопок
-  if (is_pressed_once(hpw::keycode::fulscrn)) {
-    assert(hpw::set_fullscreen);
-    hpw::set_fullscreen(!graphic::fullscreen);
-  }
-
-  if (is_pressed_once(hpw::keycode::screenshot)) {
-    assert(hpw::make_screenshot);
-    hpw::make_screenshot();
   }
 }
 

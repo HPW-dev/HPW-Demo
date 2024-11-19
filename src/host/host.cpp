@@ -8,11 +8,14 @@
 #include "game/core/canvas.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/user.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/version.hpp"
+#include "game/util/keybits.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
 #include "util/pparser.hpp"
@@ -150,4 +153,22 @@ void Host::free_app_mutex() {
 
 void Host::update(const Delta_time dt) {
   hpw::global_task_mgr.update(dt);
+
+  process_input();
+}
+
+void Host::process_input() {
+  // обработка специальных кнопок
+  if (is_pressed_once(hpw::keycode::fulscrn)) {
+    assert(hpw::set_fullscreen);
+    hpw::set_fullscreen( !graphic::fullscreen );
+  }
+
+  if (is_pressed_once(hpw::keycode::screenshot)) {
+    assert(hpw::make_screenshot);
+    hpw::make_screenshot();
+  }
+
+  if (is_pressed_once(hpw::keycode::fps))
+    graphic::show_fps = !graphic::show_fps;
 }

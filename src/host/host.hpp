@@ -9,6 +9,7 @@
 // базовый класс для игрового хоста
 class Host {
   void callbacks_init(); // задать колбэки для общих команд
+  void process_input();
 
 protected:
   int m_argc {};

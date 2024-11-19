@@ -41,7 +41,6 @@ protected:
   void set_update_time(const Delta_time dt); // контроль плавности апдейта
   void apply_render_delay();
   void apply_update_delay();
-  void process_input();
   void process_fast_forward();
 
   void _set_mouse_cursour_mode(bool enable);
