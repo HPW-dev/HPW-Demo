@@ -99,5 +99,6 @@ void Param_bool::plus_value() { _value = true; }
 void Param_bool::minus_value() { _value = false; }
 void Param_bool::plus_value_fast() { _value = true; }
 void Param_bool::minus_value_fast() { _value = false; }
+void Param_bool::enable() { _value = !_value; }
 
 } // epge ns 

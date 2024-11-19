@@ -100,6 +100,7 @@ public:
   void minus_value() final;
   void plus_value_fast() final;
   void minus_value_fast() final;
+  void enable() final;
 }; // Param_bool
 
 } // epge ns
