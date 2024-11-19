@@ -49,6 +49,15 @@ void set_high_quality() {
   graphic::blur_mode = Blur_mode::high;
 }
 
+Shared<Menu_text_item> get_shared_plugin_item() {
+  return new_shared<Menu_text_item>(
+    get_locale_str("scene.graphic_menu.pge.title"),
+    []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); },
+    []->utf32 { return {}; },
+    get_locale_str("scene.graphic_menu.description.pge")
+  );
+}
+
 struct Scene_graphic::Impl {
   Shared<Menu> _simple_menu {};
   Shared<Menu> _detailed_menu {};
@@ -325,15 +334,6 @@ struct Scene_graphic::Impl {
     );
   }
 
-  inline Shared<Menu_text_item> get_plugin_item() {
-    return new_shared<Menu_text_item>(
-      get_locale_str("scene.graphic_menu.pge.title"),
-      []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); },
-      []->utf32 { return {}; },
-      get_locale_str("scene.graphic_menu.description.pge")
-    );
-  }
-
   inline Shared<Menu_text_item> get_epge_item() {
     return new_shared<Menu_text_item>(
       get_locale_str("scene.graphic_menu.epge.title"),
@@ -435,7 +435,7 @@ struct Scene_graphic::Impl {
       Menu_items {
         get_palette_item(),
         get_epge_item(),
-        get_plugin_item(),
+        get_shared_plugin_item(),
         new_shared<Menu_text_item>(
           get_locale_str("scene.graphic_menu.pressets.name"),
           [this]{ _cur_menu = _preset_menu; }
@@ -475,7 +475,7 @@ struct Scene_graphic::Impl {
         get_gamma_item(),
         get_palette_item(),
         get_epge_item(),
-        get_plugin_item(),
+        get_shared_plugin_item(),
         get_fullscreen_item(),
         get_resize_type_item(),
         get_vsync_item(),

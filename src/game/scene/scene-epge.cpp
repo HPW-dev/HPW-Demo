@@ -2,6 +2,7 @@
 #include "scene-epge.hpp"
 #include "scene-epge-list.hpp"
 #include "scene-epge-config.hpp"
+#include "scene-graphic.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/epges.hpp"
@@ -69,6 +70,8 @@ struct Scene_epge::Impl {
       ) );
     }
 
+    // .dll/.so плагины
+    menu_items.push_back( get_shared_plugin_item() );
     // ресет и выход
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.reset"), [this]{
       hpw::epges.clear();
