@@ -119,7 +119,7 @@ struct Menu::Impl {
     _key_holded = false;
 
     if (_sticking.check(hpw::keycode::enable, 60, 60)) {
-      _key_holded = true;
+      _key_holded = _sticking.use_sticking;
       _items[_cur_item]->enable();
       if (_select_callback)
         _select_callback(*_items[_cur_item]);
@@ -129,22 +129,28 @@ struct Menu::Impl {
     }
     
     if (_sticking.check(hpw::keycode::left, 50, 18)) {
-      _key_holded = true;
-      _items[_cur_item]->minus();
+      _key_holded = _sticking.use_sticking;
+      if (holded())
+        _items[_cur_item]->minus_fast();
+      else
+        _items[_cur_item]->minus();
     }
     if (_sticking.check(hpw::keycode::right, 50, 18)) {
-      _key_holded = true;
-      _items[_cur_item]->plus();
+      _key_holded = _sticking.use_sticking;
+      if (holded())
+        _items[_cur_item]->plus_fast();
+      else
+        _items[_cur_item]->plus();
     }
 
     if (_sticking.check(hpw::keycode::down, 60, 30)) {
-      _key_holded = true;
+      _key_holded = _sticking.use_sticking;
       if (_move_cursor_callback)
         _move_cursor_callback(*_items[_cur_item]);
       next_item();
     }
     if (_sticking.check(hpw::keycode::up, 60, 30)) {
-      _key_holded = true;
+      _key_holded = _sticking.use_sticking;
       if (_move_cursor_callback)
         _move_cursor_callback(*_items[_cur_item]);
       prev_item();

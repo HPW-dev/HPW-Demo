@@ -12,7 +12,9 @@ public:
   virtual inline void update(const Delta_time dt) {}
   virtual void enable(); // enable key
   virtual void plus(); // right key
+  virtual void plus_fast(); // holded right key
   virtual void minus(); // left key
+  virtual void minus_fast(); // holded left key
   virtual utf32 to_text() const;
   virtual utf32 get_description() const;
 };

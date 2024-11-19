@@ -12,7 +12,7 @@ Param::Param(cr<Str> title, cr<Str> desc)
   assert(!_title.empty());
 }
 
-Param_int::Param_int(cr<Str> title, cr<Str> desc, int& value, int max, int min, int step, int fast_step)
+Param_int::Param_int(cr<Str> title, cr<Str> desc, int& value, int min, int max, int step, int fast_step)
 : Param {title, desc}
 , _value {value}
 , _max {max}
@@ -40,7 +40,7 @@ void Param_int::minus_value() { _value = std::clamp(_value - _step, _min, _max);
 void Param_int::plus_value_fast() { _value = std::clamp(_value + _fast_step, _min, _max); }
 void Param_int::minus_value_fast() { _value = std::clamp(_value - _fast_step, _min, _max); }
 
-Param_double::Param_double(cr<Str> title, cr<Str> desc, double& value, double max, double min,
+Param_double::Param_double(cr<Str> title, cr<Str> desc, double& value, double min, double max, 
 double step, double fast_step)
 : Param {title, desc}
 , _value {value}

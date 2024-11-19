@@ -44,7 +44,7 @@ class Param_double final: public Param {
 
 public:
   explicit Param_double(cr<Str> title, cr<Str> desc, double& value,
-    double max, double min, double step, double fast_step);
+    double min, double max, double step, double fast_step);
   void set_value(cr<Str> val) final;
   void set_max(cr<Str> val) final;
   void set_min(cr<Str> val) final;
@@ -70,7 +70,7 @@ class Param_int final: public Param {
 
 public:
   explicit Param_int(cr<Str> title, cr<Str> desc, int& value,
-    int max, int min, int step, int fast_step);
+    int min, int max, int step, int fast_step);
   void set_value(cr<Str> val) final;
   void set_max(cr<Str> val) final;
   void set_min(cr<Str> val) final;
