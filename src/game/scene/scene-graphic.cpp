@@ -435,7 +435,6 @@ struct Scene_graphic::Impl {
       Menu_items {
         get_palette_item(),
         get_epge_item(),
-        get_shared_plugin_item(),
         new_shared<Menu_text_item>(
           get_locale_str("scene.graphic_menu.pressets.name"),
           [this]{ _cur_menu = _preset_menu; }
