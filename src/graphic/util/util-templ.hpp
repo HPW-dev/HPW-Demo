@@ -94,13 +94,39 @@ void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) noexcept {
 
 template <blend_pf bf>
 void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, const int optional) {
+  // проверить валидность
   return_if( !dst);
   return_if (rect.size.x < 1 || rect.size.y < 1);
-  cauto ex = rect.pos.x + rect.size.x;
-  cauto ey = rect.pos.y + rect.size.y;
-  for (int y = rect.pos.y; y < ey; ++y)
-  for (int x = rect.pos.x; x < ex; ++x)
-    dst.set<bf>(x, y, col, optional);
+
+  // определить границы прямоугольника
+  int rect_sx = std::floor(rect.pos.x);
+  int rect_sy = std::floor(rect.pos.y);
+  int rect_ex = std::floor(rect.pos.x + rect.size.x);
+  int rect_ey = std::floor(rect.pos.y + rect.size.y);
+
+  // оптимизировать границы
+  rect_sx = std::max(rect_sx, 0);
+  rect_sy = std::max(rect_sy, 0);
+  rect_ex = std::min(rect_ex, dst.X);
+  rect_ey = std::min(rect_ey, dst.Y);
+  cauto RECT_SZ_X = rect_ex - rect_sx;
+  cauto RECT_SZ_Y = rect_ey - rect_sy;
+
+  // не рисовать, если есть проблемы с размером
+  return_if(RECT_SZ_X <= 0);
+  return_if(RECT_SZ_Y <= 0);
+
+  auto* dst_ptr = &dst(rect_sx, rect_sy);
+  const std::size_t DST_PITCH = dst.X - RECT_SZ_X;
+
+  cfor (y, RECT_SZ_Y) {
+    cfor (x, RECT_SZ_X) {
+      *dst_ptr = bf(col, *dst_ptr, optional);
+      ++dst_ptr;
+    }
+
+    dst_ptr += DST_PITCH;
+  }
 }
 
 template <blend_pf bf>
