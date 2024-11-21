@@ -6,10 +6,6 @@
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
 
-class Image;
-class Sprite;
-class Yaml;
-
 // загрузить шрифты игры
 void load_fonts();
 // загрузить все анимации
@@ -18,5 +14,3 @@ void load_animations();
 void load_sounds();
 // вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
-// ставит случайную палитру
-void set_random_palette();

@@ -16,6 +16,7 @@
 #include "game/util/game-util.hpp"
 #include "game/util/blur-helper.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/palette-helper.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -242,7 +243,7 @@ void Scene_main_menu::init_menu() {
         [this]{ next_bg(); }),
       // сменить палитру
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.rnd_pal"),
-        []{ set_random_palette(); }),
+        []{ randomize_palette(); }),
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr.add(new_shared<Scene_info>());

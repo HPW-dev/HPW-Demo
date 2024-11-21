@@ -6,6 +6,7 @@
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/palette-helper.hpp"
 #include "game/core/replays.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -42,7 +43,7 @@ void Scene_game_pause::init_menu() {
       new_shared<Menu_text_item>(get_locale_str("scene.pause.screenshot"),
         []{ hpw::make_screenshot(); }),
       new_shared<Menu_text_item>(get_locale_str("scene.game_opts.rnd_pal.title"),
-        []{ set_random_palette(); }),
+        []{ randomize_palette(); }),
       new_shared<Menu_text_item>(get_locale_str("scene.pause.main_menu"), []{
         hpw::scene_mgr.back(3); // cur->пауза->игровой процесс->окно загрузки
         // в реплее в выбор сложности не заходим (TODO может поменяться)

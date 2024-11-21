@@ -9,6 +9,7 @@
 #include "game/util/replay.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/palette-helper.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
@@ -24,7 +25,7 @@ struct Scene_gameover::Impl {
 
     // поменять палитру
     if (hpw::rnd_pal_after_death)
-      set_random_palette();
+      randomize_palette();
     
     // выключить звуки, что были до этого
     assert(hpw::sound_mgr);
@@ -72,7 +73,7 @@ struct Scene_gameover::Impl {
       []{ return hpw::rnd_pal_after_death; },
       [](bool val) { 
         if (val)
-          set_random_palette();
+          randomize_palette();
         hpw::rnd_pal_after_death = val;
       },
       get_locale_str("scene.game_opts.rnd_pal.desc")

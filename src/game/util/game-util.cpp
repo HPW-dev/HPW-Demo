@@ -152,18 +152,6 @@ void load_sounds() {
   init_store_sound();
 } // load_sounds
 
-void set_random_palette() {
-  cauto sprites = hpw::archive->get_all_names(false);;
-  cauto filter = [](cr<Str> src) {
-    return src.find("resource/image/palettes/") != Str::npos;
-  };
-  Rnd_table<Str> palettes( sprites | std::views::filter(filter)
-    | std::ranges::to<Strs>() );
-  cauto palette_name = palettes.rnd_stable();
-  graphic::current_palette_file = palette_name;
-  hpw::init_palette_from_archive (palette_name);
-}
-
 void load_fonts() {
   hpw_log("загрузка шрифтов...\n");
   assert(hpw::archive);
