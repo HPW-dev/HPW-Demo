@@ -12,17 +12,21 @@
 #include "game/util/pge.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/menu-util.hpp"
 #include "plugin/epge/epge-util.hpp"
 
 struct Scene_epge::Impl {
   Unique<Advanced_text_menu> _menu {};
   bool _need_reinit_menu {};
+  bool _need_bottom_item {}; // переходит на нижний пункт меню
 
   inline explicit Impl() {
     init_menu();
   }
 
   inline void update(const Delta_time dt) {
+    assert(_menu);
+
     if (is_pressed_once(hpw::keycode::escape))
       exit_from_scene();
 
@@ -32,7 +36,11 @@ struct Scene_epge::Impl {
       _need_reinit_menu = false;
     }
 
-    assert(_menu);
+    if (_need_bottom_item) {
+      _menu->next_item();
+      _need_bottom_item = false;
+    }
+
     _menu->update(dt);
   }
 
@@ -56,6 +64,9 @@ struct Scene_epge::Impl {
         []{ hpw::scene_mgr->add(new_shared<Scene_epge_list>()); } ),
     };
 
+    if (!hpw::epges.empty())
+      menu_items.push_back( make_menu_separator(&_need_bottom_item) );
+
     // добавить кнопки для управления отдельными эффектами
     for (crauto epge: hpw::epges) {
       assert(epge);
@@ -71,6 +82,8 @@ struct Scene_epge::Impl {
       ) );
     }
 
+    if (!hpw::epges.empty())
+      menu_items.push_back( make_menu_separator(&_need_bottom_item) );
     // .dll/.so плагины
     menu_items.push_back( get_shared_plugin_item() );
     // ресет и выход

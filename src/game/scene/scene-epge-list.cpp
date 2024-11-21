@@ -8,20 +8,28 @@
 #include "game/util/game-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/menu-util.hpp"
 #include "plugin/epge/epge-util.hpp"
 
 struct Scene_epge_list::Impl {
   Unique<Advanced_text_menu> _menu {};
+  bool _need_bottom_item {}; // переходит на нижний пункт меню
 
   inline explicit Impl() {
     init_menu();
   }
 
   inline void update(const Delta_time dt) {
+    assert(_menu);
+
     if (is_pressed_once(hpw::keycode::escape))
       exit_from_scene();
 
-    assert(_menu);
+    if (_need_bottom_item) {
+      _menu->next_item();
+      _need_bottom_item = false;
+    }
+
     _menu->update(dt);
   }
 
@@ -61,6 +69,8 @@ struct Scene_epge_list::Impl {
       ) );
     } // for epge_list
 
+    
+    menu_items.push_back( make_menu_separator(&_need_bottom_item) );
     // Exit item
     menu_items.emplace_back(new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ));
 

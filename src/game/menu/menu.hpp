@@ -28,5 +28,6 @@ public:
   void set_select_callback(cr<Menu_select_callback> callback);
   void set_move_cursor_callback(cr<Menu_select_callback> callback);
   void reset_sticking(); // сброс залипания выбора
+  void next_item(); // выбирает следующий пункт меню
   bool holded() const; // зажали кнопку в меню
 };

@@ -177,3 +177,4 @@ void Menu::set_select_callback(cr<Menu_select_callback> callback) { _impl->set_s
 void Menu::set_move_cursor_callback(cr<Menu_select_callback> callback) { _impl->set_move_cursor_callback(callback); }
 void Menu::reset_sticking() { _impl->reset_sticking(); }
 bool Menu::holded() const { return _impl->holded(); }
+void Menu::next_item() { _impl->next_item(); }
