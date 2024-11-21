@@ -9,6 +9,7 @@
 #include "game/util/replay.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/difficulty-helper.hpp"
 #include "game/util/game-util.hpp"
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"

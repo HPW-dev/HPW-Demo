@@ -223,15 +223,6 @@ void init_validation_info() {
   hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
 } // init_validation_info
 
-utf32 difficulty_to_str(const Difficulty difficulty) {
-  static const std::unordered_map<Difficulty, utf32> table {
-    {Difficulty::easy, get_locale_str("scene.difficulty_select.difficulty.easy")},
-    {Difficulty::normal, get_locale_str("scene.difficulty_select.difficulty.normal")},
-    {Difficulty::hardcore, get_locale_str("scene.difficulty_select.difficulty.hardcore")},
-  };
-  return table.at(difficulty);
-}
-
 /** нарезает ресурсы на атлас для save_all_sprites
 *@return если вернул true, то можно продолжать нарезку ресурсов */
 inline static bool stream_concat(cr<Strs> sprite_list,

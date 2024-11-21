@@ -19,8 +19,6 @@ Str get_random_replay_name();
 void draw_controls(Image& dst);
 // вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
-// перевести названия уровней сложности
-utf32 difficulty_to_str(const Difficulty difficulty);
 // сохраняет все текстуры в папку в виде атласной текстуры
 void save_all_sprites(cr<Str> save_dir, const int MX=512, const int MY=512);
 // размер всех спрайтов в банке
