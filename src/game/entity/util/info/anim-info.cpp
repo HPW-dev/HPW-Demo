@@ -1,12 +1,13 @@
 #include <cassert>
 #include "anim-info.hpp"
 #include "game/core/anims.hpp"
-#include "game/util/game-util.hpp"
+#include "game/util/anim-helper.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
+#include "util/log.hpp"
 
 void Anim_info::load(cr<Yaml> node) {
   if ( !node.check()) {

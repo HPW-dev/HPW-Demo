@@ -24,14 +24,6 @@ cr<utf32> get_locale_str(cr<Str> key);
 // сделать круг полностью перекрывающий все полигоны
 Circle cover_polygons(cr<Vector<Polygon>> polygons);
 Vec get_screen_center();
-
-/** создаёт осветлённую обводку для контуров спрайта
-* @details анимация сама сохранится в банк
-* @param src с какой анимации взять спрайты
-* @param dst как назвать новую анимацию
-* @return ссыль получившуюся анимацию */
-cr<Shared<Anim>> make_light_mask(cr<Str> src, cr<Str> dst);
-
 Str get_random_replay_name();
 [[nodiscard]] Vec get_rand_pos_safe(const real sx, const real sy, const real ex, const real ey);
 [[nodiscard]] Vec get_rand_pos_graphic(const real sx, const real sy, const real ex, const real ey);

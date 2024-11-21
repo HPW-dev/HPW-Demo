@@ -105,12 +105,16 @@ Host::Host(int argc, char** argv)
   // узнать в какойо папке игра запущена
   hpw::cur_dir = launch_dir_from_argv0(argv[0]);
 
-  load_config();
+  #ifndef DISABLE_CONFIG
+    load_config();
+  #endif
   hpw_log("Директория запуска игры: \"" + hpw::cur_dir + "\"\n", Log_stream::debug);
 } // c-tor
 
 Host::~Host() {
-  save_config();
+  #ifndef DISABLE_CONFIG
+    save_config();
+  #endif
   free_app_mutex();
   hpw_log("Корректное завершение H.P.W\n");
 }

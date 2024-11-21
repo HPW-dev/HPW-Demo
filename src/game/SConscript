@@ -60,7 +60,7 @@ def accept_config():
         case _: ValueError
     case Host.asci:
       host_sources.extend([Glob(src_dir + "host/asci/*.cpp")])
-    case Host.asci: raise ValueError("SDL2 host not implemented")
+    case Host.sdl2: raise ValueError("SDL2 host not implemented")
     case _: raise ValueError(f"unknown host name \"{hpw_config.host}\"")
 
   match hpw_config.compiler:
