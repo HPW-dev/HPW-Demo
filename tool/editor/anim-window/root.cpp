@@ -19,7 +19,6 @@
 #include "game/core/debug.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/common.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/camera.hpp"
 
 Root_wnd::Root_wnd() {

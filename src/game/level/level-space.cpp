@@ -1,7 +1,6 @@
 #include <cassert>
 #include "level-space.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/post-effect/post-effects.hpp"
 #include "game/util/post-effect/blink-text.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
@@ -12,6 +11,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/levels.hpp"
+#include "game/core/difficulty.hpp"
 #include "game/level/util/level-tasks.hpp"
 #include "game/level/util/level-util.hpp"
 #include "game/level/util/tilemap.hpp"

@@ -8,7 +8,6 @@
 #include "scene/scene-entity-editor.hpp"
 #include "game/entity/entity.hpp"
 #include "game/core/entities.hpp"
-#include "game/util/game-util.hpp"
 
 namespace {
 Uid g_wnd_uid {}; // чтобы ImGui не перепутал окна

@@ -2,7 +2,6 @@
 #include "entity-editor-ctx.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "game/util/game-util.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"

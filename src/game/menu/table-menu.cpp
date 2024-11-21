@@ -7,7 +7,6 @@
 #include "graphic/util/graphic-util.hpp"
 #include "item/table-row-item.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/game-util.hpp"
 
 struct Table_menu::Impl {
   Menu* m_base {};

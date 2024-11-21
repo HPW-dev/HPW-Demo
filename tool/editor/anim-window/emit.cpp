@@ -7,7 +7,6 @@
 #include "scene/input.hpp"
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
-#include "game/util/game-util.hpp"
 #include "game/core/anims.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"

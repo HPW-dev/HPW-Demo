@@ -6,7 +6,6 @@
 #include "util/math/random.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "game/util/game-util.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"

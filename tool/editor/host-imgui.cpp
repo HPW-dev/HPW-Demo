@@ -7,7 +7,6 @@
 #include "graphic/font/unifont-mono.hpp"
 #include "util/error.hpp"
 #include "util/file/file.hpp"
-#include "game/util/game-util.hpp"
 #include <GLFW/glfw3.h>
 #include <imgui.h>
 #include <imgui_impl_glfw.h>

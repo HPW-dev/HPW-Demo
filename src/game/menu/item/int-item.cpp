@@ -1,6 +1,5 @@
 #include <cassert>
 #include "int-item.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "util/str-util.hpp"
 

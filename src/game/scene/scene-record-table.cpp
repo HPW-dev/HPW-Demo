@@ -4,7 +4,6 @@
 #include "game/core/scenes.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "graphic/image/image.hpp"
 #include "game/menu/text-menu.hpp"

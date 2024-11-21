@@ -8,6 +8,7 @@
 #include "game/core/palette.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
+#include "game/core/sprites.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
@@ -16,7 +17,6 @@
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/double-item.hpp"
-#include "game/util/game-util.hpp"
 #include "util/error.hpp"
 #include "host/command.hpp"
 

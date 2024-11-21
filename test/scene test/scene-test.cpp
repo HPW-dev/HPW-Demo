@@ -1,5 +1,4 @@
 #include "scene-test.hpp"
-#include "game/util/game-util.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/scene/scene-info.hpp"
 #include "game/core/canvas.hpp"

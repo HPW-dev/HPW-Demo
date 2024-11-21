@@ -4,7 +4,6 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sprites.hpp"
 #include "game/scene/scene-mgr.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
 #include "graphic/image/image.hpp"

@@ -1,3 +1,4 @@
+#include <cassert>
 #include <format>
 #include <ctime>
 #include "host.hpp"
@@ -13,7 +14,6 @@
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/screenshot.hpp"

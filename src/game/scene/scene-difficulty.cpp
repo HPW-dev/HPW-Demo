@@ -10,7 +10,6 @@
 #include "game/core/difficulty.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-util.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/item/bool-item.hpp"

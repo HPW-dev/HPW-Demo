@@ -5,7 +5,6 @@
 #include "game/core/levels.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/common.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/task-util.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"

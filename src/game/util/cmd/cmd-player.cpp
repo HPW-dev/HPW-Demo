@@ -6,7 +6,6 @@
 #include "util/str-util.hpp"
 #include "util/unicode.hpp"
 #include "game/core/entities.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/player/ability/ability-util.hpp"

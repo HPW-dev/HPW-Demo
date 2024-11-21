@@ -14,7 +14,6 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/cmd/cmd.hpp"
-#include "game/util/game-util.hpp"
 
 struct Scene_cmd::Impl {
   // сколько апдейтов надо зажимать удаление текста, чтобы он начал удаляться

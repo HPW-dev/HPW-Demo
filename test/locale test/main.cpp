@@ -3,7 +3,6 @@
 #include "util/path.hpp"
 #include "util/log.hpp"
 #include "game/locale.hpp"
-#include "game/util/game-util.hpp"
 
 void test(cr<Str> fname) {
   hpw_log("\nLoading \"" << fname << "\"\n");

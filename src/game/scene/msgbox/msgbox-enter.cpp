@@ -7,7 +7,6 @@
 #include "game/core/canvas.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/blur-helper.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"

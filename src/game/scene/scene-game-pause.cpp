@@ -3,7 +3,6 @@
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/sounds.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"

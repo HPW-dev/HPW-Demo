@@ -12,7 +12,6 @@
 #include "game/core/common.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/game-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"

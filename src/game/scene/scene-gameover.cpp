@@ -8,7 +8,6 @@
 #include "game/core/sounds.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/palette-helper.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/menu/item/text-item.hpp"

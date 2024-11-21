@@ -9,7 +9,6 @@
 #include "util/math/vec-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/entity/entity.hpp"
-#include "game/util/game-util.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/animation/anim.hpp"

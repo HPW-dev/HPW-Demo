@@ -6,9 +6,9 @@
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
+#include "graphic/image/image.hpp"
 #include "graphic/font/font-util.hpp"
 
 struct Scene_nickname::Impl {

@@ -17,7 +17,6 @@
 #include "util/log.hpp"
 #include "util/file/yaml.hpp"
 #include "game/util/game-archive.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/core/time-scale.hpp"

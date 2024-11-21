@@ -8,7 +8,6 @@
 #include "util/math/mat.hpp"
 #include "util/mempool.hpp"
 #include "game/entity/util/hitbox.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/polygon-helper.hpp"
 #include "game/core/entities.hpp"
 

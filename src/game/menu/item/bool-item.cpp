@@ -1,6 +1,5 @@
 #include <cassert>
 #include "bool-item.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 
 Menu_bool_item::Menu_bool_item(cr<utf32> new_name, Get_value _get_value,

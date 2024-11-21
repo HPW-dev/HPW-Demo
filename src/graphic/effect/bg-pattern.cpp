@@ -15,7 +15,6 @@
 #include "util/math/mat.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/vec-util.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/core/fonts.hpp"
 

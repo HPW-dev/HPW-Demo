@@ -21,7 +21,7 @@
 #include "game/menu/item/int-item.hpp"
 #include "game/menu/item/double-item.hpp"
 #include "game/menu/item/bool-item.hpp"
-#include "game/util/game-util.hpp"
+#include "util/log.hpp"
 #include "util/path.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/str-util.hpp"

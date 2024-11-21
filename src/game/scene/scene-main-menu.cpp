@@ -13,7 +13,6 @@
 #include "game/core/graphic.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/version.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/blur-helper.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/palette-helper.hpp"

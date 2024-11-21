@@ -8,7 +8,6 @@
 #include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/game-archive.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/vec-helper.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"

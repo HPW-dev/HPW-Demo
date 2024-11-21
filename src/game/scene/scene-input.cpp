@@ -5,7 +5,6 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/core/scenes.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/config.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"

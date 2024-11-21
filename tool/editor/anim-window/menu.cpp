@@ -9,7 +9,6 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-util.hpp"
 #include "util/log.hpp"
 #include "util/hpw-util.hpp"
 #include "util/str-util.hpp"

@@ -16,7 +16,6 @@
 #include "game/core/common.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/game-archive.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"

@@ -18,7 +18,6 @@
 #include "game/util/locale.hpp"
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-gamma.hpp"
 #include "game/menu/text-menu.hpp"

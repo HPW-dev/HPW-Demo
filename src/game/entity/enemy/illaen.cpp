@@ -12,7 +12,6 @@
 #include "game/core/entities.hpp"
 #include "game/core/anims.hpp"
 #include "game/core/canvas.hpp"
-#include "game/util/game-util.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"

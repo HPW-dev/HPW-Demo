@@ -8,7 +8,6 @@
 #include "game/core/epges.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/pge.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"

@@ -1,7 +1,6 @@
 #include <cassert>
 #include "editor.hpp"
 #include "game/scene/scene-mgr.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/core/core.hpp"

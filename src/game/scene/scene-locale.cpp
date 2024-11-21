@@ -3,13 +3,13 @@
 #include "scene-locale.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
 #include "game/util/game-archive.hpp"
 #include "util/file/yaml.hpp"
+#include "util/log.hpp"
 
 struct Locale_info {
   Str path {};

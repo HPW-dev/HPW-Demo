@@ -8,7 +8,6 @@
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
-#include "game/util/game-util.hpp"
 #include "game/util/locale.hpp"
 #include "game/hud/hud-util.hpp"
 #include "game/core/core.hpp"
