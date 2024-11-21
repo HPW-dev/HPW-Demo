@@ -13,7 +13,7 @@ cr<decltype(callback)> new_callback)
 void Yes_no_scene::update(const Delta_time dt) {
   using namespace ImGui;
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   if (is_pressed_once(hpw::keycode::enable))
     enable();
 }
@@ -29,10 +29,10 @@ void Yes_no_scene::imgui_exec() {
     enable();
   SameLine();
   if (Button(u8tos(u8"Нет")))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
 } // imgui_execute
 
 void Yes_no_scene::enable() {
-  hpw::scene_mgr->back();
+  hpw::scene_mgr.back();
   callback();
 }

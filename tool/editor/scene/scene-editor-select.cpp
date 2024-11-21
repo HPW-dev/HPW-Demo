@@ -38,9 +38,9 @@ struct Scene_editor_select::Impl {
       exit();
   }
 
-  inline void exit() { hpw::scene_mgr->back(); }
-  inline void goto_anim_editor() { hpw::scene_mgr->add(new_shared<Scene_anim_editor>()); }
-  inline void goto_entity_editor() { hpw::scene_mgr->add(new_shared<Scene_entity_editor>()); }
+  inline void exit() { hpw::scene_mgr.back(); }
+  inline void goto_anim_editor() { hpw::scene_mgr.add(new_shared<Scene_anim_editor>()); }
+  inline void goto_entity_editor() { hpw::scene_mgr.add(new_shared<Scene_entity_editor>()); }
 }; // Impl
 
 Scene_editor_select::Scene_editor_select(): impl {new_unique<Impl>()} {}

@@ -57,8 +57,7 @@ struct Scene_epge_config::Impl {
   }
 
   inline static void exit_from_scene() {
-    assert(hpw::scene_mgr);
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   }
 
   inline void init_menu() {

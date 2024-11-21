@@ -17,6 +17,7 @@
 #include "game/level/util/level-tasks.hpp"
 #include "game/level/util/task-timed.hpp"
 #include "game/util/sync.hpp"
+#include "game/util/locale.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"

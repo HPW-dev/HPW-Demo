@@ -24,12 +24,11 @@ void Editor::init() {
   Host_imgui::init();
   load_config(); // refresh config
   load_sounds();
-  init_scene_mgr();
   init_graphic();
   #ifdef ENTITY_EDITOR_DEBUG
-    hpw::scene_mgr->add(new_shared<Scene_entity_editor>());
+    hpw::scene_mgr.add(new_shared<Scene_entity_editor>());
   #else
-    hpw::scene_mgr->add(new_shared<Scene_editor_select>());
+    hpw::scene_mgr.add(new_shared<Scene_editor_select>());
   #endif
   // при старте редактор сам растягивается и перетаскивается на нужное место
   set_window_pos(200, 25);
@@ -48,7 +47,7 @@ void Editor::update(const Delta_time dt) {
   update_graphic_autoopt(dt);
   Host_imgui::update(dt);
   auto st = Editor::get_time();
-  if ( !hpw::scene_mgr->update(dt) ) {
+  if ( !hpw::scene_mgr.update(dt) ) {
     detailed_log("scenes are over, call soft_exit\n");
     hpw::soft_exit();
   }
@@ -58,13 +57,13 @@ void Editor::update(const Delta_time dt) {
 void Editor::draw_game_frame() const {
   Host_imgui::draw_game_frame();
   auto st = Editor::get_time();
-  hpw::scene_mgr->draw(*graphic::canvas);
+  hpw::scene_mgr.draw(*graphic::canvas);
   graphic::soft_draw_time = Editor::get_time() - st;
   graphic::check_autoopt();
 }
 
 void Editor::imgui_exec() const {
-  auto scene {hpw::scene_mgr->get_current()};
+  auto scene {hpw::scene_mgr.get_current()};
   return_if (!scene);
 
   auto editor_scene {dcast<Editor_scene_base*>(scene)};

@@ -122,7 +122,7 @@ void Emit_wnd::select_anim_by_name(cr<Str> name) {
 }
 
 void Emit_wnd::make_new_anim() {
-  hpw::scene_mgr->add(
+  hpw::scene_mgr.add(
     new_shared<Input_scene>(
       "Enter animation name",
       [this](cr<Str> name) {

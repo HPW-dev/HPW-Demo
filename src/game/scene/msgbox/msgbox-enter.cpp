@@ -8,6 +8,7 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/blur-helper.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/font/font-util.hpp"
@@ -45,7 +46,7 @@ struct Scene_msgbox_enter::Impl {
     || is_pressed_once(hpw::keycode::escape)) {
       if (m_action)
         m_action();
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     }
   }
 

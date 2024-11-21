@@ -15,6 +15,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sounds.hpp"
 #include "game/util/pge.hpp"
+#include "game/util/locale.hpp"
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
@@ -52,7 +53,7 @@ void set_high_quality() {
 Shared<Menu_text_item> get_shared_plugin_item() {
   return new_shared<Menu_text_item>(
     get_locale_str("scene.graphic_menu.pge.title"),
-    []{ hpw::scene_mgr->add(new_shared<Scene_pge>()); },
+    []{ hpw::scene_mgr.add(new_shared<Scene_pge>()); },
     []->utf32 { return {}; },
     get_locale_str("scene.graphic_menu.description.pge")
   );
@@ -73,7 +74,7 @@ struct Scene_graphic::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape)) {
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
       save_config();
     }
     
@@ -319,7 +320,7 @@ struct Scene_graphic::Impl {
     return new_shared<Menu_text_item>(
       get_locale_str("common.exit"),
       []{
-        hpw::scene_mgr->back();
+        hpw::scene_mgr.back();
         save_config();
       }
     );
@@ -328,7 +329,7 @@ struct Scene_graphic::Impl {
   inline Shared<Menu_text_item> get_palette_item() {
     return new_shared<Menu_text_item>(
       get_locale_str("scene.palette_select.title"),
-      []{ hpw::scene_mgr->add(new_shared<Scene_palette_select>()); },
+      []{ hpw::scene_mgr.add(new_shared<Scene_palette_select>()); },
       []->utf32 { return {}; },
       get_locale_str("scene.graphic_menu.description.palette_select")
     );
@@ -337,7 +338,7 @@ struct Scene_graphic::Impl {
   inline Shared<Menu_text_item> get_epge_item() {
     return new_shared<Menu_text_item>(
       get_locale_str("scene.graphic_menu.epge.title"),
-      []{ hpw::scene_mgr->add(new_shared<Scene_epge>()); },
+      []{ hpw::scene_mgr.add(new_shared<Scene_epge>()); },
       []->utf32 { return {}; },
       get_locale_str("scene.graphic_menu.epge.desc")
     );
@@ -366,14 +367,14 @@ struct Scene_graphic::Impl {
       graphic::show_fps = false;
       disable_pge();
       set_default();
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
       save_config();
     } );
   }
 
   inline Shared<Menu_text_item> get_gamma_item() {
     return new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.gamma.title"),
-      []{ hpw::scene_mgr->add(new_shared<Scene_gamma>()); } );
+      []{ hpw::scene_mgr.add(new_shared<Scene_gamma>()); } );
   }
 
   inline Shared<Menu_list_item> get_light_quality_item() {

@@ -9,6 +9,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/locale.hpp"
 #include "game/hud/hud-util.hpp"
 #include "game/core/core.hpp"
 #include "game/core/huds.hpp"
@@ -75,8 +76,7 @@ public:
       + " \"" + (_path) + "\"";
     hpw_log("Error: " + msg + '\n', Log_stream::warning);
     cauto title = get_locale_str("common.error");
-    assert(hpw::scene_mgr);
-    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(utf8_to_32(msg), title));
+    hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(utf8_to_32(msg), title));
     this->kill();
   }
 };

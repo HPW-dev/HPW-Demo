@@ -14,7 +14,9 @@
 #include "game/util/keybits.hpp"
 #include "game/util/version.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/blur-helper.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "graphic/util/resize.hpp"
@@ -156,7 +158,7 @@ Scene_main_menu::~Scene_main_menu() {}
 void Scene_main_menu::update(const Delta_time dt) {
 #ifdef DEBUG
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
 #endif
 
   bg_state += dt;
@@ -164,7 +166,7 @@ void Scene_main_menu::update(const Delta_time dt) {
   update_bg_order(dt);
 
   // чтобы перезагрузить локализацию строк
-  if (hpw::scene_mgr->status.came_back)
+  if (hpw::scene_mgr.status.came_back)
     init_menu();
 }
 
@@ -231,10 +233,10 @@ void Scene_main_menu::init_menu() {
     Menu_items {
       // старт
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),
-        []{ hpw::scene_mgr->add(new_shared<Scene_difficulty>()); }),
+        []{ hpw::scene_mgr.add(new_shared<Scene_difficulty>()); }),
       // смена языка
       new_shared<Menu_text_item>(hpw::locale_select_title,
-        []{ hpw::scene_mgr->add(new_shared<Scene_locale_select>()); }),
+        []{ hpw::scene_mgr.add(new_shared<Scene_locale_select>()); }),
       // сменить фон
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
         [this]{ next_bg(); }),
@@ -243,14 +245,14 @@ void Scene_main_menu::init_menu() {
         []{ set_random_palette(); }),
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
-        hpw::scene_mgr->add(new_shared<Scene_info>());
+        hpw::scene_mgr.add(new_shared<Scene_info>());
       }),*/
       // опции
       new_shared<Menu_text_item>(get_locale_str("scene.options.name"),
-        []{ hpw::scene_mgr->add(new_shared<Scene_options>()); }),
+        []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
       // выйти из игры
       new_shared<Menu_text_item>(get_locale_str("common.exit"),
-        []{ hpw::scene_mgr->back(); }),
+        []{ hpw::scene_mgr.back(); }),
     }
   ); // init menu
 
@@ -497,7 +499,7 @@ void Scene_main_menu::init_menu_sounds() {
 
 void Scene_main_menu::update_bg_order(const Delta_time dt) {
   // поменять фон возвращаясь из сцены
-  const bool came_back = hpw::scene_mgr->status.came_back;
+  const bool came_back = hpw::scene_mgr.status.came_back;
   // поменять фон через кнопку
   const bool fast_forward = is_pressed_once(hpw::keycode::fast_forward);
   // поменять фон по таймеру

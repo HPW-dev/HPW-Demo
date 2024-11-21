@@ -31,7 +31,7 @@ struct Scene_epge::Impl {
       exit_from_scene();
 
     // при выборе эффекта менюшку надо дополнить
-    if (hpw::scene_mgr->status.came_back || _need_reinit_menu) {
+    if (hpw::scene_mgr.status.came_back || _need_reinit_menu) {
       init_menu();
       _need_reinit_menu = false;
     }
@@ -52,8 +52,7 @@ struct Scene_epge::Impl {
   }
 
   inline static void exit_from_scene() {
-    assert(hpw::scene_mgr);
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
     save_epges();
   }
 
@@ -61,7 +60,7 @@ struct Scene_epge::Impl {
     // кнопка добавить новый эффект
     Menu_items menu_items {
       new_shared<Menu_text_item>( get_locale_str("scene.graphic_menu.epge.add_new"),
-        []{ hpw::scene_mgr->add(new_shared<Scene_epge_list>()); } ),
+        []{ hpw::scene_mgr.add(new_shared<Scene_epge_list>()); } ),
     };
 
     if (!hpw::epges.empty())
@@ -76,7 +75,7 @@ struct Scene_epge::Impl {
 
       menu_items.emplace_back( new_shared<Menu_text_item>(
         epge_name,
-        [ptr=epge_ptr]{ hpw::scene_mgr->add(new_shared<Scene_epge_config>(ptr)); },
+        [ptr=epge_ptr]{ hpw::scene_mgr.add(new_shared<Scene_epge_config>(ptr)); },
         []{ return utf32{}; },
         epge_desc
       ) );

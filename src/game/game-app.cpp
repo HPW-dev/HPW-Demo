@@ -27,6 +27,7 @@
 #include "game/util/config.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/dbg-plots.hpp"
+#include "game/util/locale.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
 #include "sound/sound-mgr.hpp"
@@ -54,21 +55,20 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
 
   // управление сценами
   hpw_log("настройка игровых сцен...\n");
-  init_scene_mgr();
   #ifndef DEBUG
   hpw::empty_level_first = false;
   #endif
   if (hpw::empty_level_first) {
     hpw_log("start debug level...\n");
-    hpw::scene_mgr->add( new_shared<Scene_game>() );
+    hpw::scene_mgr.add( new_shared<Scene_game>() );
   } else {
-    hpw::scene_mgr->add( new_shared<Scene_main_menu>() );
+    hpw::scene_mgr.add( new_shared<Scene_main_menu>() );
     // спросить о языке при первом запуске
     if (hpw::first_start) {
       // набрать никнейм
-      hpw::scene_mgr->add(new_shared<Scene_nickname>());
+      hpw::scene_mgr.add(new_shared<Scene_nickname>());
       // выбрать язык
-      hpw::scene_mgr->add( new_shared<Scene_locale_select>() );
+      hpw::scene_mgr.add( new_shared<Scene_locale_select>() );
     }
   }
 
@@ -103,7 +103,7 @@ void Game_app::update(const Delta_time dt) {
   elif (hpw::enable_replay)
     replay_save_keys();
 
-  if ( !hpw::scene_mgr->update(dt) ) {
+  if ( !hpw::scene_mgr.update(dt) ) {
     hpw_log("scenes are over, call soft_exit\n", Log_stream::debug);
     hpw::soft_exit();
   }
@@ -117,7 +117,7 @@ void Game_app::draw_game_frame() const {
   assert(graphic::canvas);
   auto& dst = *graphic::canvas;
 
-  hpw::scene_mgr->draw(dst);
+  hpw::scene_mgr.draw(dst);
   post_draw(dst);
 
   graphic::soft_draw_time = get_time() - st;
@@ -141,7 +141,7 @@ void Game_app::check_errors() {
   // ошибка при загрузке звуковой системы
   if (hpw::sound_mgr_init_error) {
     hpw::sound_mgr_init_error = false;
-    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(
+    hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(
       get_locale_str("scene.sound_settings.device_init_error"),
       get_locale_str("common.error")
     ));
@@ -150,7 +150,7 @@ void Game_app::check_errors() {
   // ошибка при мультиоконном запуске
   if (hpw::multiple_apps) {
     hpw::multiple_apps = false;
-    hpw::scene_mgr->add(new_shared<Scene_msgbox_enter>(
+    hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(
       get_locale_str("common.multiapp_warning"),
       get_locale_str("common.warning")
     ));
@@ -158,7 +158,7 @@ void Game_app::check_errors() {
 
   // пользовательские сообщения
   if (!hpw::user_warnings.empty()) {
-    hpw::scene_mgr->add( new_shared<Scene_msgbox_enter>(hpw::user_warnings, get_locale_str("common.warning")) );
+    hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(hpw::user_warnings, get_locale_str("common.warning")) );
     hpw::user_warnings.clear();
   }
 } // check_errors
@@ -211,7 +211,7 @@ void Game_app::replay_load_keys() {
     hpw_log("replay end\n");
     hpw::replay_read_mode = false;
     hpw::replay = {};
-    //hpw::scene_mgr->back(); TODO?
+    //hpw::scene_mgr.back(); TODO?
   }
 }
 

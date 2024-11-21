@@ -40,7 +40,7 @@ struct Scene_entity_editor::Impl {
   inline void update(const Delta_time dt) {
     // переключение в консоль
     if (is_pressed_once(hpw::keycode::console))
-      hpw::scene_mgr->add(new_shared<Scene_cmd>());
+      hpw::scene_mgr.add(new_shared<Scene_cmd>());
 
     // удалить выключенные окна
     std::erase_if(m_emitters, [](cr<decltype(m_emitters)::value_type> window) {
@@ -95,8 +95,8 @@ struct Scene_entity_editor::Impl {
   }
 
   inline void exit() {
-    hpw::scene_mgr->add( new_shared<Yes_no_scene>(
-      u8"Выйти из редактора?", []{ hpw::scene_mgr->back(); } ) );
+    hpw::scene_mgr.add( new_shared<Yes_no_scene>(
+      u8"Выйти из редактора?", []{ hpw::scene_mgr.back(); } ) );
   }
 
   inline void draw_bg(Image& dst) const {

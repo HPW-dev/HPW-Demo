@@ -33,7 +33,7 @@ struct Scene_gameover::Impl {
 
   inline void update(const Delta_time dt) {
     if (hpw::replay_read_mode)
-      hpw::scene_mgr->back(2); // cur->gameover->replay-select
+      hpw::scene_mgr.back(2); // cur->gameover->replay-select
 
     menu->update(dt);
   }
@@ -47,11 +47,11 @@ struct Scene_gameover::Impl {
     Menu_items items;
     items.push_back (
       new_shared<Menu_text_item>( get_locale_str("scene.gameover.try_again"), []{
-        hpw::scene_mgr->back(3); // cur->game->load screen->difficulty menu
+        hpw::scene_mgr.back(3); // cur->game->load screen->difficulty menu
         // перезапуск игры
-        hpw::scene_mgr->add(new_shared<Scene_loading>( []{
+        hpw::scene_mgr.add(new_shared<Scene_loading>( []{
           hpw::replay_read_mode = false;
-          hpw::scene_mgr->add(new_shared<Scene_game>());
+          hpw::scene_mgr.add(new_shared<Scene_game>());
         } ));
       } )
     );
@@ -98,7 +98,7 @@ struct Scene_gameover::Impl {
       }
     }
 
-    hpw::scene_mgr->back(4); // cur -> game -> load screen -> difficulty menu -> main menu
+    hpw::scene_mgr.back(4); // cur -> game -> load screen -> difficulty menu -> main menu
   }
 }; // impl
 

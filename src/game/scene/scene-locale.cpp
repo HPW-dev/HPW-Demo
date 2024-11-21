@@ -4,6 +4,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
@@ -73,8 +74,7 @@ struct Scene_locale_select::Impl {
       auto item = new_shared<Menu_item_table_row>(
         [info]{
           load_locale(info.path);
-          assert(hpw::scene_mgr);
-          hpw::scene_mgr->back();
+          hpw::scene_mgr.back();
         },
         Menu_item_table_row::Content_getters {
           [info]{ return info.name; },
@@ -89,7 +89,7 @@ struct Scene_locale_select::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
 
     _menu->update(dt);
   }

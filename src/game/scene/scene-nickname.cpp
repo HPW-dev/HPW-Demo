@@ -8,6 +8,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/locale.hpp"
 #include "graphic/font/font-util.hpp"
 
 struct Scene_nickname::Impl {
@@ -88,7 +89,7 @@ struct Scene_nickname::Impl {
 
   inline static void exit() {
     hpw::text_input_mode = false;
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   }
 }; // impl
 

@@ -26,7 +26,7 @@ Scene_difficulty::Scene_difficulty() {
 
 void Scene_difficulty::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   menu->update(dt);
 }
 
@@ -37,16 +37,16 @@ void Scene_difficulty::draw(Image& dst) const {
 void Scene_difficulty::init_menu() {
   Menu_items menu_items {
     new_shared<Menu_text_item>(get_locale_str("scene.difficulty_select.start"), []{
-      hpw::scene_mgr->add(new_shared<Scene_loading>( []{
+      hpw::scene_mgr.add(new_shared<Scene_loading>( []{
         hpw::replay_read_mode = false;
         hpw::need_tutorial = false;
-        hpw::scene_mgr->add(new_shared<Scene_game>());
+        hpw::scene_mgr.add(new_shared<Scene_game>());
       } ));
     }),
     new_shared<Menu_text_item>(get_locale_str("scene.difficulty_select.start_tutorial"), []{
-      hpw::scene_mgr->add(new_shared<Scene_loading>( []{
+      hpw::scene_mgr.add(new_shared<Scene_loading>( []{
         hpw::replay_read_mode = false;
-        hpw::scene_mgr->add(new_shared<Scene_game>(true));
+        hpw::scene_mgr.add(new_shared<Scene_game>(true));
       } ));
     }),
     new_shared<Menu_list_item>(get_locale_str("scene.difficulty_select.difficulty.title"),
@@ -77,12 +77,12 @@ void Scene_difficulty::init_menu() {
     ),
     // выбор реплея
     new_shared<Menu_text_item>(get_locale_str("scene.replay.watch"), []{
-      hpw::scene_mgr->add(new_shared<Scene_loading>( []{
-        hpw::scene_mgr->add(new_shared<Scene_replay_select>());
+      hpw::scene_mgr.add(new_shared<Scene_loading>( []{
+        hpw::scene_mgr.add(new_shared<Scene_replay_select>());
       } ));
     }),
     new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     }),
   };
 

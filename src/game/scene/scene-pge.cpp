@@ -47,7 +47,7 @@ struct Scene_pge::Impl {
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape)) {
       save_pge_to_config();
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     }
 
     if (m_reinit_menu)
@@ -144,7 +144,7 @@ struct Scene_pge::Impl {
     menu_items.push_back( new_shared<Menu_text_item>(
       get_locale_str("common.back"), [] {
         save_pge_to_config();
-        hpw::scene_mgr->back();
+        hpw::scene_mgr.back();
       } ) );
     menu_items.push_back( new_shared<Menu_text_item>(
       get_locale_str("scene.graphic_menu.pge.disable"), [this] {

@@ -17,7 +17,7 @@ Scene_input::Scene_input() {
 
 void Scene_input::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   menu->update(dt);
 }
 
@@ -69,14 +69,14 @@ void Scene_input::init_menu() {
   menu_items.emplace_back( new_shared<Menu_text_item> (
     get_locale_str("common.reset"), []{
       hpw::reset_keymap();
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
       save_config();
     }
   ) );
 
   menu_items.emplace_back (
     new_shared<Menu_text_item>(get_locale_str("scene.input.exit_and_save"), []{
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
       save_config();
     } )
   );

@@ -8,6 +8,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
@@ -27,7 +28,7 @@ Scene_debug::Scene_debug() {
 void Scene_debug::update(const Delta_time dt) {
   // выйти из дебага по ESC или по той же кнопке
   if (is_pressed_once(hpw::keycode::escape) || is_pressed_once(hpw::keycode::debug))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
 
   menu->update(dt);
 }
@@ -71,7 +72,7 @@ void Scene_debug::init_menu() {
         [] { return graphic::step_mode; },
         [] (bool new_val) {
           graphic::step_mode = new_val;
-          hpw::scene_mgr->back();
+          hpw::scene_mgr.back();
         }
       ),
       new_shared<Menu_bool_item>(U"хитбоксы объектов",
@@ -117,7 +118,7 @@ void Scene_debug::init_menu() {
         10
       ),
       new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
-        hpw::scene_mgr->back();
+        hpw::scene_mgr.back();
       }),
     },
     Vec{20, 30} // menu draw pos

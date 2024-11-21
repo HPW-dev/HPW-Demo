@@ -22,7 +22,7 @@ Sprite_select::Sprite_select(decltype(callback) new_callback)
 
 void Sprite_select::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   if (is_pressed_once(hpw::keycode::enable))
     enable();
 
@@ -90,7 +90,7 @@ void Sprite_select::imgui_exec() {
 
   SameLine();
   if (Button("exit"))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
 
   PopItemWidth();
 } // imgui_execute
@@ -103,7 +103,7 @@ void Sprite_select::enable() {
     auto sprite = hpw::sprites.find(path);
     callback(sprite, path);
   }
-  hpw::scene_mgr->back();
+  hpw::scene_mgr.back();
 }
 
 Strs Sprite_select::get_list() const {

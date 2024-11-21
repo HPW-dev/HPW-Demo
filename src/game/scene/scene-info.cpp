@@ -9,7 +9,7 @@ Scene_info::Scene_info() {}
 
 void Scene_info::update(const Delta_time dt) {
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
 }
 
 void Scene_info::draw(Image& dst) const {

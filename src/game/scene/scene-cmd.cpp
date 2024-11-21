@@ -34,9 +34,9 @@ struct Scene_cmd::Impl {
   inline void update(const Delta_time dt) {
     // выход
     if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     if (is_pressed_once(hpw::keycode::console))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     // стирание текста
     if (is_pressed_once(hpw::keycode::text_delete)) {
       if (!hpw::text_input.empty()) {

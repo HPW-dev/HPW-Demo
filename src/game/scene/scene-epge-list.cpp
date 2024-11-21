@@ -41,8 +41,7 @@ struct Scene_epge_list::Impl {
   }
 
   inline static void exit_from_scene() {
-    assert(hpw::scene_mgr);
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   }
 
   inline void init_menu() {
@@ -58,10 +57,10 @@ struct Scene_epge_list::Impl {
       menu_items.push_back( new_shared<Menu_text_item>(
         utf8_to_32(name),
         [_name=name]{
-          hpw::scene_mgr->back();
+          hpw::scene_mgr.back();
           auto epge = make_epge(_name);
           assert(epge);
-          hpw::scene_mgr->add( new_shared<Scene_epge_config>(epge.get()) );
+          hpw::scene_mgr.add( new_shared<Scene_epge_config>(epge.get()) );
           hpw::epges.emplace_back(std::move(epge));
         },
         []{ return utf32{}; },

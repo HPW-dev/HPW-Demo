@@ -6,6 +6,7 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/game-util.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/locale.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -32,7 +33,7 @@ void Scene_loading::update(const Delta_time dt) {
   // если сцена отработала, можно вернутся обратно
   if (used) {
     if (time_out-- <= 0) // защита от зацикливания
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
   }
 
   if (drawed && !used) {

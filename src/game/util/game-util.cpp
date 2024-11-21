@@ -140,18 +140,6 @@ void load_animations() {
   }
 }
 
-cr<utf32> get_locale_str(cr<Str> key) {
-  assert(hpw::store_locale);
-  if (auto ret = hpw::store_locale->find(key); ret)
-    return ret->str;
-  else
-    hpw_log("not found string: \"" + key + "\"\n", Log_stream::debug);
-  static utf32 last_error;
-  hpw_log("not finded string \"" + key + "\"\n", Log_stream::debug);
-  last_error = U"_ERR_(" + sconv<utf32>(key) + U")";
-  return last_error;
-}
-
 Str get_random_replay_name() {
   std::stringstream name;
   
@@ -234,8 +222,6 @@ void init_validation_info() {
   hpw_log("game executable SHA256: " + hpw::exe_sha256 + "\n");
   hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
 } // init_validation_info
-
-void init_scene_mgr() { init_unique(hpw::scene_mgr); }
 
 utf32 difficulty_to_str(const Difficulty difficulty) {
   static const std::unordered_map<Difficulty, utf32> table {
@@ -449,27 +435,6 @@ void save_screenshot(cr<Image> image) {
   save(image, oss.str());
 } // save_screenshot
 
-void load_locale(cr<Str> user_path) {
-  hpw_log("загрузка локализации...\n");
-  assert(hpw::config);
-  File mem; 
-  cauto path = user_path.empty()
-    ? (*hpw::config)["path"].get_str("locale", hpw::fallback_locale_path)
-    : user_path;
-
-  try {
-    mem = hpw::archive->get_file(path);
-  } catch (...) {
-    hpw_log("ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
-      + hpw::fallback_locale_path + "\"\n", Log_stream::warning);
-    mem = hpw::archive->get_file(hpw::fallback_locale_path);
-  }
-
-  hpw::locale_path = mem.get_path();
-  auto yml = Yaml(mem);
-  load_locales_to_store(yml);
-}
-
 void load_fonts() {
   hpw_log("загрузка шрифтов...\n");
   assert(hpw::archive);
@@ -477,29 +442,4 @@ void load_fonts() {
   init_unique<Unifont>(graphic::font, mem, 16, true);
   init_unique<Unifont>(graphic::font_shop, mem, 32, true);
   init_unique<Unifont_mono>(graphic::system_mono, mem, 8, 16, true);
-}
-
-void hpw_blur(Image& dst, cr<Image> src, const int window_sz) {
-  switch (graphic::blur_mode) {
-    default:
-    case Blur_mode::autoopt: {
-      if (graphic::render_lag)
-        blur_fast(dst, src, window_sz);
-      else
-        blur_hq(dst, src, window_sz);
-      break;
-    }
-    case Blur_mode::low: blur_fast(dst, src, window_sz); break;
-    case Blur_mode::high: blur_hq(dst, src, window_sz); break;
-  }
-}
-
-bool check_high_blur() {
-  switch (graphic::blur_mode) {
-    default:
-    case Blur_mode::autoopt: return !graphic::render_lag;
-    case Blur_mode::low: return false;
-    case Blur_mode::high: return true;
-  }
-  return false;
 }

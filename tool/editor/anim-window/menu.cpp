@@ -68,7 +68,7 @@ void Menu_wnd::imgui_exec() {
 } // imgui_exec
 
 void Menu_wnd::back_from_wnd() {
-  hpw::scene_mgr->add(new_shared<Yes_no_scene>(
+  hpw::scene_mgr.add(new_shared<Yes_no_scene>(
     u8"Выйти из редактора?",
-    []{ hpw::scene_mgr->back(); } ));
+    []{ hpw::scene_mgr.back(); } ));
 }

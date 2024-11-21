@@ -17,6 +17,7 @@
 #include "game/core/graphic.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/blur-helper.hpp"
 #include "util/math/random.hpp"
 #include "util/math/xorshift.hpp"
 

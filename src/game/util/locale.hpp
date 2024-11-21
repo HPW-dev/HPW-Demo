@@ -15,3 +15,6 @@ public:
 };
 
 void load_locales_to_store(Yaml file);
+// безопасное получение локализованной строки
+cr<utf32> get_locale_str(cr<Str> key);
+void load_locale(cr<Str> user_path={});

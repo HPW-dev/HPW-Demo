@@ -111,7 +111,7 @@ void Frame_wnd::draw_direction_count_edit(Frame& frame) {
 void Frame_wnd::draw_path_edit(Frame& frame) {
   // добавить спрайт через поисковик
   if (ImGui::Button("+")) {
-    hpw::scene_mgr->add(
+    hpw::scene_mgr.add(
       new_shared<Sprite_select>(
         [this, &frame](Shared<Sprite> sprite, cr<Str> path) {
           detailed_log("new sprite selected for frame \"" << frame.get_name() << "\"\n");

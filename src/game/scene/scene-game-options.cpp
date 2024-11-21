@@ -39,7 +39,7 @@ struct Scene_game_options::Impl {
     Menu_items menu_items {
       new_shared<Menu_text_item>(
         get_locale_str("scene.nickname.title"),
-        []{ hpw::scene_mgr->add(new_shared<Scene_nickname>()); }
+        []{ hpw::scene_mgr.add(new_shared<Scene_nickname>()); }
       ),
       new_shared<Menu_bool_item>(
         get_locale_str("scene.game_opts.rnd_pal.title"),
@@ -67,7 +67,7 @@ struct Scene_game_options::Impl {
 
   // выходит из этого меню
   inline void goto_back() {
-    hpw::scene_mgr->back();
+    hpw::scene_mgr.back();
   }
 }; // Impl
 

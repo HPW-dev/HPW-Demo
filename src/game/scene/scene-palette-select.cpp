@@ -48,7 +48,7 @@ struct Scene_palette_select::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     menu->update(dt);
   }
 
@@ -112,10 +112,10 @@ struct Scene_palette_select::Impl {
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
           update_cur_palette_idx();
           hpw::init_palette_from_archive(cur_palette_file());
-          hpw::scene_mgr->back();
+          hpw::scene_mgr.back();
         }),
         
-        new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr->back(); }),
+        new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
       },
 
       Vec{50, 50}

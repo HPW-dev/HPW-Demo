@@ -62,6 +62,6 @@ Level::~Level() {}
 
 Level::Level(): impl {new_unique<Impl>(this)} {
   on_player_death_action = [] {
-    hpw::scene_mgr->add( new_shared<Scene_gameover>() );
+    hpw::scene_mgr.add( new_shared<Scene_gameover>() );
   };
 }

@@ -18,7 +18,7 @@ public:
   Nested_scene() {
     init_shared( menu, Menu_items{
       new_shared<Menu_text_item>(U"none 2"),
-      new_shared<Menu_text_item>(U"back", [](){ hpw::scene_mgr->back(); }),
+      new_shared<Menu_text_item>(U"back", [](){ hpw::scene_mgr.back(); }),
     },
     Vec{50, 50} );
   }
@@ -35,9 +35,9 @@ public:
   Test_scene() {
     init_shared( menu, Menu_items{
       new_shared<Menu_text_item>(U"next", []{
-        hpw::scene_mgr->add(new_shared<Nested_scene>()); }),
+        hpw::scene_mgr.add(new_shared<Nested_scene>()); }),
       new_shared<Menu_text_item>(U"none"),
-      new_shared<Menu_text_item>(U"back", []{ hpw::scene_mgr->back(); }),
+      new_shared<Menu_text_item>(U"back", []{ hpw::scene_mgr.back(); }),
     },
     Vec{30, 30} );
   }
@@ -52,10 +52,10 @@ void Menu_test::init(int argc, char *argv[]) {
   init_archive();
   load_fonts();
   init_scene_mgr();
-  hpw::scene_mgr->add(new_shared<Test_scene>());
+  hpw::scene_mgr.add(new_shared<Test_scene>());
 }
 
 Menu_test::~Menu_test() {}
 
-void Menu_test::update(const Delta_time dt) { hpw::scene_mgr->update(dt); }
-void Menu_test::draw() const { hpw::scene_mgr->draw(*graphic::canvas); }
+void Menu_test::update(const Delta_time dt) { hpw::scene_mgr.update(dt); }
+void Menu_test::draw() const { hpw::scene_mgr.draw(*graphic::canvas); }

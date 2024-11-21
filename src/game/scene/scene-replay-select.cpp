@@ -28,7 +28,7 @@ struct Scene_replay_select::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
     menu->update(dt);
   }
 
@@ -64,10 +64,10 @@ struct Scene_replay_select::Impl {
       ret.emplace_back( new_shared<Menu_item_table_row>(
         [replay_info] { // запуск файла реплея
           assert(!replay_info.path.empty());
-          hpw::scene_mgr->add(new_shared<Scene_loading>( [replay_info]{
+          hpw::scene_mgr.add(new_shared<Scene_loading>( [replay_info]{
             hpw::replay_read_mode = true;
             hpw::cur_replay_file_name = replay_info.path;
-            hpw::scene_mgr->add (
+            hpw::scene_mgr.add (
               new_shared<Scene_game>(replay_info.first_level_is_tutorial)
             );
           } ));

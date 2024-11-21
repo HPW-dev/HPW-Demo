@@ -109,7 +109,7 @@ struct Cutscene_0::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
 
     space.update(dt);
   }

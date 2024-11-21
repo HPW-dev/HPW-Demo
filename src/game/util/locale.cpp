@@ -1,8 +1,46 @@
 #include "locale.hpp"
+#include "store.hpp"
 #include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
+#include "util/file/file.hpp"
 #include "game/core/locales.hpp"
-#include "store.hpp"
+#include "game/core/locales.hpp"
+#include "game/util/locale.hpp"
+#include "game/util/config.hpp"
+#include "game/util/game-archive.hpp"
+
+cr<utf32> get_locale_str(cr<Str> key) {
+  assert(hpw::store_locale);
+  if (auto ret = hpw::store_locale->find(key); ret)
+    return ret->str;
+  else
+    hpw_log("not found string: \"" + key + "\"\n", Log_stream::debug);
+  static utf32 last_error;
+  hpw_log("not finded string \"" + key + "\"\n", Log_stream::debug);
+  last_error = U"_ERR_(" + sconv<utf32>(key) + U")";
+  return last_error;
+}
+
+void load_locale(cr<Str> user_path) {
+  hpw_log("загрузка локализации...\n");
+  assert(hpw::config);
+  File mem; 
+  cauto path = user_path.empty()
+    ? (*hpw::config)["path"].get_str("locale", hpw::fallback_locale_path)
+    : user_path;
+
+  try {
+    mem = hpw::archive->get_file(path);
+  } catch (...) {
+    hpw_log("ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
+      + hpw::fallback_locale_path + "\"\n", Log_stream::warning);
+    mem = hpw::archive->get_file(hpw::fallback_locale_path);
+  }
+
+  hpw::locale_path = mem.get_path();
+  auto yml = Yaml(mem);
+  load_locales_to_store(yml);
+}
 
 void load_locales_to_store(Yaml file) {
   init_shared(hpw::store_locale);

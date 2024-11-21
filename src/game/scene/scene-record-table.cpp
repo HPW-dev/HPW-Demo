@@ -5,6 +5,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/locale.hpp"
 #include "graphic/image/image.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -22,7 +23,7 @@ void Scene_record_table::init_menu() {
     ),
     new_shared<Menu_text_item>(
       get_locale_str("scene.input.exit_and_save"),
-      [] { hpw::scene_mgr->back(); }
+      [] { hpw::scene_mgr.back(); }
     )
   };
 

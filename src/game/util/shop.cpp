@@ -7,6 +7,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
+#include "game/util/blur-helper.hpp"
 #include "game/util/game-util.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/math/random.hpp"

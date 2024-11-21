@@ -14,7 +14,7 @@ struct Cutscene_1::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
-      hpw::scene_mgr->back();
+      hpw::scene_mgr.back();
   }
 
   inline void draw(Image& dst) const {  

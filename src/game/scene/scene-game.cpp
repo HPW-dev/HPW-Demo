@@ -166,19 +166,19 @@ void Scene_game::update(const Delta_time dt) {
 
   // input:
   if (is_pressed_once(hpw::keycode::escape))
-    hpw::scene_mgr->add(new_shared<Scene_game_pause>());
+    hpw::scene_mgr.add(new_shared<Scene_game_pause>());
   #ifdef DEBUG
   if (is_pressed_once(hpw::keycode::debug))
-    hpw::scene_mgr->add(new_shared<Scene_debug>());
+    hpw::scene_mgr.add(new_shared<Scene_debug>());
   if (is_pressed_once(hpw::keycode::console))
-    hpw::scene_mgr->add(new_shared<Scene_cmd>());
+    hpw::scene_mgr.add(new_shared<Scene_cmd>());
   if (is_pressed_once(hpw::keycode::fast_forward))
     graphic::set_fast_forward( !graphic::get_fast_forward() );
   #endif
 
   hpw::level_mgr->update(get_level_vel(), dt);
   if (hpw::level_mgr->end_of_levels) {
-    hpw::scene_mgr->back(3); // cur->loading screen->diffuculty->main menu
+    hpw::scene_mgr.back(3); // cur->loading screen->diffuculty->main menu
     hpw_log("уровни кончились, выход из сцены игры\n", Log_stream::debug);
   }
   hpw::task_mgr.update(dt);
