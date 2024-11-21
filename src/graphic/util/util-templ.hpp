@@ -146,9 +146,9 @@ void insert(Image& dst, cr<Image> src, Vec pos, int optional) noexcept {
   auto ex = scast<int>(bound.pos.x + bound.size.x);
   auto dst_p = dst.data();
   auto src_p = src.data();
-  int dst_front_poch = std::max<real>(0, pos.x);
+  int dst_front_porch = std::max<real>(0, pos.x);
   int dst_back_porch = (dst.X - (ex - sx)) - std::max<real>(0, pos.x);
-  int src_front_poch = bound.pos.x;
+  int src_front_porch = bound.pos.x;
   int src_back_porch = src.X - (bound.pos.x + bound.size.x);
 
   // начальное смещение src по y
@@ -158,8 +158,8 @@ void insert(Image& dst, cr<Image> src, Vec pos, int optional) noexcept {
 
   for (auto y = sy; y < ey; ++y) {
     // смещение по x (левый пич)
-    dst_p += dst_front_poch;
-    src_p += src_front_poch;
+    dst_p += dst_front_porch;
+    src_p += src_front_porch;
 
     // отрисовка строки
     for (auto x = sx; x < ex; ++x) {
@@ -195,9 +195,9 @@ int timer, int optional) {
   auto ex = scast<int>(bound.pos.x + bound.size.x);
   auto dst_p = dst.data();
   auto src_p = src.data();
-  int dst_front_poch = std::max<real>(0, pos.x);
+  int dst_front_porch = std::max<real>(0, pos.x);
   int dst_back_porch = (dst.X - (ex - sx)) - std::max<real>(0, pos.x);
-  int src_front_poch = bound.pos.x;
+  int src_front_porch = bound.pos.x;
   int src_back_porch = src.X - (bound.pos.x + bound.size.x);
 
   // начальное смещение src по y
@@ -207,8 +207,8 @@ int timer, int optional) {
 
   for (auto y = sy; y < ey; ++y) {
     // смещение по x (левый пич)
-    dst_p += dst_front_poch;
-    src_p += src_front_poch;
+    dst_p += dst_front_porch;
+    src_p += src_front_porch;
 
     // отрисовка строки
     for (auto x = sx; x < ex; ++x) {
@@ -243,9 +243,9 @@ int timer, int optional) {
   auto ex = scast<int>(bound.pos.x + bound.size.x);
   auto dst_p = dst.data();
   auto src_p = src.data();
-  int dst_front_poch = std::max<real>(0, pos.x);
+  int dst_front_porch = std::max<real>(0, pos.x);
   int dst_back_porch = (dst.X - (ex - sx)) - std::max<real>(0, pos.x);
-  int src_front_poch = bound.pos.x;
+  int src_front_porch = bound.pos.x;
   int src_back_porch = src.X - (bound.pos.x + bound.size.x);
 
   // начальное смещение src по y
@@ -261,8 +261,8 @@ int timer, int optional) {
     }
 
     // смещение по x (левый пич)
-    dst_p += dst_front_poch;
-    src_p += src_front_poch;
+    dst_p += dst_front_porch;
+    src_p += src_front_porch;
 
     // отрисовка строки
     for (auto x = sx; x < ex; ++x) {
@@ -358,9 +358,9 @@ void insert(Image& dst, cr<Sprite> src, Vec pos, int optional) noexcept {
   auto dst_p = dst.data();
   auto src_p = src_image.data();
   auto mask_p = src_mask.data();
-  int dst_front_poch = std::max<real>(0, pos.x);
+  int dst_front_porch = std::max<real>(0, pos.x);
   int dst_back_porch = (dst.X - (ex - sx)) - std::max<real>(0, pos.x);
-  int src_front_poch = bound.pos.x;
+  int src_front_porch = bound.pos.x;
   int src_back_porch = src_image.X - (bound.pos.x + bound.size.x);
 
   // начальное смещение src по y
@@ -371,9 +371,9 @@ void insert(Image& dst, cr<Sprite> src, Vec pos, int optional) noexcept {
 
   for (auto y = sy; y < ey; ++y) {
     // смещение по x (левый пич)
-    dst_p += dst_front_poch;
-    mask_p += src_front_poch;
-    src_p += src_front_poch;
+    dst_p += dst_front_porch;
+    mask_p += src_front_porch;
+    src_p += src_front_porch;
 
     // отрисовка строки
     for (auto x = sx; x < ex; ++x) {
