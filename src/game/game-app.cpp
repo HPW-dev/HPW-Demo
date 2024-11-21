@@ -28,6 +28,7 @@
 #include "game/util/game-archive.hpp"
 #include "game/util/dbg-plots.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/resource-helper.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
 #include "sound/sound-mgr.hpp"

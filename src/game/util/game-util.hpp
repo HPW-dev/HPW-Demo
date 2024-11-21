@@ -14,8 +14,6 @@ class Yaml;
 void load_fonts();
 // загрузить все анимации
 void load_animations();
-// загрузить все иговые ресурсы
-void load_resources();
 // загрузить звуки в звуковую систему
 void load_sounds();
 
@@ -24,9 +22,5 @@ Str get_random_replay_name();
 void draw_controls(Image& dst);
 // вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
-// сохраняет все текстуры в папку в виде атласной текстуры
-void save_all_sprites(cr<Str> save_dir, const int MX=512, const int MY=512);
-// размер всех спрайтов в банке
-std::size_t sizeof_all_sprites();
 // ставит случайную палитру
 void set_random_palette();
