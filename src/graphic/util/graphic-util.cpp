@@ -240,7 +240,7 @@ Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept {
 void insert(Image& dst, cr<Sprite> src, Vec pos, blend_pf bf,
 int optional) {
   if (!src || !dst) {
-    hpw_log("WARNING: center_point src or dst is empty\n");
+    hpw_log("WARNING: src or dst is empty\n", Log_stream::warning);
     return;
   }
   crauto src_image = src.image();
