@@ -16,6 +16,7 @@
 #include "game/util/game-util.hpp"
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/screenshot.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
 #include "util/pparser.hpp"

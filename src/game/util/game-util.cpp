@@ -405,27 +405,6 @@ void set_random_palette() {
   hpw::init_palette_from_archive (palette_name);
 }
 
-void save_screenshot(cr<Image> image) {
-  assert(image);
-
-  auto t = std::time(nullptr);
-#ifdef LINUX
-  struct ::tm lt;
-  ::localtime_r(&t, &lt);
-#else // WINDOWS
-  auto lt = *std::localtime(&t);
-#endif
-
-  cauto screenshots_dir = hpw::cur_dir + 
-    (*hpw::config)["path"].get_str("screenshots", hpw::screenshots_path) + SEPARATOR;
-  std::ostringstream oss;
-  oss << screenshots_dir;
-  make_dir_if_not_exist(oss.str());
-  oss << std::put_time(&lt, "%d-%m-%Y %H-%M-%S");
-  oss << "-" + n2s(rndu_fast(100'000)) + ".png";
-  save(image, oss.str());
-} // save_screenshot
-
 void load_fonts() {
   hpw_log("загрузка шрифтов...\n");
   assert(hpw::archive);

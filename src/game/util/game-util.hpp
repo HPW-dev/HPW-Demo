@@ -10,9 +10,14 @@ class Image;
 class Sprite;
 class Yaml;
 
+// загрузить шрифты игры
 void load_fonts();
+// загрузить все анимации
 void load_animations();
+// загрузить все иговые ресурсы
 void load_resources();
+// загрузить звуки в звуковую систему
+void load_sounds();
 
 Str get_random_replay_name();
 // рисует нажатые игровые клавиши
@@ -23,9 +28,5 @@ void init_validation_info();
 void save_all_sprites(cr<Str> save_dir, const int MX=512, const int MY=512);
 // размер всех спрайтов в банке
 std::size_t sizeof_all_sprites();
-// загрузить звуки в звуковую систему
-void load_sounds();
 // ставит случайную палитру
 void set_random_palette();
-// сохраняет скриншот в нужную папку с нужным именем
-void save_screenshot(cr<Image> image);
