@@ -100,7 +100,7 @@ struct Scene_graphic::Impl {
     graphic::wait_frame_bak = graphic::wait_frame = true;
     graphic::double_buffering = true;
     graphic::light_quality = Light_quality::medium;
-    graphic::frame_skip = 3;
+    graphic::frame_skip = 4;
     graphic::auto_frame_skip = true;
     graphic::enable_motion_interp = true;
   }
@@ -133,7 +133,8 @@ struct Scene_graphic::Impl {
 
   inline static void set_low_pc() {
     graphic::set_vsync(false);
-    graphic::set_disable_frame_limit(true);
+    graphic::set_disable_frame_limit(false);
+    graphic::set_target_fps(120);
     graphic::autoopt_timeout_max = 15;
     graphic::blink_particles = true;
     graphic::cpu_safe = false;
@@ -143,7 +144,7 @@ struct Scene_graphic::Impl {
     graphic::motion_blur_mode = Motion_blur_mode::disabled;
     graphic::blur_mode = Blur_mode::low;
     graphic::light_quality = Light_quality::low;
-    graphic::frame_skip = 5;
+    graphic::frame_skip = 3;
     graphic::auto_frame_skip = true;
     graphic::enable_motion_interp = false;
   }
