@@ -16,9 +16,6 @@ void load_fonts();
 void load_animations();
 // загрузить звуки в звуковую систему
 void load_sounds();
-
-// рисует нажатые игровые клавиши
-void draw_controls(Image& dst);
 // вычисляет контрольные суммы по экзешнику и data.zip
 void init_validation_info();
 // ставит случайную палитру

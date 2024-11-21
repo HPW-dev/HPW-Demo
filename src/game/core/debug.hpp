@@ -35,7 +35,7 @@ inline bool draw_full_hitboxes {}; // показать ещё и покрыва�
 inline bool draw_entity_pos    {};
 inline bool draw_entities      {true};
 inline bool draw_level         {true}; // рисовать фон уровня
-inline bool draw_controls      {}; // показать что за кнопки нажимаются
+inline bool show_virtual_joystick      {}; // показать что за кнопки нажимаются
 inline bool draw_entity_hp     {}; // показать жизни у объекта
 }
 

@@ -84,8 +84,8 @@ void Scene_debug::init_menu() {
         [] (bool new_val) { graphic::show_grids = new_val; }
       ),
       new_shared<Menu_bool_item>(U"кнопки ввода",
-        [] { return graphic::draw_controls; },
-        [] (bool new_val) { graphic::draw_controls = new_val; }
+        [] { return graphic::show_virtual_joystick; },
+        [] (bool new_val) { graphic::show_virtual_joystick = new_val; }
       ),
       new_shared<Menu_bool_item>(U"жизни объектов",
         [] { return graphic::draw_entity_hp; },

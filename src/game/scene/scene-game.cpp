@@ -30,6 +30,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/virt-joystick.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/score-table.hpp"
@@ -39,7 +40,6 @@
 #include "game/scene/scene-game-pause.hpp"
 #include "game/level/level-space.hpp"
 #include "game/level/level-tutorial.hpp"
-//#include "game/level/level-1.hpp"
 #include "game/entity/player/player-dark.hpp"
 #include "game/entity/util/mem-map.hpp"
 #include "game/entity/util/phys.hpp"
@@ -231,8 +231,8 @@ void Scene_game::post_draw(Image& dst) const {
   }
   if (graphic::show_grids) // сетки системы коллизий
     hpw::entity_mgr->debug_draw(dst);
-  if (graphic::draw_controls) // нажимаемые кнопки
-    draw_controls(dst);
+  if (graphic::show_virtual_joystick) // нажимаемые кнопки
+    draw_virtual_joystick(dst);
   if (hpw::show_entity_mem_map) // память занятая объектами
     draw_entity_mem_map(dst, Vec(5, 5));
   #ifdef STABLE_REPLAY

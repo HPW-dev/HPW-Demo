@@ -61,31 +61,6 @@ void load_animations() {
   }
 }
 
-void draw_controls(Image& dst) {
-  const Vec pos (5, 300);
-  const Vec text_offset (5, 5);
-  draw_rect_filled<&blend_158>(dst, Rect(pos.x, pos.y, 65, 55), Pal8::black);
-
-  utf32 inputs;
-  inputs += is_pressed(hpw::keycode::mode)  ? U"M" : U"_";
-  inputs += is_pressed(hpw::keycode::shoot) ? U"S" : U"_";
-  inputs += U"  ";
-  inputs += is_pressed(hpw::keycode::up)    ? U"#" : U"_";
-  inputs += U" \n";
-
-  inputs += U" ";
-  inputs += is_pressed(hpw::keycode::bomb)  ? U"B" : U"_";
-  inputs += U" ";
-  inputs += is_pressed(hpw::keycode::left)  ? U"#" : U"_";
-  inputs += is_pressed(hpw::keycode::down)  ? U"#" : U"_";
-  inputs += is_pressed(hpw::keycode::right) ? U"#" : U"_";
-  inputs += U" \n";
-
-  inputs += U" ";
-  inputs += is_pressed(hpw::keycode::focus) ? U"F" : U"_";
-  graphic::font->draw(dst, pos + text_offset, inputs);
-} // draw_controls
-
 Str calc_sum(cp<void> data, std::size_t sz) {
   hash_sha256 hash;
   hash.sha256_init();
