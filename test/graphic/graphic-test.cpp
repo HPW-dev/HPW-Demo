@@ -44,8 +44,8 @@ void Graphic_test::init() {
   v_bg.push_back(&Graphic_test::draw_insert);
   v_bg.push_back({});
   // шарики
-  init_shared(ball_1, 1_pps, Pal8::red);
-  init_shared(ball_2, 4_pps, Pal8::white);
+  init_shared(ball_1, 1.0_pps, Pal8::red);
+  init_shared(ball_2, 4.0_pps, Pal8::white);
   // первый фон случайный
   cur_bg = rndu(v_bg.size() - 1);
   init_shared(strawberry);
@@ -70,7 +70,7 @@ void Graphic_test::update(const Delta_time dt) {
   static bool fps_lock = graphic::get_vsync();
   if (is_pressed_once(hpw::keycode::shoot)) {
     fps_lock = !fps_lock;
-    detailed_log("VSync:" << s2yn(fps_lock) << std::endl);
+    hpw_log(Str("VSync:") + s2yn(fps_lock) + "\n", Log_stream::debug);
     graphic::set_disable_frame_limit(fps_lock);
     graphic::wait_frame_bak = graphic::wait_frame = fps_lock;
   }
@@ -91,8 +91,8 @@ void Graphic_test::update(const Delta_time dt) {
   update_board_2();
 } // update
 
-void Graphic_test::draw() {
-  return_if ( !graphic::enable_render);
+void Graphic_test::draw_game_frame() const {
+  return_if (!graphic::enable_render);
   rauto dst {*graphic::canvas};
 
   // draw backgrounds
@@ -105,7 +105,7 @@ void Graphic_test::draw() {
   overdraw(dst);
   ball_1->draw(dst);
   draw_fps(dst);
-  Host_glfw::draw();
+  Host_glfw::draw_game_frame();
 } // draw
 
 void Graphic_test::next_gr() { cur_bg = (cur_bg + 1) % v_bg.size(); }

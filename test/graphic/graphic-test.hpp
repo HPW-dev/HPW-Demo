@@ -44,8 +44,10 @@ class Graphic_test final: public Host_glfw {
   void init() override;
   void update(const Delta_time dt) override;
 
+protected:
+  void draw_game_frame() const override;
+
 public:
   explicit Graphic_test(int argc, char *argv[]);
   ~Graphic_test() = default;
-  void draw() override;
 }; // Graphic_test

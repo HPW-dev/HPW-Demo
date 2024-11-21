@@ -1,106 +1,134 @@
 #!/usr/bin/env python
-Import([
-  "env",
-  "is_linux",
-  "is_debug",
-  "ld_flags",
-  "cpp_flags",
-  "compiler",
-  "defines",
-  "is_64bit",
-])
+from script.helper import *
+Import(['env'])
 
-ld_flags.extend(["-fopenmp"])
-cpp_flags.extend(["-fopenmp"])
+hpw_config = env['hpw_config']
+assert hpw_config
+
 lib_path = []
-build_dir = "../../build/"
+inc_path = []
+used_libs = []
+host_sources = []
+sources = []
 prog_name = "HPW"
+build_dir = "../../build/"
 src_dir = "../../src/"
 thirdparty_dir = "../../thirdparty/"
 
-inc_path = [
-  ".",
-  src_dir,
-  thirdparty_dir + "include/",
-]
+def accept_config():
+  global env
+  global inc_path
+  global lib_path
+  global used_libs
+  global host_sources
+  global hpw_config
 
-used_libs = [
-  "yaml-cpp",
-  #"mcfgthread.dll", # for clang
-]
-
-if is_linux:
-  used_libs.extend(["GL", "GLEW", "glfw"])
-else: # windows
   inc_path.extend([
-    thirdparty_dir + "include/_windows_only",
-    thirdparty_dir + "include/_windows_only/GLEW"
+    ".",
+    src_dir,
+    thirdparty_dir + "include/",
   ])
-  used_libs.extend(["glfw3dll", "glew32", "opengl32"])
-  lib_path.extend([
-    thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/yaml-cpp/"
+  used_libs.extend(["yaml-cpp"])
+  hpw_config.cxx_defines.extend(["-DDISABLE_REPLAY", "-DDISABLE_SOUND", "-DDISABLE_CONFIG"])
+
+  match hpw_config.system:
+    case System.windows:
+      inc_path.extend([thirdparty_dir + "include/_windows_only"])
+      lib_path.extend([
+        thirdparty_dir + "lib/yaml-cpp/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+      ])
+    case _: raise ValueError 
+  
+  match hpw_config.host:
+    case Host.glfw3:
+      host_sources.extend([
+        Glob(src_dir + "host/glfw3/*.cpp"),
+        Glob(src_dir + "host/ogl3/*.cpp"),
+      ])
+      match hpw_config.system:
+        case System.linux: used_libs.extend(["GL", "GLEW", "glfw"])
+        case System.windows:
+          inc_path.extend([thirdparty_dir + "include/_windows_only/GLEW"])
+          used_libs.extend(["glfw3dll", "glew32", "opengl32"])
+          lib_path.extend([
+            thirdparty_dir + "lib/GLEW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+            thirdparty_dir + "lib/GLFW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+          ])
+        case _: ValueError
+    case Host.sdl2: raise ValueError("SDL2 host not implemented")
+    case _: raise ValueError(f"unknown host name \"{hpw_config.host}\"")
+
+  match hpw_config.compiler:
+    case Compiler.gcc: env['CXX'] = 'g++'
+    case Compiler.clang: env['CXX'] = 'clang++'
+    case _: raise ValueError
+
+def init_sources():
+  global sources
+
+  sources.extend([
+    src_dir + "graphic/image/color-table.cpp",
+    src_dir + "graphic/image/color.cpp",
+    src_dir + "graphic/image/color-blend.cpp",
+    src_dir + "graphic/image/image.cpp",
+    src_dir + "graphic/image/image-io.cpp",
+    src_dir + "graphic/image/palette.cpp",
+    Glob(src_dir + "graphic/font/*.cpp"),
+    src_dir + "graphic/util/convert.cpp",
+    src_dir + "graphic/util/rotation.cpp",
+    src_dir + "graphic/util/graphic-util.cpp",
+    src_dir + "graphic/sprite/sprite.cpp",
+
+    src_dir + "game/util/keybits.cpp",
+    src_dir + "game/util/game-archive.cpp",
+    src_dir + "game/util/game-util.cpp",
+    src_dir + "game/util/logo.cpp",
+    src_dir + "game/util/sync.cpp",
+    src_dir + "game/util/version.cpp",
+    src_dir + "game/util/task.cpp",
+
+    src_dir + "host/host-resize.cpp",
+    src_dir + "host/host.cpp",
+    src_dir + "host/host-util.cpp",
+    src_dir + "host/ogl3/host-ogl.cpp",
+    src_dir + "host/glfw3/host-glfw.cpp",
+    src_dir + "host/glfw3/host-glfw-keymap.cpp",
+    src_dir + "host/glfw3/host-glfw-callback.cpp",
+    src_dir + "host/windows/windows-keycodes.cpp",
+
+    src_dir + "util/platform.cpp",
+    src_dir + "util/file/archive.cpp",
+    src_dir + "util/file/file.cpp",
+    src_dir + "util/file/yaml.cpp",
+    src_dir + "util/str-util.cpp",
+    src_dir + "util/pparser.cpp",
+    src_dir + "util/error.cpp",
+    src_dir + "util/unicode.cpp",
+    src_dir + "util/log.cpp",
+    src_dir + "util/path.cpp",
+    src_dir + "util/math/mat.cpp",
+    src_dir + "util/math/vec-util.cpp",
+    src_dir + "util/math/random.cpp",
+    src_dir + "util/math/timer.cpp",
+
+    Glob(thirdparty_dir + "include/zip/*.c"),
+    Glob("*.cpp"), # <-- graphic test main
   ])
+  sources.extend([host_sources]);
 
-sources = [
-  src_dir + "graphic/image/color-table.cpp",
-  src_dir + "graphic/image/color.cpp",
-  src_dir + "graphic/image/color-blend.cpp",
-  src_dir + "graphic/image/image.cpp",
-  src_dir + "graphic/image/image-io.cpp",
-  src_dir + "graphic/image/palette.cpp",
-  src_dir + "graphic/font/unifont.cpp",
-  src_dir + "graphic/font/font.cpp",
-  src_dir + "graphic/util/convert.cpp",
-  src_dir + "graphic/util/rotation.cpp",
-  src_dir + "graphic/util/graphic-util.cpp",
-  src_dir + "graphic/sprite/sprite.cpp",
+def build():
+  env.Program(
+    target = build_dir + "bin/" + prog_name,
+    source = sources,
+    LIBPATH = lib_path,
+    LIBS = used_libs,
+    CPPDEFINES = hpw_config.cxx_defines,
+    CXXFLAGS = hpw_config.cxx_flags,
+    LINKFLAGS = hpw_config.cxx_ldflags,
+    CPPPATH = inc_path,
+  )
 
-  src_dir + "game/util/keybits.cpp",
-  src_dir + "game/util/game-archive.cpp",
-  src_dir + "game/util/config.cpp",
-  src_dir + "game/util/logo.cpp",
-  src_dir + "game/util/sync.cpp",
-
-  src_dir + "host/protownd.cpp",
-  src_dir + "host/host-resize.cpp",
-  src_dir + "host/host.cpp",
-  src_dir + "host/host-util.cpp",
-  src_dir + "host/ogl3/host-ogl.cpp",
-  src_dir + "host/glfw3/host-glfw.cpp",
-  src_dir + "host/glfw3/host-glfw-keymap.cpp",
-  src_dir + "host/windows/windows-keycodes.cpp",
-
-  src_dir + "util/platform.cpp",
-  src_dir + "util/file/archive.cpp",
-  src_dir + "util/file/file.cpp",
-  src_dir + "util/file/yaml.cpp",
-  src_dir + "util/str-util.cpp",
-  src_dir + "util/error.cpp",
-  src_dir + "util/path.cpp",
-  src_dir + "util/math/mat.cpp",
-  src_dir + "util/math/vec-util.cpp",
-  src_dir + "util/math/random.cpp",
-  src_dir + "util/math/timer.cpp",
-
-  Glob(thirdparty_dir + "include/zip/*.c"),
-  Glob("*.cpp"), # <-- graphic test main
-]  
-
-if not is_debug and not is_linux:
-  ld_flags.append("-mwindows")
-
-# билд теста графики
-env.Append(CPPDEFINES = defines)
-env.Append(CXXFLAGS = cpp_flags)
-env.Program(
-  target = build_dir + "bin/" + prog_name,
-  source = sources,
-  CXX = compiler,
-  CXXFLAGS = cpp_flags,
-  LIBPATH = lib_path,
-  CPPPATH = inc_path,
-  LINKFLAGS = ld_flags,
-  LIBS = used_libs
-) # env.Program
+# main section:
+accept_config()
+init_sources()
+build()
