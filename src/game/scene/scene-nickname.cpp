@@ -97,4 +97,3 @@ Scene_nickname::Scene_nickname(): impl {new_unique<Impl>()} {}
 Scene_nickname::~Scene_nickname() {}
 void Scene_nickname::update(const Delta_time dt) { impl->update(dt); }
 void Scene_nickname::draw(Image& dst) const { impl->draw(dst); }
-
