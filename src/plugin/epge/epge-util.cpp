@@ -4,7 +4,9 @@
 #include "epge-util.hpp"
 #include "game/core/epges.hpp"
 #include "util/file/yaml.hpp"
+
 #include "scanline.hpp"
+#include "shaker.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -27,8 +29,10 @@ inline void add_epge() {
   ::_epge_makers[name] = []{ return new_unique<T>(); };
 }
 
+// регистрирует плагины в списке
 inline static void init_epge_list() {
   add_epge<epge::Scanline>();
+  add_epge<epge::Shaker>();
 };
 
 Strs avaliable_epges() {
