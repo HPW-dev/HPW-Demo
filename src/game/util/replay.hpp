@@ -48,3 +48,5 @@ struct Replay::Info {
   Difficulty difficulty {};
   bool first_level_is_tutorial {};
 };
+
+Str get_random_replay_name();

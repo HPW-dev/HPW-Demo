@@ -417,3 +417,29 @@ cp<Replay::Impl> Replay::get_impl() const { return impl.get(); }
 Replay::Info Replay::get_info(cr<Str> path) { return Impl::get_info(path); }
 utf32 Replay::warnings() const { return impl->warnings(); }
 
+Str get_random_replay_name() {
+  std::stringstream name;
+  
+  auto player_name = utf32_to_8(hpw::player_name);
+  // укоротить имя игрока, если оно большое
+  if (player_name.size() > 50) {
+    player_name = player_name.substr(0, 50) + "...";
+  }
+  name << player_name;
+
+  auto t = std::time(nullptr);
+  #ifdef LINUX
+    struct ::tm lt;
+    ::localtime_r(&t, &lt);
+  #else // WINDOWS
+    auto lt = *std::localtime(&t);
+  #endif
+  name << " @ " << std::put_time(&lt, "Date %d-%m-%Y @ Time %H-%M-%S");
+
+  std::stringstream rnd_num_str;
+  rnd_num_str << std::hex << rndu_fast();
+  name << " @ UID " << str_toupper(rnd_num_str.str());
+
+  name << ".hpw_replay";
+  return name.str();
+}

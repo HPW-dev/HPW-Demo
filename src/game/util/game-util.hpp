@@ -17,7 +17,6 @@ void load_animations();
 // загрузить звуки в звуковую систему
 void load_sounds();
 
-Str get_random_replay_name();
 // рисует нажатые игровые клавиши
 void draw_controls(Image& dst);
 // вычисляет контрольные суммы по экзешнику и data.zip
