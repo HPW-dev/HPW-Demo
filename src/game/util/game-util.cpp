@@ -176,8 +176,6 @@ Circle cover_polygons(cr<Vector<Polygon>> polygons) {
   return Circle(mid, dist);
 } // cover_polygons
 
-Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0); }
-
 Str get_random_replay_name() {
   std::stringstream name;
   
@@ -203,20 +201,6 @@ Str get_random_replay_name() {
 
   name << ".hpw_replay";
   return name.str();
-}
-
-Vec get_rand_pos_safe(const real sx, const real sy, const real ex, const real ey) {
-  return Vec(
-    rndr(sx, ex),
-    rndr(sy, ey)
-  );
-}
-
-Vec get_rand_pos_graphic(const real sx, const real sy, const real ex, const real ey) {
-  return Vec(
-    rndr_fast(sx, ex),
-    rndr_fast(sy, ey)
-  );
 }
 
 void draw_controls(Image& dst) {
@@ -455,22 +439,6 @@ void load_sounds() {
 
   init_store_sound();
 } // load_sounds
-
-[[nodiscard]] Vec rnd_screen_pos_safe() {
-  assert(graphic::canvas);
-  return Vec {
-    rndr(0, graphic::canvas->X),
-    rndr(0, graphic::canvas->Y)
-  };
-}
-
-[[nodiscard]] Vec rnd_screen_pos_fast() {
-  assert(graphic::canvas);
-  return Vec {
-    rndr_fast(0, graphic::canvas->X),
-    rndr_fast(0, graphic::canvas->Y)
-  };
-}
 
 void set_random_palette() {
   cauto sprites = hpw::archive->get_all_names(false);;

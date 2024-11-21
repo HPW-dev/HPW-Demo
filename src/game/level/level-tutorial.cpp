@@ -20,6 +20,7 @@
 #include "game/util/game-util.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"
+#include "game/util/vec-helper.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/bg-pattern.hpp"
 #include "graphic/util/graphic-util.hpp"

@@ -11,6 +11,7 @@
 #include "game/entity/util/phys.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/util/game-util.hpp"
+#include "game/util/vec-helper.hpp"
 #include "graphic/image/image.hpp"
 #include "util/log.hpp"
 #include "util/safecall.hpp"

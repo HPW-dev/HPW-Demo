@@ -2,7 +2,7 @@
 #include "graphic/image/color-blend.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "game/util/game-util.hpp"
+#include "game/util/vec-helper.hpp"
 
 namespace epge {
 

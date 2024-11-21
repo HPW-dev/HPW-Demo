@@ -5,6 +5,7 @@
 #include "game/util/post-effect/post-effects.hpp"
 #include "game/util/post-effect/blink-text.hpp"
 #include "game/util/post-effect/game-post-effects.hpp"
+#include "game/util/vec-helper.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
