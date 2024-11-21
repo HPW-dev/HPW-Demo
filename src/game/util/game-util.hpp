@@ -7,13 +7,9 @@
 #include "util/math/num-types.hpp"
 
 class Image;
-class Anim;
 class Sprite;
 class Yaml;
 class Locale;
-struct Circle;
-struct Polygon;
-struct Vec;
 
 void load_fonts();
 void load_locale(cr<Str> user_path={});
@@ -21,8 +17,6 @@ void load_animations();
 void load_resources();
 // безопасное получение локализованной строки
 cr<utf32> get_locale_str(cr<Str> key);
-// сделать круг полностью перекрывающий все полигоны
-Circle cover_polygons(cr<Vector<Polygon>> polygons);
 Str get_random_replay_name();
 // рисует нажатые игровые клавиши
 void draw_controls(Image& dst);
