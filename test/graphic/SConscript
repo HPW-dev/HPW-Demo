@@ -81,11 +81,12 @@ def init_sources():
 
     src_dir + "game/util/keybits.cpp",
     src_dir + "game/util/game-archive.cpp",
-    src_dir + "game/util/game-util.cpp",
     src_dir + "game/util/logo.cpp",
     src_dir + "game/util/sync.cpp",
     src_dir + "game/util/version.cpp",
     src_dir + "game/util/task.cpp",
+    src_dir + "game/util/screenshot.cpp",
+    src_dir + "game/util/font-helper.cpp",
 
     src_dir + "host/host-resize.cpp",
     src_dir + "host/host.cpp",
@@ -101,6 +102,7 @@ def init_sources():
     src_dir + "util/file/file.cpp",
     src_dir + "util/file/yaml.cpp",
     src_dir + "util/str-util.cpp",
+    src_dir + "util/hpw-util.cpp",
     src_dir + "util/pparser.cpp",
     src_dir + "util/error.cpp",
     src_dir + "util/unicode.cpp",

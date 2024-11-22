@@ -6,9 +6,6 @@
 #include "graphic/image/image-io.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/font/unifont-mono.hpp"
-#include "util/error.hpp"
-#include "util/hpw-util.hpp"
-#include "util/log.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/fonts.hpp"
@@ -17,11 +14,15 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/font-helper.hpp"
 #include "host/command.hpp"
 #include "host/host-util.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/random.hpp"
 #include "ball.hpp"
+#include "util/error.hpp"
+#include "util/hpw-util.hpp"
+#include "util/log.hpp"
 
 Graphic_test::Graphic_test(int argc, char *argv[])
 : Host_glfw(argc, argv) {}
