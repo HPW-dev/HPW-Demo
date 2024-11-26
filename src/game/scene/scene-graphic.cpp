@@ -14,6 +14,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/sounds.hpp"
+#include "game/core/epges.hpp"
 #include "game/util/pge.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/config.hpp"
@@ -365,6 +366,7 @@ struct Scene_graphic::Impl {
       hpw::set_gamma(1.0);
       graphic::set_disable_frame_limit(false);
       graphic::show_fps = false;
+      hpw::epges.clear();
       disable_pge();
       set_default();
       hpw::scene_mgr.back();
