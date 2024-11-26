@@ -134,7 +134,7 @@ struct Scene_graphic::Impl {
   inline static void set_low_pc() {
     graphic::set_vsync(false);
     graphic::set_disable_frame_limit(false);
-    graphic::set_target_fps(120);
+    graphic::set_target_fps(std::min(240, graphic::get_target_vsync_fps() * 2));
     graphic::autoopt_timeout_max = 15;
     graphic::blink_particles = true;
     graphic::cpu_safe = false;
