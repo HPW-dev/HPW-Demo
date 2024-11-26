@@ -6,6 +6,6 @@ mv .tmp/new_data_zip_file.txt .tmp/old_data_zip_file.txt
 git diff --no-index .tmp/new_data_zip_file.txt .tmp/old_data_zip_file.txt > .tmp/diff_data_zip_file.txt
 printf "\n" >> $1 # не трогать сообщение, отступить
 cat .tmp/diff_data_zip_file.txt >> $1
-cat .tmp/diff_data_zip_file.txt
+cat .tmp/diff_data_zip_file.txt # мне на экране тоже показать
 
 exit 0
