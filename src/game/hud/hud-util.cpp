@@ -4,6 +4,7 @@
 #include "hud-asci.hpp"
 #include "hud-none.hpp"
 #include "hud-hex.hpp"
+#include "hud-roman.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
@@ -17,6 +18,7 @@ sconst std::unordered_map<Str, Hud_maker> g_huds {
   {"none", []{ return new_unique<Hud_none>(); }},
   {"minimal", []{ error("need impl for minimal HUD"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }},
   {"hex", []{ return new_unique<Hud_hex>(); }},
+  {"roman", []{ return new_unique<Hud_roman>(); }},
 };
 
 } // empty ns
