@@ -4,6 +4,8 @@ ignore me.lnk
 imgui.ini
 memleaks.txt
 delme.*
+.tmp/*
+!.tmp/.gitkeep
 run.py
 a.txt
 b.txt
