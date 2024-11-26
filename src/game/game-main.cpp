@@ -2,6 +2,7 @@
 #include "game-app.hpp"
 #include "util/error.hpp"
 #include "util/platform.hpp"
+#include "util/log.hpp"
 
 #ifdef WINDOWS
 #include <clocale>
@@ -21,6 +22,12 @@ static inline void draw_error_window(cr<Str> msg) {
 #endif
 }
 
+static inline void process_error(cr<Str> error) {
+  std::cerr << error << std::endl;
+  hpw_log(error, Log_stream::warning);
+  draw_error_window(error);
+}
+
 int main(int argc, char *argv[]) {
   try {
     Game_app app(argc, argv);
@@ -28,15 +35,13 @@ int main(int argc, char *argv[]) {
     return EXIT_SUCCESS;
   } catch(cr<hpw::Error> err) {
     const Str err_str = err.what();
-    std::cerr << err_str << std::endl;
-    draw_error_window(err_str);
+    process_error(err_str);
   } catch(cr<std::exception> err) {
-    const Str err_str = err.what();
-    std::cerr << err_str << std::endl;
-    draw_error_window(err_str);
+    const Str err_str = Str{"STD Error: "} + err.what();
+    process_error(err_str);
   } catch(...) {
-    std::cerr << "Unknown error" << std::endl;
-    draw_error_window("Unknown error");
+    cauto err_str = "Unknown error";
+    process_error(err_str);
   }
 
   return EXIT_FAILURE;

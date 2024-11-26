@@ -13,6 +13,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/difficulty.hpp"
 #include "util/str-util.hpp"
+#include "util/math/mat.hpp"
 
 struct Hud_roman::Impl {
   Hud& _master;
@@ -39,24 +40,49 @@ struct Hud_roman::Impl {
       debug_draw();
   }
   
+  // переводит число в римские цифры
   static Str to_roman(std::int64_t input) {
-    Str ret;
-    // TODO
     constexpr char ROMAN_ZERO = 'N';
-    return ret.empty() ? Str{ROMAN_ZERO} : ret;
+    return_if (input == 0, Str{ROMAN_ZERO});
+
+    const Str SUB_SYMBOL {input < 0 ? "-" : ""};
+    input = std::abs(input);
+
+    static const Strs ones {"","I","II","III","IV","V","VI","VII","VIII","IX"};
+    static const Strs tens {"","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"};
+    static const Strs hunds {"","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"};
+    static const Strs thous {"","M","MM","MMM","MMMM"};
+
+    cauto t = thous.at(input / 1000);
+    cauto h = hunds.at((input / 100) % 10);
+    cauto te = tens.at((input / 10) % 10);
+    cauto o = ones.at(input % 10);
+
+    return SUB_SYMBOL + t + h + te + o;
   }
 
+  // переводит число в расширенные римские цифры
+  static Str to_big_roman(std::int64_t input) {
+    constexpr char ROMAN_ZERO = 'N';
+    return_if (input == 0, Str{ROMAN_ZERO});
+
+    const Str SUB_SYMBOL {input < 0 ? "-" : ""};
+    input = std::abs(input);
+    return_if (input <= 4'000, to_roman(input));
+
+    // TODO
+    return SUB_SYMBOL + "need impl";
+  }
+  
+
   inline void draw_roman(Image& dst, Player& player) const {
-    /*
-    cauto hp_ratio = safe_div(player.get_hp(), scast<std::float128_t>(player.hp_max));
-    cauto en_ratio = safe_div(player.energy, scast<std::float128_t>(player.energy_max));
-    const std::uint64_t hp_val = hp_ratio * 0xFFFF'FFFF'FFFF'FFFFu;
-    const std::uint64_t en_val = en_ratio * 0xFFFF'FFFF'FFFF'FFFFu;
-    cauto score = hpw::get_score_normalized();
-    Hud::draw_expanded_text(dst, utf8_to_32(n2hex(hp_val)), _pos_hp);
-    Hud::draw_expanded_text(dst, utf8_to_32(n2hex(en_val)), _pos_en);
-    Hud::draw_expanded_text(dst, utf8_to_32(n2hex(score)), _pos_score);
-    */
+   cauto hp = player.get_hp();
+   cauto en_ratio = safe_div(player.energy, scast<real>(player.energy_max));
+   cauto energy = en_ratio * 4'000;
+   cauto score = hpw::get_score_normalized();
+   Hud::draw_expanded_text(dst, utf8_to_32(to_roman(hp)), _pos_hp);
+   Hud::draw_expanded_text(dst, utf8_to_32(to_roman(energy)), _pos_en);
+   Hud::draw_expanded_text(dst, utf8_to_32(to_big_roman(score)), _pos_score);
   }
 
   inline void debug_draw() const {
