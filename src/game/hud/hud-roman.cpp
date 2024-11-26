@@ -16,6 +16,7 @@
 #include "util/math/mat.hpp"
 
 struct Hud_roman::Impl {
+  constx std::int64_t MAX_ROMAN_NUMBER = 3'999;
   Hud& _master;
   Vec _pos_hp    {5,   graphic::height-17};
   Vec _pos_en    {190, graphic::height-17};
@@ -42,6 +43,8 @@ struct Hud_roman::Impl {
   
   // переводит число в римские цифры
   static Str to_roman(std::int64_t input) {
+    assert(input <= MAX_ROMAN_NUMBER);
+
     constexpr char ROMAN_ZERO = 'N';
     return_if (input == 0, Str{ROMAN_ZERO});
 
@@ -53,10 +56,10 @@ struct Hud_roman::Impl {
     static const Strs hunds {"","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"};
     static const Strs thous {"","M","MM","MMM","MMMM"};
 
-    cauto t = thous.at(input / 1000);
+    cauto t = thous.at( input / 1'000);
     cauto h = hunds.at((input / 100) % 10);
-    cauto te = tens.at((input / 10) % 10);
-    cauto o = ones.at(input % 10);
+    cauto te = tens.at((input / 10)  % 10);
+    cauto o =  ones.at( input        % 10);
 
     return SUB_SYMBOL + t + h + te + o;
   }
@@ -68,21 +71,21 @@ struct Hud_roman::Impl {
 
     const Str SUB_SYMBOL {input < 0 ? "-" : ""};
     input = std::abs(input);
-    return_if (input <= 4'000, to_roman(input));
+    return_if (input <= MAX_ROMAN_NUMBER, to_roman(input));
 
     // TODO
     return SUB_SYMBOL + "need impl";
   }
   
-
   inline void draw_roman(Image& dst, Player& player) const {
-   cauto hp = player.get_hp();
+   cauto hp_ratio = safe_div(player.get_hp(), scast<real>(player.hp_max));
    cauto en_ratio = safe_div(player.energy, scast<real>(player.energy_max));
-   cauto energy = en_ratio * 4'000;
+   cauto hp = hp_ratio * MAX_ROMAN_NUMBER;
+   cauto energy = en_ratio * MAX_ROMAN_NUMBER;
    cauto score = hpw::get_score_normalized();
-   Hud::draw_expanded_text(dst, utf8_to_32(to_roman(hp)), _pos_hp);
-   Hud::draw_expanded_text(dst, utf8_to_32(to_roman(energy)), _pos_en);
-   Hud::draw_expanded_text(dst, utf8_to_32(to_big_roman(score)), _pos_score);
+   Hud::draw_expanded_text(dst, utf8_to_32("SALUS - " + to_big_roman(hp)), _pos_hp);
+   Hud::draw_expanded_text(dst, utf8_to_32("ENERGIA - " + to_big_roman(energy)), _pos_en);
+   Hud::draw_expanded_text(dst, utf8_to_32("PECUNIA - " + to_big_roman(score)), _pos_score);
   }
 
   inline void debug_draw() const {
