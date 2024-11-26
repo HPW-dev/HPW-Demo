@@ -14,11 +14,11 @@ namespace {
 using Hud_maker = std::function< Unique<Hud> () >;
 
 sconst std::unordered_map<Str, Hud_maker> g_huds {
-  {"asci", []{ return new_unique<Hud_asci>(); }},
   {"none", []{ return new_unique<Hud_none>(); }},
-  {"minimal", []{ error("need impl for minimal HUD"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }},
-  {"hex", []{ return new_unique<Hud_hex>(); }},
   {"roman", []{ return new_unique<Hud_roman>(); }},
+  {"hex", []{ return new_unique<Hud_hex>(); }},
+  {"minimal", []{ error("need impl for minimal HUD"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }},
+  {"asci", []{ return new_unique<Hud_asci>(); }},
 };
 
 } // empty ns
