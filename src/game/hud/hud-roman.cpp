@@ -42,39 +42,39 @@ struct Hud_roman::Impl {
   }
   
   // переводит число в римские цифры
-  static Str to_roman(std::int64_t input) {
+  static utf32 to_roman(std::int64_t input) {
     assert(input <= MAX_ROMAN_NUMBER);
 
-    constexpr char ROMAN_ZERO = 'N';
-    return_if (input == 0, Str{ROMAN_ZERO});
+    constexpr utf32::value_type ROMAN_ZERO = U'N';
+    return_if (input == 0, utf32{ROMAN_ZERO});
 
-    const Str SUB_SYMBOL {input < 0 ? "-" : ""};
+    const utf32 SUB_SYMBOL {input < 0 ? U"-" : U""};
     input = std::abs(input);
 
-    static const Strs ones {"","I","II","III","IV","V","VI","VII","VIII","IX"};
-    static const Strs tens {"","X","XX","XXX","XL","L","LX","LXX","LXXX","XC"};
-    static const Strs hunds {"","C","CC","CCC","CD","D","DC","DCC","DCCC","CM"};
-    static const Strs thous {"","M","MM","MMM","MMMM"};
+    static const Vector<utf32> ones {U"",U"I",U"II",U"III",U"IV",U"V",U"VI",U"VII",U"VIII",U"IX"};
+    static const Vector<utf32> tens {U"",U"X",U"XX",U"XXX",U"XL",U"L",U"LX",U"LXX",U"LXXX",U"XC"};
+    static const Vector<utf32> hunds {U"",U"C",U"CC",U"CCC",U"CD",U"D",U"DC",U"DCC",U"DCCC",U"CM"};
+    static const Vector<utf32> thous {U"",U"M",U"MM",U"MMM"};
 
-    cauto t = thous.at( input / 1'000);
-    cauto h = hunds.at((input / 100) % 10);
-    cauto te = tens.at((input / 10)  % 10);
-    cauto o =  ones.at( input        % 10);
+    cauto t = thous.at((input / 1'000) % 4);
+    cauto h = hunds.at((input / 100)   % 10);
+    cauto te = tens.at((input / 10)    % 10);
+    cauto o =  ones.at( input          % 10);
 
     return SUB_SYMBOL + t + h + te + o;
   }
 
   // переводит число в расширенные римские цифры
-  static Str to_big_roman(std::int64_t input) {
-    constexpr char ROMAN_ZERO = 'N';
-    return_if (input == 0, Str{ROMAN_ZERO});
+  static utf32 to_big_roman(std::int64_t input) {
+    constexpr char ROMAN_ZERO = U'N';
+    return_if (input == 0, utf32{ROMAN_ZERO});
 
-    const Str SUB_SYMBOL {input < 0 ? "-" : ""};
+    const utf32 SUB_SYMBOL {input < 0 ? U"-" : U""};
     input = std::abs(input);
     return_if (input <= MAX_ROMAN_NUMBER, to_roman(input));
 
     // TODO
-    return SUB_SYMBOL + "need impl";
+    return SUB_SYMBOL + U"need impl";
   }
   
   inline void draw_roman(Image& dst, Player& player) const {
@@ -83,9 +83,9 @@ struct Hud_roman::Impl {
    cauto hp = hp_ratio * MAX_ROMAN_NUMBER;
    cauto energy = en_ratio * MAX_ROMAN_NUMBER;
    cauto score = hpw::get_score_normalized();
-   Hud::draw_expanded_text(dst, utf8_to_32("SALUS - " + to_big_roman(hp)), _pos_hp);
-   Hud::draw_expanded_text(dst, utf8_to_32("ENERGIA - " + to_big_roman(energy)), _pos_en);
-   Hud::draw_expanded_text(dst, utf8_to_32("PECUNIA - " + to_big_roman(score)), _pos_score);
+   Hud::draw_expanded_text(dst,   U"SALUS - " + to_big_roman(hp),     _pos_hp);
+   Hud::draw_expanded_text(dst, U"ENERGIA - " + to_big_roman(energy), _pos_en);
+   Hud::draw_expanded_text(dst, U"PECUNIA - " + to_big_roman(score),  _pos_score);
   }
 
   inline void debug_draw() const {
