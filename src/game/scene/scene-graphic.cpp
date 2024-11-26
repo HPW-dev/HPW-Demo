@@ -366,7 +366,7 @@ struct Scene_graphic::Impl {
       hpw::set_gamma(1.0);
       graphic::set_disable_frame_limit(false);
       graphic::show_fps = false;
-      hpw::epges.clear();
+      graphic::epges.clear();
       disable_pge();
       set_default();
       hpw::scene_mgr.back();

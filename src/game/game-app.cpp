@@ -227,7 +227,7 @@ void Game_app::post_draw(Image& dst) const {
   hpw::global_task_mgr.draw(dst);
 
   // EPGE effects:
-  for (crauto epge: hpw::epges) {
+  for (crauto epge: graphic::epges) {
     epge->update(hpw::real_dt);
     epge->draw(dst);
   }

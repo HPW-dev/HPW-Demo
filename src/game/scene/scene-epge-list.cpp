@@ -60,7 +60,7 @@ struct Scene_epge_list::Impl {
           auto epge = make_epge(_name);
           assert(epge);
           hpw::scene_mgr.add( new_shared<Scene_epge_config>(epge.get()) );
-          hpw::epges.emplace_back(std::move(epge));
+          graphic::epges.emplace_back(std::move(epge));
         },
         []{ return utf32{}; },
         utf8_to_32(desc)

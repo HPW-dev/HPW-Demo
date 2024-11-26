@@ -62,11 +62,11 @@ struct Scene_epge::Impl {
         []{ hpw::scene_mgr.add(new_shared<Scene_epge_list>()); } ),
     };
 
-    if (!hpw::epges.empty())
+    if (!graphic::epges.empty())
       menu_items.push_back( make_menu_separator(&_need_bottom_item) );
 
     // добавить кнопки для управления отдельными эффектами
-    for (crauto epge: hpw::epges) {
+    for (crauto epge: graphic::epges) {
       assert(epge);
       cauto epge_name = utf8_to_32(epge->name());
       cauto epge_desc = utf8_to_32(epge->desc());
@@ -80,13 +80,13 @@ struct Scene_epge::Impl {
       ) );
     }
 
-    if (!hpw::epges.empty())
+    if (!graphic::epges.empty())
       menu_items.push_back( make_menu_separator(&_need_bottom_item) );
     // .dll/.so плагины
     menu_items.push_back( get_shared_plugin_item() );
     // ресет и выход
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.reset"), [this]{
-      hpw::epges.clear();
+      graphic::epges.clear();
       disable_pge();
       _need_reinit_menu = true;
     } ) );

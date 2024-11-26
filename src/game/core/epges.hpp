@@ -2,6 +2,6 @@
 #include "plugin/epge/epge.hpp"
 #include "util/vector-types.hpp"
 
-namespace hpw {
+namespace graphic {
 inline Vector<Unique<epge::Base>> epges {}; // список встроенных настраиваемых графических эффектов
 }
