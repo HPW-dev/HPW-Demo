@@ -55,6 +55,10 @@ struct Hud_roman::Impl {
     static const Vector<utf32> tens {U"",U"X",U"XX",U"XXX",U"XL",U"L",U"LX",U"LXX",U"LXXX",U"XC"};
     static const Vector<utf32> hunds {U"",U"C",U"CC",U"CCC",U"CD",U"D",U"DC",U"DCC",U"DCCC",U"CM"};
     static const Vector<utf32> thous {U"",U"M",U"MM",U"MMM"};
+    /*static const Vector<utf32> ones {U"",U"Ⅰ",U"Ⅱ",U"Ⅲ",U"Ⅳ",U"Ⅴ",U"Ⅵ",U"Ⅶ",U"Ⅷ",U"Ⅸ"};
+    static const Vector<utf32> tens {U"",U"Ⅹ",U"ⅩⅩ",U"ⅩⅩⅩ",U"ⅩⅬ",U"Ⅼ",U"ⅬⅩ",U"ⅬⅩⅩ",U"ⅬⅩⅩⅩ",U"ⅩⅭ"};
+    static const Vector<utf32> hunds {U"",U"Ⅽ",U"ⅭⅭ",U"ⅭⅭⅭ",U"ⅭⅮ",U"Ⅾ",U"ⅮⅭ",U"ⅮⅭⅭ",U"ⅮⅭⅭⅭ",U"ⅭⅯ"};
+    static const Vector<utf32> thous {U"",U"Ⅿ",U"ⅯⅯ",U"ⅯⅯⅯ"};*/
 
     cauto t = thous.at((input / 1'000) % 4);
     cauto h = hunds.at((input / 100)   % 10);

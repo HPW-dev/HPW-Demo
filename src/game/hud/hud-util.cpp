@@ -11,7 +11,7 @@
 
 namespace {
 
-using Hud_maker = std::function< Unique<Hud> () >;
+using Hud_maker = std::function<Unique<Hud> ()>;
 
 sconst std::unordered_map<Str, Hud_maker> g_huds {
   {"NONE", []{ return new_unique<Hud_none>(); }},
