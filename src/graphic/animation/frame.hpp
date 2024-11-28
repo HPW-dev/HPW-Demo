@@ -4,7 +4,7 @@
 #include "util/vector-types.hpp"
 #include "util/str.hpp"
 
-// кадр анимации с разными вариактами поворота
+// кадр анимации с разными вариантами поворота
 class Frame final {
   Vector<Direct> directions {}; // повёрнутые версии кадра
   real degree_frag {}; // шаг угловой анимации
@@ -30,7 +30,7 @@ public:
 
   Source_ctx source_ctx {};
   real duration {}; // длительность кадра
-  real degree_offset {}; // смещение начального угола
+  real degree_offset {}; // смещение начального угла
   
   void init_directions(Source_ctx&& new_ctx);
   void reinit_directions_by_source();

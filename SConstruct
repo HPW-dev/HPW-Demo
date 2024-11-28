@@ -90,7 +90,7 @@ def accept_params():
     '-finput-charset=UTF-8', '-fextended-identifiers', # поддержка UTF-8
   ])
 
-  # билтность системы
+  # разрядность системы
   hpw_config.cxx_flags.extend(['-m32' if hpw_config.bitness == Bitness.x32 else '-m64'])
 
   # система
