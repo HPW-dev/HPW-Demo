@@ -5,9 +5,9 @@
 
 class Anim;
 
-// загрузить все анимации в yml файл
+// загрузить все анимации из yml файла
 void read_anims(cr<Yaml> src);
-// читает тллько одну анимацию из ноды конфига
+// читает только одну анимацию из ноды конфига
 Shared<Anim> read_anim(cr<Yaml> anim_node);
 // сохраняет все анимации в yml файл
 void save_anims(Yaml& dst);
