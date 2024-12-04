@@ -1,0 +1,467 @@
+particle.sparkling.stars:
+  type: particle
+  force: 2500
+  kill_by_end_frame: false
+  lifetime: 1.5
+  animation:
+    name: anim.sparkling.stars
+    ignore_scatter: false
+particle.laser.shard.2:
+  type: particle
+  force: 4000
+  animation:
+    name: anim.bullet.star
+    default_deg: 90
+    rand_cur_frame: true
+    ignore_scatter: true
+particle.void:
+  type: particle
+  kill_by_end_anim: false
+  lifetime: 60
+  animation:
+    name: anim.void
+    layer_up: true
+    ignore_scatter: true
+    disable_motion: true
+particle.blink.star:
+  type: particle
+  force: 1000
+  kill_by_end_anim: false
+  rand_cur_frame: true
+  lifetime: 1.1
+  animation:
+    name: anim.blink.star
+    blend_f: blend_avr
+particle.direct.crash.1:
+  type: particle
+  force: 800
+  rand_deg: true
+  kill_by_end_anim: true
+  animation:
+    name: anim.direct.crash.1
+particle.123:
+  type: particle
+  force: 80
+  animation:
+    name: anim.delme.123
+particle.frac.metall.1:
+  type: particle
+  animation:
+    name: anim.frac.metall.1
+    return_back: true
+    rand_cur_frame: true
+    speed_scale:
+      - 0.1
+      - 2
+  rand_deg: true
+  kill_by_end_anim: false
+  lifetime: 10
+  force: 80
+particle.expl.mini.1:
+  type: particle
+  animation:
+    name: anim.expl.mini.1
+  rand_deg: true
+  kill_by_end_anim: true
+  force: 2800
+particle.laser.shard:
+  type: particle
+  animation:
+    name: anim.particle.laser.shard
+  kill_by_end_anim: true
+  force: 600
+bullet.laser:
+  type: bullet
+  dmg: 1
+  hp: 1
+  ignore_self_type: true
+  ignore_master: true
+  explosion: explosion.laser
+  animation:
+    default_deg: 90
+    name: anim.bullet.laser
+    rand_cur_frame: true
+    blend_f: blend_diff
+bullet.sphere.wave.tutorial:
+  type: bullet
+  dmg: 2000
+  hp: 500
+  ignore_self_type: true
+  ignore_master: true
+  explosion: explosion.simple
+  animation:
+    default_deg: 90
+    name: anim.sphere.wave
+    rand_cur_frame: true
+bullet.player.small:
+  type: bullet
+  dmg: 1800
+  hp: 800
+  ignore_self_type: true
+  ignore_master: true
+  ignore_player: true
+  explosion: explosion.player.bullet.small
+  animation:
+    default_deg: 90
+    name: anim.bullet.player.small
+bullet.player.mid:
+  type: bullet
+  dmg: 34375
+  hp: 6875
+  ignore_scatter: true
+  ignore_self_type: true
+  ignore_master: true
+  ignore_player: true
+  explosion: explosion.simple
+  animation:
+    default_deg: 90
+    name: anim.bullet.player.mid
+bullet.placeholder.1:
+  type: bullet
+  dmg: 100
+  hp: 1
+  ignore_self_type: true
+  ignore_master: true
+  ignore_scatter: false
+  ignore_enemy: true
+  ignore_bullet: true
+  explosion: explosion.simple
+  animation:
+    name: anim.bullet.placeholder.1
+bullet.cosmic.hunter:
+  type: bullet
+  dmg: 6000
+  hp: 100
+  ignore_self_type: true
+  ignore_master: true
+  ignore_scatter: false
+  ignore_enemy: true
+  ignore_bullet: true
+  explosion: explosion.simple
+  animation:
+    name: anim.bullet.sphere.mixed
+    blend_f: blend_rotate_x4_safe
+bullet.placeholder.2:
+  type: bullet
+  dmg: 100
+  hp: 1
+  ignore_enemy: true
+  ignore_bullet: true
+  ignore_self_type: true
+  ignore_master: true
+  ignore_scatter: false
+  explosion: explosion.simple
+  animation:
+    default_deg: 90
+    name: anim.bullet.placeholder.2
+bullet.sphere.red:
+  type: bullet
+  dmg: 100
+  hp: 1
+  ignore_enemy: true
+  ignore_bullet: true
+  ignore_self_type: true
+  ignore_master: true
+  ignore_scatter: false
+  explosion: explosion.simple
+  animation:
+    name: anim.bullet.sphere.red
+    blend_f: blend_rotate_x4_safe
+bullet.sphere.gray:
+  type: bullet
+  dmg: 8000
+  hp: 1000
+  ignore_enemy: true
+  ignore_bullet: true
+  ignore_self_type: true
+  ignore_master: true
+  ignore_scatter: false
+  explosion: explosion.simple
+  animation:
+    name: anim.bullet.sphere.gray
+    blend_f: blend_rotate_x4_safe
+    layer_up: true
+bullet.sphere.mixed:
+  type: bullet
+  dmg: 100
+  hp: 1
+  ignore_enemy: true
+  ignore_bullet: true
+  ignore_self_type: true
+  ignore_master: true
+  ignore_scatter: false
+  explosion: explosion.simple
+  animation:
+    name: anim.bullet.sphere.mixed
+    blend_f: blend_rotate_x4_safe
+explosion.waiter:
+  type: explosion
+  power: 70
+  range: 70
+  particle_count: 70
+  particles_range: 15
+  animation:
+    rand_cur_frame: true
+    ignore_scatter: true
+  names:
+    - particle.expl.mini.1
+  heat_distort:
+    max_duration: 0.726
+    radius: 512
+    block_size: 50
+    block_count: 15
+    power: 3
+    flags:
+      decrease_radius: true
+      invert_decrease_radius: true
+      decrease_power: true
+      decrease_block_size: true
+explosion.cosmic.eye:
+  type: explosion
+  power: 120
+  range: 300
+  particle_count: 100
+  particles_range: 15
+  animation:
+    rand_cur_frame: true
+    ignore_scatter: true
+  names:
+    - particle.expl.mini.1
+  heat_distort:
+    max_duration: 0.726
+    radius: 512
+    block_size: 50
+    block_count: 15
+    power: 3
+    flags:
+      decrease_radius: true
+      invert_decrease_radius: true
+      decrease_power: true
+      decrease_block_size: true
+explosion.player.boo.dark:
+  type: explosion
+  power: 80
+  range: 60
+  particle_count: 50
+  particles_range: 10
+  animation:
+    rand_cur_frame: true
+    ignore_scatter: true
+  names:
+    - particle.expl.mini.1
+  heat_distort:
+    max_duration: 0.726
+    radius: 512
+    block_size: 50
+    block_count: 15
+    power: 3
+    flags:
+      decrease_radius: true
+      invert_decrease_radius: true
+      decrease_power: true
+      decrease_block_size: true
+explosion.player.bullet.small:
+  type: explosion
+  power: 9
+  range: 3
+  particle_count: 3
+  particles_range: 3
+  animation:
+    rand_cur_frame: true
+    ignore_scatter: true
+  names:
+    - particle.direct.crash.1
+explosion.laser:
+  type: explosion
+  power: 20
+  range: 15
+  particle_count: 4
+  particles_range: 4
+  animation:
+    ignore_scatter: true
+    default_deg: 90
+  names:
+    - particle.laser.shard
+    - particle.laser.shard.2
+explosion.simple:
+  type: explosion
+  power: 40
+  range: 40
+  particle_count: 25
+  particles_range: 6.5
+  animation:
+    rand_cur_frame: true
+  names:
+    - particle.expl.mini.1
+    - particle.sparkling.stars
+  heat_distort:
+    max_duration: 0.65
+    radius: 60
+    block_size: 40
+    block_count: 8
+    power: 2.5
+    flags:
+      random_radius: true
+      random_power: true
+      decrease_radius: true
+      decrease_power: true
+enemy.cosmic.hunter:
+  type: enemy.cosmic.hunter
+  hp: 32000
+  dmg: 8000
+  bullet_speed: 3.5
+  shoot_deg: 45
+  rotate_speed: 1
+  shoot_timer: 1.5
+  speed: 2
+  explosion: explosion.simple
+  bullet_name: bullet.cosmic.hunter
+  animation:
+    default_deg: 90
+    blend_f: blend_158
+    name: anim.enemy.cosmic.hunter
+enemy.cosmic.waiter:
+  type: enemy.cosmic.waiter
+  hp: 40000
+  dmg: 40000
+  ignore_enemy: false
+  ignore_self_type: false
+  start_speed: 0.1
+  accel: 0.1
+  explosion: explosion.waiter
+  animation:
+    fixed_deg: true
+    name: anim.enemy.waiter
+enemy.cosmic:
+  type: enemy.cosmic
+  hp: 275000
+  dmg: 275000
+  fade_in_time: 3
+  eyes_open_timeout: 1.25
+  magnet_range: 700
+  magnet_power: 1
+  shoot_timer: 1
+  bullet_spawn_range: 20
+  bullet_speed: 0.1
+  bullet_accel: 12
+  bullet_count: 2
+  particle_timer: 1
+  bullet_predict_speed: 7
+  bullet: bullet.sphere.gray
+  explosion: explosion.cosmic.eye
+  animations:
+    - anim.enemy.cosmic.1
+    - anim.enemy.cosmic.2
+  heat_distort:
+    max_duration: 0.934
+    radius: 600
+    block_size: 60
+    block_count: 24
+    power: 1.307
+    flags:
+      random_block_count: true
+      random_radius: true
+      random_block_size: false
+      random_power: false
+      infinity_duration: false
+      decrease_radius: true
+      invert_decrease_radius: false
+      decrease_power: false
+      decrease_block_size: false
+      repeat: true
+enemy.illaen:
+  type: enemy.illaen
+  hp: 4000
+  dmg: 20000
+  magnet_range: 700
+  magnet_power: 1
+  bullet_spawn_range: 20
+  particle_timer: 1
+  bullet: bullet.sphere.gray
+  explosion: explosion.cosmic.eye
+  animation:
+    name: anim.enemy.illaen
+  heat_distort:
+    max_duration: 0.934
+    radius: 600
+    block_size: 60
+    block_count: 24
+    power: 1.307
+    flags:
+      random_block_count: true
+      random_radius: true
+      random_block_size: false
+      random_power: false
+      infinity_duration: false
+      decrease_radius: true
+      invert_decrease_radius: false
+      decrease_power: false
+      decrease_block_size: false
+      repeat: true
+enemy.tutorial:
+  type: enemy.tutorial
+  hp: 16000
+  dmg: 7000
+  explosion: explosion.simple
+  animation:
+    default_deg: 90
+    name: anim.enemy.placeholder.small
+enemy.tutorial.bullet:
+  type: bullet
+  dmg: 4000
+  hp: 800
+  ignore_scatter: true
+  ignore_master: true
+  explosion: explosion.player.bullet.small
+  animation:
+    rand_cur_frame: true
+    name: anim.bullet.small.blinker.1
+enemy.snake.head:
+  type: snake.head
+  hp: 162000
+  dmg: 1200
+  speed: 2
+  explosion: explosion.simple
+  tail:
+    name: enemy.snake.tail
+    count: 50
+    kill_delay: 0.0333
+  animation:
+    name: anim.placeholder.mini
+enemy.snake.tail:
+  type: snake.tail
+  hp: 70000
+  dmg: 300
+  start_motion_radius: 10
+  explosion: explosion.simple
+  animation:
+    name: anim.placeholder.mini
+player.boo.dark:
+  type: player.boo.dark
+  max_speed: 5.5
+  focus_speed: 1.5
+  force: 2000
+  focus_force: 4000
+  hp: 24000
+  fuel: 10000
+  energy_max: 400000
+  boost_up: 1.6666666666
+  boost_down: 0.6666666666
+  explosion: explosion.player.boo.dark
+  animation:
+    name: anim.player.boo.dark
+    fixed_deg: true
+    default_deg: 0
+    contour_bf: blend_158
+    window_star_len: 16
+    percent_level_for_blink: 90
+  shoot:
+    shoot_timer: 0.0666666
+    shoot_price: 7000
+    energy_regen: 450
+    percent_for_power_shoot: 95
+    percent_for_power_shoot_price: 75
+    default_shoot_count: 2
+    deg_spread_shoot: 15
+    deg_focused_shoot: 4
+    shoot_speed: 20

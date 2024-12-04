@@ -1,0 +1,45 @@
+power_shoot:
+  percent_energy_needed: 95
+  percent_energy_price: 75
+  scatter:
+    range: 50
+    power: 60
+  big_bullet:
+    name: bullet.player.mid
+    speed: [ 12, 20 ]
+    count: [ 9, 15 ]
+    angle: 65
+  small_bullet:
+    name: bullet.player.small
+    powerup_name: bullet.player.small
+    speed: [ 2, 7 ]
+    count: [ 3, 5 ]
+    angle: 270
+    delay: 0.018
+    force: 70
+    lifetime: [ 0.25, 0.45 ]
+  heat_distort:
+    max_duration: 0.3
+    radius: 200
+    block_size: 50
+    block_count: 25
+    power: 3.5
+    flags:
+      random_block_count: false
+      random_radius: false
+      random_block_size: false
+      random_power: false
+      infinity_duration: false
+      decrease_radius: true
+      invert_decrease_radius: true
+      decrease_power: true
+      decrease_block_size: false
+      repeat: false
+  
+fullscreen_shoot:
+  clone_chance: 0.05
+  mul_clone_chance: 2.333
+  split_deg: 17
+  high_speed_threshold: 30
+  max_bullets: 1000
+  mul_max_bullets: 0.6

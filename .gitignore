@@ -5,6 +5,7 @@ imgui.ini
 memleaks.txt
 delme.*
 .tmp/*
+!data/
 !.tmp/.gitkeep
 run.py
 a.txt
@@ -60,6 +61,7 @@ pgo/
 build/config.yml
 build/bin/
 build/bin/*
+build/data.zip
 build/*.txt
 build/editor
 build/LICENSE.txt

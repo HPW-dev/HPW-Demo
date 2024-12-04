@@ -3,7 +3,13 @@
 
 *.bat text eol=crlf
 *.txt text eol=auto
-*.yml text eol=auto
+*.csv text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.ini text eol=crlf
+*.frag text eol=lf
+*.vert text eol=lf
 _tmp_version_ text
 *.py text
 *.c text
@@ -16,23 +22,47 @@ _tmp_version_ text
 *.hxx text
 *.hpp text
 
-# Denote all files that are truly binary and should not be modified.
+# Binary/Executable
 *.a binary
 *.o binary
+*.obj binary
 *.so binary
 *.dat binary
 *.bin binary
-*.png binary
-*.gif binary
-*.webp binary
-*.zip binary
 *.exe binary
+*.dll binary
 *.elf binary
 *.elf32 binary
 *.elf64 binary
-*.dll binary
-*.xz binary
-*.zst binary
 *.lib binary
+*.hpw_replay binary
+
+# Images:
+*.png binary
+*.gif binary
+*.webp binary
 *.jpg binary
+
+# Audio:
+*.flac
+*.wav
+*.mp2
+*.mp3
+*.ogg
+*.opus
+*.aac
+*.mp4a
+*.mka
+
+# Archive:
+*.xz binary
+*.zip binary
+*.zst binary
+*.gz binary
+*.rar binary
+*.tar binary
+
+# Other binary
 *.ods binary
+*.ttf
+*.otf

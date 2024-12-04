@@ -1,0 +1,283 @@
+info:
+  author: HPW-Dev
+  name: English (Google translate)
+  for_game_version: 0.186.3
+  revision: 1
+  
+common:
+  author: author
+  loading: "L O A D I N G . . ."
+  gameover: GAME OVER
+  score: score
+  continue: continue
+  reset: reset
+  back: back
+  exit: exit
+  on: ☑
+  off: ☐
+  money_symbol: $
+  unknown: unknown
+  game_version: version
+  error: error message
+  empty: empty
+  warning: warning
+  multiapp_warning: >
+    multiple game windows running detected this may cause stability issues.
+    Please close other windows with the game H.P.W
+    
+scene:
+  difficulty_select:
+    title: Game settings
+    start: start
+    start_tutorial: tutorial
+    write_replay: replay recording (experimental)
+    difficulty:
+      title: difficulty
+      easy: easy
+      normal: normal
+      hardcore: hardcore
+    description:
+      write_replay: >
+        You can record your gameplay to a file and launch it through
+        "main menu" -> "replays". Only a replay can confirm
+        the number of points scored by the player. The global leaderboard
+        is located in the game files and on the project website.
+      difficulty:
+        easy: >
+          Easy difficulty level - the player has a lot of lives.
+          Enemies hit the player worse. You will not be able to complete the game
+          and get the ending.
+        normal: difficulty level at which the developer can complete the game himself
+        hardcore: >
+          Hard difficulty level - the player has few lives. The player's attacks are weaker.
+          Enemies' attacks are stronger. Enemies use tricks. Enemies have more lives.
+          The player is awarded more points
+          
+  gameover:
+    title: GAME OVER
+    try_again: try again
+    save_replay_question: save replay
+    description:
+      save_replay_question: >
+        Your replay will be saved when you exit to the replays folder.
+        By default, each game is written to the file "replays/last_replay.hpw_replay",
+        even if replay saving is not enabled
+        
+  replay:
+    play: start replay
+    name: replay (expiremental)
+    watch: watch replay (expiremental)
+    no_replay: no replay files
+    table:
+      player: player
+      date: date
+      difficulty: difficulty
+      levels: levels
+      score: score
+    error:
+      while_save_to: failed to record replay in
+      
+  main_menu:
+    start: start
+    info: info
+    next_bg: next background
+    rnd_pal: next palette
+    
+  pause:
+    name: pause
+    screenshot: screenshot
+    main_menu: to main menu
+    game_exit: exit from game
+    
+  options:
+    name: options
+    input: input
+    graphic: graphic
+    
+  language_menu:
+    name: language select
+    lang: language
+    author: author
+    ver: version
+    
+  palette_select:
+    title: palette
+    cur_file: palette file
+    next: next
+    prev: previous
+    
+  graphic_menu:
+    title: Graphics settings
+    cpu_safe: Reduce CPU load
+    blur_quality_mul: blur quality
+    blink_particles: blink particles
+    disable_frame_limit: no limit
+    vsync: V-Sync
+    frame_limit: FPS limit
+    wait_frame: wait for end of frame
+    fullscreen: fullscreen
+    show_mouse_cursour: mouse cursor
+    draw_border: border
+    double_buffering: double buffering
+    enable_motion_blur: blur
+    resize_type:
+      name: stretch
+      one_to_one: "1:1"
+      x_only: width
+      y_only: height
+      full: full
+    goto_detailed: DETAILED SETTINGS
+    pressets:
+      name: quality
+      default: adaptive
+      low_pc: for weak PCs
+      high_quality: beautiful graphics
+      high_quality_plus_stream: beautiful graphics + broadcast
+    frame_skip: пропуск кадров
+    auto_frame_skip: Automatic frameskip
+    pge:
+      title: graphic effects
+      disable: disable
+      selected: selected
+      author: plugin author
+      description: Allows you to select graphic modifications. Plugins are located in the folder "plugin/effect/"
+    gamma:
+      title: gamma settings
+      gamma_value: gamma level
+      description:
+        gamma_value: Adjust the gamma level so that the points in the center of the gradient are not too light and too dark
+    epilepsy: make your eyes hurt
+    enable_motion_interp: Motion interpolation
+    description:
+      enable_motion_interp: >
+        Motion interpolation makes the movement of objects smooth.
+        If you disable this option, you will see objects there.,
+        where they really are, but the objects will twitch or
+        move abruptly. It also turns off motion blur.
+      palette_select: >
+        Recolor each frame of the game in different colors.
+        Images with palettes are stored in data.zip/resource/image/palettes/
+      pge: >
+        Apply a graphic effect to each frame of the game.
+        Effects can be downloaded from the Internet or created in C++.
+        The effects are in the plugin/effect folder/
+      epilepsy: >
+        Includes the most brutal graphic effects due to which
+        it is impossible to distinguish anything on the screen. Better remember
+        where is the graphics reset key...
+      cpu_safe: Reduces CPU load. It may slow down the graphics
+      blur_quality_mul: The lower the number, the smoother the blurring of moving objects and the higher the CPU load
+      blink_particles: Flashes particles of smoke and debris after 1 frame, this allows you to speed up the graphics with lags
+      disable_frame_limit: Turns off the frame limiter. The control will become more responsive, but the load on the processor will increase
+      vsync: Makes the frame change smooth, but may cause lags when recording a game on video or broadcast
+      frame_limit: Sets the maximum number of frames per second
+      wait_frame: >
+        The game will update the internal logic only after
+        after completing the rendering of the frame, it makes the movements smoother
+      fullscreen: Stretches the game window to the full screen
+      show_mouse_cursour: Disables the display of the mouse cursor within the game window
+      draw_border: Displays a white border around the game window
+      double_buffering: Makes the frame change smoother
+      enable_motion_blur: Enables motion blur for fast objects
+      resize_type:
+        y_only: Adjusts the size of the game to the height of the window
+        x_only: Adjusts the size of the game to the width of the window
+        full: Stretches the game over the entire window, filling it
+        one_to_one: Saves pixel sizes as multiples of an integer
+      pressets:
+        default: Adaptive - the game will simplify the graphics with lags for optimization
+        low_pc: For weak PCs - turns off beautiful effects to make the game run faster
+        high_quality: Beautiful effects can cause brakes
+        high_quality_plus_stream: The same settings as in the "beautiful graphics", but optimized for recording the game from the screen.
+      frame_skip: >
+        the number of frames that will not be rendered so as not to waste
+        they affect the performance of the computer. It can make the game more stable with lags
+      auto_frame_skip: Automatically enable frame skipping in case of lags
+      
+  input:
+    up: up
+    down: down
+    left: left
+    right: right
+    enable: apply
+    escape: back/pause
+    fulscrn: Full screen
+    screenshot: screenshot
+    focus: focus/slow down (pinch)
+    shoot: attack
+    mode: changing the mode
+    bomb: Bomb/special attack
+    exit_and_save: save and exit
+    
+  tutorial:
+    text:
+      move_keys: MOVEMENT BUTTONS
+      wave_warning: DODGE
+      move_up: You move up FASTER than down
+      end: "٩(◕‿◕)۶ You have been trained ^_^"
+      shoot_key: Shooting key
+      energy_info: |
+        Shooting wastes energy.
+        Energy is being restored
+        If YOU DON'T SHOOT
+      focus_key: For slow movement, HOLD DOWN
+      
+  sound_settings:
+    title: Sound Settings
+    master_gain:
+      title: Overall Volume
+    music_gain:
+      title: Music Volume
+    ui_gain:
+      title: Interface Volume
+      desc: Volume of sounds in the menu and interface effects
+    sfx_gain:
+      title: Effects Volume
+      desc: Volume of explosions, gunshots, etc.
+    count_buffers:
+      title: Number of Audio Buffers
+      desc: >
+        A high number of audio buffers increases memory usage
+        and eliminates sound interruptions. Three audio buffers are sufficient.
+    size_buffers:
+      title: Size of Audio Buffers
+      desc: >
+        A large audio buffer size increases memory usage
+        and eliminates sound interruptions. 16 kilobytes is sufficient.
+    count_sounds:
+      title: Maximum Number of Sounds
+      desc: >
+        Limits the number of simultaneously playing sounds.
+        If too few, not all sounds may be able to play.
+        If too many, there may not be enough memory.
+    device_init_error: >
+      Failed to connect to the default audio device. The game will run without sound.
+      Try selecting an audio device manually in the sound settings menu.
+      
+  game_opts:
+    title: game settings
+    rnd_pal:
+      title: random palette
+      title_after_death: random palette on loss
+      desc: Each time you lose, a random color palette will be selected.
+    collider_autoopt:
+      title: auto-optimization of collision system
+      desc: >
+        If the game lags due to a large number of objects, more optimal
+        collision resolution systems will be selected to speed up the game.
+        The moment of selection may cause temporary slowdowns in the game.
+        
+  locale_select:
+    translation: translation
+
+UI: # интерфейс игрока
+  hp: HP
+  en: EN
+  hud_type:
+    name: HUD type
+    none: invisible
+    line_u: top
+    line_d: bottom
+    
+secret: # exit 29
+  score: "&e0"
