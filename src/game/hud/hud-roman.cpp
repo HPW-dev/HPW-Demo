@@ -60,10 +60,10 @@ struct Hud_roman::Impl {
     static const Vector<utf32> hunds {U"",U"Ⅽ",U"ⅭⅭ",U"ⅭⅭⅭ",U"ⅭⅮ",U"Ⅾ",U"ⅮⅭ",U"ⅮⅭⅭ",U"ⅮⅭⅭⅭ",U"ⅭⅯ"};
     static const Vector<utf32> thous {U"",U"Ⅿ",U"ⅯⅯ",U"ⅯⅯⅯ"};*/
 
-    cauto t = thous.at((input / 1'000) % 4);
-    cauto h = hunds.at((input / 100)   % 10);
-    cauto te = tens.at((input / 10)    % 10);
-    cauto o =  ones.at( input          % 10);
+    cauto t  = thous.at((input / 1'000) % 4);
+    cauto h  = hunds.at((input / 100)   % 10);
+    cauto te =  tens.at((input / 10)    % 10);
+    cauto o  =  ones.at( input          % 10);
 
     return SUB_SYMBOL + t + h + te + o;
   }
