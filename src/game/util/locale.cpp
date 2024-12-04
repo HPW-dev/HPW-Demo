@@ -7,7 +7,7 @@
 #include "game/core/locales.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/config.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 
 cr<utf32> get_locale_str(cr<Str> key) {
   assert(hpw::store_locale);
@@ -30,11 +30,11 @@ void load_locale(cr<Str> user_path) {
     : user_path;
 
   try {
-    mem = hpw::archive->get_file(path);
+    mem = load_res(path);
   } catch (...) {
     hpw_log("ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
       + hpw::fallback_locale_path + "\"\n", Log_stream::warning);
-    mem = hpw::archive->get_file(hpw::fallback_locale_path);
+    mem = load_res(hpw::fallback_locale_path);
   }
 
   hpw::locale_path = mem.get_path();

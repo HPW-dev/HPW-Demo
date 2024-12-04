@@ -8,10 +8,11 @@
 #include "util/error.hpp"
 #include "util/path.hpp"
 #include "util/file/file.hpp"
+#include "util/str-util.hpp"
 #include "game/core/sprites.hpp"
-#include "game/core/"
 #include "game/core/common.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 
 // грузит спрайт либо из файловой системы, либо из архива
 static inline Shared<Sprite> sprite_loader(cr<Str> name) {
@@ -20,8 +21,7 @@ static inline Shared<Sprite> sprite_loader(cr<Str> name) {
     #ifdef EDITOR
       load(*spr, name);
     #else
-      assert(hpw::archive);
-      load(hpw::archive->get_file(name), *spr);
+      load(load_res(name), *spr);
     #endif
     return spr;
   } catch (...) {
@@ -50,10 +50,9 @@ void load_resources() {
   hpw::sprites.clear();
 
   #ifdef EDITOR
-    auto names = all_names_in_dir(hpw::cur_dir + "../");
+    auto names = all_names_in_dir(hpw::cur_dir + hpw::os_resources_dir);
   #else
-    assert(hpw::archive);
-    auto names = hpw::archive->get_all_names();
+    auto names = get_all_res_names();
   #endif
 
   // колбек на отложенную загрузку
@@ -207,25 +206,22 @@ File load_res(cr<Str> name) {
 
   // попытка загрузить ресурс с архива:
   try {
-    iferror(!hpw::archive, "hpw::archive не инициализирован");
+    iferror(!hpw::archive, "hpw::archive не инициализирован\n");
     return hpw::archive->get_file(name);
   } catch(cr<hpw::Error> err) {
-    hpw_log(Str("Ошибка при загрузке ресурса \"") + name + "\" из архива\n" + err.what(), Log_stream::warning);
+    hpw_log(Str("Ошибка при загрузке ресурса \"") + name + "\" из архива\n" + err.what(), Log_stream::debug);
   } catch(...) {
-    hpw_log(Str("не удалось загрузить ресурс \"") + name + "\" из архива\n", Log_stream::warning);
+    hpw_log(Str("не удалось загрузить ресурс \"") + name + "\" из архива\n", Log_stream::debug);
   }
 
   // попытка загрузить ресурс из файловой ситсемы ОС:
-  cauto os_path = hpw::cur_dir + hpw::os_resources_dir + name;
+  auto os_path = hpw::cur_dir + hpw::os_resources_dir + name;
   conv_sep(os_path);
-  File ret {.data = mem_from_file(os_path)};
-  ret.set_path(os_path);
-  return ret;
+  return File(mem_from_file(os_path), os_path);
 }
 
-Strs get_all_res_names(const bool with_folders = true) {
-  if (hpw::archive)
-    return hpw::archive->get_all_names(with_folders);
+Strs get_all_res_names(const bool with_folders) {
+  return_if (hpw::archive, hpw::archive->get_all_names(with_folders));
 
   hpw_log("не удалось получить все имена ресурсов из архива.\n"
     "Попытка получить их из ОС...\n", Log_stream::warning);

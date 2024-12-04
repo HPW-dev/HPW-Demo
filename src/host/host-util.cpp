@@ -4,10 +4,11 @@
 #include "command.hpp"
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/math/random.hpp"
+#include "util/file/file.hpp"
 #include "graphic/util/convert.hpp"
 #include "graphic/image/color.hpp"
 #include "graphic/image/palette.hpp"
@@ -24,8 +25,7 @@ Vector<GLfloat> load_ogl_palette(cr<Str> fname) {
   // загрузка png
   int x, y;
   int comp; // сколько цветовых каналов
-  assert(hpw::archive);
-  cauto mem = hpw::archive->get_file(fname);
+  cauto mem = load_res(fname);
   cauto mem_data = cptr2ptr<cp<stbi_uc>>(mem.data.data());
   auto decoded = stbi_load_from_memory(mem_data, mem.data.size(), &x, &y, &comp, STBI_rgb);
   iferror( !decoded, "image data is not decoded");

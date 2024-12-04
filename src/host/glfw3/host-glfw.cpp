@@ -20,7 +20,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/user.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 
 // вверх этот хедер не таскать, иначе всё развалится
 #include "host-glfw-common.hpp"
@@ -485,7 +485,7 @@ void Host_glfw::init_icon() {
       "resource/image/icon/128x128/pattern 3.png",
     };
     cauto icon_name = icon_names.at(rndu_fast(icon_names.size() - 1));
-    cauto icon_file = hpw::archive->get_file(icon_name);
+    cauto icon_file = load_res(icon_name);
     int channels;
     icon.pixels = stbi_load_from_memory (
       rcast<cp<stbi_uc>>(icon_file.data.data()), icon_file.data.size(),

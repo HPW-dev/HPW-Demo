@@ -14,7 +14,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/version.hpp"
 #include "game/util/blur-helper.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/palette-helper.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
@@ -266,7 +266,7 @@ void Scene_main_menu::next_bg() {
 }
 
 void Scene_main_menu::cache_logo_names() {
-  cauto config_file = hpw::archive->get_file("resource/image/logo/list.yml");
+  cauto config_file = load_res("resource/image/logo/list.yml");
   cauto config_yml = Yaml(config_file);
   m_logo_names = config_yml.get_v_str("logos");
 }

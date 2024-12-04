@@ -5,10 +5,11 @@
 #include "game/core/common.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
-#include "game/util/game-archive.hpp"
 #include "util/file/yaml.hpp"
+#include "util/file/file.hpp"
 #include "util/log.hpp"
 
 struct Locale_info {
@@ -28,8 +29,7 @@ struct Scene_locale_select::Impl {
   }
 
   inline void load_locale_info() {
-    assert(hpw::archive);
-    cauto files = hpw::archive->get_all_names();
+    cauto files = get_all_res_names();
     cauto locale_dir = Str("resource/locale/");
     cauto filter = [locale_dir](cr<Str> fname) {
       bool dir_equ_path = fname.find(locale_dir) == 0;
@@ -41,7 +41,7 @@ struct Scene_locale_select::Impl {
     for (crauto path: files | std::views::filter(filter)) {
       try {
         // загрузить инфу об авторе и название локализации
-        cauto locale_yml_file = hpw::archive->get_file(path);
+        cauto locale_yml_file = load_res(path);
         cauto locale_yml = Yaml(locale_yml_file);
         cauto info_node = locale_yml["info"];
 

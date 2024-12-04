@@ -9,7 +9,7 @@
 #include "game/core/sprites.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/core/palette.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -32,7 +32,7 @@ struct Scene_palette_select::Impl {
     assert(test_image);
 
     // загрузить имена всех файлов с палитрой
-    auto file_list = hpw::archive->get_all_names(false);
+    auto file_list = get_all_res_names(false);
     // фильтр списка
     std::erase_if(file_list, [](cr<Str> src) {
       return src.find("resource/image/palettes/") == Str::npos; });
@@ -143,10 +143,9 @@ struct Scene_palette_select::Impl {
 
   // сортирует список палитр по цветам
   inline static void sort_by_color(Strs& dst_list) {
-    assert(hpw::archive);
     cauto comp = [](cr<Str> a, cr<Str> b) {
-      cauto a_colors = colors_from_pal24(hpw::archive->get_file(a));
-      cauto b_colors = colors_from_pal24(hpw::archive->get_file(b));
+      cauto a_colors = colors_from_pal24(load_res(a));
+      cauto b_colors = colors_from_pal24(load_res(b));
       cauto a_score = pal24_score(a_colors);
       cauto b_score = pal24_score(b_colors);
       return a_score > b_score;

@@ -2,16 +2,15 @@
 #include <ranges>
 #include "palette-helper.hpp"
 #include "game/core/palette.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "host/command.hpp"
 #include "util/str.hpp"
 #include "util/rnd-table.hpp"
 
 void randomize_palette() {
-  assert(hpw::archive);
   assert(hpw::init_palette_from_archive);
 
-  cauto sprites = hpw::archive->get_all_names(false);;
+  cauto sprites = get_all_res_names(false);
   cauto filter = [](cr<Str> src)
     { return src.find("resource/image/palettes/") != Str::npos; };
   Rnd_table<Str> palettes(sprites | std::views::filter(filter) | std::ranges::to<Strs>());

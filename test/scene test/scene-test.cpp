@@ -10,7 +10,7 @@ void Scene_test::init(int argc, char *argv[]) {
   (void)argc;
   (void)argv;
   init_archive();
-  auto font_file {hpw::archive->get_file(
+  auto font_file {load_res(
     "resource/font/unifont-13.0.06.ttf")};
   init_shared<Unifont>(graphic::font, font_file, 16);
   init_scene_mgr();

@@ -19,6 +19,7 @@
 #include "game/util/game-archive.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/vec-helper.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/core/time-scale.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -281,9 +282,9 @@ struct Entity_mgr::Impl {
 
   inline Yaml load_entity_config() const {
     #ifdef EDITOR
-      return Yaml(hpw::cur_dir + "../config/entities.yml");
+      return Yaml(hpw::cur_dir +  + hpw::os_resources_dir + "config/entities.yml");
     #else
-      return Yaml(hpw::archive->get_file("config/entities.yml"));
+      return Yaml(load_res("config/entities.yml"));
     #endif
   }
 

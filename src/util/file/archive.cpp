@@ -45,7 +45,7 @@ File Archive::get_file(Str fname) const {
   return ret;
 } // get_file
 
-Strs Archive::get_all_names(bool width_folders) const {
+Strs Archive::get_all_names(bool with_folders) const {
   Strs ret;
   int idx = 0;
   int errcode;
@@ -57,7 +57,7 @@ Strs Archive::get_all_names(bool width_folders) const {
     }
     _zip_check(errcode, "Archive.get_all_names: zip_entry_openbyindex");
     const Str path = zip_entry_name(zip);
-    if (!width_folders) {
+    if (!with_folders) {
       if (!path.empty() && path.back() != '/')
         ret.push_back(path);
     } else {

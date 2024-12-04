@@ -20,5 +20,5 @@ public:
   // получить файл из архива в виде RAW данных
   File get_file(Str fname) const;
   // все имена файлов в архиве
-  Strs get_all_names(bool width_folders=true) const;
+  Strs get_all_names(bool with_folders=true) const;
 }; // Archive

@@ -10,6 +10,7 @@
 #include "graphic/util/util-templ.hpp"
 #include "game/core/sprites.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "util/path.hpp"
 
 struct Tile {
@@ -62,7 +63,7 @@ struct Tilemap::Impl {
   } // load
 
   inline void load_from_archive(cr<Str> fname) {
-    auto file_data = hpw::archive->get_file(fname);
+    auto file_data = load_res(fname);
     Yaml config(file_data);
     load(config);
   }

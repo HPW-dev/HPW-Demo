@@ -6,7 +6,7 @@
 
 void test(cr<Str> fname) {
   hpw_log("\nLoading \"" << fname << "\"\n");
-  auto yml {hpw::archive->get_file("resource/locale/" + fname)};
+  auto yml {load_res("resource/locale/" + fname)};
   Yaml locale_yml(yml);
   hpw::locale->load(locale_yml.get_kv_table());
 #define PRINT(str) hpw_log("\t" str ": " \

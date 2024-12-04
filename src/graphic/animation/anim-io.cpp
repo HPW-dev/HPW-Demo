@@ -8,7 +8,7 @@
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
 #include "game/util/store.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/anims.hpp"
@@ -211,8 +211,8 @@ void save_anims(Yaml& dst) {
 
 Yaml get_anim_config() {
 #ifdef EDITOR
-  return Yaml(hpw::cur_dir + "../config/animation.yml");
+  return Yaml(hpw::cur_dir + hpw::os_resources_dir + "config/animation.yml");
 #else
-  return Yaml(hpw::archive->get_file("config/animation.yml"));
+  return Yaml(load_res("config/animation.yml")); 
 #endif
 }

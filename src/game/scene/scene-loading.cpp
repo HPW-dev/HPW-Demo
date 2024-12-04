@@ -4,8 +4,8 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sprites.hpp"
 #include "game/scene/scene-mgr.hpp"
-#include "game/util/game-archive.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/resource-helper.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -17,8 +17,7 @@ Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
 : scene_maker {_scene_maker} {
   // найти в ресурсах загруженные картинки с фонами
   // удалить всё что не содержит в названии logo
-  assert(hpw::archive);
-  auto bg_names = hpw::archive->get_all_names(false);
+  auto bg_names = get_all_res_names(false);
   std::erase_if(bg_names, [](cr<Str> src) {
     return src.find("resource/image/loading logo/") == Str::npos; });
   assert(!bg_names.empty());

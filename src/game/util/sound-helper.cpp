@@ -4,7 +4,8 @@
 #include "sound-helper.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
-#include "game/util/game-archive.hpp"
+#include "util/str-util.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
 #include "game/core/sounds.hpp"
 #include "sound/audio-io.hpp"
@@ -32,10 +33,9 @@ void load_sounds() {
   hpw::sound_mgr->set_doppler_factor(hpw::DEFAULT_DOPPLER_FACTOR);
   
   #ifdef EDITOR
-    auto names = all_names_in_dir(hpw::cur_dir + "../");
+    auto names = all_names_in_dir(hpw::cur_dir + hpw::os_resources_dir);
   #else
-    assert(hpw::archive);
-    auto names = hpw::archive->get_all_names();
+    auto names = get_all_res_names();
   #endif
 
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
@@ -65,7 +65,7 @@ void load_sounds() {
       delete_all(name, hpw::cur_dir + ".." + SEPARATOR);
       conv_sep_for_archive(name);
     #else
-      auto sound = load_audio_from_memory(hpw::archive->get_file(name));
+      auto sound = load_audio_from_memory(load_res(name));
     #endif
     delete_all(name, "resource/audio/");
     hpw::sound_mgr->move_audio(name, std::move(sound));

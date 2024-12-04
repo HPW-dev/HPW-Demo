@@ -7,7 +7,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/vec-helper.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
@@ -44,7 +44,7 @@ void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
 }
 
 Strs get_entity_names() {
-  const Yaml config(hpw::archive->get_file("config/entities.yml"));
+  const Yaml config(load_res("config/entities.yml"));
   Strs ret;
   for (crauto tag: config.root_tags())
     ret.push_back(tag);

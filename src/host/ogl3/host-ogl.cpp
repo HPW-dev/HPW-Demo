@@ -9,6 +9,7 @@
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/core/palette.hpp"
 #include "graphic/image/color.hpp"
@@ -56,7 +57,6 @@ void Host_ogl::ogl_init() {
   init_palette_loader();
   screen_tex_init();
 
-  check_p(hpw::archive);
   compie_vertex_shader();
   compie_fragment_shader();
   compile_program();
@@ -158,7 +158,7 @@ void Host_ogl::compile_program() {
 } // compile_program
 
 void Host_ogl::compie_vertex_shader() {
-  auto source_file = hpw::archive->get_file("resource/shader/default.vert");
+  auto source_file = load_res("resource/shader/default.vert");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
   m_vert_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -177,7 +177,7 @@ void Host_ogl::compie_vertex_shader() {
 } // compie_vertex_shader
 
 void Host_ogl::compie_fragment_shader() {
-  auto source_file = hpw::archive->get_file("resource/shader/default.frag");
+  auto source_file = load_res("resource/shader/default.frag");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
   m_frag_shader = glCreateShader(GL_FRAGMENT_SHADER);

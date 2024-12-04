@@ -15,7 +15,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/graphic.hpp"
-#include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/blur-helper.hpp"
 #include "util/math/random.hpp"
 #include "util/math/xorshift.hpp"
@@ -398,7 +398,7 @@ void bgp_tiles_2(Image& dst, const int bg_state) {
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
     // найти тайлы из нужной папки
-    cauto list = hpw::archive->get_all_names(false);;
+    cauto list = get_all_res_names(false);
     cauto tile_name_filter = [](cr<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
@@ -447,7 +447,7 @@ void bgp_tiles_1(Image& dst, const int bg_state) {
   static std::once_flag init_once {};
   std::call_once(init_once, [&] {
     // найти тайлы из нужной папки
-    cauto list = hpw::archive->get_all_names(false);
+    cauto list = get_all_res_names(false);
     cauto tile_name_filter = [](cr<Str> name)
       { return name.find("resource/image/other/bw tiles 4x4/") != Str::npos; };
     for (crauto tile_name: list | std::views::filter(tile_name_filter)) {
