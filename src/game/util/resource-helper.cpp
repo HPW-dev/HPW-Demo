@@ -222,3 +222,21 @@ File load_res(cr<Str> name) {
   ret.set_path(os_path);
   return ret;
 }
+
+Strs get_all_res_names(const bool with_folders = true) {
+  if (hpw::archive)
+    return hpw::archive->get_all_names(with_folders);
+
+  hpw_log("не удалось получить все имена ресурсов из архива.\n"
+    "Попытка получить их из ОС...\n", Log_stream::warning);
+
+  auto ret = files_in_dir(hpw::cur_dir + hpw::os_resources_dir);
+  // вырезать имена папок
+  if (!with_folders) {
+    std::erase_if(ret, [](cr<Str> path) {
+      return_if (path.empty(), true);
+      return path.back() == SEPARATOR;
+    });
+  }
+  return ret;
+}
