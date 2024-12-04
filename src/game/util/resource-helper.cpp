@@ -216,7 +216,7 @@ File load_res(cr<Str> name) {
   }
 
   // попытка загрузить ресурс из файловой ситсемы ОС:
-  cauto os_path = hpw::os_resources_dir + name;
+  cauto os_path = hpw::cur_dir + hpw::os_resources_dir + name;
   conv_sep(os_path);
   File ret {.data = mem_from_file(os_path)};
   ret.set_path(os_path);
