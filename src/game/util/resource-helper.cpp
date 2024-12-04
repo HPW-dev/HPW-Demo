@@ -9,6 +9,7 @@
 #include "util/path.hpp"
 #include "util/file/file.hpp"
 #include "game/core/sprites.hpp"
+#include "game/core/"
 #include "game/core/common.hpp"
 #include "game/util/game-archive.hpp"
 
@@ -198,5 +199,26 @@ std::size_t sizeof_all_sprites() {
         ret += sprite->size() * 2 * sizeof(Pal8);
     }
   }
+  return ret;
+}
+
+File load_res(cr<Str> name) {
+  assert(!name.empty());
+
+  // попытка загрузить ресурс с архива:
+  try {
+    iferror(!hpw::archive, "hpw::archive не инициализирован");
+    return hpw::archive->get_file(name);
+  } catch(cr<hpw::Error> err) {
+    hpw_log(Str("Ошибка при загрузке ресурса \"") + name + "\" из архива\n" + err.what(), Log_stream::warning);
+  } catch(...) {
+    hpw_log(Str("не удалось загрузить ресурс \"") + name + "\" из архива\n", Log_stream::warning);
+  }
+
+  // попытка загрузить ресурс из файловой ситсемы ОС:
+  cauto os_path = hpw::os_resources_dir + name;
+  conv_sep(os_path);
+  File ret {.data = mem_from_file(os_path)};
+  ret.set_path(os_path);
   return ret;
 }

@@ -26,5 +26,6 @@ inline Str data_path = "./../data.zip";
 inline Str config_path = "./../config.yml";
 inline Str log_file_path = "./../log.txt";
 inline Str plugin_path = "./../plugin/";
+inline Str os_resources_dir = "./../../data/"; // отсюда брать файлы, если их нет в data.zip
 
 } // hpw ns
