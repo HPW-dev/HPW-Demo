@@ -226,13 +226,21 @@ Strs get_all_res_names(const bool with_folders) {
   hpw_log("не удалось получить все имена ресурсов из архива.\n"
     "Попытка получить их из ОС...\n", Log_stream::warning);
 
-  auto ret = files_in_dir(hpw::cur_dir + hpw::os_resources_dir);
+  auto ret = files_in_dir(hpw::cur_dir + hpw::os_resources_dir, true);
+  for (rauto fname: ret)
+    conv_sep_for_archive(fname);
   // вырезать имена папок
   if (!with_folders) {
     std::erase_if(ret, [](cr<Str> path) {
       return_if (path.empty(), true);
-      return path.back() == SEPARATOR;
+      return path.back() == '/';
     });
+  }
+  // вырезать базовую директорию
+  auto path_for_cut = hpw::cur_dir + hpw::os_resources_dir;
+  conv_sep_for_archive(path_for_cut);
+  for (rauto fname: ret) {
+    delete_all(fname, path_for_cut);
   }
   return ret;
 }

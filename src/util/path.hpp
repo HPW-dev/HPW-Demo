@@ -9,7 +9,7 @@ Str get_fileext(cr<Str> str);
 // получить путь до файла. перед вызовом переконвертируй сепараторы
 Str get_filedir(cr<Str> str);
 // получить имена файлов в директории
-Strs files_in_dir(cr<Str> path);
+Strs files_in_dir(cr<Str> path, const bool recusive = false);
 // создаёт папку, если её нет
 void make_dir_if_not_exist(cr<Str> dir);
 // текущая директория запуска (в конце/)

@@ -17,7 +17,9 @@ Bytes mem_from_file(Str fname) {
   iferror(fname.empty(), "name is empty");
   conv_sep(fname);
   std::ifstream file(fname, std::ios_base::binary);
-  iferror( !file, "file \"" << fname << "\" not readed\n");
+  //iferror( !file, "file \"" << fname << "\" not readed\n");
+  if (!file)
+    error("file \"" << fname << "\" not readed\n");
   Bytes mem(file_size(file));
   iferror( !(mem.size() > 0 && mem.size() != std::size_t(-1)),
     "bad file size");

@@ -16,10 +16,18 @@ Str get_fileext(cr<Str> str) {
 Str get_filedir(cr<Str> str)
   { return str.substr(0, str.find_last_of(SEPARATOR)); }
 
-Strs files_in_dir(cr<Str> path) {
+Strs files_in_dir(cr<Str> path, const bool recusive) {
   Strs ret = {};
-  for (crauto entry : std::filesystem::directory_iterator(path))
-    ret.push_back(entry.path().string());
+  for (crauto entry : std::filesystem::directory_iterator(path)) {
+    cauto path = entry.path().string();
+    ret.push_back(path);
+    
+    if (recusive && std::filesystem::is_directory(path)) {
+      cauto addition = files_in_dir(path, recusive);
+      for (crauto addition_path: addition)
+        ret.push_back(addition_path);
+    }
+  }
   return ret;
 }
 
