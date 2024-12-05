@@ -73,7 +73,7 @@ struct Scene_locale_select::Impl {
     for (crauto info: _locale_infos) {
       auto item = new_shared<Menu_item_table_row>(
         [info]{
-          load_locale(info.path);
+          load_locale(to_res_path(info.path));
           hpw::scene_mgr.back();
         },
         Menu_item_table_row::Content_getters {

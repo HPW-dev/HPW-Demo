@@ -224,7 +224,7 @@ Strs get_all_res_names(const bool with_folders) {
   return_if (hpw::archive, hpw::archive->get_all_names(with_folders));
 
   hpw_log("не удалось получить все имена ресурсов из архива.\n"
-    "Попытка получить их из ОС...\n", Log_stream::warning);
+    "Попытка получить их из ОС...\n", Log_stream::debug);
 
   auto ret = files_in_dir(hpw::cur_dir + hpw::os_resources_dir, true);
   for (rauto fname: ret)
@@ -243,4 +243,13 @@ Strs get_all_res_names(const bool with_folders) {
     delete_all(fname, path_for_cut);
   }
   return ret;
+}
+
+Str to_res_path(Str src) {
+  // преобразовать в пути с / и вырезать рутовый адрес
+  conv_sep_for_archive(src);
+  auto base_dir = hpw::cur_dir + hpw::os_resources_dir;
+  conv_sep_for_archive(base_dir);
+  delete_all(src, base_dir);
+  return src;
 }

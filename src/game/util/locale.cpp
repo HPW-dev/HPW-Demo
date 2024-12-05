@@ -37,7 +37,7 @@ void load_locale(cr<Str> user_path) {
     mem = load_res(hpw::fallback_locale_path);
   }
 
-  hpw::locale_path = mem.get_path();
+  hpw::locale_path = path;
   auto yml = Yaml(mem);
   load_locales_to_store(yml);
 }
