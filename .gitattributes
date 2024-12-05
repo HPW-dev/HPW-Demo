@@ -35,7 +35,6 @@ _tmp_version_ text
 *.elf32 binary
 *.elf64 binary
 *.lib binary
-*.hpw_replay binary
 
 # Images:
 *.png binary
@@ -66,3 +65,4 @@ _tmp_version_ text
 *.ods binary
 *.ttf binary
 *.otf binary
+*.hpw_replay binary
