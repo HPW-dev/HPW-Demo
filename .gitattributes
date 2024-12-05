@@ -44,15 +44,15 @@ _tmp_version_ text
 *.jpg binary
 
 # Audio:
-*.flac
-*.wav
-*.mp2
-*.mp3
-*.ogg
-*.opus
-*.aac
-*.mp4a
-*.mka
+*.flac binary
+*.wav binary
+*.mp2 binary
+*.mp3 binary
+*.ogg binary
+*.opus binary
+*.aac binary
+*.mp4a binary
+*.mka binary
 
 # Archive:
 *.xz binary
@@ -64,5 +64,5 @@ _tmp_version_ text
 
 # Other binary
 *.ods binary
-*.ttf
-*.otf
+*.ttf binary
+*.otf binary
