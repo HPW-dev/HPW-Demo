@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from script.helper import *
+from script.diff_checker import compress_diffs
 print(f'python version: {check_python_version()}')
 
 from platform import architecture
@@ -215,3 +216,4 @@ accept_params()
 copy_license()
 write_game_version()
 build()
+compress_diffs('./data/', './build/data', './.tmp/resources_diff.pickle')

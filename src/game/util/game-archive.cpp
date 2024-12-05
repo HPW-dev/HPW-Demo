@@ -13,7 +13,7 @@ void init_archive() {
     auto data_path = hpw::cur_dir + (*hpw::config)["path"].get_str("data", hpw::data_path);
     init_unique(hpw::archive, data_path);
 
-    hpw_log("будет использоваться загрузка ресурсов из архива \"" + hpw::archive->get_path() + "\"\n",
+    hpw_log("ресурсы будут грузиться из архива \"" + hpw::archive->get_path() + "\"\n",
       Log_stream::info);
     return;
   } catch (cr<hpw::Error> err) {
@@ -22,6 +22,6 @@ void init_archive() {
     hpw_log("неизвестная ошибка при чтении архива игры\n", Log_stream::debug);
   }
 
-  hpw_log("будет использоваться загрузка ресурсов с диска из папки \"" + hpw::os_resources_dir + "\"\n",
+  hpw_log("ресурсы будут грузиться с диска из папки \"" + hpw::os_resources_dir + "\"\n",
     Log_stream::info);
 }
