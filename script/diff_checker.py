@@ -76,9 +76,12 @@ def compress_folder(folder: str, archive_path: str):
   make_archive(archive_path, 'zip', folder)
 
 def compress_diffs(folder: str, archive_path: str, cache_path: str):
-  '''сжимает папку folder, если в ней появились изменения.
+  '''Отслеживает изменения в папке и сжимает её, если изменения были
 
-  В cache_path хранится база изменений в файлах'''
+  :param folder: папка, которую отслеживают и сжимают
+  :param archive_path: путь к выходному архиву (без расширения)
+  :param cache_path: файл, где хранится база изменений в файлах
+  :return: True, если нет ошибок'''
   try:
     # проверки:
     if not folder:
@@ -112,10 +115,10 @@ def compress_diffs(folder: str, archive_path: str, cache_path: str):
     else:
       print(f'изменений в \"{folder}\" нет, действия не требуются.')
 
-    exit(0)
+    return True
   except Exception as ex:
     log_error(ex, exc_info=True)
-    exit(1)
+    return False
   else:
     log_error('неизвестная ошибка', exc_info=True)
-    exit(1)
+    return False

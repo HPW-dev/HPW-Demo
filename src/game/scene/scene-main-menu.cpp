@@ -325,6 +325,8 @@ void bg_copy_4(Image& dst, const int state) {
 }
 
 void Scene_main_menu::draw_text(Image& dst) const noexcept {
+  assert(graphic::font);
+
   // буффер текста меню
   constexpr Rect MENU_TXT_RECT (140, 200, 270, 280);
   static Image menu_txt;
@@ -371,48 +373,7 @@ void Scene_main_menu::draw_text(Image& dst) const noexcept {
   insert<&blend_min>(dst, game_ver_shadows, GAME_VER_TXT_RECT.pos);
   // отрисовка текста меню поверх теней на dst
   insert<&blend_max>(dst, game_ver, GAME_VER_TXT_RECT.pos);
-
-  /*
-  // нарисовать текст меню в маленькое окошко
-  static Image menu_text_layer;
-  static Image game_ver_layer;
-  menu_text_layer.init(dst.X, dst.Y, Pal8::black);
-  game_ver_layer.init(dst.X, dst.Y, Pal8::black);
-  menu->draw(menu_text_layer);
-
-  // показать версию игры  
-  cauto game_ver = prepare_game_ver();
-  const Vec game_ver_txt_pos {
-    dst.X - graphic::font->text_width(game_ver) - 7,
-    dst.Y - graphic::font->text_height(game_ver) - 4,
-  };
-  graphic::font->draw(game_ver_layer, game_ver_txt_pos, game_ver);
-
-  // нарисовать тень от текста
-  static Image shadow_layer;
-  static Image shadow_layer_game_ver;
-  shadow_layer = menu_text_layer;
-  shadow_layer_game_ver = game_ver_layer;
-  
-  apply_invert(shadow_layer);
-  apply_invert(shadow_layer_game_ver);
-
-  static Image expand_buffer;
-  expand_buffer = shadow_layer;
-  expand_color_4_buf(shadow_layer, expand_buffer, Pal8::black);
-
-  expand_buffer = shadow_layer_game_ver;
-  expand_color_8_buf(shadow_layer_game_ver, expand_buffer, Pal8::black);
-  expand_color_4_buf(shadow_layer_game_ver, expand_buffer, Pal8::black);
-
-  insert<&blend_min>(dst, shadow_layer_game_ver);
-  insert<&blend_min>(dst, shadow_layer);
-
-  // нарисовать текст поверх тени
-  insert<&blend_max>(dst, menu_text_layer);
-  insert<&blend_max>(dst, game_ver_layer);
-  */
-} // draw_text
+}
 
 Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
   auto finded_sprite = hpw::sprites.find(name);

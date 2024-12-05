@@ -40,6 +40,7 @@ struct Table_menu::Impl {
 
   inline void draw(Image& dst) const {
     dst.fill(Pal8::black);
+    assert(graphic::font);
     graphic::font->draw(dst, Vec(8, 8), m_title);
     cauto table_offset_y = 28u;
     draw_table(dst, table_offset_y);
