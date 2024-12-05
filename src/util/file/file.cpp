@@ -19,8 +19,7 @@ Bytes mem_from_file(Str fname) {
   std::ifstream file(std::filesystem::path(fname), std::ios_base::binary);
   iferror (!file || !file.is_open(), "file \"" << fname << "\" not readed\n")
   Bytes mem(file_size(file));
-  iferror( !(mem.size() > 0 && mem.size() != std::size_t(-1)),
-    "bad file size");
+  iferror( !(mem.size() > 0 && mem.size() != std::size_t(-1)), "bad file size");
   // RAW данные с файла
   file.read(ptr2ptr<char*>(mem.data()), mem.size());
   return mem;
@@ -45,7 +44,7 @@ Strs all_names_in_dir(Str dir) {
 void mem_to_file(cr<Bytes> data, Str fname) {
   iferror(fname.empty(), "name is empty");
   conv_sep(fname);
-  std::ofstream file(fname, std::ios_base::binary);
+  std::ofstream file(std::filesystem::path(fname), std::ios_base::binary);
   iferror( !file, "file \"" << fname << "\" not opened for save\n");
   iferror( data.empty(), "saving data is empty");
   // RAW данные в файл
