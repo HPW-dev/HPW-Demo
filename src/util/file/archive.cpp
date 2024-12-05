@@ -20,6 +20,7 @@ Archive::Archive(Str fname) {
   zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
     strm_buf.size(), 0, 'r');
   iferror( !zip, "Archive.c-tor: zip error");
+  set_path(fname);
 }
 
 Archive::~Archive() { zip_close(zip); }
