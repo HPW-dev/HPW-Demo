@@ -104,7 +104,7 @@ Host::Host(int argc, char** argv)
   callbacks_init();
 
   // узнать в какойо папке игра запущена
-  hpw::cur_dir = launch_dir_from_argv0(argv[0]);
+  hpw::cur_dir = launch_dir_from_argv0(argv);
 
   #ifndef DISABLE_CONFIG
     load_config();

@@ -38,7 +38,7 @@ void read(cr<Str> fname) {
 } // read
 
 int main(int argc, char *argv[]) {
-  auto launch_dir = launch_dir_from_argv0(argv[0]);
+  auto launch_dir = launch_dir_from_argv0(argv);
   auto fname = launch_dir + "../test/yaml/test.yml";
   write(fname);
   read(fname);

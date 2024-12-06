@@ -24,7 +24,7 @@ static inline void draw_error_window(cr<Str> msg) {
 
 static inline void process_error(cr<Str> error) {
   std::cerr << error << std::endl;
-  hpw_log(error, Log_stream::warning);
+  hpw_log(error + '\n', Log_stream::warning);
   draw_error_window(error);
 }
 

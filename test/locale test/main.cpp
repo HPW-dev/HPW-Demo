@@ -19,7 +19,7 @@ void test(cr<Str> fname) {
 }
 
 int main(int argc, char *argv[]) {
-  hpw::cur_dir = launch_dir_from_argv0(argv[0]);
+  hpw::cur_dir = launch_dir_from_argv0(argv);
   init_archive();
   init_locale();
   test("en.yml");

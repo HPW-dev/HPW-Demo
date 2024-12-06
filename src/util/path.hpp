@@ -13,4 +13,4 @@ Strs files_in_dir(cr<Str> path, const bool recusive = false);
 // создаёт папку, если её нет
 void make_dir_if_not_exist(cr<Str> dir);
 // текущая директория запуска (в конце/)
-Str launch_dir_from_argv0(Cstr str);
+Str launch_dir_from_argv0(char** argv);

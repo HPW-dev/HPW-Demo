@@ -100,18 +100,24 @@ public:
   inline Impl(Yaml& master, Str fname, bool make_if_not_exist)
   : _master{master} {
     conv_sep(fname);
+    fname = std::filesystem::weakly_canonical(fname).string();
     _master.set_path(fname);
     hpw_log("Yaml: loading \"" + fname + "\"\n", Log_stream::debug);
 
     try {
-      root = YAML::LoadFile(fname);
-    } catch (cr<YAML::BadFile> ex) { // если файла нет, то создать его с нуля
+      std::ifstream file(std::filesystem::path(fname), std::ios_base::binary);
+      iferror (!file || !file.is_open(), "не удалось загрузить YAML файл \"" << fname << "\"");
+      root = YAML::Load(file);
+    } catch (...) { // если файла нет, то создать его с нуля
       if (make_if_not_exist) {
         hpw_log("файл \"" + fname + "\" отсутствует. Пересоздание\n");
-        std::ofstream file(fname);
+        std::ofstream file(std::filesystem::path(fname), std::ios_base::binary);
         file.close();
       }
-      root = YAML::LoadFile(fname);
+
+      std::ifstream file(std::filesystem::path(fname), std::ios_base::binary);
+      iferror (!file || !file.is_open(), "не удалось загрузить YAML файл \"" << fname << "\"");
+      root = YAML::Load(file);
     }
   } // c-tor(fname, make_if_not_exist)
 
@@ -150,7 +156,7 @@ public:
     assert( !fname.empty());
     conv_sep(fname);
     hpw_log("save to file \"" + fname + "\"\n", Log_stream::debug);
-    std::ofstream file(fname, std::ios_base::trunc); // удалить старый файл
+    std::ofstream file(std::filesystem::path(fname), std::ios_base::trunc); // удалить старый файл
     YAML::Emitter emt;
     emt << root;
     file << emt.c_str();

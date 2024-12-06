@@ -11,7 +11,7 @@ void print_raw(cr<Bytes> raw) {
 }
 
 int main(int /*argc*/, char *argv[]) {
-  auto launch_dir {launch_dir_from_argv0(argv[0])};
+  auto launch_dir {launch_dir_from_argv0(argv)};
   Archive archive(launch_dir + "../test/archive test/test.zip");
 
   hpw_log("\nfiles:\n");

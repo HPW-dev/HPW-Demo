@@ -3,6 +3,7 @@
 #include <syncstream>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <string>
 #include <mutex>
 #include <format>
@@ -66,15 +67,21 @@ void log_open_file(const char* fname) noexcept {
     cauto old_name = ::g_log_fname;
     ::g_log_fname = fname;
     conv_sep(::g_log_fname);
+    ::g_log_fname = std::filesystem::weakly_canonical(::g_log_fname).string();
 
     if (old_name != ::g_log_fname) {
-      ::g_log_file.open(::g_log_fname);
+      ::g_log_file.open(std::filesystem::path(::g_log_fname));
         
       if (::g_log_file.is_open())
         std::cout << "log file \"" << ::g_log_fname << "\" created\n";
       else
         error("log file is not opened");
     }
+  } catch (cr<hpw::Error> err) {
+    std::cerr << "error while creating log file (\"" << ::g_log_fname << "\":)\n" <<
+      err.what() << '\n' <<
+      "Output to log file disabled\n";
+    g_config.to_file = false;
   } catch (...) {
     std::cerr << "error while creating log file (\"" << ::g_log_fname << "\")\n" <<
       "Output to log file disabled\n";

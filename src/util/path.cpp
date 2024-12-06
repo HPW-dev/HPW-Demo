@@ -1,7 +1,15 @@
+#include <cassert>
 #include <filesystem>
 #include <string>
 #include "str-util.hpp"
-#include "util/path.hpp"
+#include "log.hpp"
+#include "unicode.hpp"
+#include "platform.hpp"
+
+#ifdef WINDOWS
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
 
 Str get_filename(cr<Str> str) {
   std::filesystem::path path(str);
@@ -31,19 +39,46 @@ Strs files_in_dir(cr<Str> path, const bool recusive) {
   return ret;
 }
 
-void make_dir_if_not_exist(cr<Str> dir) {
+void make_dir_if_not_exist(cr<Str> _dir) {
   namespace fs = std::filesystem;
-  try {
-    // Check if src folder exists
-    if ( !fs::is_directory(dir) || !fs::exists(dir))
-      fs::create_directory(dir);
-  } catch (cr<fs::filesystem_error> err) {
-    // TODO надо правильно создать папку в рус-директории
-  }
+  Str dir {_dir};
+  conv_sep(dir);
+  cauto path = std::filesystem::path(dir);
+
+  if (!fs::is_directory(path) || !fs::exists(path))
+    fs::create_directory(path);
 }
 
-Str launch_dir_from_argv0(Cstr str) {
-  Str path(str);
+#ifdef WINDOWS
+// для конвертирования виндушных кодовых страниц в utf8 строку
+static inline Str cp_acp_to_utf8(Cstr src) {
+  const int result_u = ::MultiByteToWideChar(CP_ACP, 0, src, -1, 0, 0);
+  if (result_u != 0) {
+    Vector<WCHAR> ures(result_u, L'\0');
+    if (::MultiByteToWideChar(CP_ACP, 0, src, -1, ures.data(), result_u)) {
+      const int result_c = ::WideCharToMultiByte(CP_UTF8, 0, ures.data(), -1, 0, 0, 0, 0);
+      if (result_c != 0) {
+        Vector<char> cres(result_c, '\0');
+        if (::WideCharToMultiByte(CP_UTF8, 0, ures.data(), -1, cres.data(), result_c, 0, 0))
+          return Str(cres.data());
+      }
+    }
+  }
+
+  hpw_log("не удалось преобразовать строку \"" + Str(src) + "\"\n", Log_stream::warning);
+  return Str(src);
+}
+#endif // WINDOWS
+
+Str launch_dir_from_argv0(char** argv) {
+  return_if (!argv || !argv[0], Str(".") + SEPARATOR);
+  
+  #ifdef WINDOWS
+    Str path = cp_acp_to_utf8(argv[0]);
+  #else
+    Str path(argv[0]);
+  #endif
+
 
   // обрезать path до крайнего правого сепаратора
   std::size_t sep_pos = 0;
@@ -55,4 +90,4 @@ Str launch_dir_from_argv0(Cstr str) {
   if (ret.empty())
     ret = '.';
   return ret + SEPARATOR;
-} // launch_dir_from_argv0
+}

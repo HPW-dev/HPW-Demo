@@ -28,7 +28,7 @@ void save_screenshot(cr<Image> image) {
     (*hpw::config)["path"].get_str("screenshots", hpw::screenshots_path) + SEPARATOR;
   std::ostringstream oss;
   oss << screenshots_dir;
-  make_dir_if_not_exist(oss.str());
+  make_dir_if_not_exist(hpw::cur_dir + oss.str());
   oss << std::put_time(&lt, "%d-%m-%Y %H-%M-%S");
   oss << "-" + n2s(rndu_fast(100'000)) + ".png";
   save(image, oss.str());
