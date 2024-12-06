@@ -1,3 +1,5 @@
+#include <filesystem>
+#include <cstring>
 #include "image-io.hpp"
 #include "palette.hpp"
 #define STB_IMAGE_IMPLEMENTATION
@@ -63,6 +65,12 @@ void save(cr<Image> src, Str name) {
     rgb24_p[rgb24_index + 2] = col.b;
   }
   
-  auto ok = stbi_write_png(name.c_str(), src.X, src.Y, STBI_rgb, rgb24_p.data(), 0);
-  iferror(!ok, "не удалось сохранить картинку: \"" << name <<"\"");
-} // save
+  int mem_sz {};
+  cauto file_mem = stbi_write_png_to_mem(rgb24_p.data(), 0, src.X, src.Y, STBI_rgb, &mem_sz);
+  iferror(!file_mem || mem_sz <= 0, "не удалось сохранить картинку \"" << name <<"\" в память");
+  iferror(mem_sz >= 1024 * 1024 * 200, "почему скриншот больше 200 мб?!");
+
+  Bytes image_file_mem(mem_sz);
+  std::memcpy(rcast<void*>(image_file_mem.data()), rcast<cp<void>>(file_mem), mem_sz);
+  mem_to_file(image_file_mem, name);
+}
