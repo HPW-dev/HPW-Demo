@@ -29,6 +29,10 @@ private:
     {
         return LoadLibraryA(path);
     }
+    static HINSTANCE openLib(const wchar_t *path) noexcept
+    {
+        return LoadLibraryW(path);
+    }
     FARPROC getSymbol(const char *name) const noexcept
     {
         return GetProcAddress(m_handle, name);
@@ -172,6 +176,11 @@ public:
         open(path);
     }
 
+    explicit DyLib(const wchar_t *path)
+    {
+        open(path);
+    }
+
     explicit DyLib(const std::string &path)
     {
         open(path.c_str());
@@ -202,6 +211,16 @@ public:
         m_handle = openLib(path);
         if (!m_handle)
             throw handle_error(getHandleError(path));
+    }
+
+    void open(const wchar_t *path)
+    {
+        close();
+        if (!path)
+            throw handle_error(getHandleError("(nullptr)"));
+        m_handle = openLib(path);
+        if (!m_handle)
+            throw handle_error(getHandleError("hpw-openLib-error"));
     }
 
     void open(const std::string &path)

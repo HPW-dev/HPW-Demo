@@ -1,4 +1,5 @@
 #include <cassert>
+#include <filesystem>
 #include <functional>
 #include <utility>
 #include "pge.hpp"
@@ -8,6 +9,7 @@
 #include "util/macro.hpp"
 #include "util/error.hpp"
 #include "util/file/yaml.hpp"
+#include "util/platform.hpp"
 #include "game/core/canvas.hpp"
 #include "game/util/config.hpp"
 
@@ -41,9 +43,14 @@ void load_pge(Str libname) {
   try {
     disable_pge();
     conv_sep(libname);
-
+    libname = std::filesystem::weakly_canonical(libname).string();
     hpw_log("загрузка плагина: " + libname + '\n');
-    init_shared<DyLib>(g_lib_loader, libname);
+
+    #ifdef WINDOWS
+      init_shared<DyLib>(g_lib_loader, std::filesystem::path(libname).wstring().c_str());
+    #else
+      init_shared<DyLib>(g_lib_loader, libname);
+    #endif
     g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");
     g_plugin_apply = g_lib_loader->getFunction<decltype(plugin_apply)>("plugin_apply");
     g_plugin_finalize = g_lib_loader->getFunction<decltype(plugin_finalize)>("plugin_finalize");
