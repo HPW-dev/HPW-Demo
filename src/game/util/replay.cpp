@@ -1,4 +1,5 @@
 #include <iomanip>
+#include <filesystem>
 #include <cassert>
 #include <fstream>
 #include <sstream>
@@ -189,7 +190,7 @@ struct Replay::Impl {
   {
     conv_sep(m_path);
     #ifdef ECOMEM
-    m_file.open(m_path, std::ios_base::binary |
+    m_file.open(std::filesystem::path(m_path), std::ios_base::binary |
       (write_mode ? std::ios_base::out : std::ios_base::in) );
     #endif
 
@@ -348,7 +349,7 @@ struct Replay::Impl {
       });
 
       // запись с буффера на диск
-      std::ofstream file(m_path, std::ios_base::binary);
+      std::ofstream file(std::filesystem::path(m_path), std::ios_base::binary);
 
       if (!file.is_open()) {
         hpw::global_task_mgr.add(new_shared<Save_error>(m_path));
