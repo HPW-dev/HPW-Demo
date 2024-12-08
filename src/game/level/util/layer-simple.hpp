@@ -12,7 +12,7 @@ struct Layer_simple {
   blend_pf bf {&blend_past};
 
   Layer_simple() = default;
-  explicit Layer_simple(cr<Str> tilemap_archive_name, const Vec _pos,
+  explicit Layer_simple(cr<Str> tilemap_archive, const Vec _pos,
     real _motion_ratio, blend_pf _bf=&blend_past);
   Layer_simple(Layer_simple&& other);
   void update(const Vec vel, Delta_time dt);

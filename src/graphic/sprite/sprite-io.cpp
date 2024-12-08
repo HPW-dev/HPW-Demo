@@ -49,6 +49,7 @@ inline void _data_to_sprite(Sprite &dst, cr<File> file) {
   auto file_path = file.get_path();
   image.set_path(file_path);
   mask.set_path(file_path);
+  dst.set_path(file_path);
   // сконвертировать цвета
   int rgba_index = 0;
   for (int i = 0; i < x * y; ++i) {

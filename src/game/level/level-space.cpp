@@ -46,10 +46,10 @@ struct Level_space::Impl {
   bool predict_waiter {false}; // если включён, ждун будет подбирать место спавна получше
 
   inline Impl()
-    : m_bg{"resource/image/bg/space/bg/tilemap.yml", Vec{}, 0.025, &blend_fade_out_max}
-    , m_galaxy_1{"resource/image/bg/space/galaxy 1/tilemap.yml", Vec{}, 0.1, &blend_max}
-    , m_galaxy_2{"resource/image/bg/space/galaxy 2/tilemap.yml", Vec{}, 0.025001, &blend_fade_out_max}
-    , m_galaxy_3{"resource/image/bg/space/galaxy 3/tilemap.yml", Vec{}, 0.05, &blend_max}
+    : m_bg{"resource/image/bg/space/bg.zip", Vec{}, 0.025, &blend_fade_out_max}
+    , m_galaxy_1{"resource/image/bg/space/galaxy 1.zip", Vec{}, 0.1, &blend_max}
+    , m_galaxy_2{"resource/image/bg/space/galaxy 2.zip", Vec{}, 0.025001, &blend_fade_out_max}
+    , m_galaxy_3{"resource/image/bg/space/galaxy 3.zip", Vec{}, 0.05, &blend_max}
   {
     hpw::shmup_mode = true;
     init_collider();

@@ -16,6 +16,8 @@ class Archive final: public Resource {
 
 public:
   explicit Archive(Str fname);
+  explicit Archive(cr<File> file_mem);
+  explicit Archive(File&& file_mem);
   ~Archive();
   // получить файл из архива в виде RAW данных
   File get_file(Str fname) const;

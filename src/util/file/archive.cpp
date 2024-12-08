@@ -19,8 +19,28 @@ Archive::Archive(Str fname) {
   strm_buf = mem_from_file(fname);
   zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
     strm_buf.size(), 0, 'r');
-  iferror( !zip, "Archive.c-tor: zip error");
+  iferror( !zip, "Archive.c-tor: zip error (" << fname << ")");
   set_path(fname);
+}
+
+Archive::Archive(cr<File> file_mem) {
+  cauto path = file_mem.get_path();
+  hpw_log("Archive: load from memory \"" + path + "\"\n", Log_stream::debug);
+  strm_buf = file_mem.data;
+  zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
+    strm_buf.size(), 0, 'r');
+  iferror( !zip, "Archive.c-tor: zip error (" << path << ")");
+  set_path(path);
+}
+
+Archive::Archive(File&& file_mem) {
+  cauto path = file_mem.get_path();
+  hpw_log("Archive: load from memory \"" + path + "\"\n", Log_stream::debug);
+  strm_buf = std::move(file_mem.data);
+  zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
+    strm_buf.size(), 0, 'r');
+  iferror( !zip, "Archive.move c-tor: zip error (" << path << ")");
+  set_path(path);
 }
 
 Archive::~Archive() { zip_close(zip); }

@@ -8,9 +8,9 @@ void Layer_simple::draw(Image& dst, int optional) const {
   tilemap.draw(pos, dst, bf, optional); 
 }
 
-Layer_simple::Layer_simple(cr<Str> tilemap_archive_name, const Vec _pos,
+Layer_simple::Layer_simple(cr<Str> tilemap_archive, const Vec _pos,
 real _motion_ratio, blend_pf _bf)
-: tilemap {tilemap_archive_name}
+: tilemap {tilemap_archive, true}
 , pos {_pos}
 , motion_ratio {_motion_ratio}
 , bf {_bf}

@@ -19,11 +19,9 @@ public:
   Tilemap(Tilemap&& other);
   Tilemap* operator=(cr<Tilemap> other) = delete;
   Tilemap* operator=(Tilemap&& other) = delete;
-  Tilemap(cr<Str> fname);
+  Tilemap(cr<Str> fname, const bool is_archive = true);
   ~Tilemap();
   
-  void load(cr<Yaml> config);
-  void load_from_archive(cr<Str> fname);
   void draw(const Vec pos, Image& dst, blend_pf bf=&blend_past, int optional=0) const;
   int get_original_w() const;
   int get_original_h() const;
