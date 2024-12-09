@@ -36,7 +36,6 @@ void load_sounds() {
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](cr<Str> name) {
     Str find_str = "resource/audio/";
-    conv_sep(find_str);
 
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория
