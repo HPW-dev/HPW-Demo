@@ -1,4 +1,5 @@
 #pragma once
+#include <string_view>
 #include "graphic/effect/light.hpp"
 
 enum class Heat_distort_mode {autoopt = 0, disabled, enabled};
@@ -43,5 +44,9 @@ inline Blur_mode blur_mode                 {};   // качество размы�
 inline bool blink_particles                {true}; // включает мигание спрайтов при render_lag
 inline Light_quality light_quality         {Light_quality::medium};      // качество вcпышки
 inline Heat_distort_mode heat_distort_mode {Heat_distort_mode::autoopt}; // качество искажения воздуха
+
+// прочее:
+inline std::string_view TEST_IMAGES_DIR {"resource/image/other/test images/"}; // путь до папки тестовых пикч
+inline Str cur_test_image_path          {Str(TEST_IMAGES_DIR) + "spring.png"}; // путь до выбранной тестовой пикчи
 
 } // graphic ns

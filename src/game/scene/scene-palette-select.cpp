@@ -5,13 +5,15 @@
 #include "graphic/image/image.hpp"
 #include "graphic/image/palette.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/sprites.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/palette.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
-#include "game/core/palette.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
@@ -51,11 +53,12 @@ struct Scene_palette_select::Impl {
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
+
     menu->update(dt);
   }
 
-  inline void draw(Image& dst) const {
-    dst.fill(Pal8::black);
+  inline void draw(Image& dst) const {;
+    draw_test_image(dst);
     return_if (graphic::current_palette_file.empty());
 
     // отобразить только имя файла палитры
@@ -65,8 +68,7 @@ struct Scene_palette_select::Impl {
       sconv<utf32>(palette_name));
 
     menu->draw(dst);
-    draw_palette(dst, Vec(50, 120));
-    draw_test_image(dst, Vec(50, 150));
+    draw_palette(dst, Vec(50, 140));
   }
 
   // докрутить индекс до текущего выбранного файла
@@ -122,7 +124,7 @@ struct Scene_palette_select::Impl {
         new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
       },
 
-      Vec{50, 50}
+      Vec{50, 50}, &blend_diff
     );
   } // init_menu
 
@@ -137,12 +139,10 @@ struct Scene_palette_select::Impl {
     draw_rect(dst, Rect(pos - Vec(2, 2), Vec(pal_w, pal_h) + Vec(4, 4)), Pal8::white);
   }
 
-  inline void draw_test_image(Image& dst, const Vec pos) const {
-    crauto test = *test_image;
-    insert(dst, test, pos);
-    // рамка вокруг картинки
-    draw_rect(dst, Rect(pos - Vec(1, 1), Vec(test.X(), test.Y()) + Vec(2, 2)), Pal8::black);
-    draw_rect(dst, Rect(pos - Vec(2, 2), Vec(test.X(), test.Y()) + Vec(4, 4)), Pal8::white);
+  inline void draw_test_image(Image& dst) const {
+    cauto test_image = hpw::sprites.find(graphic::cur_test_image_path);
+    return_if(!test_image);
+    insert_fast(dst, test_image->image());
   }
 
   // сортирует список палитр по цветам
