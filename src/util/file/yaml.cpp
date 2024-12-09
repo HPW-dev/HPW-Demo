@@ -189,21 +189,18 @@ public:
   inline void set_v_real(cr<Str> name, cr<Vector<real>> val) { set_v(name, val); }
 
   inline Yaml operator[] (cr<Str> name) const {
-    cauto path = _master.get_path() + "->" + name;
-
     try {
       auto node = root[name];
       iferror(!node, "!node");
-      auto ret = Impl(_master, node, path);
-      ret._master.set_generated(true);
-      return ret;
+      // путь в ресурсе нельзя трогать, он должен указывать на рутовую ноду
+      return Impl(_master, node, _master.get_path());
     }  catch(...) {
       hpw_log("WARNING: node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"\n",
         Log_stream::debug);
     }
 
     Yaml ret;
-    ret.set_path(path);
+    ret.set_path(_master.get_path() + "->" + name);
     ret.set_generated(true);
     return ret;
   }
