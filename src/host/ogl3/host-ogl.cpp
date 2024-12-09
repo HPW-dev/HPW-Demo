@@ -223,8 +223,8 @@ void Host_ogl::pal_tex_init() {
     // если палитру не удастся получить, то сгенерировать её
     if (!graphic::current_palette_file.empty()) {
       hpw_log("не удалось загрузить файл палитры \"" +
-        graphic::current_palette_file + "\"\n", Log_stream::warning);
-      graphic::current_palette_file = {};
+        graphic::current_palette_file + "\". Будет выбрана стандартная палитра\n", Log_stream::warning);
+      graphic::current_palette_file = graphic::DEFAULT_PALETTE_FILE;
     }
     _gen_palette();
   }
