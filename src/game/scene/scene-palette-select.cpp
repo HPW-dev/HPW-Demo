@@ -140,12 +140,6 @@ struct Scene_palette_select::Impl {
     draw_rect(dst, Rect(pos - Vec(2, 2), Vec(pal_w, pal_h) + Vec(4, 4)), Pal8::white);
   }
 
-  inline void draw_test_image(Image& dst) const {
-    cauto _test_image = hpw::sprites.find(graphic::cur_test_image_path);
-    return_if(!_test_image);
-    insert_fast(dst, _test_image->image());
-  }
-
   // сортирует список палитр по цветам
   inline static void sort_by_color(Strs& dst_list) {
     cauto comp = [](cr<Str> a, cr<Str> b) {

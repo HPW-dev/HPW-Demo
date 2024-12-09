@@ -4,8 +4,10 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
+#include "game/core/sprites.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "util/path.hpp"
 
 struct Test_image_path {
@@ -70,4 +72,10 @@ Shared<Menu_list_item> get_test_image_list() {
     get_locale_str("scene.graphic_menu.test_image_list.title"),
     get_items(), &get_default_item_id
   );
+}
+
+void draw_test_image(Image& dst) {
+  cauto _test_image = hpw::sprites.find(graphic::cur_test_image_path);
+  return_if(!_test_image);
+  insert_fast(dst, _test_image->image());
 }

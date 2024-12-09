@@ -3,6 +3,7 @@
 #include "scene-epge-list.hpp"
 #include "scene-epge-config.hpp"
 #include "scene-graphic.hpp"
+#include "scene-test-image.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/epges.hpp"
@@ -12,6 +13,7 @@
 #include "game/util/pge.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/item/list-item.hpp"
 #include "game/menu/menu-util.hpp"
 #include "plugin/epge/epge-util.hpp"
 
@@ -45,10 +47,10 @@ struct Scene_epge::Impl {
   }
 
   inline void draw(Image& dst) const {
+    draw_test_image(dst);
+
     assert(_menu);
     _menu->draw(dst);
-
-    // TODO рисовать чё-то тестовое на фоне
   }
 
   inline static void exit_from_scene() {
@@ -84,7 +86,8 @@ struct Scene_epge::Impl {
     if (!graphic::epges.empty())
       menu_items.push_back( make_menu_separator(&_need_bottom_item) );
     // .dll/.so плагины
-    menu_items.push_back( get_shared_plugin_item() );
+    menu_items.emplace_back( get_shared_plugin_item() );
+    menu_items.push_back( get_test_image_list() );
     // ресет и выход
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.reset"), [this]{
       graphic::epges.clear();
@@ -95,7 +98,7 @@ struct Scene_epge::Impl {
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ) );
 
     init_unique(_menu, get_locale_str("scene.graphic_menu.epge.title"),
-      menu_items, Rect{0, 0, graphic::width, graphic::height} );
+      menu_items, Rect{30, 10, 350, 300} );
   }
 }; // Impl
 
