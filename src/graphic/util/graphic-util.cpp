@@ -669,3 +669,60 @@ const Pal8 color, const blend_pf bf) {
     j -= decInc;
   }
 } // draw_line
+
+void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, blend_pf bf, const int optional) {
+  // проверить валидность
+  return_if( !dst);
+  return_if (rect.size.x < 1 || rect.size.y < 1);
+
+  // определить границы прямоугольника
+  int rect_sx = std::floor(rect.pos.x);
+  int rect_sy = std::floor(rect.pos.y);
+  int rect_ex = std::floor(rect.pos.x + rect.size.x);
+  int rect_ey = std::floor(rect.pos.y + rect.size.y);
+
+  // оптимизировать границы
+  rect_sx = std::max(rect_sx, 0);
+  rect_sy = std::max(rect_sy, 0);
+  rect_ex = std::min(rect_ex, dst.X);
+  rect_ey = std::min(rect_ey, dst.Y);
+  cauto RECT_SZ_X = rect_ex - rect_sx;
+  cauto RECT_SZ_Y = rect_ey - rect_sy;
+
+  // не рисовать, если есть проблемы с размером
+  return_if(RECT_SZ_X <= 0);
+  return_if(RECT_SZ_Y <= 0);
+
+  auto* dst_ptr = &dst(rect_sx, rect_sy);
+  const std::size_t DST_PITCH = dst.X - RECT_SZ_X;
+
+  cfor (y, RECT_SZ_Y) {
+    cfor (x, RECT_SZ_X) {
+      *dst_ptr = bf(col, *dst_ptr, optional);
+      ++dst_ptr;
+    }
+
+    dst_ptr += DST_PITCH;
+  }
+}
+
+void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col, blend_pf bf, const int optional) noexcept {
+  return_if( !dst);
+  return_if(rect.size.x <= 2 || rect.size.y <= 2);
+  const int rect_pos_x = std::round(rect.pos.x);
+  const int rect_pos_y = std::round(rect.pos.y);
+  const int rect_sz_x = std::round(rect.size.x);
+  const int rect_sz_y = std::round(rect.size.y);
+  cauto ex = rect_pos_x + rect_sz_x;
+  cauto ey = rect_pos_y + rect_sz_y;
+  
+  // рисование линий по два раза:
+  for (int x = rect_pos_x; x < ex; ++x) {
+    dst.set(x, rect_pos_y, col, bf, optional);
+    dst.set(x, ey-1, col, bf, optional);
+  }
+  for (int y = rect_pos_y+1; y < ey-1; ++y) {
+    dst.set(rect_pos_x, y, col, bf, optional);
+    dst.set(ex-1, y, col, bf, optional);
+  }
+}

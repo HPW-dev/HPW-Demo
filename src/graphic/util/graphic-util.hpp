@@ -98,5 +98,6 @@ void draw_spline(Image& dst, const Vec a, const Vec b,
   const Vec c, const Vec d, const Pal8 color,
   const blend_pf bf=blend_past, const uint quality=30);
 // рисует линию между двумя точками
-void draw_line(Image& dst, Vec _p1, const Vec _p2,
-  const Pal8 color, const blend_pf bf);
+void draw_line(Image& dst, Vec _p1, const Vec _p2, const Pal8 color, const blend_pf bf);
+void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, blend_pf bf, const int optional);
+void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col, blend_pf bf, const int optional) noexcept;
