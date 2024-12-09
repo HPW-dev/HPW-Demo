@@ -20,6 +20,9 @@ private:
   Default_select_getter _default_select_getter {};
 
 public:
+  /** @param title название списка
+  * @param items элементы списка
+  @param default_select_getter через что узнать какой сейчас выбран элемент по умолчанию */
   explicit Menu_list_item(cr<utf32> title, cr<Items> items,
     cr<Default_select_getter> default_select_getter = {});
   void enable() override;

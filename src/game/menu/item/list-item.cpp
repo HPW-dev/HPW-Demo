@@ -49,5 +49,8 @@ void Menu_list_item::update(const Delta_time dt) {
         , Log_stream::warning);
       m_selected = overrided_idx % m_items.size();
     }
+
+    // больше выбор не требуется
+    _default_select_getter = {};
   }
 }
