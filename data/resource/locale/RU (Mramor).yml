@@ -112,6 +112,8 @@ scene: # игровые менюшки
     show_mouse_cursour: курсор мыши
     draw_border: рамка
     double_buffering: Двойнаz буфферизациz
+    test_image_list:
+      title: тестовое изображение
     blur_mode:
       title: размытие изображениz
       high_desc: качественное размытие движениz может вызвать тормоза на слабых ПК
