@@ -62,6 +62,12 @@ int get_scancode(const hpw::keycode keycode) {
   return key_info->scancode;
 }
 
+static inline void load_test_image_path(cr<Yaml> config)
+  { graphic::cur_test_image_path = config.get_str("test_image_path", graphic::cur_test_image_path); }
+
+static inline void save_test_image_path(Yaml& config)
+  { config.set_str("test_image_path", graphic::cur_test_image_path); }
+  
 static inline void load_light_quality(cr<Yaml> config) {
   graphic::light_quality = scast<Light_quality>(
     config.get_int("light_quality", scast<int>(graphic::light_quality)) );
@@ -134,6 +140,7 @@ void save_config() {
   graphic_node.set_bool ("show_fps",            graphic::show_fps);
   save_light_quality(graphic_node);
   save_heat_distort_mode(graphic_node);
+  save_test_image_path(graphic_node);
 
   auto log_node = config.make_node("log");
   save_log_config(log_node);
@@ -222,6 +229,7 @@ void load_config() {
   graphic::show_fps = graphic_node.get_bool("show_fps", graphic::show_fps);
   load_light_quality(graphic_node);
   load_heat_distort_mode(graphic_node);
+  load_test_image_path(graphic_node);
 
   cauto log_node = config["log"];
   load_log_config(log_node);
