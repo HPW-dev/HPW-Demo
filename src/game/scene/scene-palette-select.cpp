@@ -14,9 +14,9 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
-#include "game/menu/text-menu.hpp"
-#include "game/menu/item/text-item.hpp"
-#include "game/menu/item/list-item.hpp"
+#include "game/_menu/text-_menu.hpp"
+#include "game/_menu/item/text-item.hpp"
+#include "game/_menu/item/list-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/file/archive.hpp"
 #include "util/str-util.hpp"
@@ -24,25 +24,25 @@
 #include "host/command.hpp"
 
 struct Scene_palette_select::Impl {
-  Unique<Menu> menu {};
-  Shared<Sprite> test_image {};
+  Unique<Menu> _menu {};
+  Shared<Sprite> _test_image {};
 
   inline Impl() {
     init_menu();
-    test_image = hpw::sprites.find("resource/image/other/palette test.png");
-    assert(test_image);
+    _test_image = hpw::sprites.find("resource/image/other/palette test.png");
+    assert(_test_image);
   }
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
 
-    menu->update(dt);
+    _menu->update(dt);
   }
 
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
-    menu->draw(dst);
+    _menu->draw(dst);
     draw_palette(dst, Vec(35, 130));
   }
 
@@ -110,7 +110,7 @@ struct Scene_palette_select::Impl {
     Text_menu_config menu_config;
     menu_config.with_bg = true;
 
-    init_unique<Text_menu>( menu,
+    init_unique<Text_menu>( _menu,
       Menu_items {
         get_palette_list(),
         get_test_image_list(),
@@ -140,9 +140,9 @@ struct Scene_palette_select::Impl {
   }
 
   inline void draw_test_image(Image& dst) const {
-    cauto test_image = hpw::sprites.find(graphic::cur_test_image_path);
-    return_if(!test_image);
-    insert_fast(dst, test_image->image());
+    cauto _test_image = hpw::sprites.find(graphic::cur_test_image_path);
+    return_if(!_test_image);
+    insert_fast(dst, _test_image->image());
   }
 
   // сортирует список палитр по цветам
