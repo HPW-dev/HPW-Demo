@@ -31,19 +31,12 @@ void load_sounds() {
   }
 
   hpw::sound_mgr->set_doppler_factor(hpw::DEFAULT_DOPPLER_FACTOR);
-  
-  #ifdef EDITOR
-    auto names = all_names_in_dir(hpw::cur_dir + hpw::os_resources_dir);
-  #else
-    auto names = get_all_res_names();
-  #endif
+  auto names = get_all_res_names();
 
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](cr<Str> name) {
     Str find_str = "resource/audio/";
-    #ifdef EDITOR
     conv_sep(find_str);
-    #endif
 
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория

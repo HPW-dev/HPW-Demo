@@ -23,12 +23,6 @@ pgo/
 **/log.txt
 **/*.lnk
 **/*.a
-**/*.opus
-**/*.flac
-**/*.ogg
-**/*.mp3
-**/*.mp4a
-**/*.mka
 **/*.bak
 **/*.svg
 **/*.o
