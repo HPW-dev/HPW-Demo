@@ -137,8 +137,10 @@ public:
       root = std::move(other.impl->root);
   }
 
-  inline Impl(Yaml& master, cr<YAML::Node> node, cr<Str> new_path): _master{master}, root(node)
-    { _master.set_path(new_path); }
+  inline Impl(Yaml& master, cr<YAML::Node> node, cr<Str> new_path)
+  : _master{master}
+  , root(node)
+  { _master.set_path(new_path); }
 
   inline Impl& operator = (cr<Yaml> other) noexcept {
     if (std::addressof(_master) != std::addressof(other))
@@ -187,15 +189,23 @@ public:
   inline void set_v_real(cr<Str> name, cr<Vector<real>> val) { set_v(name, val); }
 
   inline Yaml operator[] (cr<Str> name) const {
+    cauto path = _master.get_path() + "->" + name;
+
     try {
       auto node = root[name];
       iferror(!node, "!node");
-      return Impl(_master, node, _master.get_path());
+      auto ret = Impl(_master, node, path);
+      ret._master.set_generated(true);
+      return ret;
     }  catch(...) {
       hpw_log("WARNING: node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"\n",
         Log_stream::debug);
     }
-    return {};
+
+    Yaml ret;
+    ret.set_path(path);
+    ret.set_generated(true);
+    return ret;
   }
 
   inline Str get_str(cr<Str> name, cr<Str> def) const { return _get(name, def); }
