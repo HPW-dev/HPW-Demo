@@ -1,5 +1,6 @@
 #include <cassert>
 #include "scene-palette-select.hpp"
+#include "scene-test-image.hpp"
 #include "scene-mgr.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/image/palette.hpp"
@@ -13,6 +14,7 @@
 #include "game/core/palette.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/file/archive.hpp"
 #include "util/str-util.hpp"
@@ -107,6 +109,8 @@ struct Scene_palette_select::Impl {
             hpw::init_palette_from_archive(cur_palette_file());
           }
         }),
+
+        get_test_image_list(),
 
         new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
