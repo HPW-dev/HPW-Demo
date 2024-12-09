@@ -3,8 +3,11 @@
 #include "item/item.hpp"
 #include "game/core/fonts.hpp"
 
-Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos)
-: Menu(_items), draw_pos(_draw_pos) {}
+Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos, blend_pf bf)
+: Menu(_items)
+, draw_pos(_draw_pos)
+, _bf {bf}
+{}
 
 void Text_menu::draw(Image& dst) const {
   utf32 text;
@@ -15,6 +18,5 @@ void Text_menu::draw(Image& dst) const {
     text += U"\n";
   }
   
-  //dst.fill(Pal8::black);
-  graphic::font->draw(dst, draw_pos, text, &blend_max);
+  graphic::font->draw(dst, draw_pos, text, _bf);
 }
