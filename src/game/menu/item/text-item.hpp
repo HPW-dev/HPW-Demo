@@ -14,4 +14,8 @@ public:
   void enable() override;
   utf32 to_text() const override;
   utf32 get_description() const override;
+  inline void plus() override { enable(); }
+  inline void plus_fast() override { enable(); }
+  inline void minus() override { enable(); }
+  inline void minus_fast() override { enable(); }
 };
