@@ -16,6 +16,7 @@
 #include "util/file/yaml.hpp"
 #include "util/path.hpp"
 #include "util/log.hpp"
+#include "util/error.hpp"
 #include "util/safecall.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
@@ -261,4 +262,19 @@ void load_config() {
   }
 
   setup_log();
-} // load_config
+}
+
+void load_config_input(const Yaml& config) {
+  iferror(!config.check(), "проблемы при загрузке конфига \"" << config.get_path() << "\"");
+  // TODO
+}
+
+void load_config_graphic(const Yaml& config) {
+  iferror(!config.check(), "проблемы при загрузке конфига \"" << config.get_path() << "\"");
+  // TODO
+}
+
+void load_config_game(const Yaml& config) {
+  iferror(!config.check(), "проблемы при загрузке конфига \"" << config.get_path() << "\"");
+  // TODO
+}
