@@ -6,6 +6,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/epges.hpp"
+#include "game/core/graphic.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/pge.hpp"
@@ -88,6 +89,7 @@ struct Scene_epge::Impl {
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.reset"), [this]{
       graphic::epges.clear();
       disable_pge();
+      graphic::cur_test_image_path = graphic::DEFAULT_TEST_IMAGE;
       _need_reinit_menu = true;
     } ) );
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ) );

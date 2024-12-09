@@ -8,6 +8,7 @@
 #include "game/core/common.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/core.hpp"
+#include "game/core/palette.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/fonts.hpp"
@@ -361,7 +362,8 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_reset_item() {
     return new_shared<Menu_text_item>(get_locale_str("common.reset"), [] {
-      hpw::init_palette_from_archive("resource/image/palettes/default.png");
+      hpw::init_palette_from_archive(Str(graphic::DEFAULT_PALETTE_FILE));
+      graphic::cur_test_image_path = graphic::DEFAULT_TEST_IMAGE;
       hpw::set_resize_mode(graphic::default_resize_mode);
       hpw::set_gamma(1.0);
       graphic::set_disable_frame_limit(false);

@@ -43,7 +43,7 @@ struct Scene_palette_select::Impl {
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
     _menu->draw(dst);
-    draw_palette(dst, Vec(35, 130));
+    draw_palette(dst, Vec(35, 110));
   }
 
   struct Palette_file_name {
@@ -118,7 +118,8 @@ struct Scene_palette_select::Impl {
         new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
           hpw::init_palette_from_archive(graphic::current_palette_file);
-          hpw::scene_mgr.back();
+          graphic::cur_test_image_path = graphic::DEFAULT_TEST_IMAGE;
+          init_menu();
         }),
         
         new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
