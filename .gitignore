@@ -5,14 +5,13 @@ imgui.ini
 memleaks.txt
 delme.*
 .tmp/*
-!data/
+!data/**/*
 !.tmp/.gitkeep
 run.py
 a.txt
 b.txt
 .vscode/settings.json
 .sconsign.dblite
-**/table_*.dat
 tmp
 HPW.code-workspace
 pgo/
