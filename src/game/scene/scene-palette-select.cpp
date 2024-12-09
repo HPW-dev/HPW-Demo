@@ -26,29 +26,12 @@
 struct Scene_palette_select::Impl {
   Unique<Menu> menu {};
   Shared<Sprite> test_image {};
-  Strs m_palette_files {};
-  std::size_t m_cur_palette_idx {};
 
   inline Impl() {
     init_menu();
-
     test_image = hpw::sprites.find("resource/image/other/palette test.png");
     assert(test_image);
-
-    // загрузить имена всех файлов с палитрой
-    auto file_list = get_all_res_names(false);
-    // фильтр списка
-    std::erase_if(file_list, [](cr<Str> src) {
-      return src.find("resource/image/palettes/") == Str::npos; });
-    sort_by_color(file_list);
-    m_palette_files = file_list;
-
-    if ( !m_palette_files.empty()) {
-      update_cur_palette_idx();
-      // сразу применить палитру, как вошли в это окно
-      hpw::init_palette_from_archive(cur_palette_file());
-    }
-  } // impl
+  }
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
@@ -59,34 +42,69 @@ struct Scene_palette_select::Impl {
 
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
-    return_if (graphic::current_palette_file.empty());
-
-    // отобразить только имя файла палитры
-    cauto palette_name = get_filename( cur_palette_file() );
-    graphic::font->draw(dst, Vec(50, 25),
-      get_locale_str("scene.palette_select.cur_file") + U" : " +
-      sconv<utf32>(palette_name));
-
     menu->draw(dst);
     draw_palette(dst, Vec(35, 130));
   }
 
-  // докрутить индекс до текущего выбранного файла
-  inline void update_cur_palette_idx() {
-    std::size_t idx = 0;
-    if ( !graphic::current_palette_file.empty()) {
-      for (crauto fname: m_palette_files) {
-        if (graphic::current_palette_file == fname) {
-          m_cur_palette_idx = idx;
-          break;
-        }
-        ++idx;
-      }
+  struct Palette_file_name {
+    Str full_path {};
+    Str short_name {};
+  };
+  using Palette_file_names = Vector<Palette_file_name>;
+
+  // загрузить имена всех файлов с палитрой
+  inline static Palette_file_names get_palette_file_names() {
+    Palette_file_names ret;
+
+    auto file_list = get_all_res_names(false);
+    // фильтр списка
+    std::erase_if(file_list, [](cr<Str> src) {
+      return src.find(graphic::DEFAULT_PALETTE_FILES_DIR) == str_npos
+        || src == graphic::DEFAULT_PALETTE_FILES_DIR;
+    });
+    sort_by_color(file_list);
+    
+    for (crauto palette_name: file_list) {
+      ret.push_back(Palette_file_name {
+        .full_path = palette_name,
+        .short_name = get_filename(palette_name)
+      });
     }
+    return ret;
   }
 
-  inline Str cur_palette_file() const
-    { return m_palette_files.at(m_cur_palette_idx); }
+  // указать какае изначально выбрана палитра
+  inline static std::size_t get_default_item_id() {
+    cauto palette_files = get_palette_file_names();
+  
+    for (std::size_t ret = 0; crauto palette_file: palette_files) {
+      if (palette_file.full_path == graphic::current_palette_file)
+        return ret;
+      ++ret;
+    }
+
+    return 0;
+  }
+
+  // список палитр в меню
+  inline Shared<Menu_list_item> get_palette_list() {
+    cauto palette_files = get_palette_file_names();
+    Menu_list_item::Items items;
+    // каждый элемент списка применяет свою палитру:
+    for (crauto palette_file: palette_files) {
+      items.push_back( Menu_list_item::Item {
+        .name = utf8_to_32(palette_file.short_name),
+        .desc = {},
+        .action = [path = palette_file.full_path] {
+          assert(hpw::init_palette_from_archive);
+          graphic::current_palette_file = path;
+          hpw::init_palette_from_archive(graphic::current_palette_file);
+        }
+      } );
+    }
+
+    return new_shared<Menu_list_item>(get_locale_str("scene.palette_select.cur_file"), items, &get_default_item_id);
+  }
 
   inline void init_menu() {
     Text_menu_config menu_config;
@@ -94,33 +112,12 @@ struct Scene_palette_select::Impl {
 
     init_unique<Text_menu>( menu,
       Menu_items {
-        new_shared<Menu_text_item>(get_locale_str("scene.palette_select.next"), [this]{
-          if ( !m_palette_files.empty()) {
-            ++m_cur_palette_idx;
-            if (m_cur_palette_idx >= m_palette_files.size())
-              m_cur_palette_idx = 0;
-            assert(hpw::init_palette_from_archive);
-            hpw::init_palette_from_archive(cur_palette_file());
-          }
-        }),
-
-        new_shared<Menu_text_item>(get_locale_str("scene.palette_select.prev"), [this]{
-          if ( !m_palette_files.empty()) {
-            if (m_cur_palette_idx == 0)
-              m_cur_palette_idx = m_palette_files.size() - 1;
-            else
-              --m_cur_palette_idx;
-            assert(hpw::init_palette_from_archive);
-            hpw::init_palette_from_archive(cur_palette_file());
-          }
-        }),
-
+        get_palette_list(),
         get_test_image_list(),
 
         new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
-          update_cur_palette_idx();
-          hpw::init_palette_from_archive(cur_palette_file());
+          hpw::init_palette_from_archive(graphic::current_palette_file);
           hpw::scene_mgr.back();
         }),
         
