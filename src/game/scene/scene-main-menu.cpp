@@ -17,8 +17,10 @@
 #include "game/util/resource-helper.hpp"
 #include "game/util/palette-helper.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/palette-helper.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/item/list-item.hpp"
 #include "graphic/util/resize.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -241,8 +243,7 @@ void Scene_main_menu::init_menu() {
       new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
         [this]{ next_bg(); }),
       // сменить палитру
-      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.rnd_pal"),
-        []{ randomize_palette(); }),
+      get_palette_list(),
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
         hpw::scene_mgr.add(new_shared<Scene_info>());

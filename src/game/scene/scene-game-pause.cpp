@@ -4,11 +4,13 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sounds.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/palette-helper.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"
 #include "game/core/replays.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-options.hpp"
 #include "graphic/image/image.hpp"
 #include "host/command.hpp"
@@ -41,8 +43,7 @@ void Scene_game_pause::init_menu() {
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
       new_shared<Menu_text_item>(get_locale_str("scene.pause.screenshot"),
         []{ hpw::make_screenshot(); }),
-      new_shared<Menu_text_item>(get_locale_str("scene.game_opts.rnd_pal.title"),
-        []{ randomize_palette(); }),
+      get_palette_list(),
       new_shared<Menu_text_item>(get_locale_str("scene.pause.main_menu"), []{
         hpw::scene_mgr.back(3); // cur->пауза->игровой процесс->окно загрузки
         // в реплее в выбор сложности не заходим (TODO может поменяться)

@@ -96,7 +96,7 @@ scene: # игровые менюшки
     ver: версиz
   palette_select:
     title: палитра
-    cur_file: файл палитры
+    cur_file: палитра
   graphic_menu:
     title: Настройки графики
     cpu_safe: снижение нагрузки на процессор
