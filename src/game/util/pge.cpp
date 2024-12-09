@@ -49,7 +49,7 @@ void load_pge(Str libname) {
     #ifdef WINDOWS
       init_shared<DyLib>(g_lib_loader, std::filesystem::path(libname).wstring().c_str());
     #else
-      init_shared<DyLib>(g_lib_loader, libname);
+      init_shared<DyLib>(g_lib_loader, libname.c_str());
     #endif
     g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");
     g_plugin_apply = g_lib_loader->getFunction<decltype(plugin_apply)>("plugin_apply");

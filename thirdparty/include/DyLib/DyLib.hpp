@@ -176,10 +176,12 @@ public:
         open(path);
     }
 
+    #if defined(_WIN32) || defined(_WIN64)
     explicit DyLib(const wchar_t *path)
     {
         open(path);
     }
+    #endif
 
     explicit DyLib(const std::string &path)
     {
@@ -213,6 +215,7 @@ public:
             throw handle_error(getHandleError(path));
     }
 
+    #if defined(_WIN32) || defined(_WIN64)
     void open(const wchar_t *path)
     {
         close();
@@ -222,6 +225,7 @@ public:
         if (!m_handle)
             throw handle_error(getHandleError("hpw-openLib-error"));
     }
+    #endif
 
     void open(const std::string &path)
     {
