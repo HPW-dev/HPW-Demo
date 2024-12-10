@@ -9,6 +9,7 @@
 
 #include "scanline.hpp"
 #include "shaker.hpp"
+#include "shuffler.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -102,6 +103,7 @@ inline void add_epge() {
 inline static void init_epge_list() {
   add_epge<epge::Scanline>();
   add_epge<epge::Shaker>();
+  add_epge<epge::Shuffler>();
 };
 
 Strs avaliable_epges() {
