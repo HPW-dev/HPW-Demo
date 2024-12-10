@@ -3,6 +3,7 @@
 #include "scene-test-image.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/epges.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"
@@ -76,6 +77,11 @@ struct Scene_epge_config::Impl {
     
     menu_items.push_back( make_menu_separator(&_need_bottom_item) );
     menu_items.emplace_back(get_delete_item());
+    // кнопки смены порядка в списке EPGE
+    if (!graphic::epges.empty()) {
+      menu_items.emplace_back(get_move_up_item());
+      menu_items.emplace_back(get_move_down_item());
+    }
     menu_items.emplace_back(get_test_image_list());
     menu_items.emplace_back(get_palette_list());
     // exit item
@@ -96,6 +102,42 @@ struct Scene_epge_config::Impl {
         remove_epge(address);
       }
     );
+  }
+
+  inline Shared<Menu_text_item> get_move_up_item() const {
+    return new_shared<Menu_text_item> (
+      get_locale_str("scene.graphic_menu.epge.move.up"),
+      [this] {
+        cauto epge_idx = get_epge_idx(_epge);
+        if (epge_idx > 0)
+          std::swap(graphic::epges.at(epge_idx - 1), graphic::epges.at(epge_idx));
+      },
+      []->utf32 { return {}; },
+      get_locale_str("scene.graphic_menu.epge.move.desc")
+    );
+  }
+
+  inline Shared<Menu_text_item> get_move_down_item() const {
+    return new_shared<Menu_text_item> (
+      get_locale_str("scene.graphic_menu.epge.move.down"),
+      [this] {
+        cauto epge_idx = get_epge_idx(_epge);
+        if (graphic::epges.size() >= 2 && epge_idx + 1 <= graphic::epges.size() - 1)
+          std::swap(graphic::epges.at(epge_idx + 1), graphic::epges.at(epge_idx));
+      },
+      []->utf32 { return {}; },
+      get_locale_str("scene.graphic_menu.epge.move.desc")
+    );
+  }
+
+  // узнать индекс эффекта в graphic::epges
+  inline static std::size_t get_epge_idx(cp<epge::Base> epge_ptr) {
+    for (std::size_t idx {}; crauto epge: graphic::epges) {
+      return_if (epge.get() == epge_ptr, idx);
+      ++idx;
+    }
+
+    return 0;
   }
 }; // Impl
 
