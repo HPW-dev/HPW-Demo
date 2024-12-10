@@ -10,11 +10,11 @@ namespace epge {
 
 struct Shuffler::Impl final {
   int _seed {97'997}; // ALMONDS
-  int _block_sz {24};
-  int _rnd_style {};
+  int _block_sz {3};
+  int _rnd_style {2};
   bool _rotate_blocks {true};
   bool _shuffle_blocks {true};
-  bool _randomize_blocks {false};
+  bool _randomize_blocks {true};
   double _randomize_speed {0.09};
   mutable Image _buffer {};
 
@@ -27,8 +27,8 @@ struct Shuffler::Impl final {
     _buffer.init(dst);
 
     // сколько получится кусочков:
-    cauto block_mx = std::max<int>(1, dst.X / _block_sz);
-    cauto block_my = std::max<int>(1, dst.Y / _block_sz);
+    cauto block_mx = std::max<int>(1, dst.X / _block_sz + 1);
+    cauto block_my = std::max<int>(1, dst.Y / _block_sz + 1);
     cut_blocks_and_shuffle(dst, _buffer, block_mx, block_my);
   }
 
@@ -46,6 +46,7 @@ struct Shuffler::Impl final {
 
   inline void check() const {
     assert(_block_sz > 1 && _block_sz <= 16'000);
+    assert(_rnd_style > 0);
   }
 
   // нарезать картинку и размешать
@@ -76,8 +77,9 @@ struct Shuffler::Impl final {
   inline static int rnd_xy(const int seed, const int x, const int y, const int style) noexcept {
     switch (style) {
       default:
-      case 1: return ((seed * ((x >> 4) ^ (y >> 5))) >> 7);
-      case 2: return ((seed * (x ^ y)) >> 7);
+      case 1: return (seed * ((x >> 4) ^ (y >> 5))) >> 7;
+      case 2: return (seed ^ (x * y)) >> 5;
+      case 3: return (seed * (x ^ y)) >> 7;
     }
     return 0;
   }
