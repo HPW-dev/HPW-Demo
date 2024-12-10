@@ -51,7 +51,9 @@ struct Scene_hud_select::Impl {
     // выход из меню
     items.push_back(new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }));
 
-    init_unique(_menu, TITLE, items, MENU_WND, true);
+    Advanced_text_menu_config config;
+    config.without_desc = true;
+    init_unique(_menu, TITLE, items, MENU_WND, config);
   }
 
   inline void update(const Delta_time dt) {
