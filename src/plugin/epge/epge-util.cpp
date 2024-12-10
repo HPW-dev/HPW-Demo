@@ -4,6 +4,7 @@
 #include "epge-util.hpp"
 #include "game/core/epges.hpp"
 #include "util/file/yaml.hpp"
+#include "util/str-util.hpp"
 
 #include "scanline.hpp"
 #include "shaker.hpp"
@@ -15,7 +16,37 @@ static std::unordered_map<Str, Epge_maker> _epge_makers {};
 }
 
 void save_epges(Yaml& config) {
-  // TODO
+  cauto total_epges = graphic::epges.size();
+  return_if(total_epges <= 0);
+  config.set_int("epge_count", total_epges);
+
+  // сохранить все EPGE
+  for (int epge_idx {}; crauto epge: graphic::epges) {
+    cauto epge_name = epge->name();
+    cont_if(epge_name.empty());
+    
+    cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
+    auto epge_node = config.make_node(epge_node_name);
+
+    epge_node.set_str("name", epge->name());
+
+    // сохранить все настройки EPGE:
+    cauto epge_params = epge->params();
+    cauto params_sz = epge_params.size();
+    if (params_sz > 0) {
+      epge_node.set_int("param_count", params_sz);
+
+      for (int param_idx {}; crauto param: epge_params) {
+        cauto param_node_name = "PARAM_" + n2s(param_idx);
+        auto param_node = epge_node.make_node(param_node_name);
+        param_node.set_str("title", param->title());
+        param_node.set_str("value", param->get_value());
+        ++param_idx;
+      }
+    }
+
+    ++epge_idx;
+  }
 }
 
 void load_epges(cr<Yaml> config) {
