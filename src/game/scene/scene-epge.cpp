@@ -11,6 +11,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/pge.hpp"
+#include "game/util/config.hpp"
 #include "game/util/palette-helper.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -56,7 +57,7 @@ struct Scene_epge::Impl {
 
   inline static void exit_from_scene() {
     hpw::scene_mgr.back();
-    save_epges();
+    save_config();
   }
 
   inline void init_menu() {

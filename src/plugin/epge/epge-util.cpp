@@ -14,11 +14,11 @@ namespace {
 static std::unordered_map<Str, Epge_maker> _epge_makers {};
 }
 
-void save_epges() {
+void save_epges(Yaml& config) {
   // TODO
 }
 
-void load_epges() {
+void load_epges(cr<Yaml> config) {
   // TODO
 }
 

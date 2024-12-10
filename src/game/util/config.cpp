@@ -21,6 +21,7 @@
 #include "util/safecall.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
+#include "plugin/epge/epge-util.hpp"
 
 static inline void load_log_config(cr<Yaml> config) {
   auto cfg = log_get_config();
@@ -148,6 +149,9 @@ void save_config() {
   save_heat_distort_mode(graphic_node);
   save_test_image_path(graphic_node);
 
+  auto epge_node = graphic_node.make_node("epge");
+  save_epges(epge_node);
+
   auto log_node = config.make_node("log");
   save_log_config(log_node);
 
@@ -274,12 +278,16 @@ void load_config_graphic(cr<Yaml> config) {
   load_test_image_path(config);
 
   cauto sync_node = config["sync"];
+  node_check(sync_node);
   graphic::set_vsync( sync_node.get_bool("vsync", graphic::get_vsync()) );
   graphic::wait_frame_bak = graphic::wait_frame = sync_node.get_bool("wait_frame", graphic::wait_frame);
   graphic::set_disable_frame_limit( sync_node.get_bool("disable_frame_limit", graphic::get_disable_frame_limit()) );
   graphic::set_target_fps( sync_node.get_int("target_fps", graphic::get_target_vsync_fps()) );
   graphic::cpu_safe = sync_node.get_bool("cpu_safe", graphic::cpu_safe);
   graphic::autoopt_timeout_max = sync_node.get_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
+
+  cauto epge_node = config["epge"];
+  load_epges(epge_node);
 }
 
 void load_config_game(cr<Yaml> config) {
