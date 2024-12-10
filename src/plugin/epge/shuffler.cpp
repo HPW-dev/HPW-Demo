@@ -17,7 +17,7 @@ struct Shuffler::Impl final {
   bool _shuffle_blocks {true};
   bool _randomize_blocks {true};
   bool _unsafe {false};
-  double _randomize_speed {0.19};
+  double _randomize_speed {0.12};
   mutable Image _buffer {};
 
   inline Str name() const noexcept { return "shuffler"; }
@@ -71,7 +71,7 @@ struct Shuffler::Impl final {
   }
 
   inline Image cut_block(cr<Image> src, const int x, const int y, const int block_sz) const noexcept {
-    return cut(src, Rect(x * block_sz, y * block_sz, block_sz, block_sz), Image_get::NONE);
+    return cut(src, Rect(x * block_sz, y * block_sz, block_sz, block_sz), Image_get::MIRROR);
   }
 
   inline void insert_block(Image& dst, cr<Image> block, const int x, const int y, const int block_sz,
