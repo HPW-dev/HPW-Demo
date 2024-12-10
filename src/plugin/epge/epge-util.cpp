@@ -121,3 +121,15 @@ Unique<epge::Base> make_epge(cr<Str> name) {
 
   return ::_epge_makers.at(name) (); // создать EPGE
 }
+
+bool remove_epge(cp<epge::Base> address) {
+  // удалить все совпадения с адресом
+  cauto deleted_count = std::erase_if (
+    graphic::epges,
+    [address](cr<Unique<epge::Base>> epge) {
+      return epge.get() == address;
+    }
+  );
+
+  return deleted_count > 0 ? true : false;
+}

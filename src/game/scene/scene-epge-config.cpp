@@ -7,6 +7,7 @@
 #include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"
 #include "plugin/epge/epge.hpp"
+#include "plugin/epge/epge-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -74,6 +75,7 @@ struct Scene_epge_config::Impl {
       menu_items.push_back( new_shared<Epge_menu_item>(param) );
     
     menu_items.push_back( make_menu_separator(&_need_bottom_item) );
+    menu_items.emplace_back(get_delete_item());
     menu_items.emplace_back(get_test_image_list());
     menu_items.emplace_back(get_palette_list());
     // exit item
@@ -83,6 +85,17 @@ struct Scene_epge_config::Impl {
     config.bf_border = &blend_avr_max;
     config.bf_bg = &blend_158;
     init_unique(_menu, utf8_to_32(_epge->name()), menu_items, Rect{30, 10, 350, 300}, config);
+  }
+
+  // кнопка на удаление этого эффекта
+  inline Shared<Menu_text_item> get_delete_item() const {
+    return new_shared<Menu_text_item> (
+      get_locale_str("common.remove"),
+      [this, address = _epge] {
+        exit_from_scene();
+        remove_epge(address);
+      }
+    );
   }
 }; // Impl
 

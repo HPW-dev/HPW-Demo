@@ -13,6 +13,7 @@ common: # общие строки
   reset: сбросить
   back: назад
   exit: ВЫXD
+  remove: удалить
   on: ☑
   off: ☐
   money_symbol: ₽

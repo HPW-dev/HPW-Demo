@@ -9,11 +9,8 @@ namespace epge {
 class Base;
 }
 
-// сохранить настройки epge
-void save_epges(Yaml& config);
-// загрузить настройки epge
-void load_epges(cr<Yaml> config);
-// узнать какие эффекты есть на выбор
-Strs avaliable_epges();
-// получить эффект по его имени
-Unique<epge::Base> make_epge(cr<Str> name);
+void save_epges(Yaml& config); // сохранить настройки epge
+void load_epges(cr<Yaml> config); // загрузить настройки epge
+Strs avaliable_epges(); // узнать какие эффекты есть на выбор
+Unique<epge::Base> make_epge(cr<Str> name); // получить эффект по его имени
+bool remove_epge(cp<epge::Base> address); // удалить конкретный эффект. True, если получилось
