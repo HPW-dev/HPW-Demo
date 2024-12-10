@@ -5,17 +5,19 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/rotation.hpp"
+#include "util/math/limit.hpp"
 
 namespace epge {
 
 struct Shuffler::Impl final {
   int _seed {97'997}; // ALMONDS
-  int _block_sz {3};
+  int _block_sz {55};
   int _rnd_style {2};
   bool _rotate_blocks {true};
   bool _shuffle_blocks {true};
   bool _randomize_blocks {true};
-  double _randomize_speed {0.09};
+  bool _unsafe {false};
+  double _randomize_speed {0.19};
   mutable Image _buffer {};
 
   inline Str name() const noexcept { return "shuffler"; }
@@ -40,7 +42,8 @@ struct Shuffler::Impl final {
       new_shared<epge::Param_bool>("blocks shuffling", "apply image block shuffling", _shuffle_blocks),
       new_shared<epge::Param_bool>("randomize blocks", "apply randomization of image blocks", _randomize_blocks),
       new_shared<epge::Param_double>("randomization speed", "speed of applying image block randomization", _randomize_speed, 0, 100, 0.01, 0.03),
-      new_shared<epge::Param_int>("randomization style", "mode of randomization algorithm", _rnd_style, 1, 2, 1, 1),
+      new_shared<epge::Param_int>("randomization style", "mode of randomization algorithm", _rnd_style, 1, 3, 1, 1),
+      new_shared<epge::Param_bool>("unsafe", "but fast)", _unsafe),
     };
   }
 
@@ -52,15 +55,18 @@ struct Shuffler::Impl final {
   // нарезать картинку и размешать
   inline void cut_blocks_and_shuffle(Image& dst, cr<Image> src, const int mx, const int my) const noexcept {
     const int seed = _seed + (_randomize_blocks ? hpw::global_ticks * _randomize_speed : 0);
+    const uint pos_mask = _shuffle_blocks ? num_max<uint>() : 0;
+    const uint rot_by_90_deg_mask = _rotate_blocks ? num_max<uint>() : 0;
 
-    #pragma omp parallel for simd collapse(2)
+    #pragma omp parallel for simd collapse(2) if(_unsafe)
     cfor (y, my)
     cfor (x, mx) {
       const auto block = cut_block(src, x, y, _block_sz);
       cauto rnd = rnd_xy(seed, x, y, _rnd_style);
       // сколько раз провернуть картинку на 90 градусов
-      const int rot_by_90_deg = rnd % 4;
-      insert_block(dst, block, x, y, _block_sz, rot_by_90_deg);
+      const int rot_by_90_deg = (rnd % 4) & rot_by_90_deg_mask;
+      const int pos_xor = rnd & pos_mask;
+      insert_block(dst, block, (x ^ pos_xor) % mx, (y ^ pos_xor) % my, _block_sz, rot_by_90_deg);
     }
   }
 
