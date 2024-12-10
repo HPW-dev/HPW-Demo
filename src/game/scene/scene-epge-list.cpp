@@ -72,14 +72,17 @@ struct Scene_epge_list::Impl {
       ) );
     } // for epge_list
 
-    
     menu_items.push_back( make_menu_separator(&_need_bottom_item) );
     menu_items.emplace_back(get_test_image_list());
     menu_items.emplace_back(get_palette_list());
     // Exit item
     menu_items.emplace_back(new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ));
 
-    init_unique(_menu, get_locale_str("scene.graphic_menu.epge.list_title"), menu_items, Rect{30, 10, 350, 300} );
+    Advanced_text_menu_config config;
+    config.bf_border = &blend_avr_max;
+    config.bf_bg = &blend_158;
+    init_unique(_menu, get_locale_str("scene.graphic_menu.epge.list_title"), menu_items,
+      Rect{30, 10, 350, 300}, config);
   }
 }; // Impl
 

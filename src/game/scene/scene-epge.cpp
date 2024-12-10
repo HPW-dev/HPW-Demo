@@ -99,8 +99,11 @@ struct Scene_epge::Impl {
     // выход
     menu_items.emplace_back( new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ) );
 
+    Advanced_text_menu_config config;
+    config.bf_border = &blend_avr_max;
+    config.bf_bg = &blend_158;
     init_unique(_menu, get_locale_str("scene.graphic_menu.epge.title"),
-      menu_items, Rect{30, 10, 350, 300} );
+      menu_items, Rect{30, 10, 350, 300}, config);
   }
 }; // Impl
 
