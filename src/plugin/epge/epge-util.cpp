@@ -5,6 +5,7 @@
 #include "game/core/epges.hpp"
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
+#include "util/log.hpp"
 
 #include "scanline.hpp"
 #include "shaker.hpp"
@@ -50,7 +51,44 @@ void save_epges(Yaml& config) {
 }
 
 void load_epges(cr<Yaml> config) {
-  // TODO
+  graphic::epges.clear();
+  cauto total_epges = config.get_int("epge_count");
+  ret_if(total_epges <= 0);
+  assert(total_epges < 999'999);
+
+  // загрузить все EPGE
+  cfor (epge_idx, total_epges) {
+    cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
+    cauto epge_node = config[epge_node_name];
+    cont_if(!epge_node.check());
+
+    cauto epge_name = epge_node.get_str("name");
+    cont_if(epge_name.empty());
+
+    auto& epge = graphic::epges.emplace_back( make_epge(epge_name) );
+
+    // загрузить все настройки EPGE:
+    cauto total_params = epge_node.get_int("param_count");
+    cont_if(total_params <= 0);
+    assert(total_params < 999'999);
+
+    auto epge_params = epge->params();
+    cfor (param_idx, total_params) {
+      const Str param_node_name = "PARAM_" + n2s(param_idx);
+      auto param_node = epge_node[param_node_name];
+      cont_if(!param_node.check());
+
+      auto& param = epge_params.at(param_idx);
+      assert(param);
+      cauto param_title = param->title();
+      if (param_title == param_node.get_str("title")) {
+        param->set_value(param_node.get_str("value"));
+      } else {
+        hpw_log(Str("Несовпадение параметра \"") + param_title + "\" эффекта \"" +
+          epge_name + "\". Параметр проигнорирован\n", Log_stream::warning);
+      }
+    } // params
+  } // epges
 }
 
 template <class T>
