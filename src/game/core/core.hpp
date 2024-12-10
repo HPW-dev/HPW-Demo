@@ -10,4 +10,5 @@ inline Delta_time safe_dt {}; // dt для игры
 inline Delta_time real_dt {}; // текущий dt как есть (не юзать в фиксированных апдейтах)
 inline Delta_time tick_time {}; // время одного тика игры
 inline uint game_ticks {}; // столько апдейтов случилось с начала сцены игры
+inline uint global_ticks {}; // столько апдейтов случилось со старта игры
 } // hpw ns

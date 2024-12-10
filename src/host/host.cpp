@@ -11,6 +11,7 @@
 #include "game/core/user.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/core.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
@@ -158,7 +159,7 @@ void Host::free_app_mutex() {
 
 void Host::update(const Delta_time dt) {
   hpw::global_task_mgr.update(dt);
-
+  ++hpw::global_ticks;
   process_input();
 }
 
