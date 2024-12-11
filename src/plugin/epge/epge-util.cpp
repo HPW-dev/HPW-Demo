@@ -10,6 +10,7 @@
 #include "scanline.hpp"
 #include "shaker.hpp"
 #include "shuffler.hpp"
+#include "pixels-per-frame.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -66,7 +67,9 @@ void load_epges(cr<Yaml> config) {
     cauto epge_name = epge_node.get_str("name");
     cont_if(epge_name.empty());
 
-    auto& epge = graphic::epges.emplace_back( make_epge(epge_name) );
+    auto epge_ptr = make_epge(epge_name);
+    cont_if(!epge_ptr);
+    auto& epge = graphic::epges.emplace_back(std::move(epge_ptr));
 
     // загрузить все настройки EPGE:
     cauto total_params = epge_node.get_int("param_count");
@@ -104,6 +107,7 @@ inline static void init_epge_list() {
   add_epge<epge::Scanline>();
   add_epge<epge::Shaker>();
   add_epge<epge::Shuffler>();
+  add_epge<epge::Pixels_per_frame>();
 };
 
 Strs avaliable_epges() {
@@ -121,7 +125,12 @@ Unique<epge::Base> make_epge(cr<Str> name) {
   if (::_epge_makers.empty())
     init_epge_list();
 
-  return ::_epge_makers.at(name) (); // создать EPGE
+  try {
+    return ::_epge_makers.at(name) (); // создать EPGE
+  } catch (...) {}
+
+  hpw_log("не удалось загрузить EPGE эффект \"" + name + "\"\n", Log_stream::warning);
+  return {};
 }
 
 bool remove_epge(cp<epge::Base> address) {
