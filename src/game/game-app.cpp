@@ -30,6 +30,7 @@
 #include "game/util/resource-helper.hpp"
 #include "game/util/font-helper.hpp"
 #include "game/util/sound-helper.hpp"
+#include "game/util/validation.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/image/color-table.hpp"
 #include "sound/sound-mgr.hpp"
