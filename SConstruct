@@ -203,10 +203,8 @@ def build():
   env = Environment(ENV=environ.copy())
   # скопировать нужные переменные для экспорта
   env['hpw_config'] = hpw_config
-  if hpw_config.custom_cxx:
-    env['CXX'] = hpw_config.custom_cxx
-  if hpw_config.custom_cc:
-    env['CC'] = hpw_config.custom_cc
+  env['CXX'] = hpw_config.custom_cxx if hpw_config.custom_cxx else "g++"
+  env['CC'] = hpw_config.custom_cc if hpw_config.custom_cc else "gcc"
   SConscript(hpw_config.build_script, exports=['env'], must_exist=True)
 
 # main section:
