@@ -1,30 +1,5 @@
-﻿cppcheck.txt
-stats.csv
-ignore me.lnk
-imgui.ini
-memleaks.txt
-delme.*
-.tmp/*
-!data/**/*
-!.tmp/.gitkeep
-run.py
-a.txt
-b.txt
-.vscode/settings.json
-.sconsign.dblite
-tmp
-HPW.code-workspace
-pgo/
-**/*.~lock.*
-**/delme 1.txt
-**/delme 2.txt
-**/test.hpw_replay
-**/*.hpw_replay
-**/log.txt
-**/*.lnk
+﻿# Binary:
 **/*.a
-**/*.bak
-**/*.svg
 **/*.o
 **/*.dll
 **/*.so
@@ -34,42 +9,74 @@ pgo/
 **/*.elf64
 **/*.exe
 **/*.out
-**/*.gch
-**/*.mkv
-**/err.txt
-**/*.avi
-**/*.mp4
-**/delme
-**/delme.txt
-**/lib
-**/HPW-test.tar.gz
-**/vgcore.*
-**/__pycache__
-**/perf.data
-**/perf.data.old
-**/ignore me
-**/cpplint.txt
-**/*.gcda
-**/*.gcno
-build/config.yml
+**/*.svg
+
+# Game:
+!data/**/*
+**/test.hpw_replay
+**/*.hpw_replay
 build/bin/
 build/bin/*
+build/config.yml
+**/lib
 build/data.zip
-build/*.txt
 build/editor
-build/LICENSE.txt
-build/BUILD.txt
-build/version info.txt
-build/NOTICE.txt
+build/*.txt
 build/plugin
-build/cmd-test-helper.txt
-build/cmd-test.txt
-build/test.yml
 build/HPW
 build/screenshots
 build/config
 build/resource
 build/replays
+
+# Code:
+.vscode/settings.json
+HPW.code-workspace
+build/cmd-test-helper.txt
+build/cmd-test.txt
+build/test.yml
+src/game/util/version.cpp
+
+# Other:
+!.tmp/.gitkeep
+stats.csv
+ignore me.lnk
+delme.*
+run.py
+**/*.lnk
+**/*.bak
+**/vgcore.*
+**/ignore me
+
+# Temp:
+.tmp/*
+tmp
+imgui.ini
+**/cppcheck.txt
+**/memleaks.txt
+a.txt
+b.txt
+.sconsign.dblite
+pgo/
+**/*.~lock.*
+**/delme 1.txt
+**/delme 2.txt
+**/log.txt
+**/*.gch
+**/err.txt
+**/delme
+**/delme.txt
+**/HPW-test.tar.gz
+**/__pycache__
+**/perf.data
+**/perf.data.old
+**/cpplint.txt
+**/*.gcda
+**/*.gcno
 test/yaml test/test.yml
 src/.sconsign.dblite
-src/game/util/version.cpp
+
+# Videos:
+**/*.mkv
+**/*.avi
+**/*.mp4
