@@ -201,10 +201,17 @@ def accept_params():
 def build():
   '''сборка проекта'''
   env = Environment(ENV=environ.copy())
+  # не юзать MSVC
+  if hpw_config.system == System.windows:
+    env = Environment(tools = ['mingw'])
+  else:
+    env = Environment(tools = ['gcc'])
   # скопировать нужные переменные для экспорта
   env['hpw_config'] = hpw_config
-  env['CXX'] = hpw_config.custom_cxx if hpw_config.custom_cxx else "g++"
-  env['CC'] = hpw_config.custom_cc if hpw_config.custom_cc else "gcc"
+  if hpw_config.custom_cxx:
+    env['CXX'] = hpw_config.custom_cxx
+  if hpw_config.custom_cc:
+    env['CC'] = hpw_config.custom_cc
   SConscript(hpw_config.build_script, exports=['env'], must_exist=True)
 
 # main section:
