@@ -3,10 +3,10 @@
 #include <sstream>
 #include <cmath>
 #include <iomanip>
-#include "util/macro.hpp"
-#include "util/platform.hpp"
-#include "util/str.hpp"
-#include "util/math/num-types.hpp"
+#include "macro.hpp"
+#include "platform.hpp"
+#include "str.hpp"
+#include "math/num-types.hpp"
 
 inline constexpr Cstr s2yn(const bool cond) { return cond ? "yes" : "no"; }
 
