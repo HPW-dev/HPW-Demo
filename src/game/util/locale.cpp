@@ -33,7 +33,7 @@ void load_locale(cr<Str> user_path) {
     mem = load_res(path);
   } catch (...) {
     hpw_log("ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
-      + hpw::fallback_locale_path + "\"\n", Log_stream::warning);
+      + hpw::fallback_locale_path + "\"\n", Log_stream::debug);
     mem = load_res(hpw::fallback_locale_path);
   }
 

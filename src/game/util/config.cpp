@@ -185,6 +185,7 @@ void save_config() {
 void load_config() {
   hpw_log("чтение конфига...\n");
   init_shared(hpw::config, hpw::cur_dir + hpw::config_path, true);
+  hpw_log("файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"\n");
 
   crauto config = *hpw::config;
   hpw::first_start = config.get_bool("first_start", true);
@@ -296,5 +297,11 @@ void load_config_game(cr<Yaml> config) {
   hpw::player_name = utf8_to_32(config.get_str("nickname", utf32_to_8(hpw::player_name)));
   hpw::collider_autoopt = config.get_bool("collider_autoopt", hpw::collider_autoopt);
   graphic::cur_hud = config.get_str("hud", graphic::cur_hud);
-  load_locale( config.get_str("locale", hpw::locale_path) );
+
+  try {
+    hpw::locale_path = config.get_str("locale", hpw::locale_path);
+    load_locale(hpw::locale_path);
+  } catch (...) {
+    hpw_log("не удалось загрузить файл локализации \"" + hpw::locale_path + "\"\n", Log_stream::debug);
+  }
 }
