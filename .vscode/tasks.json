@@ -137,5 +137,11 @@
       "command": "python",
       "args": ["script/empty-test.py"]
     },
+    {
+      "label": "file I/O test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/file-io-test.py"]
+    },
   ]
 }
