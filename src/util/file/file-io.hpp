@@ -14,10 +14,9 @@ public:
   File_writer();
   File_writer(cr<Str> fname);
   ~File_writer();
-
   void open(cr<Str> fname);
   void close();
-  bool operator bool() const;
+  operator bool() const;
   void write(cp<byte> dst, const std::size_t sz);
 
   template <class T>
@@ -35,11 +34,10 @@ public:
   File_reader();
   File_reader(cr<Str> fname);
   ~File_reader();
-
   void open(cr<Str> fname);
   void close();
   std::size_t size() const;
-  bool operator bool() const;
+  operator bool() const;
   void read(byte* dst, const std::size_t sz);
 
   template <class T>
