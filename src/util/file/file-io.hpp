@@ -18,6 +18,7 @@ public:
   void close();
   operator bool() const;
   void write(cp<byte> dst, const std::size_t sz);
+  std::size_t writed() const; // сколько байтов уже записано
 
   template <class T>
   inline void write(T& dst) {
