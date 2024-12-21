@@ -55,11 +55,6 @@ struct Level_space::Impl {
     init_collider();
     make_player();
     init_tasks();
-
-    // надпись о низкой гравитации
-    // TODO locale
-    graphic::post_effects->move_to_back (
-      new_shared<Blink_text>(6, U"слабая гравитация") );
   }
 
   inline void update(const Vec vel, Delta_time dt) {
@@ -85,13 +80,20 @@ struct Level_space::Impl {
       : get_screen_center();
     hpw::entity_mgr->make({}, "player.boo.dark", pos);
 
+    /*
+    TODO включи потом и сделай бэкап, чтобы после уровня можно было вернуть как было
     // на этом уорвне у игрока гравитация снижена (не в изи режиме)
     if (hpw::difficulty != Difficulty::easy) {
       auto player = hpw::entity_mgr->get_player();
       assert(player);
       player->default_force *= 0.004;
       player->focus_force *= 0.02;
+
+      // надпись о низкой гравитации
+      // TODO locale
+      graphic::post_effects->move_to_back (new_shared<Blink_text>(6, U"слабая гравитация") );
     }
+    */
   }
 
   inline void init_collider() {
