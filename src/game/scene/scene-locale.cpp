@@ -65,7 +65,7 @@ struct Scene_locale_select::Impl {
     utf32 author_str = U"Автор • Author • 著者";
     // переопределить строки хедера, если язык уже выбран
     if (!hpw::first_start) {
-      translation_str = get_locale_str("scene.locale_select.translation");
+      translation_str = get_locale_str("locale_select.translation");
       author_str = get_locale_str("common.author");
     }
     Table_menu::Rows rows {{translation_str, 330}, {author_str, 0}};

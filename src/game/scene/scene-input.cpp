@@ -22,7 +22,7 @@ void Scene_input::update(const Delta_time dt) {
 
 void Scene_input::draw(Image& dst) const {
   dst.fill(Pal8::black);
-  graphic::font->draw(dst, {30, 30}, get_locale_str("scene.options.input"), &blend_max);
+  graphic::font->draw(dst, {30, 30}, get_locale_str("options.input"), &blend_max);
   menu->draw(dst);
 }
 
@@ -74,7 +74,7 @@ void Scene_input::init_menu() {
   ) );
 
   menu_items.emplace_back (
-    new_shared<Menu_text_item>(get_locale_str("scene.input.exit_and_save"), []{
+    new_shared<Menu_text_item>(get_locale_str("input.exit_and_save"), []{
       hpw::scene_mgr.back();
       save_config();
     } )

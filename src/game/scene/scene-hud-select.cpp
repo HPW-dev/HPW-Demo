@@ -24,7 +24,7 @@ struct Scene_hud_select::Impl {
 
   inline explicit Impl() {
     const Rect MENU_WND(Vec(30, 30), Vec(210, 130));
-    cauto TITLE = get_locale_str("scene.hud_select.title");
+    cauto TITLE = get_locale_str("hud_select.title");
 
     Menu_items items;
     // имена HUD'ов как кнопки
@@ -42,7 +42,7 @@ struct Scene_hud_select::Impl {
       );
     }
     // дефолт гуй
-    items.push_back(new_shared<Menu_text_item>(get_locale_str("scene.hud_select.default"),
+    items.push_back(new_shared<Menu_text_item>(get_locale_str("hud_select.default"),
       [name = "asci"]{
         graphic::cur_hud = name;
         graphic::hud = make_hud(name); 
@@ -79,7 +79,7 @@ struct Scene_hud_select::Impl {
     // если нет фона с примером интерфейса, то показать пустую картинку
     dst.fill(Pal8::black);
     assert(graphic::font);
-    graphic::font->draw(dst, get_screen_center() - Vec(30, 0), get_locale_str("scene.hud_select.no_image"));
+    graphic::font->draw(dst, get_screen_center() - Vec(30, 0), get_locale_str("hud_select.no_image"));
   }
 }; // Impl
 

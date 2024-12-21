@@ -234,22 +234,22 @@ void Scene_main_menu::init_menu() {
   init_unique<Text_menu>( menu,
     Menu_items {
       // старт
-      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.start"),
+      new_shared<Menu_text_item>(get_locale_str("main_menu.start"),
         []{ hpw::scene_mgr.add(new_shared<Scene_difficulty>()); }),
       // смена языка
       new_shared<Menu_text_item>(hpw::locale_select_title,
         []{ hpw::scene_mgr.add(new_shared<Scene_locale_select>()); }),
       // сменить фон
-      new_shared<Menu_text_item>(get_locale_str("scene.main_menu.next_bg"),
+      new_shared<Menu_text_item>(get_locale_str("main_menu.next_bg"),
         [this]{ next_bg(); }),
       // сменить палитру
       get_palette_list(),
       // инфа о разрабах TODO
-      /*new_shared<Menu_text_item>(get_locale_str("scene.main_menu.info"), []{
+      /*new_shared<Menu_text_item>(get_locale_str("main_menu.info"), []{
         hpw::scene_mgr.add(new_shared<Scene_info>());
       }),*/
       // опции
-      new_shared<Menu_text_item>(get_locale_str("scene.options.name"),
+      new_shared<Menu_text_item>(get_locale_str("options.name"),
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
       // выйти из игры
       new_shared<Menu_text_item>(get_locale_str("common.exit"),

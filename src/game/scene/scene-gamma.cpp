@@ -57,18 +57,18 @@ struct Scene_gamma::Impl {
   inline void init_menu() {
     Menu_items menu_items {
       new_shared<Menu_double_item>(
-        get_locale_str("scene.graphic_menu.gamma.gamma_value"),
+        get_locale_str("graphic_menu.gamma.gamma_value"),
         []()->double { return graphic::gamma; },
         [](const double val) { hpw::set_gamma(val); },
         0.005,
-        get_locale_str("scene.graphic_menu.gamma.description.gamma_value")
+        get_locale_str("graphic_menu.gamma.description.gamma_value")
       ),
       new_shared<Menu_text_item>( get_locale_str("common.reset"), []{ hpw::set_gamma(1.0); hpw::scene_mgr.back(); } ),
       new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); } ),
     }; // menu_items
 
     init_unique( m_menu,
-      get_locale_str("scene.graphic_menu.gamma.title"),
+      get_locale_str("graphic_menu.gamma.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}
     );
   } // init_menu

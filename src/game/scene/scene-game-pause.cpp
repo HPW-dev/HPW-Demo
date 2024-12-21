@@ -39,12 +39,12 @@ void Scene_game_pause::init_menu() {
     Menu_items {
       new_shared<Menu_text_item>(get_locale_str("common.continue"),
         []{ hpw::scene_mgr.back(); }),
-      new_shared<Menu_text_item>(get_locale_str("scene.options.name"),
+      new_shared<Menu_text_item>(get_locale_str("options.name"),
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
-      new_shared<Menu_text_item>(get_locale_str("scene.pause.screenshot"),
+      new_shared<Menu_text_item>(get_locale_str("pause.screenshot"),
         []{ hpw::make_screenshot(); }),
       get_palette_list(),
-      new_shared<Menu_text_item>(get_locale_str("scene.pause.main_menu"), []{
+      new_shared<Menu_text_item>(get_locale_str("pause.main_menu"), []{
         hpw::scene_mgr.back(3); // cur->пауза->игровой процесс->окно загрузки
         // в реплее в выбор сложности не заходим (TODO может поменяться)
         if (!hpw::replay_read_mode) {
@@ -52,7 +52,7 @@ void Scene_game_pause::init_menu() {
           hpw::replay = {};
         }
       }),
-      new_shared<Menu_text_item>(get_locale_str("scene.pause.game_exit"),
+      new_shared<Menu_text_item>(get_locale_str("pause.game_exit"),
         []{ hpw::soft_exit(); }),
     },
     Vec{60, 80}

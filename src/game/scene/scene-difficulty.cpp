@@ -35,47 +35,47 @@ void Scene_difficulty::draw(Image& dst) const {
 
 void Scene_difficulty::init_menu() {
   Menu_items menu_items {
-    new_shared<Menu_text_item>(get_locale_str("scene.difficulty_select.start"), []{
+    new_shared<Menu_text_item>(get_locale_str("difficulty_select.start"), []{
       hpw::scene_mgr.add(new_shared<Scene_loading>( []{
         hpw::replay_read_mode = false;
         hpw::need_tutorial = false;
         hpw::scene_mgr.add(new_shared<Scene_game>());
       } ));
     }),
-    new_shared<Menu_text_item>(get_locale_str("scene.difficulty_select.start_tutorial"), []{
+    new_shared<Menu_text_item>(get_locale_str("difficulty_select.start_tutorial"), []{
       hpw::scene_mgr.add(new_shared<Scene_loading>( []{
         hpw::replay_read_mode = false;
         hpw::scene_mgr.add(new_shared<Scene_game>(true));
       } ));
     }),
-    new_shared<Menu_list_item>(get_locale_str("scene.difficulty_select.difficulty.title"),
+    new_shared<Menu_list_item>(get_locale_str("difficulty_select.difficulty.title"),
       Menu_list_item::Items {
         Menu_list_item::Item {
-          .name = get_locale_str("scene.difficulty_select.difficulty.easy"),
-          .desc = get_locale_str("scene.difficulty_select.description.difficulty.easy"),
+          .name = get_locale_str("difficulty_select.difficulty.easy"),
+          .desc = get_locale_str("difficulty_select.description.difficulty.easy"),
           .action = []{ hpw::difficulty = Difficulty::easy; }
         },
         Menu_list_item::Item {
-          .name = get_locale_str("scene.difficulty_select.difficulty.normal"),
-          .desc = get_locale_str("scene.difficulty_select.description.difficulty.normal"),
+          .name = get_locale_str("difficulty_select.difficulty.normal"),
+          .desc = get_locale_str("difficulty_select.description.difficulty.normal"),
           .action = []{ hpw::difficulty = Difficulty::normal; }
         },
         Menu_list_item::Item {
-          .name = get_locale_str("scene.difficulty_select.difficulty.hardcore"),
-          .desc = get_locale_str("scene.difficulty_select.description.difficulty.hardcore"),
+          .name = get_locale_str("difficulty_select.difficulty.hardcore"),
+          .desc = get_locale_str("difficulty_select.description.difficulty.hardcore"),
           .action = []{ hpw::difficulty = Difficulty::hardcore; }
         }
       }, // Items
       []{ return scast<std::size_t>(hpw::difficulty); }
     ), // List items (difficulty)
 
-    new_shared<Menu_bool_item>(get_locale_str("scene.difficulty_select.write_replay"),
+    new_shared<Menu_bool_item>(get_locale_str("difficulty_select.write_replay"),
       []{ return hpw::enable_replay; },
       [](const bool val) { hpw::enable_replay = val; },
-      get_locale_str("scene.difficulty_select.description.write_replay")
+      get_locale_str("difficulty_select.description.write_replay")
     ),
     // выбор реплея
-    new_shared<Menu_text_item>(get_locale_str("scene.replay.watch"), []{
+    new_shared<Menu_text_item>(get_locale_str("replay.watch"), []{
       hpw::scene_mgr.add(new_shared<Scene_loading>( []{
         hpw::scene_mgr.add(new_shared<Scene_replay_select>());
       } ));
@@ -89,7 +89,7 @@ void Scene_difficulty::init_menu() {
     std::swap(menu_items.at(0), menu_items.at(1));
 
   init_shared<Advanced_text_menu>( menu,
-    get_locale_str("scene.difficulty_select.title"),
+    get_locale_str("difficulty_select.title"),
     menu_items, Rect(Vec{}, Vec(graphic::width, graphic::height))
   );
 } // init_menu

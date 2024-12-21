@@ -53,10 +53,10 @@ void set_high_quality() {
 
 Shared<Menu_text_item> get_shared_plugin_item() {
   return new_shared<Menu_text_item>(
-    get_locale_str("scene.graphic_menu.pge.title"),
+    get_locale_str("graphic_menu.pge.title"),
     []{ hpw::scene_mgr.add(new_shared<Scene_pge>()); },
     []->utf32 { return {}; },
-    get_locale_str("scene.graphic_menu.description.pge")
+    get_locale_str("graphic_menu.description.pge")
   );
 }
 
@@ -153,26 +153,26 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_list_item> get_preset_item() {
     return new_shared<Menu_list_item>(
-      get_locale_str("scene.graphic_menu.pressets.name"),
+      get_locale_str("graphic_menu.pressets.name"),
       Menu_list_item::Items {
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.pressets.default"),
-          get_locale_str("scene.graphic_menu.description.pressets.default"),
+          get_locale_str("graphic_menu.pressets.default"),
+          get_locale_str("graphic_menu.description.pressets.default"),
           &set_default
         },
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.pressets.low_pc"),
-          get_locale_str("scene.graphic_menu.description.pressets.low_pc"),
+          get_locale_str("graphic_menu.pressets.low_pc"),
+          get_locale_str("graphic_menu.description.pressets.low_pc"),
           &set_low_pc
         },
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.pressets.high_quality_plus_stream"),
-          get_locale_str("scene.graphic_menu.description.pressets.high_quality_plus_stream"),
+          get_locale_str("graphic_menu.pressets.high_quality_plus_stream"),
+          get_locale_str("graphic_menu.description.pressets.high_quality_plus_stream"),
           &set_high_plus_stream
         },
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.pressets.high_quality"),
-          get_locale_str("scene.graphic_menu.description.pressets.high_quality"),
+          get_locale_str("graphic_menu.pressets.high_quality"),
+          get_locale_str("graphic_menu.description.pressets.high_quality"),
           &set_high_quality
         }
       } // Menu list items
@@ -181,48 +181,48 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_bool_item> get_fullscreen_item() {
     return new_shared<Menu_bool_item>(
-      get_locale_str("scene.graphic_menu.fullscreen"),
+      get_locale_str("graphic_menu.fullscreen"),
       []{ return graphic::fullscreen; },
       [](bool new_val) { hpw::set_fullscreen(new_val); },
-      get_locale_str("scene.graphic_menu.description.fullscreen")
+      get_locale_str("graphic_menu.description.fullscreen")
     );
   }
 
   inline Shared<Menu_bool_item> get_vsync_item() {
     return new_shared<Menu_bool_item>(
-      get_locale_str("scene.graphic_menu.vsync"),
+      get_locale_str("graphic_menu.vsync"),
       []{ return graphic::get_vsync(); },
       [](bool new_val) { graphic::set_vsync(new_val); },
-      get_locale_str("scene.graphic_menu.description.vsync")
+      get_locale_str("graphic_menu.description.vsync")
     );
   }
 
   inline Shared<Menu_bool_item> get_draw_border_item() {
     return new_shared<Menu_bool_item>(
-      get_locale_str("scene.graphic_menu.draw_border"),
+      get_locale_str("graphic_menu.draw_border"),
       []{ return graphic::draw_border; },
       [](bool new_val) { graphic::draw_border = new_val; },
-      get_locale_str("scene.graphic_menu.description.draw_border")
+      get_locale_str("graphic_menu.description.draw_border")
     );
   }
 
   inline Shared<Menu_list_item> get_motion_blur_item() {
     return new_shared<Menu_list_item>(
-      get_locale_str("scene.graphic_menu.motion_blur_mode.title"),
+      get_locale_str("graphic_menu.motion_blur_mode.title"),
       Menu_list_item::Items {
         Menu_list_item::Item {
           get_locale_str("common.auto"),
-          get_locale_str("scene.graphic_menu.motion_blur_mode.autoopt_desc"),
+          get_locale_str("graphic_menu.motion_blur_mode.autoopt_desc"),
           []{ graphic::motion_blur_mode = Motion_blur_mode::autoopt; }
         },
         Menu_list_item::Item {
           get_locale_str("common.off"),
-          get_locale_str("scene.graphic_menu.motion_blur_mode.disabled_desc"),
+          get_locale_str("graphic_menu.motion_blur_mode.disabled_desc"),
           []{ graphic::motion_blur_mode = Motion_blur_mode::disabled; }
         },
         Menu_list_item::Item {
           get_locale_str("common.on"),
-          get_locale_str("scene.graphic_menu.motion_blur_mode.enabled_desc"),
+          get_locale_str("graphic_menu.motion_blur_mode.enabled_desc"),
           []{ graphic::motion_blur_mode = Motion_blur_mode::enabled; }
         },
       }, // items
@@ -232,21 +232,21 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_list_item> get_blur_item() {
     return new_shared<Menu_list_item>(
-      get_locale_str("scene.graphic_menu.blur_mode.title"),
+      get_locale_str("graphic_menu.blur_mode.title"),
       Menu_list_item::Items {
         Menu_list_item::Item {
           get_locale_str("common.auto"),
-          get_locale_str("scene.graphic_menu.blur_mode.autoopt_desc"),
+          get_locale_str("graphic_menu.blur_mode.autoopt_desc"),
           []{ graphic::blur_mode = Blur_mode::autoopt; }
         },
         Menu_list_item::Item {
           get_locale_str("common.low"),
-          get_locale_str("scene.graphic_menu.blur_mode.low_desc"),
+          get_locale_str("graphic_menu.blur_mode.low_desc"),
           []{ graphic::blur_mode = Blur_mode::low; }
         },
         Menu_list_item::Item {
           get_locale_str("common.high"),
-          get_locale_str("scene.graphic_menu.blur_mode.high_desc"),
+          get_locale_str("graphic_menu.blur_mode.high_desc"),
           []{ graphic::blur_mode = Blur_mode::high; }
         },
       }, // items
@@ -256,54 +256,54 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_bool_item> get_mouse_cursour_item() {
     return new_shared<Menu_bool_item>(
-      get_locale_str("scene.graphic_menu.show_mouse_cursour"),
+      get_locale_str("graphic_menu.show_mouse_cursour"),
       []{ return graphic::show_mouse_cursour; },
       [](bool new_val) { hpw::set_mouse_cursour_mode(new_val); },
-      get_locale_str("scene.graphic_menu.description.show_mouse_cursour")
+      get_locale_str("graphic_menu.description.show_mouse_cursour")
     );
   }
 
   inline Shared<Menu_bool_item> get_disable_frame_limit_item() {
     return new_shared<Menu_bool_item>(
-      get_locale_str("scene.graphic_menu.disable_frame_limit"),
+      get_locale_str("graphic_menu.disable_frame_limit"),
       []{ return graphic::get_disable_frame_limit(); },
       [](bool new_val) { graphic::set_disable_frame_limit(new_val); },
-      get_locale_str("scene.graphic_menu.description.disable_frame_limit")
+      get_locale_str("graphic_menu.description.disable_frame_limit")
     );
   }
 
   inline Shared<Menu_int_item> get_frame_limit_item() {
     return new_shared<Menu_int_item>(
-      get_locale_str("scene.graphic_menu.frame_limit"),
+      get_locale_str("graphic_menu.frame_limit"),
       []{ return graphic::get_target_fps(); },
       [](int new_val) { graphic::set_target_fps(std::clamp(new_val, 10, 3'000)); },
       10,
-      get_locale_str("scene.graphic_menu.description.frame_limit")
+      get_locale_str("graphic_menu.description.frame_limit")
     );
   }
 
   inline Shared<Menu_list_item> get_resize_type_item() {
     return new_shared<Menu_list_item>(
-      get_locale_str("scene.graphic_menu.resize_type.name"),
+      get_locale_str("graphic_menu.resize_type.name"),
       Menu_list_item::Items {
         Menu_list_item::Item {
-          .name = get_locale_str("scene.graphic_menu.resize_type.one_to_one"),
-          .desc = get_locale_str("scene.graphic_menu.description.resize_type.one_to_one"),
+          .name = get_locale_str("graphic_menu.resize_type.one_to_one"),
+          .desc = get_locale_str("graphic_menu.description.resize_type.one_to_one"),
           .action = []{ hpw::set_resize_mode(Resize_mode::one_to_one); }
         },
         Menu_list_item::Item {
-          .name = get_locale_str("scene.graphic_menu.resize_type.x_only"),
-          .desc = get_locale_str("scene.graphic_menu.description.resize_type.x_only"),
+          .name = get_locale_str("graphic_menu.resize_type.x_only"),
+          .desc = get_locale_str("graphic_menu.description.resize_type.x_only"),
           .action = []{ hpw::set_resize_mode(Resize_mode::by_width); }
         },
         Menu_list_item::Item {
-          .name = get_locale_str("scene.graphic_menu.resize_type.y_only"),
-          .desc = get_locale_str("scene.graphic_menu.description.resize_type.y_only"),
+          .name = get_locale_str("graphic_menu.resize_type.y_only"),
+          .desc = get_locale_str("graphic_menu.description.resize_type.y_only"),
           .action = []{ hpw::set_resize_mode(Resize_mode::by_height); }
         },
         Menu_list_item::Item {
-          .name = get_locale_str("scene.graphic_menu.resize_type.full"),
-          .desc = get_locale_str("scene.graphic_menu.description.resize_type.full"),
+          .name = get_locale_str("graphic_menu.resize_type.full"),
+          .desc = get_locale_str("graphic_menu.description.resize_type.full"),
           .action = []{ hpw::set_resize_mode(Resize_mode::full); }
         }
       }, // items
@@ -313,7 +313,7 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_goto_detailed_item() {
     return new_shared<Menu_text_item> (
-      get_locale_str("scene.graphic_menu.goto_detailed"),
+      get_locale_str("graphic_menu.goto_detailed"),
       [this]{ _cur_menu = _detailed_menu; }
     );
   }
@@ -330,24 +330,24 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_palette_item() {
     return new_shared<Menu_text_item>(
-      get_locale_str("scene.palette_select.title"),
+      get_locale_str("palette_select.title"),
       []{ hpw::scene_mgr.add(new_shared<Scene_palette_select>()); },
       []->utf32 { return {}; },
-      get_locale_str("scene.graphic_menu.description.palette_select")
+      get_locale_str("graphic_menu.description.palette_select")
     );
   }
 
   inline Shared<Menu_text_item> get_epge_item() {
     return new_shared<Menu_text_item>(
-      get_locale_str("scene.graphic_menu.epge.title"),
+      get_locale_str("graphic_menu.epge.title"),
       []{ hpw::scene_mgr.add(new_shared<Scene_epge>()); },
       []->utf32 { return {}; },
-      get_locale_str("scene.graphic_menu.epge.desc")
+      get_locale_str("graphic_menu.epge.desc")
     );
   }
 
   inline Shared<Menu_text_item> get_epilepsy_item() {
-    return new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.epilepsy"), [] {
+    return new_shared<Menu_text_item>(get_locale_str("graphic_menu.epilepsy"), [] {
       hpw::init_palette_from_archive("resource/image/palettes/zebura.png");
       hpw::set_resize_mode(Resize_mode::full);
       graphic::set_disable_frame_limit(true);
@@ -357,7 +357,7 @@ struct Scene_graphic::Impl {
         load_pge(hpw::cur_dir + hpw::plugin_path + "effect/libepilepsy.so");
       #endif
     }, []->utf32 { return {}; },
-    get_locale_str("scene.graphic_menu.description.epilepsy") );
+    get_locale_str("graphic_menu.description.epilepsy") );
   }
 
   inline Shared<Menu_text_item> get_reset_item() {
@@ -377,32 +377,32 @@ struct Scene_graphic::Impl {
   }
 
   inline Shared<Menu_text_item> get_gamma_item() {
-    return new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.gamma.title"),
+    return new_shared<Menu_text_item>(get_locale_str("graphic_menu.gamma.title"),
       []{ hpw::scene_mgr.add(new_shared<Scene_gamma>()); } );
   }
 
   inline Shared<Menu_list_item> get_light_quality_item() {
     return new_shared<Menu_list_item>(
-      get_locale_str("scene.graphic_menu.light_quality.title"),
+      get_locale_str("graphic_menu.light_quality.title"),
       Menu_list_item::Items {
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.light_quality.disabled.title"),
-          get_locale_str("scene.graphic_menu.light_quality.disabled.desc"),
+          get_locale_str("graphic_menu.light_quality.disabled.title"),
+          get_locale_str("graphic_menu.light_quality.disabled.desc"),
           []{ graphic::light_quality = Light_quality::disabled; }
         },
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.light_quality.low.title"),
-          get_locale_str("scene.graphic_menu.light_quality.low.desc"),
+          get_locale_str("graphic_menu.light_quality.low.title"),
+          get_locale_str("graphic_menu.light_quality.low.desc"),
           []{ graphic::light_quality = Light_quality::low; }
         },
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.light_quality.medium.title"),
-          get_locale_str("scene.graphic_menu.light_quality.medium.desc"),
+          get_locale_str("graphic_menu.light_quality.medium.title"),
+          get_locale_str("graphic_menu.light_quality.medium.desc"),
           []{ graphic::light_quality = Light_quality::medium; }
         },
         Menu_list_item::Item {
-          get_locale_str("scene.graphic_menu.light_quality.high.title"),
-          get_locale_str("scene.graphic_menu.light_quality.high.desc"),
+          get_locale_str("graphic_menu.light_quality.high.title"),
+          get_locale_str("graphic_menu.light_quality.high.desc"),
           []{ graphic::light_quality = Light_quality::high; }
         },
       }, // items
@@ -412,21 +412,21 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_list_item> get_heat_distort_mode_item() {
     return new_shared<Menu_list_item>(
-      get_locale_str("scene.graphic_menu.heat_distort_mode.title"),
+      get_locale_str("graphic_menu.heat_distort_mode.title"),
       Menu_list_item::Items {
         Menu_list_item::Item {
           get_locale_str("common.auto"),
-          get_locale_str("scene.graphic_menu.heat_distort_mode.autoopts_desc"),
+          get_locale_str("graphic_menu.heat_distort_mode.autoopts_desc"),
           []{ graphic::heat_distort_mode = Heat_distort_mode::autoopt; }
         },
         Menu_list_item::Item {
           get_locale_str("common.off"),
-          get_locale_str("scene.graphic_menu.heat_distort_mode.disabled_desc"),
+          get_locale_str("graphic_menu.heat_distort_mode.disabled_desc"),
           []{ graphic::heat_distort_mode = Heat_distort_mode::disabled; }
         },
         Menu_list_item::Item {
           get_locale_str("common.on"),
-          get_locale_str("scene.graphic_menu.heat_distort_mode.enabled_desc"),
+          get_locale_str("graphic_menu.heat_distort_mode.enabled_desc"),
           []{ graphic::heat_distort_mode = Heat_distort_mode::enabled; }
         },
       }, // items
@@ -436,12 +436,12 @@ struct Scene_graphic::Impl {
 
   inline void init_simple_menu() {
     init_shared<Advanced_text_menu>( _simple_menu,
-      get_locale_str("scene.graphic_menu.title"),
+      get_locale_str("graphic_menu.title"),
       Menu_items {
         get_palette_item(),
         get_epge_item(),
         new_shared<Menu_text_item>(
-          get_locale_str("scene.graphic_menu.pressets.name"),
+          get_locale_str("graphic_menu.pressets.name"),
           [this]{ _cur_menu = _preset_menu; }
         ),
         get_fullscreen_item(),
@@ -469,10 +469,10 @@ struct Scene_graphic::Impl {
       U"Расширенные настройки графики", // TODO locale
       Menu_items {
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.show_fps.title"),
+          get_locale_str("graphic_menu.show_fps.title"),
           [] { return graphic::show_fps; },
           [] (bool new_val) { graphic::show_fps = new_val; },
-          get_locale_str("scene.graphic_menu.show_fps.desc")
+          get_locale_str("graphic_menu.show_fps.desc")
         ),
         get_draw_border_item(),
         get_mouse_cursour_item(),
@@ -486,58 +486,58 @@ struct Scene_graphic::Impl {
         get_frame_limit_item(),
         get_disable_frame_limit_item(),
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.double_buffering"),
+          get_locale_str("graphic_menu.double_buffering"),
           []{ return graphic::double_buffering; },
           [](bool new_val) { hpw::set_double_buffering(new_val); },
-          get_locale_str("scene.graphic_menu.description.double_buffering")
+          get_locale_str("graphic_menu.description.double_buffering")
         ),
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.wait_frame"),
+          get_locale_str("graphic_menu.wait_frame"),
           []{ return graphic::wait_frame; },
           [](bool new_val) { graphic::wait_frame_bak = graphic::wait_frame = new_val; },
-          get_locale_str("scene.graphic_menu.description.wait_frame")
+          get_locale_str("graphic_menu.description.wait_frame")
         ),
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.cpu_safe"),
+          get_locale_str("graphic_menu.cpu_safe"),
           []{ return graphic::cpu_safe; },
           [](bool new_val) { graphic::cpu_safe = new_val; },
-          get_locale_str("scene.graphic_menu.description.cpu_safe")
+          get_locale_str("graphic_menu.description.cpu_safe")
         ),
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.auto_frame_skip"),
+          get_locale_str("graphic_menu.auto_frame_skip"),
           []{ return graphic::auto_frame_skip; },
           [](bool val){ graphic::auto_frame_skip = val; },
-          get_locale_str("scene.graphic_menu.description.auto_frame_skip")
+          get_locale_str("graphic_menu.description.auto_frame_skip")
         ),
         new_shared<Menu_int_item>(
-          get_locale_str("scene.graphic_menu.frame_skip"),
+          get_locale_str("graphic_menu.frame_skip"),
           []{ return graphic::frame_skip; },
           [](int val){ graphic::frame_skip = std::clamp(val, 0, 30); },
           1,
-          get_locale_str("scene.graphic_menu.description.frame_skip")
+          get_locale_str("graphic_menu.description.frame_skip")
         ),
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.blink_particles"),
+          get_locale_str("graphic_menu.blink_particles"),
           []{ return graphic::blink_particles; },
           [](bool new_val) { graphic::blink_particles = new_val; },
-          get_locale_str("scene.graphic_menu.description.blink_particles")
+          get_locale_str("graphic_menu.description.blink_particles")
         ),
         get_blur_item(),
         get_motion_blur_item(),
         new_shared<Menu_double_item>(
-          get_locale_str("scene.graphic_menu.motion_blur_quality_mul"),
+          get_locale_str("graphic_menu.motion_blur_quality_mul"),
           [] { return graphic::motion_blur_quality_mul; },
           [] (double val) { graphic::motion_blur_quality_mul = std::clamp(val, 0.5, 8.0); },
           0.25, // step speed
-          get_locale_str("scene.graphic_menu.description.motion_blur_quality_mul")
+          get_locale_str("graphic_menu.description.motion_blur_quality_mul")
         ),
         get_light_quality_item(),
         get_heat_distort_mode_item(),
         new_shared<Menu_bool_item>(
-          get_locale_str("scene.graphic_menu.enable_motion_interp.title"),
+          get_locale_str("graphic_menu.enable_motion_interp.title"),
           [] { return graphic::enable_motion_interp; },
           [] (bool new_val) { graphic::enable_motion_interp = new_val; },
-          get_locale_str("scene.graphic_menu.enable_motion_interp.desc")
+          get_locale_str("graphic_menu.enable_motion_interp.desc")
         ),
         get_epilepsy_item(),
         get_reset_item(),
@@ -559,7 +559,7 @@ struct Scene_graphic::Impl {
 
   inline void init_preset_menu() {
     init_shared<Advanced_text_menu>( _preset_menu,
-      get_locale_str("scene.graphic_menu.pressets.name"),
+      get_locale_str("graphic_menu.pressets.name"),
       Menu_items {
         get_preset_item(),
         new_shared<Menu_text_item>(

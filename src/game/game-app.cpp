@@ -145,7 +145,7 @@ void Game_app::check_errors() {
   if (hpw::sound_mgr_init_error) {
     hpw::sound_mgr_init_error = false;
     hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(
-      get_locale_str("scene.sound_settings.device_init_error"),
+      get_locale_str("sound_settings.device_init_error"),
       get_locale_str("common.error")
     ));
   }

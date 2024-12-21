@@ -69,7 +69,7 @@ static inline std::size_t get_default_item_id() {
 
 Shared<Menu_list_item> get_test_image_list() {
   return new_shared<Menu_list_item>(
-    get_locale_str("scene.graphic_menu.test_image_list.title"),
+    get_locale_str("graphic_menu.test_image_list.title"),
     get_items(), &get_default_item_id
   );
 }

@@ -37,20 +37,20 @@ struct Scene_game_options::Impl {
   inline void init_menu() {
     Menu_items menu_items {
       new_shared<Menu_text_item>(
-        get_locale_str("scene.nickname.title"),
+        get_locale_str("nickname.title"),
         []{ hpw::scene_mgr.add(new_shared<Scene_nickname>()); }
       ),
       new_shared<Menu_bool_item>(
-        get_locale_str("scene.game_opts.rnd_pal.title"),
+        get_locale_str("game_opts.rnd_pal.title"),
         []{ return hpw::rnd_pal_after_death; },
         [](bool val) { hpw::rnd_pal_after_death = val; },
-        get_locale_str("scene.game_opts.rnd_pal.desc")
+        get_locale_str("game_opts.rnd_pal.desc")
       ),
       new_shared<Menu_bool_item>(
-        get_locale_str("scene.game_opts.collider_autoopt.title"),
+        get_locale_str("game_opts.collider_autoopt.title"),
         []{ return hpw::collider_autoopt; },
         [](bool val) { hpw::collider_autoopt = val; },
-        get_locale_str("scene.game_opts.collider_autoopt.desc")
+        get_locale_str("game_opts.collider_autoopt.desc")
       ),
       new_shared<Menu_text_item>(
         get_locale_str("common.exit"),
@@ -59,7 +59,7 @@ struct Scene_game_options::Impl {
     }; // menu_items
 
     init_unique( m_menu,
-      get_locale_str("scene.game_opts.title"),
+      get_locale_str("game_opts.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}
     );
   } // init_menu

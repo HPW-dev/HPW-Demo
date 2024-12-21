@@ -120,7 +120,7 @@ public:
   inline explicit Save_error(cr<Str> path): _path {path} {}
 
   inline void update(const Delta_time dt) override {
-    cauto msg = utf32_to_8(get_locale_str("scene.replay.error.while_save_to"))
+    cauto msg = utf32_to_8(get_locale_str("replay.error.while_save_to"))
       + " \"" + (_path) + "\"";
     hpw_log("Error: " + msg + '\n', Log_stream::warning);
     cauto title = get_locale_str("common.error");

@@ -16,12 +16,12 @@ Scene_record_table::Scene_record_table()
 void Scene_record_table::init_menu() {
   Menu_items menu_items {
     new_shared<Menu_text_item>(
-      //get_locale_str("scene.input.exit_and_save"), TODO locale
+      //get_locale_str("input.exit_and_save"), TODO locale
       U"save replay",
       [] { hpw_log("need impl. for save replay\n"); } // TODO call save replay
     ),
     new_shared<Menu_text_item>(
-      get_locale_str("scene.input.exit_and_save"),
+      get_locale_str("input.exit_and_save"),
       [] { hpw::scene_mgr.back(); }
     )
   };

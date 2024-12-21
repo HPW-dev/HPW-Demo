@@ -67,7 +67,7 @@ struct Scene_pge::Impl {
     m_reinit_menu = false;
 
     Menu_items menu_items {
-      new_shared<Menu_text_item>(get_locale_str("scene.graphic_menu.pge.selected"),
+      new_shared<Menu_text_item>(get_locale_str("graphic_menu.pge.selected"),
         [this] { 
           m_reinit_menu = true;
           if ( !m_effects.empty()) {
@@ -88,7 +88,7 @@ struct Scene_pge::Impl {
     if ( !author.empty()) {
       menu_items.push_back (
         new_shared<Menu_text_item> (
-          get_locale_str("scene.graphic_menu.pge.author"),
+          get_locale_str("graphic_menu.pge.author"),
           []{}, []->utf32 { return sconv<utf32>( get_cur_pge_author() ); }
         )
       );
@@ -147,13 +147,13 @@ struct Scene_pge::Impl {
         hpw::scene_mgr.back();
       } ) );
     menu_items.push_back( new_shared<Menu_text_item>(
-      get_locale_str("scene.graphic_menu.pge.disable"), [this] {
+      get_locale_str("graphic_menu.pge.disable"), [this] {
         disable_pge();
         m_reinit_menu = true;
       } ) );
 
     init_unique( m_menu,
-      get_locale_str("scene.graphic_menu.pge.title"),
+      get_locale_str("graphic_menu.pge.title"),
       menu_items, Rect{0, 0, graphic::width, graphic::height}
     );
   } // init_menu

@@ -106,27 +106,27 @@ struct Scene_epge_config::Impl {
 
   inline Shared<Menu_text_item> get_move_up_item() const {
     return new_shared<Menu_text_item> (
-      get_locale_str("scene.graphic_menu.epge.move.up"),
+      get_locale_str("graphic_menu.epge.move.up"),
       [this] {
         cauto epge_idx = get_epge_idx(_epge);
         if (epge_idx > 0)
           std::swap(graphic::epges.at(epge_idx - 1), graphic::epges.at(epge_idx));
       },
       []->utf32 { return {}; },
-      get_locale_str("scene.graphic_menu.epge.move.desc")
+      get_locale_str("graphic_menu.epge.move.desc")
     );
   }
 
   inline Shared<Menu_text_item> get_move_down_item() const {
     return new_shared<Menu_text_item> (
-      get_locale_str("scene.graphic_menu.epge.move.down"),
+      get_locale_str("graphic_menu.epge.move.down"),
       [this] {
         cauto epge_idx = get_epge_idx(_epge);
         if (graphic::epges.size() >= 2 && epge_idx + 1 <= graphic::epges.size() - 1)
           std::swap(graphic::epges.at(epge_idx + 1), graphic::epges.at(epge_idx));
       },
       []->utf32 { return {}; },
-      get_locale_str("scene.graphic_menu.epge.move.desc")
+      get_locale_str("graphic_menu.epge.move.desc")
     );
   }
 

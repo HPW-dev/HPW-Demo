@@ -63,7 +63,7 @@ struct Scene_epge::Impl {
   inline void init_menu() {
     // кнопка добавить новый эффект
     Menu_items menu_items {
-      new_shared<Menu_text_item>( get_locale_str("scene.graphic_menu.epge.add_new"),
+      new_shared<Menu_text_item>( get_locale_str("graphic_menu.epge.add_new"),
         []{ hpw::scene_mgr.add(new_shared<Scene_epge_list>()); } ),
     };
     // .dll/.so плагины
@@ -103,7 +103,7 @@ struct Scene_epge::Impl {
     Advanced_text_menu_config config;
     config.bf_border = &blend_avr_max;
     config.bf_bg = &blend_158;
-    init_unique(_menu, get_locale_str("scene.graphic_menu.epge.title"),
+    init_unique(_menu, get_locale_str("graphic_menu.epge.title"),
       menu_items, Rect{30, 10, 350, 300}, config);
   }
 }; // Impl

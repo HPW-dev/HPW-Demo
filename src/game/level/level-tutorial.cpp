@@ -86,13 +86,13 @@ struct Level_tutorial::Impl {
 
       Timed_task(9.0, Task_draw_motion_keys(*this)),
       Spawner_border_bullet(*this, 40, 0.6),
-      Timed_task(4.5, [this](Delta_time dt) { bg_text = get_locale_str("scene.tutorial.text.move_up"); return false; }),
+      Timed_task(4.5, [this](Delta_time dt) { bg_text = get_locale_str("tutorial.text.move_up"); return false; }),
       Up_speed_test(*this),
       Timed_task(6, [this](Delta_time dt) { draw_shoot_key(); return false; }),
       Spawner_enemy_noshoot(*this, 4.0),
       Timed_task(2.5, [this](Delta_time dt) { bg_text = {}; return false; }),
       Spawner_enemy_shoot(*this, 8.0),
-      Timed_task(5.0, [this](Delta_time dt) { bg_text = get_locale_str("scene.tutorial.text.energy_info"); return false; }),
+      Timed_task(5.0, [this](Delta_time dt) { bg_text = get_locale_str("tutorial.text.energy_info"); return false; }),
       Energy_test(*this),
       Timed_task(5.0, [this](Delta_time dt) { return draw_focus_key(); }),
       Focus_test(*this),
@@ -107,7 +107,7 @@ struct Level_tutorial::Impl {
       },
       Timed_task(7.0, [this](Delta_time dt) {
         enable_epilepsy_bg = false;
-        bg_text = get_locale_str("scene.tutorial.text.end");
+        bg_text = get_locale_str("tutorial.text.end");
         return false;
       }),
       &exit_from_level,
@@ -186,12 +186,12 @@ struct Level_tutorial::Impl {
 
   // показать кнопки движения
   inline void draw_motion_keys() {
-    bg_text = get_locale_str("scene.tutorial.text.move_keys");
+    bg_text = get_locale_str("tutorial.text.move_keys");
     #define KEY_TEXT(key_name) { \
       const bool pressed = is_pressed(hpw::keycode::key_name); \
       cauto scope_l = pressed ? U'{' : U' '; \
       cauto scope_r = pressed ? U'}' : U' '; \
-      bg_text += U'\n' + get_locale_str("scene.input."#key_name) + U" - "; \
+      bg_text += U'\n' + get_locale_str("input."#key_name) + U" - "; \
       bg_text += scope_l + hpw::keys_info.find(hpw::keycode::key_name)->name + scope_r; \
     }
     KEY_TEXT(left)
@@ -203,7 +203,7 @@ struct Level_tutorial::Impl {
 
   // показать кнопку стрельбы
   inline void draw_shoot_key() {
-    bg_text = get_locale_str("scene.tutorial.text.shoot_key");
+    bg_text = get_locale_str("tutorial.text.shoot_key");
     const bool pressed = is_pressed(hpw::keycode::shoot);
     cauto scope_l = pressed ? U'<' : U' ';
     cauto scope_r = pressed ? U'>' : U' ';
@@ -231,7 +231,7 @@ struct Level_tutorial::Impl {
     inline bool operator()(Delta_time dt) {
       master.draw_motion_keys();
       // надпись об уклонении
-      master.bg_text += U"\n\n" + get_locale_str("scene.tutorial.text.wave_warning");
+      master.bg_text += U"\n\n" + get_locale_str("tutorial.text.wave_warning");
 
       cfor (_, spwan_timer.update(dt)) {
         --count;
@@ -520,7 +520,7 @@ struct Level_tutorial::Impl {
 
   // показать кнопку фокусировки
   inline bool draw_focus_key() {
-    bg_text = get_locale_str("scene.tutorial.text.focus_key");
+    bg_text = get_locale_str("tutorial.text.focus_key");
     cauto key = hpw::keycode::focus;
     cauto pressed = is_pressed(key);
     cauto scope_l = pressed ? U'[' : U' ';

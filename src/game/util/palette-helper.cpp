@@ -145,5 +145,5 @@ Shared<Menu_list_item> get_palette_list() {
     } );
   }
 
-  return new_shared<Menu_list_item>(get_locale_str("scene.palette_select.cur_file"), items, &get_default_item_id);
+  return new_shared<Menu_list_item>(get_locale_str("palette_select.cur_file"), items, &get_default_item_id);
 }

@@ -46,7 +46,7 @@ struct Scene_gameover::Impl {
   inline void init_menu() {
     Menu_items items;
     items.push_back (
-      new_shared<Menu_text_item>( get_locale_str("scene.gameover.try_again"), []{
+      new_shared<Menu_text_item>( get_locale_str("gameover.try_again"), []{
         hpw::scene_mgr.back(3); // cur->game->load screen->difficulty menu
         // перезапуск игры
         hpw::scene_mgr.add(new_shared<Scene_loading>( []{
@@ -58,24 +58,24 @@ struct Scene_gameover::Impl {
 
     if (hpw::enable_replay) {
       items.push_back (
-        new_shared<Menu_bool_item>( get_locale_str("scene.gameover.save_replay_question"),
+        new_shared<Menu_bool_item>( get_locale_str("gameover.save_replay_question"),
           []{ return hpw::save_last_replay; },
           [](const bool new_val) { hpw::save_last_replay = new_val; },
-          get_locale_str("scene.gameover.descriptin.save_replay_question")
+          get_locale_str("gameover.descriptin.save_replay_question")
         )
       );
     } // if enable_replay
     
     // менять палитру при смерти
     items.push_back( new_shared<Menu_bool_item>(
-      get_locale_str("scene.game_opts.rnd_pal.title_after_death"),
+      get_locale_str("game_opts.rnd_pal.title_after_death"),
       []{ return hpw::rnd_pal_after_death; },
       [](bool val) { 
         if (val)
           randomize_palette();
         hpw::rnd_pal_after_death = val;
       },
-      get_locale_str("scene.game_opts.rnd_pal.desc")
+      get_locale_str("game_opts.rnd_pal.desc")
     ) );
 
     items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), [this]{ this->exit(); }) );
@@ -85,7 +85,7 @@ struct Scene_gameover::Impl {
         items.push_back ( new_shared<Menu_text_item>(get_locale_str("common.exit"), [this]{ this->exit(); }) );
 
     init_unique<Advanced_text_menu>( menu,
-      get_locale_str("scene.gameover.title"),
+      get_locale_str("gameover.title"),
       items, Rect(0,0, graphic::width, graphic::height) );
   } // init_menu
 

@@ -41,16 +41,16 @@ struct Scene_replay_select::Impl {
     load_replays();
 
     init_unique<Table_menu>( menu,
-      get_locale_str("scene.replay.name"),
+      get_locale_str("replay.name"),
       Table_menu::Rows {
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.player"), .sz = 200},
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.date"), .sz = 135},
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.difficulty"), .sz = 80},
-        Table_menu::Row {.name = get_locale_str("scene.replay.table.score")},
+        Table_menu::Row {.name = get_locale_str("replay.table.player"), .sz = 200},
+        Table_menu::Row {.name = get_locale_str("replay.table.date"), .sz = 135},
+        Table_menu::Row {.name = get_locale_str("replay.table.difficulty"), .sz = 80},
+        Table_menu::Row {.name = get_locale_str("replay.table.score")},
       },
       25,
       generate_rows(),
-      get_locale_str("scene.replay.no_replay")
+      get_locale_str("replay.no_replay")
     );
   } // init_menu
 
