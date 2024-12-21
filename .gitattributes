@@ -19,6 +19,9 @@
 *.vert text eol=lf
 
 # Scripts:
+SConscript text eol=lf
+SCsub text eol=lf
+SConstruct text eol=lf
 *.bat text eol=crlf
 *.cmd text eol=crlf
 *.yml text eol=lf
