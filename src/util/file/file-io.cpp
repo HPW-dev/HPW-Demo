@@ -118,3 +118,23 @@ File_reader::operator bool() const { return _impl->operator bool(); }
 std::size_t File_reader::size() const { return _impl->size(); }
 void File_reader::read(byte* dst, const std::size_t sz) { _impl->read(dst, sz); }
 Bytes File_reader::read_all() { return _impl->read_all(); }
+
+File file_load(cr<Str> fname) {
+  File_reader reader(fname);
+  return File(reader.read_all(), fname);
+}
+
+void file_save(cr<File> file) {
+  File_writer writer(file.get_path());
+  writer.write(file.data.data(), file.data.size());
+}
+
+Bytes mem_from_file(cr<Str> fname) {
+  File_reader reader(fname);
+  return reader.read_all();
+}
+
+void mem_to_file(cr<Bytes> src, cr<Str> fname) {
+  File_writer writer(fname);
+  writer.write(src.data(), src.size());
+}

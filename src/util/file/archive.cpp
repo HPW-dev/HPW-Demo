@@ -1,12 +1,11 @@
 extern "C" {
 #include <zip/zip.h>
 }
-#include <fstream>
 #include "archive.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
-#include "util/file/file.hpp"
+#include "util/file/file-io.hpp"
 
 File::File(cr<Bytes> _data, cr<Str> _path)
 : Resource {_path}

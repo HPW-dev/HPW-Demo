@@ -64,7 +64,7 @@ struct Scene_replay_select::Impl {
     for (crauto replay_info: m_replay_info_table) {
       ret.emplace_back( new_shared<Menu_item_table_row>(
         [replay_info] { // запуск файла реплея
-          assert(!replay_info.path.empty());
+          iferror(replay_info.path.empty(), "отсутствует строка пути к файлу реплея");
           hpw::scene_mgr.add(new_shared<Scene_loading>( [replay_info]{
             hpw::replay_read_mode = true;
             hpw::cur_replay_file_name = replay_info.path;

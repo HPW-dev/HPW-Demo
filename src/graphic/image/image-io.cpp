@@ -9,7 +9,7 @@
 #include "image.hpp"
 #include "graphic/util/convert.hpp"
 #include "util/str-util.hpp"
-#include "util/file/file.hpp"
+#include "util/file/file-io.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 

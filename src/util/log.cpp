@@ -1,8 +1,8 @@
 #include "log.hpp"
 #include <cassert>
 #include <syncstream>
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <filesystem>
 #include <string>
 #include <mutex>

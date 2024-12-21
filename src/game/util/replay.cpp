@@ -1,7 +1,55 @@
+#include <cassert>
+#include <ctime>
+#include <sstream>
+#include <iomanip>
+#include "replay.hpp"
+#include "util/str-util.hpp"
+#include "util/log.hpp"
+#include "util/math/random.hpp"
+#include "core/user.hpp"
+
+struct Replay::Impl {};
+
+ // TODO
+Replay::Replay(cr<Str> path, bool write_mode) { hpw_log("need impl\n", Log_stream::warning); }
+Replay::~Replay() { hpw_log("need impl\n", Log_stream::warning); }
+void Replay::close() { hpw_log("need impl\n", Log_stream::warning); }
+void Replay::push(cr<Key_packet> key_packet) { hpw_log("need impl\n", Log_stream::debug); }
+std::optional<Key_packet> Replay::pop() { hpw_log("need impl\n", Log_stream::debug); return {}; }
+Replay::Info Replay::get_info(cr<Str> path) { hpw_log("need impl\n", Log_stream::warning); return {}; }
+utf32 Replay::warnings() const { hpw_log("need impl\n", Log_stream::warning); return {}; }
+
+Str get_random_replay_name() {
+  std::stringstream name;
+  
+  auto player_name = utf32_to_8(hpw::player_name);
+  // укоротить имя игрока, если оно большое
+  if (player_name.size() > 50) {
+    player_name = player_name.substr(0, 50) + "...";
+  }
+  name << player_name;
+
+  auto t = std::time(nullptr);
+  #ifdef LINUX
+    struct ::tm lt;
+    ::localtime_r(&t, &lt);
+  #else // WINDOWS
+    auto lt = *std::localtime(&t);
+  #endif
+  name << " @ " << std::put_time(&lt, "Date %d-%m-%Y @ Time %H-%M-%S");
+
+  std::stringstream rnd_num_str;
+  rnd_num_str << std::hex << rndu_fast();
+  name << " @ UID " << str_toupper(rnd_num_str.str());
+
+  name << ".hpw_replay";
+  return name.str();
+}
+
+/*
 #include <iomanip>
 #include <filesystem>
 #include <cassert>
-#include <fstream>
 #include <sstream>
 #include <cstring>
 #include <unordered_set>
@@ -443,3 +491,4 @@ Str get_random_replay_name() {
   name << ".hpw_replay";
   return name.str();
 }
+*/

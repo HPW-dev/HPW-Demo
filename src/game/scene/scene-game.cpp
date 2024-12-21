@@ -1,5 +1,4 @@
 #include <utility>
-#include <fstream>
 #include <algorithm>
 #include <ctime>
 #include "scene-game.hpp"
@@ -288,6 +287,7 @@ void Scene_game::save_named_replay() {
     hpw::replay = {};
 
     if (hpw::save_last_replay) {
+      /*
       // открыть файл последнего реплея и скопировать в именной файл
       std::ifstream source(hpw::cur_dir + hpw::replays_path + "last_replay.hpw_replay", std::ios::binary);
       auto replay_name = hpw::cur_dir + hpw::replays_path + get_random_replay_name();
@@ -298,6 +298,8 @@ void Scene_game::save_named_replay() {
       std::ofstream dest(replay_name, std::ios::binary);
       iferror(!dest.is_open(), "не получилось переименовать реплей");
       dest << source.rdbuf();
+      */
+      error("need impl"); // TODO
     }
   } catch (cr<hpw::Error> err) {
     hpw::user_warnings = U"ошибка при сохранении реплея: " + utf8_to_32(err.what()) + U"\n";

@@ -10,7 +10,7 @@
 //#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 #include "util/str-util.hpp"
-#include "util/file/file.hpp"
+#include "util/file/file-io.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "graphic/util/convert.hpp"
@@ -76,8 +76,7 @@ void load(Sprite &dst, cr<File> file) {
 
 void load(Sprite &dst, cr<Str> name) {
   hpw_log("Sprite.load_file(F) \"" + name + "\"\n", Log_stream::debug);
-  File file {mem_from_file(name), name};
-  _data_to_sprite(dst, file);
+  _data_to_sprite(dst, file_load(name));
 } // load
 
 void load(cr<File> file, Sprite &dst) {

@@ -1,8 +1,8 @@
 #include <ranges>
+#include <fstream>
 #include <unordered_map>
 #include <cassert>
 #include <chrono>
-#include <fstream>
 #include "cmd-core.hpp"
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"

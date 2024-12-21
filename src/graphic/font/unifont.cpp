@@ -12,10 +12,10 @@ extern "C" {
 #include "graphic/sprite/sprite.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "util/str-util.hpp"
-#include "util/file/file.hpp"
+#include "util/file/file-io.hpp"
 
 Unifont::Unifont(cr<Str> fname, int height, bool mono)
-: Unifont( File{mem_from_file(fname), fname}, height, mono) {}
+: Unifont(file_load(fname), height, mono) {}
 
 Unifont::Unifont(cr<File> file, int height, bool mono) {
   init(file, height, mono);

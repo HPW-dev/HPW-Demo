@@ -1,9 +1,10 @@
 #include <cassert>
 #include "unifont-mono.hpp"
+#include "util/file/file-io.hpp"
 #include "graphic/util/util-templ.hpp"
 
 Unifont_mono::Unifont_mono(cr<Str> fname, int width, int height, bool mono)
-: Unifont_mono( File{mem_from_file(fname), fname}, height, mono, width) {}
+: Unifont_mono(file_load(fname), height, mono, width) {}
 
 Unifont_mono::Unifont_mono(cr<File> file, int width, int height, bool mono) {
   assert(width >= 0);

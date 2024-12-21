@@ -7,7 +7,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/path.hpp"
-#include "util/file/file.hpp"
+#include "util/file/file-io.hpp"
 #include "util/str-util.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/common.hpp"
@@ -217,7 +217,7 @@ File load_res(cr<Str> name) {
   // попытка загрузить ресурс из файловой ситсемы ОС:
   auto os_path = hpw::cur_dir + hpw::os_resources_dir + name;
   conv_sep(os_path);
-  return File(mem_from_file(os_path), os_path);
+  return file_load(os_path);
 }
 
 Strs get_all_res_names(const bool with_folders) {

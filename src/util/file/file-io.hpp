@@ -47,3 +47,8 @@ public:
     read(ptr2ptr<byte*>(&dst), sizeof(T));
   }
 };
+
+Bytes mem_from_file(cr<Str> fname);
+void mem_to_file(cr<Bytes> src, cr<Str> fname);
+File file_load(cr<Str> fname);
+void file_save(cr<File> file);
