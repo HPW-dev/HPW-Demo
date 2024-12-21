@@ -38,6 +38,10 @@ struct File_reader::Impl {
   }
 
   inline void read(byte* dst, const std::size_t sz) {}
+
+  inline Bytes read_all() {
+    return {}; // TODO
+  }
 }; // File_reader::Impl
 
 File_writer::File_writer(): _impl{new_unique<Impl>()} {}
@@ -56,3 +60,4 @@ void File_reader::close() { _impl->close(); }
 File_reader::operator bool() const { return _impl->operator bool(); }
 std::size_t File_reader::size() const { return _impl->size(); }
 void File_reader::read(byte* dst, const std::size_t sz) { _impl->read(dst, sz); }
+Bytes File_reader::read_all() { return _impl->read_all(); }

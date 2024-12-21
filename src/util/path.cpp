@@ -91,3 +91,16 @@ Str launch_dir_from_argv0(char** argv) {
     ret = '.';
   return ret + SEPARATOR;
 }
+
+[[nodiscard]] bool file_exists(cr<Str> fname) {
+  namespace fs = std::filesystem;
+  cauto path = std::filesystem::path(fname);
+  
+  try {
+    return fs::exists(path);
+  } catch (...) {
+    hpw_log("не удалось определить, существует ли файл \"" + fname + "\"\n", Log_stream::warning);
+  }
+
+  return false;
+}

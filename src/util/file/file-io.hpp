@@ -39,6 +39,7 @@ public:
   std::size_t size() const;
   operator bool() const;
   void read(byte* dst, const std::size_t sz);
+  Bytes read_all();
 
   template <class T>
   inline void read(T& dst) {
