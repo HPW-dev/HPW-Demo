@@ -13,4 +13,4 @@ public:
   explicit Particle_loader(cr<Yaml> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Particle_loader();
-}; // Particle_loader
+};

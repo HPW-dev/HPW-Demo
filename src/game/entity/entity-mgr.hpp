@@ -28,15 +28,6 @@ namespace hpw {
 
 // управление игровыми объектами
 class Entity_mgr final {
-  nocopy(Entity_mgr);
-  struct Impl;
-  Unique<Impl> impl {};
-
-  // найти в памяти подходящий по типу объект
-  Entity* find_avaliable_entity(const Entity_type type);
-  // добавить объект в систему
-  Entity* registrate(Entities::value_type&& entity);
-
 public:
   Entity_mgr();
   ~Entity_mgr();
@@ -86,6 +77,16 @@ public:
   
   // выделить память под объект
   template <class T> inline T* allocate();
+
+private:
+  nocopy(Entity_mgr);
+  struct Impl;
+  Unique<Impl> impl {};
+
+  // найти в памяти подходящий по типу объект
+  Entity* find_avaliable_entity(const Entity_type type);
+  // добавить объект в систему
+  Entity* registrate(Entities::value_type&& entity);
 }; // Entity_mgr
 
 template <class T> inline T* Entity_mgr::allocate() {

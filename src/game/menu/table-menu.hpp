@@ -6,9 +6,6 @@
 
 // Более красивое текстовое меню с описанием
 class Table_menu: public Menu {
-  struct Impl;
-  Unique<Impl> impl {};
-
 public:
   struct Row {
     utf32 name {}; // название столбца
@@ -26,4 +23,8 @@ public:
     cr<Menu_items> items, cr<utf32> elems_empty_txt={});
   ~Table_menu();
   void draw(Image& dst) const override;
+
+private:
+  struct Impl;
+  Unique<Impl> impl {};
 };

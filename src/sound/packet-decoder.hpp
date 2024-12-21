@@ -15,13 +15,15 @@ public:
 
 #define MAKE_PACKET_DECODER(NAME) \
 class NAME: public Packet_decoder { \
-  nocopy(NAME); \
-  struct Impl; \
-  Unique<Impl> impl {}; \
 public: \
   explicit NAME(cr<Audio> sound); \
   ~NAME(); \
   Bytes decode(const uint needed_sz) override; \
+ \
+private: \
+  nocopy(NAME); \
+  struct Impl; \
+  Unique<Impl> impl {}; \
 };
 
 MAKE_PACKET_DECODER(Packet_decoder_flac);

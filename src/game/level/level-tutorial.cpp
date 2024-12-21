@@ -56,7 +56,11 @@ struct Level_tutorial::Impl {
     init_tasks();
 
     // рестарт уровня при смерти
-    master.on_player_death_action = [this] { restart(); };
+    master.on_player_death_action = [this] {
+      // вернуться на одну секцию назад при перезапуске уровня
+      _completed_tasks = std::max(_completed_tasks - 1, 0);
+      restart();
+    };
   }
 
   inline void update(const Vec vel, Delta_time dt) {
@@ -589,27 +593,19 @@ struct Level_tutorial::Impl {
       }
     } // spwan_hatch
   }; // Focus_test
-
-  inline void on_player_death(const Delta_time dt) {
-    // вернуться на одну секцию назад при перезапуске уровня
-    _completed_tasks = std::max(_completed_tasks - 1, 0);
-  }
 }; // Impl
 
-Level_tutorial::Level_tutorial(): impl {new_unique<Impl>(*this)} {}
+Level_tutorial::Level_tutorial(): _impl {new_unique<Impl>(*this)} {}
 Level_tutorial::~Level_tutorial() {}
 void Level_tutorial::update(const Vec vel, Delta_time dt) {
   cauto camera_offset = graphic::camera->get_offset();
   Level::update(vel + camera_offset, dt);
-  if (impl->enable_epilepsy_bg)
-    impl->update(vel + camera_offset, dt);
+
+  if (_impl->enable_epilepsy_bg)
+    _impl->update(vel + camera_offset, dt);
   else
-    impl->update(camera_offset, dt);
+    _impl->update(camera_offset, dt);
 }
-void Level_tutorial::draw(Image& dst) const { impl->draw(dst); }
-void Level_tutorial::draw_upper_layer(Image& dst) const { impl->draw_upper_layer(dst); }
+void Level_tutorial::draw(Image& dst) const { _impl->draw(dst); }
+void Level_tutorial::draw_upper_layer(Image& dst) const { _impl->draw_upper_layer(dst); }
 Str Level_tutorial::level_name() const { return Str{Level_tutorial::NAME}; }
-void Level_tutorial::on_player_death(const Delta_time dt) {
-  Level::on_player_death(dt);
-  impl->on_player_death(dt);
-}

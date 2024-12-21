@@ -11,9 +11,6 @@ class Image;
 
 // от этого надо наследоваться, чтобы получить способности
 class Ability_entry {
-  struct Impl;
-  Unique<Impl> impl {};
-
 protected:
   void update(Delta_time dt);
   void draw_bg(Image& dst, const Vec offset) const;
@@ -35,4 +32,8 @@ public:
   bool exist(Ability_id id) const;
   // список всех способностей
   Vector<cp<Ability>> abilities() const;
+
+private:
+  struct Impl;
+  Unique<Impl> impl {};
 };

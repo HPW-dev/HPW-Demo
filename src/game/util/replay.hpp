@@ -12,10 +12,6 @@ using Key_packet = Vector<hpw::keycode>;
 
 // Game replay (keylogger)
 class Replay final {
-  nocopy(Replay);
-  struct Impl;
-  Unique<Impl> impl {};
-
 public:
   struct Info;
 
@@ -26,7 +22,12 @@ public:
   std::optional<Key_packet> pop(); // будет возвращать нажатые клавиши, пока не кончатся
   static Info get_info(cr<Str> path);
   utf32 warnings() const; // посмотреть проблемы с реплеем, если они есть
-}; // Replay
+
+private:
+  nocopy(Replay);
+  struct Impl;
+  Unique<Impl> impl {};
+};
 
 struct Date {
   uint year {};

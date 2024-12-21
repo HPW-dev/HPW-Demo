@@ -7,9 +7,6 @@ class Image;
 
 // применяет список эффектов к картинке
 class Effect_mgr final {
-  struct Impl;
-  Unique<Impl> impl {};
-
 public:
   // если эффект вернёт true, значит он завершился
   class Effect {
@@ -26,4 +23,8 @@ public:
   void move_to_back(Shared<Effect>&& effect); // вставить эффект последним
   void update(const Delta_time dt);
   void draw(Image& dst) const;
+
+private:
+  struct Impl;
+  Unique<Impl> impl {};
 };

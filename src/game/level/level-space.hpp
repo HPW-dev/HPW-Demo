@@ -5,11 +5,6 @@
 
 // Уровень в космосе
 class Level_space final: public Level {
-  nocopy(Level_space);
-
-  struct Impl;
-  Unique<Impl> impl {};
-
 public:
   constx std::string_view NAME {"Space"};
   
@@ -18,4 +13,9 @@ public:
   void update(const Vec vel, Delta_time dt) override;
   void draw(Image& dst) const override;
   Str level_name() const override;
+
+private:
+  nocopy(Level_space);
+  struct Impl;
+  Unique<Impl> impl {};
 };

@@ -14,21 +14,27 @@
 #endif
 
 struct Level::Impl {
-  Level* master {};
+  Level& _master;
   Timer death_timer {4.0}; // через это время засчитывается смерть игрока
   #ifdef CLD_DEBUG
   Timer cld_debug_timer {1};
   #endif
 
-  inline explicit Impl(Level* _master): master {_master} {}
-  ~Impl() {}
+  inline explicit Impl(Level& master)
+  : _master {master}
+  {
+    _master.on_player_death_action = [] {
+      hpw::scene_mgr.add( new_shared<Scene_gameover>() );
+    };
+  }
 
   inline void update(const Vec vel, Delta_time dt) {
     #ifdef CLD_DEBUG
     if (cld_debug_timer.update(dt))
       print_collision_info();
     #endif
-    on_player_death(dt);
+
+    process_player_death(dt);
   }
 
   // дебажный вывод количества столкновений
@@ -45,23 +51,17 @@ struct Level::Impl {
     #endif
   }
 
-  inline void on_player_death(const Delta_time dt) {
-    return_if (!master->on_player_death_action);
+  inline void process_player_death(const Delta_time dt) {
+    ret_if (!_master.on_player_death_action);
 
     // перезапуск уровня, если игрок умер
     if (cauto player = hpw::entity_mgr->get_player(); player)
-      if ( !player->status.live)
+      if (!player->status.live)
         if (death_timer.update(dt)) // по завершению таймера
-          master->on_player_death_action();
+          _master.on_player_death_action();
   }
 }; // Impl
 
-void Level::update(const Vec vel, Delta_time dt) { impl->update(vel, dt); }
-void Level::on_player_death(const Delta_time dt) { impl->on_player_death(dt); }
+Level::Level(): _impl {new_unique<Impl>(*this)} {}
 Level::~Level() {}
-
-Level::Level(): impl {new_unique<Impl>(this)} {
-  on_player_death_action = [] {
-    hpw::scene_mgr.add( new_shared<Scene_gameover>() );
-  };
-}
+void Level::update(const Vec vel, Delta_time dt) { _impl->update(vel, dt); }
