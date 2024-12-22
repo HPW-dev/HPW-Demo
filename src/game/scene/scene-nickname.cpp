@@ -85,7 +85,9 @@ struct Scene_nickname::Impl {
     txt += hpw::keys_info.find(hpw::keycode::enable)->name + U"> ";
     txt += get_locale_str("nickname.for_exit");
     txt += U"\n" + get_locale_str("nickname.copy_paste");
-    text_bordered(dst, txt, graphic::font.get(), get_screen_rect(), Vec(25, dst.Y/3 - 6));
+    auto txt_rect = get_screen_rect();
+    txt_rect.size.x -= 25;
+    text_bordered(dst, txt, graphic::font.get(), txt_rect, Vec(25, dst.Y/3 - 6));
   }
 
   inline static void exit() {
