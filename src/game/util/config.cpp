@@ -179,11 +179,13 @@ void save_config() {
   SAVE_KEY(fulscrn)
   #undef SAVE_KEY
 
+  make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
   config.save( hpw::config->get_path() );
 }
 
 void load_config() {
   hpw_log("чтение конфига...\n");
+  make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
   init_shared(hpw::config, hpw::cur_dir + hpw::config_path, true);
   hpw_log("файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"\n");
 

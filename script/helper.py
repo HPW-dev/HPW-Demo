@@ -113,8 +113,9 @@ def write_game_version():
 def copy_license():
   "копирует файл LICENSE.txt и NOTICE.txt в нужную папку"
   try:
-    shutil.copyfile('LICENSE.txt', 'build/LICENSE.txt')
-    shutil.copyfile('NOTICE.txt',  'build/NOTICE.txt')
+    os.makedirs("build/info/", exist_ok=True)
+    shutil.copyfile('LICENSE.txt', 'build/info/LICENSE.txt')
+    shutil.copyfile('NOTICE.txt',  'build/info/NOTICE.txt')
   except:
     print("error copying license file")
 
@@ -122,9 +123,11 @@ def prepare_strs(strs: list[str]):
   return ' '.join(filter(None, strs))
 
 def save_version(build_dir, used_libs, hpw_config, cxx, cc):
-  "создаёт файл build_dir/version info с инфой о компиляции"
+  "создаёт файл build_dir/info/version info с инфой о компиляции"
   try:
-    with open(file=f'{build_dir}version info.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
+    os.makedirs("build/info/", exist_ok=True)
+
+    with open(file=f'{build_dir}info/version info.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
       game_ver, game_date, game_time = get_game_version()
       file.writelines([
         "H.P.W build info:\n",
@@ -156,7 +159,7 @@ def save_version(build_dir, used_libs, hpw_config, cxx, cc):
         f'  OpenMP: {hpw_config.enable_omp}\n',
       ])
   except Exception as inst:
-    print(f"error generating build/version info.txt\n{inst}")
+    print(f"error generating \"info/version info.txt\"\n{inst}")
 
 def get_max_threads():
   '''позволяет узнать сколько доступно потоков процессора'''

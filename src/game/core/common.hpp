@@ -19,12 +19,16 @@ inline bool multiple_apps {}; // true - два и более окна с игр�
 inline bool rnd_pal_after_death {}; // true - менять палитру при проигрыше
 inline bool collider_autoopt {true}; // перебирать разные варианты детекторов коллизий при лагах
 
-inline Str screenshots_path = "./../screenshots/";
-inline Str replays_path = "./../replays/";
-inline Str data_path = "./../data.zip";
-inline Str config_path = "./../config.yml";
-inline Str log_file_path = "./../log.txt";
-inline Str plugin_path = "./../plugin/";
-inline Str os_resources_dir = "./../../data/"; // отсюда брать файлы, если их нет в data.zip
+inline Str game_dir = "./../"; // корневая папка игры
+inline Str screenshots_path = game_dir + "screenshots/";
+inline Str replays_path = game_dir + "replays/";
+inline Str data_path = game_dir + "data.zip";
+inline Str config_dir = game_dir + "config/"; // папка с нофигами
+inline Str config_path = config_dir + "config.yml"; // файл настроек
+inline Str nickname_path = config_dir + "nickname.dat"; // файл с никнеймом
+inline Str avatar_path = config_dir + "miniature.dat"; // файл с миниатюркой игрока
+inline Str log_file_path = game_dir + "log.txt";
+inline Str plugin_path = game_dir + "plugin/";
+inline Str os_resources_dir = game_dir + "../data/"; // отсюда брать файлы, если их нет в data.zip
 
 } // hpw ns

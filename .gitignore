@@ -18,7 +18,6 @@
 **/*.hpw_replay
 build/bin/
 build/bin/*
-build/config.yml
 **/lib
 build/data.zip
 build/editor
@@ -26,7 +25,8 @@ build/*.txt
 build/plugin
 build/HPW
 build/screenshots
-build/config
+build/config/
+build/info/
 build/resource
 build/replays
 
