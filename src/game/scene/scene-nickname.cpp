@@ -8,6 +8,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/vec-helper.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font-util.hpp"
 
@@ -84,7 +85,7 @@ struct Scene_nickname::Impl {
     txt += hpw::keys_info.find(hpw::keycode::enable)->name + U"> ";
     txt += get_locale_str("nickname.for_exit");
     txt += U"\n" + get_locale_str("nickname.copy_paste");
-    graphic::font->draw(dst, Vec(25, dst.Y/3 - 6), txt);
+    text_bordered(dst, txt, graphic::font.get(), get_screen_rect(), Vec(25, dst.Y/3 - 6));
   }
 
   inline static void exit() {

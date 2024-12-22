@@ -2,6 +2,7 @@
 #include "vec-helper.hpp"
 #include "game/core/canvas.hpp"
 #include "util/math/vec.hpp"
+#include "util/math/rect.hpp"
 #include "util/math/random.hpp"
 
 Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0); }
@@ -35,3 +36,5 @@ Vec rnd_screen_pos_fast() {
     rndr_fast(0, graphic::canvas->Y)
   };
 }
+
+[[nodiscard]] Rect get_screen_rect() { return Rect(0,0, graphic::canvas->X,graphic::canvas->Y); }
