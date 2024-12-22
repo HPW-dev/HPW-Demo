@@ -88,3 +88,12 @@ void log_open_file(const char* fname) noexcept {
     g_config.to_file = false;
   }
 }
+
+void hpw_info(const std::string_view msg, const std::source_location location) noexcept
+  { hpw_log(msg, Log_stream::info, location); }
+
+void hpw_warning(const std::string_view msg, const std::source_location location) noexcept
+  { hpw_log(msg, Log_stream::warning, location); }
+
+void hpw_debug(const std::string_view msg, const std::source_location location) noexcept
+  { hpw_log(msg, Log_stream::debug, location); }

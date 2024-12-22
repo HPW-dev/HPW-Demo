@@ -33,3 +33,10 @@ void hpw_log(
   const Log_stream stream = Log_stream::info,
   const std::source_location location = std::source_location::current()
 ) noexcept;
+
+// сообщения в потоке для информации
+void hpw_info(const std::string_view msg, const std::source_location location = std::source_location::current()) noexcept;
+// сообщения в потоке для предупреждений
+void hpw_warning(const std::string_view msg, const std::source_location location = std::source_location::current()) noexcept;
+// сообщения в потоке для отладки
+void hpw_debug(const std::string_view msg, const std::source_location location = std::source_location::current()) noexcept;
