@@ -15,8 +15,10 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "util/file/yaml.hpp"
+#include "util/file/file-io.hpp"
 #include "util/path.hpp"
 #include "util/log.hpp"
+#include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/safecall.hpp"
 #include "host/host-util.hpp"
@@ -102,6 +104,42 @@ static inline void setup_log() {
     log_open_file(Str(hpw::cur_dir + hpw::log_file_path).c_str());
 }
 
+static inline void save_nickname() {
+  static_assert(std::is_same_v<utf32, decltype(hpw::player_name)>);
+  static_assert(sizeof(char32_t) == sizeof(decltype(hpw::player_name)::value_type));
+
+  std::uint32_t nick_sz = hpw::player_name.size() * sizeof(char32_t);
+  nick_sz = std::min(nick_sz, hpw::MAX_NICKNAME_SZ);
+
+  if (nick_sz) {
+    File_writer fw(hpw::cur_dir + hpw::nickname_path);
+    fw.write(cptr2ptr<cp<byte>>(hpw::player_name.data()), nick_sz);
+  }
+}
+
+static inline void load_nickname() {
+  static_assert(std::is_same_v<utf32, decltype(hpw::player_name)>);
+  static_assert(sizeof(char32_t) == sizeof(decltype(hpw::player_name)::value_type));
+
+  try {
+    File_reader fr(hpw::cur_dir + hpw::nickname_path);
+    std::uint32_t nick_sz = fr.size();
+    nick_sz = std::min(nick_sz, hpw::MAX_NICKNAME_SZ);
+
+    if (nick_sz == 0) {
+      hpw::player_name = {};  
+      return;
+    }
+
+    hpw::player_name.resize(nick_sz / sizeof(char32_t));
+    assert(hpw::player_name.size() == nick_sz / sizeof(char32_t));
+    fr.read(ptr2ptr<byte*>(hpw::player_name.data()), nick_sz);
+  } catch (...) {
+    hpw_warning("не удалось загрузить файл с никнеймом игрока. Ник будет пустым\n");
+    hpw::player_name = {};
+  }
+}
+
 void save_config() {
   auto& config = *hpw::config;
 
@@ -112,9 +150,9 @@ void save_config() {
   auto game_node = config.make_node("game");
   game_node.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   game_node.set_bool("collider_autoopt", hpw::collider_autoopt);
-  game_node.set_str ("nickname", utf32_to_8(hpw::player_name));
   game_node.set_str ("locale", hpw::locale_path);
   game_node.set_str ("hud", graphic::cur_hud);
+  save_nickname();
 
   auto path_node = config.make_node("path");
   path_node.set_str("screenshots", hpw::screenshots_path);
@@ -216,6 +254,7 @@ void load_config() {
 
   cauto game_node = config["game"];
   load_config_game(game_node);
+  load_nickname();
 
   cauto input_node = config["input"];
   load_config_input(input_node);
@@ -296,7 +335,6 @@ void load_config_graphic(cr<Yaml> config) {
 void load_config_game(cr<Yaml> config) {
   node_check(config);
   hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
-  hpw::player_name = utf8_to_32(config.get_str("nickname", utf32_to_8(hpw::player_name)));
   hpw::collider_autoopt = config.get_bool("collider_autoopt", hpw::collider_autoopt);
   graphic::cur_hud = config.get_str("hud", graphic::cur_hud);
 

@@ -1,8 +1,10 @@
 #pragma once
+#include <cstdint>
 #include "util/unicode.hpp"
 #include "util/str.hpp"
 
 namespace hpw {
+inline constexpr std::uint32_t MAX_NICKNAME_SZ = 1024 * 1024 * 300; // лимит на размер никнейма игрока
 inline utf32 player_name {}; // текущее имя игрока
 inline bool text_input_mode {}; // когда true, записывать текст с клавы в text_input
 inline utf32 text_input {}; // строка введённая через клавиатуру

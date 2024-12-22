@@ -21,7 +21,7 @@ public:
   std::size_t writed() const; // сколько байтов уже записано
 
   template <class T>
-  inline void write(T& dst) {
+  inline void write(cr<T> dst) {
     write(cptr2ptr<cp<byte>>(&dst), sizeof(T));
   }
 };
