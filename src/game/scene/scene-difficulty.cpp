@@ -69,6 +69,7 @@ void Scene_difficulty::init_menu() {
       []{ return scast<std::size_t>(hpw::difficulty); }
     ), // List items (difficulty)
 
+    /* TODO REPLAY
     new_shared<Menu_bool_item>(get_locale_str("difficulty_select.write_replay"),
       []{ return hpw::enable_replay; },
       [](const bool val) { hpw::enable_replay = val; },
@@ -80,6 +81,8 @@ void Scene_difficulty::init_menu() {
         hpw::scene_mgr.add(new_shared<Scene_replay_select>());
       } ));
     }),
+    */
+
     new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
       hpw::scene_mgr.back();
     }),

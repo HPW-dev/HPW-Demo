@@ -56,6 +56,7 @@ struct Scene_gameover::Impl {
       } )
     );
 
+    /* TODO REPLAY
     if (hpw::enable_replay) {
       items.push_back (
         new_shared<Menu_bool_item>( get_locale_str("gameover.save_replay_question"),
@@ -64,7 +65,8 @@ struct Scene_gameover::Impl {
           get_locale_str("gameover.descriptin.save_replay_question")
         )
       );
-    } // if enable_replay
+    }
+    */
     
     // менять палитру при смерти
     items.push_back( new_shared<Menu_bool_item>(
