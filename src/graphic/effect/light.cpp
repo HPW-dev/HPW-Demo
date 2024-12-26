@@ -104,8 +104,7 @@ void Light::draw(Image& dst, const Vec pos) const {
 } // draw
 
 void Light::set_duration(real new_duration) {
-  assert(new_duration > 0);
-  cur_duration = max_duration = new_duration;
+  cur_duration = max_duration = std::max<real>(0, new_duration);
 }
 
 void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const {
@@ -150,11 +149,10 @@ void Light::draw_fullscreen_blink(Image& dst) const {
 
   // high
   for (rauto pix: dst)
-    pix = bf(Pal8::from_real(safe_div(cur_duration, max_duration)), pix, {});
+    pix = bf(Pal8::from_real(effect_ratio()), pix, {});
 }
 
 void Light::draw_light_star(Image& dst, const Vec pos, const real tmp_radius) const {
-  assert(max_duration >= 0);
   return_if(cur_duration <= 0 && !flags.repeat);
   // на низких настройках можно мигать при тормозах
   return_if (graphic::light_quality == Light_quality::low &&
