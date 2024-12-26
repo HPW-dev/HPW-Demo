@@ -205,7 +205,7 @@ def build():
   if hpw_config.system == System.windows:
     env = Environment(tools = ['mingw'])
   else:
-    env = Environment(tools = ['gcc'])
+    pass # env = Environment(tools = ['gcc'])
   # скопировать нужные переменные для экспорта
   env['hpw_config'] = hpw_config
   if hpw_config.custom_cxx:
