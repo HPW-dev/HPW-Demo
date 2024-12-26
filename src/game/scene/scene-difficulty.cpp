@@ -33,6 +33,8 @@ void Scene_difficulty::draw(Image& dst) const {
   menu->draw(dst);
 }
 
+#pragma message("TODO return replays")
+
 void Scene_difficulty::init_menu() {
   Menu_items menu_items {
     new_shared<Menu_text_item>(get_locale_str("difficulty_select.start"), []{

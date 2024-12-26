@@ -63,19 +63,18 @@ struct Explosion_loader::Impl {
       it->status.ignore_self_type = true;
       it->status.ignore_master = true;
       // разлёт в случайную сторону, но с сохранением начального направления
-      Vec motion = rand_normalized_stable() * rndr(0, pps(m_particles_range));
+      #pragma message("TODO fix stattering")
+      constexpr real range_fixer = 6.5f; // TODO временное решение
+      Vec motion = rand_normalized_stable() * rndr(0, pps(m_particles_range) * range_fixer);
       it->phys.set_vel(it->phys.get_vel() + motion);
       init_shared(it->heat_distort, m_heat_distort);
-      // TODO создание вспышки
     } // for m_particle_count
     
-    /*
-    auto it = hpw::entity_mgr->allocate<Particle>();
+    /* auto it = hpw::entity_mgr->allocate<Particle>();
     Entity_loader::prepare(*it, master, pos);
-    */
-    return {}; // TODO от взрыва возвращать хитбокс
-  } // op ()
-
+    // TODO создание вспышки */
+    return {}; // TODO от взрыва возвращать хитбокс; 
+  }
 }; // Impl
 
 Explosion_loader::Explosion_loader(cr<Yaml> config)
