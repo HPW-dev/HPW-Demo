@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include "cosmic-hunter.hpp"
 #include "util/file/yaml.hpp"
 #include "util/hpw-util.hpp"
@@ -12,8 +13,26 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
-#include "util/log.hpp"
-#include "util/str-util.hpp"
+
+// замедление вращения, когда мало хп
+struct Slowdown_while_damage {
+  real _initial_rot_spd {};
+  real _max_hp {};
+
+  inline explicit Slowdown_while_damage(real init_rot_spd, hp_t max_hp)
+  : _initial_rot_spd {init_rot_spd}
+  , _max_hp {max_hp}
+  {
+    assert(_initial_rot_spd > 0);
+    assert(_max_hp > 0);
+  }
+
+  inline void operator ()(Entity& src, const Delta_time dt) {
+    rauto casted = scast<Cosmic_hunter&>(src);
+    cauto ratio = casted.get_hp() / real(_max_hp);
+    casted._info.initial_rot_spd = std::lerp<real>(0, _initial_rot_spd, ratio);
+  }
+};
 
 Cosmic_hunter::Cosmic_hunter(): Proto_enemy(GET_SELF_TYPE) {}
 
@@ -116,6 +135,7 @@ struct Cosmic_hunter::Loader::Impl {
     it->phys.set_speed(_info.speed);
     // при спавне сразу смотрим в сторону игрока
     it->phys.set_deg( deg_to_target(it->phys.get_pos(), hpw::entity_mgr->target_for_enemy()) );
+    it->add_update_cb(Slowdown_while_damage(it->_info.initial_rot_spd, it->get_hp()));
     return parent;
   } // op ()
 }; // Impl

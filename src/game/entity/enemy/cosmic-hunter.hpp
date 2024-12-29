@@ -7,6 +7,8 @@
 // Простой противник стреляющий на упреждение в игрока
 class Cosmic_hunter final: public Proto_enemy {
   nocopy(Cosmic_hunter);
+  
+public:
   struct Info {
     Anim_ctx external_part {}; // анимация внешней части
     Str bullet_name {};
@@ -23,7 +25,6 @@ class Cosmic_hunter final: public Proto_enemy {
   Info _info {};
   mutable Hitbox _hitbox {}; // хитбокс из двух частей
   
-public:
   class Loader;
   Cosmic_hunter();
   ~Cosmic_hunter() = default;
