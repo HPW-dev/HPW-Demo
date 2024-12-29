@@ -34,7 +34,7 @@ static inline Shared<Sprite> sprite_loader(cr<Str> name) {
 static inline decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
   auto name {_name};
   #ifdef EDITOR
-    name = hpw::cur_dir + "../" + name;
+    name = hpw::cur_dir + hpw::os_resources_dir + name;
   #endif
   cauto spr = sprite_loader(name);
   if (!spr)
@@ -82,11 +82,18 @@ void load_resources() {
 
   // загрузка в хранилище
   for (auto &name: image_names) {
-    auto sprite = sprite_loader(name);
     #ifdef EDITOR
-      delete_all(name, hpw::cur_dir + ".." + SEPARATOR);
-      conv_sep_for_archive(name);
+    name = std::filesystem::absolute(name).string();
+    cauto path_for_delete = std::filesystem::absolute(hpw::cur_dir + hpw::os_resources_dir + SEPARATOR).string();
     #endif
+
+    auto sprite = sprite_loader(name);
+
+    #ifdef EDITOR
+    delete_all(name, path_for_delete);
+    conv_sep_for_archive(name);
+    #endif
+
     hpw::sprites.push(name, sprite);
   }
 }
