@@ -9,18 +9,18 @@
 #include "util/macro.hpp"
 
 namespace {
-Str g_entities_yml_path = "../config/entities.yml";
+Str g_entities_yml_path = "config/entities.yml";
 }
 
 void entity_editor_save(cr<Entity_editor_ctx> ctx) {
-  auto entities_yml_path = hpw::cur_dir + ::g_entities_yml_path;
+  auto entities_yml_path = hpw::cur_dir + hpw::os_resources_dir + ::g_entities_yml_path;
   conv_sep(entities_yml_path);
   ctx.entities_yml.save(entities_yml_path);
   hpw_log("entity editor data saved\n");
 }
 
 void entity_editor_load(Entity_editor_ctx& ctx) {
-  auto entities_yml_path = hpw::cur_dir + ::g_entities_yml_path;
+  auto entities_yml_path = hpw::cur_dir + hpw::os_resources_dir + ::g_entities_yml_path;
   conv_sep(entities_yml_path);
 
   try {

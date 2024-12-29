@@ -11,7 +11,7 @@
 #include "host/command.hpp"
 #include "util/log.hpp"
 
-#define ENTITY_EDITOR_DEBUG
+//#define ENTITY_EDITOR_DEBUG
 #ifdef ENTITY_EDITOR_DEBUG
 #include "scene/scene-entity-editor.hpp"
 #else

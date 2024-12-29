@@ -9,6 +9,7 @@
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/file/file-io.hpp"
+#include "game/util/resource-helper.hpp"
 #define STB_VORBIS_HEADER_ONLY
 #include <stb/stb_vorbis.c>
 
@@ -126,12 +127,12 @@ Audio load_audio_from_memory(cr<File> file) {
 
 Audio load_audio(cr<Str> file_name) {
   cauto format = quess_format(file_name);
-  cauto mem = mem_from_file(file_name);
+  cauto file = load_res(file_name);
   switch (format) {
-    case Audio::Compression::raw:    return load_raw(mem, file_name);    break;
-    case Audio::Compression::flac:   return load_flac(mem, file_name);   break;
-    case Audio::Compression::opus:   return load_opus(mem, file_name);   break;
-    case Audio::Compression::vorbis: return load_vorbis(mem, file_name); break;
+    case Audio::Compression::raw:    return load_raw(file.data, file_name);    break;
+    case Audio::Compression::flac:   return load_flac(file.data, file_name);   break;
+    case Audio::Compression::opus:   return load_opus(file.data, file_name);   break;
+    case Audio::Compression::vorbis: return load_vorbis(file.data, file_name); break;
     default: error("unsupported audio compression format");
   }
   error("audio file \"" << file_name << "\" not loaded");

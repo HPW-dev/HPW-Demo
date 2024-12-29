@@ -150,6 +150,8 @@ struct Scene_entity_editor::Impl {
     hpw::shmup_mode = true;
     hpw::collider_autoopt = true;
     init_shared(graphic::camera);
+    init_shared(hpw::hitbox_layer, graphic::canvas->X, graphic::canvas->Y);
+    init_unique(hpw::entity_mgr);
     // editor context:
     m_ctx = {};
     // показ текста на экране:
@@ -157,6 +159,7 @@ struct Scene_entity_editor::Impl {
     // слой отладки
     init_shared(hpw::hitbox_layer, graphic::width, graphic::height);
     // log:
+    assert(hpw::entity_mgr);
     std::stringstream log_txt;
     log_txt << "entity editor init info:\n";
     log_txt << "graphic:\n";
