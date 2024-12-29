@@ -1,5 +1,75 @@
 animations:
   hunter.rotor:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -21
+            P1:
+              - -10
+              - -17
+            P2:
+              - -10
+              - -14
+            P3:
+              - 0
+              - 0
+        poly_1:
+          points:
+            P0:
+              - -17
+              - -1
+            P1:
+              - 0
+              - 0
+            P2:
+              - -7
+              - 16
+            P3:
+              - -12
+              - 16
+            P4:
+              - -18
+              - 11
+            P5:
+              - -19
+              - 1
+        poly_2:
+          points:
+            P0:
+              - -0
+              - -21
+            P1:
+              - 10
+              - -17
+            P2:
+              - 10
+              - -14
+            P3:
+              - -0
+              - 0
+        poly_3:
+          points:
+            P0:
+              - 17
+              - -1
+            P1:
+              - -0
+              - 0
+            P2:
+              - 7
+              - 16
+            P3:
+              - 12
+              - 16
+            P4:
+              - 18
+              - 11
+            P5:
+              - 19
+              - 1
     frames:
       Frame_UID_393:
         directions: 32
@@ -1522,6 +1592,36 @@ animations:
           - -1
           - -1
   hunter.head:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -8
+              - -2
+            P1:
+              - 0
+              - -7
+            P2:
+              - 0
+              - 8
+            P3:
+              - -8
+              - 3
+        poly_1:
+          points:
+            P0:
+              - 8
+              - -2
+            P1:
+              - -0
+              - -7
+            P2:
+              - -0
+              - 8
+            P3:
+              - 8
+              - 3
     frames:
       Frame_UID_392:
         directions: 1
