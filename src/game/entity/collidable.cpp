@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <cassert>
 #include "util/phys.hpp"
 #include "util/error.hpp"
@@ -51,16 +52,32 @@ bool Collidable::hitbox_test(cr<Collidable> other) const {
   // столкновение с собой не проверять
   return_if (this == std::addressof(other), false);
 
-  auto this_hitbox = this->get_hitbox();
-  return_if (!this_hitbox, false);
-  cauto this_pos = phys.get_pos();
-  
-  auto other_hitbox = other.get_hitbox();
-  return_if (!other_hitbox, false);
-  cauto other_pos = other.phys.get_pos();
+  bool ret {};
+  Hitbox a, b;
+  bool killme {};
 
-  return this_hitbox->is_collided_with(this_pos, other_pos, *other_hitbox);
-} // hitbox_test
+  #pragma omp critical(hitbox_guard)
+  {
+    auto this_hitbox = this->get_hitbox();
+    if (!this_hitbox) {
+      killme = true;
+    } else {
+      a = *this_hitbox;
+
+      auto other_hitbox = other.get_hitbox();
+      if (!other_hitbox)
+        killme = true;
+      else
+        b = *other_hitbox;
+    }
+  }
+  return_if (killme, false);
+
+  cauto this_pos = phys.get_pos();
+  cauto other_pos = other.phys.get_pos();
+  ret = a.is_collided_with(this_pos, other_pos, b);
+  return ret;
+}
 
 cp<Hitbox> Collidable::get_hitbox() const {
   cauto deg = phys.get_deg();
