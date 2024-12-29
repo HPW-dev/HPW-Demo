@@ -62,10 +62,11 @@ struct Explosion_loader::Impl {
       // инит флагов
       it->status.ignore_self_type = true;
       it->status.ignore_master = true;
-      // разлёт в случайную сторону, но с сохранением начального направления
       constexpr real range_fixer = 6.5f; // TODO временное решение
+      constexpr real motion_fixer = 4.f; // TODO временное решение
+      // разлёт в случайную сторону, но с сохранением начального направления
       Vec motion = rand_normalized_stable() * rndr(0, pps(m_particles_range) * range_fixer);
-      it->phys.set_vel(it->phys.get_vel() + motion);
+      it->phys.set_vel(it->phys.get_vel() * motion_fixer + motion);
       init_shared(it->heat_distort, m_heat_distort);
     } // for m_particle_count
     
