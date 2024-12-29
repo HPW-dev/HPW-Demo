@@ -1,141 +1,169 @@
 #!/usr/bin/env python
-Import([
-  "env",
-  "is_linux",
-  "is_debug",
-  "ld_flags",
-  "cpp_flags",
-  "compiler",
-  "defines",
-  "is_64bit",
-])
+from script.helper import *
+Import(['env'])
 
+hpw_config = env['hpw_config']
+assert hpw_config
+
+lib_path = []
+inc_path = []
+used_libs = []
+host_sources = []
+sources = []
 src_dir = "../../src/"
 build_dir = "../../build/"
 prog_name = "editor"
 thirdparty_dir = "../../thirdparty/"
 imgui_dir = thirdparty_dir + "include/imgui/"
 
-inc_path = [
-  ".",
-  src_dir,
-  thirdparty_dir + "include/",
-  imgui_dir,
-  imgui_dir + "backends/",
-]
-lib_path = []
-used_libs = [
-  "yaml-cpp",
-]
+def accept_config():
+  global env
+  global inc_path
+  global lib_path
+  global used_libs
+  global host_sources
+  global hpw_config
 
-ld_flags.extend(["-fopenmp"])
-cpp_flags.extend(["-fopenmp"])
-defines.extend(["-DEDITOR", "-DNO_LVL_CMDS"])
-
-if is_linux:
-  used_libs.extend(["GL", "GLEW", "glfw", "openal"])
-else: # windows
   inc_path.extend([
-    thirdparty_dir + "include/_windows_only",
-    thirdparty_dir + "include/_windows_only/GLEW"
+    ".",
+    src_dir,
+    thirdparty_dir + "include/",
+    imgui_dir,
+    imgui_dir + "backends/",
   ])
-  used_libs.extend(["glfw3dll", "glew32", "opengl32", "OpenAL32.dll"])
-  lib_path.extend([
-    thirdparty_dir + "lib/GLFW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/GLEW/" + ("x64" if is_64bit else "x32"),
-    thirdparty_dir + "lib/yaml-cpp/",
-    thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if is_64bit else "x32"),
+  used_libs.extend(["yaml-cpp"])
+  
+  hpw_config.cxx_defines.extend(["-DEDITOR", "-DNO_LVL_CMDS", "-DNO_EPGE"])
+
+  match hpw_config.system:
+    case System.windows:
+      inc_path.extend([thirdparty_dir + "include/_windows_only"])
+      used_libs.extend(["OpenAL32.dll"])
+      lib_path.extend([
+        thirdparty_dir + "lib/yaml-cpp/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+        thirdparty_dir + "lib/OpenAL-soft/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+      ])
+    case System.linux:
+      used_libs.extend(["openal"])
+    case _: raise ValueError 
+  
+  match hpw_config.host:
+    case Host.glfw3:
+      host_sources.extend([
+        Glob(src_dir + "host/glfw3/*.cpp"),
+        Glob(src_dir + "host/ogl3/*.cpp"),
+      ])
+      match hpw_config.system:
+        case System.linux: used_libs.extend(["GL", "GLEW", "glfw"])
+        case System.windows:
+          inc_path.extend([thirdparty_dir + "include/_windows_only/GLEW"])
+          used_libs.extend(["glfw3dll", "glew32", "opengl32"])
+          lib_path.extend([
+            thirdparty_dir + "lib/GLEW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+            thirdparty_dir + "lib/GLFW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+          ])
+        case _: ValueError
+    case Host.sdl2: raise ValueError("SDL2 host not implemented")
+    case _: raise ValueError(f"unknown host name \"{hpw_config.host}\"")
+
+  match hpw_config.compiler:
+    case Compiler.gcc: env['CXX'] = 'g++'
+    case Compiler.clang: env['CXX'] = 'clang++'
+    case _: raise ValueError
+
+def init_sources():
+  global sources
+
+  sources.extend([
+    Glob(thirdparty_dir + "include/zip/*.c"),
+    thirdparty_dir + "include/stb/stb_vorbis.c",
+    Glob(src_dir + "util/file/archive/*.cpp"),
+    Glob(src_dir + "util/file/yaml/*.cpp"),
+    Glob(src_dir + "util/file/*.cpp"),
+    Glob(src_dir + "util/math/*.cpp"),
+    Glob(src_dir + "util/math/*.c"),
+    Glob(src_dir + "util/*.cpp"),
+    Glob(src_dir + "game/menu/*.cpp"),
+    Glob(src_dir + "game/menu/item/*.cpp"),
+    Glob(src_dir + "game/util/*.cpp"),
+    Glob(src_dir + "game/entity/enemy/*.cpp"),
+    Glob(src_dir + "game/entity/util/info/*.cpp"),
+    Glob(src_dir + "game/entity/player/ability/*.cpp"),
+    Glob(src_dir + "game/entity/collider/*.cpp"),
+    Glob(src_dir + "graphic/animation/*.cpp"),
+    Glob(src_dir + "graphic/image/*.cpp"),
+    Glob(src_dir + "graphic/sprite/*.cpp"),
+    Glob(src_dir + "graphic/font/*.cpp"),
+    Glob(src_dir + "graphic/util/*.cpp"),
+    Glob(src_dir + "graphic/effect/*.cpp"),
+    Glob(src_dir + "hpw/*.cpp"),
+    Glob(src_dir + "sound/*.cpp"),
+    Glob(imgui_dir + "imgui*.cpp"),
+    Glob("scene/*.cpp"),
+    Glob("anim-window/*.cpp"),
+    Glob("entity-window/*.cpp"),
+    Glob("*.cpp"),
+    src_dir + "host/host-resize.cpp",
+    src_dir + "host/host-util.cpp",
+    src_dir + "host/host.cpp",
+    src_dir + "host/ogl3/protownd.cpp",
+    src_dir + "host/ogl3/host-ogl.cpp",
+    src_dir + "host/glfw3/host-glfw.cpp",
+    src_dir + "host/glfw3/host-glfw-callback.cpp",
+    src_dir + "host/glfw3/host-glfw-keymap.cpp",
+    src_dir + "host/windows/windows-keycodes.cpp",
+    src_dir + "game/util/cmd/cmd.cpp",
+    src_dir + "game/util/cmd/cmd-util.cpp",
+    src_dir + "game/util/cmd/cmd-player.cpp",
+    src_dir + "game/util/cmd/cmd-entity.cpp",
+    src_dir + "game/util/cmd/cmd-script.cpp",
+    src_dir + "game/util/cmd/cmd-common.cpp",
+    src_dir + "game/util/cmd/cmd-core.cpp",
+    src_dir + "game/scene/scene.cpp",
+    src_dir + "game/scene/scene-mgr.cpp",
+    src_dir + "game/scene/scene-cmd.cpp",
+    src_dir + "game/scene/msgbox/msgbox-enter.cpp",
+    src_dir + "game/level/level-mgr.cpp",
+    src_dir + "game/entity/entity.cpp",
+    src_dir + "game/entity/entity-animated.cpp",
+    src_dir + "game/entity/entity-debug.cpp",
+    src_dir + "game/entity/entity-cbs.cpp",
+    src_dir + "game/entity/entity-loader.cpp",
+    src_dir + "game/entity/player/player.cpp",
+    src_dir + "game/entity/player/player-dark.cpp",
+    src_dir + "game/entity/player/player-dark-loader.cpp",
+    src_dir + "game/entity/bonus-loader.cpp",
+    src_dir + "game/entity/bullet-loader.cpp",
+    src_dir + "game/entity/explosion-loader.cpp",
+    src_dir + "game/entity/particle-loader.cpp",
+    src_dir + "game/entity/particle.cpp",
+    src_dir + "game/entity/collidable.cpp",
+    src_dir + "game/entity/entity-mgr.cpp",
+    src_dir + "game/entity/util/collider-optimizer.cpp",
+    src_dir + "game/entity/util/scatter.cpp",
+    src_dir + "game/entity/util/hitbox.cpp",
+    src_dir + "game/entity/util/entity-util.cpp",
+    src_dir + "game/entity/util/phys.cpp",
+    src_dir + "game/entity/util/anim-ctx.cpp",
+    src_dir + "game/entity/util/anim-ctx-util.cpp",
+    imgui_dir + "backends/imgui_impl_opengl3.cpp",
+    imgui_dir + "backends/imgui_impl_glfw.cpp",
   ])
+  sources.extend([host_sources]);
 
-sources = [
-  Glob(thirdparty_dir + "include/zip/*.c"),
-  thirdparty_dir + "include/stb/stb_vorbis.c",
-  Glob(src_dir + "util/file/archive/*.cpp"),
-  Glob(src_dir + "util/file/yaml/*.cpp"),
-  Glob(src_dir + "util/file/*.cpp"),
-  Glob(src_dir + "util/math/*.cpp"),
-  Glob(src_dir + "util/math/*.c"),
-  Glob(src_dir + "util/*.cpp"),
-  Glob(src_dir + "game/menu/*.cpp"),
-  Glob(src_dir + "game/menu/item/*.cpp"),
-  Glob(src_dir + "game/util/*.cpp"),
-  Glob(src_dir + "game/entity/enemy/*.cpp"),
-  Glob(src_dir + "game/entity/util/info/*.cpp"),
-  Glob(src_dir + "game/entity/player/ability/*.cpp"),
-  Glob(src_dir + "game/entity/collider/*.cpp"),
-  Glob(src_dir + "graphic/animation/*.cpp"),
-  Glob(src_dir + "graphic/image/*.cpp"),
-  Glob(src_dir + "graphic/sprite/*.cpp"),
-  Glob(src_dir + "graphic/font/*.cpp"),
-  Glob(src_dir + "graphic/util/*.cpp"),
-  Glob(src_dir + "graphic/effect/*.cpp"),
-  Glob(src_dir + "hpw/*.cpp"),
-  Glob(src_dir + "sound/*.cpp"),
-  Glob(imgui_dir + "imgui*.cpp"),
-  Glob("scene/*.cpp"),
-  Glob("anim-window/*.cpp"),
-  Glob("entity-window/*.cpp"),
-  Glob("*.cpp"),
-  src_dir + "host/host-resize.cpp",
-  src_dir + "host/host-util.cpp",
-  src_dir + "host/host.cpp",
-  src_dir + "host/ogl3/protownd.cpp",
-  src_dir + "host/ogl3/host-ogl.cpp",
-  src_dir + "host/glfw3/host-glfw.cpp",
-  src_dir + "host/glfw3/host-glfw-callback.cpp",
-  src_dir + "host/glfw3/host-glfw-keymap.cpp",
-  src_dir + "host/windows/windows-keycodes.cpp",
-  src_dir + "game/util/cmd/cmd.cpp",
-  src_dir + "game/util/cmd/cmd-util.cpp",
-  src_dir + "game/util/cmd/cmd-player.cpp",
-  src_dir + "game/util/cmd/cmd-entity.cpp",
-  src_dir + "game/util/cmd/cmd-script.cpp",
-  src_dir + "game/util/cmd/cmd-common.cpp",
-  src_dir + "game/util/cmd/cmd-core.cpp",
-  src_dir + "game/scene/scene.cpp",
-  src_dir + "game/scene/scene-mgr.cpp",
-  src_dir + "game/scene/scene-cmd.cpp",
-  src_dir + "game/scene/msgbox/msgbox-enter.cpp",
-  src_dir + "game/level/level-mgr.cpp",
-  src_dir + "game/entity/entity.cpp",
-  src_dir + "game/entity/entity-animated.cpp",
-  src_dir + "game/entity/entity-debug.cpp",
-  src_dir + "game/entity/entity-cbs.cpp",
-  src_dir + "game/entity/entity-loader.cpp",
-  src_dir + "game/entity/player/player.cpp",
-  src_dir + "game/entity/player/player-dark.cpp",
-  src_dir + "game/entity/player/player-dark-loader.cpp",
-  src_dir + "game/entity/bonus-loader.cpp",
-  src_dir + "game/entity/bullet-loader.cpp",
-  src_dir + "game/entity/explosion-loader.cpp",
-  src_dir + "game/entity/particle-loader.cpp",
-  src_dir + "game/entity/particle.cpp",
-  src_dir + "game/entity/collidable.cpp",
-  src_dir + "game/entity/entity-mgr.cpp",
-  src_dir + "game/entity/util/collider-optimizer.cpp",
-  src_dir + "game/entity/util/scatter.cpp",
-  src_dir + "game/entity/util/hitbox.cpp",
-  src_dir + "game/entity/util/entity-util.cpp",
-  src_dir + "game/entity/util/phys.cpp",
-  src_dir + "game/entity/util/anim-ctx.cpp",
-  src_dir + "game/entity/util/anim-ctx-util.cpp",
-  imgui_dir + "backends/imgui_impl_opengl3.cpp",
-  imgui_dir + "backends/imgui_impl_glfw.cpp",
-]
+def build():
+  env.Program(
+    target = build_dir + "bin/" + prog_name,
+    source = sources,
+    LIBPATH = lib_path,
+    LIBS = used_libs,
+    CPPDEFINES = hpw_config.cxx_defines,
+    CXXFLAGS = hpw_config.cxx_flags,
+    LINKFLAGS = hpw_config.cxx_ldflags,
+    CPPPATH = inc_path,
+  )
 
-if not is_debug and not is_linux:
-  ld_flags.append("-mwindows")
-
-# билд теста графики
-env.Append(CPPDEFINES = defines)
-env.Append(CXXFLAGS = cpp_flags)
-env.Program(
-  target = build_dir + "bin/" + prog_name,
-  source = sources,
-  CXX = compiler,
-  CXXFLAGS = cpp_flags,
-  LIBPATH = lib_path,
-  CPPPATH = inc_path,
-  LINKFLAGS = ld_flags,
-  LIBS = used_libs
-) # env.Program
+# main section:
+accept_config()
+init_sources()
+build()

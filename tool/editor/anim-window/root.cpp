@@ -11,6 +11,9 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/util/sync.hpp"
+#include "game/util/camera.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/animation-helper.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/anims.hpp"
@@ -19,7 +22,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/common.hpp"
-#include "game/util/camera.hpp"
+#include "game/core/sprites.hpp"
 
 Root_wnd::Root_wnd() {
   init_root_wnd();

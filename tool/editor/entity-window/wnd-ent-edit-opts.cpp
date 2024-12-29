@@ -61,7 +61,9 @@ struct Wnd_ent_edit_opts::Impl {
     }
 
     // haze
-    ImGui::Checkbox("выкл. искажение при лагах", &graphic::disable_heat_distort_while_lag);
+    bool enable_heat_distort = graphic::heat_distort_mode == Heat_distort_mode::disabled ? false : true;
+    if (ImGui::Checkbox("выкл. искажение при лагах", &enable_heat_distort))
+      graphic::heat_distort_mode = enable_heat_distort ? Heat_distort_mode::enabled : Heat_distort_mode::disabled;
 
     // frameskip
     ImGui::Checkbox("фреймскип при лагах", &graphic::auto_frame_skip);

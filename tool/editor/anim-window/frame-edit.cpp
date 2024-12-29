@@ -84,8 +84,8 @@ void Frame_wnd::draw_direction_count_edit(Frame& frame) {
     1, 1, ImGuiInputTextFlags_EnterReturnsTrue)
   ) {
     max_directions = std::clamp(max_directions, 0, 128);
-    detailed_log("set new direction count for \"" << frame.get_name() << "\" - "
-      << max_directions << "\n");
+    hpw_debug("set new direction count for \"" + frame.get_name() + "\" - "
+      + n2s(max_directions) + "\n");
     frame.source_ctx.max_directions = max_directions;
     frame.init_directions( std::move(frame.source_ctx) );
   }
@@ -114,7 +114,7 @@ void Frame_wnd::draw_path_edit(Frame& frame) {
     hpw::scene_mgr.add(
       new_shared<Sprite_select>(
         [this, &frame](Shared<Sprite> sprite, cr<Str> path) {
-          detailed_log("new sprite selected for frame \"" << frame.get_name() << "\"\n");
+          hpw_debug("new sprite selected for frame \"" + frame.get_name() + "\"\n");
           auto new_ctx = frame.source_ctx;
           new_ctx.direct_0.sprite = sprite;
           // чтобы показать хоть какой-то спрайт
@@ -143,7 +143,7 @@ void Frame_wnd::draw_path_edit(Frame& frame) {
       frame.source_ctx.direct_0.sprite = sprite;
       frame.reinit_directions_by_source();
     } else {
-      hpw_log("bad sprite path name (\"" << new_path << "\")\n");
+      hpw_warning("bad sprite path name (\"" + new_path + "\")\n");
     }
   } // if imgui::input (file path)
 } // draw_path_edit

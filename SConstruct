@@ -35,6 +35,7 @@ def parse_args():
   hpw_config.enable_omp = bool(int(ARGUMENTS.get('enable_omp', 1)))
   hpw_config.enable_asan = bool(int(ARGUMENTS.get('enable_asan', 0)))
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
+  hpw_config.use_data_zip = bool(int(ARGUMENTS.get('use_data_zip', 1)))
   assert hpw_config.build_script, 'path to build script needed'
   _architecture = architecture()
   hpw_config.system = System.linux if _architecture[1] == 'ELF' else System.windows
@@ -221,4 +222,8 @@ accept_params()
 copy_license()
 write_game_version()
 build()
-compress_diffs('./data/', './build/data', './.tmp/resources_diff.pickle')
+
+if hpw_config.use_data_zip:
+  compress_diffs('./data/', './build/data', './.tmp/resources_diff.pickle')
+else:
+  print('generation data.zip: disabled')

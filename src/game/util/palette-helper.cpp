@@ -5,7 +5,7 @@
 #include "graphic/image/color.hpp"
 #include "game/core/palette.hpp"
 #include "game/util/resource-helper.hpp"
-#include "menu/item/list-item.hpp"
+#include "game/menu/item/list-item.hpp"
 #include "game/util/locale.hpp"
 #include "host/command.hpp"
 #include "util/file/file.hpp"

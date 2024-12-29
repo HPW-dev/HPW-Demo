@@ -21,6 +21,9 @@
 #include "game/core/messages.hpp"
 #include "game/core/debug.hpp"
 #include "game/util/cmd/cmd.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/animation-helper.hpp"
+#include "game/util/vec-helper.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
@@ -127,7 +130,7 @@ struct Scene_entity_editor::Impl {
     { m_emitters.emplace_back(std::move(other)); }
 
   inline void init() {
-    detailed_log("entity editor init...\n");
+    hpw_debug("entity editor init...\n");
     // graphic:
     graphic::cpu_safe = false;
     graphic::set_vsync(false);
@@ -136,8 +139,8 @@ struct Scene_entity_editor::Impl {
     graphic::auto_frame_skip = false;
     graphic::frame_skip = 0;
     graphic::blink_particles = false;
-    graphic::disable_heat_distort_while_lag = true;
-    graphic::light_quality = Light_quality::high;
+    graphic::heat_distort_mode = Heat_distort_mode::autoopt;
+    graphic::light_quality = Light_quality::medium;
     // resource:
     hpw::lazy_load_anim = true;
     hpw::lazy_load_sprite = true;
@@ -182,7 +185,7 @@ struct Scene_entity_editor::Impl {
     m_windows.clear();
     m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
     m_windows.push_back(new_unique<Wnd_ent_edit_opts>(m_ctx));
-    detailed_log("windows initialized\n");
+    hpw_debug("windows initialized\n");
   }
 }; // Impl
 

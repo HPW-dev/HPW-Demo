@@ -3,11 +3,13 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
+#include "game/util/sound-helper.hpp"
 #include "game/core/core.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "host/command.hpp"
+#include "util/log.hpp"
 
 #define ENTITY_EDITOR_DEBUG
 #ifdef ENTITY_EDITOR_DEBUG
@@ -47,7 +49,7 @@ void Editor::update(const Delta_time dt) {
   Host_imgui::update(dt);
   auto st = Editor::get_time();
   if ( !hpw::scene_mgr.update(dt) ) {
-    detailed_log("scenes are over, call soft_exit\n");
+    hpw_debug("scenes are over, call soft_exit\n");
     hpw::soft_exit();
   }
   hpw::tick_time = Editor::get_time() - st;
@@ -80,7 +82,7 @@ void Editor::init_graphic() {
   graphic::set_target_fps(60);
   hpw::set_fullscreen(false);
   hpw::set_resize_mode(graphic::default_resize_mode);
-  graphic::enable_heat_distort = true;
-  graphic::enable_motion_blur = true;
-  graphic::enable_light = true;
+  graphic::heat_distort_mode = Heat_distort_mode::autoopt;
+  graphic::motion_blur_mode = Motion_blur_mode::autoopt;
+  graphic::light_quality = Light_quality::medium;
 }

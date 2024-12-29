@@ -6,7 +6,7 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 #include "util/math/random.hpp"
-#include "core/user.hpp"
+#include "game/core/user.hpp"
 
 struct Replay::Impl {};
 

@@ -2,7 +2,9 @@
 #include "editor.hpp"
 #include "host-imgui.hpp"
 #include "game/core/fonts.hpp"
+#include "game/util/font-helper.hpp"
 #include "game/util/game-archive.hpp"
+#include "game/util/resource-helper.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/font/unifont-mono.hpp"
 #include "util/error.hpp"
@@ -37,6 +39,7 @@ void Host_imgui::init_window() {
   ImFontConfig font_cfg;
   // без этого шрифт нормально не грузится из памяти
   font_cfg.FontDataOwnedByAtlas = false;
+  auto font_file = load_res("resource/font/unifont-13.0.06.ttf");
   auto font = io.Fonts->AddFontFromMemoryTTF(
     font_file.data.data(), font_file.data.size(),
     16.0f, &font_cfg, io.Fonts->GetGlyphRangesCyrillic());

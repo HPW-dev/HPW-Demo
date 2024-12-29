@@ -7,7 +7,7 @@
 #include <algorithm>
 #include "bg-pattern-3.hpp"
 #include "game/core/fonts.hpp"
-#include "core/sprites.hpp"
+#include "game/core/sprites.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"
 #include "graphic/effect/noise.hpp"

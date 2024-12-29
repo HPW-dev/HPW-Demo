@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 import helper
 
-script = "tool/editor/SConscript"
-is_debug = 1
-disable_debug_info = 0
-helper.exec_cmd(f'scons -j16 -Q debug={is_debug} -Q disable_debug_info={disable_debug_info} -Q script={script}')
+opts = \
+  ' -Q enable_omp=1' \
+  ' -Q enable_asan=0' \
+  ' -Q host=glfw3' \
+  ' -Q compiler=gcc' \
+  ' -Q use_data_zip=0' \
+  ' -Q opt_level=debug'
+NUM_THREADS = helper.get_max_threads() + 1
+print(f'threads for building: {NUM_THREADS}')
+helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=tool/editor/SConscript' + opts)
 helper.exec_cmd('build/bin/editor')

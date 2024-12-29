@@ -23,6 +23,7 @@ class Hpw_config:
   host = Host.glfw3
   enable_omp = True
   enable_asan = False
+  use_data_zip = True
   static_link = False
   build_script = ''
   custom_cxx: str

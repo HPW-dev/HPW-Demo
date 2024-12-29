@@ -8,6 +8,7 @@
 #include "scene/scene-entity-editor.hpp"
 #include "game/entity/entity.hpp"
 #include "game/core/entities.hpp"
+#include "game/util/vec-helper.hpp"
 
 namespace {
 Uid g_wnd_uid {}; // чтобы ImGui не перепутал окна
@@ -32,7 +33,7 @@ struct Window_emitter::Impl {
   , m_uid {get_uid()}
   {
     m_title = "Эмиттер " + n2s(m_uid);
-    detailed_log("добавлено окно эмиттера (№" << m_uid << ")\n");
+    hpw_debug("добавлено окно эмиттера (№" + n2s(m_uid) + ")\n");
     m_spawn_phys.set_pos( get_screen_center() + Vec(0, 40) );
   }
 
