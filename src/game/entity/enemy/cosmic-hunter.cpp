@@ -64,9 +64,18 @@ void Cosmic_hunter::update(const Delta_time dt) {
 } // update
 
 cp<Hitbox> Cosmic_hunter::get_hitbox() const {
+  // взять внешних полигонов
+  cauto external_hitbox = anim_ctx_util::get_hitbox(_info.external_part, _info.external_deg, *this);
+  assert(external_hitbox);
+  _hitbox = *external_hitbox;
+
+  // взять полигонов с кабины
   cauto proto_enemy_hitbox = Proto_enemy::get_hitbox();
-  cauto external_hitbox = anim_ctx_util::get_hitbox(anim_ctx, _info.external_deg, *this);
-  return proto_enemy_hitbox;
+  assert(proto_enemy_hitbox);
+  for (crauto poly: proto_enemy_hitbox->polygons)
+    _hitbox.polygons.push_back(poly);
+
+  return &_hitbox;
 }
 
 struct Cosmic_hunter::Loader::Impl {

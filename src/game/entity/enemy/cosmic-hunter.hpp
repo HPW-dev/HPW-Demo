@@ -21,7 +21,7 @@ class Cosmic_hunter final: public Proto_enemy {
     real initial_rot_spd {}; // с какой скоростью крутится внешняя часть
   };
   Info _info {};
-  Hitbox _hitbox {}; // хитбокс из двух частей
+  mutable Hitbox _hitbox {}; // хитбокс из двух частей
   
 public:
   class Loader;

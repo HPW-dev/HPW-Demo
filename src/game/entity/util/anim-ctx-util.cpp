@@ -7,8 +7,7 @@
 
 namespace anim_ctx_util {
 
-cp<Hitbox> get_hitbox(cr<Anim_ctx> anim_ctx,
-real degree, cr<Entity> entity) {
+cp<Hitbox> get_hitbox(cr<Anim_ctx> anim_ctx, real degree, cr<Entity> entity) {
   cauto anim = anim_ctx.get_anim();
   return_if( !anim, nullptr);
   cauto new_deg = anim_ctx.get_degree_with_flags(degree, entity);
