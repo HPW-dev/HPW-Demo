@@ -12,6 +12,8 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
+#include "util/log.hpp"
+#include "util/str-util.hpp"
 
 Cosmic_hunter::Cosmic_hunter(): Proto_enemy(GET_SELF_TYPE) {}
 
@@ -95,7 +97,6 @@ struct Cosmic_hunter::Loader::Impl {
     cauto external_anim = hpw::anim_mgr->find_anim(external_part_name).get();
     _info.external_part.set_anim(external_anim);
     _info.initial_rot_spd = pps(anim_node.get_real("initial_rot_spd", 8.0));
-    _info.external_rot_dir = rndb();
     
     assert(_info.bullet_speed > 0);
     assert(_info.rotate_speed > 0);
@@ -111,6 +112,7 @@ struct Cosmic_hunter::Loader::Impl {
     auto it = ptr2ptr<Cosmic_hunter*>(parent);
     it->_info = _info;
     it->_info.shoot_timer.randomize_stable();
+    it->_info.external_rot_dir = (rndb() % 2) ? true : false;
     it->phys.set_speed(_info.speed);
     // при спавне сразу смотрим в сторону игрока
     it->phys.set_deg( deg_to_target(it->phys.get_pos(), hpw::entity_mgr->target_for_enemy()) );
