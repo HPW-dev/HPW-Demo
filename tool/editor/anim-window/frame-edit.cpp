@@ -237,10 +237,11 @@ Pool_ptr(Hitbox) Frame_wnd::get_hitbox_source() const {
   if ( !hitbox_source) {
     anim->update_hitbox(hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>(), 1);
     hitbox_source = anim->get_hitbox_source();
+    assert(hitbox_source);
     graphic::draw_hitboxes = true; // заодно включить показ хитбоксов на экране
   }
   return hitbox_source;
-} // get_hitbox_source
+}
 
 bool Frame_wnd::edit_polygon(Pool_ptr(Hitbox) hitbox) const {
   bool ret {false};

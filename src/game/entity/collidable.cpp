@@ -65,11 +65,12 @@ bool Collidable::hitbox_test(cr<Collidable> other) const {
 cp<Hitbox> Collidable::get_hitbox() const {
   cauto deg = phys.get_deg();
 
+  #ifndef EDITOR
   // если угол не менялся, то вернуть кешированный результат
   const bool deg_is_equal = m_old_deg == deg;
   const bool anim_is_equal = m_old_anim == anim_ctx.get_anim();
-  if (deg_is_equal && anim_is_equal)
-    return m_old_hitbox;
+  return_if (deg_is_equal && anim_is_equal, m_old_hitbox);
+  #endif
 
   // кэшировать новый результат
   auto ret = anim_ctx_util::get_hitbox(anim_ctx, deg, *this);
