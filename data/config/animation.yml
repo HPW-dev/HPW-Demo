@@ -1,4 +1,20 @@
 animations:
+  hunter.rotor:
+    frames:
+      Frame_UID_195:
+        directions: 32
+        sprite path: resource/image/enemy/hunter/rotor.png
+        sprite offset:
+          - -19
+          - -21
+  hunter.head:
+    frames:
+      Frame_UID_195:
+        directions: 1
+        sprite path: resource/image/enemy/hunter/head.png
+        sprite offset:
+          - -19
+          - -21
   anim.void: ~
   anim.sphere.fade:
     frames:
