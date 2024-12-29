@@ -23,6 +23,7 @@ public:
   void operator ()(int argc, char** argv) const;
   void operator ()(cr<Str> opts) const;
   void print_info() const;
+  [[nodiscard]] Str get_info() const;
 
 private:
   v_param_t v_param {};

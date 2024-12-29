@@ -83,11 +83,20 @@ Strs Pparser::get_tokens(cr<Str> opts) const {
 }
 
 void Pparser::print_info() const {
-  std::cout << "Usage:\n";
+  std::cout << get_info();
+  std::cout.flush();
+}
+
+Str Pparser::get_info() const {
+  std::stringstream ss;
+
+  ss << "Usage:\n";
   for (auto param: v_param) {
     for (auto key: param.keys)
-      std::cout << key << ' ';
-    std::cout << std::setw(12) << "\t: " << param.desc << "\n";
-    std::cout.flush();
+      ss << key << ' ';
+    ss << std::setw(12) << "\t: " << param.desc << "\n";
   }
+  ss << "\n";
+
+  return ss.str();
 }

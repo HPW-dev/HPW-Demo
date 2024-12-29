@@ -55,13 +55,14 @@ struct Host::Impl final {
   inline void parse_args(int argc, char** argv) {
     Pparser ret( Pparser::v_param_t {
       {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
-      {{"-t", "--title"}, "set window title", [this](cr<Str> val){ hpw::default_tile = val; }},
       {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(false)); }},
       {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(true)); }},
       {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
         ret.print_info();
         std::exit(EXIT_SUCCESS);
       }},
+      {{"-t", "--title"}, "set window title (if not defined, set HPW)", [this](cr<Str> val)
+        { hpw::default_tile = val.empty() ? "HPW" : val; }},
       {{"-v", "--version"}, "print game version and exit", [this](cr<Str> val){
         cauto ver = get_game_version();
         cauto creation_date = get_game_creation_date();
