@@ -18,11 +18,7 @@
 static inline Shared<Sprite> sprite_loader(cr<Str> name) {
   try {
     auto spr = new_shared<Sprite>();
-    #ifdef EDITOR
-      load(*spr, name);
-    #else
-      load(load_res(name), *spr);
-    #endif
+    load(load_res(name), *spr);
     return spr;
   } catch (...) {
     hpw_log("не удалось найти спрайт с имененм \"" + name + "\"\n", Log_stream::debug);
@@ -33,9 +29,6 @@ static inline Shared<Sprite> sprite_loader(cr<Str> name) {
 
 static inline decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
   auto name {_name};
-  #ifdef EDITOR
-    name = hpw::cur_dir + hpw::os_resources_dir + name;
-  #endif
   cauto spr = sprite_loader(name);
   if (!spr)
     hpw_log("sprite \"" + name + "\" not finded\n", Log_stream::debug);
@@ -48,12 +41,7 @@ static inline decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
 void load_resources() {
   hpw_log("загрузка ресурсов...\n");
   hpw::sprites.clear();
-
-  #ifdef EDITOR
-    auto names = all_names_in_dir(hpw::cur_dir + hpw::os_resources_dir);
-  #else
-    auto names = get_all_res_names();
-  #endif
+  auto names = get_all_res_names();
 
   // колбек на отложенную загрузку
   if (hpw::lazy_load_sprite) {
@@ -65,9 +53,6 @@ void load_resources() {
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](cr<Str> name) {
     Str find_str = "resource/image/";
-    #ifdef EDITOR
-      conv_sep(find_str);
-    #endif
 
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория
@@ -82,18 +67,7 @@ void load_resources() {
 
   // загрузка в хранилище
   for (auto &name: image_names) {
-    #ifdef EDITOR
-    name = std::filesystem::absolute(name).string();
-    cauto path_for_delete = std::filesystem::absolute(hpw::cur_dir + hpw::os_resources_dir + SEPARATOR).string();
-    #endif
-
     auto sprite = sprite_loader(name);
-
-    #ifdef EDITOR
-    delete_all(name, path_for_delete);
-    conv_sep_for_archive(name);
-    #endif
-
     hpw::sprites.push(name, sprite);
   }
 }
@@ -212,6 +186,7 @@ File load_res(cr<Str> name) {
   assert(!name.empty());
 
   // попытка загрузить ресурс с архива:
+  #ifndef EDITOR
   try {
     iferror(!hpw::archive, "hpw::archive не инициализирован\n");
     return hpw::archive->get_file(name);
@@ -220,6 +195,7 @@ File load_res(cr<Str> name) {
   } catch(...) {
     hpw_log(Str("не удалось загрузить ресурс \"") + name + "\" из архива\n", Log_stream::debug);
   }
+  #endif
 
   // попытка загрузить ресурс из файловой ситсемы ОС:
   auto os_path = hpw::cur_dir + hpw::os_resources_dir + name;

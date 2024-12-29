@@ -52,13 +52,7 @@ void load_sounds() {
   iferror (file_names.empty(), "file_names пуст, возможно нет ресурсов в папках");
   // загрузка в хранилище
   for (auto &name: file_names) {
-    #ifdef EDITOR
-      auto sound = load_audio(name);
-      delete_all(name, hpw::cur_dir + ".." + SEPARATOR);
-      conv_sep_for_archive(name);
-    #else
-      auto sound = load_audio_from_memory(load_res(name));
-    #endif
+    auto sound = load_audio_from_memory(load_res(name));
     delete_all(name, "resource/audio/");
     hpw::sound_mgr->move_audio(name, std::move(sound));
   }

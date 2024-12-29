@@ -191,8 +191,10 @@ void save_anims(Yaml& dst) {
 
       if (auto sprite = frame->source_ctx.direct_0.sprite; !sprite.expired()) {
         // путь к файлу с кадром
-        if (auto sprite_lock = sprite.lock(); !sprite_lock->get_path().empty())
-          cur_frame_node.set_str("sprite path", sprite_lock->get_path());
+        if (auto sprite_lock = sprite.lock(); !sprite_lock->get_path().empty()) {
+          cauto sprite_path = sprite_lock->get_path();
+          cur_frame_node.set_str("sprite path", sprite_path);
+        }
         // смещение отрисовки относительно центра спрайта
         if (frame->source_ctx.direct_0.offset.not_zero()) {
           cur_frame_node.set_v_real("sprite offset", Vector<real>{
@@ -209,9 +211,5 @@ void save_anims(Yaml& dst) {
 } // save_anims
 
 Yaml get_anim_config() {
-#ifdef EDITOR
-  return Yaml(hpw::cur_dir + hpw::os_resources_dir + "config/animation.yml");
-#else
   return Yaml(load_res("config/animation.yml")); 
-#endif
 }

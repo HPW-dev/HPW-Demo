@@ -1,17 +1,9 @@
 animations:
   hunter.rotor:
     frames:
-      Frame_UID_195:
+      Frame_UID_196:
         directions: 32
         sprite path: resource/image/enemy/hunter/rotor.png
-        sprite offset:
-          - -19
-          - -21
-  hunter.head:
-    frames:
-      Frame_UID_195:
-        directions: 1
-        sprite path: resource/image/enemy/hunter/head.png
         sprite offset:
           - -19
           - -21
@@ -1529,6 +1521,14 @@ animations:
         sprite offset:
           - -1
           - -1
+  hunter.head:
+    frames:
+      Frame_UID_195:
+        directions: 1
+        sprite path: resource/image/enemy/hunter/head.png
+        sprite offset:
+          - -19
+          - -21
   anim.player.boo.dark.long.3:
     hitbox:
       polygons:

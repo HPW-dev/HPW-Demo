@@ -281,11 +281,7 @@ struct Entity_mgr::Impl {
   } // make
 
   inline Yaml load_entity_config() const {
-    #ifdef EDITOR
-      return Yaml(hpw::cur_dir + hpw::os_resources_dir + "config/entities.yml");
-    #else
-      return Yaml(load_res("config/entities.yml"));
-    #endif
+    return Yaml(load_res("config/entities.yml"));
   }
 
   inline void add_scatter(cr<Scatter> scatter) {
