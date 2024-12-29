@@ -29,8 +29,8 @@ void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
 
   Vec pos;
   if (args.size() >= 4) {
-    pos.x = s2n<real>(args[2]);
-    pos.y = s2n<real>(args[3]);
+    pos.x = str_tolower(args[2]) == "r" ? rnd_screen_pos_safe().x : s2n<real>(args[2]);
+    pos.y = str_tolower(args[3]) == "r" ? rnd_screen_pos_safe().x : s2n<real>(args[3]);
   } else {
     pos = rnd_screen_pos_safe();
   }
