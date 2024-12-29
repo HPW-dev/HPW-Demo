@@ -34,7 +34,6 @@ void Emit_wnd::imgui_exec() {
 
   if (ImGui::BeginTabItem("main")) {
     Scope tab_scope({}, &ImGui::EndTabItem);
-    draw_spawner_types();
     draw_anim_list();
     ImGui::SameLine();
     if (ImGui::Button("+"))
@@ -65,26 +64,6 @@ void Emit_wnd::reset() {
   editor::entity->phys.set_pos(center_point(*graphic::canvas));
   select_anim_by_name(get_avaliable_first_anim());
   editor::entity->status.ignore_damage = true;
-}
-
-Strs spawner_type_names() {
-  Strs list;
-  for (crauto item: spawner_type_table)
-    list.emplace_back(item.second);
-  return list;
-}
-
-void Emit_wnd::draw_spawner_types() {
-  int item {scast<int>(type)};
-  auto list = strs_to_null_terminated(spawner_type_names());
-  ImGui::Text("type");
-  ImGui::Combo("##type", &item, list.data());
-  type = scast<spawner_t>(item);
-  //TODO del:
-  if (type != spawner_t::statical) {
-    hpw_log("[!] need impl for other spawners!\n");
-    type = spawner_t::statical;
-  }
 }
 
 void Emit_wnd::draw_anim_list() {

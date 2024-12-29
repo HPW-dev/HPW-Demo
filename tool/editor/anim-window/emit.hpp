@@ -1,30 +1,14 @@
 #pragma once
-#include <unordered_map>
 #include "window.hpp"
 #include "util/macro.hpp"
 #include "util/str.hpp"
 
 class Heat_distort;
 
-enum class spawner_t {
-  statical = 0,
-  directed,
-  spray,
-};
-
-inline std::unordered_map<spawner_t, Str> spawner_type_table {
-  {spawner_t::statical, "statical"},
-  {spawner_t::directed, "directed"},
-  {spawner_t::spray, "spray"},
-};
-
 Strs spawner_type_names();
 
 // настройки спавнера частиц
 class Emit_wnd: public Window {
-  spawner_t type {spawner_t::statical};
-
-  void draw_spawner_types();
   void draw_anim_list();
   void make_new_anim();
   void delete_anim_by_name(cr<Str> name);
