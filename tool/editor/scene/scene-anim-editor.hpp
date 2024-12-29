@@ -15,5 +15,6 @@ public:
   ~Scene_anim_editor() = default;
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
+  void post_draw(Image& dst) const;
   void imgui_exec() override;
-}; // Scene_anim_editor
+};
