@@ -1,147 +1,142 @@
 animations:
-  anim.expl.big.1:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -25.5
-              - -30
-            P1:
-              - 0
-              - -47.5
-            P2:
-              - 34.5
-              - -36
-            P3:
-              - 15.5
-              - 23
-            P4:
-              - -5.5
-              - 44
-            P5:
-              - -18.5
-              - 19.5
-            P6:
-              - -27
-              - -3
+  anim.void: ~
+  anim.sphere.fade:
     frames:
-      Frame_UID_57:
-        duration: 0.100000001
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/0.png
+      Frame_UID_183:
+        duration: 0.0700000003
+        directions: 3
+        sprite path: resource/image/particle/fade sphere/0.png
         sprite offset:
-          - -14
-          - -17
-      Frame_UID_111:
+          - -5
+          - -5
+      Frame_UID_184:
+        duration: 0.0700000003
+        directions: 3
+        rotate offset:
+          - -1.4000001
+          - 0.699999988
+        sprite path: resource/image/particle/fade sphere/1.png
+        sprite offset:
+          - -5
+          - -5
+      Frame_UID_185:
+        duration: 0.0599999912
+        directions: 3
+        rotate offset:
+          - -1.00000012
+          - 0
+        sprite path: resource/image/particle/fade sphere/2.png
+        sprite offset:
+          - -5
+          - -4
+      Frame_UID_186:
         duration: 0.0500000007
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/1.png
+        directions: 3
+        sprite path: resource/image/particle/fade sphere/3.png
         sprite offset:
-          - -27
-          - -48
-      Frame_UID_179:
-        duration: 0.0599999987
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/2.png
+          - -4
+          - -3
+      Frame_UID_187:
+        duration: 0.0399999991
+        directions: 3
+        sprite path: resource/image/particle/fade sphere/4.png
         sprite offset:
-          - -39
-          - -71
+          - -3
+          - -3
       Frame_UID_188:
-        duration: 0.0700000003
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/3.png
+        duration: 0.0399999991
+        directions: 3
+        sprite path: resource/image/particle/fade sphere/5.png
         sprite offset:
-          - -28
-          - -69
+          - -2
+          - -2
       Frame_UID_189:
-        duration: 0.0700000003
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/4.png
+        duration: 0.0399999991
+        directions: 3
+        sprite path: resource/image/particle/fade sphere/6.png
         sprite offset:
-          - -27
-          - -63
-      Frame_UID_190:
-        duration: 0.0809999853
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/5.png
-        sprite offset:
-          - -25
-          - -44
-      Frame_UID_191:
-        duration: 0.0870000124
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/6.png
-        sprite offset:
-          - -30
-          - -41
-      Frame_UID_192:
-        duration: 0.0940000266
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/7.png
-        sprite offset:
-          - -25
-          - -44
-      Frame_UID_193:
-        duration: 0.0869999975
-        directions: 16
-        sprite path: resource/image/particle/big expl 1/8.png
-        sprite offset:
-          - 15
-          - -38
-  anim.enemy.bomber.1:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 0
-              - -56
-            P1:
-              - -23
-              - 24
-            P2:
-              - 0
-              - 31
-            P3:
-              - 23
-              - 24
-        poly_1:
-          points:
-            P0:
-              - -51
-              - 16
-            P1:
-              - 0
-              - -19
-            P2:
-              - 0
-              - 14
-            P3:
-              - -30.5
-              - 31
-        poly_2:
-          points:
-            P0:
-              - 51
-              - 16
-            P1:
-              - -0
-              - -19
-            P2:
-              - -0
-              - 14
-            P3:
-              - 30.5
-              - 31
+          - -2
+          - -2
+  anim.sparkling.stars:
     frames:
-      Frame_UID_45:
-        directions: 32
-        ccf: average
-        sprite path: resource/image/enemy/bomber 1/0.png
+      Frame_UID_172:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/0.png
         sprite offset:
-          - -50.5
-          - -56.5
+          - -6
+          - -6
+      Frame_UID_173:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/1.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_174:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/2.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_175:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/3.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_176:
+        duration: 0.0500000007
+        directions: 8
+        ccf: min
+        sprite path: resource/image/particle/sparkling stars/4.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_177:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/5.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_178:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/6.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_179:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/7.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_180:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/8.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_181:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/9.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_182:
+        duration: 0.0500000007
+        directions: 8
+        sprite path: resource/image/particle/sparkling stars/10.png
+        sprite offset:
+          - -6
+          - -6
   anim.shot.1:
     hitbox:
       polygons:
@@ -163,771 +158,353 @@ animations:
               - -3.5
               - 2.5
     frames:
-      Frame_UID_117:
+      Frame_UID_152:
         duration: 0.0609999672
         directions: 16
         sprite path: resource/image/particle/shoot 1/0.png
         sprite offset:
           - -6
           - -14
-      Frame_UID_124:
+      Frame_UID_153:
         duration: 0.0400000028
         directions: 16
         sprite path: resource/image/particle/shoot 1/1.png
         sprite offset:
           - -14
           - -26
-      Frame_UID_166:
+      Frame_UID_154:
         duration: 0.0559999757
         directions: 16
         sprite path: resource/image/particle/shoot 1/2.png
         sprite offset:
           - -14
           - -31
-      Frame_UID_173:
+      Frame_UID_155:
         duration: 0.0639999658
         directions: 16
         sprite path: resource/image/particle/shoot 1/3.png
         sprite offset:
           - -18
           - -46
-      Frame_UID_177:
+      Frame_UID_156:
         duration: 0.0699999779
         directions: 16
         sprite path: resource/image/particle/shoot 1/4.png
         sprite offset:
           - -18
           - -48
-      Frame_UID_181:
+      Frame_UID_157:
         duration: 0.0779999942
         directions: 16
         sprite path: resource/image/particle/shoot 1/5.png
         sprite offset:
           - -14
           - -50
-      Frame_UID_183:
+      Frame_UID_158:
         duration: 0.0799999982
         directions: 16
         sprite path: resource/image/particle/shoot 1/6.png
         sprite offset:
           - -13
           - -53
-      Frame_UID_185:
+      Frame_UID_159:
         duration: 0.0799999982
         directions: 16
         sprite path: resource/image/particle/shoot 1/7.png
         sprite offset:
           - -11
           - -54
-  anim.bullet.laser:
+  anim.player.boo.dark:
     hitbox:
       polygons:
         poly_0:
           points:
             P0:
               - 0
-              - -9
+              - -3
             P1:
               - 0
-              - 10
-    frames:
-      Frame_UID_4:
-        duration: 0.0299999993
-        directions: 64
-        sprite path: resource/image/bullet/laser/0.png
-        sprite offset:
-          - 0
-          - -9
-      Frame_UID_79:
-        duration: 0.0299999993
-        directions: 64
-        sprite path: resource/image/bullet/laser/1.png
-        sprite offset:
-          - 0
-          - -9
-      Frame_UID_97:
-        duration: 0.0299999993
-        directions: 64
-        sprite path: resource/image/bullet/laser/2.png
-        sprite offset:
-          - 0
-          - -9
-      Frame_UID_108:
-        duration: 0.0299999993
-        directions: 64
-        sprite path: resource/image/bullet/laser/3.png
-        sprite offset:
-          - -1
-          - -9
-      Frame_UID_122:
-        duration: 0.0299999993
-        directions: 64
-        rotate offset:
-          - 0
-          - 0.100000001
-        sprite path: resource/image/bullet/laser/4.png
-        sprite offset:
-          - -2
-          - -9
-      Frame_UID_160:
-        duration: 0.0299999993
-        directions: 64
-        sprite path: resource/image/bullet/laser/5.png
-        sprite offset:
-          - -1
-          - -9
-  anim.expl.mini.1:
-    frames:
-      Frame_UID_53:
-        duration: 0.030000031
-        directions: 3
-        sprite path: resource/image/particle/mini expl/0.png
-        sprite offset:
-          - -4
-          - -4
-      Frame_UID_62:
-        duration: 0.0380000211
-        directions: 3
-        sprite path: resource/image/particle/mini expl/1.png
-        sprite offset:
-          - -6
-          - -8
-      Frame_UID_80:
-        duration: 0.050999999
-        directions: 3
-        ccf: average
-        sprite path: resource/image/particle/mini expl/2.png
-        sprite offset:
-          - -8
-          - -10
-      Frame_UID_92:
-        duration: 0.0649999827
-        directions: 3
-        ccf: average
-        sprite path: resource/image/particle/mini expl/3.png
-        sprite offset:
-          - -10
-          - -11
-      Frame_UID_103:
-        duration: 0.075000003
-        directions: 3
-        cgp: box
-        sprite path: resource/image/particle/mini expl/4.png
-        sprite offset:
-          - -9
-          - -11
-      Frame_UID_113:
-        duration: 0.077000007
-        directions: 3
-        ccf: average
-        sprite path: resource/image/particle/mini expl/5.png
-        sprite offset:
-          - -10
-          - -11
-      Frame_UID_119:
-        duration: 0.0810000151
-        directions: 3
-        sprite path: resource/image/particle/mini expl/6.png
-        sprite offset:
-          - -10
-          - -11
-      Frame_UID_125:
-        duration: 0.0400000177
-        directions: 3
-        sprite path: resource/image/particle/mini expl/7.png
-        sprite offset:
-          - -10
-          - -11
-      Frame_UID_147:
-        duration: 0.0800000131
-        directions: 3
-        sprite path: resource/image/particle/mini expl/8.png
-        sprite offset:
-          - -10
-          - -11
-      Frame_UID_162:
-        duration: 0.0609999895
-        directions: 3
-        sprite path: resource/image/particle/mini expl/9.png
-        sprite offset:
-          - -9
-          - -11
-      Frame_UID_169:
-        duration: 0.0639999807
-        directions: 3
-        sprite path: resource/image/particle/mini expl/10.png
-        sprite offset:
-          - -8
-          - -10
-      Frame_UID_171:
-        duration: 0.0619999804
-        directions: 3
-        sprite path: resource/image/particle/mini expl/11.png
-        sprite offset:
-          - -8
-          - -9
-  anim.sparkling.stars:
-    frames:
-      Frame_UID_138:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/0.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_141:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/1.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_143:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/2.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_148:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/3.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_150:
-        duration: 0.0500000007
-        directions: 8
-        ccf: min
-        sprite path: resource/image/particle/sparkling stars/4.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_153:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/5.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_156:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/6.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_159:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/7.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_163:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/8.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_165:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/9.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_167:
-        duration: 0.0500000007
-        directions: 8
-        sprite path: resource/image/particle/sparkling stars/10.png
-        sprite offset:
-          - -6
-          - -6
-  anim.enemy.waiter:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 0
-              - -52
-            P1:
-              - 8
-              - -41
+              - 1
             P2:
-              - 16
-              - -27
-            P3:
-              - 22
-              - -0
-            P4:
-              - 20
               - 13
-            P5:
-              - 10
-              - 24
-            P6:
-              - 0
-              - 27
+              - 14
+            P3:
+              - 15
+              - 12
         poly_1:
           points:
             P0:
               - -0
-              - -52
+              - -3
             P1:
-              - -8
-              - -41
-            P2:
-              - -16
-              - -27
-            P3:
-              - -22
               - -0
-            P4:
-              - -20
-              - 13
-            P5:
-              - -10
-              - 24
-            P6:
-              - -0
-              - 27
-    frames:
-      Frame_UID_63:
-        directions: 1
-        sprite path: resource/image/enemy/waiter/normal.png
-        sprite offset:
-          - -23
-          - -51
-      Frame_UID_65:
-        directions: 1
-        sprite path: resource/image/enemy/waiter/damaged 1.png
-        sprite offset:
-          - -23
-          - -51
-      Frame_UID_66:
-        directions: 1
-        sprite path: resource/image/enemy/waiter/pre-expl.png
-        sprite offset:
-          - -23
-          - -51
-  anim.bullet.sphere.mixed:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 9
-              - 0
-            P1:
-              - 6
-              - 6
+              - 1
             P2:
-              - 0
-              - 9
+              - -13
+              - 14
             P3:
-              - -7
-              - 6
-            P4:
-              - -10
-              - 0
-            P5:
-              - -7
-              - -6
-            P6:
-              - 0
-              - -10
-            P7:
-              - 6
-              - -6
+              - -15
+              - 12
     frames:
-      Frame_UID_28:
-        directions: 1
-        sprite path: resource/image/bullet/sphere/sphere-mixed.png
-        sprite offset:
-          - -8.5
-          - -8.5
-  anim.enemy.cosmic.2:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -42
-              - 7
-            P1:
-              - -17.5
-              - 33
-            P2:
-              - 8.5
-              - 36
-            P3:
-              - 35
-              - 36
-            P4:
-              - 47
-              - 26
-            P5:
-              - 53
-              - 18
-            P6:
-              - 20
-              - -23.5
-            P7:
-              - -10
-              - -33.5
-            P8:
-              - -32
-              - -33.5
-            P9:
-              - -41
-              - -28.5
-            P10:
-              - -44.5
-              - -19.5
-    frames:
-      Frame_UID_55:
-        duration: 0.117169999
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 2/b0.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_56:
-        duration: 0.117169999
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 2/b1.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_58:
-        duration: 0.117169999
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 2/b0.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_64:
-        duration: 0.117169999
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 2/b2.png
-        sprite offset:
-          - -44
-          - -33
-  anim.direct.crash.1:
-    frames:
-      Frame_UID_18:
-        duration: 0.0557999797
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/0.png
-        sprite offset:
-          - -8
-          - -6
-      Frame_UID_30:
-        duration: 0.067799978
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/1.png
-        sprite offset:
-          - -11
-          - -8
-      Frame_UID_49:
-        duration: 0.0777999982
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/2.png
-        sprite offset:
-          - -12
-          - -13
-      Frame_UID_60:
-        duration: 0.0777999982
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/3.png
-        sprite offset:
-          - -13
-          - -6
-      Frame_UID_77:
-        duration: 0.0777999982
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/4.png
-        sprite offset:
-          - -12
-          - -6
-      Frame_UID_83:
-        duration: 0.0777999982
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/5.png
-        sprite offset:
-          - -13
-          - -6
-      Frame_UID_88:
-        duration: 0.0777999982
-        directions: 8
-        sprite path: resource/image/particle/direct crash 1/6.png
-        sprite offset:
-          - -11
-          - -1
-  anim.blink.star:
-    frames:
-      Frame_UID_1:
-        duration: 0.0900000036
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/0.png
-        sprite offset:
-          - -3
-          - -3
-      Frame_UID_5:
-        duration: 0.0900000036
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/4.png
-        sprite offset:
-          - -2
-          - -2
-      Frame_UID_13:
-        duration: 0.0900000036
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/1.png
-        sprite offset:
-          - -2
-          - -2
-      Frame_UID_16:
-        duration: 0.0700000003
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/2.png
-        sprite offset:
-          - -2
-          - -2
-      Frame_UID_20:
-        duration: 0.0900000036
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/7.png
-        sprite offset:
-          - -2
-          - -2
-      Frame_UID_26:
-        duration: 0.0700000003
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/3.png
-        sprite offset:
-          - -1
-          - -1
-      Frame_UID_37:
-        duration: 0.0900000036
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/5.png
-        sprite offset:
-          - -1
-          - -1
-      Frame_UID_42:
-        duration: 0.0900000036
-        directions: 1
-        ccf: max
-        sprite path: resource/image/particle/blink star/6.png
-        sprite offset:
-          - -1
-          - -1
-  anim.enemy.wall:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -256
-              - -29
-            P1:
-              - 256
-              - -29
-            P2:
-              - 256
-              - 28
-            P3:
-              - -256
-              - 28
-    frames:
-      Frame_UID_194:
-        directions: 1
-        sprite path: resource/image/enemy/enemy wall.png
-        sprite offset:
-          - -256
-          - -29
-  anim.crash.small:
-    frames:
-      Frame_UID_2:
-        duration: 0.0250000153
-        directions: 4
+      Frame_UID_148:
+        directions: 32
         rotate offset:
-          - -1.49011612e-08
-          - 0
-        sprite path: resource/image/particle/small crash/0.png
+          - 2.89999962
+          - 0.600000858
+        sprite path: resource/image/player/dark/0.png
+        sprite offset:
+          - -15
+          - -2
+  anim.particle.laser.shard:
+    frames:
+      Frame_UID_141:
+        duration: 0.0450000018
+        directions: 16
+        sprite path: resource/image/particle/laser shard/0.png
         sprite offset:
           - -1
-          - -1
-      Frame_UID_3:
-        duration: 0.0479999892
-        directions: 8
-        rotate offset:
-          - -1.49011612e-08
-          - -0.100000001
-        sprite path: resource/image/particle/small crash/1.png
-        sprite offset:
-          - -3
-          - -3
-      Frame_UID_12:
-        duration: 0.0549999774
-        directions: 8
-        rotate offset:
-          - 0.0999999866
-          - -0.100000001
-        sprite path: resource/image/particle/small crash/2.png
-        sprite offset:
-          - -4
-          - -4
-      Frame_UID_23:
-        duration: 0.071999982
-        directions: 4
-        rotate offset:
-          - -1.49011612e-08
-          - 0
-        sprite path: resource/image/particle/small crash/3.png
-        sprite offset:
-          - -5
-          - -5
-      Frame_UID_33:
-        duration: 0.0799999982
-        directions: 4
-        rotate offset:
-          - -1.49011612e-08
-          - 0
-        sprite path: resource/image/particle/small crash/4.png
-        sprite offset:
-          - -5
-          - -5
-      Frame_UID_40:
-        duration: 0.0799999982
-        directions: 8
-        rotate offset:
-          - -1.49011612e-08
-          - -1.50000024
-        sprite path: resource/image/particle/small crash/5.png
-        sprite offset:
-          - -3
-          - -5
-  anim.enemy.cosmic.1:
-    frames:
-      Frame_UID_25:
-        duration: 0.129999995
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/0.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_27:
-        duration: 0.129999995
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/1.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_32:
-        duration: 0.129999995
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/2.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_36:
-        duration: 0.170000002
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/3.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_39:
-        duration: 0.209999993
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/4.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_44:
-        duration: 0.119999997
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/5.png
-        sprite offset:
-          - -44
-          - -33
-      Frame_UID_48:
-        duration: 0.100000001
-        directions: 1
-        sprite path: resource/image/enemy/cosmic/state 1/6.png
-        sprite offset:
-          - -44
-          - -33
-  anim.sphere.fade:
-    frames:
+          - -7
       Frame_UID_142:
-        duration: 0.0700000003
-        directions: 3
-        sprite path: resource/image/particle/fade sphere/0.png
+        duration: 0.0549999997
+        directions: 16
+        sprite path: resource/image/particle/laser shard/1.png
         sprite offset:
-          - -5
-          - -5
+          - -1
+          - -18
+      Frame_UID_143:
+        duration: 0.0549999997
+        directions: 16
+        sprite path: resource/image/particle/laser shard/2.png
+        sprite offset:
+          - -1
+          - -18
+      Frame_UID_144:
+        duration: 0.0549999997
+        directions: 16
+        rotate offset:
+          - 0
+          - 0.100000001
+        sprite path: resource/image/particle/laser shard/3.png
+        sprite offset:
+          - -1
+          - -18
+      Frame_UID_145:
+        duration: 0.0649999976
+        directions: 16
+        sprite path: resource/image/particle/laser shard/4.png
+        sprite offset:
+          - -1
+          - -19
       Frame_UID_146:
         duration: 0.0700000003
-        directions: 3
+        directions: 16
         rotate offset:
-          - -1.4000001
-          - 0.699999988
-        sprite path: resource/image/particle/fade sphere/1.png
+          - 0.800000072
+          - 0.800000072
+        sprite path: resource/image/particle/laser shard/5.png
         sprite offset:
-          - -5
-          - -5
-      Frame_UID_151:
-        duration: 0.0599999912
-        directions: 3
+          - -1
+          - -19
+  anim.player.boo.dark.long.1:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -4
+            P1:
+              - 11
+              - 24
+            P2:
+              - 8
+              - 25
+            P3:
+              - 0
+              - 2
+        poly_1:
+          points:
+            P0:
+              - -0
+              - -4
+            P1:
+              - -11
+              - 24
+            P2:
+              - -8
+              - 25
+            P3:
+              - -0
+              - 2
+    frames:
+      Frame_UID_149:
+        directions: 32
         rotate offset:
-          - -1.00000012
-          - 0
-        sprite path: resource/image/particle/fade sphere/2.png
+          - -1.40000021
+          - 0.900000095
+        sprite path: resource/image/player/dark/long 1.png
         sprite offset:
-          - -5
-          - -4
-      Frame_UID_152:
-        duration: 0.0500000007
-        directions: 3
-        sprite path: resource/image/particle/fade sphere/3.png
-        sprite offset:
-          - -4
+          - -10
           - -3
-      Frame_UID_155:
-        duration: 0.0399999991
-        directions: 3
-        sprite path: resource/image/particle/fade sphere/4.png
+  anim.fire.1.red:
+    frames:
+      Frame_UID_122:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/0.png
         sprite offset:
-          - -3
-          - -3
-      Frame_UID_157:
-        duration: 0.0399999991
-        directions: 3
-        sprite path: resource/image/particle/fade sphere/5.png
+          - -9
+          - -25
+      Frame_UID_123:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/1.png
         sprite offset:
-          - -2
-          - -2
-      Frame_UID_161:
-        duration: 0.0399999991
-        directions: 3
-        sprite path: resource/image/particle/fade sphere/6.png
+          - -10
+          - -26
+      Frame_UID_124:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/2.png
         sprite offset:
-          - -2
-          - -2
+          - -11
+          - -21
+      Frame_UID_125:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/3.png
+        sprite offset:
+          - -8
+          - -18
+      Frame_UID_126:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/4.png
+        sprite offset:
+          - -7
+          - -21
+      Frame_UID_127:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/5.png
+        sprite offset:
+          - -9
+          - -17
+      Frame_UID_128:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/6.png
+        sprite offset:
+          - -12
+          - -25
+      Frame_UID_129:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/7.png
+        sprite offset:
+          - -13
+          - -26
+      Frame_UID_130:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/8.png
+        sprite offset:
+          - -15
+          - -21
+      Frame_UID_131:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/9.png
+        sprite offset:
+          - -14
+          - -18
+      Frame_UID_132:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/10.png
+        sprite offset:
+          - -10
+          - -21
+      Frame_UID_133:
+        directions: 8
+        sprite path: resource/image/particle/fire 1 red/11.png
+        sprite offset:
+          - -13
+          - -17
+  anim.bullet.star:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -0.5
+              - 2
+            P1:
+              - -6
+              - -7
+            P2:
+              - 3.5
+              - -6
+    frames:
+      Frame_UID_43:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/0.png
+        sprite offset:
+          - -3.5
+          - -10
+      Frame_UID_44:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/1.png
+        sprite offset:
+          - -6.5
+          - -7
+      Frame_UID_45:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/2.png
+        sprite offset:
+          - -4.5
+          - -16
+      Frame_UID_46:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/3.png
+        sprite offset:
+          - -4.5
+          - -9
+      Frame_UID_47:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/4.png
+        sprite offset:
+          - -4.5
+          - -9
+      Frame_UID_48:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/5.png
+        sprite offset:
+          - -7.5
+          - -10
+      Frame_UID_49:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/6.png
+        sprite offset:
+          - -5.5
+          - -7
+      Frame_UID_50:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/7.png
+        sprite offset:
+          - -6.5
+          - -16
+      Frame_UID_51:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/8.png
+        sprite offset:
+          - -4.5
+          - -9
+      Frame_UID_52:
+        duration: 0.0299999993
+        directions: 16
+        sprite path: resource/image/bullet/star/9.png
+        sprite offset:
+          - -4.5
+          - -9
   anim.bullet.sphere.red:
     hitbox:
       polygons:
@@ -958,12 +535,155 @@ animations:
               - 6
               - -6
     frames:
-      Frame_UID_29:
+      Frame_UID_42:
         directions: 1
         sprite path: resource/image/bullet/sphere/sphere-red.png
         sprite offset:
           - -8.5
           - -8.5
+  anim.bullet.sphere.mixed:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 9
+              - 0
+            P1:
+              - 6
+              - 6
+            P2:
+              - 0
+              - 9
+            P3:
+              - -7
+              - 6
+            P4:
+              - -10
+              - 0
+            P5:
+              - -7
+              - -6
+            P6:
+              - 0
+              - -10
+            P7:
+              - 6
+              - -6
+    frames:
+      Frame_UID_41:
+        directions: 1
+        sprite path: resource/image/bullet/sphere/sphere-mixed.png
+        sprite offset:
+          - -8.5
+          - -8.5
+  anim.player.boo.dark.long.2:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 1
+              - -40
+            P1:
+              - -1
+              - -40
+            P2:
+              - -1
+              - 40
+            P3:
+              - 1
+              - 40
+    frames:
+      Frame_UID_150:
+        directions: 64
+        rotate offset:
+          - 0
+          - 0.200000018
+        sprite path: resource/image/player/dark/long 2.png
+        sprite offset:
+          - -1
+          - -41
+  anim.placeholder.mini:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -5
+              - -5
+            P1:
+              - 5
+              - -5
+            P2:
+              - 5
+              - 5
+            P3:
+              - -5
+              - 5
+    frames:
+      Frame_UID_147:
+        directions: 16
+        rotate offset:
+          - 1.60000014
+          - 0.799999952
+        sprite path: resource/image/other/placeholders/mini.png
+        sprite offset:
+          - -5
+          - -5
+  anim.bullet.small.blinker.1:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -3
+            P1:
+              - 3
+              - 0
+            P2:
+              - 0
+              - 3
+            P3:
+              - -3
+              - 0
+    frames:
+      Frame_UID_33:
+        duration: 0.0299999993
+        directions: 1
+        sprite path: resource/image/bullet/blinker/1.png
+        sprite offset:
+          - -3
+          - -3
+      Frame_UID_34:
+        duration: 0.0299999993
+        directions: 1
+        sprite path: resource/image/bullet/blinker/2.png
+        sprite offset:
+          - -3
+          - -3
+      Frame_UID_35:
+        duration: 0.0299999993
+        directions: 1
+        sprite path: resource/image/bullet/blinker/3.png
+        sprite offset:
+          - -3
+          - -3
+      Frame_UID_36:
+        duration: 0.0299999993
+        directions: 1
+        sprite path: resource/image/bullet/blinker/4.png
+        sprite offset:
+          - -3
+          - -3
+      Frame_UID_37:
+        duration: 0.0299999993
+        directions: 1
+        sprite path: resource/image/bullet/blinker/5.png
+        sprite offset:
+          - -3
+          - -3
   anim.sphere.wave:
     hitbox:
       polygons:
@@ -991,14 +711,14 @@ animations:
               - -14
               - 9.5
     frames:
-      Frame_UID_144:
+      Frame_UID_190:
         duration: 0.0850000009
         directions: 16
         sprite path: resource/image/bullet/sphere wave/0.png
         sprite offset:
           - -12
           - -11
-      Frame_UID_170:
+      Frame_UID_191:
         duration: 0.0850000009
         directions: 16
         ccf: average
@@ -1006,21 +726,21 @@ animations:
         sprite offset:
           - -13
           - -11
-      Frame_UID_172:
+      Frame_UID_192:
         duration: 0.0850000009
         directions: 16
         sprite path: resource/image/bullet/sphere wave/2.png
         sprite offset:
           - -12
           - -11
-      Frame_UID_174:
+      Frame_UID_193:
         duration: 0.0850000009
         directions: 16
         sprite path: resource/image/bullet/sphere wave/3.png
         sprite offset:
           - -12
           - -11
-      Frame_UID_176:
+      Frame_UID_194:
         duration: 0.0599999987
         directions: 16
         sprite path: resource/image/bullet/sphere wave/4.png
@@ -1057,7 +777,7 @@ animations:
               - 6
               - -6
     frames:
-      Frame_UID_34:
+      Frame_UID_40:
         directions: 1
         sprite path: resource/image/bullet/sphere/sphere-gray.png
         sprite offset:
@@ -1081,14 +801,14 @@ animations:
               - -3
               - 0
     frames:
-      Frame_UID_14:
+      Frame_UID_38:
         duration: 0.0599999316
         directions: 1
         sprite path: resource/image/bullet/blinker/2.png
         sprite offset:
           - -3
           - -3
-      Frame_UID_22:
+      Frame_UID_39:
         duration: 0.0599999316
   anim.bullet.placeholder.1:
     hitbox:
@@ -1108,7 +828,7 @@ animations:
               - -4
               - 3
     frames:
-      Frame_UID_15:
+      Frame_UID_14:
         directions: 16
         sprite path: resource/image/other/placeholders/bullet 1.png
         sprite offset:
@@ -1251,28 +971,28 @@ animations:
               - 10.5
               - 8
     frames:
-      Frame_UID_69:
+      Frame_UID_83:
         duration: 0.150000006
         directions: 1
         sprite path: resource/image/enemy/illaen/0.png
         sprite offset:
           - -68
           - -50
-      Frame_UID_70:
+      Frame_UID_84:
         duration: 0.200000003
         directions: 1
         sprite path: resource/image/enemy/illaen/1.png
         sprite offset:
           - -68
           - -50
-      Frame_UID_71:
+      Frame_UID_85:
         duration: 0.171700001
         directions: 1
         sprite path: resource/image/enemy/illaen/2.png
         sprite offset:
           - -68
           - -50
-      Frame_UID_72:
+      Frame_UID_86:
         duration: 0.150000006
         directions: 1
         sprite path: resource/image/enemy/illaen/3.png
@@ -1297,7 +1017,7 @@ animations:
               - -18
               - 29
     frames:
-      Frame_UID_50:
+      Frame_UID_87:
         directions: 16
         rotate offset:
           - -0.100000016
@@ -1308,42 +1028,42 @@ animations:
           - -28
   anim.frac.metall.1:
     frames:
-      Frame_UID_73:
+      Frame_UID_134:
         duration: 0.0549999997
         directions: 16
         sprite path: resource/image/particle/frac metall/1.png
         sprite offset:
           - -9
           - -8
-      Frame_UID_91:
+      Frame_UID_135:
         duration: 0.0549999997
         directions: 16
         sprite path: resource/image/particle/frac metall/2.png
         sprite offset:
           - -9
           - -7
-      Frame_UID_105:
+      Frame_UID_136:
         duration: 0.0549999997
         directions: 16
         sprite path: resource/image/particle/frac metall/3.png
         sprite offset:
           - -9
           - -8
-      Frame_UID_114:
+      Frame_UID_137:
         duration: 0.0549999997
         directions: 16
         sprite path: resource/image/particle/frac metall/4.png
         sprite offset:
           - -8
           - -9
-      Frame_UID_121:
+      Frame_UID_138:
         duration: 0.0549999997
         directions: 16
         sprite path: resource/image/particle/frac metall/5.png
         sprite offset:
           - -9
           - -11
-      Frame_UID_140:
+      Frame_UID_139:
         duration: 0.0549999997
         directions: 16
         cgp: box
@@ -1351,7 +1071,7 @@ animations:
         sprite offset:
           - -10
           - -10
-      Frame_UID_154:
+      Frame_UID_140:
         duration: 0.0549999997
         directions: 16
         sprite path: resource/image/particle/frac metall/8.png
@@ -1376,13 +1096,668 @@ animations:
               - -1
               - 4
     frames:
-      Frame_UID_8:
+      Frame_UID_26:
         directions: 32
         cgp: box
         sprite path: resource/image/bullet/player/side.png
         sprite offset:
           - -1
           - -5
+  anim.bullet.player.small:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -4
+              - 3
+            P1:
+              - 3
+              - 3
+            P2:
+              - 0
+              - -3
+    frames:
+      Frame_UID_27:
+        duration: 0.0299999993
+        directions: 16
+        rotate offset:
+          - 0
+          - -0.800000072
+        sprite path: resource/image/bullet/player/small/0.png
+        sprite offset:
+          - -3
+          - -2
+      Frame_UID_28:
+        duration: 0.0299999993
+        directions: 16
+        rotate offset:
+          - 0
+          - -0.800000072
+        sprite path: resource/image/bullet/player/small/1.png
+        sprite offset:
+          - -3
+          - -2
+      Frame_UID_29:
+        duration: 0.0299999993
+        directions: 16
+        rotate offset:
+          - 0
+          - -0.800000072
+        sprite path: resource/image/bullet/player/small/2.png
+        sprite offset:
+          - -3
+          - -2
+      Frame_UID_30:
+        directions: 16
+        rotate offset:
+          - 0
+          - -0.800000072
+        sprite path: resource/image/bullet/player/small/3.png
+        sprite offset:
+          - -4
+          - -2
+      Frame_UID_31:
+        duration: 0.0299999993
+        directions: 16
+        rotate offset:
+          - 0
+          - -0.800000072
+        sprite path: resource/image/bullet/player/small/4.png
+        sprite offset:
+          - -4
+          - -2
+      Frame_UID_32:
+        directions: 16
+        rotate offset:
+          - 0
+          - -0.800000072
+        sprite path: resource/image/bullet/player/small/5.png
+        sprite offset:
+          - -4
+          - -2
+  anim.smoke.1:
+    frames:
+      Frame_UID_160:
+        duration: 0.0500000007
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/0.png
+        sprite offset:
+          - -7
+          - -5
+      Frame_UID_161:
+        duration: 0.0599999987
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/1.png
+        sprite offset:
+          - -8
+          - -9
+      Frame_UID_162:
+        duration: 0.0599999987
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/2.png
+        sprite offset:
+          - -9
+          - -11
+      Frame_UID_163:
+        duration: 0.0700000003
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/3.png
+        sprite offset:
+          - -12
+          - -12
+      Frame_UID_164:
+        duration: 0.0799999982
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/4.png
+        sprite offset:
+          - -12
+          - -12
+      Frame_UID_165:
+        duration: 0.0700000003
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/5.png
+        sprite offset:
+          - -18
+          - -15
+      Frame_UID_166:
+        duration: 0.0700000003
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/6.png
+        sprite offset:
+          - -19
+          - -19
+      Frame_UID_167:
+        duration: 0.0799999982
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/7.png
+        sprite offset:
+          - -22
+          - -21
+      Frame_UID_168:
+        duration: 0.0900000036
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/8.png
+        sprite offset:
+          - -25
+          - -25
+      Frame_UID_169:
+        duration: 0.0900000036
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/9.png
+        sprite offset:
+          - -27
+          - -30
+      Frame_UID_170:
+        duration: 0.100000001
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/10.png
+        sprite offset:
+          - -28
+          - -26
+      Frame_UID_171:
+        duration: 0.0599999987
+        directions: 4
+        sprite path: resource/image/particle/smoke 1/12.png
+        sprite offset:
+          - -25
+          - -22
+  anim.bullet.player.mid:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -21
+            P1:
+              - 9
+              - 11
+            P2:
+              - -9
+              - 11
+    frames:
+      Frame_UID_16:
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/0.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_17:
+        duration: 0.0500000007
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/1.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_18:
+        duration: 0.0500000007
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/2.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_19:
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/3.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_20:
+        duration: 0.0500000007
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/4.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_21:
+        duration: 0.0500000007
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/5.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_22:
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/6.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_23:
+        duration: 0.0500000007
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/7.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_24:
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/8.png
+        sprite offset:
+          - -9
+          - -21
+      Frame_UID_25:
+        duration: 0.0500000007
+        directions: 32
+        ccf: max
+        sprite path: resource/image/bullet/player/mid/9.png
+        sprite offset:
+          - -9
+          - -21
+  anim.delme.f:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -7
+              - 0.5
+            P1:
+              - 6.5
+              - 0.5
+        poly_1:
+          points:
+            P0:
+              - 0
+              - -20.5
+            P1:
+              - 0
+              - 8
+        poly_2:
+          points:
+            P0:
+              - 0
+              - -20.5
+            P1:
+              - 5.5
+              - -20.5
+    frames:
+      Frame_UID_62:
+        directions: 32
+        rotate offset:
+          - -0.699999988
+          - -0.299999982
+        sprite path: resource/image/particle/dummy/F.png
+        sprite offset:
+          - -11
+          - -27
+  anim.bullet.laser:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -9
+            P1:
+              - 0
+              - 10
+    frames:
+      Frame_UID_8:
+        duration: 0.0299999993
+        directions: 64
+        sprite path: resource/image/bullet/laser/0.png
+        sprite offset:
+          - 0
+          - -9
+      Frame_UID_9:
+        duration: 0.0299999993
+        directions: 64
+        sprite path: resource/image/bullet/laser/1.png
+        sprite offset:
+          - 0
+          - -9
+      Frame_UID_10:
+        duration: 0.0299999993
+        directions: 64
+        sprite path: resource/image/bullet/laser/2.png
+        sprite offset:
+          - 0
+          - -9
+      Frame_UID_11:
+        duration: 0.0299999993
+        directions: 64
+        sprite path: resource/image/bullet/laser/3.png
+        sprite offset:
+          - -1
+          - -9
+      Frame_UID_12:
+        duration: 0.0299999993
+        directions: 64
+        rotate offset:
+          - 0
+          - 0.100000001
+        sprite path: resource/image/bullet/laser/4.png
+        sprite offset:
+          - -2
+          - -9
+      Frame_UID_13:
+        duration: 0.0299999993
+        directions: 64
+        sprite path: resource/image/bullet/laser/5.png
+        sprite offset:
+          - -1
+          - -9
+  anim.blink.star:
+    frames:
+      Frame_UID_0:
+        duration: 0.0900000036
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/0.png
+        sprite offset:
+          - -3
+          - -3
+      Frame_UID_1:
+        duration: 0.0900000036
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/4.png
+        sprite offset:
+          - -2
+          - -2
+      Frame_UID_2:
+        duration: 0.0900000036
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/1.png
+        sprite offset:
+          - -2
+          - -2
+      Frame_UID_3:
+        duration: 0.0700000003
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/2.png
+        sprite offset:
+          - -2
+          - -2
+      Frame_UID_4:
+        duration: 0.0900000036
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/7.png
+        sprite offset:
+          - -2
+          - -2
+      Frame_UID_5:
+        duration: 0.0700000003
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/3.png
+        sprite offset:
+          - -1
+          - -1
+      Frame_UID_6:
+        duration: 0.0900000036
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/5.png
+        sprite offset:
+          - -1
+          - -1
+      Frame_UID_7:
+        duration: 0.0900000036
+        directions: 1
+        ccf: max
+        sprite path: resource/image/particle/blink star/6.png
+        sprite offset:
+          - -1
+          - -1
+  anim.player.boo.dark.long.3:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -1
+              - -257
+            P1:
+              - -1
+              - 257
+            P2:
+              - 1
+              - 257
+            P3:
+              - 1
+              - -257
+    frames:
+      Frame_UID_151:
+        directions: 128
+        rotate offset:
+          - 0.699999988
+          - 0.600000024
+        sprite path: resource/image/player/dark/long 3.png
+        sprite offset:
+          - -1
+          - -257
+  anim.delme.123:
+    frames:
+      Frame_UID_59:
+        duration: 1
+        directions: 1
+        sprite path: resource/image/particle/123/1.png
+        sprite offset:
+          - -5.5
+          - -7
+      Frame_UID_60:
+        duration: 1
+        directions: 1
+        sprite path: resource/image/particle/123/2.png
+        sprite offset:
+          - -5.5
+          - -7
+      Frame_UID_61:
+        duration: 1
+        directions: 1
+        sprite path: resource/image/particle/123/3.png
+        sprite offset:
+          - -5.5
+          - -7
+  anim.direct.crash.1:
+    frames:
+      Frame_UID_63:
+        duration: 0.0557999797
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/0.png
+        sprite offset:
+          - -8
+          - -6
+      Frame_UID_64:
+        duration: 0.067799978
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/1.png
+        sprite offset:
+          - -11
+          - -8
+      Frame_UID_65:
+        duration: 0.0777999982
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/2.png
+        sprite offset:
+          - -12
+          - -13
+      Frame_UID_66:
+        duration: 0.0777999982
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/3.png
+        sprite offset:
+          - -13
+          - -6
+      Frame_UID_67:
+        duration: 0.0777999982
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/4.png
+        sprite offset:
+          - -12
+          - -6
+      Frame_UID_68:
+        duration: 0.0777999982
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/5.png
+        sprite offset:
+          - -13
+          - -6
+      Frame_UID_69:
+        duration: 0.0777999982
+        directions: 8
+        sprite path: resource/image/particle/direct crash 1/6.png
+        sprite offset:
+          - -11
+          - -1
+  anim.enemy.cosmic.2:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -42
+              - 7
+            P1:
+              - -17.5
+              - 33
+            P2:
+              - 8.5
+              - 36
+            P3:
+              - 35
+              - 36
+            P4:
+              - 47
+              - 26
+            P5:
+              - 53
+              - 18
+            P6:
+              - 20
+              - -23.5
+            P7:
+              - -10
+              - -33.5
+            P8:
+              - -32
+              - -33.5
+            P9:
+              - -41
+              - -28.5
+            P10:
+              - -44.5
+              - -19.5
+    frames:
+      Frame_UID_78:
+        duration: 0.117169999
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 2/b0.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_79:
+        duration: 0.117169999
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 2/b1.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_80:
+        duration: 0.117169999
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 2/b0.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_81:
+        duration: 0.117169999
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 2/b2.png
+        sprite offset:
+          - -44
+          - -33
+  anim.enemy.bomber.1:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -56
+            P1:
+              - -23
+              - 24
+            P2:
+              - 0
+              - 31
+            P3:
+              - 23
+              - 24
+        poly_1:
+          points:
+            P0:
+              - -51
+              - 16
+            P1:
+              - 0
+              - -19
+            P2:
+              - 0
+              - 14
+            P3:
+              - -30.5
+              - 31
+        poly_2:
+          points:
+            P0:
+              - 51
+              - 16
+            P1:
+              - -0
+              - -19
+            P2:
+              - -0
+              - 14
+            P3:
+              - 30.5
+              - 31
+    frames:
+      Frame_UID_70:
+        directions: 32
+        ccf: average
+        sprite path: resource/image/enemy/bomber 1/0.png
+        sprite offset:
+          - -50.5
+          - -56.5
+  anim.bullet.placeholder.2:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -4
+              - -12
+            P1:
+              - 3
+              - -12
+            P2:
+              - 3
+              - 12
+            P3:
+              - -4
+              - 12
+    frames:
+      Frame_UID_15:
+        directions: 32
+        sprite path: resource/image/other/placeholders/bullet 2.png
+        sprite offset:
+          - -4
+          - -12
   anim.enemy.cosmic.hunter:
     hitbox:
       polygons:
@@ -1437,875 +1812,13 @@ animations:
               - -0
               - 8
     frames:
-      Frame_UID_59:
+      Frame_UID_82:
         directions: 64
         ccf: average
         sprite path: resource/image/enemy/hunter/hunter.png
         sprite offset:
           - -22
           - -22
-  anim.bullet.placeholder.2:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -4
-              - -12
-            P1:
-              - 3
-              - -12
-            P2:
-              - 3
-              - 12
-            P3:
-              - -4
-              - 12
-    frames:
-      Frame_UID_17:
-        directions: 32
-        sprite path: resource/image/other/placeholders/bullet 2.png
-        sprite offset:
-          - -4
-          - -12
-  anim.player.boo.dark.long.3:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -1
-              - -257
-            P1:
-              - -1
-              - 257
-            P2:
-              - 1
-              - 257
-            P3:
-              - 1
-              - -257
-    frames:
-      Frame_UID_102:
-        directions: 128
-        rotate offset:
-          - 0.699999988
-          - 0.600000024
-        sprite path: resource/image/player/dark/long 3.png
-        sprite offset:
-          - -1
-          - -257
-  anim.delme.123:
-    frames:
-      Frame_UID_0:
-        duration: 1
-        directions: 1
-        sprite path: resource/image/particle/123/1.png
-        sprite offset:
-          - -5.5
-          - -7
-      Frame_UID_7:
-        duration: 1
-        directions: 1
-        sprite path: resource/image/particle/123/2.png
-        sprite offset:
-          - -5.5
-          - -7
-      Frame_UID_10:
-        duration: 1
-        directions: 1
-        sprite path: resource/image/particle/123/3.png
-        sprite offset:
-          - -5.5
-          - -7
-  anim.bullet.player.small:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -4
-              - 3
-            P1:
-              - 3
-              - 3
-            P2:
-              - 0
-              - -3
-    frames:
-      Frame_UID_6:
-        duration: 0.0299999993
-        directions: 16
-        rotate offset:
-          - 0
-          - -0.800000072
-        sprite path: resource/image/bullet/player/small/0.png
-        sprite offset:
-          - -3
-          - -2
-      Frame_UID_21:
-        duration: 0.0299999993
-        directions: 16
-        rotate offset:
-          - 0
-          - -0.800000072
-        sprite path: resource/image/bullet/player/small/1.png
-        sprite offset:
-          - -3
-          - -2
-      Frame_UID_35:
-        duration: 0.0299999993
-        directions: 16
-        rotate offset:
-          - 0
-          - -0.800000072
-        sprite path: resource/image/bullet/player/small/2.png
-        sprite offset:
-          - -3
-          - -2
-      Frame_UID_47:
-        directions: 16
-        rotate offset:
-          - 0
-          - -0.800000072
-        sprite path: resource/image/bullet/player/small/3.png
-        sprite offset:
-          - -4
-          - -2
-      Frame_UID_51:
-        duration: 0.0299999993
-        directions: 16
-        rotate offset:
-          - 0
-          - -0.800000072
-        sprite path: resource/image/bullet/player/small/4.png
-        sprite offset:
-          - -4
-          - -2
-      Frame_UID_61:
-        directions: 16
-        rotate offset:
-          - 0
-          - -0.800000072
-        sprite path: resource/image/bullet/player/small/5.png
-        sprite offset:
-          - -4
-          - -2
-  anim.player.boo.dark:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 0
-              - -3
-            P1:
-              - 0
-              - 1
-            P2:
-              - 13
-              - 14
-            P3:
-              - 15
-              - 12
-        poly_1:
-          points:
-            P0:
-              - -0
-              - -3
-            P1:
-              - -0
-              - 1
-            P2:
-              - -13
-              - 14
-            P3:
-              - -15
-              - 12
-    frames:
-      Frame_UID_89:
-        directions: 32
-        rotate offset:
-          - 2.89999962
-          - 0.600000858
-        sprite path: resource/image/player/dark/0.png
-        sprite offset:
-          - -15
-          - -2
-  anim.player.boo.dark.long.2:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 1
-              - -40
-            P1:
-              - -1
-              - -40
-            P2:
-              - -1
-              - 40
-            P3:
-              - 1
-              - 40
-    frames:
-      Frame_UID_101:
-        directions: 64
-        rotate offset:
-          - 0
-          - 0.200000018
-        sprite path: resource/image/player/dark/long 2.png
-        sprite offset:
-          - -1
-          - -41
-  anim.bullet.small.blinker.1:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 0
-              - -3
-            P1:
-              - 3
-              - 0
-            P2:
-              - 0
-              - 3
-            P3:
-              - -3
-              - 0
-    frames:
-      Frame_UID_19:
-        duration: 0.0299999993
-        directions: 1
-        sprite path: resource/image/bullet/blinker/1.png
-        sprite offset:
-          - -3
-          - -3
-      Frame_UID_24:
-        duration: 0.0299999993
-        directions: 1
-        sprite path: resource/image/bullet/blinker/2.png
-        sprite offset:
-          - -3
-          - -3
-      Frame_UID_38:
-        duration: 0.0299999993
-        directions: 1
-        sprite path: resource/image/bullet/blinker/3.png
-        sprite offset:
-          - -3
-          - -3
-      Frame_UID_43:
-        duration: 0.0299999993
-        directions: 1
-        sprite path: resource/image/bullet/blinker/4.png
-        sprite offset:
-          - -3
-          - -3
-      Frame_UID_46:
-        duration: 0.0299999993
-        directions: 1
-        sprite path: resource/image/bullet/blinker/5.png
-        sprite offset:
-          - -3
-          - -3
-  anim.placeholder.mini:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -5
-              - -5
-            P1:
-              - 5
-              - -5
-            P2:
-              - 5
-              - 5
-            P3:
-              - -5
-              - 5
-    frames:
-      Frame_UID_82:
-        directions: 16
-        rotate offset:
-          - 1.60000014
-          - 0.799999952
-        sprite path: resource/image/other/placeholders/mini.png
-        sprite offset:
-          - -5
-          - -5
-  anim.particle.laser.shard:
-    frames:
-      Frame_UID_74:
-        duration: 0.0450000018
-        directions: 16
-        sprite path: resource/image/particle/laser shard/0.png
-        sprite offset:
-          - -1
-          - -7
-      Frame_UID_76:
-        duration: 0.0549999997
-        directions: 16
-        sprite path: resource/image/particle/laser shard/1.png
-        sprite offset:
-          - -1
-          - -18
-      Frame_UID_85:
-        duration: 0.0549999997
-        directions: 16
-        sprite path: resource/image/particle/laser shard/2.png
-        sprite offset:
-          - -1
-          - -18
-      Frame_UID_90:
-        duration: 0.0549999997
-        directions: 16
-        rotate offset:
-          - 0
-          - 0.100000001
-        sprite path: resource/image/particle/laser shard/3.png
-        sprite offset:
-          - -1
-          - -18
-      Frame_UID_95:
-        duration: 0.0649999976
-        directions: 16
-        sprite path: resource/image/particle/laser shard/4.png
-        sprite offset:
-          - -1
-          - -19
-      Frame_UID_99:
-        duration: 0.0700000003
-        directions: 16
-        rotate offset:
-          - 0.800000072
-          - 0.800000072
-        sprite path: resource/image/particle/laser shard/5.png
-        sprite offset:
-          - -1
-          - -19
-  anim.enemy.placeholder.small:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -12
-              - -13
-            P1:
-              - 13
-              - -13
-            P2:
-              - 13
-              - 12
-            P3:
-              - -12
-              - 12
-    frames:
-      Frame_UID_52:
-        directions: 16
-        cgp: box
-        rotate offset:
-          - -1.80000031
-          - -1.70000005
-        sprite path: resource/image/other/placeholders/enemy small.png
-        sprite offset:
-          - -12
-          - -13
-  anim.bullet.star:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -0.5
-              - 2
-            P1:
-              - -6
-              - -7
-            P2:
-              - 3.5
-              - -6
-    frames:
-      Frame_UID_11:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/0.png
-        sprite offset:
-          - -3.5
-          - -10
-      Frame_UID_41:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/1.png
-        sprite offset:
-          - -6.5
-          - -7
-      Frame_UID_54:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/2.png
-        sprite offset:
-          - -4.5
-          - -16
-      Frame_UID_81:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/3.png
-        sprite offset:
-          - -4.5
-          - -9
-      Frame_UID_87:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/4.png
-        sprite offset:
-          - -4.5
-          - -9
-      Frame_UID_94:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/5.png
-        sprite offset:
-          - -7.5
-          - -10
-      Frame_UID_100:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/6.png
-        sprite offset:
-          - -5.5
-          - -7
-      Frame_UID_106:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/7.png
-        sprite offset:
-          - -6.5
-          - -16
-      Frame_UID_112:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/8.png
-        sprite offset:
-          - -4.5
-          - -9
-      Frame_UID_116:
-        duration: 0.0299999993
-        directions: 16
-        sprite path: resource/image/bullet/star/9.png
-        sprite offset:
-          - -4.5
-          - -9
-  anim.void: ~
-  anim.bullet.player.mid:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 0
-              - -21
-            P1:
-              - 9
-              - 11
-            P2:
-              - -9
-              - 11
-    frames:
-      Frame_UID_9:
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/0.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_107:
-        duration: 0.0500000007
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/1.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_164:
-        duration: 0.0500000007
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/2.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_175:
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/3.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_178:
-        duration: 0.0500000007
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/4.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_180:
-        duration: 0.0500000007
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/5.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_182:
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/6.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_184:
-        duration: 0.0500000007
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/7.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_186:
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/8.png
-        sprite offset:
-          - -9
-          - -21
-      Frame_UID_187:
-        duration: 0.0500000007
-        directions: 32
-        ccf: max
-        sprite path: resource/image/bullet/player/mid/9.png
-        sprite offset:
-          - -9
-          - -21
-  anim.smoke.1:
-    frames:
-      Frame_UID_126:
-        duration: 0.0500000007
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/0.png
-        sprite offset:
-          - -7
-          - -5
-      Frame_UID_127:
-        duration: 0.0599999987
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/1.png
-        sprite offset:
-          - -8
-          - -9
-      Frame_UID_128:
-        duration: 0.0599999987
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/2.png
-        sprite offset:
-          - -9
-          - -11
-      Frame_UID_129:
-        duration: 0.0700000003
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/3.png
-        sprite offset:
-          - -12
-          - -12
-      Frame_UID_130:
-        duration: 0.0799999982
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/4.png
-        sprite offset:
-          - -12
-          - -12
-      Frame_UID_131:
-        duration: 0.0700000003
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/5.png
-        sprite offset:
-          - -18
-          - -15
-      Frame_UID_132:
-        duration: 0.0700000003
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/6.png
-        sprite offset:
-          - -19
-          - -19
-      Frame_UID_133:
-        duration: 0.0799999982
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/7.png
-        sprite offset:
-          - -22
-          - -21
-      Frame_UID_134:
-        duration: 0.0900000036
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/8.png
-        sprite offset:
-          - -25
-          - -25
-      Frame_UID_135:
-        duration: 0.0900000036
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/9.png
-        sprite offset:
-          - -27
-          - -30
-      Frame_UID_136:
-        duration: 0.100000001
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/10.png
-        sprite offset:
-          - -28
-          - -26
-      Frame_UID_137:
-        duration: 0.0599999987
-        directions: 4
-        sprite path: resource/image/particle/smoke 1/12.png
-        sprite offset:
-          - -25
-          - -22
-  anim.fire.1.red:
-    frames:
-      Frame_UID_67:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/0.png
-        sprite offset:
-          - -9
-          - -25
-      Frame_UID_84:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/1.png
-        sprite offset:
-          - -10
-          - -26
-      Frame_UID_96:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/2.png
-        sprite offset:
-          - -11
-          - -21
-      Frame_UID_104:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/3.png
-        sprite offset:
-          - -8
-          - -18
-      Frame_UID_109:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/4.png
-        sprite offset:
-          - -7
-          - -21
-      Frame_UID_115:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/5.png
-        sprite offset:
-          - -9
-          - -17
-      Frame_UID_118:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/6.png
-        sprite offset:
-          - -12
-          - -25
-      Frame_UID_123:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/7.png
-        sprite offset:
-          - -13
-          - -26
-      Frame_UID_139:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/8.png
-        sprite offset:
-          - -15
-          - -21
-      Frame_UID_149:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/9.png
-        sprite offset:
-          - -14
-          - -18
-      Frame_UID_158:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/10.png
-        sprite offset:
-          - -10
-          - -21
-      Frame_UID_168:
-        directions: 8
-        sprite path: resource/image/particle/fire 1 red/11.png
-        sprite offset:
-          - -13
-          - -17
-  anim.player.boo.dark.long.1:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - 0
-              - -4
-            P1:
-              - 11
-              - 24
-            P2:
-              - 8
-              - 25
-            P3:
-              - 0
-              - 2
-        poly_1:
-          points:
-            P0:
-              - -0
-              - -4
-            P1:
-              - -11
-              - 24
-            P2:
-              - -8
-              - 25
-            P3:
-              - -0
-              - 2
-    frames:
-      Frame_UID_93:
-        directions: 32
-        rotate offset:
-          - -1.40000021
-          - 0.900000095
-        sprite path: resource/image/player/dark/long 1.png
-        sprite offset:
-          - -10
-          - -3
-  anim.delme.f:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -7
-              - 0.5
-            P1:
-              - 6.5
-              - 0.5
-        poly_1:
-          points:
-            P0:
-              - 0
-              - -20.5
-            P1:
-              - 0
-              - 8
-        poly_2:
-          points:
-            P0:
-              - 0
-              - -20.5
-            P1:
-              - 5.5
-              - -20.5
-    frames:
-      Frame_UID_31:
-        directions: 32
-        rotate offset:
-          - -0.699999988
-          - -0.299999982
-        sprite path: resource/image/particle/dummy/F.png
-        sprite offset:
-          - -11
-          - -27
-  anim.expl.small.1:
-    hitbox:
-      polygons:
-        poly_0:
-          points:
-            P0:
-              - -16.5
-              - -8.5
-            P1:
-              - 1
-              - -16
-            P2:
-              - 14
-              - 3
-            P3:
-              - -2.5
-              - 7
-    frames:
-      Frame_UID_68:
-        duration: 0.0700000003
-        directions: 8
-        sprite path: resource/image/particle/small expl/0.png
-        sprite offset:
-          - -6
-          - -6
-      Frame_UID_75:
-        duration: 0.0700000003
-        directions: 8
-        sprite path: resource/image/particle/small expl/1.png
-        sprite offset:
-          - -6
-          - -7
-      Frame_UID_78:
-        duration: 0.0800000206
-        directions: 8
-        sprite path: resource/image/particle/small expl/2.png
-        sprite offset:
-          - -10
-          - -9
-      Frame_UID_86:
-        duration: 0.0930000469
-        directions: 8
-        sprite path: resource/image/particle/small expl/3.png
-        sprite offset:
-          - -15
-          - -15
-      Frame_UID_98:
-        duration: 0.095000051
-        directions: 8
-        sprite path: resource/image/particle/small expl/4.png
-        sprite offset:
-          - -22
-          - -22
-      Frame_UID_110:
-        duration: 0.104000069
-        directions: 8
-        sprite path: resource/image/particle/small expl/5.png
-        sprite offset:
-          - -24
-          - -25
-      Frame_UID_120:
-        duration: 0.122000106
-        directions: 8
-        sprite path: resource/image/particle/small expl/6.png
-        sprite offset:
-          - -25
-          - -25
-      Frame_UID_145:
-        duration: 0.132000118
-        directions: 8
-        sprite path: resource/image/particle/small expl/7.png
-        sprite offset:
-          - -23
-          - -24
   hitbox.home.1:
     hitbox:
       polygons:
@@ -2337,3 +1850,490 @@ animations:
             P3:
               - -0
               - -0.5
+  anim.expl.small.1:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -16.5
+              - -8.5
+            P1:
+              - 1
+              - -16
+            P2:
+              - 14
+              - 3
+            P3:
+              - -2.5
+              - 7
+    frames:
+      Frame_UID_114:
+        duration: 0.0700000003
+        directions: 8
+        sprite path: resource/image/particle/small expl/0.png
+        sprite offset:
+          - -6
+          - -6
+      Frame_UID_115:
+        duration: 0.0700000003
+        directions: 8
+        sprite path: resource/image/particle/small expl/1.png
+        sprite offset:
+          - -6
+          - -7
+      Frame_UID_116:
+        duration: 0.0800000206
+        directions: 8
+        sprite path: resource/image/particle/small expl/2.png
+        sprite offset:
+          - -10
+          - -9
+      Frame_UID_117:
+        duration: 0.0930000469
+        directions: 8
+        sprite path: resource/image/particle/small expl/3.png
+        sprite offset:
+          - -15
+          - -15
+      Frame_UID_118:
+        duration: 0.095000051
+        directions: 8
+        sprite path: resource/image/particle/small expl/4.png
+        sprite offset:
+          - -22
+          - -22
+      Frame_UID_119:
+        duration: 0.104000069
+        directions: 8
+        sprite path: resource/image/particle/small expl/5.png
+        sprite offset:
+          - -24
+          - -25
+      Frame_UID_120:
+        duration: 0.122000106
+        directions: 8
+        sprite path: resource/image/particle/small expl/6.png
+        sprite offset:
+          - -25
+          - -25
+      Frame_UID_121:
+        duration: 0.132000118
+        directions: 8
+        sprite path: resource/image/particle/small expl/7.png
+        sprite offset:
+          - -23
+          - -24
+  anim.enemy.placeholder.small:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -12
+              - -13
+            P1:
+              - 13
+              - -13
+            P2:
+              - 13
+              - 12
+            P3:
+              - -12
+              - 12
+    frames:
+      Frame_UID_88:
+        directions: 16
+        cgp: box
+        rotate offset:
+          - -1.80000031
+          - -1.70000005
+        sprite path: resource/image/other/placeholders/enemy small.png
+        sprite offset:
+          - -12
+          - -13
+  anim.enemy.waiter:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - 0
+              - -52
+            P1:
+              - 8
+              - -41
+            P2:
+              - 16
+              - -27
+            P3:
+              - 22
+              - -0
+            P4:
+              - 20
+              - 13
+            P5:
+              - 10
+              - 24
+            P6:
+              - 0
+              - 27
+        poly_1:
+          points:
+            P0:
+              - -0
+              - -52
+            P1:
+              - -8
+              - -41
+            P2:
+              - -16
+              - -27
+            P3:
+              - -22
+              - -0
+            P4:
+              - -20
+              - 13
+            P5:
+              - -10
+              - 24
+            P6:
+              - -0
+              - 27
+    frames:
+      Frame_UID_89:
+        directions: 1
+        sprite path: resource/image/enemy/waiter/normal.png
+        sprite offset:
+          - -23
+          - -51
+      Frame_UID_90:
+        directions: 1
+        sprite path: resource/image/enemy/waiter/damaged 1.png
+        sprite offset:
+          - -23
+          - -51
+      Frame_UID_91:
+        directions: 1
+        sprite path: resource/image/enemy/waiter/pre-expl.png
+        sprite offset:
+          - -23
+          - -51
+  anim.crash.small:
+    frames:
+      Frame_UID_53:
+        duration: 0.0250000153
+        directions: 4
+        rotate offset:
+          - -1.49011612e-08
+          - 0
+        sprite path: resource/image/particle/small crash/0.png
+        sprite offset:
+          - -1
+          - -1
+      Frame_UID_54:
+        duration: 0.0479999892
+        directions: 8
+        rotate offset:
+          - -1.49011612e-08
+          - -0.100000001
+        sprite path: resource/image/particle/small crash/1.png
+        sprite offset:
+          - -3
+          - -3
+      Frame_UID_55:
+        duration: 0.0549999774
+        directions: 8
+        rotate offset:
+          - 0.0999999866
+          - -0.100000001
+        sprite path: resource/image/particle/small crash/2.png
+        sprite offset:
+          - -4
+          - -4
+      Frame_UID_56:
+        duration: 0.071999982
+        directions: 4
+        rotate offset:
+          - -1.49011612e-08
+          - 0
+        sprite path: resource/image/particle/small crash/3.png
+        sprite offset:
+          - -5
+          - -5
+      Frame_UID_57:
+        duration: 0.0799999982
+        directions: 4
+        rotate offset:
+          - -1.49011612e-08
+          - 0
+        sprite path: resource/image/particle/small crash/4.png
+        sprite offset:
+          - -5
+          - -5
+      Frame_UID_58:
+        duration: 0.0799999982
+        directions: 8
+        rotate offset:
+          - -1.49011612e-08
+          - -1.50000024
+        sprite path: resource/image/particle/small crash/5.png
+        sprite offset:
+          - -3
+          - -5
+  anim.enemy.cosmic.1:
+    frames:
+      Frame_UID_71:
+        duration: 0.129999995
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/0.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_72:
+        duration: 0.129999995
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/1.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_73:
+        duration: 0.129999995
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/2.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_74:
+        duration: 0.170000002
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/3.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_75:
+        duration: 0.209999993
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/4.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_76:
+        duration: 0.119999997
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/5.png
+        sprite offset:
+          - -44
+          - -33
+      Frame_UID_77:
+        duration: 0.100000001
+        directions: 1
+        sprite path: resource/image/enemy/cosmic/state 1/6.png
+        sprite offset:
+          - -44
+          - -33
+  anim.enemy.wall:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -256
+              - -29
+            P1:
+              - 256
+              - -29
+            P2:
+              - 256
+              - 28
+            P3:
+              - -256
+              - 28
+    frames:
+      Frame_UID_92:
+        directions: 1
+        sprite path: resource/image/enemy/enemy wall.png
+        sprite offset:
+          - -256
+          - -29
+  anim.expl.big.1:
+    hitbox:
+      polygons:
+        poly_0:
+          points:
+            P0:
+              - -25.5
+              - -30
+            P1:
+              - 0
+              - -47.5
+            P2:
+              - 34.5
+              - -36
+            P3:
+              - 15.5
+              - 23
+            P4:
+              - -5.5
+              - 44
+            P5:
+              - -18.5
+              - 19.5
+            P6:
+              - -27
+              - -3
+    frames:
+      Frame_UID_93:
+        duration: 0.100000001
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/0.png
+        sprite offset:
+          - -14
+          - -17
+      Frame_UID_94:
+        duration: 0.0500000007
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/1.png
+        sprite offset:
+          - -27
+          - -48
+      Frame_UID_95:
+        duration: 0.0599999987
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/2.png
+        sprite offset:
+          - -39
+          - -71
+      Frame_UID_96:
+        duration: 0.0700000003
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/3.png
+        sprite offset:
+          - -28
+          - -69
+      Frame_UID_97:
+        duration: 0.0700000003
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/4.png
+        sprite offset:
+          - -27
+          - -63
+      Frame_UID_98:
+        duration: 0.0809999853
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/5.png
+        sprite offset:
+          - -25
+          - -44
+      Frame_UID_99:
+        duration: 0.0870000124
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/6.png
+        sprite offset:
+          - -30
+          - -41
+      Frame_UID_100:
+        duration: 0.0940000266
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/7.png
+        sprite offset:
+          - -25
+          - -44
+      Frame_UID_101:
+        duration: 0.0869999975
+        directions: 16
+        sprite path: resource/image/particle/big expl 1/8.png
+        sprite offset:
+          - 15
+          - -38
+  anim.expl.mini.1:
+    frames:
+      Frame_UID_102:
+        duration: 0.030000031
+        directions: 3
+        sprite path: resource/image/particle/mini expl/0.png
+        sprite offset:
+          - -4
+          - -4
+      Frame_UID_103:
+        duration: 0.0380000211
+        directions: 3
+        sprite path: resource/image/particle/mini expl/1.png
+        sprite offset:
+          - -6
+          - -8
+      Frame_UID_104:
+        duration: 0.050999999
+        directions: 3
+        ccf: average
+        sprite path: resource/image/particle/mini expl/2.png
+        sprite offset:
+          - -8
+          - -10
+      Frame_UID_105:
+        duration: 0.0649999827
+        directions: 3
+        ccf: average
+        sprite path: resource/image/particle/mini expl/3.png
+        sprite offset:
+          - -10
+          - -11
+      Frame_UID_106:
+        duration: 0.075000003
+        directions: 3
+        cgp: box
+        sprite path: resource/image/particle/mini expl/4.png
+        sprite offset:
+          - -9
+          - -11
+      Frame_UID_107:
+        duration: 0.077000007
+        directions: 3
+        ccf: average
+        sprite path: resource/image/particle/mini expl/5.png
+        sprite offset:
+          - -10
+          - -11
+      Frame_UID_108:
+        duration: 0.0810000151
+        directions: 3
+        sprite path: resource/image/particle/mini expl/6.png
+        sprite offset:
+          - -10
+          - -11
+      Frame_UID_109:
+        duration: 0.0400000177
+        directions: 3
+        sprite path: resource/image/particle/mini expl/7.png
+        sprite offset:
+          - -10
+          - -11
+      Frame_UID_110:
+        duration: 0.0800000131
+        directions: 3
+        sprite path: resource/image/particle/mini expl/8.png
+        sprite offset:
+          - -10
+          - -11
+      Frame_UID_111:
+        duration: 0.0609999895
+        directions: 3
+        sprite path: resource/image/particle/mini expl/9.png
+        sprite offset:
+          - -9
+          - -11
+      Frame_UID_112:
+        duration: 0.0639999807
+        directions: 3
+        sprite path: resource/image/particle/mini expl/10.png
+        sprite offset:
+          - -8
+          - -10
+      Frame_UID_113:
+        duration: 0.0619999804
+        directions: 3
+        sprite path: resource/image/particle/mini expl/11.png
+        sprite offset:
+          - -8
+          - -9
