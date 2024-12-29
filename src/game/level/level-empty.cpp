@@ -22,7 +22,9 @@ struct Level_empty::Impl {
 
   inline void update(const Vec vel, Delta_time dt) {}
 
-  inline void draw(Image& dst) const {}
+  inline void draw(Image& dst) const {
+    dst.fill(Pal8::red);
+  }
 }; // Impl
 
 Level_empty::Level_empty(): impl {new_unique<Impl>()} {}
