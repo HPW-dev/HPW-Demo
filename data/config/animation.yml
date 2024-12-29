@@ -77,8 +77,8 @@ animations:
         sprite offset:
           - -19
           - -21
-  anim.void: ~
-  anim.sphere.fade:
+  void: ~
+  sphere.fade:
     frames:
       Frame_UID_380:
         duration: 0.0700000003
@@ -135,7 +135,7 @@ animations:
         sprite offset:
           - -2
           - -2
-  anim.sparkling.stars:
+  sparkling.stars:
     frames:
       Frame_UID_369:
         duration: 0.0500000007
@@ -215,7 +215,7 @@ animations:
         sprite offset:
           - -6
           - -6
-  anim.shot.1:
+  shot.1:
     hitbox:
       polygons:
         poly_0:
@@ -292,7 +292,7 @@ animations:
         sprite offset:
           - -11
           - -54
-  anim.player.boo.dark:
+  player.boo.dark:
     hitbox:
       polygons:
         poly_0:
@@ -333,7 +333,7 @@ animations:
         sprite offset:
           - -15
           - -2
-  anim.particle.laser.shard:
+  particle.laser.shard:
     frames:
       Frame_UID_338:
         duration: 0.0450000018
@@ -383,7 +383,7 @@ animations:
         sprite offset:
           - -1
           - -19
-  anim.player.boo.dark.long.1:
+  player.boo.dark.long.1:
     hitbox:
       polygons:
         poly_0:
@@ -424,7 +424,7 @@ animations:
         sprite offset:
           - -10
           - -3
-  anim.fire.1.red:
+  fire.1.red:
     frames:
       Frame_UID_319:
         directions: 8
@@ -498,7 +498,7 @@ animations:
         sprite offset:
           - -13
           - -17
-  anim.bullet.star:
+  bullet.star:
     hitbox:
       polygons:
         poly_0:
@@ -583,7 +583,7 @@ animations:
         sprite offset:
           - -4.5
           - -9
-  anim.bullet.sphere.red:
+  bullet.sphere.red:
     hitbox:
       polygons:
         poly_0:
@@ -619,7 +619,7 @@ animations:
         sprite offset:
           - -8.5
           - -8.5
-  anim.bullet.sphere.mixed:
+  bullet.sphere.mixed:
     hitbox:
       polygons:
         poly_0:
@@ -655,7 +655,7 @@ animations:
         sprite offset:
           - -8.5
           - -8.5
-  anim.player.boo.dark.long.2:
+  player.boo.dark.long.2:
     hitbox:
       polygons:
         poly_0:
@@ -682,7 +682,7 @@ animations:
         sprite offset:
           - -1
           - -41
-  anim.placeholder.mini:
+  placeholder.mini:
     hitbox:
       polygons:
         poly_0:
@@ -709,7 +709,7 @@ animations:
         sprite offset:
           - -5
           - -5
-  anim.bullet.small.blinker.1:
+  bullet.small.blinker.1:
     hitbox:
       polygons:
         poly_0:
@@ -762,7 +762,7 @@ animations:
         sprite offset:
           - -3
           - -3
-  anim.sphere.wave:
+  sphere.wave:
     hitbox:
       polygons:
         poly_0:
@@ -825,7 +825,7 @@ animations:
         sprite offset:
           - -12
           - -11
-  anim.bullet.sphere.gray:
+  bullet.sphere.gray:
     hitbox:
       polygons:
         poly_0:
@@ -861,7 +861,7 @@ animations:
         sprite offset:
           - -8.5
           - -8.5
-  anim.bullet.small.blinker.2:
+  bullet.small.blinker.2:
     hitbox:
       polygons:
         poly_0:
@@ -888,7 +888,7 @@ animations:
           - -3
       Frame_UID_236:
         duration: 0.0599999316
-  anim.bullet.placeholder.1:
+  bullet.placeholder.1:
     hitbox:
       polygons:
         poly_0:
@@ -912,7 +912,7 @@ animations:
         sprite offset:
           - -4
           - -4
-  anim.enemy.illaen:
+  enemy.illaen:
     hitbox:
       polygons:
         poly_0:
@@ -1077,7 +1077,7 @@ animations:
         sprite offset:
           - -68
           - -50
-  anim.enemy.placeholder.big:
+  enemy.placeholder.big:
     hitbox:
       polygons:
         poly_0:
@@ -1104,7 +1104,7 @@ animations:
         sprite offset:
           - -18
           - -28
-  anim.frac.metall.1:
+  frac.metall.1:
     frames:
       Frame_UID_331:
         duration: 0.0549999997
@@ -1156,7 +1156,7 @@ animations:
         sprite offset:
           - -10
           - -10
-  anim.bullet.player.side:
+  bullet.player.side:
     hitbox:
       polygons:
         poly_0:
@@ -1181,7 +1181,7 @@ animations:
         sprite offset:
           - -1
           - -5
-  anim.bullet.player.small:
+  bullet.player.small:
     hitbox:
       polygons:
         poly_0:
@@ -1254,7 +1254,7 @@ animations:
         sprite offset:
           - -4
           - -2
-  anim.smoke.1:
+  smoke.1:
     frames:
       Frame_UID_357:
         duration: 0.0500000007
@@ -1340,7 +1340,7 @@ animations:
         sprite offset:
           - -25
           - -22
-  anim.bullet.player.mid:
+  bullet.player.mid:
     hitbox:
       polygons:
         poly_0:
@@ -1431,7 +1431,7 @@ animations:
         sprite offset:
           - -9
           - -21
-  anim.delme.f:
+  delme.f:
     hitbox:
       polygons:
         poly_0:
@@ -1468,7 +1468,7 @@ animations:
         sprite offset:
           - -11
           - -27
-  anim.bullet.laser:
+  bullet.laser:
     hitbox:
       polygons:
         poly_0:
@@ -1525,7 +1525,7 @@ animations:
         sprite offset:
           - -1
           - -9
-  anim.blink.star:
+  blink.star:
     frames:
       Frame_UID_197:
         duration: 0.0900000036
@@ -1629,7 +1629,7 @@ animations:
         sprite offset:
           - -8
           - -7
-  anim.player.boo.dark.long.3:
+  player.boo.dark.long.3:
     hitbox:
       polygons:
         poly_0:
@@ -1656,7 +1656,7 @@ animations:
         sprite offset:
           - -1
           - -257
-  anim.delme.123:
+  delme.123:
     frames:
       Frame_UID_256:
         duration: 1
@@ -1679,7 +1679,7 @@ animations:
         sprite offset:
           - -5.5
           - -7
-  anim.direct.crash.1:
+  direct.crash.1:
     frames:
       Frame_UID_260:
         duration: 0.0557999797
@@ -1730,7 +1730,7 @@ animations:
         sprite offset:
           - -11
           - -1
-  anim.enemy.cosmic.2:
+  enemy.cosmic.2:
     hitbox:
       polygons:
         poly_0:
@@ -1797,7 +1797,7 @@ animations:
         sprite offset:
           - -44
           - -33
-  anim.enemy.bomber.1:
+  enemy.bomber.1:
     hitbox:
       polygons:
         poly_0:
@@ -1850,7 +1850,7 @@ animations:
         sprite offset:
           - -50.5
           - -56.5
-  anim.bullet.placeholder.2:
+  bullet.placeholder.2:
     hitbox:
       polygons:
         poly_0:
@@ -1874,7 +1874,7 @@ animations:
         sprite offset:
           - -4
           - -12
-  anim.enemy.cosmic.hunter:
+  enemy.cosmic.hunter:
     hitbox:
       polygons:
         poly_0:
@@ -1966,7 +1966,7 @@ animations:
             P3:
               - -0
               - -0.5
-  anim.expl.small.1:
+  expl.small.1:
     hitbox:
       polygons:
         poly_0:
@@ -2040,7 +2040,7 @@ animations:
         sprite offset:
           - -23
           - -24
-  anim.enemy.placeholder.small:
+  enemy.placeholder.small:
     hitbox:
       polygons:
         poly_0:
@@ -2068,7 +2068,7 @@ animations:
         sprite offset:
           - -12
           - -13
-  anim.enemy.waiter:
+  enemy.waiter:
     hitbox:
       polygons:
         poly_0:
@@ -2136,7 +2136,7 @@ animations:
         sprite offset:
           - -23
           - -51
-  anim.crash.small:
+  crash.small:
     frames:
       Frame_UID_250:
         duration: 0.0250000153
@@ -2198,7 +2198,7 @@ animations:
         sprite offset:
           - -3
           - -5
-  anim.enemy.cosmic.1:
+  enemy.cosmic.1:
     frames:
       Frame_UID_268:
         duration: 0.129999995
@@ -2249,7 +2249,7 @@ animations:
         sprite offset:
           - -44
           - -33
-  anim.enemy.wall:
+  enemy.wall:
     hitbox:
       polygons:
         poly_0:
@@ -2273,7 +2273,7 @@ animations:
         sprite offset:
           - -256
           - -29
-  anim.expl.big.1:
+  expl.big.1:
     hitbox:
       polygons:
         poly_0:
@@ -2363,7 +2363,7 @@ animations:
         sprite offset:
           - 15
           - -38
-  anim.expl.mini.1:
+  expl.mini.1:
     frames:
       Frame_UID_299:
         duration: 0.030000031

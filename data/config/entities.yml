@@ -4,13 +4,13 @@ particle.sparkling.stars:
   kill_by_end_frame: false
   lifetime: 1.5
   animation:
-    name: anim.sparkling.stars
+    name: sparkling.stars
     ignore_scatter: false
 particle.laser.shard.2:
   type: particle
   force: 4000
   animation:
-    name: anim.bullet.star
+    name: bullet.star
     default_deg: 90
     rand_cur_frame: true
     ignore_scatter: true
@@ -19,7 +19,7 @@ particle.void:
   kill_by_end_anim: false
   lifetime: 60
   animation:
-    name: anim.void
+    name: void
     layer_up: true
     ignore_scatter: true
     disable_motion: true
@@ -30,7 +30,7 @@ particle.blink.star:
   rand_cur_frame: true
   lifetime: 1.1
   animation:
-    name: anim.blink.star
+    name: blink.star
     blend_f: blend_avr
 particle.direct.crash.1:
   type: particle
@@ -38,16 +38,16 @@ particle.direct.crash.1:
   rand_deg: true
   kill_by_end_anim: true
   animation:
-    name: anim.direct.crash.1
+    name: direct.crash.1
 particle.123:
   type: particle
   force: 80
   animation:
-    name: anim.delme.123
+    name: delme.123
 particle.frac.metall.1:
   type: particle
   animation:
-    name: anim.frac.metall.1
+    name: frac.metall.1
     return_back: true
     rand_cur_frame: true
     speed_scale:
@@ -60,14 +60,14 @@ particle.frac.metall.1:
 particle.expl.mini.1:
   type: particle
   animation:
-    name: anim.expl.mini.1
+    name: expl.mini.1
   rand_deg: true
   kill_by_end_anim: true
   force: 2800
 particle.laser.shard:
   type: particle
   animation:
-    name: anim.particle.laser.shard
+    name: particle.laser.shard
   kill_by_end_anim: true
   force: 600
 bullet.laser:
@@ -79,7 +79,7 @@ bullet.laser:
   explosion: explosion.laser
   animation:
     default_deg: 90
-    name: anim.bullet.laser
+    name: bullet.laser
     rand_cur_frame: true
     blend_f: blend_diff
 bullet.sphere.wave.tutorial:
@@ -91,7 +91,7 @@ bullet.sphere.wave.tutorial:
   explosion: explosion.simple
   animation:
     default_deg: 90
-    name: anim.sphere.wave
+    name: sphere.wave
     rand_cur_frame: true
 bullet.player.small:
   type: bullet
@@ -103,7 +103,7 @@ bullet.player.small:
   explosion: explosion.player.bullet.small
   animation:
     default_deg: 90
-    name: anim.bullet.player.small
+    name: bullet.player.small
 bullet.player.mid:
   type: bullet
   dmg: 34375
@@ -115,7 +115,7 @@ bullet.player.mid:
   explosion: explosion.simple
   animation:
     default_deg: 90
-    name: anim.bullet.player.mid
+    name: bullet.player.mid
 bullet.placeholder.1:
   type: bullet
   dmg: 100
@@ -127,7 +127,7 @@ bullet.placeholder.1:
   ignore_bullet: true
   explosion: explosion.simple
   animation:
-    name: anim.bullet.placeholder.1
+    name: bullet.placeholder.1
 bullet.cosmic.hunter:
   type: bullet
   dmg: 6000
@@ -139,7 +139,7 @@ bullet.cosmic.hunter:
   ignore_bullet: true
   explosion: explosion.simple
   animation:
-    name: anim.bullet.sphere.mixed
+    name: bullet.sphere.mixed
     blend_f: blend_rotate_x4_safe
 bullet.placeholder.2:
   type: bullet
@@ -153,7 +153,7 @@ bullet.placeholder.2:
   explosion: explosion.simple
   animation:
     default_deg: 90
-    name: anim.bullet.placeholder.2
+    name: bullet.placeholder.2
 bullet.sphere.red:
   type: bullet
   dmg: 100
@@ -165,7 +165,7 @@ bullet.sphere.red:
   ignore_scatter: false
   explosion: explosion.simple
   animation:
-    name: anim.bullet.sphere.red
+    name: bullet.sphere.red
     blend_f: blend_rotate_x4_safe
 bullet.sphere.gray:
   type: bullet
@@ -178,7 +178,7 @@ bullet.sphere.gray:
   ignore_scatter: false
   explosion: explosion.simple
   animation:
-    name: anim.bullet.sphere.gray
+    name: bullet.sphere.gray
     blend_f: blend_rotate_x4_safe
     layer_up: true
 bullet.sphere.mixed:
@@ -192,7 +192,7 @@ bullet.sphere.mixed:
   ignore_scatter: false
   explosion: explosion.simple
   animation:
-    name: anim.bullet.sphere.mixed
+    name: bullet.sphere.mixed
     blend_f: blend_rotate_x4_safe
 explosion.waiter:
   type: explosion
@@ -319,7 +319,7 @@ enemy.cosmic.hunter:
   animation:
     default_deg: 90
     blend_f: blend_158
-    name: anim.enemy.cosmic.hunter
+    name: enemy.cosmic.hunter
 enemy.cosmic.waiter:
   type: enemy.cosmic.waiter
   hp: 40000
@@ -331,7 +331,7 @@ enemy.cosmic.waiter:
   explosion: explosion.waiter
   animation:
     fixed_deg: true
-    name: anim.enemy.waiter
+    name: enemy.waiter
 enemy.cosmic:
   type: enemy.cosmic
   hp: 275000
@@ -350,8 +350,8 @@ enemy.cosmic:
   bullet: bullet.sphere.gray
   explosion: explosion.cosmic.eye
   animations:
-    - anim.enemy.cosmic.1
-    - anim.enemy.cosmic.2
+    - enemy.cosmic.1
+    - enemy.cosmic.2
   heat_distort:
     max_duration: 0.934
     radius: 600
@@ -380,7 +380,7 @@ enemy.illaen:
   bullet: bullet.sphere.gray
   explosion: explosion.cosmic.eye
   animation:
-    name: anim.enemy.illaen
+    name: enemy.illaen
   heat_distort:
     max_duration: 0.934
     radius: 600
@@ -405,7 +405,7 @@ enemy.tutorial:
   explosion: explosion.simple
   animation:
     default_deg: 90
-    name: anim.enemy.placeholder.small
+    name: enemy.placeholder.small
 enemy.tutorial.bullet:
   type: bullet
   dmg: 4000
@@ -415,7 +415,7 @@ enemy.tutorial.bullet:
   explosion: explosion.player.bullet.small
   animation:
     rand_cur_frame: true
-    name: anim.bullet.small.blinker.1
+    name: bullet.small.blinker.1
 enemy.snake.head:
   type: snake.head
   hp: 162000
@@ -427,7 +427,7 @@ enemy.snake.head:
     count: 50
     kill_delay: 0.0333
   animation:
-    name: anim.placeholder.mini
+    name: placeholder.mini
 enemy.snake.tail:
   type: snake.tail
   hp: 70000
@@ -435,7 +435,7 @@ enemy.snake.tail:
   start_motion_radius: 10
   explosion: explosion.simple
   animation:
-    name: anim.placeholder.mini
+    name: placeholder.mini
 player.boo.dark:
   type: player.boo.dark
   max_speed: 5.5
@@ -449,7 +449,7 @@ player.boo.dark:
   boost_down: 0.6666666666
   explosion: explosion.player.boo.dark
   animation:
-    name: anim.player.boo.dark
+    name: player.boo.dark
     fixed_deg: true
     default_deg: 0
     contour_bf: blend_158
