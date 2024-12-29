@@ -14,7 +14,7 @@
 #include "util/file/file.hpp"
 
 // Внутреннаяя реализация для Yaml
-class Yaml::Impl {
+struct Yaml::Impl {
   Yaml& _master;
   YAML::Node root {};
 
@@ -89,7 +89,6 @@ class Yaml::Impl {
     return default_val;
   } // _get_v
 
-public:
   inline Impl(Yaml& master) noexcept: _master{master} {}
   inline ~Impl() = default;
   
@@ -250,7 +249,8 @@ Yaml::Yaml() noexcept: impl {new_unique<Impl>(*this)} {}
 Yaml::Yaml(cr<Yaml> other): impl {new_unique<Impl>(*this, other)}
   { Resource::operator=(other); }
 
-Yaml::Yaml(cr<Impl> new_impl): impl {new_unique<Impl>(*this, new_impl)} {}
+Yaml::Yaml(cr<Impl> new_impl): impl {new_unique<Impl>(*this, new_impl)}
+  { Resource::operator=(new_impl._master); }
 
 // деструктор должен бытьв .cpp файле, а то не выйдет запихнуть реализаццию в unique_ptr
 Yaml::~Yaml() {}

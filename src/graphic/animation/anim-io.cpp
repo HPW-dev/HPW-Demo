@@ -139,7 +139,6 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
       frame->source_ctx.direct_0.offset.x = sprite_offset_v.at(0);
       frame->source_ctx.direct_0.offset.y = sprite_offset_v.at(1);
     }
-    // TODO hitbox
 
     frame->reinit_directions_by_source();
     anim->add_frame(frame);
