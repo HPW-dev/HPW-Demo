@@ -63,7 +63,7 @@ struct Explosion_loader::Impl {
       it->status.ignore_self_type = true;
       it->status.ignore_master = true;
       // разлёт в случайную сторону, но с сохранением начального направления
-      #pragma message("TODO fix stattering")
+      #pragma message("TODO fix scattering")
       constexpr real range_fixer = 6.5f; // TODO временное решение
       Vec motion = rand_normalized_stable() * rndr(0, pps(m_particles_range) * range_fixer);
       it->phys.set_vel(it->phys.get_vel() + motion);
