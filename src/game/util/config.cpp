@@ -24,7 +24,7 @@
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 
-#ifdef NO_EPGE
+#ifndef NO_EPGE
 #include "plugin/epge/epge-util.hpp"
 #endif
 
