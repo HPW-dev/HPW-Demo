@@ -23,7 +23,10 @@
 #include "util/safecall.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
+
+#ifdef NO_EPGE
 #include "plugin/epge/epge-util.hpp"
+#endif
 
 static inline void load_log_config(cr<Yaml> config) {
   auto cfg = log_get_config();
@@ -187,8 +190,10 @@ void save_config() {
   save_heat_distort_mode(graphic_node);
   save_test_image_path(graphic_node);
 
+  #ifndef NO_EPGE
   auto epge_node = graphic_node.make_node("epge");
   save_epges(epge_node);
+  #endif
 
   auto log_node = config.make_node("log");
   save_log_config(log_node);
@@ -328,8 +333,10 @@ void load_config_graphic(cr<Yaml> config) {
   graphic::cpu_safe = sync_node.get_bool("cpu_safe", graphic::cpu_safe);
   graphic::autoopt_timeout_max = sync_node.get_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
 
+  #ifndef NO_EPGE
   cauto epge_node = config["epge"];
   load_epges(epge_node);
+  #endif
 }
 
 void load_config_game(cr<Yaml> config) {
