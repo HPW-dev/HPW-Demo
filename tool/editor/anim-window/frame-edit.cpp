@@ -353,10 +353,10 @@ bool Frame_wnd::edit_polygon_detailed(Pool_ptr(Hitbox) hitbox) const {
         if (ImGui::TreeNode(point_name.c_str())) {
           // настройка кордов точки
           ImGui::PushItemWidth(120);
-          if (ImGui::InputFloat("##pos x", &point.x, 0.5, 1))
+          if (ImGui::InputFloat("##pos x", &point.x, 1, 2))
             ret = true;
           ImGui::SameLine();
-          if (ImGui::InputFloat("pos", &point.y, 0.5, 1))
+          if (ImGui::InputFloat("pos", &point.y, 1, 2))
             ret = true;
           ImGui::PopItemWidth();
           ImGui::TreePop(); // point
