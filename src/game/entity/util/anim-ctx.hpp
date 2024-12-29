@@ -21,7 +21,7 @@ public:
   Anim_ctx(cp<Anim> new_anim);
 
   void update(const Delta_time dt, Entity &entity);
-  void draw(Image& dst, cr<Entity> entity, const Vec offset);
+  void draw(Image& dst, cr<Entity> entity, const Vec offset) const;
   void set_cur_frame(std::size_t num);
   void set_last_frame();
   void set_anim(cp<Anim> new_anim);

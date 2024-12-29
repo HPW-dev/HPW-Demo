@@ -317,9 +317,9 @@ enemy.cosmic.hunter:
   explosion: explosion.simple
   bullet_name: bullet.cosmic.hunter
   animation:
-    default_deg: 90
-    blend_f: blend_158
-    name: enemy.cosmic.hunter
+    name: hunter.head
+    foreground_name: hunter.rotor # анимация внешней части
+    initial_rot_spd: 10.0 # скорость внешней части
 enemy.cosmic.waiter:
   type: enemy.cosmic.waiter
   hp: 40000

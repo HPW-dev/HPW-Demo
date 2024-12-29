@@ -98,7 +98,7 @@ void Anim_ctx::goto_prev_frame(Entity& entity) {
 void Anim_ctx::goto_rnd_frame()
   { m_frame_idx = rndu(m_anim->frame_count()-1); }
 
-void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) {
+void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
   // TODO сделать межкадровый дизеринг
 
   // взять текущий кадр анимации
