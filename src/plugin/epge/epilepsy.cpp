@@ -22,7 +22,7 @@ struct Epilepsy::Impl final {
   int _mode {scast<int>(Mode::_or)};
 
   inline Str name() const noexcept { return "epilepsy"; }
-  inline Str desc() const noexcept { return "various color rotation"; }
+  inline Str desc() const noexcept { return "various color rotations"; }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);
