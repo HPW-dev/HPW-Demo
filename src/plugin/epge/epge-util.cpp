@@ -7,6 +7,7 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 
+#include "pixelate.hpp"
 #include "epilepsy.hpp"
 #include "inversion.hpp"
 #include "fading.hpp"
@@ -30,15 +31,15 @@ inline void add_epge() {
 
 // регистрирует плагины в списке
 inline static void init_epge_list() {
-  add_epge<epge::Scanline>();
-  add_epge<epge::Inversion>();
-  add_epge<epge::Fading>();
-  //add_epge<epge::Flashes>();
-  //add_epge<epge::Pixelate>();
-  add_epge<epge::Shaker>();
-  add_epge<epge::Pixels_per_frame>();
-  add_epge<epge::Shuffler>();
   add_epge<epge::Epilepsy>();
+  add_epge<epge::Shuffler>();
+  add_epge<epge::Pixels_per_frame>();
+  add_epge<epge::Shaker>();
+  add_epge<epge::Pixelate>();
+  add_epge<epge::Inversion>();
+  //add_epge<epge::Flashes>();
+  add_epge<epge::Fading>();
+  add_epge<epge::Scanline>();
 };
 
 void save_epges(Yaml& config) {
