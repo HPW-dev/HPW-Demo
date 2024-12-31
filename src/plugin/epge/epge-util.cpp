@@ -7,6 +7,7 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 
+#include "inversion.hpp"
 #include "fading.hpp"
 #include "scanline.hpp"
 #include "shaker.hpp"
@@ -29,7 +30,7 @@ inline void add_epge() {
 // регистрирует плагины в списке
 inline static void init_epge_list() {
   add_epge<epge::Scanline>();
-  //add_epge<epge::Inversion>();
+  add_epge<epge::Inversion>();
   add_epge<epge::Fading>();
   //add_epge<epge::Flashes>();
   //add_epge<epge::Pixelate>();
