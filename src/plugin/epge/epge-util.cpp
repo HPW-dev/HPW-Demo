@@ -7,6 +7,7 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 
+#include "flashes.hpp"
 #include "pixelate.hpp"
 #include "epilepsy.hpp"
 #include "inversion.hpp"
@@ -37,7 +38,7 @@ inline static void init_epge_list() {
   add_epge<epge::Shaker>();
   add_epge<epge::Pixelate>();
   add_epge<epge::Inversion>();
-  //add_epge<epge::Flashes>();
+  add_epge<epge::Flashes>();
   add_epge<epge::Fading>();
   add_epge<epge::Scanline>();
 };
