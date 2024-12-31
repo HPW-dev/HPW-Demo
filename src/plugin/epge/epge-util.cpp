@@ -7,6 +7,7 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 
+#include "fading.hpp"
 #include "scanline.hpp"
 #include "shaker.hpp"
 #include "shuffler.hpp"
@@ -17,6 +18,26 @@ using Epge_maker = std::function< Unique<epge::Base> ()>;
 namespace {
 static std::unordered_map<Str, Epge_maker> _epge_makers {};
 }
+
+template <class T>
+inline void add_epge() {
+  cauto epge = new_unique<T>();
+  cauto name = epge->name();
+  ::_epge_makers[name] = []{ return new_unique<T>(); };
+}
+
+// регистрирует плагины в списке
+inline static void init_epge_list() {
+  add_epge<epge::Scanline>();
+  //add_epge<epge::Inversion>();
+  add_epge<epge::Fading>();
+  //add_epge<epge::Flashes>();
+  //add_epge<epge::Pixelate>();
+  add_epge<epge::Shaker>();
+  add_epge<epge::Pixels_per_frame>();
+  add_epge<epge::Shuffler>();
+  //add_epge<epge::Epilepsy>();
+};
 
 void save_epges(Yaml& config) {
   cauto total_epges = graphic::epges.size();
@@ -94,21 +115,6 @@ void load_epges(cr<Yaml> config) {
     } // params
   } // epges
 }
-
-template <class T>
-inline void add_epge() {
-  cauto epge = new_unique<T>();
-  cauto name = epge->name();
-  ::_epge_makers[name] = []{ return new_unique<T>(); };
-}
-
-// регистрирует плагины в списке
-inline static void init_epge_list() {
-  add_epge<epge::Scanline>();
-  add_epge<epge::Shaker>();
-  add_epge<epge::Shuffler>();
-  add_epge<epge::Pixels_per_frame>();
-};
 
 Strs avaliable_epges() {
   if (::_epge_makers.empty())
