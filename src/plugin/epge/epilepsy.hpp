@@ -4,14 +4,14 @@
 
 namespace epge {
 
-// инверсия цвета
-class Inversion: public epge::Base {
+// перекручивает цвета
+class Epilepsy: public epge::Base {
   struct Impl;
   Unique<Impl> impl {};
 
 public:
-  Inversion();
-  ~Inversion();
+  Epilepsy();
+  ~Epilepsy();
   Str name() const noexcept final;
   Str desc() const noexcept final;
   void draw(Image& dst) const noexcept final;
