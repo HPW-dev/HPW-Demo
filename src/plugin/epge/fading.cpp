@@ -72,8 +72,8 @@ struct Fading::Impl final {
 
   inline epge::Params params() noexcept {
     return epge::Params {
-      new_shared<epge::Param_double>("power", "0.99 - slow fading, 0.01 - fast", _power, 0.01, 0.99, 0.01, 0.1),
-      new_shared<epge::Param_int>("mode", "pixel blending modes:\n  0 - average, 1 - max, 2 - min", _mode, 0, scast<int>(Mode::MAX), 1, 1),
+      new_shared<epge::Param_double>("power", "0.99 - slow fading, 0.01 - fast", _power, 0.01, 0.99, 0.01, 0.03),
+      new_shared<epge::Param_int>("mode", "pixel blending modes:\n  0 - average, 1 - max, 2 - min", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
     };
   }
 }; // Impl
