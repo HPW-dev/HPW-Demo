@@ -93,7 +93,7 @@ struct Epilepsy::Impl final {
     return epge::Params {
       new_shared<epge::Param_int>("mode", "pixel blending modes:\n"
         "  0 - XOR, 1 - &, 2 - |, 3 - +,\n"
-        "4 - *, 5 - >, 6 - <, 7 - average", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
+        "  4 - *,   5 - >, 6 - <, 7 - average", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
     };
   }
 }; // Impl
