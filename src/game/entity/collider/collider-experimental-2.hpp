@@ -1,8 +1,8 @@
 #pragma once
 #include "collider.hpp"
+#include "util/math/vec.hpp"
 
 class Image;
-struct Vec;
 
 class Collider_experimental_2 final: public Collider {
   nocopy(Collider_experimental_2);

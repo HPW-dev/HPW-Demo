@@ -4,22 +4,23 @@
 #include "util/hpw-concept.hpp"
 
 // 2D вектор
-struct Vec {
-  real x {};
-  real y {};
+template <typename T>
+struct Vec_base {
+  T x {};
+  T y {};
 
-  Vec() noexcept = default;
-  inline constexpr Vec(auto _x, auto _y) noexcept: x(_x), y(_y) {}
-  inline constexpr Vec(have_xy auto in) noexcept: x(in.x), y(in.y) {}
-  inline constexpr Vec(cr<Vec> other) noexcept: x {other.x}, y {other.y} {}
-  inline constexpr Vec(Vec&& other) noexcept: x {other.x}, y {other.y} {}
-  inline constexpr Vec& operator=(cr<Vec> other) noexcept { x = other.x; y = other.y; return *this; }
-  inline constexpr Vec& operator=(Vec&& other) noexcept { x = other.x; y = other.y; return *this; }
+  Vec_base() noexcept = default;
+  inline constexpr Vec_base(auto _x, auto _y) noexcept: x(_x), y(_y) {}
+  inline constexpr Vec_base(have_xy auto in) noexcept: x(in.x), y(in.y) {}
+  inline constexpr Vec_base(cr<Vec_base> other) noexcept: x {other.x}, y {other.y} {}
+  inline constexpr Vec_base(Vec_base&& other) noexcept: x {other.x}, y {other.y} {}
+  inline constexpr Vec_base& operator=(cr<Vec_base> other) noexcept { x = other.x; y = other.y; return *this; }
+  inline constexpr Vec_base& operator=(Vec_base&& other) noexcept { x = other.x; y = other.y; return *this; }
 
-  inline constexpr bool operator ==(const Vec in) const noexcept { return x == in.x && y == in.y; }
-  inline constexpr bool operator !=(const Vec in) const noexcept { return x != in.x || y != in.y; }
+  inline constexpr bool operator ==(const Vec_base in) const noexcept { return x == in.x && y == in.y; }
+  inline constexpr bool operator !=(const Vec_base in) const noexcept { return x != in.x || y != in.y; }
 
-  inline constexpr Vec operator -() const noexcept { return Vec(x * -1, y * -1); }
+  inline constexpr Vec_base operator -() const noexcept { return Vec_base(x * -1, y * -1); }
   inline constexpr bool not_zero() const noexcept { return x != 0 || y != 0; }
   inline constexpr bool is_zero() const noexcept { return x == 0 && y == 0; }
 
@@ -32,9 +33,10 @@ struct Vec {
   inline constexpr bool operator >= (crauto other) const noexcept;
   inline constexpr bool operator < (crauto other) const noexcept;
   inline constexpr bool operator <= (crauto other) const noexcept;
-}; // Vec
+}; // Vec_base
 
-inline constexpr void Vec::operator +=(crauto other) noexcept {
+template <typename T>
+inline constexpr void Vec_base<T>::operator +=(crauto other) noexcept {
   if constexpr (requires { other.x; other.y; }) {
     x += other.x;
     y += other.y;
@@ -44,7 +46,8 @@ inline constexpr void Vec::operator +=(crauto other) noexcept {
   }
 }
 
-inline constexpr void Vec::operator -=(crauto other) noexcept {
+template <typename T>
+inline constexpr void Vec_base<T>::operator -=(crauto other) noexcept {
   if constexpr (requires { other.x; other.y; }) {
     x -= other.x;
     y -= other.y;
@@ -54,7 +57,8 @@ inline constexpr void Vec::operator -=(crauto other) noexcept {
   }
 }
 
-inline constexpr void Vec::operator *=(crauto other) noexcept {
+template <typename T>
+inline constexpr void Vec_base<T>::operator *=(crauto other) noexcept {
   if constexpr (requires { other.x; other.y; }) {
     x *= other.x;
     y *= other.y;
@@ -64,7 +68,8 @@ inline constexpr void Vec::operator *=(crauto other) noexcept {
   }
 }
 
-inline constexpr void Vec::operator /=(crauto other) noexcept {
+template <typename T>
+inline constexpr void Vec_base<T>::operator /=(crauto other) noexcept {
   if constexpr (requires { other.x; other.y; }) {
     x /= other.x;
     y /= other.y;
@@ -74,63 +79,80 @@ inline constexpr void Vec::operator /=(crauto other) noexcept {
   }
 }
 
-inline constexpr Vec operator + (const Vec a, crauto b) noexcept {
+template <typename T>
+inline constexpr Vec_base<T> operator + (const Vec_base<T> a, crauto b) noexcept {
   if constexpr (requires { b.x; b.y; }) {
-    return Vec(a.x + b.x, a.y + b.y);
+    return Vec_base<T>(a.x + b.x, a.y + b.y);
   } else {
-    return Vec(a.x + b, a.y + b);
+    return Vec_base<T>(a.x + b, a.y + b);
   }
 }
 
-inline constexpr Vec operator - (const Vec a, crauto b) noexcept {
+template <typename T>
+inline constexpr Vec_base<T> operator - (const Vec_base<T> a, crauto b) noexcept {
   if constexpr (requires { b.x; b.y; }) {
-    return Vec(a.x - b.x, a.y - b.y);
+    return Vec_base<T>(a.x - b.x, a.y - b.y);
   } else {
-    return Vec(a.x - b, a.y - b);
+    return Vec_base<T>(a.x - b, a.y - b);
   }
 }
 
-inline constexpr Vec operator * (const Vec a, crauto b) noexcept {
+template <typename T>
+inline constexpr Vec_base<T> operator * (const Vec_base<T> a, crauto b) noexcept {
   if constexpr (requires { b.x; b.y; }) {
-    return Vec(a.x * b.x, a.y * b.y);
+    return Vec_base<T>(a.x * b.x, a.y * b.y);
   } else {
-    return Vec(a.x * b, a.y * b);
+    return Vec_base<T>(a.x * b, a.y * b);
   }
 }
 
-inline constexpr Vec operator / (const Vec a, crauto b) noexcept {
+template <typename T>
+inline constexpr Vec_base<T> operator / (const Vec_base<T> a, crauto b) noexcept {
   if constexpr (requires { b.x; b.y; }) {
-    return Vec(a.x / b.x, a.y / b.y);
+    return Vec_base<T>(a.x / b.x, a.y / b.y);
   } else {
-    return Vec(a.x / b, a.y / b);
+    return Vec_base<T>(a.x / b, a.y / b);
   }
 }
 
-inline constexpr bool Vec::operator > (crauto other) const noexcept {
+template <typename T>
+inline constexpr bool Vec_base<T>::operator > (crauto other) const noexcept {
   if constexpr (requires { other.x; other.y; }) {
     return x > other.x && y > other.y;
   } else {
     return x > other && y > other;
   }
 }
-inline constexpr bool Vec::operator >= (crauto other) const noexcept {
+
+template <typename T>
+inline constexpr bool Vec_base<T>::operator >= (crauto other) const noexcept {
   if constexpr (requires { other.x; other.y; }) {
     return x >= other.x && y >= other.y;
   } else {
     return x >= other && y >= other;
   }
 }
-inline constexpr bool Vec::operator < (crauto other) const noexcept {
+
+template <typename T>
+inline constexpr bool Vec_base<T>::operator < (crauto other) const noexcept {
   if constexpr (requires { other.x; other.y; }) {
     return x < other.x && y < other.y;
   } else {
     return x < other && y < other;
   }
 }
-inline constexpr bool Vec::operator <= (crauto other) const noexcept {
+
+template <typename T>
+inline constexpr bool Vec_base<T>::operator <= (crauto other) const noexcept {
   if constexpr (requires { other.x; other.y; }) {
     return x <= other.x && y <= other.y;
   } else {
     return x <= other && y <= other;
   }
 }
+
+using Vec = Vec_base<real>;
+using Vecd = Vec_base<double>;
+using Veci = Vec_base<int>;
+using Vecu = Vec_base<uint>;
+using Veci64 = Vec_base<std::int64_t>;

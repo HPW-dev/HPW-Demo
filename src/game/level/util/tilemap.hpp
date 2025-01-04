@@ -2,9 +2,9 @@
 #include "util/mem-types.hpp"
 #include "util/macro.hpp"
 #include "util/str.hpp"
+#include "util/math/vec.hpp"
 #include "graphic/image/color-blend.hpp"
 
-struct Vec;
 class Image;
 class Yaml;
 

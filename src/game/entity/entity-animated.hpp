@@ -2,11 +2,11 @@
 #include "entity-debug.hpp"
 #include "entity-cbs.hpp"
 #include "util/macro.hpp"
+#include "util/math/vec.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 
 class Entity;
 class Image;
-struct Vec;
 class Anim;
 class Heat_distort;
 class Light;

@@ -2,11 +2,11 @@
 #include <functional>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
+#include "util/math/vec.hpp"
 #include "util/math/num-types.hpp"
 
 class Entity;
 class Image;
-struct Vec;
 
 // управляет колбэками игровых объектов
 class Entity_cbs {

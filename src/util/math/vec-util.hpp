@@ -1,9 +1,7 @@
 #pragma once
 #include "util/macro.hpp"
-#include "util/math/num-types.hpp"
+#include "util/math/vec.hpp"
 #include "util/str.hpp"
-
-struct Vec;
 
 Vec rotate_rad(const Vec center, const Vec src, real radian);
 Vec rotate_deg(const Vec center, const Vec src, real degree);

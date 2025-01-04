@@ -7,6 +7,7 @@
 #include "util/mempool.hpp"
 #include "game/entity/entity-type.hpp"
 #include "game/entity/entity.hpp"
+#include "util/math/vec.hpp"
 
 class Collider;
 class Entity;
@@ -14,7 +15,6 @@ class Phys;
 class Hitbox;
 class Player;
 class Image;
-struct Vec;
 struct Scatter;
 
 namespace hpw {

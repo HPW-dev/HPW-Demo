@@ -3,10 +3,9 @@
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
-#include "util/math/num-types.hpp"
+#include "util/math/vec.hpp"
 
 class Image;
-struct Vec;
 
 // База для уровней
 class Level {

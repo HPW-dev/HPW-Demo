@@ -1,8 +1,8 @@
 #pragma once
 #include "collider.hpp"
+#include "util/math/vec.hpp"
 
 class Image;
-struct Vec;
 
 /* разбивает пространство расшияющимися прямоугольниками
 и проверяет столькновения в них */

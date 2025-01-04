@@ -1,9 +1,9 @@
 #pragma once
 #include "util/macro.hpp"
+#include "util/math/vec.hpp"
 
 class Entity;
 class Image;
-struct Vec;
 
 // даёт игровым объектам дебажные функции
 class Entity_debug {

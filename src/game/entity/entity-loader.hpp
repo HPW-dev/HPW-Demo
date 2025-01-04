@@ -1,8 +1,8 @@
 #pragma once
 #include "util/macro.hpp"
+#include "util/math/vec.hpp"
 
 class Entity;
-struct Vec;
 
 // база для инициализаторов объектов
 class Entity_loader {

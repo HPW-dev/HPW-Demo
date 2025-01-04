@@ -1,6 +1,6 @@
 #pragma once
+#include "util/math/vec.hpp"
 
-struct Vec;
 class Image;
 
 // показать память занятую объектами

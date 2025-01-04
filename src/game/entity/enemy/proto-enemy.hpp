@@ -1,10 +1,10 @@
 #pragma once
 #include "game/entity/collidable.hpp"
 #include "game/entity/entity-loader.hpp"
+#include "util/math/vec.hpp"
 
 class Yaml;
 class Image;
-struct Vec;
 
 // общая база для изичного построения врагов
 class Proto_enemy: public Collidable {

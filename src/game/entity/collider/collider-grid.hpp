@@ -1,8 +1,8 @@
 #pragma once
 #include "collider.hpp"
+#include "util/math/vec.hpp"
 
 class Image;
-struct Vec;
 
 // разбиение пространства сеткой
 class Collider_grid final: public Collider {

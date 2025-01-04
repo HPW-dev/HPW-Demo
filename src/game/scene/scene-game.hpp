@@ -1,8 +1,7 @@
 #pragma once
 #include "scene.hpp"
 #include "util/mem-types.hpp"
-
-struct Vec;
+#include "util/math/vec.hpp"
 
 // сцена игрового процесса
 class Scene_game final: public Scene {

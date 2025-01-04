@@ -1,10 +1,10 @@
 #pragma once
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"
+#include "util/math/vec.hpp"
 #include "util/unicode.hpp"
 
 class Image;
-struct Vec;
 
 // База для интерфейса игрока
 class Hud {

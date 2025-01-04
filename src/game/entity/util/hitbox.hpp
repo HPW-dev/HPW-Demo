@@ -1,10 +1,10 @@
 #pragma once
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
+#include "util/math/vec.hpp"
 
 using Polygons = Vector<Polygon>;
 class Image;
-struct Vec;
 struct Pal8;
 
 class Hitbox final {

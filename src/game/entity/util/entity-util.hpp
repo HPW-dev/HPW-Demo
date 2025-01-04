@@ -7,12 +7,12 @@
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/rect.hpp"
+#include "util/math/vec.hpp"
 
 class Entity;
 class Particle;
 class Collidable;
 class Phys;
-struct Vec;
 struct Vec3;
 
 // рекомендуемый колижн ресолвер для шмап мода
