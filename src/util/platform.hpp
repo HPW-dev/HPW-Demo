@@ -29,6 +29,14 @@
 #endif
 
 using Seconds = double;
+
+enum class Priority {
+  low,
+  normal,
+  high,
+  realtime,
+};
+
 // подождать секунды
 void delay_sec(const Seconds seconds);
 
@@ -40,3 +48,6 @@ void set_timer(cr<Str> name);
 
 // унать какой таймер используется сейчас
 Str get_timer();
+
+// устанавливает приоритет процесса
+void set_priority(Priority mode);
