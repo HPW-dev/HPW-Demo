@@ -395,43 +395,16 @@ Unique<Sprite> Scene_main_menu::prepare_logo(cr<Str> name) const {
 utf32 Scene_main_menu::prepare_game_ver() const {
   auto game_date = sconv<utf32>( get_game_creation_date() );
   auto game_ver = sconv<utf32>( get_game_version() );
+  
   if (game_ver.empty())
     game_ver = U"v???";
 
-  game_ver += U" (";
-
-  /*
-    // добавить инфу по платформе и билду:
-    #ifdef WINDOWS
-      game_ver += U"Windows";
-    #else
-      game_ver += U"Linux";
-    #endif
-
-    #ifdef is_x64
-      game_ver += U" x64";
-    #else
-      game_ver += U" x32";
-    #endif
-
-    #ifdef DEBUG
-      game_ver += U" Debug";
-    #else
-      game_ver += U" Release";
-    #endif
-
-    #ifdef ECOMEM
-      game_ver += U" Ecomem";
-    #endif
-
-    if (!game_date.empty())
-      game_ver += U' ' + game_date;
-  */
- 
-  if (!game_date.empty())
+  if (!game_date.empty()) {
+    game_ver += U" (";
     game_ver += game_date;
+    game_ver += U')';
+  }
 
-  game_ver += U')';
   return game_ver;
 }
 
