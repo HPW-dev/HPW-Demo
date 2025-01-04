@@ -17,7 +17,7 @@
 // замедление вращения, когда мало хп
 struct Slowdown_while_damage {
   real _initial_rot_spd {};
-  real _max_hp {};
+  hp_t _max_hp {};
 
   inline explicit Slowdown_while_damage(real init_rot_spd, hp_t max_hp)
   : _initial_rot_spd {init_rot_spd}
@@ -29,8 +29,8 @@ struct Slowdown_while_damage {
 
   inline void operator ()(Entity& src, const Delta_time dt) {
     rauto casted = scast<Cosmic_hunter&>(src);
-    cauto ratio = casted.get_hp() / real(_max_hp);
-    casted._info.initial_rot_spd = std::lerp<real>(0, _initial_rot_spd, ratio);
+    cauto ratio = casted.get_hp() / double(_max_hp);
+    casted._info.initial_rot_spd = std::lerp<double>(0, _initial_rot_spd, ratio);
   }
 };
 
