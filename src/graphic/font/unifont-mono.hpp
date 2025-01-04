@@ -10,4 +10,5 @@ public:
   explicit Unifont_mono(cr<Str> fname, int width=12, int height=12, bool mono=true);
   // @param width if = 0 - use same as height
   explicit Unifont_mono(cr<File> file, int width=12, int height=12, bool mono=true);
+  inline bool is_mono() const override { return true; }
 };

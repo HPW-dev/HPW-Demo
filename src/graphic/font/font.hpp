@@ -26,6 +26,7 @@ public:
   // отобразить текст
   virtual void draw(Image& dst, const Vec pos, cr<utf32> text,
     blend_pf bf = &blend_past, const int optional = 0) const = 0;
+  virtual bool is_mono() const = 0;
   inline crauto w() const noexcept { return w_; }
   inline crauto h() const noexcept { return h_; }
   inline crauto space() const noexcept { return space_; }
