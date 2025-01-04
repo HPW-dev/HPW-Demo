@@ -1,0 +1,15 @@
+grid:
+  w: 4
+  h: 32
+  space: 1
+  
+glyph:
+  w: 5
+  h: 5
+  
+total_glyphs: 128
+start_codepoint: 0
+
+offsets:
+  - # ,
+    y: 1

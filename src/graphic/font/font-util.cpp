@@ -3,7 +3,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
 
-void draw_center(cp<hpw::Font> font, Image& dst,
+void draw_center(cp<Font_base> font, Image& dst,
 cr<utf32> msg, blend_pf bf) {
   auto w = font->text_width(msg);
   auto h = font->text_height(msg);
@@ -14,7 +14,7 @@ cr<utf32> msg, blend_pf bf) {
   font->draw(dst, pos, msg, bf);
 }
 
-void text_bordered(Image& dst, cr<utf32> txt, cp<hpw::Font> font,
+void text_bordered(Image& dst, cr<utf32> txt, cp<Font_base> font,
 const Rect border, const Vec offset, blend_pf bf, int opt) {
   assert(dst);
   assert(font);

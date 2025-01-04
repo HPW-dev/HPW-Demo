@@ -5,12 +5,9 @@
 
 class Image;
 
-// фикс алиаса имён из X11
-namespace hpw { class Font; }
-
 // базовый класс для шрифтов
-class hpw::Font {
-  nocopy(Font);
+class Font_base {
+  nocopy(Font_base);
   
 protected:
   int w_ = 0; // ширина шрифта
@@ -18,8 +15,8 @@ protected:
   Vec space_ {}; // величина отступа
 
 public:
-  Font() = default;
-  virtual ~Font() = default;
+  Font_base() = default;
+  virtual ~Font_base() = default;
   // узнать ширину текста
   virtual int text_width(cr<utf32> text) const noexcept;
   // узнать высоту текста
@@ -32,4 +29,4 @@ public:
   inline crauto w() const noexcept { return w_; }
   inline crauto h() const noexcept { return h_; }
   inline crauto space() const noexcept { return space_; }
-}; // Font
+}; // Font_base

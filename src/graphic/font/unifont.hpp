@@ -9,7 +9,7 @@
 struct stbtt_fontinfo;
 
 // шрифт для unifont.ttf
-class Unifont: public hpw::Font {
+class Unifont: public Font_base {
 public:
   struct Glyph {
     Sprite image {};

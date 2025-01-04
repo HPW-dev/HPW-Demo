@@ -5,13 +5,13 @@
 #include "util/math/rect.hpp"
 #include "util/math/vec.hpp"
 
-namespace hpw { class Font; }
+class Font_base;
 class Image;
 
 // нарисовать текст по центру
-void draw_center(cp<hpw::Font> font, Image& dst,
+void draw_center(cp<Font_base> font, Image& dst,
   cr<utf32> msg, blend_pf bf=&blend_max);
 
 // рисует текст в пределах прямоугольной области
-void text_bordered(Image& dst, cr<utf32> txt, cp<hpw::Font> font,
+void text_bordered(Image& dst, cr<utf32> txt, cp<Font_base> font,
   const Rect border, const Vec offset, blend_pf bf=&blend_past, int opt=0);

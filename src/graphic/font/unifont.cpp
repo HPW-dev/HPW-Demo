@@ -46,7 +46,7 @@ int Unifont::text_width(cr<utf32> text) const noexcept {
       size = 0;
     }
 
-    const int glyph_w = Font::w_ == 0 ? _get_glyph(ch)->image.X() : Font::w_;
+    const int glyph_w = Font_base::w_ == 0 ? _get_glyph(ch)->image.X() : Font_base::w_;
     size += glyph_w + space_.x;
   }
 

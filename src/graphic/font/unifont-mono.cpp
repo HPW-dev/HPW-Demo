@@ -8,7 +8,7 @@ Unifont_mono::Unifont_mono(cr<Str> fname, int width, int height, bool mono)
 
 Unifont_mono::Unifont_mono(cr<File> file, int width, int height, bool mono) {
   assert(width >= 0);
-  Font::w_ = width == 0 ? height : width;
+  Font_base::w_ = width == 0 ? height : width;
   init(file, height, mono);
 }
 
@@ -18,7 +18,7 @@ Shared<Unifont::Glyph> Unifont_mono::_load_glyph(char32_t ch) const {
   
   // сделать ширину глифа такой же как и высота шрифта
   assert(glyph->image);
-  Sprite extended_glyph(Font::w_, Font::h_);
+  Sprite extended_glyph(Font_base::w_, Font_base::h_);
   const Vec past_pos ((extended_glyph.X() - glyph->image.X()) / 2, 0);
   insert(extended_glyph.image(), glyph->image.image(), past_pos);
   insert(extended_glyph.mask(), glyph->image.mask(), past_pos);
