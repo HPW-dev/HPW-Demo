@@ -155,4 +155,4 @@ using Vec = Vec_base<real>;
 using Vecd = Vec_base<double>;
 using Veci = Vec_base<int>;
 using Vecu = Vec_base<uint>;
-using Veci64 = Vec_base<std::int64_t>;
+using Veci64 = Vec_base<i64_t>;
