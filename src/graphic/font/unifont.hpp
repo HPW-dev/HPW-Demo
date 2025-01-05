@@ -24,7 +24,7 @@ public:
   // узнать ширину текста
   int text_width(cr<utf32> text) const noexcept override final;
   // отобразить текст
-  void draw(Image& dst, const Vec pos, cr<utf32> text,
+  void draw(Image& dst, const Veci pos, cr<utf32> text,
     blend_pf bf=&blend_diff, const int optional=0) const override final;
   inline bool is_mono() const override { return w_ == h_; }
   

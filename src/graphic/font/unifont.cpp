@@ -54,7 +54,7 @@ int Unifont::text_width(cr<utf32> text) const noexcept {
   return max_size + 1;
 }
 
-void Unifont::draw(Image& dst, const Vec pos, cr<utf32> text,
+void Unifont::draw(Image& dst, const Veci pos, cr<utf32> text,
 blend_pf bf, const int optional) const {
   int posx = pos.x;
   int posy = pos.y;

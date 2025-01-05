@@ -1,3 +1,5 @@
+glyphs_file: "resource/font/microfont mono/glyphs.png"
+
 grid:
   w: 4
   h: 32

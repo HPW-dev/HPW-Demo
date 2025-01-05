@@ -26,5 +26,5 @@ int Font_base::text_height(cr<utf32> text) const noexcept {
   return strings * space_.y * h_;
 }
 
-Vec Font_base::text_size(cr<utf32> text) const noexcept
-  { return Vec(text_width(text), text_height(text)); }
+Veci Font_base::text_size(cr<utf32> text) const noexcept
+  { return Veci(text_width(text), text_height(text)); }

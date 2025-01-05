@@ -6,4 +6,5 @@ namespace graphic {
 inline Unique<Font_base> font; // обычный шрифт игры
 inline Unique<Font_base> font_shop; // шрифт для надписей в магазине
 inline Unique<Font_base> system_mono; // моноширинный шрифт для системной информации
+inline Unique<Font_base> asci_mono; // моноширинный маленький пиксельный шрифт с латинскими буквами
 }

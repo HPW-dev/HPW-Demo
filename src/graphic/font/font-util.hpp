@@ -14,4 +14,4 @@ void draw_center(cp<Font_base> font, Image& dst,
 
 // рисует текст в пределах прямоугольной области
 void text_bordered(Image& dst, cr<utf32> txt, cp<Font_base> font,
-  const Rect border, const Vec offset, blend_pf bf=&blend_past, int opt=0);
+  const Rect border, const Veci offset, blend_pf bf=&blend_past, int opt=0);

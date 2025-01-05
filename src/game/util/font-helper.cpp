@@ -5,6 +5,7 @@
 #include "game/util/resource-helper.hpp"
 #include "graphic/font/unifont.hpp"
 #include "graphic/font/unifont-mono.hpp"
+#include "graphic/font/microfont-mono.hpp"
 
 void load_fonts() {
   hpw_log("загрузка шрифтов...\n");
@@ -12,4 +13,5 @@ void load_fonts() {
   init_unique<Unifont>(graphic::font, mem, 16, true);
   init_unique<Unifont>(graphic::font_shop, mem, 32, true);
   init_unique<Unifont_mono>(graphic::system_mono, mem, 8, 16, true);
+  init_unique<Microfont_mono>(graphic::asci_mono, "resource/font/microfont mono/config.yml");
 }

@@ -19,7 +19,7 @@ Shared<Unifont::Glyph> Unifont_mono::_load_glyph(char32_t ch) const {
   // сделать ширину глифа такой же как и высота шрифта
   assert(glyph->image);
   Sprite extended_glyph(Font_base::w_, Font_base::h_);
-  const Vec past_pos ((extended_glyph.X() - glyph->image.X()) / 2, 0);
+  const Veci past_pos ((extended_glyph.X() - glyph->image.X()) / 2, 0);
   insert(extended_glyph.image(), glyph->image.image(), past_pos);
   insert(extended_glyph.mask(), glyph->image.mask(), past_pos);
   glyph->image = extended_glyph;

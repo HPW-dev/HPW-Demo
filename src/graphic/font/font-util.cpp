@@ -7,7 +7,7 @@ void draw_center(cp<Font_base> font, Image& dst,
 cr<utf32> msg, blend_pf bf) {
   auto w = font->text_width(msg);
   auto h = font->text_height(msg);
-  Vec pos{
+  Veci pos{
     dst.X / 2 - w / 2,
     dst.Y / 2 - h / 2,
   };
@@ -15,7 +15,7 @@ cr<utf32> msg, blend_pf bf) {
 }
 
 void text_bordered(Image& dst, cr<utf32> txt, cp<Font_base> font,
-const Rect border, const Vec offset, blend_pf bf, int opt) {
+const Rect border, const Veci offset, blend_pf bf, int opt) {
   assert(dst);
   assert(font);
   assert(bf);
@@ -55,6 +55,6 @@ const Rect border, const Vec offset, blend_pf bf, int opt) {
     formated_txt += str;
   }
   
-  const Vec pos = border.pos + offset;
+  const Veci pos = border.pos + offset;
   font->draw(dst, pos, formated_txt, bf, opt);
 }
