@@ -11,7 +11,7 @@
 
 struct Glyph {
   Veci offset {};
-  Sprite image {};
+  Sprite spr {};
 };
 
 struct Microfont_mono::Impl {
@@ -56,13 +56,14 @@ struct Microfont_mono::Impl {
     cfor (x, grid_x)
     cfor (y, grid_y) {
       Glyph glyph;
-      glyph.image.image().init(w, h, Pal8::white);
+      glyph.spr.image().init(w, h, Pal8::white);
       Vec pos(x * (w + grid_space), y * (h + grid_space));
       const Rect rect(pos, Vec(w, h));
       cauto tile = cut(glyphs_image, rect, Image_get::NONE);
-      glyph.image.set_mask(tile);
-      assert(glyph.image.mask().X == w);
-      assert(glyph.image.mask().Y == h);
+      glyph.spr.set_mask(tile);
+      apply_invert(glyph.spr.mask());
+      assert(glyph.spr.mask().X == w);
+      assert(glyph.spr.mask().Y == h);
       _glyphs.at(charcode) = std::move(glyph);
       ++charcode;
     }
@@ -72,7 +73,33 @@ struct Microfont_mono::Impl {
   }
 
   inline void draw(Image& dst, const Veci pos, cr<utf32> txt, blend_pf bf, const int opt) const {
-    // TODO
+    assert(dst);
+    return_if(txt.empty());
+    int posx = pos.x;
+    int posy = pos.y;
+    
+    for (uint limit = 0; auto ch: txt) {
+      ++limit;
+
+      // столько текста на экран не влезет
+      break_if(limit >= 8'000);
+
+      // пропуск строки
+      if (ch == U'\n') {
+        posy += _master.h() + _master.space().y;
+        posx = pos.x;
+        continue;
+      }
+      // \r возврат каретки
+      if (ch == '\r') {
+        posx = pos.x;
+        continue;
+      }
+
+      cauto glyph = _glyphs.at(ch < _glyphs.size() ? ch : 127);
+      insert(dst, glyph.spr, {posx + glyph.offset.x, posy + glyph.offset.y}, bf, opt);
+      posx += _master.w() + _master.space().x;
+    } // for text size
   }
 };
 

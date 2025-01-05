@@ -8,7 +8,8 @@ grid:
 glyph:
   w: 5
   h: 5
-  space: 1
+  space_w: 1
+  space_h: 1
   
 total_glyphs: 128
 start_codepoint: 0

@@ -70,7 +70,7 @@ blend_pf bf, const int optional) const {
       posx = pos.x;
       continue;
     }
-    // \r игнорить
+    // \r возврат каретки
     if (ch == '\r') {
       posx = pos.x;
       continue;
