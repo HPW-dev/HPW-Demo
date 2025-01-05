@@ -191,6 +191,8 @@ void set_timer(cr<Str> name) {
 Str get_timer() { return g_timer_name; }
 
 void set_priority(Priority mode) {
+  hpw_debug("set process priority " + n2s(scast<int>(mode)) + "\n");
+
 #ifdef WINDOWS
   static const std::unordered_map<Priority, ::DWORD> priority_classez {
     {Priority::low, BELOW_NORMAL_PRIORITY_CLASS},
