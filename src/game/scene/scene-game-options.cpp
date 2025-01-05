@@ -15,6 +15,7 @@
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
+#include "game/menu/item/list-item.hpp"
 #include "util/error.hpp"
 #include "host/command.hpp"
 
@@ -52,6 +53,7 @@ struct Scene_game_options::Impl {
         [](bool val) { hpw::collider_autoopt = val; },
         get_locale_str("game_opts.collider_autoopt.desc")
       ),
+      priority_menu_item(),
       new_shared<Menu_text_item>(
         get_locale_str("common.exit"),
         [this]{ goto_back(); }
@@ -67,6 +69,36 @@ struct Scene_game_options::Impl {
   // выходит из этого меню
   inline void goto_back() {
     hpw::scene_mgr.back();
+  }
+
+  // пункт меню с настройкой приоритета процесса
+  static inline Shared<Menu_item> priority_menu_item() {
+    return new_shared<Menu_list_item>(
+      get_locale_str("game_opts.priority.title"),
+      Menu_list_item::Items {
+        Menu_list_item::Item {
+          get_locale_str("game_opts.priority.low"),
+          get_locale_str("game_opts.priority.low_desc"),
+          []{ set_priority( (hpw::process_priority = Priority::low) ); }
+        },
+        Menu_list_item::Item {
+          get_locale_str("game_opts.priority.normal"),
+          get_locale_str("game_opts.priority.normal_desc"),
+          []{ set_priority( (hpw::process_priority = Priority::normal) ); }
+        },
+        Menu_list_item::Item {
+          get_locale_str("game_opts.priority.high"),
+          get_locale_str("game_opts.priority.high_desc"),
+          []{ set_priority( (hpw::process_priority = Priority::high) ); }
+        },
+        Menu_list_item::Item {
+          get_locale_str("game_opts.priority.realtime"),
+          get_locale_str("game_opts.priority.realtime_desc"),
+          []{ set_priority( (hpw::process_priority = Priority::realtime) ); }
+        },
+      },
+      []{ return scast<std::size_t>(hpw::process_priority); }
+    );
   }
 }; // Impl
 
