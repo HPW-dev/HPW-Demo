@@ -75,9 +75,9 @@ def exec_cmd(cmd, without_print=False):
 
 def get_game_version():
   ''':return: version, last commit date, last commit time'''
-  version = "v???"
-  date = "unknown last commit date"
-  time = "unknown last commit time"
+  version = ""
+  date = ""
+  time = ""
 
   # получить версии
   try:
@@ -97,9 +97,9 @@ def write_game_version():
   "записать версию игры в version.cpp"
 
   version, date, time = get_game_version()
-  print("game version: " + version)
-  print("last commit date: " + date)
-  print("last commit time: " + time)
+  print("game version: " + version if version else "unknown")
+  print("last commit date: " + date if date else "unknown")
+  print("last commit time: " + time if time else "unknown")
 
   # сгенерировать C++ файл
   with open(file='src/game/util/version.cpp', mode='w', newline='\n', encoding="utf-8") as file:
@@ -133,9 +133,9 @@ def save_version(build_dir, used_libs, hpw_config, cxx, cc):
       file.writelines([
         "H.P.W build info:\n",
         f'  ASAN checks: {hpw_config.enable_asan}\n',
-        f'  Game ver: {game_ver}\n',
-        f'    last commit date: {game_date}\n',
-        f'    last commit time: {game_time}\n',
+        f'  Game ver: {game_ver if game_ver else "unknown"}\n',
+        f'    last commit date: {game_date if game_date else "unknown"}\n',
+        f'    last commit time: {game_time if game_time else "unknown"}\n',
 
         f'\nUtils:\n',
         f'  Python ver: {check_python_version()}\n',

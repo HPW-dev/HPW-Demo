@@ -143,6 +143,14 @@ static inline void load_nickname() {
   }
 }
 
+static inline void save_game_config(Yaml& config) {
+  config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
+  config.set_bool("collider_autoopt", hpw::collider_autoopt);
+  config.set_str ("locale", hpw::locale_path);
+  config.set_str ("hud", graphic::cur_hud);
+  config.set_int ("priority", scast<int>(hpw::process_priority));
+}
+
 void save_config() {
   auto& config = *hpw::config;
 
@@ -151,10 +159,7 @@ void save_config() {
   config.set_bool("need_tutorial", hpw::need_tutorial);
 
   auto game_node = config.make_node("game");
-  game_node.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
-  game_node.set_bool("collider_autoopt", hpw::collider_autoopt);
-  game_node.set_str ("locale", hpw::locale_path);
-  game_node.set_str ("hud", graphic::cur_hud);
+  save_game_config(game_node);
   save_nickname();
 
   auto path_node = config.make_node("path");
@@ -344,6 +349,9 @@ void load_config_game(cr<Yaml> config) {
   hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   hpw::collider_autoopt = config.get_bool("collider_autoopt", hpw::collider_autoopt);
   graphic::cur_hud = config.get_str("hud", graphic::cur_hud);
+  hpw::process_priority = scast<Priority>( config.get_int("priority", scast<int>(hpw::process_priority)) );
+  if (hpw::process_priority != Priority::normal)
+    set_priority(hpw::process_priority);
 
   try {
     hpw::locale_path = config.get_str("locale", hpw::locale_path);

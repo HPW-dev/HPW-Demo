@@ -11,6 +11,7 @@
 #include "util/str-util.hpp"
 
 #ifdef WINDOWS
+#define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #else // LINUX
 #include <unistd.h>
@@ -188,3 +189,34 @@ void set_timer(cr<Str> name) {
 } // set_timer
 
 Str get_timer() { return g_timer_name; }
+
+void set_priority(Priority mode) {
+  hpw_debug("set process priority " + n2s(scast<int>(mode)) + "\n");
+
+#ifdef WINDOWS
+  static const std::unordered_map<Priority, ::DWORD> priority_classez {
+    {Priority::low, BELOW_NORMAL_PRIORITY_CLASS},
+    {Priority::normal, NORMAL_PRIORITY_CLASS},
+    {Priority::high, HIGH_PRIORITY_CLASS},
+    {Priority::realtime, REALTIME_PRIORITY_CLASS},
+  };
+
+  static const std::unordered_map<Priority, int> thread_priority_classez {
+    {Priority::low, THREAD_PRIORITY_LOWEST},
+    {Priority::normal, THREAD_PRIORITY_NORMAL},
+    {Priority::high, THREAD_PRIORITY_HIGHEST},
+    {Priority::realtime, THREAD_PRIORITY_TIME_CRITICAL},
+  };
+
+  auto ret = ::SetPriorityClass(::GetCurrentProcess(), priority_classez.at(mode));
+  if (!ret)
+    hpw_warning("ошибка при смене приоритета процесса\n");
+    
+  ret = ::SetThreadPriority(::GetCurrentThread(), thread_priority_classez.at(mode));
+  if (!ret)
+    hpw_warning("ошибка при смене приоритета потока\n");
+#else // LINUX
+  #pragma message("need impl for set_priority in Linux")
+  hpw_warning("need impl for set_priority in Linux\n");
+#endif
+}
