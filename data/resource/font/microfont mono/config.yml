@@ -8,10 +8,12 @@ grid:
 glyph:
   w: 5
   h: 5
+  space: 1
   
 total_glyphs: 128
 start_codepoint: 0
 
 offsets:
-  - # ,
+  -
+    char: ","
     y: 1

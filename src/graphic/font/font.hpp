@@ -30,4 +30,7 @@ public:
   inline crauto w() const noexcept { return w_; }
   inline crauto h() const noexcept { return h_; }
   inline crauto space() const noexcept { return space_; }
+  void set_w(int w);
+  void set_h(int h);
+  void set_space(const Veci space);
 }; // Font_base

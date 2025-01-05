@@ -26,7 +26,7 @@ public:
   // отобразить текст
   void draw(Image& dst, const Veci pos, cr<utf32> text,
     blend_pf bf=&blend_diff, const int optional=0) const override final;
-  inline bool is_mono() const override { return w_ == h_; }
+  inline bool is_mono() const override { return w_ != 0; }
   
 private:
   bool mono_ {};
