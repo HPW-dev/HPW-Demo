@@ -306,6 +306,7 @@ real c11, real tx, real ty) {
 Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
   assert(src);
   return_if(NEW_SIZE_X == scast<uint>(src.X) && NEW_SIZE_Y == scast<uint>(src.Y), src);
+  return_if(NEW_SIZE_X == 0 || NEW_SIZE_Y == 0, {});
 
   Image ret(NEW_SIZE_X, NEW_SIZE_Y);
   const real scale_x = 1.0 / (scast<real>(NEW_SIZE_X) / src.X);
@@ -330,6 +331,27 @@ Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_
       c01.to_real(),
       c11.to_real(), tx, ty);
     ret.fast_set(x, y, Pal8::from_real(l), {});
+  }
+
+  return ret;
+}
+
+Image resize_neighbor(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
+  assert(src);
+  return_if(NEW_SIZE_X == scast<uint>(src.X) && NEW_SIZE_Y == scast<uint>(src.Y), src);
+  return_if(NEW_SIZE_X == 0 || NEW_SIZE_Y == 0, {});
+
+  Image ret(NEW_SIZE_X, NEW_SIZE_Y);
+  const real scale_x = 1.0 / (scast<real>(NEW_SIZE_X) / src.X);
+  const real scale_y = 1.0 / (scast<real>(NEW_SIZE_Y) / src.Y);
+
+  #pragma omp parallel for simd collapse(2) if (ret.X * ret.Y >= 64 * 64)
+  cfor (y, ret.Y)
+  cfor (x, ret.X) {
+    const int gxi = std::floor(x * scale_x);
+    const int gyi = std::floor(y * scale_y);
+    cauto color = src(gxi, gyi);
+    ret(x, y) = color;
   }
 
   return ret;

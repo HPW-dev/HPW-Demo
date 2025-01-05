@@ -16,6 +16,8 @@
 #include "shaker.hpp"
 #include "shuffler.hpp"
 #include "pixels-per-frame.hpp"
+#include "epge-resize.hpp"
+#include "mirror.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -38,6 +40,8 @@ inline static void init_epge_list() {
   add_epge<epge::Shaker>();
   add_epge<epge::Pixelate>();
   add_epge<epge::Inversion>();
+  add_epge<epge::Mirror>();
+  add_epge<epge::Resize>();
   add_epge<epge::Flashes>();
   add_epge<epge::Fading>();
   add_epge<epge::Scanline>();
