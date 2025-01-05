@@ -15,6 +15,7 @@ struct Resize::Impl final {
     MAX,
   };
 
+  mutable Image _resized {};
   int _mode {scast<int>(Mode::bilinear)};
   int _w {1};
   int _h {1};
@@ -31,23 +32,22 @@ struct Resize::Impl final {
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);
-    static Image resized;
 
     // заресайзить
     switch (scast<Mode>(_mode)) {
       default:
-      case Mode::neighbor: resized = resize_neighbor(dst, _w, _h); break;
-      case Mode::bilinear: resized = resize_bilinear(dst, _w, _h); break;
+      case Mode::neighbor: _resized = resize_neighbor(dst, _w, _h); break;
+      case Mode::bilinear: _resized = resize_bilinear(dst, _w, _h); break;
     }
 
     // центрировать
     Vec pos {};
     if (_center)
-      pos = center_point(dst, resized);
+      pos = center_point(dst, _resized);
 
-    assert(resized);
+    assert(_resized);
     dst.fill(_black_bg ? Pal8::black : Pal8::white);
-    insert(dst, resized, pos);
+    insert(dst, _resized, pos);
   }
 
   inline Params params() noexcept {
