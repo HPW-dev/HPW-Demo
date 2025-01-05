@@ -54,8 +54,8 @@ struct Resize::Impl final {
     return Params {
       new_shared<Param_int>("mode", "resize algorithm:\n"
         "  0 - neighbor;\n  1 - bilinear.\n", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
-      new_shared<Param_int>("width", "screen width (pixels)", _w, 1, graphic::width, 1, 3),
-      new_shared<Param_int>("height", "screen height (pixels)", _h, 1, graphic::height, 1, 3),
+      new_shared<Param_int>("width", "screen width (pixels)", _w, 1, graphic::width*2, 1, 4),
+      new_shared<Param_int>("height", "screen height (pixels)", _h, 1, graphic::height*2, 1, 4),
       new_shared<Param_bool>("center", "center the game frame", _center),
       new_shared<Param_bool>("black bg", "use black background color", _black_bg),
     };
