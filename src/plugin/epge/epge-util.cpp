@@ -18,6 +18,7 @@
 #include "pixels-per-frame.hpp"
 #include "epge-resize.hpp"
 #include "mirror.hpp"
+#include "color-rotation.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -35,6 +36,7 @@ inline void add_epge() {
 // регистрирует плагины в списке
 inline static void init_epge_list() {
   add_epge<epge::Epilepsy>();
+  add_epge<epge::Color_rotation>();
   add_epge<epge::Shuffler>();
   add_epge<epge::Pixels_per_frame>();
   add_epge<epge::Shaker>();
