@@ -1,0 +1,20 @@
+glyphs_file: "resource/font/microfont mono/glyphs downcase.png"
+
+grid:
+  w: 4
+  h: 32
+  space: 1
+  
+glyph:
+  w: 3
+  h: 5
+  space_w: 1
+  space_h: 1
+  
+total_glyphs: 128
+start_codepoint: 0
+
+offsets:
+  -
+    char: ","
+    y: 1

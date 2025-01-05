@@ -37,6 +37,6 @@ public:
   inline cr<real> get_cur_duration() const { return cur_duration; }
 
   void update(const Delta_time dt);
-  void draw(Image& dst, const Vec offset);
+  void draw(Image& dst, const Veci offset);
   void restart();
 }; // Heat_distort

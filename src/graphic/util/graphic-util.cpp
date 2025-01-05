@@ -137,7 +137,7 @@ void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int
     dst.fast_set(x - sx, y - sy, src(x, y), {});
 }
 
-Image cut(cr<Image> src, cr<Rect> rect_, Image_get mode) {
+Image cut(cr<Image> src, cr<Recti> rect_, Image_get mode) {
   assert(src);
   return_if (rect_.size.x <= 0 || rect_.size.y <= 0, {});
 

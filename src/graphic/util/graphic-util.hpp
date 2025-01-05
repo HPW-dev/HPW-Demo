@@ -38,7 +38,7 @@ void insert_x2(Image& dst, cr<Image> src, Vec pos);
 void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my) noexcept;
 
 // вырезание области (безопасное)
-[[nodiscard]] Image cut(cr<Image> src, cr<Rect> rect,
+[[nodiscard]] Image cut(cr<Image> src, cr<Recti> rect,
   Image_get mode=Image_get::MIRROR);
 
 // найти центр спрайта

@@ -24,7 +24,7 @@ const uint W, const uint H, cr<std::string_view> PAL) {
 
   cfor (y, H) {
     cfor (x, W) {
-      const Rect rect(x * CHAR_X, y * CHAR_Y, CHAR_X, CHAR_Y);
+      const Recti rect(x * CHAR_X, y * CHAR_Y, CHAR_X, CHAR_Y);
       cauto tile = cut(resized, rect);
       assert(tile);
       // вычислить среднюю яркость всех пикселей

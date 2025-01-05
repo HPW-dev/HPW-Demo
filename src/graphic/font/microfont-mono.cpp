@@ -57,8 +57,8 @@ struct Microfont_mono::Impl {
     cfor (y, grid_y) {
       Glyph glyph;
       glyph.spr.image().init(w, h, Pal8::white);
-      Vec pos(x * (w + grid_space), y * (h + grid_space));
-      const Rect rect(pos, Vec(w, h));
+      Veci pos(x * (w + grid_space), y * (h + grid_space));
+      const Recti rect(pos, Veci(w, h));
       cauto tile = cut(glyphs_image, rect, Image_get::NONE);
       glyph.spr.set_mask(tile);
       apply_invert(glyph.spr.mask());

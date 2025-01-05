@@ -71,7 +71,7 @@ struct Shuffler::Impl final {
   }
 
   inline Image cut_block(cr<Image> src, const int x, const int y, const int block_sz) const noexcept {
-    return cut(src, Rect(x * block_sz, y * block_sz, block_sz, block_sz), Image_get::MIRROR);
+    return cut(src, Recti(x * block_sz, y * block_sz, block_sz, block_sz), Image_get::MIRROR);
   }
 
   inline void insert_block(Image& dst, cr<Image> block, const int x, const int y, const int block_sz,

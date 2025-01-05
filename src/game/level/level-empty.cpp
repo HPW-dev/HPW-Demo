@@ -9,12 +9,12 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
 
-// #include "game/core/sounds.hpp"
-// #include "util/math/vec-util.hpp"
-// #include "util/math/timer.hpp"
-// #include "util/math/random.hpp"
-// #include "util/error.hpp"
-#include "game/core/fonts.hpp"
+//#include "game/core/sounds.hpp"
+//#include "util/math/vec-util.hpp"
+//#include "util/math/timer.hpp"
+//#include "util/math/random.hpp"
+//#include "util/error.hpp"
+//#include "game/core/fonts.hpp"
 
 struct Level_empty::Impl {
   inline explicit Impl() {
@@ -24,22 +24,7 @@ struct Level_empty::Impl {
   inline void update(const Vec vel, Delta_time dt) {}
 
   inline void draw(Image& dst) const {
-    dst.fill(Pal8::black);
-
-    cauto txt =
-      U"          +-------------+\n"
-      U"          |..Test.text..|\n"
-      U"          +-------------+\n"
-      U"\n"
-      U"AaBbCcEeFf\n"
-      U"1234567890\n"
-      U"+-=/\\_|{}[]()*&^%$#@!?'\"\n"
-      U"\n"
-      U"русский\n"
-      U"Boo fucking project v0.227.8.0.1\n"
-      U"__________________________________"
-    ;
-    graphic::asci_mono->draw(dst, {5, 5}, txt);
+    dst.fill(Pal8::red);
   }
 }; // Impl
 

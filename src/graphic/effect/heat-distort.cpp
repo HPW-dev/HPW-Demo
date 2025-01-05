@@ -26,7 +26,7 @@ void Heat_distort::update(const Delta_time dt) {
   cur_duration -= dt;
 }
 
-void Heat_distort::draw(Image& dst, const Vec offset) {
+void Heat_distort::draw(Image& dst, const Veci offset) {
   return_if(cur_duration <= 0 && !flags.infinity_duration);
   assert(dst);
 
@@ -65,7 +65,7 @@ void Heat_distort::draw(Image& dst, const Vec offset) {
     auto local_block_size = flags.random_block_size
       ? rnd_fast(0, pre_block_size)
       : pre_block_size;
-    Rect block;
+    Recti block;
     block.pos.x = block_offset.x + offset.x - local_block_size / 2;
     block.pos.y = block_offset.y + offset.y - local_block_size / 2;
     block.size.x = local_block_size;
@@ -76,7 +76,6 @@ void Heat_distort::draw(Image& dst, const Vec offset) {
     local_offset *= flags.random_power
       ? rndr_fast(0, local_power)
       : local_power;
-    insert( dst, cuted_block,
-      Vec{block.pos.x + local_offset.x, block.pos.y + local_offset.y} );
+    insert(dst, cuted_block, Vec{block.pos.x + local_offset.x, block.pos.y + local_offset.y});
   } // for block_count
 } // draw
