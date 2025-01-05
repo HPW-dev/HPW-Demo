@@ -137,13 +137,9 @@ void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int
     dst.fast_set(x - sx, y - sy, src(x, y), {});
 }
 
-Image cut(cr<Image> src, cr<Recti> rect_, Image_get mode) {
+Image cut(cr<Image> src, cr<Recti> rect, Image_get mode) {
   assert(src);
-  return_if (rect_.size.x <= 0 || rect_.size.y <= 0, {});
-
-  auto rect = rect_;
-  rect.size = floor(rect.size);
-  rect.pos = floor(rect.pos);
+  return_if (rect.size.x <= 0 || rect.size.y <= 0, {});
 
   Image ret(rect.size.x, rect.size.y);
   cauto ex = rect.pos.x + rect.size.x;
