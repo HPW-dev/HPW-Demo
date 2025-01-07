@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstring>
 #include <iostream>
 #include "util/log.hpp"
 #include "util/str-util.hpp"
@@ -6,6 +7,7 @@
 #include "util/pparser.hpp"
 #include "util/platform.hpp"
 #include "util/net/udp-server.hpp"
+#include "util/net/udp-client.hpp"
 
 struct Args {
   bool is_server {};
@@ -83,6 +85,13 @@ void server_test(cr<Args> args) {
 
 void client_test(cr<Args> args) {
   hpw_log("Client test\n");
+  assert(!args.ip.empty());
+
+  hpw_log("init client...\n");
+  net::Udp_client client(args.ip, s2n<u16_t>(args.port));
+
+  hpw_log("connect to server...\n");
+  client.try_to_connect();
 
   while (true) {
     Str message;
@@ -90,6 +99,18 @@ void client_test(cr<Args> args) {
     std::getline(std::cin, message);
     std::cin >> message;
 
+    // подготовка пакета с сообщение к отправке
+    Bytes data(message.size() + 1);
+    std::memcpy(ptr2ptr<void*>(data.data()), cptr2ptr<cp<void>>(message.data()), message.size());
+    data.back() = scast<byte>('\0');
+
+    if (args.async) {
+      client.async_send(data);
+    } else {
+      error("need impl");
+    }
+
+    client.update();
     break_if(str_tolower(message) == "exit");
   }
 }

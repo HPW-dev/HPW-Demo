@@ -1,7 +1,6 @@
 #include "util/str-util.hpp"
 #include <asio/asio.hpp>
 #include <atomic>
-#include <algorithm>
 #include <cstring>
 #include "udp-server.hpp"
 #include "util/log.hpp"
@@ -16,7 +15,7 @@ struct Udp_server::Impl {
   Packets _packets {};
   mutable asio::io_service _io {};
   Unique<ip_udp::socket> _socket {};
-  std::atomic_bool _live {true};
+  std::atomic_bool _live {};
   Bytes _input_buffer {};
   Bytes _output_buffer {};
   ip_udp::endpoint _incoming_address {};
@@ -36,6 +35,8 @@ struct Udp_server::Impl {
     auto handler = [this](cr<std::error_code> err, std::size_t bytes)->void
       { this->input_handler(err, bytes); };
     _socket->async_receive_from(asio::buffer(_input_buffer), _incoming_address, handler);
+
+    _live = true;
   }
 
   inline ~Impl() {
@@ -76,7 +77,7 @@ struct Udp_server::Impl {
     std::memcpy(ptr2ptr<void*>(packet.bytes.data()), cptr2ptr<cp<void>>(this->_input_buffer.data()), bytes);
     _packets.emplace_back(std::move(packet));
   }
-};
+}; // Impl
 
 Udp_server::Udp_server(u16_t port): _impl{new_unique<Impl>(port)} {}
 Udp_server::~Udp_server() {}
