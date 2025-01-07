@@ -1,52 +1,69 @@
 #include <utility>
+#include "util/str-util.hpp" // перемещение вниз приведёт к взрыву
+#include <asio/asio.hpp>
 #include "udp-mgr.hpp"
 #include "util/error.hpp"
+#include "util/log.hpp"
+#include "util/platform.hpp"
 
 namespace net {
+using ip_udp = asio::ip::udp;
 
 struct Udp_mgr::Impl {
-  inline bool is_server() const {
-    // TODO
-    error("need impl");
-    return {};
-  }
+  struct Status {
+    bool is_server: 1 {};
+    bool is_active: 1 {};
+    bool is_listening_enabled: 1 {};
+  };
+  Status _status {};
+  Packets _packets {};
+  mutable asio::io_service _io {};
+  Unique<ip_udp::socket> _socket {};
+  u16_t _port {};
+  Str _ip {};
 
-  inline bool is_client() const {
-    // TODO
-    error("need impl");
-    return {};
-  }
-
-  inline operator bool() const {
-    // TODO
-    error("need impl");
-    return {};
-  }
+  inline ~Impl() { disconnect(); }
+  inline bool is_server() const { return _status.is_active && _status.is_server; }
+  inline bool is_client() const { return _status.is_active && !_status.is_server; }
+  inline operator bool() const { return _status.is_active; }
 
   inline Strs avaliable_ipv4s() const {
-    // TODO
-    error("need impl");
-    return {};
+    return_if(!this->operator bool(), {});
+    ip_udp::resolver resolver {_io};
+    ip_udp::resolver::query query(get_pc_name(), n2s(_port));
+    Strs ret;
+    cauto port = n2s(_port);
+    for (crauto it: resolver.resolve(query))
+      if (it.endpoint().address().is_v4())
+        ret.push_back(it.endpoint().address().to_string() + ":" + port);
+    return ret;
   }
 
   inline void start_server(u16_t port) {
-    // TODO
-    error("need impl");
+    _port = port;
+    if (_port < 1024 || _port > 49'150)
+      hpw_warning("use recomended UPD-ports in 1024...49'150\n");
+    init_unique(_socket, _io, ip_udp::endpoint(ip_udp::v4(), _port));
+    _socket->set_option(ip_udp::socket::reuse_address(true));
+    _status.is_active = true;
+    _status.is_server = true;
   }
 
   inline void start_client(cr<Str> ip, u16_t port) {
-    // TODO
-    error("need impl");
+    _status.is_active = true;
+    _status.is_server = false;
   }
 
   inline void start_client(cr<Str> ip_with_port) {
-    // TODO
-    error("need impl");
+    _status.is_active = true;
+    _status.is_server = false;
   }
 
   inline void disconnect() {
-    // TODO
-    error("need impl");
+    disable_packet_listening();
+    _io.stop();
+    _socket = {};
+    _status.is_active = false;
   }
 
   inline void run_packet_listening() {
@@ -65,11 +82,7 @@ struct Udp_mgr::Impl {
     return {};
   }
 
-  inline cr<Packets> packets() const {
-    // TODO
-    error("need impl");
-    return {};
-  }
+  inline cr<Packets> packets() const { return _packets; }
 
   inline void clear_packets() {
     // TODO
