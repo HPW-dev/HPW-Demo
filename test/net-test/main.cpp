@@ -68,27 +68,21 @@ void server_test(cr<Args> args) {
   avaliable_ips << "\n";
   hpw_info(avaliable_ips.str());
 
-  if (args.async)
-    udp.run_packet_listening();
-
   hpw_info("server loop:\n");
   while (_g_active) {
     udp.update();
 
     if (args.async) {
-      if (udp.has_packets()) {
-        for (crauto packet: udp.packets())
-          if (packet.loaded_correctly)
-            print_packet(packet);
-        udp.clear_packets();
-      } else {
-        hpw_debug("nop\n");
-      }
+      cauto packet = udp.load_packet_if_exist();
+      if (packet.has_value())
+        print_packet(*packet);
+      else
+        hpw_info("nop\n");
 
       constexpr Seconds DELAY = 1.0;
       delay_sec(DELAY);
     } else { // serial mode
-      print_packet(udp.wait_packet());
+      print_packet(udp.load_packet());
     }
   }
 }
