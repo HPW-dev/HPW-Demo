@@ -11,12 +11,17 @@ struct Udp_server::Impl {
   u16_t _port {};
   Packets _packets {};
   mutable asio::io_service _io {};
+  Unique<ip_udp::socket> _socket {};
 
   inline explicit Impl(u16_t port)
   : _port {port}
   {
     if (_port < 1024 || _port > 49'150)
       hpw_warning("use recomended UPD-ports in 1024...49'150\n");
+    
+    hpw_debug(Str("init server by port \"") + n2s(_port) + "\"...\n");
+    init_unique(_socket, _io, ip_udp::endpoint(ip_udp::v4(), _port));
+    _socket->set_option(ip_udp::socket::reuse_address(true));
   }
 
   inline bool has_packets() const { return !_packets.empty(); }

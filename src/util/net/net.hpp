@@ -1,9 +1,14 @@
 #pragma once
 #include "util/bytes.hpp"
+#include "util/str.hpp"
 
 namespace net {
   
-using Packet = Bytes;
+struct Packet {
+  Str ip {};
+  Bytes bytes {};
+};
+
 using Packets = Vector<Packet>;
 
 } // net ns
