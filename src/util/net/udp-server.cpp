@@ -5,6 +5,7 @@ namespace net {
 
 struct Udp_server::Impl {
   u16_t _port {};
+  Packets _packets {};
 
   inline explicit Impl(u16_t port)
   : _port {port}
@@ -13,17 +14,9 @@ struct Udp_server::Impl {
       hpw_warning("use recomended UPD-ports in 1024...49'150\n");
   }
 
-  inline bool has_packets() const {
-    return {}; // TODO
-  }
-
-  inline cr<Packets> packets() const {
-    return {}; // TODO
-  }
-
-  inline void clear_packets() {
-
-  }
+  inline bool has_packets() const { return !_packets.empty(); }
+  inline cr<Packets> packets() const { return _packets; }
+  inline void clear_packets() { _packets.clear(); }
 };
 
 Udp_server::Udp_server(u16_t port): _impl{new_unique<Impl>(port)} {}
