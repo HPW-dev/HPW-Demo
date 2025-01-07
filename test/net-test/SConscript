@@ -52,6 +52,7 @@ def init_sources():
     src_dir + 'util/error.cpp',
     src_dir + 'util/log.cpp',
     src_dir + 'util/str-util.cpp',
+    src_dir + 'util/platform.cpp',
     'main.cpp',
   ])
   sources.extend([host_sources]);

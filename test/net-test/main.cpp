@@ -4,9 +4,11 @@
 #include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/pparser.hpp"
+#include "util/platform.hpp"
 
 struct Args {
   bool is_server {};
+  bool async {};
   Str ip, port;
 };
 
@@ -15,6 +17,7 @@ Args parse_args(int argc, char** argv) {
   Pparser argparser({
     {{"-c", "--client"}, "set client mode", [&](cr<Str> arg) {ret.is_server = false;}},
     {{"-s", "--server"}, "set server mode", [&](cr<Str> arg) {ret.is_server = true;}},
+    {{"-a", "--async"}, "set async mode", [&](cr<Str> arg) {ret.async = true;}},
     {{"-i", "--ip"}, "set IP (--ip 127.0.0.1)", [&](cr<Str> arg) {ret.ip = arg;}},
     {{"-p", "--port"}, "port number (--port 49099)", [&](cr<Str> arg) {ret.port = arg;}, true},
   });
@@ -23,6 +26,7 @@ Args parse_args(int argc, char** argv) {
   argparser(argc, argv);
 
   hpw_log(Str("server mode: ") + (ret.is_server ? "enabled" : "disabled") + "\n");
+  hpw_log(Str("async mode: ") + (ret.async ? "enabled" : "disabled") + "\n");
   assert(!ret.port.empty());
   hpw_log("port: " + ret.port + "\n");
   if (!ret.ip.empty())
@@ -31,11 +35,28 @@ Args parse_args(int argc, char** argv) {
   return ret;
 }
 
-void server_test(cr<Str> port) {
+void server_test(cr<Args> args) {
   hpw_log("Server test\n");
+
+  hpw_log("timer calibration...\n");
+  calibrate_delay(0.1);
+
+  hpw_log("server init...\n");
+  // TODO
+
+  hpw_log("server loop:\n");
+  while (true) {
+    if (args.async) {
+      constexpr Seconds DELAY = 1.0;
+      delay_sec(DELAY);
+      hpw_debug("nop\n");
+    } else {
+
+    }
+  }
 }
 
-void client_test(cr<Str> ip, cr<Str> port) {
+void client_test(cr<Args> args) {
   hpw_log("Client test\n");
 
   while (true) {
@@ -53,7 +74,7 @@ int main(int argc, char** argv) {
 
   cauto args = parse_args(argc, argv);
   if (args.is_server)
-    server_test(args.port);
+    server_test(args);
   else
-    client_test(args.ip, args.port);
+    client_test(args);
 }
