@@ -1,4 +1,6 @@
+#include <cassert>
 #include <utility>
+#include <thread>
 #include "util/str-util.hpp" // перемещение вниз приведёт к взрыву
 #include <asio/asio.hpp>
 #include "udp-mgr.hpp"
@@ -21,6 +23,9 @@ struct Udp_mgr::Impl {
   Unique<ip_udp::socket> _socket {};
   u16_t _port {};
   Str _ip {};
+  ip_udp::endpoint _target_client_address {};
+  std::atomic_bool _listener_thread_live {};
+  std::thread _listener_thread {};
 
   inline ~Impl() { disconnect(); }
   inline bool is_server() const { return _status.is_active && _status.is_server; }
@@ -50,13 +55,18 @@ struct Udp_mgr::Impl {
   }
 
   inline void start_client(cr<Str> ip, u16_t port) {
+    iferror(ip.empty(), "empty ip string");
+    _ip = ip;
+    init_unique(_socket, _io);
+    _socket->open(ip_udp::v4());
+    _target_client_address = ip_udp::endpoint(asio::ip::address::from_string(_ip), _port);
     _status.is_active = true;
     _status.is_server = false;
   }
 
   inline void start_client(cr<Str> ip_with_port) {
-    _status.is_active = true;
-    _status.is_server = false;
+    error("need impl");
+    //start_client() parsed ip:port
   }
 
   inline void disconnect() {
@@ -67,52 +77,93 @@ struct Udp_mgr::Impl {
   }
 
   inline void run_packet_listening() {
-    // TODO
-    error("need impl");
+    return_if(!_status.is_active);
+
+    _listener_thread_live = true;
+    _status.is_listening_enabled = true;
+    _listener_thread = std::thread([this] {
+      while (this->_listener_thread_live) {
+        
+        this->_io.run();
+      }
+    });
   }
 
   inline void disable_packet_listening() {
-    // TODO
-    error("need impl");
+    return_if(!_status.is_active);
+    return_if(!_listener_thread.joinable());
+    return_if(!_status.is_listening_enabled);
+    _listener_thread_live = false;
+    _listener_thread.join();
+    _status.is_listening_enabled = false;
   }
 
   inline bool has_packets() const {
-    // TODO
-    error("need impl");
-    return {};
+    return_if(!_status.is_active, false);
+    for (crauto packet: _packets)
+      if (packet.loaded_correctly)
+        return true;
+    return false;
   }
 
-  inline cr<Packets> packets() const { return _packets; }
+  inline cr<Packets> packets() const {
+    iferror(!_status.is_active, "not initialized");
+    return _packets;
+  }
 
   inline void clear_packets() {
-    // TODO
-    error("need impl");
+    return_if(!_status.is_active);
+    _packets.clear();
   }
 
   inline Packet wait_packet() const {
-    // TODO
-    error("need impl");
-    return {};
+    iferror(!_status.is_active, "not initialized");
+    Packet ret;
+    ret.bytes.resize(net::PACKET_BUFFER_SZ);
+    assert(_socket);
+    ip_udp::endpoint address;
+    cauto loaded_bytes = _socket->receive_from(asio::buffer(ret.bytes), address);
+    iferror(loaded_bytes >= net::PACKET_BUFFER_SZ, "превышение размера получаемого пакета");
+    iferror(loaded_bytes == 0, "данные не получены");
+    ret.source_address = address.address().to_string();
+    return ret;
   }
 
-  inline void send(cr<Bytes> bytes) {
-    // TODO
-    error("need impl");
+  inline void send(cr<Bytes> bytes, cr<Str> ip, std::optional<u16_t> port) {
+    iferror(!_status.is_active, "not initialized");
+    iferror(bytes.empty(), "нет данных для передачи");
+    iferror(bytes.size() >= net::PACKET_BUFFER_SZ, "превышение размера передаваемого пакета");
+    assert(_socket);
+
+    std::size_t sended_bytes;
+    if (!_status.is_server) {
+      sended_bytes = _socket->send_to(asio::buffer(bytes), _target_client_address);
+    } else {
+      iferror(ip.empty(), "ip пустой");
+      const u16_t cur_port = port.has_value() ? port.value() : _port;
+      ip_udp::endpoint target_address(asio::ip::address::from_string(ip), cur_port);
+      sended_bytes = _socket->send_to(asio::buffer(bytes), target_address);
+    }
+    
+    iferror(sended_bytes == 0, "данные не переданы");
+    iferror(sended_bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
   }
 
-  inline void async_send(cr<Bytes> bytes, Action&& cb) {
+  inline void async_send(cr<Bytes> bytes, Action&& cb, cr<Str> ip, std::optional<u16_t> port) {
     // TODO
     error("need impl");
   }
 
   inline void async_load(Packet& dst, Action&& cb) {
+    iferror(_status.is_active, "not initialized");
+    iferror(_status.is_listening_enabled, "listening is not enabled");
     // TODO
     error("need impl");
   }
 
   inline void update() {
-    // TODO
-    error("need impl");
+    iferror(!_status.is_active, "not initialized");
+    _io.run();
   }
 }; // Impl
 
@@ -132,8 +183,9 @@ bool Udp_mgr::has_packets() const { return _impl->has_packets(); }
 cr<Packets> Udp_mgr::packets() const { return _impl->packets(); }
 void Udp_mgr::clear_packets() { _impl->clear_packets(); }
 [[nodiscard]] Packet Udp_mgr::wait_packet() const { return _impl->wait_packet(); }
-void Udp_mgr::send(cr<Bytes> bytes) { _impl->send(bytes); }
-void Udp_mgr::async_send(cr<Bytes> bytes, Action&& cb) { _impl->async_send(bytes, std::move(cb)); }
+void Udp_mgr::send(cr<Bytes> bytes, cr<Str> ip, std::optional<u16_t> port) { _impl->send(bytes, ip, port); }
+void Udp_mgr::async_send(cr<Bytes> bytes, Action&& cb, cr<Str> ip, std::optional<u16_t> port)
+  { _impl->async_send(bytes, std::move(cb), ip, port); }
 void Udp_mgr::async_load(Packet& dst, Action&& cb) { _impl->async_load(dst, std::move(cb)); }
 void Udp_mgr::update() { _impl->update(); }
 

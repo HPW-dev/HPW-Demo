@@ -1,5 +1,6 @@
 #pragma once
 #include <functional>
+#include <optional>
 #include "net.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
@@ -41,10 +42,10 @@ public:
   void clear_packets();
   // ждать получения пакета
   [[nodiscard]] Packet wait_packet() const;
-  // отправить данные
-  void send(cr<Bytes> bytes);
+  // отправить данные. ip и port для клиента возьмётся автоматически
+  void send(cr<Bytes> bytes, cr<Str> ip={}, std::optional<u16_t> port={});
   // отправить данные без блокировки потока. Вызывать cb, когда данные будут отправлены
-  void async_send(cr<Bytes> bytes, Action&& cb = {});
+  void async_send(cr<Bytes> bytes, Action&& cb = {}, cr<Str> ip={}, std::optional<u16_t> port={});
   /* загрузить пакет без блокировки потока. Вызывать cb, когда данные пакет будет получен,
   в пакете будет loaded_correctly = true */
   void async_load(Packet& dst, Action&& cb = {});
