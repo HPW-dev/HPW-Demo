@@ -1,12 +1,14 @@
 #pragma once
+#include <atomic>
 #include "util/bytes.hpp"
 #include "util/str.hpp"
 
 namespace net {
   
 struct Packet {
-  Str source_address {};
-  Bytes bytes {};
+  Str source_address {}; // от кого пришёл пакет
+  Bytes bytes {}; // данные пакета
+  std::atomic_bool loaded_correctly {}; // true когда успешно получен
 };
 
 using Packets = Vector<Packet>;

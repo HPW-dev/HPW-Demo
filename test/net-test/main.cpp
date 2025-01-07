@@ -6,8 +6,12 @@
 #include "util/error.hpp"
 #include "util/pparser.hpp"
 #include "util/platform.hpp"
+
+/*
 #include "util/net/udp-server.hpp"
 #include "util/net/udp-client.hpp"
+*/
+#include "util/net/udp-mgr.hpp"
 
 struct Args {
   bool is_server {};
@@ -53,24 +57,29 @@ void server_test(cr<Args> args) {
   #endif
 
   hpw_info("server init...\n");
-  net::Udp_server srv(s2n<u16_t>(args.port));
+  net::Udp_mgr udp;
+  udp.start_server(s2n<u16_t>(args.port));
 
   std::stringstream avaliable_ips;
   avaliable_ips << "avaliable IPv4's:\n";
-  for (crauto ip: srv.avaliable_ipv4s())
+  for (crauto ip: udp.avaliable_ipv4s())
     avaliable_ips << ip << "\n";
   avaliable_ips << "\n";
   hpw_info(avaliable_ips.str());
 
+  if (args.async)
+    udp.run_packet_listening();
+
   hpw_info("server loop:\n");
   while (true) {
-    srv.update();
+    udp.update();
 
     if (args.async) {
-      if (srv.has_packets()) {
-        for (crauto data: srv.packets())
-          print_packet(data);
-        srv.clear_packets();
+      if (udp.has_packets()) {
+        for (crauto packet: udp.packets())
+          if (packet.loaded_correctly)
+            print_packet(packet);
+        udp.clear_packets();
       } else {
         hpw_debug("nop\n");
       }
@@ -78,20 +87,22 @@ void server_test(cr<Args> args) {
       constexpr Seconds DELAY = 1.0;
       delay_sec(DELAY);
     } else { // serial mode
-      error("need impl");
+      print_packet(udp.wait_packet());
     }
   }
 }
 
 void client_test(cr<Args> args) {
+  /*
   hpw_log("Client test\n");
   assert(!args.ip.empty());
 
   hpw_log("init client...\n");
-  net::Udp_client client(args.ip, s2n<u16_t>(args.port));
+  net::Udp_mgr udp;
+  udp.start_client(args.ip, s2n<u16_t>(args.port));
 
   hpw_log("connect to server...\n");
-  client.try_to_connect();
+  udp.try_to_connect();
 
   while (true) {
     Str message;
@@ -104,15 +115,15 @@ void client_test(cr<Args> args) {
     std::memcpy(ptr2ptr<void*>(data.data()), cptr2ptr<cp<void>>(message.data()), message.size());
     data.back() = scast<byte>('\0');
 
-    if (args.async) {
-      client.async_send(data);
-    } else {
-      error("need impl");
-    }
+    if (args.async)
+      udp.async_send(data);
+    else
+      udp.send(data);
 
-    client.update();
+    udp.update();
     break_if(str_tolower(message) == "exit");
   }
+  */
 }
 
 int main(int argc, char** argv) {
