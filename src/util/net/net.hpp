@@ -11,4 +11,6 @@ struct Packet {
 
 using Packets = Vector<Packet>;
 
+constexpr static const std::size_t PACKET_BUFFER_SZ = 400;
+
 } // net ns

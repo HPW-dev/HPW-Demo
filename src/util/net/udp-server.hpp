@@ -16,6 +16,7 @@ public:
   cr<Packets> packets() const; // доступ к полученным пакетам
   void clear_packets(); // снести пакеты
   Strs avaliable_ipv4s() const; // узнать по каким ipv4 можно подконектиться
+  void update(); // обновить состояние сервера, роверить входящие пакеты
 
 private:
   struct Impl;

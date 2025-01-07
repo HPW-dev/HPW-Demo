@@ -37,15 +37,18 @@ Args parse_args(int argc, char** argv) {
 }
 
 void print_packet(cr<net::Packet> packet) {
-  // TODO
-  error("need impl");
+  hpw_log("packet from ip: " + packet.ip + "\n");
+  hpw_log("message size: " + n2s(packet.bytes.size()) + "\n");
+  hpw_log("message: " + Str(cptr2ptr<Cstr>(packet.bytes.data())) + "\n");
 }
 
 void server_test(cr<Args> args) {
   hpw_info("Server test\n");
 
+  #ifndef DEBUG
   hpw_info("timer calibration...\n");
   calibrate_delay(0.1);
+  #endif
 
   hpw_info("server init...\n");
   net::Udp_server srv(s2n<u16_t>(args.port));
@@ -59,6 +62,8 @@ void server_test(cr<Args> args) {
 
   hpw_info("server loop:\n");
   while (true) {
+    srv.update();
+
     if (args.async) {
       if (srv.has_packets()) {
         for (crauto data: srv.packets())
