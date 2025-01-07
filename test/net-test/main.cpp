@@ -1,5 +1,7 @@
 #include <cassert>
+#include <iostream>
 #include "util/log.hpp"
+#include "util/str-util.hpp"
 #include "util/error.hpp"
 #include "util/pparser.hpp"
 
@@ -18,6 +20,7 @@ Args parse_args(int argc, char** argv) {
   });
 
   iferror (argc <= 1, argparser.get_info());
+  argparser(argc, argv);
 
   hpw_log(Str("server mode: ") + (ret.is_server ? "enabled" : "disabled") + "\n");
   assert(!ret.port.empty());
@@ -28,8 +31,29 @@ Args parse_args(int argc, char** argv) {
   return ret;
 }
 
+void server_test(cr<Str> port) {
+  hpw_log("Server test\n");
+}
+
+void client_test(cr<Str> ip, cr<Str> port) {
+  hpw_log("Client test\n");
+
+  while (true) {
+    Str message;
+    std::cout << "enter message (\"exit\" for exit) > ";
+    std::getline(std::cin, message);
+    std::cin >> message;
+
+    break_if(str_tolower(message) == "exit");
+  }
+}
+
 int main(int argc, char** argv) {
   hpw_log("Network test\n\n");
 
   cauto args = parse_args(argc, argv);
+  if (args.is_server)
+    server_test(args.port);
+  else
+    client_test(args.ip, args.port);
 }
