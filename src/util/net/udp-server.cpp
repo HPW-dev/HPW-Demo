@@ -1,3 +1,4 @@
+#include <asio/asio.hpp>
 #include "udp-server.hpp"
 #include "util/log.hpp"
 

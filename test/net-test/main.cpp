@@ -54,9 +54,8 @@ void server_test(cr<Args> args) {
   while (true) {
     if (args.async) {
       if (srv.has_packets()) {
-        for (crauto data: srv.packets()) {
+        for (crauto data: srv.packets())
           print_packet(data);
-        }
         srv.clear_packets();
       } else {
         hpw_debug("nop\n");

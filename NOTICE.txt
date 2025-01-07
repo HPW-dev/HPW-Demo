@@ -89,3 +89,8 @@ dr_libs:
   Copyright (c) 2023-2024 David Reid <mackron@gmail.com>
   SPDX-License-Identifier: MIT-0
   <https://github.com/aws/mit-0>
+
+asio:
+  Copyright (c) 2003-2024 Christopher M. Kohlhoff (chris at kohlhoff dot com)
+  SPDX-License-Identifier: BSL-1.0
+  <http://www.boost.org/LICENSE_1_0.txt>
