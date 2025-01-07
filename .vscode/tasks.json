@@ -143,5 +143,11 @@
       "command": "python",
       "args": ["script/file-io-test.py"]
     },
+    {
+      "label": "network test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/net-test.py"]
+    },
   ]
 }
