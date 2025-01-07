@@ -5,6 +5,7 @@
 #include "util/error.hpp"
 #include "util/pparser.hpp"
 #include "util/platform.hpp"
+#include "util/net/udp-server.hpp"
 
 struct Args {
   bool is_server {};
@@ -35,6 +36,11 @@ Args parse_args(int argc, char** argv) {
   return ret;
 }
 
+void print_packet(cr<net::Packet> packet) {
+  // TODO
+  error("need impl");
+}
+
 void server_test(cr<Args> args) {
   hpw_log("Server test\n");
 
@@ -42,16 +48,24 @@ void server_test(cr<Args> args) {
   calibrate_delay(0.1);
 
   hpw_log("server init...\n");
-  // TODO
+  net::Udp_server srv(s2n<u16_t>(args.port));
 
   hpw_log("server loop:\n");
   while (true) {
     if (args.async) {
+      if (srv.has_packets()) {
+        for (crauto data: srv.packets()) {
+          print_packet(data);
+        }
+        srv.clear_packets();
+      } else {
+        hpw_debug("nop\n");
+      }
+
       constexpr Seconds DELAY = 1.0;
       delay_sec(DELAY);
-      hpw_debug("nop\n");
-    } else {
-
+    } else { // serial mode
+      error("need impl");
     }
   }
 }
