@@ -3,6 +3,7 @@
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
 #include "util/macro.hpp"
+#include "util/str.hpp"
 
 namespace net {
   
@@ -14,6 +15,7 @@ public:
   bool has_packets() const; // проверить что есть входящие пакеты
   cr<Packets> packets() const; // доступ к полученным пакетам
   void clear_packets(); // снести пакеты
+  Strs avaliable_ipv4s() const; // узнать по каким ipv4 можно подконектиться
 
 private:
   struct Impl;

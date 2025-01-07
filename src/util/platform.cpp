@@ -220,3 +220,16 @@ void set_priority(Priority mode) {
   hpw_warning("need impl for set_priority in Linux\n");
 #endif
 }
+
+Str get_pc_name() {
+#ifdef WINDOWS
+  constexpr ::DWORD NAME_SZ = MAX_COMPUTERNAME_LENGTH + 1;
+  char ret[NAME_SZ];
+  ::DWORD sz = NAME_SZ;
+  return_if (GetComputerNameA(ret, &sz), Str(ret)) ;
+#else
+  #pragma message("TODO need linux impl for PC name")
+#endif
+
+  return "localhost";
+}

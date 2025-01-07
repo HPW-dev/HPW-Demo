@@ -42,15 +42,22 @@ void print_packet(cr<net::Packet> packet) {
 }
 
 void server_test(cr<Args> args) {
-  hpw_log("Server test\n");
+  hpw_info("Server test\n");
 
-  hpw_log("timer calibration...\n");
+  hpw_info("timer calibration...\n");
   calibrate_delay(0.1);
 
-  hpw_log("server init...\n");
+  hpw_info("server init...\n");
   net::Udp_server srv(s2n<u16_t>(args.port));
 
-  hpw_log("server loop:\n");
+  std::stringstream avaliable_ips;
+  avaliable_ips << "avaliable IPv4's:\n";
+  for (crauto ip: srv.avaliable_ipv4s())
+    avaliable_ips << ip << "\n";
+  avaliable_ips << "\n";
+  hpw_info(avaliable_ips.str());
+
+  hpw_info("server loop:\n");
   while (true) {
     if (args.async) {
       if (srv.has_packets()) {

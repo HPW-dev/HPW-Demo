@@ -51,3 +51,6 @@ Str get_timer();
 
 // устанавливает приоритет процесса
 void set_priority(Priority mode);
+
+// как в системе называется компьютер
+Str get_pc_name();
