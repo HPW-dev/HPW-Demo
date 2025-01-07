@@ -31,7 +31,6 @@ struct Udp_server::Impl {
     for (crauto it: resolver.resolve(query))
       if (it.endpoint().address().is_v4())
         ret.push_back(it.endpoint().address().to_string() + ":" + port);
-    ret.push_back("127.0.0.1:" + port);
     return ret;
   }
 };
