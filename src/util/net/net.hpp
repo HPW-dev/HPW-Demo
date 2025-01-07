@@ -5,7 +5,7 @@
 namespace net {
   
 struct Packet {
-  Str ip {};
+  Str source_address {};
   Bytes bytes {};
 };
 

@@ -1,6 +1,8 @@
 #include "util/str-util.hpp"
 #include <asio/asio.hpp>
 #include <atomic>
+#include <algorithm>
+#include <cstring>
 #include "udp-server.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
@@ -66,8 +68,13 @@ struct Udp_server::Impl {
     iferror(err, err.message());
     hpw_log("loaded bytes" + n2s(bytes) + "\n");
     return_if(bytes == 0);
-
-    // TODO
+    iferror(bytes >= net::PACKET_BUFFER_SZ, "превышен размер пакета ("
+      << bytes << "/" << net::PACKET_BUFFER_SZ << ")");
+    Packet packet;
+    packet.source_address = this->_incoming_address.address().to_string();
+    packet.bytes.resize(bytes);
+    std::memcpy(ptr2ptr<void*>(packet.bytes.data()), cptr2ptr<cp<void>>(this->_input_buffer.data()), bytes);
+    _packets.emplace_back(std::move(packet));
   }
 };
 

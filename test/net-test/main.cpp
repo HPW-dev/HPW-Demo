@@ -37,7 +37,7 @@ Args parse_args(int argc, char** argv) {
 }
 
 void print_packet(cr<net::Packet> packet) {
-  hpw_log("packet from ip: " + packet.ip + "\n");
+  hpw_log("packet from address: \"" + packet.source_address + "\"\n");
   hpw_log("message size: " + n2s(packet.bytes.size()) + "\n");
   hpw_log("message: " + Str(cptr2ptr<Cstr>(packet.bytes.data())) + "\n");
 }
