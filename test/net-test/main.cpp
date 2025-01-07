@@ -6,12 +6,9 @@
 #include "util/error.hpp"
 #include "util/pparser.hpp"
 #include "util/platform.hpp"
-
-/*
-#include "util/net/udp-server.hpp"
-#include "util/net/udp-client.hpp"
-*/
 #include "util/net/udp-mgr.hpp"
+
+static bool _g_active {true};
 
 struct Args {
   bool is_server {};
@@ -49,7 +46,7 @@ void print_packet(cr<net::Packet> packet) {
   hpw_log("message: " + message + "\n");
 
   if (str_tolower(message) == "exit")
-    std::exit(EXIT_SUCCESS);
+    _g_active = false;
 }
 
 void server_test(cr<Args> args) {
@@ -75,7 +72,7 @@ void server_test(cr<Args> args) {
     udp.run_packet_listening();
 
   hpw_info("server loop:\n");
-  while (true) {
+  while (_g_active) {
     udp.update();
 
     if (args.async) {
@@ -104,7 +101,7 @@ void client_test(cr<Args> args) {
   net::Udp_mgr udp;
   udp.start_client(args.ip, s2n<u16_t>(args.port));
 
-  while (true) {
+  while (_g_active) {
     std::cout << "enter message (\"exit\" for exit) > ";
     Str message;
     std::getline(std::cin, message);

@@ -26,6 +26,7 @@ struct Udp_mgr::Impl {
   ip_udp::endpoint _target_client_address {};
   std::atomic_bool _listener_thread_live {};
   std::thread _listener_thread {};
+  std::atomic_bool _new_packet_needed = true; // запрос на выделение места под пакет в очереди
 
   inline Impl() { hpw_info("udp-mgr created\n"); }
   inline ~Impl() { disconnect(); }
@@ -90,30 +91,33 @@ struct Udp_mgr::Impl {
     _listener_thread = std::thread([this] {
       hpw_info("поток прослушивания пакетов создан\n");
       auto address = new_shared<ip_udp::endpoint>();
-      bool new_packet_needed = true;
+      this->_new_packet_needed = true;
 
       auto handler = [&, address=address](cr<std::error_code> err, std::size_t bytes)->void {
         return_if(!_status.is_active);
         iferror(err, err.message());
         iferror(bytes == 0, "данные не прочитаны");
         iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
-        iferror(_packets.empty(), "пакетов нет в буффере");
+        if (_packets.empty()) {
+          _packets.emplace_back(Packet{});
+          _packets.back().bytes.resize(net::PACKET_BUFFER_SZ);
+        }
         rauto packet = _packets.back();
         assert(address);
         packet.source_address = address->address().to_string();
         packet.bytes.resize(bytes);
         packet.loaded_correctly = true;
-        new_packet_needed = true;
+        _new_packet_needed = true;
       };
 
       while (this->_listener_thread_live) {
-        if (new_packet_needed) {
+        if (_new_packet_needed) {
           Packet packet;
           packet.bytes.resize(net::PACKET_BUFFER_SZ);
           assert(address);
           _socket->async_receive_from(asio::buffer(packet.bytes), *address, handler);
           _packets.emplace_back(std::move(packet));
-          new_packet_needed = false;
+          _new_packet_needed = false;
         }
 
         this->_io.run();
@@ -149,6 +153,7 @@ struct Udp_mgr::Impl {
   inline void clear_packets() {
     return_if(!_status.is_active);
     _packets.clear();
+    _new_packet_needed = true;
   }
 
   inline Packet wait_packet() const {
