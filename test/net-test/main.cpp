@@ -73,11 +73,15 @@ void server_test(cr<Args> args) {
     udp.update();
 
     if (args.async) {
-      cauto packet = udp.load_packet_if_exist();
-      if (packet.has_value())
-        print_packet(*packet);
-      else
-        hpw_info("nop\n");
+      while (true) {
+        cauto packet = udp.load_packet_if_exist();
+        if (packet.has_value()) {
+          print_packet(*packet);
+        } else {
+          hpw_debug("nop\n");
+          break;
+        }
+      }
 
       constexpr Seconds DELAY = 1.0;
       delay_sec(DELAY);
