@@ -81,9 +81,35 @@ struct Udp_mgr::Impl {
 
     _listener_thread_live = true;
     _status.is_listening_enabled = true;
+
     _listener_thread = std::thread([this] {
+      auto address = new_shared<ip_udp::endpoint>();
+      bool new_packet_needed = true;
+
+      auto handler = [&, address=address](cr<std::error_code> err, std::size_t bytes)->void {
+        return_if(!_status.is_active);
+        iferror(err, err.message());
+        iferror(bytes == 0, "данные не прочитаны");
+        iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+        iferror(!_packets.empty(), "пакетов нет в буффере");
+        rauto packet = _packets.back();
+        assert(address);
+        packet.source_address = address->address().to_string();
+        packet.bytes.resize(bytes);
+        packet.loaded_correctly = true;
+        new_packet_needed = true;
+      };
+
       while (this->_listener_thread_live) {
-        
+        if (new_packet_needed) {
+          Packet packet;
+          packet.bytes.resize(net::PACKET_BUFFER_SZ);
+          assert(address);
+          _socket->async_receive_from(asio::buffer(packet.bytes), *address, handler);
+          _packets.emplace_back(std::move(packet));
+          new_packet_needed = false;
+        }
+
         this->_io.run();
       }
     });
@@ -126,6 +152,7 @@ struct Udp_mgr::Impl {
     iferror(loaded_bytes >= net::PACKET_BUFFER_SZ, "превышение размера получаемого пакета");
     iferror(loaded_bytes == 0, "данные не получены");
     ret.source_address = address.address().to_string();
+    ret.bytes.resize(loaded_bytes);
     return ret;
   }
 
@@ -150,15 +177,53 @@ struct Udp_mgr::Impl {
   }
 
   inline void async_send(cr<Bytes> bytes, Action&& cb, cr<Str> ip, std::optional<u16_t> port) {
-    // TODO
-    error("need impl");
+    iferror(!_status.is_active, "not initialized");
+    iferror(bytes.empty(), "нет данных для оптравки");
+    iferror(bytes.size() >= net::PACKET_BUFFER_SZ, "данных для отправки больше чем допустимый размер пакета");
+
+    auto handler = [&, cb=cb](cr<std::error_code> err, std::size_t bytes)->void {
+      return_if(!_status.is_active);
+      iferror(err, err.message());
+      iferror(bytes == 0, "данные не прочитаны");
+      iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+      if (cb)
+        cb(bytes);
+    };
+
+    assert(_socket);
+    if (!_status.is_server) {
+      _socket->async_send_to(asio::buffer(bytes), _target_client_address, handler);
+    } else {
+      iferror(ip.empty(), "ip пустой");
+      const u16_t cur_port = port.has_value() ? port.value() : _port;
+      ip_udp::endpoint target_address(asio::ip::address::from_string(ip), cur_port);
+      _socket->async_send_to(asio::buffer(bytes), target_address, handler);
+    }
   }
 
   inline void async_load(Packet& dst, Action&& cb) {
     iferror(_status.is_active, "not initialized");
     iferror(_status.is_listening_enabled, "listening is not enabled");
-    // TODO
-    error("need impl");
+    auto address = new_shared<ip_udp::endpoint>();
+    
+    auto handler = [&, cb=cb, address=address](cr<std::error_code> err, std::size_t bytes)->void {
+      return_if(!_status.is_active);
+      iferror(err, err.message());
+      iferror(bytes == 0, "данные не прочитаны");
+      iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+      if (cb)
+        cb(bytes);
+      dst.bytes.resize(bytes);
+      dst.loaded_correctly = true;
+      assert(address);
+      dst.source_address = address->address().to_string();
+    };
+
+    assert(_socket);
+    dst.bytes.resize(net::PACKET_BUFFER_SZ);
+    dst.loaded_correctly = false;
+    dst.source_address.clear();
+    _socket->async_receive_from(asio::buffer(dst.bytes), *address, handler);
   }
 
   inline void update() {
