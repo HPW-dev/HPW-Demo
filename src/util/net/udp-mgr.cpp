@@ -27,6 +27,7 @@ struct Udp_mgr::Impl {
   std::atomic_bool _listener_thread_live {};
   std::thread _listener_thread {};
 
+  inline Impl() { hpw_info("udp-mgr created\n"); }
   inline ~Impl() { disconnect(); }
   inline bool is_server() const { return _status.is_active && _status.is_server; }
   inline bool is_client() const { return _status.is_active && !_status.is_server; }
@@ -57,11 +58,13 @@ struct Udp_mgr::Impl {
   inline void start_client(cr<Str> ip, u16_t port) {
     iferror(ip.empty(), "empty ip string");
     _ip = ip;
+    _port = port;
     init_unique(_socket, _io);
     _socket->open(ip_udp::v4());
     _target_client_address = ip_udp::endpoint(asio::ip::address::from_string(_ip), _port);
     _status.is_active = true;
     _status.is_server = false;
+    hpw_info("UDP клиент создан и настроен на " + _ip + ":" + n2s(_port) + "\n");
   }
 
   inline void start_client(cr<Str> ip_with_port) {
@@ -71,6 +74,7 @@ struct Udp_mgr::Impl {
 
   inline void disconnect() {
     disable_packet_listening();
+    hpw_info("выключение udp-mgr\n");
     _io.stop();
     _socket = {};
     _status.is_active = false;
@@ -78,11 +82,13 @@ struct Udp_mgr::Impl {
 
   inline void run_packet_listening() {
     return_if(!_status.is_active);
+    hpw_info("запуск потока прослушивания пакетов...\n");
 
     _listener_thread_live = true;
     _status.is_listening_enabled = true;
 
     _listener_thread = std::thread([this] {
+      hpw_info("поток прослушивания пакетов создан\n");
       auto address = new_shared<ip_udp::endpoint>();
       bool new_packet_needed = true;
 
@@ -91,7 +97,7 @@ struct Udp_mgr::Impl {
         iferror(err, err.message());
         iferror(bytes == 0, "данные не прочитаны");
         iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
-        iferror(!_packets.empty(), "пакетов нет в буффере");
+        iferror(_packets.empty(), "пакетов нет в буффере");
         rauto packet = _packets.back();
         assert(address);
         packet.source_address = address->address().to_string();
@@ -112,6 +118,8 @@ struct Udp_mgr::Impl {
 
         this->_io.run();
       }
+
+      hpw_info("потока прослушивания пакетов завершён\n");
     });
   }
 
@@ -119,6 +127,7 @@ struct Udp_mgr::Impl {
     return_if(!_status.is_active);
     return_if(!_listener_thread.joinable());
     return_if(!_status.is_listening_enabled);
+    hpw_info("выключение потока прослушивания\n");
     _listener_thread_live = false;
     _listener_thread.join();
     _status.is_listening_enabled = false;
@@ -162,18 +171,22 @@ struct Udp_mgr::Impl {
     iferror(bytes.size() >= net::PACKET_BUFFER_SZ, "превышение размера передаваемого пакета");
     assert(_socket);
 
+    hpw_info("отправка " + n2s(bytes.size()) + " байт...\n");
     std::size_t sended_bytes;
     if (!_status.is_server) {
       sended_bytes = _socket->send_to(asio::buffer(bytes), _target_client_address);
+      hpw_info("адрес назначения: " + _target_client_address.address().to_string() + "\n");
     } else {
       iferror(ip.empty(), "ip пустой");
       const u16_t cur_port = port.has_value() ? port.value() : _port;
       ip_udp::endpoint target_address(asio::ip::address::from_string(ip), cur_port);
       sended_bytes = _socket->send_to(asio::buffer(bytes), target_address);
+      hpw_info("адрес назначения: " + target_address.address().to_string() + "\n");
     }
     
     iferror(sended_bytes == 0, "данные не переданы");
     iferror(sended_bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+    hpw_info(n2s(sended_bytes) + " байт было отправлено\n");
   }
 
   inline void async_send(cr<Bytes> bytes, Action&& cb, cr<Str> ip, std::optional<u16_t> port) {
@@ -188,8 +201,10 @@ struct Udp_mgr::Impl {
       iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
       if (cb)
         cb(bytes);
+      hpw_info("отправлено " + n2s(bytes) + " байт\n");
     };
 
+    hpw_info("ассинхронная отправка " + n2s(bytes.size()) + " байт...\n");
     assert(_socket);
     if (!_status.is_server) {
       _socket->async_send_to(asio::buffer(bytes), _target_client_address, handler);

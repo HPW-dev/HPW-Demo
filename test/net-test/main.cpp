@@ -43,9 +43,13 @@ Args parse_args(int argc, char** argv) {
 }
 
 void print_packet(cr<net::Packet> packet) {
+  Str message(cptr2ptr<Cstr>(packet.bytes.data()));
   hpw_log("packet from address: \"" + packet.source_address + "\"\n");
   hpw_log("message size: " + n2s(packet.bytes.size()) + "\n");
-  hpw_log("message: " + Str(cptr2ptr<Cstr>(packet.bytes.data())) + "\n");
+  hpw_log("message: " + message + "\n");
+
+  if (str_tolower(message) == "exit")
+    std::exit(EXIT_SUCCESS);
 }
 
 void server_test(cr<Args> args) {
@@ -93,7 +97,6 @@ void server_test(cr<Args> args) {
 }
 
 void client_test(cr<Args> args) {
-  /*
   hpw_log("Client test\n");
   assert(!args.ip.empty());
 
@@ -101,14 +104,10 @@ void client_test(cr<Args> args) {
   net::Udp_mgr udp;
   udp.start_client(args.ip, s2n<u16_t>(args.port));
 
-  hpw_log("connect to server...\n");
-  udp.try_to_connect();
-
   while (true) {
-    Str message;
     std::cout << "enter message (\"exit\" for exit) > ";
+    Str message;
     std::getline(std::cin, message);
-    std::cin >> message;
 
     // подготовка пакета с сообщение к отправке
     Bytes data(message.size() + 1);
@@ -123,7 +122,6 @@ void client_test(cr<Args> args) {
     udp.update();
     break_if(str_tolower(message) == "exit");
   }
-  */
 }
 
 int main(int argc, char** argv) {
