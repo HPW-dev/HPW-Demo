@@ -5,6 +5,7 @@
 *.c text eol=lf diff=cpp
 *.cpp text eol=lf diff=cpp
 *.tpp text eol=lf diff=cpp
+*.ipp text eol=lf diff=cpp
 *.tcc text eol=lf diff=cpp
 *.cc text eol=lf diff=cpp
 *.cxx text eol=lf diff=cpp
