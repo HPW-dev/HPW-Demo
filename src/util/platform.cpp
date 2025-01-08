@@ -112,7 +112,7 @@ struct Timer_stat {
 };
 
 void calibrate_delay(const Seconds target) {
-  hpw_info("калибровка таймера задержки...\n");
+  hpw_info("delay timer calibration...\n");
   hpw_debug(std::format("целевая задержка {} сек.\n", target));
   assert(target >= 1.0 / 10'000.0 && target <= 1.0);
 
@@ -185,7 +185,7 @@ void set_timer(cr<Str> name) {
     g_timer_name = "std_delay";
   }
 
-  hpw_log("выбран таймер: " + g_timer_name + '\n');
+  hpw_log("selected delay timer: " + g_timer_name + '\n');
 } // set_timer
 
 Str get_timer() { return g_timer_name; }
@@ -232,4 +232,8 @@ Str get_pc_name() {
 #endif
 
   return "localhost";
+}
+
+Seconds get_cur_time() {
+  return std::chrono::duration_cast<std_seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
 }
