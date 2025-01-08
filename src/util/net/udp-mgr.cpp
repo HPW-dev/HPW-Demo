@@ -74,7 +74,6 @@ struct Udp_mgr::Impl {
     _socket = {};
     _status.is_active = false;
   }
-
   
   inline Packet load_packet() {
     iferror(!_status.is_active, "not initialized");

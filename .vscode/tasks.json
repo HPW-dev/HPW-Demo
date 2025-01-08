@@ -149,5 +149,11 @@
       "command": "python",
       "args": ["script/net-test.py"]
     },
+    {
+      "label": "rollback test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/rollback-test.py"]
+    },
   ]
 }

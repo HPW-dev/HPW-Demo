@@ -1,0 +1,76 @@
+#!/usr/bin/env python
+from script.helper import *
+Import(['env'])
+
+hpw_config = env['hpw_config']
+assert hpw_config
+
+lib_path = []
+inc_path = []
+used_libs = []
+host_sources = []
+sources = []
+prog_name = 'rollback-test'
+build_dir = '../../build/'
+src_dir = '../../src/'
+thirdparty_dir = '../../thirdparty/'
+
+def accept_config():
+  global env
+  global inc_path
+  global lib_path
+  global used_libs
+  global host_sources
+  global hpw_config
+
+  inc_path.extend([
+    '.',
+    src_dir,
+    thirdparty_dir + 'include/',
+  ])
+
+  match hpw_config.compiler:
+    case Compiler.gcc: env['CXX'] = 'g++'
+    case Compiler.clang: env['CXX'] = 'clang++'
+    case _: raise ValueError
+  
+  used_libs.extend([
+    "ws2_32",
+    "mswsock",
+  ])
+
+  hpw_config.cxx_defines.extend([
+    "-D_WIN32_WINNT=0x0601",
+    "-DASIO_STANDALONE",
+  ])
+
+def init_sources():
+  global sources
+
+  sources.extend([
+    src_dir + 'util/pparser.cpp',
+    src_dir + 'util/error.cpp',
+    src_dir + 'util/log.cpp',
+    src_dir + 'util/str-util.cpp',
+    src_dir + 'util/platform.cpp',
+    src_dir + 'util/net/udp-mgr.cpp',
+    'main.cpp',
+  ])
+  sources.extend([host_sources]);
+
+def build():
+  env.Program(
+    target = build_dir + 'bin/' + prog_name,
+    source = sources,
+    LIBPATH = lib_path,
+    LIBS = used_libs,
+    CPPDEFINES = hpw_config.cxx_defines,
+    CXXFLAGS = hpw_config.cxx_flags,
+    LINKFLAGS = hpw_config.cxx_ldflags,
+    CPPPATH = inc_path,
+  )
+
+# main section:
+accept_config()
+init_sources()
+build()
