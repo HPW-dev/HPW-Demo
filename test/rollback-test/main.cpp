@@ -250,6 +250,27 @@ void wait_connections(cr<Args> args) {
     hpw_info("  empty\n");
 }
 
+void try_to_connect(cr<Args> args) {
+  hpw_info("create TCP client...\n");
+
+  hpw_info("connecting to TCP server...\n");
+  net::Tcp_mgr tcp;
+  tcp.start_client(args.ip, s2n<u16_t>(args.port));
+
+  constexpr Seconds TIMEOUT = 5;
+  hpw_info("wait connection for " + n2s(TIMEOUT) + " seconds\n");
+  std::atomic_bool connected {};
+  tcp.async_connect(connected);
+
+  cauto start_time = get_cur_time();
+  while (get_cur_time() - start_time < TIMEOUT) {
+    tcp.update();
+    break_if (connected);
+  }
+
+  hpw_info("client " + Str(connected ? "connected" : "not connected") + " to server\n");
+}
+
 int main(int argc, char** argv) {
   hpw_info("Rollback test\n\n");
 
@@ -261,7 +282,7 @@ int main(int argc, char** argv) {
   if (args.is_server) {
     wait_connections(args);
   } else {
-    error("need impl");
+    try_to_connect(args);
   }
 
   /*

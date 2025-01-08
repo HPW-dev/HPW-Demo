@@ -46,11 +46,12 @@ struct Tcp_mgr::Impl {
     _port = port;
     if (_port < 1024 || _port > 49'150)
       hpw_warning("use recomended UPD-ports in 1024...49'150\n");
-    init_unique(_socket, _io, ip_tcp::endpoint(ip_tcp::v4(), _port));
-    _socket->set_option(ip_tcp::socket::reuse_address(true));
+    init_unique(_socket, _io);
+    //_socket->set_option(ip_tcp::socket::reuse_address(true));
+    _incoming_ipv4 = ip_tcp::endpoint(ip_tcp::v4(), _port);
+    init_unique<ip_tcp::acceptor>(_acceptor, _io, _incoming_ipv4);
     _status.is_active = true;
     _status.is_server = true;
-    init_unique<ip_tcp::acceptor>(_acceptor, _io, _incoming_ipv4);
   }
 
   inline void start_client(cr<Str> ip, u16_t port) {
@@ -84,18 +85,32 @@ struct Tcp_mgr::Impl {
   }
 
   inline void async_find_incoming_ipv4(std::atomic_bool& connected, Str& dst) {
-    iferror(connected, "данные уже получены");
+    iferror(connected, "set connected as false");
     iferror(!_status.is_active, "not initialized");
     iferror(!_status.is_server, "is not a server");
     
     auto handler = [&](cr<std::error_code> err, ip_tcp::socket socket) {
       iferror(err, err.message());
+      dst = socket.local_endpoint().address().to_v4().to_string();
       connected = true;
-      dst = _incoming_ipv4.address().to_v4().to_string();
     };
 
     assert(_acceptor);
     _acceptor->async_accept(handler);
+  }
+
+  inline void async_connect(std::atomic_bool& connected) {
+    iferror(connected, "set connected as false");
+    iferror(!_status.is_active, "not initialized");
+    iferror(_status.is_server, "is not a client");
+    
+    auto handler = [&](cr<std::error_code> err) {
+      iferror(err, err.message());
+      connected = true;
+    };
+
+    assert(_socket);
+    _socket->async_connect(_target_client_address, handler);
   }
 }; // Impl
 
@@ -111,5 +126,6 @@ void Tcp_mgr::start_client(cr<Str> ip_with_port) { _impl->start_client(ip_with_p
 void Tcp_mgr::disconnect() { _impl->disconnect(); }
 void Tcp_mgr::update() { _impl->update(); }
 void Tcp_mgr::async_find_incoming_ipv4(std::atomic_bool& connected, Str& dst) { _impl->async_find_incoming_ipv4(connected, dst); }
+void Tcp_mgr::async_connect(std::atomic_bool& connected) { _impl->async_connect(connected); }
 
 } // net ns

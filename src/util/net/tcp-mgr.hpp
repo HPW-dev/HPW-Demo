@@ -33,8 +33,11 @@ public:
   void disconnect();
   // обновление ивентов системы
   void update();
-  // ожидать подключение и записать адрес в dst. Через connected можно понять что адрес получен
+  /* ассинхронно ожидать подключение и записать адрес в dst.
+  Через connected можно понять что адрес получен */
   void async_find_incoming_ipv4(std::atomic_bool& connected, Str& dst);
+  // поытка ассинхроннного подключения к серверу, connected станет true при успехе
+  void async_connect(std::atomic_bool& connected);
 
 private:
   struct Impl;
