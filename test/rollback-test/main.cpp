@@ -218,7 +218,7 @@ void wait_connections(cr<Args> args) {
   net::Tcp_mgr tcp;
   tcp.start_server(s2n<u16_t>(args.port));
 
-  constexpr Seconds TIMEOUT = 5;
+  constexpr Seconds TIMEOUT = 10;
   std::unordered_set<Str> connected_ipv4s; // для уникальных IP
   hpw_info("wait connections for " + n2s(TIMEOUT) + " seconds\n");
 

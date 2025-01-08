@@ -226,9 +226,11 @@ Str get_pc_name() {
   constexpr ::DWORD NAME_SZ = MAX_COMPUTERNAME_LENGTH + 1;
   char ret[NAME_SZ];
   ::DWORD sz = NAME_SZ;
-  return_if (GetComputerNameA(ret, &sz), Str(ret)) ;
+  return_if (::GetComputerNameA(ret, &sz), Str(ret));
 #else
-  #pragma message("TODO need linux impl for PC name")
+  char hostname[1024];
+  ::gethostname(hostname, 1024);
+  return Str(hostname);
 #endif
 
   return "localhost";
