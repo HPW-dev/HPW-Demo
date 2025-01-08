@@ -208,6 +208,23 @@ void calculate_ping(net::Udp_mgr& udp) {
 }
 */
 
+void wait_connections() {
+  constexpr Seconds TIMEOUT = 5;
+  hpw_info("wait connections for " + n2s(TIMEOUT) + " seconds\n");
+  Strs connected_ipv4s;
+
+  cauto start_time = get_cur_time();
+  while (get_cur_time() - start_time < TIMEOUT) {
+
+  }
+
+  hpw_info("connected ips:\n");
+  for (crauto ip: connected_ipv4s)
+    hpw_info("  " + ip + "\n");
+  if (connected_ipv4s.empty())
+    hpw_info("  empty\n");
+}
+
 int main(int argc, char** argv) {
   hpw_info("Rollback test\n\n");
 
@@ -215,6 +232,12 @@ int main(int argc, char** argv) {
 
   hpw_info("calibrate timer...\n");
   calibrate_delay(TICK_TIME);
+
+  if (args.is_server) {
+    wait_connections();
+  } else {
+
+  }
 
   /*
   net::Udp_mgr udp;
