@@ -1,14 +1,19 @@
 #include <cassert>
 #include <cstring>
+#include <unordered_set>
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
 #include "util/pparser.hpp"
 #include "util/platform.hpp"
 #include "util/net/udp-mgr.hpp"
+#include "util/net/tcp-mgr.hpp"
 #include "util/math/num-types.hpp"
 
 constx Delta_time TICK_TIME = 1.0 / 60.0;
+
+// кто смог подключиться к серверу
+static Strs g_connected_ipv4s;
 
 struct Args {
   bool is_server {};
@@ -208,20 +213,29 @@ void calculate_ping(net::Udp_mgr& udp) {
 }
 */
 
-void wait_connections() {
-  constexpr Seconds TIMEOUT = 5;
-  hpw_info("wait connections for " + n2s(TIMEOUT) + " seconds\n");
-  Strs connected_ipv4s;
+void wait_connections(cr<Args> args) {
+  hpw_info("create TCP server...\n");
+  net::Tcp_mgr tcp;
+  tcp.start_server(s2n<u16_t>(args.port));
 
+  constexpr Seconds TIMEOUT = 5;
+  std::unordered_set<Str> connected_ipv4s; // для уникальных IP
+  hpw_info("wait connections for " + n2s(TIMEOUT) + " seconds\n");
+
+  // ждём несколько секунд соединения:
   cauto start_time = get_cur_time();
   while (get_cur_time() - start_time < TIMEOUT) {
-
+    // TODO
+    tcp.update();
   }
 
+  // передать уникальные ip
+  for (rauto ip: connected_ipv4s)
+    g_connected_ipv4s.emplace_back(std::move(ip));
   hpw_info("connected ips:\n");
-  for (crauto ip: connected_ipv4s)
+  for (crauto ip: g_connected_ipv4s)
     hpw_info("  " + ip + "\n");
-  if (connected_ipv4s.empty())
+  if (g_connected_ipv4s.empty())
     hpw_info("  empty\n");
 }
 
@@ -234,9 +248,9 @@ int main(int argc, char** argv) {
   calibrate_delay(TICK_TIME);
 
   if (args.is_server) {
-    wait_connections();
+    wait_connections(args);
   } else {
-
+    error("need impl");
   }
 
   /*

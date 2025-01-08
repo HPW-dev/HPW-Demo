@@ -14,7 +14,6 @@ struct Udp_mgr::Impl {
   struct Status {
     bool is_server: 1 {};
     bool is_active: 1 {};
-    bool is_listening_enabled: 1 {};
   };
   Status _status {};
   mutable asio::io_service _io {};
@@ -142,7 +141,6 @@ struct Udp_mgr::Impl {
 
   inline void async_load(Packet& dst, Action&& cb) {
     iferror(_status.is_active, "not initialized");
-    iferror(_status.is_listening_enabled, "listening is not enabled");
     auto address = new_shared<ip_udp::endpoint>();
     
     auto handler = [&, cb=cb, address=address](cr<std::error_code> err, std::size_t bytes)->void {
