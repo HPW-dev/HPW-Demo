@@ -39,8 +39,6 @@ public:
   void async_load(Packet& dst, Action&& cb = {});
   // обновление ивентов системы
   void update();
-  // если можно загрузить пакет, он будет получен
-  std::optional<Packet> load_packet_if_exist();
   // ждать загрузки пакета
   [[nodiscard]] Packet load_packet();
 

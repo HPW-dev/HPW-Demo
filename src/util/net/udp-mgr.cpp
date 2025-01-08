@@ -167,13 +167,6 @@ struct Udp_mgr::Impl {
     iferror(!_status.is_active, "not initialized");
     _io.run();
   }
-
-  inline std::optional<Packet> load_packet_if_exist() {
-    iferror(!_status.is_active, "not initialized");
-    assert(_socket);
-    return_if (_socket->available() > 0, this->load_packet());
-    return {};
-  }
 }; // Impl
 
 Udp_mgr::Udp_mgr(): _impl{new_unique<Impl>()} {}
@@ -192,6 +185,5 @@ void Udp_mgr::async_send(cr<Bytes> bytes, Action&& cb, cr<Str> ip, std::optional
   { _impl->async_send(bytes, std::move(cb), ip, port); }
 void Udp_mgr::async_load(Packet& dst, Action&& cb) { _impl->async_load(dst, std::move(cb)); }
 void Udp_mgr::update() { _impl->update(); }
-std::optional<Packet> Udp_mgr::load_packet_if_exist() { return _impl->load_packet_if_exist(); }
 
 } // net ns
