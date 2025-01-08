@@ -1,4 +1,5 @@
 #pragma once
+#include <atomic>
 #include <functional>
 #include <optional>
 #include "net.hpp"
@@ -32,6 +33,8 @@ public:
   void disconnect();
   // обновление ивентов системы
   void update();
+  // ожидать подключение и записать адрес в dst. Через connected можно понять что адрес получен
+  void async_find_incoming_ipv4(std::atomic_bool& connected, Str& dst);
 
 private:
   struct Impl;

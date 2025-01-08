@@ -224,8 +224,19 @@ void wait_connections(cr<Args> args) {
 
   // ждём несколько секунд соединения:
   cauto start_time = get_cur_time();
+  std::atomic_bool connected {};
+  Str incoming_ipv4;
+  tcp.async_find_incoming_ipv4(connected, incoming_ipv4);
+
   while (get_cur_time() - start_time < TIMEOUT) {
-    // TODO
+    // если получили соединение, засейвить и продолжить искать новое
+    if (connected) {
+      hpw_info("incoming ip: " + incoming_ipv4 + "\n");
+      connected_ipv4s.emplace(incoming_ipv4);
+      connected = false;
+      tcp.async_find_incoming_ipv4(connected, incoming_ipv4);
+    }
+
     tcp.update();
   }
 

@@ -21,6 +21,8 @@ struct Tcp_mgr::Impl {
   u16_t _port {};
   Str _ip {};
   ip_tcp::endpoint _target_client_address {};
+  ip_tcp::endpoint _incoming_ipv4 {}; // для ассинхронной записи туда входящего соединения
+  Unique<ip_tcp::acceptor> _acceptor {};
 
   inline Impl() { hpw_debug("tcp-mgr created\n"); }
   inline ~Impl() { disconnect(); }
@@ -48,6 +50,7 @@ struct Tcp_mgr::Impl {
     _socket->set_option(ip_tcp::socket::reuse_address(true));
     _status.is_active = true;
     _status.is_server = true;
+    init_unique<ip_tcp::acceptor>(_acceptor, _io, _incoming_ipv4);
   }
 
   inline void start_client(cr<Str> ip, u16_t port) {
@@ -70,13 +73,29 @@ struct Tcp_mgr::Impl {
   inline void disconnect() {
     hpw_debug("выключение tcp-mgr\n");
     _io.stop();
+    _acceptor = {};
     _socket = {};
     _status.is_active = false;
   }
 
   inline void update() {
     iferror(!_status.is_active, "not initialized");
-    _io.run();
+    _io.run_for(std::chrono::seconds(1));
+  }
+
+  inline void async_find_incoming_ipv4(std::atomic_bool& connected, Str& dst) {
+    iferror(connected, "данные уже получены");
+    iferror(!_status.is_active, "not initialized");
+    iferror(!_status.is_server, "is not a server");
+    
+    auto handler = [&](cr<std::error_code> err, ip_tcp::socket socket) {
+      iferror(err, err.message());
+      connected = true;
+      dst = _incoming_ipv4.address().to_v4().to_string();
+    };
+
+    assert(_acceptor);
+    _acceptor->async_accept(handler);
   }
 }; // Impl
 
@@ -91,5 +110,6 @@ void Tcp_mgr::start_client(cr<Str> ip, u16_t port) { _impl->start_client(ip, por
 void Tcp_mgr::start_client(cr<Str> ip_with_port) { _impl->start_client(ip_with_port); }
 void Tcp_mgr::disconnect() { _impl->disconnect(); }
 void Tcp_mgr::update() { _impl->update(); }
+void Tcp_mgr::async_find_incoming_ipv4(std::atomic_bool& connected, Str& dst) { _impl->async_find_incoming_ipv4(connected, dst); }
 
 } // net ns
