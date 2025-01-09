@@ -163,7 +163,7 @@ struct Udp_mgr::Impl {
 
   inline void update() {
     iferror(!_status.is_active, "not initialized");
-    _io.run();
+    _io.run_for(std::chrono::seconds(1));
   }
 }; // Impl
 
