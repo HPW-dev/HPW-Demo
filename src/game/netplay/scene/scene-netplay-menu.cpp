@@ -1,23 +1,37 @@
-#include <utility>
+#include <cassert>
 #include "scene-netplay-menu.hpp"
-#include "game/core/canvas.hpp"
-#include "game/core/scenes.hpp"
-#include "game/util/locale.hpp"
-#include "game/util/keybits.hpp"
-#include "game/menu/item/text-item.hpp"
-#include "game/menu/text-menu.hpp"
 #include "game/menu/menu-from-yaml.hpp"
+#include "game/menu/item/text-item.hpp"
+#include "game/core/scenes.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/keybits.hpp"
+#include "util/file/file.hpp"
+#include "util/file/yaml.hpp"
+#include "util/log.hpp"
 #include "graphic/image/image.hpp"
-#include "util/log.hpp" // TODO del
 
 struct Scene_netplay_menu::Impl {
-  Unique<Text_menu> _menu {};
-  Unique<Menu> _menu2 {};
+  menu_item_ft _goto_find_server_scene {};
+  menu_item_ft _goto_connect_by_ipv4_scene {};
+  menu_item_ft _goto_create_server_scene {};
+  Action_table _actions {};
+  Unique<Menu> _menu {};
 
   inline Impl() {
-    // _menu2 = menu_from_yaml(); TODO
+    _goto_find_server_scene = []{ hpw_info("goto_find_server_scene\n"); };
+    _goto_connect_by_ipv4_scene = []{ hpw_info("goto_connect_by_ipv4_scene\n"); };
+    _goto_create_server_scene = []{ hpw_info("goto_create_server_scene\n"); };
+    _actions = Action_table {
+      {"goto_find_server_scene", Action_container(_goto_find_server_scene)},
+      {"goto_connect_by_ipv4_scene", Action_container(_goto_connect_by_ipv4_scene)},
+      {"goto_create_server_scene", Action_container(_goto_create_server_scene)},
+    };
 
-    init_unique (
+    cauto config_file = load_res("resource/menu/netplay-menu.yml");
+    Yaml config(config_file);
+    _menu = menu_from_yaml(config, _actions);
+
+    /*init_unique (
       _menu,
       Menu_items {
         new_shared<Menu_text_item> (
@@ -41,18 +55,21 @@ struct Scene_netplay_menu::Impl {
         new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
       },
       Vec{15, 10}
-    );
+    );*/
   }
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
 
+    assert(_menu);
     _menu->update(dt);
   }
 
   inline void draw(Image& dst) const {
     dst.fill(Pal8::black);
+
+    assert(_menu);
     _menu->draw(dst);
   }
 }; // Impl 
