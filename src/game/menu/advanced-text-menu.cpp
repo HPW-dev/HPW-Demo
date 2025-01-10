@@ -7,6 +7,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "item/item.hpp"
 #include "game/core/fonts.hpp"
+#include "game/util/vec-helper.hpp"
 
 struct Advanced_text_menu::Impl {
   Menu* m_base {};
@@ -26,10 +27,12 @@ struct Advanced_text_menu::Impl {
   , m_rect {rect}
   , _config {config}
   {
-    assert(m_rect.size.not_zero());
     assert(m_base);
     assert( !m_title.empty());
     assert( !base->get_items().empty());
+
+    if (m_rect.size.is_zero())
+      m_rect = get_screen_rect();
 
     m_title_pos = m_rect.pos + Vec(7, 7);
     assert(m_title_pos.x < m_rect.size.x);
