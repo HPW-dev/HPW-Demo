@@ -1,0 +1,12 @@
+title: netplay.title
+items:
+  - locale_prefix: netplay.find_server
+    action: goto_find_server_scene
+    # type по умолчанию text_item
+    # к prefix добавляется .title/.desc при поиске инфы о кнопке
+  - locale_prefix: netplay.connect_by_ipv4
+    action: goto_connect_by_ipv4_scene
+  - locale_prefix: netplay.create_server
+    action: goto_create_server_scene
+  - type: back_item
+    # если имя не задано, берётся common.back
