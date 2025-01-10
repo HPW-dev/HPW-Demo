@@ -112,8 +112,10 @@ struct Menu::Impl {
   inline void update(const Delta_time dt) {
     return_if(_items.empty());
 
-    for (crauto item: _items)
+    for (crauto item: _items) {
+      assert(item);
       item->update(dt);
+    }
 
     _sticking.update();
     _key_holded = false;
