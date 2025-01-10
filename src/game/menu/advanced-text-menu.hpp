@@ -16,13 +16,14 @@ struct Advanced_text_menu_config {
 
 // Более красивое текстовое меню с описанием
 class Advanced_text_menu: public Menu {
-  struct Impl;
-  Unique<Impl> impl {};
-
 public:
-  ~Advanced_text_menu();
   explicit Advanced_text_menu(cr<utf32> title, cr<Menu_items> items, const Rect rect,
     cr<Advanced_text_menu_config> config = {});
+  ~Advanced_text_menu();
   void draw(Image& dst) const override;
   void update(const Delta_time dt) override;
+
+private:
+  struct Impl;
+  Unique<Impl> impl {};
 };

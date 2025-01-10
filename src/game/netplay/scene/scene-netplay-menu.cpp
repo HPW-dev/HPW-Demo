@@ -6,13 +6,17 @@
 #include "game/util/keybits.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/text-menu.hpp"
+#include "game/menu/menu-from-yaml.hpp"
 #include "graphic/image/image.hpp"
 #include "util/log.hpp" // TODO del
 
 struct Scene_netplay_menu::Impl {
   Unique<Text_menu> _menu {};
+  Unique<Menu> _menu2 {};
 
   inline Impl() {
+    // _menu2 = menu_from_yaml(); TODO
+
     init_unique (
       _menu,
       Menu_items {
