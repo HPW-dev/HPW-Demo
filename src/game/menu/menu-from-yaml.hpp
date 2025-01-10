@@ -2,6 +2,7 @@
 #pragma once
 #include <cassert>
 #include <unordered_map>
+#include <type_traits>
 #include "menu.hpp"
 #include "util/str.hpp"
 
@@ -15,6 +16,7 @@ struct Action_container {
 
   template <class F>
   inline explicit Action_container(F* f) {
+    static_assert(std::is_function_v<F>);
     assert(f != nullptr);
     action_address = rcast<std::uintptr_t>(f);
     action_type_hash = typeid(F).hash_code();
@@ -22,7 +24,10 @@ struct Action_container {
 
   // проверить что типы функций совпадают
   template <class F>
-  inline bool is_same_type() const { return action_type_hash == typeid(F).hash_code(); }
+  inline bool is_same_type() const {
+    static_assert(std::is_function_v<F>);
+    return action_type_hash == typeid(F).hash_code();
+  }
 
   // каст с проверкой
   template <class F>
