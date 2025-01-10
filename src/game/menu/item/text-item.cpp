@@ -1,10 +1,9 @@
 #include "text-item.hpp"
 
-Menu_text_item::Menu_text_item(cr<utf32> _name, menu_item_ft&& _action,
-  decltype(get_value)&& _get_value, cr<utf32> desc)
-: action{_action}
-, name{_name}
-, m_desc{desc}
+Menu_text_item::Menu_text_item(cr<utf32> _name, cr<Action> _action, cr<Getter> _get_value, cr<utf32> desc)
+: action {_action}
+, name {_name}
+, m_desc {desc}
 , get_value {_get_value}
 {}
 

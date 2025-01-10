@@ -3,11 +3,11 @@
 #include "util/unicode.hpp"
 #include "util/math/num-types.hpp"
 
-using menu_item_ft = std::function<void ()>;
-
 // база для элементов меню
 class Menu_item {
 public:
+  using Action = std::function<void ()>;
+  
   virtual ~Menu_item() = default;
   virtual inline void update(const Delta_time dt) {}
   virtual void enable(); // enable key

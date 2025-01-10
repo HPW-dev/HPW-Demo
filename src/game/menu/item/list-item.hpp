@@ -4,7 +4,6 @@
 // именованные параметры вызывающие действие
 class Menu_list_item final: public Menu_item {
 public:
-  using Action = std::function<void ()>;
   using Default_select_getter = std::function<std::size_t ()>;
   struct Item {
     utf32 name {};

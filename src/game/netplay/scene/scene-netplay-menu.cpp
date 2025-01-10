@@ -11,9 +11,9 @@
 #include "graphic/image/image.hpp"
 
 struct Scene_netplay_menu::Impl {
-  menu_item_ft _goto_find_server_scene {};
-  menu_item_ft _goto_connect_by_ipv4_scene {};
-  menu_item_ft _goto_create_server_scene {};
+  Menu_text_item::Action _goto_find_server_scene {};
+  Menu_text_item::Action _goto_connect_by_ipv4_scene {};
+  Menu_text_item::Action _goto_create_server_scene {};
   Action_table _actions {};
   Unique<Menu> _menu {};
 
