@@ -70,4 +70,5 @@ public:
   vkvu32_t get_kvu32_table() const; // вернёт список ключей и значений: {"tag1.tag2.tag3", U"value"}
   Strs root_tags() const; // получить название тегов рута (все верхние ноды)
   bool check() const; // проверяет валидность (не заменяй это на op-bool)
+  Vector<Yaml> items() const; // пройтись по всем вложенным нодам в текущей
 }; // Yaml
