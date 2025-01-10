@@ -235,6 +235,13 @@ struct Yaml::Impl {
   }
 
   inline bool check() const { return root && root.size(); }
+
+  inline Vector<Yaml> items() const {
+    Vector<Yaml> ret;
+    for (crauto node: root)
+      ret.emplace_back( Impl(_master, YAML::Node(node), _master.get_path()) );
+    return ret;
+  }
 }; // Impl
 
 Yaml::Yaml(Str fname, bool make_if_not_exist): impl {new_unique<Impl>(*this, fname, make_if_not_exist)} {}
@@ -297,3 +304,4 @@ Yaml::vkv_t Yaml::get_kv_table() const { return impl->get_kv_table(); }
 Yaml::vkvu32_t Yaml::get_kvu32_table() const { return impl->get_kvu32_table(); }
 Strs Yaml::root_tags() const { return impl->root_tags(); }
 bool Yaml::check() const { return impl->check(); }
+Vector<Yaml> Yaml::items() const { return impl->items(); }
