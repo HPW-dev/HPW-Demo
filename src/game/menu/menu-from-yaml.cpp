@@ -43,7 +43,7 @@ inline static Shared<Menu_item> make_text_item(cr<Yaml> item_node, cr<Action_tab
 
 inline static Shared<Menu_item> make_back_item(cr<Yaml> item_node, cr<Action_table> actions)
   { return new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }); }
-  
+
 inline static Shared<Menu_item> make_exit_item(cr<Yaml> item_node, cr<Action_table> actions)
   { return new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }); }
 
@@ -61,7 +61,7 @@ Unique<Menu> menu_from_yaml(cr<Yaml> config, cr<Action_table> actions) {
   assert(config.check());
   assert(!actions.empty());
 
-  utf32 title = utf8_to_32(config.get_str("title"));
+  utf32 title = get_locale_str(config.get_str("title"));
   Rect rect {};
   Advanced_text_menu_config atm_config {};
 

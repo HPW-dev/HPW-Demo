@@ -7,7 +7,7 @@
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
 #include "util/file/yaml.hpp"
-#include "util/log.hpp"
+#include "util/error.hpp" // TODO del
 #include "graphic/image/image.hpp"
 
 struct Scene_netplay_menu::Impl {
@@ -18,9 +18,9 @@ struct Scene_netplay_menu::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    _goto_find_server_scene = []{ hpw_info("goto_find_server_scene\n"); };
-    _goto_connect_by_ipv4_scene = []{ hpw_info("goto_connect_by_ipv4_scene\n"); };
-    _goto_create_server_scene = []{ hpw_info("goto_create_server_scene\n"); };
+    _goto_find_server_scene = []{ error("need impl"); };
+    _goto_connect_by_ipv4_scene = []{ error("need impl"); };
+    _goto_create_server_scene = []{ error("need impl"); };
     _actions = Action_table {
       {"goto_find_server_scene", Action_container(_goto_find_server_scene)},
       {"goto_connect_by_ipv4_scene", Action_container(_goto_connect_by_ipv4_scene)},
@@ -30,32 +30,6 @@ struct Scene_netplay_menu::Impl {
     cauto config_file = load_res("resource/menu/netplay-menu.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(config, _actions);
-
-    /*init_unique (
-      _menu,
-      Menu_items {
-        new_shared<Menu_text_item> (
-          get_locale_str("netplay.find_server"),
-          []{ hpw_info("need impl\n"); },
-          []->utf32 { return {}; },
-          get_locale_str("netplay.find_server_desc")
-        ),
-        new_shared<Menu_text_item> (
-          get_locale_str("netplay.join_by_ipv4port"),
-          []{ hpw_info("need impl\n"); },
-          []->utf32 { return {}; },
-          get_locale_str("netplay.join_by_ipv4port_desc")
-        ),
-        new_shared<Menu_text_item> (
-          get_locale_str("netplay.start_server"),
-          []{ hpw_info("need impl\n"); },
-          []->utf32 { return {}; },
-          get_locale_str("netplay.start_server_desc")
-        ),
-        new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
-      },
-      Vec{15, 10}
-    );*/
   }
 
   inline void update(const Delta_time dt) {
