@@ -5,17 +5,51 @@
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/text-menu.hpp"
 #include "graphic/image/image.hpp"
+#include "util/log.hpp" // TODO del
 
 struct Scene_netplay_menu::Impl {
+  Unique<Text_menu> _menu {};
+
+  inline Impl() {
+    init_unique (
+      _menu,
+      Menu_items {
+        new_shared<Menu_text_item> (
+          get_locale_str("netplay.find_server"),
+          []{ hpw_info("need impl\n"); },
+          []->utf32 { return {}; },
+          get_locale_str("netplay.find_server_desc")
+        ),
+        new_shared<Menu_text_item> (
+          get_locale_str("netplay.join_by_ipv4port"),
+          []{ hpw_info("need impl\n"); },
+          []->utf32 { return {}; },
+          get_locale_str("netplay.join_by_ipv4port_desc")
+        ),
+        new_shared<Menu_text_item> (
+          get_locale_str("netplay.start_server"),
+          []{ hpw_info("need impl\n"); },
+          []->utf32 { return {}; },
+          get_locale_str("netplay.start_server_desc")
+        ),
+        new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
+      },
+      Vec{15, 10}
+    );
+  }
+
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
-    //menu.update(dt);
+
+    _menu->update(dt);
   }
 
   inline void draw(Image& dst) const {
-    //menu.draw(dst);
+    dst.fill(Pal8::black);
+    _menu->draw(dst);
   }
 }; // Impl 
 
