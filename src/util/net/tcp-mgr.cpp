@@ -91,7 +91,7 @@ struct Tcp_mgr::Impl {
     
     auto handler = [&](cr<std::error_code> err, ip_tcp::socket socket) {
       iferror(err, err.message());
-      dst = socket.local_endpoint().address().to_v4().to_string();
+      dst = socket.remote_endpoint().address().to_v4().to_string();
       connected = true;
     };
 
