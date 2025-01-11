@@ -41,182 +41,21 @@ Args parse_args(int argc, char** argv) {
   return ret;
 }
 
-/*
-struct Player {
-  Str address {};
-  u16_t port {};
-  bool is_server {};
-  bool is_ready {};
-};
-
-static inline Player g_player2 {};
-
-enum class Packet_tag: byte {
-  error = 0,
-  ready,
-  ping,
-  end,
-};
-
-struct Packet_ready {
-  Packet_tag tag {Packet_tag::ready};
-  bool is_server {};
-  bool is_ready {};
-};
-
-struct Packet_end {
-  Packet_tag tag {Packet_tag::end};
-  bool is_end {};
-};
-
-struct Packet_ping {
-  Packet_tag tag {Packet_tag::ping};
-  std::uint16_t id {};
-  Seconds sending_time {};
-  bool arrived {};
-};
-
-template <class T>
-void async_send(net::Udp_mgr& udp, cr<T> src, cr<Str> ip={}, u16_t port={}) {
-  static_assert(sizeof(T) > 0);
-  static_assert(sizeof(T) < net::PACKET_BUFFER_SZ);
-  assert(udp);
-
-  constexpr auto packet_sz = sizeof(T);
-  Bytes data(packet_sz);
-  std::memcpy(ptr2ptr<void*>(data.data()), cptr2ptr<cp<void>>(&src), packet_sz);
-  if (ip.empty())
-    udp.async_send(data);
-  else
-    udp.async_send(data, {}, ip, port);
+void print_interfaces(net::Tcp_mgr& tcp) {
+  Str ret = "avaliable interfaces:\n";
+  cauto ips = tcp.avaliable_ipv4s();
+  for (crauto ip: ips)
+    ret += "  " + ip + "\n";
+  if (ips.empty())
+    ret += "  empty\n";
+  hpw_info(ret);
 }
-
-// проверяет что игрок готов
-bool check_if_ready(cr<Bytes> bytes) {
-  assert(!bytes.empty());
-
-  constexpr auto packet_sz = sizeof(Packet_ready);
-  if (bytes.size() == packet_sz) {
-    crauto in = rcast<cr<Packet_ready>>(*bytes.data());
-    if (in.tag != Packet_tag::ready) {
-      hpw_info("тег не совпадает\n");
-      return false;
-    }
-
-    if (in.is_ready) {
-      g_player2.is_server = in.is_server;
-      g_player2.is_ready = true;
-      return true;
-    }
-  }
-
-  hpw_info("пакет не является Packet_ready\n");
-  return false;
-}
-
-// ждать соединения с другим игроком
-void try_to_connect(net::Udp_mgr& udp, cr<Args> args) {
-  assert(udp);
-
-  hpw_info("trying to connect...\n");
-  uint timeout = 50;
-  constexpr Seconds DELAY = 0.5;
-  Packet_ready ready_packet;
-  ready_packet.is_ready = true;
-  ready_packet.is_server = udp.is_server();
-  
-  while (timeout-- > 0) {
-    if (udp.is_client())
-      async_send(udp, ready_packet);
-    elif (g_player2.is_ready)
-      async_send(udp, ready_packet, g_player2.address, g_player2.port);
-
-    cauto input_packet = udp.load_packet_if_exist();
-    if (input_packet && check_if_ready(input_packet->bytes)) {
-      hpw_info("получен ответ\n");
-      g_player2.address = input_packet->source_address;
-      g_player2.port = s2n<u16_t>(args.port);
-      break;
-    }
-
-    delay_sec(DELAY);
-  }
-
-  iferror (timeout <= 0, "connection timeout");
-  hpw_info (
-    "connected player info:\n"
-    "  is " + Str(g_player2.is_server ? "server" : "client") + "\n"
-    "  is " + Str(g_player2.is_ready ? "ready" : "not ready") + "\n"
-    "  address: " + g_player2.address + "\n"
-  );
-}
-
-void print_ping(cr<Bytes> bytes) {
-  assert(!bytes.empty());
-
-  constexpr auto packet_sz = sizeof(Packet_ping);
-  if (bytes.size() == packet_sz) {
-    crauto in = rcast<cr<Packet_ping>>(*bytes.data());
-
-    if (in.tag != Packet_tag::ping) {
-      hpw_info("тег не совпадает\n");
-      return;
-    }
-
-    if (in.arrived) {
-      hpw_info(
-        "packet ping info:\n"
-        "  id: " + n2s(in.id) + "\n"
-        "  delay: " + n2s(get_cur_time() - in.sending_time) + "\n"
-      );
-    } else {
-      hpw_info("этот пинг-пакет не был доставлен\n");
-    }
-
-    return;
-  }
-
-  hpw_info("пакет не является Packet_ping\n");
-}
-
-void calculate_ping(net::Udp_mgr& udp) {
-  assert(udp);
-  hpw_log("calculate ping...\n");
-
-  if (udp.is_server()) {
-    constexpr std::uint16_t PACKETS = 100;
-    cfor (packet_id, PACKETS) {
-      Packet_ping packet;
-      packet.id = packet_id;
-      packet.sending_time = get_cur_time();
-      async_send(udp, packet, g_player2.address, g_player2.port);
-    }
-
-    uint timeout = 50;
-    while (timeout-- > 0) {
-      cauto packet = udp.load_packet_if_exist();
-      if (packet)
-        print_ping(packet->bytes);
-    }
-  } else { // client
-    cauto packet = udp.load_packet_if_exist();
-    constexpr auto packet_sz = sizeof(Packet_ping);
-    if (packet && packet->bytes.size() == packet_sz) {
-      auto in = rcast<cr<Packet_ping>>(*packet->bytes.data());
-      if (in.tag == Packet_tag::ping) {
-        in.arrived = true;
-        async_send(udp, in);
-        hpw_log("пинг пакет переотправлен\n");
-      }
-    }
-  }
-}
-*/
 
 void wait_connections(cr<Args> args) {
   hpw_info("create TCP server...\n");
   net::Tcp_mgr tcp;
   tcp.start_server(s2n<u16_t>(args.port));
+  print_interfaces(tcp);
 
   constexpr Seconds TIMEOUT = 10;
   std::unordered_set<Str> connected_ipv4s; // для уникальных IP
@@ -256,6 +95,7 @@ void try_to_connect(cr<Args> args) {
   hpw_info("connecting to TCP server...\n");
   net::Tcp_mgr tcp;
   tcp.start_client(args.ip, s2n<u16_t>(args.port));
+  print_interfaces(tcp);
 
   constexpr Seconds TIMEOUT = 5;
   hpw_info("wait connection for " + n2s(TIMEOUT) + " seconds\n");
@@ -284,20 +124,6 @@ int main(int argc, char** argv) {
   } else {
     try_to_connect(args);
   }
-
-  /*
-  net::Udp_mgr udp;
-  if (args.is_server) {
-    hpw_info("start server...\n");
-    udp.start_server(s2n<u16_t>(args.port));
-  } else {
-    hpw_info("start client...\n");
-    udp.start_client(args.ip, s2n<u16_t>(args.port));
-  }
-
-  try_to_connect(udp, args);
-  calculate_ping(udp);
-  */
 
   hpw_info("rollback test end\n");
 }
