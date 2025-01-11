@@ -59,7 +59,6 @@ inline static Shared<Menu_item> make_menu_item(cr<Yaml> item_node, cr<Action_tab
 
 Unique<Menu> menu_from_yaml(cr<Yaml> config, cr<Action_table> actions) {
   assert(config.check());
-  assert(!actions.empty());
 
   utf32 title = get_locale_str(config.get_str("title"));
   Rect rect {};

@@ -30,13 +30,13 @@ common: # общие строки
 netplay:
   title: сетеваz игра
   connect_by_ipv4:
-    title: подключитьсz по IP
+    title: подключение по IP
     desc: длz подключениz к серверу по IPv4 и номеру порта
   find_server:
-    title: найти сервер
+    title: поиск сервера
     desc: попытатьсz найти сервер хостzщий сетевую игру
   start_server:
-    title: запустить сервер
+    title: создание сервера
     desc: вы начнёте хостить игру, к вам будут подключатьсz другие игроки
 difficulty_select:
   title: Настройки игры

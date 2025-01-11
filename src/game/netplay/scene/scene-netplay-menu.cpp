@@ -1,5 +1,8 @@
 #include <cassert>
 #include "scene-netplay-menu.hpp"
+#include "scene-find-server.hpp"
+#include "scene-connect-by-ipv4.hpp"
+#include "scene-create-server.hpp"
 #include "game/menu/menu-from-yaml.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
@@ -7,21 +10,26 @@
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
 #include "util/file/yaml.hpp"
-#include "util/error.hpp" // TODO del
 #include "graphic/image/image.hpp"
 
 struct Scene_netplay_menu::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("resource/menu/netplay-menu.yml");
+    cauto config_file = load_res("resource/menu/netplay menu.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(
       config,
       Action_table {
-        {"goto_find_server_scene", Action_container( Menu_item::Action([]{ error("need impl"); }) )},
-        {"goto_connect_by_ipv4_scene", Action_container( Menu_item::Action([]{ error("need impl"); }) )},
-        {"goto_create_server_scene", Action_container( Menu_item::Action([]{ error("need impl"); }) )},
+        {"goto_find_server_scene", Action_container( Menu_item::Action([]{
+          hpw::scene_mgr.add(new_shared<Scene_find_server>());
+        }) )},
+        {"goto_connect_by_ipv4_scene", Action_container( Menu_item::Action([]{
+          hpw::scene_mgr.add(new_shared<Scene_connect_by_ipv4>());
+        }) )},
+        {"goto_create_server_scene", Action_container( Menu_item::Action([]{
+          hpw::scene_mgr.add(new_shared<Scene_create_server>());
+        }) )},
       }
     );
   }
