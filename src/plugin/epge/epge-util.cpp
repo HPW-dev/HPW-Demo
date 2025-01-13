@@ -7,7 +7,9 @@
 #include "util/str-util.hpp"
 #include "util/log.hpp"
 
+#include "display-3d.hpp"
 #include "flashes.hpp"
+#include "flashes-2.hpp"
 #include "pixelate.hpp"
 #include "epilepsy.hpp"
 #include "inversion.hpp"
@@ -43,7 +45,9 @@ inline static void init_epge_list() {
   add_epge<epge::Pixelate>();
   add_epge<epge::Inversion>();
   add_epge<epge::Mirror>();
+  add_epge<epge::Display_3d>();
   add_epge<epge::Resize>();
+  add_epge<epge::Flashes_2>();
   add_epge<epge::Flashes>();
   add_epge<epge::Fading>();
   add_epge<epge::Scanline>();
@@ -133,7 +137,9 @@ Strs avaliable_epges() {
   Strs list;
   for (crauto [name, _]: ::_epge_makers)
     list.push_back(name);
+    
   assert(!list.empty());
+  std::sort(list.begin(), list.end());
   return list;
 }
 
