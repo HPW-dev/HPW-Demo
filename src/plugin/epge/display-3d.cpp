@@ -1,63 +1,77 @@
 #include <cassert>
-#include <random>
-#include <ctime>
 #include "display-3d.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/util/resize.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
-#include "graphic/effect/light.hpp"
 
 namespace epge {
 
 struct Display_3d::Impl final {
-  enum class Mode {
-    full_star = 0,
-    diagonal,
+  enum class Blend_mode {
+    _xor = 0,
+    _or,
+    _plus,
+    _max,
+    _avr,
     MAX,
   };
-
-  int _mode {scast<int>(Mode::diagonal)};
-  int _radius {1};
-  double _chance {0.16};
-  double _threshold {0.75};
-  bool _halo {false};
-  mutable std::default_random_engine _generator {};
-  mutable std::uniform_real_distribution<double> _dist {0, 1};
+  enum class Resize_mode {
+    neighbor = 0,
+    bilinear,
+    MAX,
+  };
+  int _resize_mode {scast<int>(Resize_mode::neighbor)};
+  int _blend_mode {scast<int>(Blend_mode::_plus)};
+  double _depth {0.988};
+  double _bg_shading {0.74};
+  mutable Image _resized {};
+  mutable Image _dst_copy {};
 
   inline Str name() const noexcept { return "3D display"; }
-  inline Str desc() const noexcept { return "draws flashes on bright pixels"; }
+  inline Str desc() const noexcept { return "simulates the depth of mobile phone LCD display"; }
 
-  inline Impl() { _generator.seed( std::time({}) ); }
-  
   inline void draw(Image& dst) const noexcept {
     assert(dst);
-    cauto is_diagonal = scast<Mode>(_mode) == Mode::diagonal ? true : false;
 
-    cfor (y, dst.Y)
-    cfor (x, dst.X) {
-      cauto ratio = dst(x, y).to_real();
-      continue_if (ratio < _threshold);
-      continue_if (_dist(_generator) > _chance);
-      Light lgt;
-      lgt.radius = _radius * ratio;
-      lgt.flags.random_radius = true;
-      lgt.flags.repeat = true;
-      lgt.flags.no_sphere = !_halo;
-      lgt.flags.star = !is_diagonal;
-      lgt.bf = &blend_max;
-      lgt.bf_star = &blend_max;
-      lgt.draw(dst, Vec(x, y));
+    // заресайзить
+    cauto new_x = dst.X*_depth;
+    cauto new_y = dst.Y*_depth;
+    switch (scast<Resize_mode>(_resize_mode)) {
+      default:
+      case Resize_mode::neighbor: _resized = resize_neighbor(dst, new_x, new_y); break;
+      case Resize_mode::bilinear: _resized = resize_bilinear(dst, new_x, new_y); break;
     }
+
+    _dst_copy = dst;
+    dst.fill(Pal8::black);
+    insert(dst, _resized, center_point(dst, _resized));
+    sub_brightness(dst, Pal8::from_real(_bg_shading));
+    insert(dst, _dst_copy, Vec{}, get_blend_mode(scast<Blend_mode>(_blend_mode)));
   }
 
   inline epge::Params params() noexcept {
     return epge::Params {
-      new_shared<epge::Param_int>("type", "type of flashes:\n  0 - full star, 1 - diagonal star",
-        _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
-      new_shared<epge::Param_int>("radius", "flash size", _radius, 1, 100, 1, 2),
-      new_shared<epge::Param_double>("chance", "chance of a pixel flash", _chance, 0.01, 1, 0.01, 0.05),
-      new_shared<epge::Param_double>("threadid", "brightness threshold for flash to occur", _threshold, 0, 1, 0.05, 0.1),
-      new_shared<epge::Param_bool>("halo", "display flash halo", _halo),
+      new_shared<epge::Param_double>("depth", "distance of pixels from the screen", _depth, 0.9, 0.999, 0.001, 0.01),
+      new_shared<epge::Param_double>("Bg shading", "screen shading intensity", _bg_shading, 0.001, 0.999, 0.001, 0.01),
+      new_shared<Param_int>("mode", "resize algorithm:\n"
+        "  0 - neighbor;\n  1 - bilinear.\n", _resize_mode, 0, scast<int>(Resize_mode::MAX)-1, 1, 1),
+      new_shared<epge::Param_int>("blend mode", "pixel blending modes:\n"
+        "  0 - XOR, 1 - |, 2 - +,\n"
+        "  3 - max, 5 - average", _blend_mode, 0, scast<int>(Blend_mode::MAX)-1, 1, 1),
     };
+  }
+
+  inline static blend_pf get_blend_mode(const Blend_mode blend_mode) {
+    switch (blend_mode) {
+      default:
+      case Blend_mode::_xor: return &blend_xor_safe;
+      case Blend_mode::_or: return &blend_or_safe;
+      case Blend_mode::_plus: return &blend_add_safe;
+      case Blend_mode::_max: return &blend_max;
+      case Blend_mode::_avr: return &blend_avr;
+    }
+    return &blend_past;
   }
 }; // Impl
 
