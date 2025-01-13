@@ -50,7 +50,7 @@ cr<Str> locale_name, hpw::keycode keycode) {
 void Scene_input::init_menu() {
   Menu_items menu_items;
 
-#define AMI(key_name) add_menu_item(menu_items, hpw::keys_info, "scene.input."#key_name, hpw::keycode::key_name)
+#define AMI(key_name) add_menu_item(menu_items, hpw::keys_info, "input."#key_name, hpw::keycode::key_name)
   AMI(up);
   AMI(down);
   AMI(left);
