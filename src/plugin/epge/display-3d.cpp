@@ -50,13 +50,13 @@ struct Display_3d::Impl final {
     insert(dst, _dst_copy, Vec{}, get_blend_mode(scast<Blend_mode>(_blend_mode)));
   }
 
-  inline epge::Params params() noexcept {
-    return epge::Params {
-      new_shared<epge::Param_double>("depth", "distance of pixels from the screen", _depth, 0.9, 0.999, 0.001, 0.01),
-      new_shared<epge::Param_double>("Bg shading", "screen shading intensity", _bg_shading, 0.001, 0.999, 0.001, 0.01),
+  inline Params params() noexcept {
+    return Params {
+      new_shared<Param_double>("depth", "distance of pixels from the screen", _depth, 0.9, 0.999, 0.001, 0.01),
+      new_shared<Param_double>("Bg shading", "screen shading intensity", _bg_shading, 0.001, 0.999, 0.001, 0.01),
       new_shared<Param_int>("mode", "resize algorithm:\n"
         "  0 - neighbor;\n  1 - bilinear.\n", _resize_mode, 0, scast<int>(Resize_mode::MAX)-1, 1, 1),
-      new_shared<epge::Param_int>("blend mode", "pixel blending modes:\n"
+      new_shared<Param_int>("blend mode", "pixel blending modes:\n"
         "  0 - XOR, 1 - |, 2 - +,\n"
         "  3 - max, 5 - average", _blend_mode, 0, scast<int>(Blend_mode::MAX)-1, 1, 1),
     };

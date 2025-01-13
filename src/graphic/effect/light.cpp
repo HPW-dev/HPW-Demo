@@ -40,7 +40,7 @@ void cache_light_spheres() {
 
     cfor (y, sphere_sz)
     cfor (x, sphere_sz) {
-      cauto dist = distance(center, Vec(x, y));
+      cauto dist = distance(center - 0.5f, Vec(x, y));
       cauto ratio = 1.0f - (dist / R);
       cauto light = std::pow(ratio * ratio, Light::GAMMA_CORR); // гамма-коррекция + формула освещения
       sphere(x, y) = Pal8::from_real(light);
@@ -120,7 +120,7 @@ void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const 
 
     cfor (y, sphere_sz)
     cfor (x, sphere_sz) {
-      cauto dist = distance(center, Vec(x, y));
+      cauto dist = distance(center - 0.5f, Vec(x, y));
       cauto ratio = 1.0 - (dist / tmp_radius);
       cauto light = std::pow(ratio * ratio, GAMMA_CORR); // гамма-коррекция + формула освещения
       sphere(x, y) = Pal8::from_real(light);
