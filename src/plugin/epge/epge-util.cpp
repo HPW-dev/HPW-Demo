@@ -9,7 +9,7 @@
 
 #include "display-3d.hpp"
 #include "flashes.hpp"
-#include "flashes-2.hpp"
+#include "glow.hpp"
 #include "pixelate.hpp"
 #include "epilepsy.hpp"
 #include "inversion.hpp"
@@ -47,7 +47,7 @@ inline static void init_epge_list() {
   add_epge<epge::Mirror>();
   add_epge<epge::Display_3d>();
   add_epge<epge::Resize>();
-  add_epge<epge::Flashes_2>();
+  add_epge<epge::Glow>();
   add_epge<epge::Flashes>();
   add_epge<epge::Fading>();
   add_epge<epge::Scanline>();
