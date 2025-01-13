@@ -30,17 +30,22 @@ struct Glow::Impl final {
     cfor (y, dst.Y)
     cfor (x, dst.X) {
       real total {};
+      bool is_red = dst(x, y).is_red();
+
       cfor (gx, _glowmap_sz)
       cfor (gy, _glowmap_sz) {
         cauto light = _glowmap[gy * _glowmap_sz + gx];
-        total += _lightness * light * _buffer.get(
+        cauto src_pix = _buffer.get(
           x - _glowmap_sz/2 + gx,
           y - _glowmap_sz/2 + gy,
           Image_get::MIRROR
-        ).to_real();
+        );
+        
+        is_red |= src_pix.is_red();
+        total += _lightness * light * src_pix.to_real();
       }
       
-      dst(x, y) = blend_max(Pal8::from_real(total / _glowmap_sum), dst(x, y));
+      dst(x, y) = blend_max(Pal8::from_real(total / _glowmap_sum, is_red), dst(x, y));
     }
   }
 
