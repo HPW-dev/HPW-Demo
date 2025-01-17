@@ -15,9 +15,9 @@ struct Flashes::Impl final {
     MAX,
   };
 
-  int _mode {scast<int>(Mode::diagonal)};
-  int _radius {1};
-  double _chance {0.16};
+  int _mode {scast<int>(Mode::full_star)};
+  int _radius {16};
+  double _chance {0.1};
   double _threshold {0.75};
   bool _halo {false};
   mutable std::default_random_engine _generator {};
