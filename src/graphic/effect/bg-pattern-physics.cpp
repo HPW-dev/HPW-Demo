@@ -12,6 +12,7 @@
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/str-util.hpp"
+#include "util/mem-types.hpp"
 
 struct Config {
   enum class Bound {
@@ -131,11 +132,39 @@ struct Object_square: public Object_base {
 
 struct Physics_simulation {
   Config _cfg {};
+  using Figures = Vector<Unique<Object_base>>;
+  Figures _figures {};
+  xorshift128_state _seed {};
 
   explicit inline Physics_simulation(cr<Config> cfg) { init(cfg); }
 
+  inline uint rndd(double a=0, double b=1) {
+    return_if (a == b, a);
+    assert(a < b);
+    return a + (b - a) * ((xorshift128(_seed) % 100'000) / 100'000.0);
+  }
+
+  inline uint rndu(uint a, uint b) {
+    return_if (a == b, a);
+    assert(a < b);
+    return a + xorshift128(_seed) % (b - a + 1);
+  }
+
+  inline Pal8 get_color() {
+    return {};
+  }
+
+  inline Vecd get_pos() {
+    return {};
+  }
+
+  inline Vecd get_vel() {
+    return {};
+  }
+
   inline void init(cr<Config> cfg) {
     _cfg = cfg;
+
     assert(_cfg.mass_min > 0);
     assert(_cfg.mass_max >= _cfg.mass_min);
     assert(_cfg.size_min > 0);
@@ -145,6 +174,36 @@ struct Physics_simulation {
     assert(_cfg.scale > 0);
     assert(_cfg.scale < 9);
     assert(_cfg.seed > 1);
+
+    generate_figures();
+  }
+
+  inline void generate_figures() {
+    _figures.clear();
+    _figures.resize(rndu(_cfg.count_min, _cfg.count_max));
+
+    for (rauto fig: _figures) {
+      if (_cfg.figure == Config::Figure::circle)
+        fig = new_unique<Object_circle>(
+          get_color(),
+          rndd(_cfg.mass_min, _cfg.mass_max),
+          get_pos(),
+          get_vel(),
+          rndd(_cfg.size_min, _cfg.size_max),
+          _cfg.fill_color  
+        );
+      elif (_cfg.figure == Config::Figure::square)
+        fig = new_unique<Object_square>(
+          get_color(),
+          rndd(_cfg.mass_min, _cfg.mass_max),
+          get_pos(),
+          get_vel(),
+          rndd(_cfg.size_min, _cfg.size_max),
+          _cfg.fill_color  
+        );
+      else
+        static_assert("unknown figure");
+    }
   }
 
   inline void update(Delta_time dt) {
