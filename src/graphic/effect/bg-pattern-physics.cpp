@@ -6,6 +6,8 @@
 #include "graphic/util/resize.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
+#include "util/math/circle.hpp"
+#include "util/math/rect.hpp"
 #include "util/math/xorshift.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/math/mat.hpp"
@@ -49,16 +51,18 @@ struct Config {
 }; // Config
 
 struct Object_base {
-  Pal8 color {};
   real m {}; // масса объекта
   Vecd pos {};
   Vecd v {}; // вектор скорости
+  Pal8 color {};
+  bool filled {};
 
-  inline explicit Object_base(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity)
-  : color {_color}
-  , m {mass}
+  inline explicit Object_base(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity, bool _filled)
+  : m {mass}
   , pos {_pos}
   , v {velocity}
+  , color {_color}
+  , filled {_filled}
   { assert(m > 0); }
 
   virtual ~Object_base() = default;
@@ -71,34 +75,54 @@ struct Object_base {
 struct Object_circle: public Object_base {
   real r {};
 
-  inline explicit Object_circle(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity, real radius)
-  : Object_base(_color, mass, _pos, velocity), r{radius}
+  inline explicit Object_circle(const Pal8 _color, real mass, cr<Vecd> _pos,
+  cr<Vecd> velocity, real radius, bool _filled)
+  : Object_base(_color, mass, _pos, velocity, _filled), r{radius}
   { assert(r > 0); }
 
   inline bool check_collision(cr<Object_base> other) const override { 
-    // TODO
-    return false;
+    Circle a;
+    a.r = r;
+
+    crauto other_circle = rcast<cr<Object_circle>>(other);
+    Circle b;
+    b.r = other_circle.r;
+
+    return a.is_collided(this->pos, other_circle.pos, b);
   }
 
   inline void draw(Image dst) const override {
-    // TODO
+    if (filled)
+      draw_circle_filled(dst, pos, r, color);
+    else
+      draw_circle(dst, pos, r, color);
   }
 }; // Object_circle
 
 struct Object_square: public Object_base {
   real sz {};
 
-  inline explicit Object_square(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity, real _sz)
-  : Object_base(_color, mass, _pos, velocity), sz {_sz}
+  inline explicit Object_square(const Pal8 _color, real mass, cr<Vecd> _pos,
+  cr<Vecd> velocity, real _sz, bool _filled)
+  : Object_base(_color, mass, _pos, velocity, _filled), sz {_sz}
   { assert(sz > 0); }
 
-  inline bool check_collision(cr<Object_base> other) const override { 
-    // TODO
-    return false;
+  inline bool check_collision(cr<Object_base> other) const override {
+    const Rectd a(this->pos, Vecd{sz, sz});
+
+    crauto other_square = rcast<cr<Object_square>>(other);
+    const Rectd b(other_square.pos, Vecd{other_square.sz, other_square.sz});
+
+    return intersect(a, b);
   }
 
   inline void draw(Image dst) const override {
-    // TODO
+    const Rectd rect(this->pos, Vecd{sz, sz});
+
+    if (filled)
+      draw_rect_filled(dst, rect, color);
+    else
+      draw_rect(dst, rect, color);
   }
 }; // Object_square
 

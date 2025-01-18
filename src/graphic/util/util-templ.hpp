@@ -16,12 +16,12 @@
 extern Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept;
 
 // нарисовать прямоуг-к
-template <blend_pf bf = &blend_past>
-void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) noexcept;
+template <blend_pf bf = &blend_past, typename T=real>
+void draw_rect(Image& dst, cr<Rect_base<T>> rect, const Pal8 col) noexcept;
 
 // нарисовать залитый прямоуг-к
-template <blend_pf bf = &blend_past>
-void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, const int optional=0);
+template <blend_pf bf = &blend_past, typename T=real>
+void draw_rect_filled(Image& dst, cr<Rect_base<T>> rect, const Pal8 col, const int optional=0);
 
 // нарисовать залитый круг
 template <blend_pf bf = &blend_past>
@@ -70,8 +70,8 @@ void insert_fast(Image& dst, cr<Image> src, int optional={});
 
 // ----------------------- impl ----------------------------------
 
-template <blend_pf bf>
-void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) noexcept {
+template <blend_pf bf, typename T>
+void draw_rect(Image& dst, cr<Rect_base<T>> rect, const Pal8 col) noexcept {
   return_if( !dst);
   return_if(rect.size.x <= 2 || rect.size.y <= 2);
   const int rect_pos_x = std::round(rect.pos.x);
@@ -92,8 +92,8 @@ void draw_rect(Image& dst, cr<Rect> rect, const Pal8 col) noexcept {
   }
 } // draw_rect
 
-template <blend_pf bf>
-void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, const int optional) {
+template <blend_pf bf, typename T>
+void draw_rect_filled(Image& dst, cr<Rect_base<T>> rect, const Pal8 col, const int optional) {
   // проверить валидность
   return_if( !dst);
   return_if (rect.size.x < 1 || rect.size.y < 1);
