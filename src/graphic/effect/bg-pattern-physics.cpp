@@ -36,13 +36,13 @@ struct Config {
   Colors colors {}; // как раскрашивать фигуры
   bool elastic_impact {}; // упругий удар
   bool gravity {}; // притяжение объектов друг к другу
-  real gravity_power {}; // как быстро объекты притягиваются к друг другу
+  double gravity_power {}; // как быстро объекты притягиваются к друг другу
   bool pushing_out {}; // выталкивать объект, если он застрял внутри другого
   bool fill_color {}; // заливать цветом
-  real mass_min {};
-  real mass_max {};
-  real size_min {};
-  real size_max {};
+  double mass_min {};
+  double mass_max {};
+  double size_min {};
+  double size_max {};
   uint count_min {};
   uint count_max {};
   uint scale {}; // во сколько раз увеличить пиксели
@@ -51,13 +51,13 @@ struct Config {
 }; // Config
 
 struct Object_base {
-  real m {}; // масса объекта
+  double m {}; // масса объекта
   Vecd pos {};
   Vecd v {}; // вектор скорости
   Pal8 color {};
   bool filled {};
 
-  inline explicit Object_base(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity, bool _filled)
+  inline explicit Object_base(const Pal8 _color, double mass, cr<Vecd> _pos, cr<Vecd> velocity, bool _filled)
   : m {mass}
   , pos {_pos}
   , v {velocity}
@@ -73,10 +73,10 @@ struct Object_base {
 };
 
 struct Object_circle: public Object_base {
-  real r {};
+  double r {};
 
-  inline explicit Object_circle(const Pal8 _color, real mass, cr<Vecd> _pos,
-  cr<Vecd> velocity, real radius, bool _filled)
+  inline explicit Object_circle(const Pal8 _color, double mass, cr<Vecd> _pos,
+  cr<Vecd> velocity, double radius, bool _filled)
   : Object_base(_color, mass, _pos, velocity, _filled), r{radius}
   { assert(r > 0); }
 
@@ -100,24 +100,27 @@ struct Object_circle: public Object_base {
 }; // Object_circle
 
 struct Object_square: public Object_base {
-  real sz {};
+  double sz {};
 
-  inline explicit Object_square(const Pal8 _color, real mass, cr<Vecd> _pos,
-  cr<Vecd> velocity, real _sz, bool _filled)
+  inline explicit Object_square(const Pal8 _color, double mass, cr<Vecd> _pos,
+  cr<Vecd> velocity, double _sz, bool _filled)
   : Object_base(_color, mass, _pos, velocity, _filled), sz {_sz}
   { assert(sz > 0); }
 
   inline bool check_collision(cr<Object_base> other) const override {
-    const Rectd a(this->pos, Vecd{sz, sz});
+    const double this_half = sz / 2.0;
+    const Rectd a(this->pos - this_half, Vecd{sz, sz});
 
     crauto other_square = rcast<cr<Object_square>>(other);
-    const Rectd b(other_square.pos, Vecd{other_square.sz, other_square.sz});
+    const double other_half = other_square.sz / 2.0;
+    const Rectd b(other_square.pos - other_half, Vecd{other_square.sz, other_square.sz});
 
     return intersect(a, b);
   }
 
   inline void draw(Image dst) const override {
-    const Rectd rect(this->pos, Vecd{sz, sz});
+    const double this_half = sz / 2.0;
+    const Rectd rect(this->pos - this_half, Vecd{sz, sz});
 
     if (filled)
       draw_rect_filled(dst, rect, color);
