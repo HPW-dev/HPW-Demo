@@ -41,9 +41,66 @@ struct Config {
   real mass_max {};
   real size_min {};
   real size_max {};
+  uint count_min {};
+  uint count_max {};
+  uint scale {}; // во сколько раз увеличить пиксели
   Pal8 bg_color {};
   std::uint32_t seed {};
 }; // Config
+
+struct Object_base {
+  Pal8 color {};
+  real m {}; // масса объекта
+  Vecd pos {};
+  Vecd v {}; // вектор скорости
+
+  inline explicit Object_base(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity)
+  : color {_color}
+  , m {mass}
+  , pos {_pos}
+  , v {velocity}
+  { assert(m > 0); }
+
+  virtual ~Object_base() = default;
+
+  void update(Delta_time dt) { pos += v * dt; }
+  virtual bool check_collision(cr<Object_base> other) const = 0;
+  virtual void draw(Image dst) const = 0;
+};
+
+struct Object_circle: public Object_base {
+  real r {};
+
+  inline explicit Object_circle(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity, real radius)
+  : Object_base(_color, mass, _pos, velocity), r{radius}
+  { assert(r > 0); }
+
+  inline bool check_collision(cr<Object_base> other) const override { 
+    // TODO
+    return false;
+  }
+
+  inline void draw(Image dst) const override {
+    // TODO
+  }
+}; // Object_circle
+
+struct Object_square: public Object_base {
+  real sz {};
+
+  inline explicit Object_square(const Pal8 _color, real mass, cr<Vecd> _pos, cr<Vecd> velocity, real _sz)
+  : Object_base(_color, mass, _pos, velocity), sz {_sz}
+  { assert(sz > 0); }
+
+  inline bool check_collision(cr<Object_base> other) const override { 
+    // TODO
+    return false;
+  }
+
+  inline void draw(Image dst) const override {
+    // TODO
+  }
+}; // Object_square
 
 struct Physics_simulation {
   Config _cfg {};
@@ -56,6 +113,10 @@ struct Physics_simulation {
     assert(_cfg.mass_max >= _cfg.mass_min);
     assert(_cfg.size_min > 0);
     assert(_cfg.size_max >= _cfg.size_min);
+    assert(_cfg.count_min > 0);
+    assert(_cfg.count_max >= _cfg.count_min);
+    assert(_cfg.scale > 0);
+    assert(_cfg.scale < 9);
     assert(_cfg.seed > 1);
   }
 
@@ -84,6 +145,9 @@ void bgp_physics_1(Image& dst, const int bg_state) {
     .mass_max = 4,
     .size_min = 5,
     .size_max = 9,
+    .count_min = 4,
+    .count_max = 7,
+    .scale = 1,
     .bg_color = Pal8::black,
     .seed = 97'997,
   };
