@@ -207,11 +207,19 @@ struct Physics_simulation {
   }
 
   inline void update(Delta_time dt) {
-
+    for (rauto fig: _figures) {
+      assert(fig);
+      fig->update(dt);
+    }
   }
 
   inline void draw(Image& dst) const {
     dst.fill(_cfg.bg_color);
+
+    for (rauto fig: _figures) {
+      assert(fig);
+      fig->draw(dst);
+    }
   }
 }; // Physics_simulation
 
