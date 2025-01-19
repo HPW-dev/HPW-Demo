@@ -36,6 +36,7 @@ def parse_args():
   hpw_config.enable_asan = bool(int(ARGUMENTS.get('enable_asan', 0)))
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
   hpw_config.use_data_zip = bool(int(ARGUMENTS.get('use_data_zip', 1)))
+  hpw_config.use_netplay = bool(int(ARGUMENTS.get('use_netplay', 0)))
   assert hpw_config.build_script, 'path to build script needed'
   _architecture = architecture()
   hpw_config.system = System.linux if _architecture[1] == 'ELF' else System.windows
@@ -76,6 +77,7 @@ def print_params():
   print(f'Optimization level: {yelow_text(hpw_config.opt_level.name)}')
   print(f'Static link: {yn2s(hpw_config.static_link)}')
   print(f'OpenMP: {yn2s(hpw_config.enable_omp)}');
+  print(f'Netplay: {yn2s(hpw_config.use_netplay)}')
   print(f'ASAN checks: {yn2s(hpw_config.enable_asan)}')
   print(f'CXX: {green_text(hpw_config.custom_cxx) if hpw_config.custom_cxx else yelow_text('default')}')
   print(f'CC: {green_text(hpw_config.custom_cc) if hpw_config.custom_cc else yelow_text('default')}')
@@ -182,6 +184,10 @@ def accept_params():
   if hpw_config.enable_omp:
     hpw_config.cxx_flags.extend(['-fopenmp'])
     hpw_config.cxx_ldflags.extend(['-fopenmp'])
+
+  # сетевая игра
+  if hpw_config.use_netplay:
+    hpw_config.cxx_defines.append('-DUSE_NETPLAY')
 
   # ASAN
   if hpw_config.enable_asan:

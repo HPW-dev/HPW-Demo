@@ -16,18 +16,19 @@ Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
 class Hpw_config:
   '''хранит настройки билда'''
   # управляющие переменные:
-  bitness = Bitness.x64
-  system = System.windows
+  bitness = Bitness.x64 # разрядность системы для которой билдят
+  system = System.windows # система для которой билдят
   compiler = Compiler.gcc
   opt_level = Opt_level.debug
   host = Host.glfw3
   enable_omp = True
   enable_asan = False
-  use_data_zip = True
-  static_link = False
-  build_script = ''
-  custom_cxx: str
-  custom_cc: str
+  use_data_zip = True # грузить данные из архива с ресурсами игры
+  use_netplay = False # использовать LAN
+  static_link = False # статически слинковать все библиотеки
+  build_script = '' # какой скрипт для SCons использовать для сборки кода
+  custom_cxx: str # свой путь до компилятора C++
+  custom_cc: str # свой путь до компилятора C
 
   # опции билда C++:
   cxx_defines = []

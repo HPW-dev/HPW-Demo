@@ -6,6 +6,7 @@ opts = \
   ' -Q enable_asan=0' \
   ' -Q host=glfw3' \
   ' -Q compiler=gcc' \
+  ' -Q use_netplay=0' \
   ' -Q opt_level=stable'
 NUM_THREADS = helper.get_max_threads() + 1
 print(f'threads for building: {NUM_THREADS}')
