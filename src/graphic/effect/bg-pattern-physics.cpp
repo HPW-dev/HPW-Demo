@@ -336,23 +336,24 @@ struct Physics_simulation {
 void bgp_physics_1(Image& dst, const int bg_state) {
   assert(dst);
 
-  static const Config cfg {
+  static uint state = 0;
+  static Config cfg {
     .bound = Config::Bound::screen,
     .figure = Config::Figure::circle,
-    .colors = Config::Colors::white,
+    .colors = Config::Colors::red,
     .impact = Config::Impact::elastic,
     .gravity = false,
     .gravity_power = 0,
     .pushing_out = false,
     .fill_color = false,
-    .mass_min = 1,
-    .mass_max = 4,
-    .size_min = 5,
-    .size_max = 15,
+    .mass_min = 10,
+    .mass_max = 40,
+    .size_min = 3,
+    .size_max = 11,
     .speed_min = 0.2_pps,
-    .speed_max = 4.0_pps,
-    .count_min = 40,
-    .count_max = 70,
+    .speed_max = 6.0_pps,
+    .count_min = 70,
+    .count_max = 120,
     .scale = 1,
     .bg_color = Pal8::black,
     .seed = 97'997
@@ -361,4 +362,45 @@ void bgp_physics_1(Image& dst, const int bg_state) {
 
   sim.update(1.0 / 60.0);
   sim.draw(dst);
+
+  if (state++ % 433 == 0) {
+    cfg.seed += state;
+    sim.init(cfg);
+  }
+}
+
+void bgp_physics_2(Image& dst, const int bg_state) {
+  assert(dst);
+
+  static uint state = 0;
+  static Config cfg {
+    .bound = Config::Bound::screen,
+    .figure = Config::Figure::circle,
+    .colors = Config::Colors::white,
+    .impact = Config::Impact::inelastic,
+    .gravity = false,
+    .gravity_power = 0,
+    .pushing_out = false,
+    .fill_color = true,
+    .mass_min = 1,
+    .mass_max = 4,
+    .size_min = 1,
+    .size_max = 7,
+    .speed_min = 1.0_pps,
+    .speed_max = 10.0_pps,
+    .count_min = 200,
+    .count_max = 400,
+    .scale = 1,
+    .bg_color = Pal8::black,
+    .seed = 97'997
+  };
+  static Physics_simulation sim(cfg);
+
+  sim.update(1.0 / 60.0);
+  sim.draw(dst);
+
+  if (state++ % 300 == 0) {
+    cfg.seed += state;
+    sim.init(cfg);
+  }
 }

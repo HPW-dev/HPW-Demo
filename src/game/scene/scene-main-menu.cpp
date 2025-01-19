@@ -43,7 +43,7 @@ void bg_copy_4(Image& dst, const int state);
 void Scene_main_menu::init_bg() {
   sconst Rnd_table<decltype(bg_pattern_pf)> bg_patterns {{
   // Пак 1:
-  #if 0
+  #if 1
     &bgp_hpw_text_lines,
     &bgp_bit_1,
     &bgp_bit_2,
@@ -86,7 +86,7 @@ void Scene_main_menu::init_bg() {
     #endif
   #endif
   // Пак 2:
-  #if 0
+  #if 1
     &bgp_self_code,
     &bgp_noise,
     &bgp_tile_corruption,
@@ -123,7 +123,7 @@ void Scene_main_menu::init_bg() {
     &bgp_zoom_dst,
   #endif
   // Пак 3:
-  #if 0
+  #if 1
     &bgp_3d_sky,
     &bgp_perlin_noise,
     &bgp_liquid,
@@ -149,6 +149,7 @@ void Scene_main_menu::init_bg() {
   // Пак 4 (физика шариков):
   #if 1
     &bgp_physics_1,
+    &bgp_physics_2,
   #endif
   }}; // bg_patterns table
 
