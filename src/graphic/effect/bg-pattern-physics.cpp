@@ -34,11 +34,16 @@ struct Config {
     grad_red,
     random,
   };
+  enum class Impact {
+    none,
+    elastic,
+    inelastic,
+  };
 
   Bound bound {}; // режим рамки
   Figure figure {}; // тип фигуры
   Colors colors {}; // как раскрашивать фигуры
-  bool elastic_impact {}; // упругий удар
+  Impact impact {}; // тип удара
   bool gravity {}; // притяжение объектов друг к другу
   double gravity_power {}; // как быстро объекты притягиваются к друг другу
   bool pushing_out {}; // выталкивать объект, если он застрял внутри другого
@@ -240,13 +245,54 @@ struct Physics_simulation {
     }
   }
 
+  inline void bound_pocess(Object_base& obj) {
+    if (_cfg.bound == Config::Bound::screen) {
+      if (obj.pos.x < 0) {
+        obj.pos.x = 0;
+        obj.v.x *= -1;
+      }
+      if (obj.pos.x >= graphic::width) {
+        obj.pos.x = graphic::width - 1;
+        obj.v.x *= -1;
+      }
+
+      if (obj.pos.y < 0) {
+        obj.pos.y = 0;
+        obj.v.y *= -1;
+      }
+      if (obj.pos.y >= graphic::height) {
+        obj.pos.y = graphic::height - 1;
+        obj.v.y *= -1;
+      }
+    } else {
+      error("need impl");
+    }
+  }
+
+  inline void ellastic_impact(Object_base& dst, cr<Object_base> src) const {
+    // TODO
+  }
+
+  inline void impact_process(Object_base& obj) {
+    // найти столкновения с другими объектами
+    for (rauto fig: _figures) {
+      assert(fig);
+      cont_if(fig.get() == &obj);
+      crauto other = *fig;
+      iferror(_cfg.impact != Config::Impact::elastic, "need impl");
+      if (obj.check_collision(other))
+        ellastic_impact(obj, other);
+    }
+  }
+
   inline void update(Delta_time dt) {
     for (rauto fig: _figures) {
       assert(fig);
       fig->update(dt);
+      bound_pocess(*fig);
+      impact_process(*fig);
     }
 
-    iferror(_cfg.elastic_impact == false, "need impl");
     iferror(_cfg.gravity, "need impl");
     iferror(_cfg.gravity_power != 0, "need impl");
     iferror(_cfg.pushing_out, "need impl");
@@ -271,7 +317,7 @@ void bgp_physics_1(Image& dst, const int bg_state) {
     .bound = Config::Bound::screen,
     .figure = Config::Figure::circle,
     .colors = Config::Colors::white,
-    .elastic_impact = true,
+    .impact = Config::Impact::elastic,
     .gravity = false,
     .gravity_power = 0,
     .pushing_out = false,
