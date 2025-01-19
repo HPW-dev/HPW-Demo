@@ -100,7 +100,6 @@ def init_sources():
     Glob(src_dir + "game/scene/msgbox/*.cpp"),
     Glob(src_dir + "game/level/*.cpp"),
     Glob(src_dir + "game/level/util/*.cpp"),
-    Glob(src_dir + "game/netplay/scene/*.cpp"),
     Glob(src_dir + "plugin/epge/*.cpp"),
     Glob(src_dir + "graphic/animation/*.cpp"),
     Glob(src_dir + "graphic/image/*.cpp"),
@@ -110,6 +109,13 @@ def init_sources():
     Glob(src_dir + "graphic/util/*.cpp"),
     Glob(src_dir + "sound/*.cpp"),
   ])
+  
+  # LAN
+  if hpw_config.use_netplay:
+    sources.extend([
+      Glob(src_dir + "game/netplay/scene/*.cpp")
+    ])
+
   sources.extend([host_sources]);
 
 def build():

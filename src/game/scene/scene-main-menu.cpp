@@ -5,7 +5,6 @@
 #include "scene-loading.hpp"
 #include "scene-difficulty.hpp"
 #include "scene-locale.hpp"
-#include "game/netplay/scene/scene-netplay-menu.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
@@ -34,6 +33,10 @@
 #include "util/rnd-table.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
+
+#ifdef USE_NETPLAY
+#include "game/netplay/scene/scene-netplay-menu.hpp"
+#endif
 
 void bg_copy_1(Image& dst, const int state);
 void bg_copy_2(Image& dst, const int state);
@@ -243,27 +246,33 @@ void Scene_main_menu::init_menu() {
       // старт
       new_shared<Menu_text_item>(get_locale_str("main_menu.start"),
         []{ hpw::scene_mgr.add(new_shared<Scene_difficulty>()); }),
-      // старт
+
+      #ifdef USE_NETPLAY
+      // LAN
       new_shared<Menu_text_item>(get_locale_str("netplay.title"),
         []{ hpw::scene_mgr.add(new_shared<Scene_netplay_menu>()); }),
+      #endif
+
       // смена языка
       new_shared<Menu_text_item>(hpw::locale_select_title,
         []{ hpw::scene_mgr.add(new_shared<Scene_locale_select>()); }),
+
       // сменить фон
-      new_shared<Menu_text_item>(get_locale_str("main_menu.next_bg"),
-        [this]{ next_bg(); }),
-      // сменить палитру
-      get_palette_list(),
+      new_shared<Menu_text_item>(get_locale_str("main_menu.next_bg"), [this]{ next_bg(); }),
+      
+      get_palette_list(), // сменить палитру
+
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("main_menu.info"), []{
         hpw::scene_mgr.add(new_shared<Scene_info>());
       }),*/
+
       // опции
       new_shared<Menu_text_item>(get_locale_str("options.name"),
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
+
       // выйти из игры
-      new_shared<Menu_text_item>(get_locale_str("common.exit"),
-        []{ hpw::scene_mgr.back(); }),
+      new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }),
     }
   ); // init menu
 
