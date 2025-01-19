@@ -269,19 +269,32 @@ struct Physics_simulation {
     }
   }
 
-  inline void ellastic_impact(Object_base& dst, cr<Object_base> src) const {
-    // TODO
+  inline void ellastic_impact(Object_base& a, Object_base& b) const {
+    cauto av = a.v;
+    cauto bv = b.v;
+    cauto abm = a.m + b.m;
+    a.v = (av * (a.m - b.m) - bv * 2 * b.m) / abm;
+    b.v = (bv * (b.m - a.m) + av * 2 * a.m) / abm;
   }
 
-  inline void impact_process(Object_base& obj) {
-    // найти столкновения с другими объектами
-    for (rauto fig: _figures) {
-      assert(fig);
-      cont_if(fig.get() == &obj);
-      crauto other = *fig;
-      iferror(_cfg.impact != Config::Impact::elastic, "need impl");
-      if (obj.check_collision(other))
-        ellastic_impact(obj, other);
+  inline void impact_process() {
+    cauto figures_sz = _figures.size();
+    assert(figures_sz > 1);
+
+    for (std::size_t a_i = 0; a_i < figures_sz - 1; ++a_i) {
+      assert(_figures[a_i]);
+      rauto a = *_figures[a_i];
+
+      for (std::size_t b_i = a_i + 1; b_i < figures_sz; ++b_i) {
+        assert(_figures[b_i]);
+        rauto b = *_figures[b_i];
+
+        cont_if(std::addressof(a) == std::addressof(b));
+
+        iferror(_cfg.impact != Config::Impact::elastic, "need impl");
+        if (a.check_collision(b))
+          ellastic_impact(a, b);
+      }
     }
   }
 
@@ -290,8 +303,9 @@ struct Physics_simulation {
       assert(fig);
       fig->update(dt);
       bound_pocess(*fig);
-      impact_process(*fig);
     }
+
+    impact_process();
 
     iferror(_cfg.gravity, "need impl");
     iferror(_cfg.gravity_power != 0, "need impl");
