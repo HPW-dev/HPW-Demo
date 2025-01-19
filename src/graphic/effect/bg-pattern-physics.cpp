@@ -277,7 +277,13 @@ struct Physics_simulation {
     b.v = (bv * (b.m - a.m) + av * 2 * a.m) / abm;
   }
 
+  inline void inelastic_impact(Object_base& a, Object_base& b) const {
+    a.v = b.v = (a.v * a.m + b.v * b.m) / (a.m + b.m);
+  }
+
   inline void impact_process() {
+    ret_if(_cfg.impact == Config::Impact::none);
+
     cauto figures_sz = _figures.size();
     assert(figures_sz > 1);
 
@@ -291,9 +297,12 @@ struct Physics_simulation {
 
         cont_if(std::addressof(a) == std::addressof(b));
 
-        iferror(_cfg.impact != Config::Impact::elastic, "need impl");
         if (a.check_collision(b))
-          ellastic_impact(a, b);
+        switch (_cfg.impact) {
+          case Config::Impact::elastic: ellastic_impact(a, b); break;
+          case Config::Impact::inelastic: inelastic_impact(a, b); break;
+          default: error("unknown impact type");
+        }
       }
     }
   }
