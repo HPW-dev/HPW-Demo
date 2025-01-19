@@ -145,6 +145,7 @@ def save_version(build_dir, used_libs, hpw_config, cxx, cc):
         f'\nTarget:\n',
         f'  OS: {hpw_config.system.name + ' ' + hpw_config.bitness.name}\n',
         f'  Host render-system: {hpw_config.host.name}\n',
+        f'  Netplay: {hpw_config.use_netplay}\n',
 
         f'\nCompilation info:\n',
         f'  Compiler: {hpw_config.compiler.name}\n',
