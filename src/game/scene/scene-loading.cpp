@@ -49,7 +49,9 @@ void Scene_loading::draw(Image& dst) const {
 
   // нарисовать фон
   insert_fast(dst, bg_image);
-  fast_dither_bayer16x16_4bit(dst);
+  // задизерить
+  if ((rndu_fast() % 10) >= 5)
+    fast_dither_bayer16x16_4bit(dst);
 
   // нарисовать надпись с затенением
   cauto loading_txt = get_locale_str("common.loading");
