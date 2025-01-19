@@ -13,6 +13,9 @@
 #include "util/math/mat.hpp"
 #include "util/str-util.hpp"
 #include "util/mem-types.hpp"
+#include "util/error.hpp"
+#include "util/hpw-util.hpp"
+#include "game/core/canvas.hpp"
 
 struct Config {
   enum class Bound {
@@ -44,6 +47,8 @@ struct Config {
   double mass_max {};
   double size_min {};
   double size_max {};
+  double speed_min {};
+  double speed_max {};
   uint count_min {};
   uint count_max {};
   uint scale {}; // во сколько раз увеличить пиксели
@@ -70,7 +75,7 @@ struct Object_base {
 
   void update(Delta_time dt) { pos += v * dt; }
   virtual bool check_collision(cr<Object_base> other) const = 0;
-  virtual void draw(Image dst) const = 0;
+  virtual void draw(Image& dst) const = 0;
 };
 
 struct Object_circle: public Object_base {
@@ -92,7 +97,7 @@ struct Object_circle: public Object_base {
     return a.is_collided(this->pos, other_circle.pos, b);
   }
 
-  inline void draw(Image dst) const override {
+  inline void draw(Image& dst) const override {
     if (filled)
       draw_circle_filled(dst, pos, r, color);
     else
@@ -119,7 +124,7 @@ struct Object_square: public Object_base {
     return intersect(a, b);
   }
 
-  inline void draw(Image dst) const override {
+  inline void draw(Image& dst) const override {
     const double this_half = sz / 2.0;
     const Rectd rect(this->pos - this_half, Vecd{sz, sz});
 
@@ -141,7 +146,7 @@ struct Physics_simulation {
   inline uint rndd(double a=0, double b=1) {
     return_if (a == b, a);
     assert(a < b);
-    return a + (b - a) * ((xorshift128(_seed) % 100'000) / 100'000.0);
+    return a + (b - a) * (std::fmod<double>(xorshift128(_seed), 100'000.0) / 100'000.0);
   }
 
   inline uint rndu(uint a, uint b) {
@@ -151,15 +156,33 @@ struct Physics_simulation {
   }
 
   inline Pal8 get_color() {
-    return {};
+    switch (_cfg.colors) {
+      case Config::Colors::white: return Pal8::white;
+      case Config::Colors::red: return Pal8::red;
+      default: error("unknown color type");
+    }
+
+    return Pal8::white;
   }
 
   inline Vecd get_pos() {
+    if (_cfg.bound == Config::Bound::circle) {
+      error("need impl");
+    } elif (_cfg.bound == Config::Bound::screen) {
+      return Vecd(
+        rndd(0, graphic::width),
+        rndd(0, graphic::height)
+      );
+    } else {
+      error("unknown bound type");
+    }
+
     return {};
   }
 
   inline Vecd get_vel() {
-    return {};
+    cauto speed = rndd(_cfg.speed_min, _cfg.speed_max);
+    return deg_to_vec(rndd(0, 360)) * speed; // TODO double vec ret
   }
 
   inline void init(cr<Config> cfg) {
@@ -169,40 +192,51 @@ struct Physics_simulation {
     assert(_cfg.mass_max >= _cfg.mass_min);
     assert(_cfg.size_min > 0);
     assert(_cfg.size_max >= _cfg.size_min);
+    assert(_cfg.speed_min >= 0);
+    assert(_cfg.speed_max >= _cfg.speed_min);
     assert(_cfg.count_min > 0);
     assert(_cfg.count_max >= _cfg.count_min);
     assert(_cfg.scale > 0);
     assert(_cfg.scale < 9);
     assert(_cfg.seed > 1);
 
+    _seed.a = 123'456 ^ _cfg.seed;
+    _seed.b = 789'012 ^ _cfg.seed;
+    _seed.c = 345'543 ^ _cfg.seed;
+    _seed.d = 979'977 ^ _cfg.seed;
+
     generate_figures();
   }
 
   inline void generate_figures() {
     _figures.clear();
-    _figures.resize(rndu(_cfg.count_min, _cfg.count_max));
+    cauto figures_sz = rndu(_cfg.count_min, _cfg.count_max);
+    _figures.resize(figures_sz);
 
     for (rauto fig: _figures) {
+      cauto mass = rndd(_cfg.mass_min, _cfg.mass_max);
+      cauto mass_ratio = mass / scast<double>(_cfg.mass_max);
+
       if (_cfg.figure == Config::Figure::circle)
         fig = new_unique<Object_circle>(
           get_color(),
-          rndd(_cfg.mass_min, _cfg.mass_max),
+          mass,
           get_pos(),
           get_vel(),
-          rndd(_cfg.size_min, _cfg.size_max),
+          std::lerp(_cfg.size_min, _cfg.size_max, mass_ratio),
           _cfg.fill_color  
         );
       elif (_cfg.figure == Config::Figure::square)
         fig = new_unique<Object_square>(
           get_color(),
-          rndd(_cfg.mass_min, _cfg.mass_max),
+          mass,
           get_pos(),
           get_vel(),
-          rndd(_cfg.size_min, _cfg.size_max),
+          std::lerp(_cfg.size_min, _cfg.size_max, mass_ratio),
           _cfg.fill_color  
         );
       else
-        static_assert("unknown figure");
+        error("unknown figure");
     }
   }
 
@@ -211,6 +245,11 @@ struct Physics_simulation {
       assert(fig);
       fig->update(dt);
     }
+
+    iferror(_cfg.elastic_impact == false, "need impl");
+    iferror(_cfg.gravity, "need impl");
+    iferror(_cfg.gravity_power != 0, "need impl");
+    iferror(_cfg.pushing_out, "need impl");
   }
 
   inline void draw(Image& dst) const {
@@ -220,6 +259,8 @@ struct Physics_simulation {
       assert(fig);
       fig->draw(dst);
     }
+
+    iferror(_cfg.scale != 1, "need impl for resizes");
   }
 }; // Physics_simulation
 
@@ -227,7 +268,7 @@ void bgp_physics_1(Image& dst, const int bg_state) {
   assert(dst);
 
   static const Config cfg {
-    .bound = Config::Bound::circle,
+    .bound = Config::Bound::screen,
     .figure = Config::Figure::circle,
     .colors = Config::Colors::white,
     .elastic_impact = true,
@@ -238,12 +279,14 @@ void bgp_physics_1(Image& dst, const int bg_state) {
     .mass_min = 1,
     .mass_max = 4,
     .size_min = 5,
-    .size_max = 9,
-    .count_min = 4,
-    .count_max = 7,
+    .size_max = 15,
+    .speed_min = 0.2_pps,
+    .speed_max = 4.0_pps,
+    .count_min = 40,
+    .count_max = 70,
     .scale = 1,
     .bg_color = Pal8::black,
-    .seed = 97'997,
+    .seed = 97'997
   };
   static Physics_simulation sim(cfg);
 
