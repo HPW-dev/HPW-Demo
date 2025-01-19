@@ -1,4 +1,6 @@
 #pragma once
+#include <cmath>
+#include "mat.hpp"
 #include "util/macro.hpp"
 #include "util/math/vec.hpp"
 #include "util/str.hpp"
@@ -23,9 +25,6 @@ Vec make_rand_by_radius_graphic(const Vec pos, real r);
 Str to_str(const Vec src);
 Str to_str(const Vec src, real prec);
 
-// единичный вектор направления по углу
-Vec deg_to_vec(real deg);
-
 // угол по единичному вектору
 real vec_to_deg(Vec vec);
 
@@ -41,5 +40,11 @@ Vec rand_normalized_stable();
 
 real distance(const Vec a, const Vec b);
 real fast_distance(const Vec a, const Vec b);
+
 // угол между двумя векторами направления
 [[nodiscard]] real deg_between_vecs(const Vec a, const Vec b);
+
+// единичный вектор направления по углу
+template <typename T>
+[[nodiscard]] inline Vec_base<T> deg_to_vec(const T deg)
+  { return { std::cos(deg_to_rad(deg)), std::sin(deg_to_rad(deg)) }; }

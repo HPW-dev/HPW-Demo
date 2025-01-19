@@ -9,9 +9,6 @@ inline constexpr auto real_inf = std::numeric_limits<real>::infinity();
 // радианы в градусы
 real rad_to_deg(real rad);
 
-// градусы в радианы
-real deg_to_rad(real deg);
-
 real ring_rad(real rad);
 real ring_deg(real deg);
 
@@ -19,9 +16,17 @@ real ring_deg(real deg);
 real get_sign(real val);
 
 // безопасное деление
-inline constexpr auto safe_div(auto a, auto b) -> decltype(a / b)
+[[nodiscard]] inline constexpr auto safe_div(auto a, auto b) -> decltype(a / b)
   { return (b == 0 ? 0 : (a / b)); }
 
-inline constexpr auto pow2(auto x) { return x * x; }
+[[nodiscard]] inline constexpr auto pow2(auto x) { return x * x; }
+
 // вычислить сколько цифр в записи числа
 int32_t digits_number_i32(int32_t x);
+
+// градусы в радианы
+template <typename T>
+[[nodiscard]] inline T deg_to_rad(const T deg) {
+  constexpr auto CONST = std::numbers::pi / T(180);
+  return deg * CONST;
+}

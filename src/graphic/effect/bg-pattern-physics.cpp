@@ -182,7 +182,7 @@ struct Physics_simulation {
 
   inline Vecd get_vel() {
     cauto speed = rndd(_cfg.speed_min, _cfg.speed_max);
-    return deg_to_vec(rndd(0, 360)) * speed; // TODO double vec ret
+    return deg_to_vec<double>(rndd(0, 360)) * speed;
   }
 
   inline void init(cr<Config> cfg) {

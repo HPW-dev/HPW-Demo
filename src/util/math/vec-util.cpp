@@ -1,9 +1,7 @@
 #include <algorithm>
-#include <cmath>
 #include <cassert>
 #include "vec-util.hpp"
 #include "vec.hpp"
-#include "mat.hpp"
 #include "random.hpp"
 #include "util/str-util.hpp"
 
@@ -50,10 +48,6 @@ Str to_str(const Vec src)
 
 Str to_str(const Vec src, real prec)
   { return Str("{") + n2s(src.x, prec) + ", " + n2s(src.y, prec) + "}"; }
-
-Vec deg_to_vec(real deg) {
-  return { std::cos(deg_to_rad(deg)), std::sin(deg_to_rad(deg)) };
-}
 
 real vec_to_deg(Vec vec) {
   if (vec.x == 0) { // special cases

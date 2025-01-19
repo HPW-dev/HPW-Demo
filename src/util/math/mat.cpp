@@ -6,11 +6,6 @@ real rad_to_deg(real rad) {
   return rad * CONST;
 }
 
-real deg_to_rad(real deg) {
-  constexpr auto CONST = PI / 180;
-  return deg * CONST;
-}
-
 real ring_rad(real rad) {
   constexpr auto maxRad = PI * 2;
   if (rad < 0)
