@@ -23,6 +23,7 @@ class Hpw_config:
   host = Host.glfw3
   enable_omp = True
   enable_asan = False
+  use_ccache = False
   use_data_zip = True # грузить данные из архива с ресурсами игры
   use_netplay = False # использовать LAN
   static_link = False # статически слинковать все библиотеки

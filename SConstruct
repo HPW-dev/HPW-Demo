@@ -37,6 +37,7 @@ def parse_args():
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
   hpw_config.use_data_zip = bool(int(ARGUMENTS.get('use_data_zip', 1)))
   hpw_config.use_netplay = bool(int(ARGUMENTS.get('use_netplay', 0)))
+  hpw_config.use_ccache = bool(int(ARGUMENTS.get('use_ccache', 0)))
   assert hpw_config.build_script, 'path to build script needed'
   _architecture = architecture()
   hpw_config.system = System.linux if _architecture[1] == 'ELF' else System.windows
@@ -213,12 +214,18 @@ def build():
     env = Environment(tools = ['mingw'])
   else:
     pass # env = Environment(tools = ['gcc'])
+
   # скопировать нужные переменные для экспорта
   env['hpw_config'] = hpw_config
   if hpw_config.custom_cxx:
     env['CXX'] = hpw_config.custom_cxx
   if hpw_config.custom_cc:
     env['CC'] = hpw_config.custom_cc
+  if hpw_config.use_ccache:
+    ccache_str = "ccache -o LOCALAPPDATA=.tmp "
+    env['CXX'] = ccache_str + env['CXX']
+    env['CC'] = ccache_str + env['CC']
+
   SConscript(hpw_config.build_script, exports=['env'], must_exist=True)
 
 # main section:
