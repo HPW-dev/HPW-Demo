@@ -13,7 +13,7 @@ public:
   using Action = std::function<void (std::size_t)>;
 
   Udp_mgr();
-  ~Udp_mgr();
+  virtual ~Udp_mgr();
   // проверить режим сервера
   [[nodiscard]] bool is_server() const;
   // проверить режим клиента
@@ -23,13 +23,13 @@ public:
   // узнать какие айпишники можно дать килентам, чтобы к ним подключиться
   [[nodiscard]] Strs avaliable_ipv4s() const;
   // запустить сервер
-  void start_server(u16_t port);
+  virtual void start_server(u16_t port);
   // запустить клиент
-  void start_client(cr<Str> ip, u16_t port);
+  virtual void start_client(cr<Str> ip, u16_t port);
   // запустить клиент и подключиться к ip:port
-  void start_client(cr<Str> ip_with_port);
+  virtual void start_client(cr<Str> ip_with_port);
   // выключить соединение
-  void disconnect();
+  virtual void disconnect();
   // отправить данные. ip и port для клиента возьмётся автоматически
   void send(cr<Bytes> bytes, cr<Str> ip={}, std::optional<u16_t> port={});
   /* отправить данные без блокировки потока. Вызывать cb, когда данные будут отправлены.
@@ -38,7 +38,7 @@ public:
   // загрузить пакет без блокировки потока. Вызывать cb, когда данные пакета будут получены
   void async_load(Packet& dst, Action&& cb = {});
   // обновление ивентов системы
-  void update();
+  virtual void update();
   // ждать загрузки пакета
   [[nodiscard]] Packet load_packet();
 

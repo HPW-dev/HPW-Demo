@@ -53,6 +53,7 @@ def init_sources():
     src_dir + 'util/log.cpp',
     src_dir + 'util/str-util.cpp',
     src_dir + 'util/platform.cpp',
+    src_dir + 'util/net/udp-packet-mgr.cpp',
     src_dir + 'util/net/udp-mgr.cpp',
     src_dir + 'util/net/tcp-mgr.cpp',
     'main.cpp',

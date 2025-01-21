@@ -6,6 +6,7 @@
 #include "util/str-util.hpp"
 #include "util/pparser.hpp"
 #include "util/platform.hpp"
+#include "util/net/udp-packet-mgr.hpp"
 #include "util/net/udp-mgr.hpp"
 #include "util/net/tcp-mgr.hpp"
 #include "util/math/num-types.hpp"
@@ -111,6 +112,26 @@ void try_to_connect(cr<Args> args) {
   hpw_info("client " + Str(connected ? "connected" : "not connected") + " to server\n");
 }
 
+void udp_packet_mgr_test(cr<Args> args) {
+  assert(!args.port.empty());
+  return_if(args.is_server && args.ip.empty());
+  hpw_info("UDP packet manager test start...\n");
+
+  net::Udp_packet_mgr udppm;
+  if (args.is_server)
+    udppm.start_server(s2n<u16_t>(args.port));
+  else
+    udppm.start_client(args.ip, s2n<u16_t>(args.port));
+  
+  hpw_info("UDP packet manager loop start...\n");
+  bool is_ran = true;
+  while (is_ran) {
+    udppm.update();
+  }
+
+  hpw_info("UDP packet manager test end\n");
+}
+
 int main(int argc, char** argv) {
   hpw_info("Rollback test\n\n");
 
@@ -124,6 +145,9 @@ int main(int argc, char** argv) {
   } else {
     try_to_connect(args);
   }
+
+  // TODO del:
+  udp_packet_mgr_test(args);
 
   hpw_info("rollback test end\n");
 }
