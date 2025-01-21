@@ -16,6 +16,10 @@
 
 [Графические плагины](info/plugins-pge-ru.md)
 
+### Что осталось сделать для релиза
+[основные задачи](info/tasks/main%20tasks.md)
+[план сетевой игры](info/tasks/HPW%20LAN%20tasks.md)
+
 ### Donate
 [Счета для доната](info/donate.md)
 
