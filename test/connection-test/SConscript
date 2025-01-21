@@ -29,6 +29,32 @@ def accept_config():
     thirdparty_dir + 'include/',
   ])
 
+  match hpw_config.system:
+    case System.windows:
+      inc_path.extend([thirdparty_dir + "include/_windows_only"])
+      lib_path.extend([
+        thirdparty_dir + "lib/yaml-cpp/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+      ])
+    case _: raise ValueError 
+  
+  match hpw_config.host:
+    case Host.glfw3:
+      host_sources.extend([
+        Glob(src_dir + "host/glfw3/*.cpp"),
+        Glob(src_dir + "host/ogl3/*.cpp"),
+      ])
+      match hpw_config.system:
+        case System.linux: used_libs.extend(["GL", "GLEW", "glfw"])
+        case System.windows:
+          inc_path.extend([thirdparty_dir + "include/_windows_only/GLEW"])
+          used_libs.extend(["glfw3dll", "glew32", "opengl32"])
+          lib_path.extend([
+            thirdparty_dir + "lib/GLEW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+            thirdparty_dir + "lib/GLFW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+          ])
+        case _: ValueError
+    case _: raise ValueError(f"unknown host name \"{hpw_config.host}\"")
+
   match hpw_config.compiler:
     case Compiler.gcc: env['CXX'] = 'g++'
     case Compiler.clang: env['CXX'] = 'clang++'
@@ -37,25 +63,68 @@ def accept_config():
   used_libs.extend([
     "ws2_32",
     "mswsock",
+    "yaml-cpp",
   ])
-
   hpw_config.cxx_defines.extend([
     "-D_WIN32_WINNT=0x0601",
     "-DASIO_STANDALONE",
+    "-DDISABLE_REPLAY", "-DDISABLE_SOUND", "-DDISABLE_CONFIG", "",
   ])
 
 def init_sources():
   global sources
 
   sources.extend([
-    src_dir + 'util/pparser.cpp',
-    src_dir + 'util/error.cpp',
-    src_dir + 'util/log.cpp',
-    src_dir + 'util/str-util.cpp',
-    src_dir + 'util/platform.cpp',
+    Glob(thirdparty_dir + "include/zip/*.c"),
+
+    src_dir + "graphic/image/color-table.cpp",
+    src_dir + "graphic/image/color.cpp",
+    src_dir + "graphic/image/color-blend.cpp",
+    src_dir + "graphic/image/image.cpp",
+    src_dir + "graphic/image/image-io.cpp",
+    src_dir + "graphic/image/palette.cpp",
+    Glob(src_dir + "graphic/font/*.cpp"),
+    src_dir + "graphic/util/convert.cpp",
+    src_dir + "graphic/util/rotation.cpp",
+    src_dir + "graphic/util/graphic-util.cpp",
+    src_dir + "graphic/sprite/sprite.cpp",
+    src_dir + "graphic/sprite/sprite-io.cpp",
+
+    src_dir + "game/util/keybits.cpp",
+    src_dir + "game/util/game-archive.cpp",
+    src_dir + "game/util/logo.cpp",
+    src_dir + "game/util/sync.cpp",
+    src_dir + "game/util/version.cpp",
+    src_dir + "game/util/task.cpp",
+    src_dir + "game/util/screenshot.cpp",
+    src_dir + "game/util/font-helper.cpp",
+    src_dir + "game/util/resource-helper.cpp",
+
+    src_dir + "host/host-resize.cpp",
+    src_dir + "host/host.cpp",
+    src_dir + "host/host-util.cpp",
+    src_dir + "host/windows/windows-keycodes.cpp",
+
+    src_dir + "util/platform.cpp",
+    src_dir + "util/file/archive.cpp",
+    src_dir + "util/file/file.cpp",
+    src_dir + "util/file/file-io.cpp",
+    src_dir + "util/file/yaml.cpp",
+    src_dir + "util/str-util.cpp",
+    src_dir + "util/hpw-util.cpp",
+    src_dir + "util/pparser.cpp",
+    src_dir + "util/error.cpp",
+    src_dir + "util/unicode.cpp",
+    src_dir + "util/log.cpp",
+    src_dir + "util/path.cpp",
+    src_dir + "util/math/mat.cpp",
+    src_dir + "util/math/vec-util.cpp",
+    src_dir + "util/math/random.cpp",
+    src_dir + "util/math/timer.cpp",
     src_dir + 'util/net/udp-packet-mgr.cpp',
     src_dir + 'util/net/udp-mgr.cpp',
     src_dir + 'util/net/tcp-mgr.cpp',
+  
     'main.cpp',
   ])
   sources.extend([host_sources]);

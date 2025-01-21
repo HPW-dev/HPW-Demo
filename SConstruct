@@ -225,6 +225,11 @@ def build():
     ccache_str = "ccache -o LOCALAPPDATA=.tmp "
     env['CXX'] = ccache_str + env['CXX']
     env['CC'] = ccache_str + env['CC']
+  
+  # выключение использование архива с ресурсами
+  if not hpw_config.use_data_zip:
+    print('generation data.zip: disabled')
+    hpw_config.cxx_defines.append("-DDISABLE_ARCHIVE")
 
   SConscript(hpw_config.build_script, exports=['env'], must_exist=True)
 
@@ -238,5 +243,3 @@ build()
 
 if hpw_config.use_data_zip:
   compress_diffs('./data/', './build/data', './.tmp/resources_diff.pickle')
-else:
-  print('generation data.zip: disabled')

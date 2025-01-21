@@ -7,6 +7,7 @@
 #include "util/error.hpp"
 
 void init_archive() {
+#ifndef DISABLE_ARCHIVE
   assert(hpw::config);
 
   try {
@@ -21,6 +22,7 @@ void init_archive() {
   } catch (...) {
     hpw_log("неизвестная ошибка при чтении архива игры\n", Log_stream::debug);
   }
+#endif
 
   hpw_log("ресурсы будут грузиться с диска из папки \"" + hpw::os_resources_dir + "\"\n",
     Log_stream::info);
