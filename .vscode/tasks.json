@@ -155,5 +155,17 @@
       "command": "python",
       "args": ["script/net-test-2.py"]
     },
+    {
+      "label": "connection test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/connection-test.py"]
+    },
+    {
+      "label": "buttons transmit test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/buttons-transmit-test.py"]
+    },
   ]
 }
