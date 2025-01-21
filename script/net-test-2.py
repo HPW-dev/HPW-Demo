@@ -8,5 +8,5 @@ opts = \
   ' -Q opt_level=debug'
 NUM_THREADS = helper.get_max_threads() + 1
 print(f'threads for building: {NUM_THREADS}')
-helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=test/rollback-test/SConscript' + opts)
-helper.exec_cmd('build/bin/rollback-test --server --port 49099')
+helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=test/net-test-2/SConscript' + opts)
+helper.exec_cmd('build/bin/net-test-2 --server --port 49099')

@@ -150,10 +150,10 @@
       "args": ["script/net-test.py"]
     },
     {
-      "label": "rollback test",
+      "label": "network test 2",
       "type": "shell",
       "command": "python",
-      "args": ["script/rollback-test.py"]
+      "args": ["script/net-test-2.py"]
     },
   ]
 }

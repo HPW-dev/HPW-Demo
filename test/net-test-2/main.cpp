@@ -59,7 +59,7 @@ void wait_connections(cr<Args> args) {
   print_interfaces(tcp);
 
   constexpr Seconds TIMEOUT = 10;
-  std::unordered_set<Str> connected_ipv4s; // для уникальных IP
+  std::unordered_set<Str> connected_ipv4s; // для подключившихся уникальных IPv4
   hpw_info("wait connections for " + n2s(TIMEOUT) + " seconds\n");
 
   // ждём несколько секунд соединения:
@@ -114,7 +114,7 @@ void try_to_connect(cr<Args> args) {
 
 void udp_packet_mgr_test(cr<Args> args) {
   assert(!args.port.empty());
-  return_if(args.is_server && args.ip.empty());
+  return_if(args.is_server && g_connected_ipv4s.empty());
   hpw_info("UDP packet manager test start...\n");
 
   net::Udp_packet_mgr udppm;
@@ -133,7 +133,7 @@ void udp_packet_mgr_test(cr<Args> args) {
 }
 
 int main(int argc, char** argv) {
-  hpw_info("Rollback test\n\n");
+  hpw_info("net test #2 start...\n\n");
 
   cauto args = parse_args(argc, argv);
 
@@ -149,5 +149,5 @@ int main(int argc, char** argv) {
   // TODO del:
   udp_packet_mgr_test(args);
 
-  hpw_info("rollback test end\n");
+  hpw_info("net test #2 end\n");
 }
