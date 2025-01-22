@@ -90,8 +90,17 @@ def init_sources():
     src_dir + "graphic/sprite/sprite.cpp",
     src_dir + "graphic/sprite/sprite-io.cpp",
 
+    src_dir + "game/menu/menu.cpp",
+    src_dir + "game/menu/text-menu.cpp",
+    src_dir + "game/menu/item/text-item.cpp",
+    src_dir + "game/menu/item/item.cpp",
+
+    src_dir + "game/scene/scene-mgr.cpp",
+    src_dir + "game/scene/scene.cpp",
+
     src_dir + "game/util/keybits.cpp",
     src_dir + "game/util/game-archive.cpp",
+    src_dir + "game/util/locale.cpp",
     src_dir + "game/util/logo.cpp",
     src_dir + "game/util/sync.cpp",
     src_dir + "game/util/version.cpp",
@@ -125,7 +134,7 @@ def init_sources():
     src_dir + 'util/net/udp-mgr.cpp',
     src_dir + 'util/net/tcp-mgr.cpp',
   
-    'main.cpp',
+    Glob('*.cpp'),
   ])
   sources.extend([host_sources]);
 

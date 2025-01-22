@@ -1,7 +1,10 @@
 #include "game/core/canvas.hpp"
-#include "util/net/udp-packet-mgr.hpp"
 #include "host/glfw3/host-glfw.hpp"
-#include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
+#include "game/util/font-helper.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/locales.hpp"
+#include "server-or-client.hpp"
 
 class Test_app final: public Host_glfw {
 public:
@@ -9,22 +12,21 @@ public:
 
 protected:
   void draw_game_frame() const override {
-    rauto dst {*graphic::canvas};
-    dst.fill(Pal8::red);
+    hpw::scene_mgr.draw(*graphic::canvas);
     Host_glfw::draw_game_frame();
   }
 
 private:
   void init() override {
     Host_glfw::init();
-    // TODO
+    load_locale(hpw::locale_path);
+    load_fonts();
+    hpw::scene_mgr.add(new_shared<Server_or_client>());
   }
 
   void update(const Delta_time dt) override {
-    if (is_pressed_once(hpw::keycode::escape))
+    if (!hpw::scene_mgr.update(dt))
       hpw::soft_exit();
-    
-    // TODO
   }
 }; // Test_app
 

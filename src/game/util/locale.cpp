@@ -23,9 +23,9 @@ cr<utf32> get_locale_str(cr<Str> key) {
 
 void load_locale(cr<Str> user_path) {
   hpw_log("загрузка локализации...\n");
-  assert(hpw::config);
+
   File mem; 
-  cauto path = user_path.empty()
+  cauto path = (user_path.empty() && hpw::config)
     ? (*hpw::config)["path"].get_str("locale", hpw::fallback_locale_path)
     : user_path;
 

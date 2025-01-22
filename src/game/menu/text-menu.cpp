@@ -30,5 +30,6 @@ void Text_menu::draw(Image& dst) const {
     draw_rect(dst, bg_rect, _config.color_border, _config.border_bf, {});
   }
   
+  assert(graphic::font);
   graphic::font->draw(dst, draw_pos, text, _config.text_bf);
 }

@@ -33,7 +33,7 @@ public:
   Scene_mgr() = default;
   ~Scene_mgr() = default;
   // @return false если сцены кончились
-  bool update(const Delta_time dt);
+  [[nodiscard]] bool update(const Delta_time dt);
   void draw(Image& dst) const;
   Scene* get_current() const;
   void add(cr<Shared<Scene>> scene); // добавить новую сцену
