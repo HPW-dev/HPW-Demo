@@ -2,11 +2,16 @@ title: options.title
 items:
   - title: options.graphic
     action: graphic_opts
+
   - locale_prefix: hud_select
     action: hud_opts
+
   - title: options.input
     action: input_opts
+
   - locale_prefix: game_opts
     action: game_opts
+
   #- type: locale_select
+  
   - type: back_item

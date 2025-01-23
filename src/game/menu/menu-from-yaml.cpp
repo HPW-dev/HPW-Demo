@@ -15,7 +15,12 @@ inline static Shared<Menu_item> make_text_item(cr<Yaml> item_node, cr<Action_tab
 
   // если title/desc не задан, брать по умолчанию из префикса
   cauto title = get_locale_str(item_node.get_str("title", locale_prefix + ".title"));
-  cauto desc = get_locale_str(item_node.get_str("desc", locale_prefix + ".desc"));
+  utf32 desc {};
+  if (!locale_prefix.empty()) {
+    cauto tmp_desc = get_locale_str_with_check(item_node.get_str("desc", locale_prefix + ".desc"));
+    if (tmp_desc)
+      desc = tmp_desc.value();
+  }
 
   // колбэк при выборе пункта
   Menu_text_item::Action action;

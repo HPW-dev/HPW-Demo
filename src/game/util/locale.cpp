@@ -21,6 +21,16 @@ cr<utf32> get_locale_str(cr<Str> key) {
   return last_error;
 }
 
+std::optional<utf32> get_locale_str_with_check(cr<Str> key) {
+  return_if (!hpw::store_locale, {});
+  
+  if (auto ret = hpw::store_locale->find(key); ret)
+    return ret->str;
+  
+  hpw_log("not found string: \"" + key + "\"\n", Log_stream::debug);
+  return {};
+}
+
 void load_locale(cr<Str> user_path) {
   hpw_log("загрузка локализации...\n");
   assert(hpw::config);
