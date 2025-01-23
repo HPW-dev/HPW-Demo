@@ -1,0 +1,20 @@
+title: options.title
+items:
+  - title: options.graphic
+    action: graphic_opts
+
+  - type: locale_select
+
+  - locale_prefix: bgp_select
+    action: bgp_select
+
+  - locale_prefix: hud_select
+    action: hud_opts
+
+  - title: options.input
+    action: input_opts
+
+  - locale_prefix: game_opts
+    action: game_opts
+
+  - type: back_item

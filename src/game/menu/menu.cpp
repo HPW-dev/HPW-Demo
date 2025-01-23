@@ -74,6 +74,7 @@ struct Menu::Impl {
   Menu_select_callback _select_callback {}; // вызывается всегда при выборе элемента меню
   Menu_select_callback _move_cursor_callback {}; // вызывается всегда при смене элемента в меню
   bool _key_holded {};
+  bool _moved {};
 
   inline explicit Impl(Menu& master, cr<Menu_items> items)
   : _master{master}
@@ -111,6 +112,7 @@ struct Menu::Impl {
 
   inline void update(const Delta_time dt) {
     return_if(_items.empty());
+    _moved = false;
 
     for (crauto item: _items) {
       assert(item);
@@ -150,12 +152,14 @@ struct Menu::Impl {
       if (_move_cursor_callback)
         _move_cursor_callback(*_items[_cur_item]);
       next_item();
+      _moved = true;
     }
     if (_sticking.check(hpw::keycode::up, 60, 30)) {
       _key_holded = _sticking.use_sticking;
       if (_move_cursor_callback)
         _move_cursor_callback(*_items[_cur_item]);
       prev_item();
+      _moved = true;
     }
   }
 
@@ -164,6 +168,7 @@ struct Menu::Impl {
   inline cr<Menu_items::value_type> get_cur_item() const { return _items.at(_cur_item); }
   inline cr<Menu_items> get_items() const { return _items; }
   inline bool item_selected() const { return _item_selected; }
+  inline bool moved() const { return _moved; }
   inline void set_select_callback(cr<Menu_select_callback> callback) { _select_callback = callback; }
   inline void set_move_cursor_callback(cr<Menu_select_callback> callback) { _move_cursor_callback = callback; }
 }; // Impl
@@ -175,6 +180,7 @@ cr<Menu_items::value_type> Menu::get_cur_item() const { return _impl->get_cur_it
 cr<Menu_items> Menu::get_items() const { return _impl->get_items(); }
 void Menu::update(const Delta_time dt) { _impl->update(dt); }
 bool Menu::item_selected() const { return _impl->item_selected(); }
+bool Menu::moved() const { return _impl->moved(); }
 void Menu::set_select_callback(cr<Menu_select_callback> callback) { _impl->set_select_callback(callback); }
 void Menu::set_move_cursor_callback(cr<Menu_select_callback> callback) { _impl->set_move_cursor_callback(callback); }
 void Menu::reset_sticking() { _impl->reset_sticking(); }

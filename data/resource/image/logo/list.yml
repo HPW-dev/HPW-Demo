@@ -1,4 +1,35 @@
 logos:
+  # K.I.R.I.M.E:
+  - resource/image/logo/Kirime/1.png
+  - resource/image/logo/Kirime/2.png
+  - resource/image/logo/Kirime/3.png
+  - resource/image/logo/Kirime/4.png
+  - resource/image/logo/Kirime/5.png
+
+  # Alles Sokolov:
+  - resource/image/logo/Alles/Alles logo.png
+  
+  # August Pevko:
+  - resource/image/logo/Aug/russia24.png
+
+  # DSFF:
+  - resource/image/logo/dsff/1.png
+  
+  # ASCII Art:
+  - resource/image/logo/ASCII/2.png
+  - resource/image/logo/ASCII/4.png
+  - resource/image/logo/ASCII/5.png
+  - resource/image/logo/ASCII/6.png
+  - resource/image/logo/ASCII/7.png
+  - resource/image/logo/ASCII/8.png
+  - resource/image/logo/ASCII/9.png
+  - resource/image/logo/ASCII/10.png
+  - resource/image/logo/ASCII/11.png
+  - resource/image/logo/ASCII/12.png
+  - resource/image/logo/ASCII/13.png
+  - resource/image/logo/ASCII/14.png
+
+  # Other:
   - resource/image/logo/other/1.png
   - resource/image/logo/other/2.png
   - resource/image/logo/other/3.png
@@ -23,31 +54,8 @@ logos:
   - resource/image/logo/other/29.png
   - resource/image/logo/other/30.png
   - resource/image/logo/other/31.png
-
-  - resource/image/logo/Kirime/1.png
-  - resource/image/logo/Kirime/2.png
-  - resource/image/logo/Kirime/3.png
-  - resource/image/logo/Kirime/4.png
-  - resource/image/logo/Kirime/5.png
-
-  - resource/image/logo/Alles/Alles logo.png
   
-  - resource/image/logo/Aug/russia24.png
-
-  - resource/image/logo/dsff/1.png
+  - resource/image/logo/other/hex logo 1.png
   
   - resource/image/logo/japanese.png
   - resource/image/logo/chinese.png
-  
-  - resource/image/logo/ASCII/2.png
-  - resource/image/logo/ASCII/4.png
-  - resource/image/logo/ASCII/5.png
-  - resource/image/logo/ASCII/6.png
-  - resource/image/logo/ASCII/7.png
-  - resource/image/logo/ASCII/8.png
-  - resource/image/logo/ASCII/9.png
-  - resource/image/logo/ASCII/10.png
-  - resource/image/logo/ASCII/11.png
-  - resource/image/logo/ASCII/12.png
-  - resource/image/logo/ASCII/13.png
-  - resource/image/logo/ASCII/14.png

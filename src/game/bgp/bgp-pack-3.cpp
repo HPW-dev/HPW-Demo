@@ -5,7 +5,7 @@
 #include <cassert>
 #include <functional>
 #include <algorithm>
-#include "bg-pattern-3.hpp"
+#include "bgp-pack-3.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
 #include "graphic/image/image.hpp"
