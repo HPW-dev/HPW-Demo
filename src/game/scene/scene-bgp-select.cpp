@@ -10,7 +10,6 @@
 #include "game/bgp/bgp.hpp"
 #include "util/hpw-util.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/effect/bgp-pack-3.hpp" // TODO del
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};

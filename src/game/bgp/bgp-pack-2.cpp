@@ -4,7 +4,7 @@
 #include <mutex>
 #include <cassert>
 #include <algorithm>
-#include "bg-pattern.hpp"
+#include "bgp-pack-1.hpp"
 #include "bgp-pack-2.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/effect/dither.hpp"

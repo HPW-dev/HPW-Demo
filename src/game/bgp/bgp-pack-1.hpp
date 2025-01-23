@@ -72,7 +72,7 @@ void bgp_clock(Image& dst, const int bg_state);
 void bgp_clock_24(Image& dst, const int bg_state);
 // рандомный график
 void bgp_graph(Image& dst, const int bg_state);
-void bg_copy_1(Image& dst, const int bg_state);
-void bg_copy_2(Image& dst, const int bg_state);
-void bg_copy_3(Image& dst, const int bg_state);
-void bg_copy_4(Image& dst, const int bg_state);
+void bgp_copy_1(Image& dst, const int bg_state);
+void bgp_copy_2(Image& dst, const int bg_state);
+void bgp_copy_3(Image& dst, const int bg_state);
+void bgp_copy_4(Image& dst, const int bg_state);
