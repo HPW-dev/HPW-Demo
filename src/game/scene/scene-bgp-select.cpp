@@ -7,14 +7,18 @@
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/effect/bg-pattern-3.hpp"
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};
+  int _state {};
 
   inline Impl() {
     cauto title = get_locale_str("bgp_select.title");
     Rect rect {15, 10, 300, 200};
     Advanced_text_menu_config atm_config {};
+    atm_config.bf_bg = &blend_avr;
+    atm_config.bf_border = &blend_avr_max;
 
     Menu_items items {};
     items.push_back(new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }));
@@ -26,12 +30,15 @@ struct Scene_bgp_select::Impl {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
 
+    ++_state;
+
     assert(_menu);
     _menu->update(dt);
   }
 
   inline void draw(Image& dst) const {
     dst.fill(Pal8::red);
+    bgp_liquid(dst, _state / 4);
 
     assert(_menu);
     _menu->draw(dst);
