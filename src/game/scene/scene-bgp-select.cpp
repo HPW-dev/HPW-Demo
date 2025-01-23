@@ -1,4 +1,5 @@
 #include <cassert>
+#include <algorithm>
 #include <cmath>
 #include "scene-bgp-select.hpp"
 #include "game/core/scenes.hpp"
@@ -26,6 +27,34 @@ struct Scene_bgp_select::Impl {
     atm_config.bf_border = &blend_avr_max;
 
     Menu_items items {};
+    // случайный фон
+    items.push_back(
+      new_shared<Menu_text_item>(
+        get_locale_str("bgp_select.random_bg.title"),
+        []{
+          hpw::autoswith_bgp = true;
+          hpw::menu_bgp_name = {};
+          randomize_menu_bgp();
+          hpw::scene_mgr.back();
+        },
+        []->utf32 { return {}; },
+        get_locale_str("bgp_select.random_bg.desc")
+      )
+    );
+    // добавить все фоны
+    auto bgps = get_bgp_names();
+    std::sort(bgps.begin(), bgps.end());
+    for (crauto name: bgps) {
+      items.push_back(new_shared<Menu_text_item>(
+        utf8_to_32(name),
+        [bgp_name=name]{
+          hpw::autoswith_bgp = false;
+          hpw::menu_bgp_name = bgp_name;
+          hpw::menu_bgp = get_bgp(hpw::menu_bgp_name);
+        }
+      ));
+    }
+    // выйти
     items.push_back(new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }));
 
     init_unique<Advanced_text_menu>(_menu, title, items, rect, atm_config);
@@ -42,8 +71,6 @@ struct Scene_bgp_select::Impl {
   }
 
   inline void draw(Image& dst) const {
-    dst.fill(Pal8::red);
-
     assert(hpw::menu_bgp);
     hpw::menu_bgp(dst, std::floor(pps(_bgp_state)));
 
