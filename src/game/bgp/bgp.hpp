@@ -17,4 +17,5 @@ void randomize_menu_bgp();
 namespace hpw {
 inline Str menu_bgp_name {}; // если ничего не задано, будет случайным
 inline bgp_pf menu_bgp {}; // текущий фон меню
+inline bool autoswith_bgp {true};
 }

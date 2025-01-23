@@ -38,7 +38,8 @@
 Scene_main_menu::Scene_main_menu() {
   init_menu();
   init_logo();
-  randomize_menu_bgp();
+  if (hpw::menu_bgp_name.empty())
+    randomize_menu_bgp();
 }
 
 Scene_main_menu::~Scene_main_menu() {}
@@ -276,6 +277,8 @@ void Scene_main_menu::init_menu_sounds() {
 }
 
 void Scene_main_menu::update_bg_order(const Delta_time dt) {
+  ret_if(!hpw::autoswith_bgp);
+  
   // поменять фон возвращаясь из сцены
   const bool came_back = hpw::scene_mgr.status.came_back;
   // поменять фон через кнопку
