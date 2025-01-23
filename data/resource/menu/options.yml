@@ -5,6 +5,9 @@ items:
 
   - type: locale_select
 
+  - locale_prefix: bgp_select
+    action: bgp_select
+
   - locale_prefix: hud_select
     action: hud_opts
 

@@ -4,6 +4,7 @@
 #include "scene-graphic.hpp"
 #include "scene-game-options.hpp"
 #include "scene-hud-select.hpp"
+#include "scene-bgp-select.hpp"
 #include "game/menu/menu-from-yaml.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
@@ -47,6 +48,7 @@ struct Scene_options::Impl {
         {"hud_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }) )},
         {"input_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_input>()); }) )},
         {"game_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }) )},
+        {"bgp_select", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }) )},
       }
     );
   }

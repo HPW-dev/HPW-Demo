@@ -89,7 +89,7 @@ replay:
 main_menu: # главное меню
   start: старт
   info: инфо
-  next_bg: сменить фон
+  next_bg: случайный фон
   rnd_pal: сменить палитру
 pause: # пауза в игре
   name: пауза
@@ -345,6 +345,12 @@ hud_select:
   title: интерфейс игрока
   default: стандартный интерфейс
   no_image: отсутствует картинка с HUD
+bgp_select:
+  title: "выбрать фон"
+  desc: "позволяет изменить фон в стартовом меню игры"
+  random_bg:
+    title: "случайный фон"
+    desc: "фоны будут случайно меняться в течении минуты"
 nickname:
   title: имz игрока
   enter_name: ВВЕДИТЕ ИМZ
