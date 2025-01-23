@@ -35,7 +35,6 @@ struct Scene_bgp_select::Impl {
           hpw::autoswith_bgp = true;
           hpw::menu_bgp_name = {};
           randomize_menu_bgp();
-          hpw::scene_mgr.back();
         },
         []->utf32 { return {}; },
         get_locale_str("bgp_select.random_bg.desc")
@@ -68,6 +67,18 @@ struct Scene_bgp_select::Impl {
 
     assert(_menu);
     _menu->update(dt);
+
+    // если выбирается строка с именем фона, то сразу применять этот фон
+    if (_menu->moved()) {
+      crauto item = _menu->get_cur_item();
+      crauto exit_from_menu = _menu->get_items().back();
+      if (exit_from_menu != item)
+        item->enable();
+    }
+
+    // при выборе тоже выходить
+    if (is_pressed_once(hpw::keycode::enable))
+      hpw::scene_mgr.back();
   }
 
   inline void draw(Image& dst) const {
