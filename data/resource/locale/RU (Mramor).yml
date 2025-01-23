@@ -1,7 +1,7 @@
 info:
   author: Мрамор
   name: Русский (с приколом)
-  for_game_version: 0.228.12.0
+  for_game_version: 0.228.21.0
   revision: 1
 common: # общие строки
   author: автор
@@ -97,7 +97,7 @@ pause: # пауза в игре
   main_menu: в главное меню
   game_exit: выйти из игры
 options:
-  name: опции
+  title: опции
   input: управление
   graphic: графика
 language_menu:

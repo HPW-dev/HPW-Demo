@@ -1,17 +1,15 @@
 #pragma once
-#include "scene.hpp"
 #include "util/mem-types.hpp"
+#include "game/scene/scene.hpp"
 
-class Menu;
-  
-// стартовое меню игры
+// меню настроек игры
 class Scene_options final: public Scene {
-  Shared<Menu> menu {};
+  struct Impl;
+  Unique<Impl> _impl {};
 
-  void init_menu();
-  
 public:
   Scene_options();
+  ~Scene_options();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
 };

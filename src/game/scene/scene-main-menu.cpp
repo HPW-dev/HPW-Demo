@@ -268,7 +268,7 @@ void Scene_main_menu::init_menu() {
       }),*/
 
       // опции
-      new_shared<Menu_text_item>(get_locale_str("options.name"),
+      new_shared<Menu_text_item>(get_locale_str("options.title"),
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
 
       // выйти из игры
