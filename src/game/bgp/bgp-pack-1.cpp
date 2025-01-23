@@ -1198,3 +1198,57 @@ void bgp_graph(Image& dst, const int bg_state) {
     graphic::font->draw(dst, Vec(25 + (dst.X / 7.0) * x, AREA.pos.y + AREA.size.y + 7),
       n2s<utf32>(x * 200));
 }
+
+void bg_copy_1(Image& dst, const int state) {
+  const Vec pos {
+    rnd_fast(-1, 1),
+    rnd_fast(-1, 1)
+  };
+  return_if(pos.is_zero());
+  static Image buffer(dst.X, dst.Y);
+  assert(buffer.size == dst.size);
+  insert_fast(buffer, dst);
+  insert<&blend_diff>(dst, buffer, pos);
+}
+
+void bg_copy_2(Image& dst, const int state) {
+  const Vec pos {
+    rnd_fast(-1, 1),
+    rnd_fast(-1, 1)
+  };
+  return_if(pos.is_zero());
+  static Image buffer(dst.X, dst.Y);
+  assert(buffer.size == dst.size);
+  insert_fast(buffer, dst);
+  insert<&blend_xor>(dst, buffer, pos);
+}
+
+void bg_copy_3(Image& dst, const int state) {
+  Vec pos {
+    rnd_fast(-3, 3),
+    rnd_fast(-3, 3)
+  };
+  pos += Vec(
+    std::cos(scast<real>(state) * 0.01) * 3.0,
+    std::sin(scast<real>(state) * 0.01) * 3.0
+  );
+  return_if(pos.is_zero());
+  static Image buffer(dst.X, dst.Y);
+  assert(buffer.size == dst.size);
+  insert_fast(buffer, dst);
+  insert(dst, buffer, pos);
+}
+
+void bg_copy_4(Image& dst, const int state) {
+  cauto speed = rndr_fast(0, 4);
+  const Vec pos(
+    std::cos(scast<real>(state) * 0.01) * speed,
+    std::sin(scast<real>(state) * 0.01) * speed
+  );
+  return_if(pos.is_zero());
+  static Image buffer(dst.X, dst.Y);
+  assert(buffer.size == dst.size);
+  insert_fast(buffer, dst);
+  insert(dst, buffer, pos);
+}
+

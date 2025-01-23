@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cmath>
 #include "scene-bgp-select.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/resource-helper.hpp"
@@ -6,14 +7,19 @@
 #include "game/util/locale.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/bgp/bgp.hpp"
+#include "util/hpw-util.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/effect/bg-pattern-3.hpp"
+#include "graphic/effect/bgp-pack-3.hpp" // TODO del
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};
-  int _state {};
+  Delta_time _bgp_state {};
 
   inline Impl() {
+    if (!hpw::menu_bgp)
+      randomize_menu_bgp();
+
     cauto title = get_locale_str("bgp_select.title");
     Rect rect {15, 10, 300, 200};
     Advanced_text_menu_config atm_config {};
@@ -30,7 +36,7 @@ struct Scene_bgp_select::Impl {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
 
-    ++_state;
+    _bgp_state += dt;
 
     assert(_menu);
     _menu->update(dt);
@@ -38,7 +44,9 @@ struct Scene_bgp_select::Impl {
 
   inline void draw(Image& dst) const {
     dst.fill(Pal8::red);
-    bgp_liquid(dst, _state / 4);
+
+    assert(hpw::menu_bgp);
+    hpw::menu_bgp(dst, std::floor(pps(_bgp_state)));
 
     assert(_menu);
     _menu->draw(dst);

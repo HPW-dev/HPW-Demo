@@ -19,13 +19,10 @@ class Scene_main_menu final: public Scene {
   Strs m_logo_names {}; // пути к картинкам для лого
   std::once_flag m_logo_load_once {};
   Delta_time bg_state {}; // чтобы менять узор на фоне
-  // функция рисующая фон
-  std::function<void (Image& dst, const int bg_state)> bg_pattern_pf {};
   Timer change_bg_timer {50}; // таймер сменяющий фон
 
   void init_menu();
   void init_logo();
-  void init_bg();
   void draw_bg(Image& dst) const noexcept;
   void draw_logo(Image& dst) const noexcept;
   void draw_text(Image& dst) const noexcept;

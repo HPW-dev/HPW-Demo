@@ -1,7 +1,7 @@
 #include <omp.h>
 #include <cassert>
 #include <algorithm>
-#include "bg-pattern-physics.hpp"
+#include "bgp-pack-4.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/resize.hpp"
 #include "graphic/util/util-templ.hpp"
