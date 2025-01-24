@@ -68,7 +68,7 @@ struct Server::Impl {
     broadcast_packet.hash = net::get_hash(broadcast_packet);
     hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(broadcast_packet.hash) + ")\n");
 
-    //_upm.broadcast_push();
+    _upm.broadcast_push(std::move(broadcast_packet), _upm.port());
     ++_broadcast_count;
   }
 }; // Impl 

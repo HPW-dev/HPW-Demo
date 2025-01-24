@@ -13,6 +13,12 @@ public:
   void start_client(cr<Str> ip_with_port) override;
   void disconnect() override;
   void update() override;
+  /** широковещательная отправка пакета
+  * @param src данные отправки
+  * @param ip адрес получателя
+  * @param port порт получателя
+  * @param cb действие при завершении отправки */
+  void broadcast_push(cr<Packet> src, cr<Str> ip, const u16_t port, Udp_mgr::Action&& cb={});
 
 private:
   struct Impl;

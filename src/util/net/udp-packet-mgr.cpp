@@ -23,6 +23,10 @@ struct Udp_packet_mgr::Impl {
   inline void disconnect() {
     // TODO
   }
+
+  void broadcast_push(cr<Packet> src, cr<Str> ip, const u16_t port, Udp_mgr::Action&& cb) {
+    // TODO
+  }
 }; // Impl
 
 Udp_packet_mgr::Udp_packet_mgr(): _impl{new_unique<Impl>()} {}
@@ -52,5 +56,8 @@ void Udp_packet_mgr::disconnect() {
   Udp_mgr::disconnect();
   _impl->disconnect();
 }
+
+void Udp_packet_mgr::broadcast_push(cr<Packet> src, cr<Str> ip, const u16_t port, Udp_mgr::Action&& cb)
+{ _impl->broadcast_push(src, ip, port, std::move(cb)); }
 
 } // net ns
