@@ -18,9 +18,23 @@ inline static void hash_step(Hash& dst, cp<byte> src, const std::size_t sz) {
 }
 
 Hash get_hash(cr<Packet> src) {
+  assert(!src.bytes.empty());
+  // не учитывать сами данные контрольной суммы
+  auto data_size = src.bytes.size();
+  assert(data_size - sizeof(Hash) > 0);
+  data_size -= sizeof(Hash);
+
   Hash ret {0xFFFFu};
-  hash_step(ret, src.bytes.data(), src.bytes.size());
+  hash_step(ret, src.bytes.data(), data_size);
   return ret;
+}
+
+Hash find_packet_hash(cr<Packet> src) {
+  assert(!src.bytes.empty());
+  cauto data_size = src.bytes.size();
+  assert(data_size - sizeof(Hash) > 0);
+  cauto hash_addr = src.bytes.data() + data_size - sizeof(Hash);
+  return *(cptr2ptr<cp<Hash>>(hash_addr));
 }
 
 } // net ns

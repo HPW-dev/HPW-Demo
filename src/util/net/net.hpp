@@ -34,5 +34,7 @@ inline T& bytes_to_packet(Bytes& src) {
 
 // получить контрольную сумму по данным пакета
 Hash get_hash(cr<Packet> src);
+// найти в данных пакета инфу о контрольной сумме
+Hash find_packet_hash(cr<Packet> src);
 
 } // net ns

@@ -22,6 +22,7 @@ struct Server::Impl {
   Unique<Menu> _menu {};
   net::Udp_packet_mgr _upm {};
   std::unordered_set<Str> _addressez {}; // адреса подключённых игроков
+  uint _total_loaded_packets {};
 
   inline Impl() {
     _menu = new_unique<Text_menu>(
@@ -38,6 +39,7 @@ struct Server::Impl {
 
     _menu->update(dt);
     _upm.update();
+    process_packets();
 
     if (--_broadcast_timer == 0) {
       _broadcast_timer = BROADCAST_INTERVAL;
@@ -77,6 +79,7 @@ struct Server::Impl {
     crauto font = graphic::font;
     assert(font);
     utf32 text;
+    text += U"loaded packets: " + n2s<utf32>(_total_loaded_packets) + U"\n";
     text += U"connected players: " + n2s<utf32>(this->_addressez.size()) + U"\n";
     if (this->_addressez.empty()) {
       text += U"empty addrs\n";
@@ -88,6 +91,29 @@ struct Server::Impl {
     }
     const Vec pos(50, 60);
     font->draw(dst, pos, text);
+  }
+
+  // разбор полученных пакетов
+  inline void process_packets() {
+    return_if(!_upm.has_packets());
+    cauto packets = _upm.unload_all();
+
+    for (crauto packet: packets) {
+      ++_total_loaded_packets;
+
+      // пустые пакеты игнорить
+      if (packet.bytes.empty()) {
+        hpw_log("packet data is empty, ignore\n");
+        continue;
+      }
+
+      // при несовпадении контрольной суммы игнор
+      cauto local_hash = net::get_hash(packet);
+      if (local_hash != net::find_packet_hash(packet)) {
+        hpw_log("packet hash is not equal, ignore\n");
+        continue;
+      }
+    }
   }
 }; // Impl 
 
