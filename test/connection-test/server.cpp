@@ -25,12 +25,10 @@ struct Server::Impl {
 
   inline Impl() {
     _menu = new_unique<Text_menu>(
-      Menu_items {
-        new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }),
-      },
+      Menu_items { new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }), },
       Vec{15, 10}
     );
-
+    hpw::player_name = U".:Strawberry Server (Connection test):.";
     server_start();
   }
 
@@ -57,7 +55,6 @@ struct Server::Impl {
     hpw_log("start server\n");
     _upm.start_server(net::DEFAULT_PORT);
     broadcast_send();
-    hpw::player_name = U".:Strawberry Server (Connection test):.";
   }
 
   inline void broadcast_send() {
