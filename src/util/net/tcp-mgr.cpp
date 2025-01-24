@@ -1,8 +1,11 @@
 #include <cassert>
 #include <utility>
-#include "util/str-util.hpp" // перемещение вниз приведёт к взрыву
-#include <asio/asio.hpp>
+
+// порядок инклудов не нарушать, иначе взрыв!
+#include "util/str-util.hpp"
 #include "tcp-mgr.hpp"
+#include <asio/asio.hpp>
+
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/platform.hpp"

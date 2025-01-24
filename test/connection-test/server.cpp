@@ -55,7 +55,8 @@ struct Server::Impl {
   inline void broadcast_send() {
     assert(_upm.is_server());
     hpw_log("send broadcast packet " + n2s(_broadcast_count) + "\n");
-    // TODO
+    //net::Packet
+    //_upm.broadcast_push();
     ++_broadcast_count;
   }
 }; // Impl 
