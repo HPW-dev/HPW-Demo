@@ -1,7 +1,7 @@
 #pragma once
 #include "util/net/net.hpp"
 
-constexpr static const uint SHORT_NICKNAME_SZ = 30;
+constexpr static const uint SHORT_NICKNAME_SZ = 50;
 
 enum class Tag: byte {
   EMPTY = 0,
@@ -40,4 +40,4 @@ struct Packet_connect {
 #pragma pack(pop)
 
 void prepare_game_version(Version& dst);
-void prepare_short_nickname(char32_t* short_nickname, const uint sz);
+void prepare_short_nickname(char32_t short_nickname[], const uint sz);

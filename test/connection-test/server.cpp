@@ -8,6 +8,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/core/fonts.hpp"
+#include "game/core/user.hpp"
 #include "graphic/image/image.hpp"
 #include "util/net/udp-packet-mgr.hpp"
 #include "util/log.hpp"
@@ -54,6 +55,7 @@ struct Server::Impl {
     hpw_log("start server\n");
     _upm.start_server(net::DEFAULT_PORT);
     broadcast_send();
+    hpw::player_name = U".:Strawberry Server (Connection test):.";
   }
 
   inline void broadcast_send() {
