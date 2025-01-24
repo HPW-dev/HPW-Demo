@@ -2,7 +2,6 @@
 #include <functional>
 #include "net.hpp"
 #include "util/mem-types.hpp"
-#include "util/macro.hpp"
 
 namespace net {
 
