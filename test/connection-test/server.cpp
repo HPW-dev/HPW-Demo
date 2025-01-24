@@ -13,6 +13,7 @@
 #include "graphic/image/image.hpp"
 #include "util/net/udp-packet-mgr.hpp"
 #include "util/log.hpp"
+#include "util/error.hpp"
 #include "util/str-util.hpp"
 
 struct Server::Impl {
@@ -62,8 +63,7 @@ struct Server::Impl {
   inline void broadcast_send() {
     assert(_upm.is_server());
 
-    net::Packet broadcast_packet;
-    broadcast_packet.bytes.resize(sizeof(Packet_broadcast));
+    net::Packet broadcast_packet = new_packet<Packet_broadcast>();
     rauto raw = net::bytes_to_packet<Packet_broadcast>(broadcast_packet.bytes);
     prepare_game_version(raw.game_version);
     prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
@@ -102,8 +102,8 @@ struct Server::Impl {
       ++_total_loaded_packets;
 
       // пустые пакеты игнорить
-      if (packet.bytes.empty()) {
-        hpw_log("packet data is empty, ignore\n");
+      if (packet.bytes.size() < sizeof(Tag)) {
+        hpw_log("packet data is small, ignore\n");
         continue;
       }
 
@@ -113,7 +113,21 @@ struct Server::Impl {
         hpw_log("packet hash is not equal, ignore\n");
         continue;
       }
-    }
+
+      cauto tag = find_packet_tag(packet);
+
+      switch (tag) {
+        case Tag::ERROR: error("tag error"); break;
+        case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
+        case Tag::SERVER_BROADCAST: hpw_log("broadcast tag, ignore\n"); break;
+        case Tag::CLIENT_CONNECT: process_connection(packet); break;
+        default: error("unknown tag"); break;
+      }
+    } // for packets
+  }
+
+  inline void process_connection(cr<net::Packet> packet) {
+    hpw_log("process connection packet...\n");
   }
 }; // Impl 
 

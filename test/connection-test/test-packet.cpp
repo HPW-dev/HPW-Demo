@@ -36,3 +36,8 @@ void prepare_short_nickname(char32_t short_nickname[], const uint sz) {
   cfor (i, nick_sz)
     short_nickname[i] = hpw::player_name[i];
 }
+
+Tag find_packet_tag(cr<net::Packet> src) {
+  ret_if (src.bytes.size() < sizeof(Tag), Tag::EMPTY);
+  return *(cptr2ptr<cp<Tag>>(src.bytes.data()));
+}

@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include "util/net/net.hpp"
 
 constexpr static const uint SHORT_NICKNAME_SZ = 50;
@@ -39,5 +40,17 @@ struct Packet_connect {
 };
 #pragma pack(pop)
 
+template <class T>
+net::Packet new_packet() {
+  net::Packet dst {};
+  dst.bytes.resize(sizeof(Packet_broadcast));
+  cauto ret = new (dst.bytes.data()) T();
+  assert(ret);
+  return dst;
+}
+
 void prepare_game_version(Version& dst);
 void prepare_short_nickname(char32_t short_nickname[], const uint sz);
+
+// найти в данных пакета метку пакета
+Tag find_packet_tag(cr<net::Packet> src);
