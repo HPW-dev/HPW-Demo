@@ -37,6 +37,7 @@ struct Server::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
+    _upm.update();
 
     if (--_broadcast_timer == 0) {
       _broadcast_timer = BROADCAST_INTERVAL;
@@ -68,7 +69,7 @@ struct Server::Impl {
     broadcast_packet.hash = net::get_hash(broadcast_packet);
     hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(broadcast_packet.hash) + ")\n");
 
-    _upm.broadcast_push(std::move(broadcast_packet), _upm.port());
+    _upm.broadcast_push(std::move(broadcast_packet));
     ++_broadcast_count;
   }
 }; // Impl 
