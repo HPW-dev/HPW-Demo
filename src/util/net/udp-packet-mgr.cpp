@@ -26,6 +26,9 @@ struct Udp_packet_mgr::Impl {
   Str _ip_v4 {net::MY_IPV4}; // свой IPv4
   std::deque<Packet> _packets_to_send {}; // пакеты ждущие отправки
   std::deque<Packet> _loaded_packets {}; // полученные пакеты
+  Action _if_loaded_cb {}; // действие при загрузке пакета
+  ip_udp::endpoint _input_addr {}; // адрес от входящего пакета
+  Packet _input_packet {}; // промежуточный пакет для записи в него входящих пакетов
 
   inline ~Impl() { disconnect(); }
 
@@ -42,6 +45,7 @@ struct Udp_packet_mgr::Impl {
     _socket->set_option(ip_udp::socket::broadcast(true));
     _status.is_active = true;
     _status.is_server = true;
+    start_waiting_packets();
   }
 
   inline void start_client(cr<Str> ip, Port port) {
@@ -55,6 +59,7 @@ struct Udp_packet_mgr::Impl {
     _socket->open(ip_udp::v4());
     _status.is_active = true;
     _status.is_server = false;
+    start_waiting_packets();
     hpw_debug("UDP клиент создан и настроен на " + _ip_v4 + ":" + n2s(_port) + "\n");
   }
 
@@ -119,12 +124,43 @@ struct Udp_packet_mgr::Impl {
     iferror(!_status.is_active, "not initialized");
     return _port;
   }
-  
+
   inline cr<Str> ip_v4() const {
     iferror(!_status.is_active, "not initialized");
     return _ip_v4;
   }
 
+  // включает приём пакетов и их сохранение в буффер
+  inline void start_waiting_packets() {
+    iferror(!_status.is_active, "not initialized");
+    assert(_socket);
+    _input_packet = {};
+    // размер пакета изначально больше чем принимаемые данные
+    _input_packet.bytes.resize(net::PACKET_BUFFER_SZ);
+    _socket->async_receive_from (
+      asio::buffer(_input_packet.bytes),
+      _input_addr,
+      [this](cr<std::error_code> err, std::size_t bytes) { // handler
+        return_if(!_status.is_active);
+        iferror(err, err.message());
+        iferror(bytes == 0, "данные не прочитаны");
+        iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+
+        if (_if_loaded_cb)
+          _if_loaded_cb();
+
+        _input_packet.bytes.resize(bytes); // сократить размер пакета
+        _input_packet.ip_v4 = _input_addr.address().to_v4().to_string();
+        _input_packet.port = _input_addr.port();
+
+        // передать загруженный пакет в буффер загрузок и запустить следующий приём пакетов
+        _loaded_packets.emplace_back(std::move(_input_packet));
+        start_waiting_packets();
+      }
+    );
+  }
+
+  inline void action_if_loaded(Action&& cb) { _if_loaded_cb = std::move(cb); }
   inline bool is_server() const { return _status.is_active && _status.is_server; }
   inline bool is_client() const { return _status.is_active && !_status.is_server; }
 }; // Impl
@@ -142,5 +178,6 @@ bool Udp_packet_mgr::is_server() const { return _impl->is_server(); }
 bool Udp_packet_mgr::is_client() const { return _impl->is_client(); }
 Packets Udp_packet_mgr::unload_all() { return _impl->unload_all(); }
 bool Udp_packet_mgr::has_packets() const { return _impl->has_packets(); }
+void Udp_packet_mgr::action_if_loaded(Action&& cb) { _impl->action_if_loaded(std::move(cb)); }
 
 } // net ns

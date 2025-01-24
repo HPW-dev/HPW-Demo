@@ -27,6 +27,7 @@ public:
   void broadcast_push(Packet&& src, const Port port=net::DEFAULT_PORT, Action&& cb={});
   [[nodiscard]] Packets unload_all(); // выгрузить все скачанные пакеты
   [[nodiscard]] bool has_packets() const; // проверить что есть входящие пакеты
+  void action_if_loaded(Action&& cb); // задать действие выполняющиеся при получении пакета
 
 private:
   struct Impl;
