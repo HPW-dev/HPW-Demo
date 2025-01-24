@@ -15,5 +15,6 @@ struct Packet final {
 using Packets = Vector<Packet>;
 
 constexpr static const std::size_t PACKET_BUFFER_SZ = 400;
+constexpr static const u16_t DEFAULT_PORT = 49'099;
 
 } // net ns
