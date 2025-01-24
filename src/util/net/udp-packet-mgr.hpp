@@ -25,6 +25,8 @@ public:
   * @param port порт получателя
   * @param cb действие при завершении отправки */
   void broadcast_push(Packet&& src, const Port port=net::DEFAULT_PORT, Action&& cb={});
+  [[nodiscard]] Packets unload_all(); // выгрузить все скачанные пакеты
+  [[nodiscard]] bool has_packets() const; // проверить что есть входящие пакеты
 
 private:
   struct Impl;

@@ -101,8 +101,30 @@ struct Udp_packet_mgr::Impl {
     _socket->async_send_to(asio::buffer(for_delete->bytes), broadcast_endpoint, handler);
   }
 
-  inline cr<Port> port() const { return _port; }
-  inline cr<Str> ip_v4() const { return _ip_v4; }
+  inline Packets unload_all() {
+    iferror(!_status.is_active, "not initialized");
+    Packets ret;
+    for (rauto packet: _loaded_packets)
+      ret.emplace_back(std::move(packet));
+    _loaded_packets.clear();
+    return ret;
+  }
+
+  inline bool has_packets() const {
+    iferror(!_status.is_active, "not initialized");
+    return !_loaded_packets.empty();
+  }
+
+  inline cr<Port> port() const {
+    iferror(!_status.is_active, "not initialized");
+    return _port;
+  }
+  
+  inline cr<Str> ip_v4() const {
+    iferror(!_status.is_active, "not initialized");
+    return _ip_v4;
+  }
+
   inline bool is_server() const { return _status.is_active && _status.is_server; }
   inline bool is_client() const { return _status.is_active && !_status.is_server; }
 }; // Impl
@@ -118,5 +140,7 @@ cr<Port> Udp_packet_mgr::port() const { return _impl->port(); }
 cr<Str> Udp_packet_mgr::ip_v4() const { return _impl->ip_v4(); }
 bool Udp_packet_mgr::is_server() const { return _impl->is_server(); }
 bool Udp_packet_mgr::is_client() const { return _impl->is_client(); }
+Packets Udp_packet_mgr::unload_all() { return _impl->unload_all(); }
+bool Udp_packet_mgr::has_packets() const { return _impl->has_packets(); }
 
 } // net ns
