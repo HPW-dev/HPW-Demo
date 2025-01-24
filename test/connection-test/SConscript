@@ -130,9 +130,11 @@ def init_sources():
     src_dir + "util/math/vec-util.cpp",
     src_dir + "util/math/random.cpp",
     src_dir + "util/math/timer.cpp",
+
     src_dir + 'util/net/udp-packet-mgr.cpp',
     src_dir + 'util/net/udp-mgr.cpp',
     src_dir + 'util/net/tcp-mgr.cpp',
+    src_dir + 'util/net/net.cpp',
   
     Glob('*.cpp'),
   ])

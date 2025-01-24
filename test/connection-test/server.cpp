@@ -1,5 +1,7 @@
 #include <cassert>
+#include <unordered_set>
 #include "server.hpp"
+#include "test-packets.hpp"
 #include "game/core/scenes.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -12,11 +14,12 @@
 #include "util/str-util.hpp"
 
 struct Server::Impl {
-  constx uint BROADCAST_INTERVAL = 240*1;
+  constx uint BROADCAST_INTERVAL = 240 * 1.5;
   uint _broadcast_timer {BROADCAST_INTERVAL};
   uint _broadcast_count {};
   Unique<Menu> _menu {};
   net::Udp_packet_mgr _upm {};
+  std::unordered_set<Str> _addressez {}; // адреса подключённых игроков
 
   inline Impl() {
     _menu = new_unique<Text_menu>(
@@ -54,8 +57,17 @@ struct Server::Impl {
 
   inline void broadcast_send() {
     assert(_upm.is_server());
-    hpw_log("send broadcast packet " + n2s(_broadcast_count) + "\n");
-    //net::Packet
+
+    net::Packet broadcast_packet;
+    broadcast_packet.tag = net::Packet::Tag::SERVER_BROADCAST;
+    broadcast_packet.bytes.resize(sizeof(Packet_broadcast));
+    rauto raw = net::bytes_to_packet<Packet_broadcast>(broadcast_packet.bytes);
+    prepare_game_version(raw.game_version);
+    prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
+    raw.connected_players = _addressez.size();
+    broadcast_packet.hash = net::get_hash(broadcast_packet);
+    hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(broadcast_packet.hash) + ")\n");
+
     //_upm.broadcast_push();
     ++_broadcast_count;
   }
