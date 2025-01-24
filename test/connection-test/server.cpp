@@ -60,14 +60,13 @@ struct Server::Impl {
     assert(_upm.is_server());
 
     net::Packet broadcast_packet;
-    broadcast_packet.tag = net::Packet::Tag::SERVER_BROADCAST;
     broadcast_packet.bytes.resize(sizeof(Packet_broadcast));
     rauto raw = net::bytes_to_packet<Packet_broadcast>(broadcast_packet.bytes);
     prepare_game_version(raw.game_version);
     prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
     raw.connected_players = _addressez.size();
-    broadcast_packet.hash = net::get_hash(broadcast_packet);
-    hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(broadcast_packet.hash) + ")\n");
+    raw.hash = net::get_hash(broadcast_packet);
+    hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(raw.hash) + ")\n");
 
     _upm.broadcast_push(std::move(broadcast_packet));
     ++_broadcast_count;

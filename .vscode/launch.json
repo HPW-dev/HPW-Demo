@@ -40,6 +40,16 @@
       "program": "${workspaceRoot}/build/bin/editor.exe",
       "args": [],
       "cwd": ".",
-    }
+    },
+    {
+      "type":"cppdbg",
+      "miDebuggerPath": "O:/dev/mingw64/bin/gdb.exe",
+      "targetArchitecture": "x64",
+      "request": "launch",
+      "name": "connection test x64",
+      "program": "${workspaceRoot}/build/bin/connection-test.exe",
+      "args": ["-w"],
+      "cwd": "${workspaceRoot}/",
+    },
   ]
 }

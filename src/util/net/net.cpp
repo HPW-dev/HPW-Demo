@@ -19,7 +19,6 @@ inline static void hash_step(Hash& dst, cp<byte> src, const std::size_t sz) {
 
 Hash get_hash(cr<Packet> src) {
   Hash ret {0xFFFFu};
-  hash_step(ret, cptr2ptr<cp<byte>>(&src.tag), sizeof(src.tag));
   hash_step(ret, src.bytes.data(), src.bytes.size());
   return ret;
 }

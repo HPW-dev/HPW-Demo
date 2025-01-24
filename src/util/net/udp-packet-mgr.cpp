@@ -1,5 +1,6 @@
 #include <cassert>
 #include <utility>
+#include <deque>
 
 // порядок инклудов не нарушать, иначе взрыв!
 #include "util/str-util.hpp"
@@ -23,27 +24,81 @@ struct Udp_packet_mgr::Impl {
   Unique<ip_udp::socket> _socket {};
   Port _port {net::DEFAULT_PORT}; // свой порт
   Str _ip_v4 {net::MY_IPV4}; // свой IPv4
+  std::deque<Packet> _packets_to_send {}; // пакеты ждущие отправки
+  std::deque<Packet> _loaded_packets {}; // полученные пакеты
 
   inline ~Impl() { disconnect(); }
 
   inline void start_server(Port port) {
-    // TODO
+    disconnect();
+    hpw_debug("Udp_packet_mgr.start_server\n");
+
+    _port = port;
+    if (_port < 1024 || _port > 49'150)
+      hpw_warning("use recomended UPD-ports in 1024...49'150\n");
+
+    init_unique(_socket, _io, ip_udp::endpoint(ip_udp::v4(), _port));
+    _socket->set_option(ip_udp::socket::reuse_address(true));
+    _socket->set_option(ip_udp::socket::broadcast(true));
+    _status.is_active = true;
+    _status.is_server = true;
   }
 
   inline void start_client(cr<Str> ip, Port port) {
-    // TODO
+    disconnect();
+    hpw_debug("Udp_packet_mgr.start_client\n");
+
+    iferror(ip.empty(), "empty ip string");
+    _ip_v4 = ip;
+    _port = port;
+    init_unique(_socket, _io);
+    _socket->open(ip_udp::v4());
+    _status.is_active = true;
+    _status.is_server = false;
+    hpw_debug("UDP клиент создан и настроен на " + _ip_v4 + ":" + n2s(_port) + "\n");
   }
 
   inline void update() {
-    // TODO
+    iferror(!_status.is_active, "not initialized");
+    _io.run_for(std::chrono::seconds(1));
   }
 
   inline void disconnect() {
-    // TODO
+    hpw_debug("Udp_packet_mgr.disconnect\n");
+    _io.stop();
+    _socket = {};
+    _status.is_active = false;
+    _packets_to_send.clear();
+    _loaded_packets.clear();
   }
 
   inline void broadcast_push(Packet&& src, const Port port, Action&& cb) {
-    // TODO
+    iferror(!_status.is_active, "not initialized");
+    iferror(src.bytes.empty(), "нет данных для оптравки");
+    iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
+      "данных для отправки больше чем допустимый размер пакета");
+
+    auto* for_delete = &_packets_to_send.emplace_back(std::move(src));
+
+    auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
+    (cr<std::error_code> err, std::size_t bytes) {
+      return_if(!_status.is_active);
+      iferror(err, err.message());
+      iferror(bytes == 0, "данные не отправлены");
+      iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+      hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+
+      if (cb)
+        cb();
+        
+      // удалить пакет из списка
+      std::erase_if(_packets_to_send, [_for_delete](cr<Packet> packet){ return std::addressof(packet) == _for_delete; });
+    };
+
+    hpw_debug("ассинхронная отправка " + n2s(for_delete->bytes.size()) + " байт...\n");
+    assert(_socket);
+    ip_udp::endpoint broadcast_endpoint(asio::ip::address_v4::broadcast(), port);
+    _socket->async_send_to(asio::buffer(for_delete->bytes), broadcast_endpoint, handler);
   }
 
   inline cr<Port> port() const { return _port; }

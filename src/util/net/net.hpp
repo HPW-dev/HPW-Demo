@@ -12,24 +12,17 @@ namespace net {
 using Hash = u32_t;
 using Port = u16_t;
 
-constexpr static const std::size_t PACKET_BUFFER_SZ = 400;
+constexpr static const std::size_t PACKET_BUFFER_SZ = 512;
 constexpr static const Port DEFAULT_PORT = 49'099;
 constexpr static const auto MY_IPV4 = "127.0.0.1";
 
+#pragma pack(push, 1)
 struct Packet final {
-  enum class Tag: byte {
-    EMPTY = 0,
-    ERROR, // заставляет кинуть hpw::error
-    MESSAGE, // текстовое сообщение
-    CONNECT, // запрос на подключение к серверу
-    SERVER_BROADCAST, // широковещательное приглашение от сервера
-  };
-
-  Str source_address {MY_IPV4}; // от кого пришёл пакет
-  Tag tag {}; // тип пакета
-  Bytes bytes {}; // данные пакета
-  Hash hash {}; // контрольная сумма пакета
+  Port port {DEFAULT_PORT};
+  Str ip_v4 {MY_IPV4};
+  Bytes bytes {};
 };
+#pragma pack(pop)
 
 using Packets = Vector<Packet>;
 
