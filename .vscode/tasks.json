@@ -144,18 +144,6 @@
       "args": ["script/file-io-test.py"]
     },
     {
-      "label": "network test",
-      "type": "shell",
-      "command": "python",
-      "args": ["script/net-test.py"]
-    },
-    {
-      "label": "network test 2",
-      "type": "shell",
-      "command": "python",
-      "args": ["script/net-test-2.py"]
-    },
-    {
       "label": "connection test",
       "type": "shell",
       "command": "python",
