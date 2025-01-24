@@ -9,6 +9,7 @@
 #include "game/util/locale.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
+#include "game/core/fonts.hpp"
 #include "graphic/image/image.hpp"
 #include "util/net/udp-packet-mgr.hpp"
 #include "util/log.hpp"
@@ -49,6 +50,7 @@ struct Server::Impl {
   inline void draw(Image& dst) const {
     dst.fill(Pal8::black);
     _menu->draw(dst);
+    draw_connections(dst);
   }
 
   inline void server_start() {
@@ -72,6 +74,23 @@ struct Server::Impl {
 
     _upm.broadcast_push(std::move(broadcast_packet));
     ++_broadcast_count;
+  }
+
+  inline void draw_connections(Image& dst) const {
+    crauto font = graphic::font;
+    assert(font);
+    utf32 text;
+    text += U"connected players: " + n2s<utf32>(this->_addressez.size()) + U"\n";
+    if (this->_addressez.empty()) {
+      text += U"empty addrs\n";
+    } else {
+      for (crauto addr: _addressez) {
+        // TODO player nick
+        text += U"Player " + utf8_to_32(addr) + U"\n";
+      }
+    }
+    const Vec pos(50, 60);
+    font->draw(dst, pos, text);
   }
 }; // Impl 
 
