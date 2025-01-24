@@ -13,10 +13,10 @@ enum class Tag: byte {
 
 #pragma pack(push, 1)
 struct Version {
-  byte version_major {};
-  u16_t version_minor {};
-  u16_t version_maintance {};
-  byte version_patch {};
+  byte major {};
+  u16_t minor {};
+  u16_t feature {};
+  byte patch {};
 };
 #pragma pack(pop)
 
