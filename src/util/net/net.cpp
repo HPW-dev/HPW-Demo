@@ -1,4 +1,5 @@
 #include "net.hpp"
+#include "util/error.hpp"
 
 namespace net {
 
@@ -18,10 +19,10 @@ inline static void hash_step(Hash& dst, cp<byte> src, const std::size_t sz) {
 }
 
 Hash get_hash(cr<Packet> src) {
-  assert(!src.bytes.empty());
+  iferror(src.bytes.empty(), "packet is empty");
   // не учитывать сами данные контрольной суммы
   auto data_size = src.bytes.size();
-  assert(data_size - sizeof(Hash) > 0);
+  iferror(data_size <= sizeof(Hash), "пакет слишком короткий");
   data_size -= sizeof(Hash);
 
   Hash ret {0xFFFFu};

@@ -18,6 +18,15 @@ struct Version {
   u16_t minor {};
   u16_t feature {};
   byte patch {};
+
+  bool operator ==(cr<Version> other) const {
+    return
+      major == other.major &&
+      minor == other.minor &&
+      feature == other.feature &&
+      patch == other.patch
+    ;
+  }
 };
 #pragma pack(pop)
 
@@ -43,7 +52,7 @@ struct Packet_connect {
 template <class T>
 net::Packet new_packet() {
   net::Packet dst {};
-  dst.bytes.resize(sizeof(Packet_broadcast));
+  dst.bytes.resize(sizeof(T));
   cauto ret = new (dst.bytes.data()) T();
   assert(ret);
   return dst;

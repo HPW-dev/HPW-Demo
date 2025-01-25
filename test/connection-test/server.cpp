@@ -55,7 +55,7 @@ struct Server::Impl {
 
   inline void server_start() {
     hpw_log("start server\n");
-    _upm.start_server(net::DEFAULT_PORT);
+    _upm.start_server("127.0.0.1");
     broadcast_send();
   }
 

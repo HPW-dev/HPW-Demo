@@ -15,11 +15,15 @@
 #include "util/str-util.hpp"
 
 struct Client::Impl {
+  constx uint CONNECTION_INTERVAL = 240 * 1.5;
+  uint _reserve_connection_timer {CONNECTION_INTERVAL}; // таймаут резервной отправки сигнала о коннекте
   Unique<Menu> _menu {};
   Str _server_ipv4 {};
   utf32 _server_name {};
   decltype(Packet_broadcast::connected_players) _server_players {};
-  Delta_time _server_ping {};
+  Delta_time _server_ping {-1};
+  net::Udp_packet_mgr _upm {};
+  uint _total_loaded_packets {};
 
   inline Impl() {
     _menu = new_unique<Text_menu>(
@@ -29,6 +33,7 @@ struct Client::Impl {
       },
       Vec{15, 10}
     );
+    _upm.start_client("127.0.0.2");
   }
 
   inline void update(const Delta_time dt) {
@@ -36,6 +41,16 @@ struct Client::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
+
+    if (_upm.is_active()) {
+      _upm.update();
+      process_packets();
+
+      if (!_server_ipv4.empty() && --_reserve_connection_timer == 0) {
+        _reserve_connection_timer = CONNECTION_INTERVAL;
+        send_connection();
+      }
+    }
   }
 
   inline void draw(Image& dst) const {
@@ -51,19 +66,83 @@ struct Client::Impl {
     }
 
     hpw_log("попытка подключения к серверу: \"" + _server_ipv4 + "\"\n");
-    // TODO
+    send_connection();
   }
 
   inline void draw_server_info(Image& dst) const {
     crauto font = graphic::font;
     assert(font);
-    utf32 text = U"S E R V E R\n";
+    utf32 text;
+    text += U"loaded packets: " + n2s<utf32>(_total_loaded_packets) + U"\n\n";
+    text += U"S E R V E R\n";
     text += U"* IPv4 " + (_server_ipv4.empty() ? U"-" : utf8_to_32(_server_ipv4)) + U"\n";
     text += U"* Name " + (_server_name.empty() ? U"-" : _server_name) + U"\n";
     text += U"* Players " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_players)) + U"\n";
-    text += U"* Ping " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_ping)) + U" ms.\n";
+    text += U"* Ping " + (_server_ping < 0 ? U"-" : (n2s<utf32>(_server_ping) + U" ms.")) + U"\n";
     const Vec pos(50, 60);
     font->draw(dst, pos, text);
+  }
+
+  inline void send_connection() {
+    net::Packet packet = new_packet<Packet_connect>();
+    rauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
+    prepare_game_version(raw.game_version);
+    prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
+    raw.hash = net::get_hash(packet);
+    hpw_log("send connection packet to \"" + _server_ipv4 + "\" (hash: " + n2hex(raw.hash) + ")\n");
+    _upm.push(std::move(packet), _server_ipv4);
+  }
+
+  // разбор полученных пакетов
+  inline void process_packets() {
+    return_if(!_upm.has_packets());
+    cauto packets = _upm.unload_all();
+
+    for (crauto packet: packets) {
+      ++_total_loaded_packets;
+
+      // пустые пакеты игнорить
+      if (packet.bytes.size() < sizeof(Tag)) {
+        hpw_log("packet data is small, ignore\n");
+        continue;
+      }
+
+      // при несовпадении контрольной суммы игнор
+      cauto local_hash = net::get_hash(packet);
+      if (local_hash != net::find_packet_hash(packet)) {
+        hpw_log("packet hash is not equal, ignore\n");
+        continue;
+      }
+
+      cauto tag = find_packet_tag(packet);
+
+      switch (tag) {
+        case Tag::ERROR: error("tag error"); break;
+        case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
+        case Tag::SERVER_BROADCAST: process_broadcast(packet); break;
+        case Tag::CLIENT_CONNECT: hpw_log("client connect, ignore\n"); break;
+        default: hpw_log("unknown tag, ignore\n"); break;
+      }
+    } // for packets
+  }
+
+  inline void process_broadcast(cr<net::Packet> packet) {
+    hpw_log("process broadcast packet...\n");
+
+    if (packet.bytes.size() != sizeof(Packet_broadcast)) {
+      hpw_log("размер пакета несовпадает с Packet_broadcast, игнор\n");
+      return;
+    }
+
+    _server_ipv4 = packet.ip_v4;
+    crauto pb = net::bytes_to_packet<Packet_broadcast>(packet.bytes);
+    _server_players = pb.connected_players;
+    _server_name = pb.short_nickname;
+
+    // check ver:
+    Version local_ver;
+    prepare_game_version(local_ver);
+    hpw_log(Str("версии игр ") + (local_ver == pb.game_version ? "совпадают" : "не совпадают") + "\n");
   }
 }; // Impl 
 

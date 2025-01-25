@@ -32,7 +32,7 @@ struct Udp_packet_mgr::Impl {
 
   inline ~Impl() { disconnect(); }
 
-  inline void start_server(Port port) {
+  inline void start_server(cr<Str> ip_v4, Port port) {
     disconnect();
     hpw_debug("Udp_packet_mgr.start_server\n");
 
@@ -40,23 +40,30 @@ struct Udp_packet_mgr::Impl {
     if (_port < 1024 || _port > 49'150)
       hpw_warning("use recomended UPD-ports in 1024...49'150\n");
 
-    init_unique(_socket, _io, ip_udp::endpoint(ip_udp::v4(), _port));
+    if (ip_v4.empty())
+      _ip_v4 = MY_IPV4;
+    else
+      _ip_v4 = ip_v4;
+    init_unique(_socket, _io, ip_udp::endpoint(asio::ip::address_v4::from_string(_ip_v4), _port));
     _socket->set_option(ip_udp::socket::reuse_address(true));
     _socket->set_option(ip_udp::socket::broadcast(true));
+    _socket->set_option(ip_udp::socket::enable_connection_aborted(true));
     _status.is_active = true;
     _status.is_server = true;
     start_waiting_packets();
   }
 
-  inline void start_client(cr<Str> ip, Port port) {
+  inline void start_client(cr<Str> ip_v4, Port port=net::DEFAULT_PORT) {
     disconnect();
     hpw_debug("Udp_packet_mgr.start_client\n");
-
-    iferror(ip.empty(), "empty ip string");
-    _ip_v4 = ip;
     _port = port;
-    init_unique(_socket, _io);
-    _socket->open(ip_udp::v4());
+    if (ip_v4.empty())
+      _ip_v4 = MY_IPV4;
+    else
+      _ip_v4 = ip_v4;
+    init_unique(_socket, _io, ip_udp::endpoint(asio::ip::address_v4::from_string(_ip_v4), _port));
+    _socket->set_option(ip_udp::socket::enable_connection_aborted(true));
+    _socket->set_option(ip_udp::socket::reuse_address(true));
     _status.is_active = true;
     _status.is_server = false;
     start_waiting_packets();
@@ -75,6 +82,35 @@ struct Udp_packet_mgr::Impl {
     _status.is_active = false;
     _packets_to_send.clear();
     _loaded_packets.clear();
+  }
+
+  inline void push(Packet&& src, cr<Str> ip_v4, const Port port, Action&& cb) {
+    iferror(!_status.is_active, "not initialized");
+    iferror(src.bytes.empty(), "нет данных для оптравки");
+    iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
+      "данных для отправки больше чем допустимый размер пакета");
+
+    auto* for_delete = &_packets_to_send.emplace_back(std::move(src));
+
+    auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
+    (cr<std::error_code> err, std::size_t bytes) {
+      return_if(!_status.is_active);
+      iferror(err, err.message());
+      iferror(bytes == 0, "данные не отправлены");
+      iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+      hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+
+      if (cb)
+        cb();
+        
+      // удалить пакет из списка
+      std::erase_if(_packets_to_send, [_for_delete](cr<Packet> packet){ return std::addressof(packet) == _for_delete; });
+    };
+
+    hpw_debug("ассинхронная отправка " + n2s(for_delete->bytes.size()) + " байт...\n");
+    assert(_socket);
+    ip_udp::endpoint endpoint(asio::ip::address_v4::from_string(ip_v4), port);
+    _socket->async_send_to(asio::buffer(for_delete->bytes), endpoint, handler);
   }
 
   inline void broadcast_push(Packet&& src, const Port port, Action&& cb) {
@@ -133,14 +169,16 @@ struct Udp_packet_mgr::Impl {
   // включает приём пакетов и их сохранение в буффер
   inline void start_waiting_packets() {
     iferror(!_status.is_active, "not initialized");
-    assert(_socket);
-    _input_packet = {};
+
     // размер пакета изначально больше чем принимаемые данные
+    _input_packet = {};
     _input_packet.bytes.resize(net::PACKET_BUFFER_SZ);
+    
+    assert(_socket);
     _socket->async_receive_from (
       asio::buffer(_input_packet.bytes),
       _input_addr,
-      [this](cr<std::error_code> err, std::size_t bytes) { // handler
+      [this](cr<std::error_code> err, std::size_t bytes)->void { // handler
         return_if(!_status.is_active);
         iferror(err, err.message());
         iferror(bytes == 0, "данные не прочитаны");
@@ -161,21 +199,25 @@ struct Udp_packet_mgr::Impl {
   }
 
   inline void action_if_loaded(Action&& cb) { _if_loaded_cb = std::move(cb); }
-  inline bool is_server() const { return _status.is_active && _status.is_server; }
-  inline bool is_client() const { return _status.is_active && !_status.is_server; }
+  inline bool is_server() const { return is_active() && _status.is_server; }
+  inline bool is_client() const { return is_active() && !_status.is_server; }
+  inline bool is_active() const { return _status.is_active; }
 }; // Impl
 
 Udp_packet_mgr::Udp_packet_mgr(): _impl{new_unique<Impl>()} {}
 Udp_packet_mgr::~Udp_packet_mgr() {}
-void Udp_packet_mgr::start_server(Port port) { _impl->start_server(port); }
+void Udp_packet_mgr::start_server(cr<Str> ip_v4, Port port) { _impl->start_server(ip_v4, port); }
 void Udp_packet_mgr::start_client(cr<Str> ip, Port port) { _impl->start_client(ip, port); }
 void Udp_packet_mgr::update() { _impl->update(); }
 void Udp_packet_mgr::broadcast_push(Packet&& src, const Port port, Action&& cb)
   { _impl->broadcast_push(std::move(src), port, std::move(cb)); }
+void Udp_packet_mgr::push(Packet&& src, cr<Str> ip_v4, const Port port, Action&& cb)
+  { _impl->push(std::move(src), ip_v4, port, std::move(cb)); }
 cr<Port> Udp_packet_mgr::port() const { return _impl->port(); }
 cr<Str> Udp_packet_mgr::ip_v4() const { return _impl->ip_v4(); }
 bool Udp_packet_mgr::is_server() const { return _impl->is_server(); }
 bool Udp_packet_mgr::is_client() const { return _impl->is_client(); }
+bool Udp_packet_mgr::is_active() const { return _impl->is_active(); }
 Packets Udp_packet_mgr::unload_all() { return _impl->unload_all(); }
 bool Udp_packet_mgr::has_packets() const { return _impl->has_packets(); }
 void Udp_packet_mgr::action_if_loaded(Action&& cb) { _impl->action_if_loaded(std::move(cb)); }

@@ -26,10 +26,18 @@ struct Packet final {
 
 using Packets = Vector<Packet>;
 
+// конвертирует raw байты в конктретный тип пакетов (не net::Packet)
 template <class T>
 inline T& bytes_to_packet(Bytes& src) {
   assert(src.size() == sizeof(T));
   return *(ptr2ptr<T*>(src.data()));
+}
+
+// конвертирует raw байты в конктретный тип пакетов (не net::Packet)
+template <class T>
+inline cr<T> bytes_to_packet(cr<Bytes> src) {
+  assert(src.size() == sizeof(T));
+  return *(cptr2ptr<cp<T>>(src.data()));
 }
 
 // получить контрольную сумму по данным пакета
