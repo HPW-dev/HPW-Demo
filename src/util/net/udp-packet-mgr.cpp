@@ -177,9 +177,21 @@ struct Udp_packet_mgr::Impl {
       _input_addr,
       [this](cr<std::error_code> err, std::size_t bytes)->void { // handler
         return_if(!_status.is_active);
-        iferror(err, err.category().name());
-        iferror(bytes == 0, "данные не прочитаны");
-        iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+
+        if(err) {
+          hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
+          start_waiting_packets();
+        }
+
+        if(bytes == 0) {
+          hpw_debug("данные не прочитаны\n");
+          start_waiting_packets();
+        }
+
+        if(bytes >= net::PACKET_BUFFER_SZ) {
+          hpw_debug("недопустимый размер пакета\n");
+          start_waiting_packets();
+        }
 
         if (_if_loaded_cb)
           _if_loaded_cb();
