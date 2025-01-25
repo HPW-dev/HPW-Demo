@@ -81,8 +81,7 @@ void replace_all(str_t& str, ch_t find_it, ch_t replace_to) {
 
 // строку в число
 template <class str_t, typename T>
-T s2n(cr<str_t> str,
-auto base = std::hex) {
+T s2n(cr<str_t> str, auto base = std::hex) {
   using ch_t = typename str_t::value_type;
   std::basic_stringstream<ch_t> ss;
   ss << base << str;

@@ -18,8 +18,8 @@
 struct Scene_cmd::Impl {
   // сколько апдейтов надо зажимать удаление текста, чтобы он начал удаляться
   cautox TEXT_DELETE_TIMEOUT = 120u;
-  Image bg {};
   uint m_text_delete_timer {};
+  Image bg {};
 
   inline ~Impl() { hpw::text_input_mode = false; }
 

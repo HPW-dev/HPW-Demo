@@ -47,7 +47,7 @@ struct Udp_packet_mgr::Impl {
     init_unique(_socket, _io, ip_udp::endpoint(asio::ip::address_v4::from_string(_ip_v4), _port));
     _socket->set_option(ip_udp::socket::reuse_address(true));
     _socket->set_option(ip_udp::socket::broadcast(true));
-    _socket->set_option(ip_udp::socket::enable_connection_aborted(true));
+    //_socket->set_option(ip_udp::socket::enable_connection_aborted(true));
     _status.is_active = true;
     _status.is_server = true;
     start_waiting_packets();
@@ -62,8 +62,8 @@ struct Udp_packet_mgr::Impl {
     else
       _ip_v4 = ip_v4;
     init_unique(_socket, _io, ip_udp::endpoint(asio::ip::address_v4::from_string(_ip_v4), _port));
-    _socket->set_option(ip_udp::socket::enable_connection_aborted(true));
-    _socket->set_option(ip_udp::socket::reuse_address(true));
+    //_socket->set_option(ip_udp::socket::enable_connection_aborted(true));
+    //_socket->set_option(ip_udp::socket::reuse_address(true));
     _status.is_active = true;
     _status.is_server = false;
     start_waiting_packets();

@@ -97,6 +97,7 @@ def init_sources():
 
     src_dir + "game/scene/scene-mgr.cpp",
     src_dir + "game/scene/scene.cpp",
+    src_dir + "game/scene/scene-enter-text.cpp",
 
     src_dir + "game/util/keybits.cpp",
     src_dir + "game/util/game-archive.cpp",

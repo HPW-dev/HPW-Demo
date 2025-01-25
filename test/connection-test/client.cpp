@@ -25,7 +25,7 @@ struct Client::Impl {
   net::Udp_packet_mgr _upm {};
   uint _total_loaded_packets {};
 
-  inline Impl() {
+  inline explicit Impl(cr<Str> ip_v4, const net::Port port) {
     _menu = new_unique<Text_menu>(
       Menu_items {
         new_shared<Menu_text_item>(U"попытаться подключиться", [this]{ try_to_connect(); }),
@@ -33,7 +33,8 @@ struct Client::Impl {
       },
       Vec{15, 10}
     );
-    _upm.start_client("127.0.0.2");
+    hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок ʕ•ᴥ•ʔ";
+    _upm.start_client(ip_v4, port);
   }
 
   inline void update(const Delta_time dt) {
@@ -146,7 +147,7 @@ struct Client::Impl {
   }
 }; // Impl 
 
-Client::Client(): _impl {new_unique<Impl>()} {}
+Client::Client(cr<Str> ip_v4, const net::Port port): _impl {new_unique<Impl>(ip_v4, port)} {}
 Client::~Client() {}
 void Client::update(const Delta_time dt) { _impl->update(dt); }
 void Client::draw(Image& dst) const { _impl->draw(dst); }

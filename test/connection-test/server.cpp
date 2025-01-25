@@ -1,5 +1,5 @@
 #include <cassert>
-#include <unordered_set>
+#include <unordered_map>
 #include "server.hpp"
 #include "test-packets.hpp"
 #include "game/core/scenes.hpp"
@@ -15,22 +15,27 @@
 #include "util/error.hpp"
 #include "util/str-util.hpp"
 
+struct Player_info {
+  Str ip_v4 {};
+  utf32 short_nickname {};
+};
+
 struct Server::Impl {
   constx uint BROADCAST_INTERVAL = 240 * 1.5;
   uint _broadcast_timer {BROADCAST_INTERVAL};
   uint _broadcast_count {};
   Unique<Menu> _menu {};
   net::Udp_packet_mgr _upm {};
-  std::unordered_set<Str> _addressez {}; // адреса подключённых игроков
+  std::unordered_map<Str, Player_info> _players {}; // адреса подключённых игроков
   uint _total_loaded_packets {};
 
-  inline Impl() {
+  inline explicit Impl(cr<Str> ip_v4, const net::Port port) {
     _menu = new_unique<Text_menu>(
       Menu_items { new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }), },
       Vec{15, 10}
     );
     hpw::player_name = U".:Strawberry Server (Connection test):.";
-    server_start();
+    server_start(ip_v4, port);
   }
 
   inline void update(const Delta_time dt) {
@@ -53,9 +58,9 @@ struct Server::Impl {
     draw_connections(dst);
   }
 
-  inline void server_start() {
+  inline void server_start(cr<Str> ip_v4, const net::Port port) {
     hpw_log("start server\n");
-    _upm.start_server("127.0.0.1");
+    _upm.start_server(ip_v4, port);
     broadcast_send();
   }
 
@@ -66,7 +71,7 @@ struct Server::Impl {
     rauto raw = net::bytes_to_packet<Packet_broadcast>(broadcast_packet.bytes);
     prepare_game_version(raw.game_version);
     prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
-    raw.connected_players = _addressez.size();
+    raw.connected_players = _players.size();
     raw.hash = net::get_hash(broadcast_packet);
     hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(raw.hash) + ")\n");
 
@@ -79,13 +84,13 @@ struct Server::Impl {
     assert(font);
     utf32 text;
     text += U"loaded packets: " + n2s<utf32>(_total_loaded_packets) + U"\n";
-    text += U"connected players: " + n2s<utf32>(this->_addressez.size()) + U"\n";
-    if (this->_addressez.empty()) {
-      text += U"empty addrs\n";
+    text += U"connected players: " + n2s<utf32>(this->_players.size()) + U"\n";
+    if (this->_players.empty()) {
+      text += U"empty player list\n";
     } else {
-      for (crauto addr: _addressez) {
-        // TODO player nick
-        text += U"Player " + utf8_to_32(addr) + U"\n";
+      for (crauto player: _players) {
+        text += U"Player " + utf8_to_32(player.second.ip_v4) +
+          U" \"" + player.second.short_nickname + U"\"\n";
       }
     }
     const Vec pos(50, 60);
@@ -133,11 +138,24 @@ struct Server::Impl {
       return;
     }
 
-    // TODO
+    crauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
+    // version check:
+    Version local_ver;
+    prepare_game_version(local_ver);
+    if (local_ver == raw.game_version)
+      hpw_log("версии игры совпадают\n");
+    else
+      hpw_log("версии игры не совпадают\n");
+
+    // save player info
+    _players[packet.ip_v4] = Player_info {
+      .ip_v4 = packet.ip_v4,
+      .short_nickname = raw.short_nickname
+    };
   }
 }; // Impl 
 
-Server::Server(): _impl {new_unique<Impl>()} {}
+Server::Server(cr<Str> ip_v4, const net::Port port): _impl {new_unique<Impl>(ip_v4, port)} {}
 Server::~Server() {}
 void Server::update(const Delta_time dt) { _impl->update(dt); }
 void Server::draw(Image& dst) const { _impl->draw(dst); }
