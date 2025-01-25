@@ -9,7 +9,6 @@
 #include "game/util/locale.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
-#include "game/core/fonts.hpp"
 #include "graphic/image/image.hpp"
 #include "util/net/udp-packet-mgr.hpp"
 #include "util/log.hpp"
@@ -121,13 +120,20 @@ struct Server::Impl {
         case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
         case Tag::SERVER_BROADCAST: hpw_log("broadcast tag, ignore\n"); break;
         case Tag::CLIENT_CONNECT: process_connection(packet); break;
-        default: error("unknown tag"); break;
+        default: hpw_log("unknown tag, ignore\n"); break;
       }
     } // for packets
   }
 
   inline void process_connection(cr<net::Packet> packet) {
     hpw_log("process connection packet...\n");
+
+    if (packet.bytes.size() != sizeof(Packet_connect)) {
+      hpw_log("размер пакета несовпадает с Packet_connect, игнор\n");
+      return;
+    }
+
+    // TODO
   }
 }; // Impl 
 
