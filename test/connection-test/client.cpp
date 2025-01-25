@@ -1,13 +1,14 @@
 #include <cassert>
 #include "client.hpp"
 #include "test-packets.hpp"
+#include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/fonts.hpp"
+#include "game/core/user.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "game/core/fonts.hpp"
-#include "game/core/user.hpp"
 #include "graphic/image/image.hpp"
 #include "util/net/udp-packet-mgr.hpp"
 #include "util/log.hpp"
@@ -34,7 +35,18 @@ struct Client::Impl {
       Vec{15, 10}
     );
     hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок ʕ•ᴥ•ʔ";
-    _upm.start_client(ip_v4, port);
+    
+    try {
+      _upm.start_client(ip_v4, port);
+    } catch (cr<hpw::Error> err) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка при создании создании клиента: " +
+        utf8_to_32(err.what()), get_locale_str("common.warning")) );
+      hpw::scene_mgr.back();
+    } catch (...) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"неизвестная ошибка при создании клиента",
+        get_locale_str("common.warning")) );
+      hpw::scene_mgr.back();
+    }
   }
 
   inline void update(const Delta_time dt) {
