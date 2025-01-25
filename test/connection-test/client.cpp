@@ -38,14 +38,31 @@ struct Client::Impl {
             U"Enter для подтверждения, Escape чтобы выйти",
             U"Server IPv4: ",
             utf8_to_32(_server_ipv4),
-            [this](cr<utf32> text) { _server_ipv4 = utf32_to_8(text); }
+            [this](cr<utf32> text) {            
+              try {
+                _server_ipv4 = utf32_to_8(text);
+                _upm.send(get_connection_packet(), _server_ipv4);
+              }  catch (cr<hpw::Error> err) {
+                hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка при подключении к серверу: " +
+                  utf8_to_32(err.what()), get_locale_str("common.warning")) );
+                hpw::scene_mgr.back();
+              } catch (...) {
+                hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"неизвестная ошибка при подключении к серверу",
+                  get_locale_str("common.warning")) );
+                hpw::scene_mgr.back();
+              }
+            }
           ));
         }),
         new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }),
       },
       Vec{15, 10}
     );
-    hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок (" + n2s<utf32>(rndu_fast() % 1000) + U")";
+
+    hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок (";
+    cauto rnd_num = rndu_fast(999);
+    hpw::player_name += n2s<utf32>(rnd_num);
+    hpw::player_name += U")";
     
     try {
       _upm.start_client(ip_v4, port);
@@ -67,12 +84,22 @@ struct Client::Impl {
     _menu->update(dt);
 
     if (_upm.is_active()) {
-      _upm.update();
-      process_packets();
+      try {
+        _upm.update();
+        process_packets();
 
-      if (!_server_ipv4.empty() && --_reserve_connection_timer == 0) {
-        _reserve_connection_timer = CONNECTION_INTERVAL;
-        send_connection();
+        if (!_server_ipv4.empty() && --_reserve_connection_timer == 0) {
+          _reserve_connection_timer = CONNECTION_INTERVAL;
+          send_connection();
+        }
+      } catch (cr<hpw::Error> err) {
+        hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка обмена данных" +
+          utf8_to_32(err.what()), get_locale_str("common.warning")) );
+        hpw::scene_mgr.back();
+      } catch (...) {
+        hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"неизвестная ошибка обмена данных",
+          get_locale_str("common.warning")) );
+        hpw::scene_mgr.back();
       }
     }
   }
@@ -89,25 +116,17 @@ struct Client::Impl {
       return;
     }
 
-    try {
-      hpw_log("попытка подключения к серверу: \"" + _server_ipv4 + "\"\n");
-      send_connection();
-    } catch (cr<hpw::Error> err) {
-      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка при создании создании клиента: " +
-        utf8_to_32(err.what()), get_locale_str("common.warning")) );
-      hpw::scene_mgr.back();
-    } catch (...) {
-      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"неизвестная ошибка при создании клиента",
-        get_locale_str("common.warning")) );
-      hpw::scene_mgr.back();
-    }
+    hpw_log("попытка подключения к серверу: \"" + _server_ipv4 + "\"\n");
+    send_connection();
   }
 
   inline void draw_server_info(Image& dst) const {
     crauto font = graphic::font;
     assert(font);
     utf32 text;
-    text += U"loaded packets: " + n2s<utf32>(_total_loaded_packets) + U"\n\n";
+    text += U"player name: " + hpw::player_name + U"\n";
+    text += U"loaded packets: " + n2s<utf32>(_total_loaded_packets) + U"\n";
+    text += U"\n";
     text += U"S E R V E R\n";
     text += U"* IPv4 " + (_server_ipv4.empty() ? U"-" : utf8_to_32(_server_ipv4)) + U"\n";
     text += U"* Name " + (_server_name.empty() ? U"-" : _server_name) + U"\n";
@@ -117,14 +136,18 @@ struct Client::Impl {
     font->draw(dst, pos, text);
   }
 
-  inline void send_connection() {
+  inline net::Packet get_connection_packet() const {
     net::Packet packet = new_packet<Packet_connect>();
     rauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
     prepare_game_version(raw.game_version);
     prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
     raw.hash = net::get_hash(packet);
-    hpw_log("send connection packet to \"" + _server_ipv4 + "\" (hash: " + n2hex(raw.hash) + ")\n");
-    _upm.push(std::move(packet), _server_ipv4);
+    hpw_log("connection packet created for \"" + _server_ipv4 + "\" (hash: " + n2hex(raw.hash) + ")\n");
+    return packet;
+  }
+
+  inline void send_connection() {
+    _upm.push(get_connection_packet(), _server_ipv4);
   }
 
   // разбор полученных пакетов

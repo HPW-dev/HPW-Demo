@@ -81,6 +81,18 @@ struct Udp_packet_mgr::Impl {
     _loaded_packets.clear();
   }
 
+  inline void send(Packet&& src, cr<Str> ip_v4, const Port port) {
+    iferror(!_status.is_active, "not initialized");
+    iferror(src.bytes.empty(), "нет данных для оптравки");
+    iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
+      "данных для отправки больше чем допустимый размер пакета");
+    hpw_debug("ссинхронная отправка " + n2s(src.bytes.size()) + " байт...\n");
+    ip_udp::endpoint endpoint(asio::ip::address_v4::from_string(ip_v4), port);
+    assert(_socket);
+    cauto sended = _socket->send_to(asio::buffer(src.bytes), endpoint);
+    iferror(sended == 0, "данные не отправлены");
+  }
+
   inline void push(Packet&& src, cr<Str> ip_v4, const Port port, Action&& cb) {
     iferror(!_status.is_active, "not initialized");
     iferror(src.bytes.empty(), "нет данных для оптравки");
@@ -92,9 +104,22 @@ struct Udp_packet_mgr::Impl {
     auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
     (cr<std::error_code> err, std::size_t bytes) {
       return_if(!_status.is_active);
-      iferror(err, err.message());
-      iferror(bytes == 0, "данные не отправлены");
-      iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+
+      if (err) {
+        hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
+        start_waiting_packets();
+      }
+
+      if (bytes == 0) {
+        hpw_debug("данные не отправлены\n");
+        start_waiting_packets();
+      }
+
+      if (bytes >= net::PACKET_BUFFER_SZ) {
+        hpw_debug("недопустимый размер пакета\n");
+        start_waiting_packets();
+      }
+      
       hpw_debug("отправлено " + n2s(bytes) + " байт\n");
 
       if (cb)
@@ -121,9 +146,22 @@ struct Udp_packet_mgr::Impl {
     auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
     (cr<std::error_code> err, std::size_t bytes) {
       return_if(!_status.is_active);
-      iferror(err, err.message());
-      iferror(bytes == 0, "данные не отправлены");
-      iferror(bytes >= net::PACKET_BUFFER_SZ, "недопустимый размер пакета");
+
+      if (err) {
+        hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
+        start_waiting_packets();
+      }
+
+      if (bytes == 0) {
+        hpw_debug("данные не отправлены\n");
+        start_waiting_packets();
+      }
+
+      if (bytes >= net::PACKET_BUFFER_SZ) {
+        hpw_debug("недопустимый размер пакета\n");
+        start_waiting_packets();
+      }
+
       hpw_debug("отправлено " + n2s(bytes) + " байт\n");
 
       if (cb)
@@ -222,6 +260,8 @@ void Udp_packet_mgr::broadcast_push(Packet&& src, const Port port, Action&& cb)
   { _impl->broadcast_push(std::move(src), port, std::move(cb)); }
 void Udp_packet_mgr::push(Packet&& src, cr<Str> ip_v4, const Port port, Action&& cb)
   { _impl->push(std::move(src), ip_v4, port, std::move(cb)); }
+void Udp_packet_mgr::send(Packet&& src, cr<Str> ip_v4, const Port port)
+  { _impl->send(std::move(src), ip_v4, port); }
 cr<Port> Udp_packet_mgr::port() const { return _impl->port(); }
 cr<Str> Udp_packet_mgr::ip_v4() const { return _impl->ip_v4(); }
 bool Udp_packet_mgr::is_server() const { return _impl->is_server(); }
