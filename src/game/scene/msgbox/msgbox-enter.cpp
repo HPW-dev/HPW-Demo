@@ -45,6 +45,7 @@ struct Scene_msgbox_enter::Impl {
     || is_pressed_once(hpw::keycode::escape)) {
       if (m_action)
         m_action();
+        
       hpw::scene_mgr.back();
     }
   }

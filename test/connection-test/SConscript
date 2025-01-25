@@ -77,6 +77,7 @@ def init_sources():
   sources.extend([
     Glob(thirdparty_dir + "include/zip/*.c"),
 
+    src_dir + "graphic/effect/blur.cpp",
     src_dir + "graphic/image/color-table.cpp",
     src_dir + "graphic/image/color.cpp",
     src_dir + "graphic/image/color-blend.cpp",
@@ -98,6 +99,7 @@ def init_sources():
     src_dir + "game/scene/scene-mgr.cpp",
     src_dir + "game/scene/scene.cpp",
     src_dir + "game/scene/scene-enter-text.cpp",
+    src_dir + "game/scene/msgbox/msgbox-enter.cpp",
 
     src_dir + "game/util/keybits.cpp",
     src_dir + "game/util/game-archive.cpp",
@@ -109,6 +111,7 @@ def init_sources():
     src_dir + "game/util/screenshot.cpp",
     src_dir + "game/util/font-helper.cpp",
     src_dir + "game/util/resource-helper.cpp",
+    src_dir + "game/util/blur-helper.cpp",
 
     src_dir + "host/host-resize.cpp",
     src_dir + "host/host.cpp",

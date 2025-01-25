@@ -2,7 +2,9 @@
 #include <unordered_map>
 #include "server.hpp"
 #include "test-packets.hpp"
+#include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/user.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/util/keybits.hpp"
@@ -43,12 +45,14 @@ struct Server::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
-    _upm.update();
-    process_packets();
+      if (_upm.is_active()) {
+      _upm.update();
+      process_packets();
 
-    if (--_broadcast_timer == 0) {
-      _broadcast_timer = BROADCAST_INTERVAL;
-      broadcast_send();
+      if (--_broadcast_timer == 0) {
+        _broadcast_timer = BROADCAST_INTERVAL;
+        broadcast_send();
+      }
     }
   }
 
@@ -60,8 +64,18 @@ struct Server::Impl {
 
   inline void server_start(cr<Str> ip_v4, const net::Port port) {
     hpw_log("start server\n");
-    _upm.start_server(ip_v4, port);
-    broadcast_send();
+    try {
+      _upm.start_server(ip_v4, port);
+      broadcast_send();
+    } catch (cr<hpw::Error> err) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка при создании сервера: " +
+        utf8_to_32(err.what()), get_locale_str("common.warning")) );
+      hpw::scene_mgr.back();
+    } catch (...) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"неизвестная ошибка при создании сервера",
+        get_locale_str("common.warning")) );
+      hpw::scene_mgr.back();
+    }
   }
 
   inline void broadcast_send() {
