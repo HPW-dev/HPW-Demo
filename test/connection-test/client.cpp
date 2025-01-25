@@ -2,6 +2,7 @@
 #include "client.hpp"
 #include "test-packets.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
+#include "game/scene/scene-enter-text.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
@@ -14,6 +15,7 @@
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
+#include "util/math/random.hpp"
 
 struct Client::Impl {
   constx uint CONNECTION_INTERVAL = 240 * 1.5;
@@ -30,11 +32,20 @@ struct Client::Impl {
     _menu = new_unique<Text_menu>(
       Menu_items {
         new_shared<Menu_text_item>(U"попытаться подключиться", [this]{ try_to_connect(); }),
+        new_shared<Menu_text_item>(U"подключиться по IPv4", [this]{
+          hpw::scene_mgr.add(new_shared<Scene_enter_text>(
+            U"Введите IP сервера",
+            U"Enter для подтверждения, Escape чтобы выйти",
+            U"Server IPv4: ",
+            utf8_to_32(_server_ipv4),
+            [this](cr<utf32> text) { _server_ipv4 = utf32_to_8(text); }
+          ));
+        }),
         new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }),
       },
       Vec{15, 10}
     );
-    hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок ʕ•ᴥ•ʔ";
+    hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок (" + n2s<utf32>(rndu_fast() % 1000) + U")";
     
     try {
       _upm.start_client(ip_v4, port);
@@ -78,8 +89,18 @@ struct Client::Impl {
       return;
     }
 
-    hpw_log("попытка подключения к серверу: \"" + _server_ipv4 + "\"\n");
-    send_connection();
+    try {
+      hpw_log("попытка подключения к серверу: \"" + _server_ipv4 + "\"\n");
+      send_connection();
+    } catch (cr<hpw::Error> err) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка при создании создании клиента: " +
+        utf8_to_32(err.what()), get_locale_str("common.warning")) );
+      hpw::scene_mgr.back();
+    } catch (...) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"неизвестная ошибка при создании клиента",
+        get_locale_str("common.warning")) );
+      hpw::scene_mgr.back();
+    }
   }
 
   inline void draw_server_info(Image& dst) const {
