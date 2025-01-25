@@ -1,6 +1,7 @@
 #pragma once
 #include <stack>
 #include <functional>
+#include <list>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
@@ -16,7 +17,7 @@ class Scene_mgr final {
   using Job = std::function<void ()>;
   /** @brief для отложенной вставки и смены сцен.
   Повышает безопасность вызова add и back в любом месте */ 
-  Vector<Job> jobs {};
+  std::list<Job> jobs {};
   
   void _add(cr<Shared<Scene>> scene);
   void _back();

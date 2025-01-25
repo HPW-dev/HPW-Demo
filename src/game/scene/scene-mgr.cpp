@@ -1,4 +1,5 @@
 #include <cassert>
+#include <ranges>
 #include "scene-mgr.hpp"
 #include "scene.hpp"
 
@@ -21,7 +22,7 @@ void Scene_mgr::draw(Image& dst) const {
 
 void Scene_mgr::add(cr<Shared<Scene>> scene) {
   assert(scene);
-  jobs.emplace_back([this, scene]{ _add(scene); });
+  jobs.emplace_front([this, scene]{ _add(scene); });
 }
 
 void Scene_mgr::back(uint count) {
@@ -29,7 +30,7 @@ void Scene_mgr::back(uint count) {
   assert(count < 1000);
   
   cfor (_, count)
-    jobs.emplace_back([this]{ _back(); });
+    jobs.emplace_front([this]{ _back(); });
 }
 
 void Scene_mgr::_add(cr<Shared<Scene>> scene) {
