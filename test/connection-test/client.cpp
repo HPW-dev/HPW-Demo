@@ -53,7 +53,7 @@ struct Client::Impl {
               }
             }
           ));
-        }),
+        }), // кнопка подключиться по ipv4
         new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }),
       },
       Vec{15, 10}
