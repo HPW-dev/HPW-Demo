@@ -57,11 +57,11 @@ struct Client::Impl {
   inline void draw_server_info(Image& dst) const {
     crauto font = graphic::font;
     assert(font);
-    utf32 text = U"SERVER:\n";
-    text += U"* IPv4: " + (_server_ipv4.empty() ? U"-" : utf8_to_32(_server_ipv4)) + U"\n";
-    text += U"* Name: " + (_server_name.empty() ? U"-" : _server_name) + U"\n";
-    text += U"* Players: " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_players)) + U"\n";
-    text += U"* Ping: " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_ping)) + U"\n";
+    utf32 text = U"S E R V E R\n";
+    text += U"* IPv4 " + (_server_ipv4.empty() ? U"-" : utf8_to_32(_server_ipv4)) + U"\n";
+    text += U"* Name " + (_server_name.empty() ? U"-" : _server_name) + U"\n";
+    text += U"* Players " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_players)) + U"\n";
+    text += U"* Ping " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_ping)) + U" ms.\n";
     const Vec pos(50, 60);
     font->draw(dst, pos, text);
   }
