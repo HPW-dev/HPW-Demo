@@ -81,7 +81,7 @@ struct Udp_packet_mgr::Impl {
     _loaded_packets.clear();
   }
 
-  inline void send(Packet&& src, cr<Str> ip_v4, const Port port) {
+  inline void send(cr<Packet> src, cr<Str> ip_v4, const Port port) {
     iferror(!_status.is_active, "not initialized");
     iferror(src.bytes.empty(), "нет данных для оптравки");
     iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
@@ -93,7 +93,7 @@ struct Udp_packet_mgr::Impl {
     iferror(sended == 0, "данные не отправлены");
   }
 
-  inline void push(Packet&& src, cr<Str> ip_v4, const Port port, Action&& cb) {
+  inline void push(cr<Packet> src, cr<Str> ip_v4, const Port port, Action&& cb) {
     iferror(!_status.is_active, "not initialized");
     iferror(src.bytes.empty(), "нет данных для оптравки");
     iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
@@ -135,7 +135,7 @@ struct Udp_packet_mgr::Impl {
     _socket->async_send_to(asio::buffer(for_delete->bytes), endpoint, handler);
   }
 
-  inline void broadcast_push(Packet&& src, const Port port, Action&& cb) {
+  inline void broadcast_push(cr<Packet> src, const Port port, Action&& cb) {
     iferror(!_status.is_active, "not initialized");
     iferror(src.bytes.empty(), "нет данных для оптравки");
     iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
@@ -256,12 +256,12 @@ Udp_packet_mgr::~Udp_packet_mgr() {}
 void Udp_packet_mgr::start_server(cr<Str> ip_v4, Port port) { _impl->start_server(ip_v4, port); }
 void Udp_packet_mgr::start_client(cr<Str> ip, Port port) { _impl->start_client(ip, port); }
 void Udp_packet_mgr::update() { _impl->update(); }
-void Udp_packet_mgr::broadcast_push(Packet&& src, const Port port, Action&& cb)
-  { _impl->broadcast_push(std::move(src), port, std::move(cb)); }
-void Udp_packet_mgr::push(Packet&& src, cr<Str> ip_v4, const Port port, Action&& cb)
-  { _impl->push(std::move(src), ip_v4, port, std::move(cb)); }
-void Udp_packet_mgr::send(Packet&& src, cr<Str> ip_v4, const Port port)
-  { _impl->send(std::move(src), ip_v4, port); }
+void Udp_packet_mgr::broadcast_push(cr<Packet> src, const Port port, Action&& cb)
+  { _impl->broadcast_push(src, port, std::move(cb)); }
+void Udp_packet_mgr::push(cr<Packet> src, cr<Str> ip_v4, const Port port, Action&& cb)
+  { _impl->push(src, ip_v4, port, std::move(cb)); }
+void Udp_packet_mgr::send(cr<Packet> src, cr<Str> ip_v4, const Port port)
+  { _impl->send(src, ip_v4, port); }
 cr<Port> Udp_packet_mgr::port() const { return _impl->port(); }
 cr<Str> Udp_packet_mgr::ip_v4() const { return _impl->ip_v4(); }
 bool Udp_packet_mgr::is_server() const { return _impl->is_server(); }
