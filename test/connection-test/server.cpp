@@ -44,8 +44,11 @@ struct Server::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    if (is_pressed_once(hpw::keycode::escape))
+    if (is_pressed_once(hpw::keycode::escape)) {
+      if (_upm.is_active())
+        send_disconnect();
       hpw::scene_mgr.back();
+    }
 
     _menu->update(dt);
 
@@ -153,7 +156,7 @@ struct Server::Impl {
     }
 
     crauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
-    
+
     // version check:
     Version local_ver;
     prepare_game_version(local_ver);
@@ -178,6 +181,15 @@ struct Server::Impl {
     raw.connected_players = _players.size();
     raw.hash = net::get_hash(ret);
     return ret;
+  }
+
+  inline void send_disconnect() {
+    net::Packet packet = new_packet<Packet_disconnect>();
+    rauto raw = net::bytes_to_packet<Packet_disconnect>(packet.bytes);
+    raw.hash = net::get_hash(packet);
+    // разослать всем сигнал о том, что ты выключаешься
+    for (crauto [ipv4, info]: _players)
+      _upm.send(packet, info.ip_v4);
   }
 }; // Impl 
 

@@ -10,6 +10,7 @@ enum class Tag: byte {
   MESSAGE, // текстовое сообщение
   CLIENT_CONNECT, // запрос на подключение к серверу
   SERVER_BROADCAST, // широковещательное приглашение от сервера
+  DISCONNECT, // сигнал выключающий сервер или клиента
 };
 
 #pragma pack(push, 1)
@@ -46,6 +47,15 @@ struct Packet_connect {
   char32_t short_nickname[SHORT_NICKNAME_SZ]; // сокращённый ник клиента
   Version game_version {}; // с какой версией игры играет клиент
   net::Hash hash {}; // контрольная сумма пакета
+};
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+// сигнал отключения
+struct Packet_disconnect {
+  Tag tag {Tag::DISCONNECT};
+  bool disconnect_you {}; // если True, то это тебя отключить хотят
+  net::Hash hash {};
 };
 #pragma pack(pop)
 
