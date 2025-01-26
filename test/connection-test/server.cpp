@@ -139,19 +139,34 @@ struct Server::Impl {
       // при несовпадении контрольной суммы игнорs
       cauto local_hash = net::get_hash(packet);
       if (local_hash != net::find_packet_hash(packet)) {
-        hpw_log("packet hash is not equal for tag " + n2s(scast<uint>(tag)) + ", ignore\n");
+        hpw_log("packet hash is not equal for tag " + n2s(scast<uint>(tag)) + " hash " +
+          n2hex(net::find_packet_hash(packet)) +
+          " size " + n2s(packet.bytes.size()) + " byte" +
+          ", ignore\n");
         continue;
       }
 
       switch (tag) {
         case Tag::ERROR: error("tag error"); break;
         case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
-        case Tag::SERVER_INFO: hpw_log("broadcast tag, ignore\n"); break;
+        case Tag::SERVER_INFO: hpw_debug("broadcast tag, ignore\n"); break;
         case Tag::CLIENT_INFO: process_clinet_info(packet); break;
         case Tag::CONNECTED: process_connected(packet); break;
+        case Tag::DISCONNECT: process_disconnect(packet); break;
         default: hpw_log("unknown tag, ignore\n"); break;
       }
     } // for packets
+  }
+
+  inline void process_disconnect(cr<net::Packet> src) {
+    hpw_log("process disconnect...\n");
+
+    if (src.bytes.size() != sizeof(Packet_disconnect)) {
+      hpw_log("размер пакета несовпадает с Packet_disconnect, игнор\n");
+      return;
+    }
+
+    _players[src.ip_v4].connected = false;
   }
 
   inline void process_connected(cr<net::Packet> src) {

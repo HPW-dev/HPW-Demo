@@ -80,6 +80,11 @@ struct Client::Impl {
     }
   }
 
+  inline ~Impl() {
+    if (_upm.is_active() && _connected)
+      send_disconnect();
+  }
+
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
@@ -149,7 +154,7 @@ struct Client::Impl {
     prepare_game_version(raw.game_version);
     prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
     raw.hash = net::get_hash(packet);
-    hpw_log("connection packet created for \"" + _server_ipv4 + "\" (hash: " + n2hex(raw.hash) + ")\n");
+    hpw_debug("connection packet created for \"" + _server_ipv4 + "\" (hash: " + n2hex(raw.hash) + ")\n");
     return packet;
   }
 
@@ -249,7 +254,16 @@ struct Client::Impl {
     // check ver:
     Version local_ver;
     prepare_game_version(local_ver);
-    hpw_log(Str("версии игр ") + (local_ver == pb.game_version ? "совпадают" : "не совпадают") + "\n");
+    hpw_debug(Str("версии игр ") + (local_ver == pb.game_version ? "совпадают" : "не совпадают") + "\n");
+  }
+
+  inline void send_disconnect() {
+    hpw_log("send info about disconnect\n");
+    net::Packet packet = new_packet<Packet_disconnect>();
+    rauto raw = net::bytes_to_packet<Packet_disconnect>(packet.bytes);
+    raw.hash = net::get_hash(packet);
+    
+    _upm.send(packet, _server_ipv4);
   }
 }; // Impl 
 
