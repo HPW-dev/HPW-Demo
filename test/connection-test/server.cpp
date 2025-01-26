@@ -191,6 +191,7 @@ struct Server::Impl {
     rauto raw = net::bytes_to_packet<Packet_disconnect>(packet.bytes);
     raw.hash = net::get_hash(packet);
     
+    _upm.broadcast_push(packet);
     // разослать всем сигнал о том, что ты выключаешься
     for (crauto [ipv4, info]: _players)
       _upm.send(packet, info.ip_v4);

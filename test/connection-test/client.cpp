@@ -180,9 +180,30 @@ struct Client::Impl {
         case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
         case Tag::SERVER_BROADCAST: process_broadcast(packet); break;
         case Tag::CLIENT_CONNECT: hpw_log("client connect, ignore\n"); break;
+        case Tag::DISCONNECT: process_disconnect(packet); break;
         default: hpw_log("unknown tag, ignore\n"); break;
       }
     } // for packets
+  }
+
+  inline void process_disconnect(cr<net::Packet> src) {
+    hpw_log("process disconnect packet...\n");
+
+    if (src.bytes.size() != sizeof(Packet_disconnect)) {
+      hpw_log("размер пакета несовпадает с Packet_disconnect, игнор\n");
+      return;
+    }
+
+    crauto raw = net::bytes_to_packet<Packet_disconnect>(src.bytes);
+    // если сервер отключает тебя:
+    if (raw.disconnect_you) {
+      error("need impl");
+    } else { // если сервер отключился сам:
+      _server_players = {};
+      _server_ipv4.clear();
+      _server_name.clear();
+      _server_ping = -1;
+    }
   }
 
   inline void process_broadcast(cr<net::Packet> packet) {
