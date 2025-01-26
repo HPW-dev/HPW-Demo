@@ -179,14 +179,14 @@ struct Client::Impl {
         continue;
       }
 
-      // при несовпадении контрольной суммы игнор
+      cauto tag = find_packet_tag(packet);
+
+      // при несовпадении контрольной суммы игнорs
       cauto local_hash = net::get_hash(packet);
       if (local_hash != net::find_packet_hash(packet)) {
-        hpw_log("packet hash is not equal, ignore\n");
+        hpw_log("packet hash is not equal for tag " + n2s(scast<uint>(tag)) + ", ignore\n");
         continue;
       }
-
-      cauto tag = find_packet_tag(packet);
 
       switch (tag) {
         case Tag::ERROR: error("tag error"); break;

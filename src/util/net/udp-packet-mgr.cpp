@@ -99,7 +99,8 @@ struct Udp_packet_mgr::Impl {
     iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
       "данных для отправки больше чем допустимый размер пакета");
 
-    auto* for_delete = &_packets_to_send.emplace_back(std::move(src));
+    _packets_to_send.push_back(src);
+    auto* for_delete = &_packets_to_send.back();
 
     auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
     (cr<std::error_code> err, std::size_t bytes) {
@@ -141,7 +142,8 @@ struct Udp_packet_mgr::Impl {
     iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
       "данных для отправки больше чем допустимый размер пакета");
 
-    auto* for_delete = &_packets_to_send.emplace_back(std::move(src));
+    _packets_to_send.push_back(src);
+    auto* for_delete = &_packets_to_send.back();
 
     auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
     (cr<std::error_code> err, std::size_t bytes) {
