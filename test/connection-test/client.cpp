@@ -23,7 +23,7 @@ struct Client::Impl {
   Unique<Menu> _menu {};
   Str _server_ipv4 {};
   utf32 _server_name {};
-  decltype(Packet_broadcast::connected_players) _server_players {};
+  decltype(Packet_server_info::connected_players) _server_players {};
   Delta_time _server_ping {-1};
   net::Udp_packet_mgr _upm {};
   uint _total_loaded_packets {};
@@ -188,13 +188,13 @@ struct Client::Impl {
   inline void process_broadcast(cr<net::Packet> packet) {
     hpw_log("process broadcast packet...\n");
 
-    if (packet.bytes.size() != sizeof(Packet_broadcast)) {
-      hpw_log("размер пакета несовпадает с Packet_broadcast, игнор\n");
+    if (packet.bytes.size() != sizeof(Packet_server_info)) {
+      hpw_log("размер пакета несовпадает с Packet_server_info, игнор\n");
       return;
     }
 
     _server_ipv4 = packet.ip_v4;
-    crauto pb = net::bytes_to_packet<Packet_broadcast>(packet.bytes);
+    crauto pb = net::bytes_to_packet<Packet_server_info>(packet.bytes);
     _server_players = pb.connected_players;
     _server_name = pb.short_nickname;
 

@@ -31,7 +31,7 @@ struct Version {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct Packet_broadcast {
+struct Packet_server_info {
   Tag tag {Tag::SERVER_BROADCAST};
   char32_t short_nickname[SHORT_NICKNAME_SZ]; // сокращённый ник сервера
   u16_t connected_players {}; // сколько игроков уже подключено к серверу

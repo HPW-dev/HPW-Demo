@@ -39,7 +39,7 @@ struct Server::Impl {
 
     if (hpw::player_name.empty())
       hpw::player_name = U".:Strawberry Server (Connection test):.";
-      
+
     server_start(ip_v4, port);
   }
 
@@ -48,15 +48,21 @@ struct Server::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
-      if (_upm.is_active()) {
+
+    if (_upm.is_active()) {
       _upm.update();
       process_packets();
 
       if (--_broadcast_timer == 0) {
         _broadcast_timer = BROADCAST_INTERVAL;
         broadcast_send();
-      }
-    }
+
+        // дать подключившимся по ipv4 игрокам инфу о сервере
+        for (crauto [ipv4, info]: _players) {
+          _upm.push(get_server_info_packet(), info.ip_v4);
+        }
+      } // if broadcast timer
+    } // if _ump active
   }
 
   inline void draw(Image& dst) const {
@@ -83,16 +89,7 @@ struct Server::Impl {
 
   inline void broadcast_send() {
     assert(_upm.is_server());
-
-    net::Packet broadcast_packet = new_packet<Packet_broadcast>();
-    rauto raw = net::bytes_to_packet<Packet_broadcast>(broadcast_packet.bytes);
-    prepare_game_version(raw.game_version);
-    prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
-    raw.connected_players = _players.size();
-    raw.hash = net::get_hash(broadcast_packet);
-    hpw_log("send broadcast packet " + n2s(_broadcast_count) + " (hash: " + n2hex(raw.hash) + ")\n");
-
-    _upm.broadcast_push(std::move(broadcast_packet));
+    _upm.broadcast_push(get_server_info_packet());
     ++_broadcast_count;
   }
 
@@ -156,12 +153,11 @@ struct Server::Impl {
     }
 
     crauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
+    
     // version check:
     Version local_ver;
     prepare_game_version(local_ver);
-    if (local_ver == raw.game_version)
-      hpw_log("версии игры совпадают\n");
-    else
+    if (local_ver != raw.game_version)
       hpw_log("версии игры не совпадают\n");
 
     // save player info
@@ -169,6 +165,19 @@ struct Server::Impl {
       .ip_v4 = packet.ip_v4,
       .short_nickname = raw.short_nickname
     };
+
+    // сразу дать игроку знать что сейчас на сервере
+    _upm.push(get_server_info_packet(), packet.ip_v4);
+  }
+
+  inline net::Packet get_server_info_packet() const {
+    net::Packet ret = new_packet<Packet_server_info>();
+    rauto raw = net::bytes_to_packet<Packet_server_info>(ret.bytes);
+    prepare_game_version(raw.game_version);
+    prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
+    raw.connected_players = _players.size();
+    raw.hash = net::get_hash(ret);
+    return ret;
   }
 }; // Impl 
 
