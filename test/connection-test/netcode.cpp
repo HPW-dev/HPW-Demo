@@ -13,9 +13,19 @@
 #include "util/math/random.hpp"
 
 struct Netcode::Impl {
+  net::Udp_packet_mgr _upm {};
+
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port)
   {
-    // TODO
+    hpw_log (
+      "start " + Str(is_server ? "server" : "client") + " mode:\n" +
+      "- input ip: " + ip_v4 + "\n" +
+      "- input port: " + n2s(port) + "\n"
+    );
+    if (is_server)
+      _upm.start_server(ip_v4, port);
+    else
+      _upm.start_client(ip_v4, port);
   }
 
   inline void draw(Image& dst) const {
