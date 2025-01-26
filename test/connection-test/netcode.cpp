@@ -24,16 +24,13 @@ struct Netcode::Impl {
   std::unordered_map<Str, Player_info> _players {}; // <Ip, Info>
 
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
-    hpw_log (
-      "start " + Str(is_server ? "server" : "client") + " mode:\n" +
-      "- input ip: " + ip_v4 + "\n" +
-      "- input port: " + n2s(port) + "\n"
-    );
-
     if (is_server)
       _upm.start_server(ip_v4, port);
     else
       _upm.start_client(ip_v4, port);
+
+    hpw_log("created " + Str(_upm.is_server() ? "server" : "client") +
+      " at ip:port " + _upm.ip_v4() + ":" + n2s(_upm.port()) + "\n");
 
     // если кастомного имени, сгенерить случайное
     if (hpw::player_name.empty()) {
