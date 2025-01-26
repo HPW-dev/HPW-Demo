@@ -45,6 +45,7 @@ struct Udp_packet_mgr::Impl {
     else
       _ip_v4 = ip_v4;
     init_unique(_socket, _io, ip_udp::endpoint(asio::ip::address_v4::from_string(_ip_v4), _port));
+    _ip_v4 = _socket->local_endpoint().address().to_v4().to_string();
     _socket->set_option(ip_udp::socket::reuse_address(true));
     _socket->set_option(ip_udp::socket::broadcast(true));
     _status.is_active = true;
@@ -61,6 +62,7 @@ struct Udp_packet_mgr::Impl {
     else
       _ip_v4 = ip_v4;
     init_unique(_socket, _io, ip_udp::endpoint(asio::ip::address_v4::from_string(_ip_v4), _port));
+    _ip_v4 = _socket->local_endpoint().address().to_v4().to_string();
     _status.is_active = true;
     _status.is_server = false;
     start_waiting_packets();
