@@ -142,8 +142,8 @@ struct Server::Impl {
       switch (tag) {
         case Tag::ERROR: error("tag error"); break;
         case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
-        case Tag::SERVER_BROADCAST: hpw_log("broadcast tag, ignore\n"); break;
-        case Tag::CLIENT_CONNECT: process_connection(packet); break;
+        case Tag::SERVER_INFO: hpw_log("broadcast tag, ignore\n"); break;
+        case Tag::CLIENT_INFO: process_connection(packet); break;
         default: hpw_log("unknown tag, ignore\n"); break;
       }
     } // for packets
@@ -152,12 +152,12 @@ struct Server::Impl {
   inline void process_connection(cr<net::Packet> packet) {
     hpw_log("process connection packet...\n");
 
-    if (packet.bytes.size() != sizeof(Packet_connect)) {
-      hpw_log("размер пакета несовпадает с Packet_connect, игнор\n");
+    if (packet.bytes.size() != sizeof(Packet_client_info)) {
+      hpw_log("размер пакета несовпадает с Packet_client_info, игнор\n");
       return;
     }
 
-    crauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
+    crauto raw = net::bytes_to_packet<Packet_client_info>(packet.bytes);
 
     // version check:
     Version local_ver;

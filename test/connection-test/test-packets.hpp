@@ -8,9 +8,10 @@ enum class Tag: byte {
   EMPTY = 0,
   ERROR, // заставляет кинуть hpw::error
   MESSAGE, // текстовое сообщение
-  CLIENT_CONNECT, // запрос на подключение к серверу
-  SERVER_BROADCAST, // широковещательное приглашение от сервера
+  CLIENT_INFO, // инфа для подключения к серверу
+  SERVER_INFO, // инфа о сервере
   DISCONNECT, // сигнал выключающий сервер или клиента
+  CONNECTED, // сервер или клиент смогли приконнектиться
 };
 
 #pragma pack(push, 1)
@@ -33,7 +34,7 @@ struct Version {
 
 #pragma pack(push, 1)
 struct Packet_server_info {
-  Tag tag {Tag::SERVER_BROADCAST};
+  Tag tag {Tag::SERVER_INFO};
   char32_t short_nickname[SHORT_NICKNAME_SZ]; // сокращённый ник сервера
   u16_t connected_players {}; // сколько игроков уже подключено к серверу
   Version game_version {}; // с какой версией игры играет сервак
@@ -42,8 +43,8 @@ struct Packet_server_info {
 #pragma pack(pop)
 
 #pragma pack(push, 1)
-struct Packet_connect {
-  Tag tag {Tag::CLIENT_CONNECT};
+struct Packet_client_info {
+  Tag tag {Tag::CLIENT_INFO};
   char32_t short_nickname[SHORT_NICKNAME_SZ]; // сокращённый ник клиента
   Version game_version {}; // с какой версией игры играет клиент
   net::Hash hash {}; // контрольная сумма пакета

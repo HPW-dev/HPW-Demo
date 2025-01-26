@@ -27,6 +27,7 @@ struct Client::Impl {
   Delta_time _server_ping {-1};
   net::Udp_packet_mgr _upm {};
   uint _total_loaded_packets {};
+  bool _connected {};
 
   inline explicit Impl(cr<Str> ip_v4, const net::Port port) {
     _menu = new_unique<Text_menu>(
@@ -89,6 +90,14 @@ struct Client::Impl {
       try {
         _upm.update();
         process_packets();
+
+        if (--_reserve_connection_timer == 0) {
+          _reserve_connection_timer = CONNECTION_INTERVAL;
+
+          // давать серверу обновлённую инфу о себе
+          if (_connected)
+            send_connection();
+        }
       } catch (cr<hpw::Error> err) {
         hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка обмена данных" +
           utf8_to_32(err.what()), get_locale_str("common.warning")) );
@@ -134,8 +143,8 @@ struct Client::Impl {
   }
 
   inline net::Packet get_connection_packet() const {
-    net::Packet packet = new_packet<Packet_connect>();
-    rauto raw = net::bytes_to_packet<Packet_connect>(packet.bytes);
+    net::Packet packet = new_packet<Packet_client_info>();
+    rauto raw = net::bytes_to_packet<Packet_client_info>(packet.bytes);
     prepare_game_version(raw.game_version);
     prepare_short_nickname(raw.short_nickname, SHORT_NICKNAME_SZ);
     raw.hash = net::get_hash(packet);
@@ -173,8 +182,8 @@ struct Client::Impl {
       switch (tag) {
         case Tag::ERROR: error("tag error"); break;
         case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
-        case Tag::SERVER_BROADCAST: process_broadcast(packet); break;
-        case Tag::CLIENT_CONNECT: hpw_log("client connect, ignore\n"); break;
+        case Tag::SERVER_INFO: process_broadcast(packet); break;
+        case Tag::CLIENT_INFO: hpw_log("client connect, ignore\n"); break;
         case Tag::DISCONNECT: process_disconnect(packet); break;
         default: hpw_log("unknown tag, ignore\n"); break;
       }
@@ -190,15 +199,17 @@ struct Client::Impl {
     }
 
     crauto raw = net::bytes_to_packet<Packet_disconnect>(src.bytes);
-    // если сервер отключает тебя:
-    if (raw.disconnect_you) {
-      error("need impl");
-    } else { // если сервер отключился сам:
-      _server_players = {};
-      _server_ipv4.clear();
-      _server_name.clear();
-      _server_ping = -1;
-    }
+
+    if (raw.disconnect_you)
+      hpw_log("сервер отключает тебя\n");
+    else
+      hpw_log("сервер отключился сам\n");
+
+    _server_players = {};
+    _server_ipv4.clear();
+    _server_name.clear();
+    _server_ping = -1;
+    _connected = {};
   }
 
   inline void process_broadcast(cr<net::Packet> packet) {
