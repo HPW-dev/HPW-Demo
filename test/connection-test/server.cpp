@@ -36,7 +36,10 @@ struct Server::Impl {
       Menu_items { new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }), },
       Vec{15, 10}
     );
-    hpw::player_name = U".:Strawberry Server (Connection test):.";
+
+    if (hpw::player_name.empty())
+      hpw::player_name = U".:Strawberry Server (Connection test):.";
+      
     server_start(ip_v4, port);
   }
 

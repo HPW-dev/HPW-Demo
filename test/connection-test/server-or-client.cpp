@@ -4,6 +4,7 @@
 #include "server.hpp"
 #include "client.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/user.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/scene/scene-enter-text.hpp"
@@ -36,6 +37,13 @@ struct Server_or_client::Impl {
           U"Port: ",
           n2s<utf32>(_port),
           [this](cr<utf32> text) { _port = s2n<utf32, net::Port>(text, std::ios::dec); }
+        )); }),
+        new_shared<Menu_text_item>(U"задать никнейм", [this]{ hpw::scene_mgr.add(new_shared<Scene_enter_text>(
+          U"Введите ник (50 символов макс.)",
+          U"Escape чтобы выйти, Enter чтобы подтвердить",
+          U"Никнейм: ",
+          hpw::player_name,
+          [this](cr<utf32> text) { hpw::player_name = text; }
         )); }),
         new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }),
       },

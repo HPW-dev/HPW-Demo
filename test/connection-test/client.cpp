@@ -59,10 +59,12 @@ struct Client::Impl {
       Vec{15, 10}
     );
 
-    hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок (";
-    cauto rnd_num = rndu_fast(999);
-    hpw::player_name += n2s<utf32>(rnd_num);
-    hpw::player_name += U")";
+    if (hpw::player_name.empty()) {
+      hpw::player_name = U" ʕ•ᴥ•ʔ Тестовый игрок (";
+      cauto rnd_num = rndu_fast(999);
+      hpw::player_name += n2s<utf32>(rnd_num);
+      hpw::player_name += U")";
+    }
     
     try {
       _upm.start_client(ip_v4, port);
