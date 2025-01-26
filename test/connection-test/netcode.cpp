@@ -55,7 +55,6 @@ struct Netcode::Impl {
     std::stringstream ss;
     ss << "N E T P L A Y   I N F O :\n";
     ss << "- self name: " << utf32_to_8(hpw::player_name) << "\n";
-    ss << "- player count: " << _players.size() << "\n";
     ss << "- players:";
     if (_players.empty()) {
       ss << "empty\n";
