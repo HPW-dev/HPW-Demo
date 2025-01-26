@@ -43,12 +43,14 @@ struct Server::Impl {
     server_start(ip_v4, port);
   }
 
+  inline ~Impl() {
+    if (_upm.is_active())
+      send_disconnect();
+  }
+
   inline void update(const Delta_time dt) {
-    if (is_pressed_once(hpw::keycode::escape)) {
-      if (_upm.is_active())
-        send_disconnect();
+    if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
-    }
 
     _menu->update(dt);
 
@@ -184,9 +186,11 @@ struct Server::Impl {
   }
 
   inline void send_disconnect() {
+    hpw_log("send info about disconnect\n");
     net::Packet packet = new_packet<Packet_disconnect>();
     rauto raw = net::bytes_to_packet<Packet_disconnect>(packet.bytes);
     raw.hash = net::get_hash(packet);
+    
     // разослать всем сигнал о том, что ты выключаешься
     for (crauto [ipv4, info]: _players)
       _upm.send(packet, info.ip_v4);
