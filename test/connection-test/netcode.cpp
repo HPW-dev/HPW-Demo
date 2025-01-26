@@ -22,6 +22,8 @@ struct Player_info {
 struct Netcode::Impl {
   net::Udp_packet_mgr _upm {};
   std::unordered_map<Str, Player_info> _players {}; // <Ip, Info>
+  uint _received_packets {};
+  uint _sended_packets {};
 
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
     if (is_server)
@@ -34,7 +36,7 @@ struct Netcode::Impl {
 
     // если кастомного имени, сгенерить случайное
     if (hpw::player_name.empty()) {
-      hpw::player_name = U"ʕ•ᴥ•ʔ Тестовый игрок №";
+      hpw::player_name = U"ʕ•ᴥ•ʔ Игрок №";
       cauto rnd_num = rndu_fast(999);
       hpw::player_name += n2s<utf32>(rnd_num);
     }
@@ -47,22 +49,29 @@ struct Netcode::Impl {
   }
 
   inline void draw(Image& dst) const {
-    crauto font = graphic::font;
+    crauto font = graphic::system_mono;
     assert(font);
+
     std::stringstream ss;
     ss << "N E T P L A Y   I N F O :\n";
-    ss << "- self name: " << utf32_to_8(hpw::player_name) << "\n";
+    ss << "- self name \"" << utf32_to_8(hpw::player_name) << "\"\n";
+    ss << "- data packets:\n";
+    ss << "  * received " << _received_packets << "\n";
+    ss << "  * sended " << _sended_packets << "\n";
     ss << "- players:";
+
+    // показать игроков
     if (_players.empty()) {
       ss << "empty\n";
     } else {
       ss << "\n";
       for (crauto [ip, info]: _players) {
         ss << "  * " << ip << ":" << _upm.port() << " ";
-        ss << utf32_to_8(info.nickname) << " - ";
+        ss << "\"" << utf32_to_8(info.nickname) << "\" - ";
         ss << (info.connected ? "connected" : "waiting for connection...") << "\n";
       }
     }
+
     const Vec pos(15, 90);
     font->draw(dst, pos, utf8_to_32(ss.str()));
   }
