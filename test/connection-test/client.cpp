@@ -89,11 +89,6 @@ struct Client::Impl {
       try {
         _upm.update();
         process_packets();
-
-        if (!_server_ipv4.empty() && --_reserve_connection_timer == 0) {
-          _reserve_connection_timer = CONNECTION_INTERVAL;
-          send_connection();
-        }
       } catch (cr<hpw::Error> err) {
         hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(U"ошибка обмена данных" +
           utf8_to_32(err.what()), get_locale_str("common.warning")) );
@@ -134,7 +129,7 @@ struct Client::Impl {
     text += U"* Name " + (_server_name.empty() ? U"-" : _server_name) + U"\n";
     text += U"* Players " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_players)) + U"\n";
     text += U"* Ping " + (_server_ping < 0 ? U"-" : (n2s<utf32>(_server_ping) + U" ms.")) + U"\n";
-    const Vec pos(50, 60);
+    const Vec pos(60, 80);
     font->draw(dst, pos, text);
   }
 
