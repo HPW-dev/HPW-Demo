@@ -1,4 +1,5 @@
 #include <cassert>
+#include <unordered_map>
 #include <sstream>
 #include "netcode.hpp"
 #include "test-packets.hpp"
@@ -13,8 +14,14 @@
 #include "util/str-util.hpp"
 #include "util/math/random.hpp"
 
+struct Player_info {
+  utf32 nickname {};
+  bool connected {};
+};
+
 struct Netcode::Impl {
   net::Udp_packet_mgr _upm {};
+  std::unordered_map<Str, Player_info> _players {}; // <Ip, Info>
 
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
     hpw_log (
@@ -34,6 +41,12 @@ struct Netcode::Impl {
       cauto rnd_num = rndu_fast(999);
       hpw::player_name += n2s<utf32>(rnd_num);
     }
+
+    // добавить самого себя в список игроков
+    _players[_upm.ip_v4()] = Player_info {
+      .nickname = hpw::player_name,
+      .connected = true
+    };
   }
 
   inline void draw(Image& dst) const {
@@ -42,7 +55,19 @@ struct Netcode::Impl {
     std::stringstream ss;
     ss << "N E T P L A Y   I N F O :\n";
     ss << "- self name: " << utf32_to_8(hpw::player_name) << "\n";
-    const Vec pos(60, 80);
+    ss << "- player count: " << _players.size() << "\n";
+    ss << "- players:";
+    if (_players.empty()) {
+      ss << "empty\n";
+    } else {
+      ss << "\n";
+      for (crauto [ip, info]: _players) {
+        ss << "  * " << ip << ":" << _upm.port() << " ";
+        ss << utf32_to_8(info.nickname) << " - ";
+        ss << (info.connected ? "connected" : "waiting for connection...") << "\n";
+      }
+    }
+    const Vec pos(15, 90);
     font->draw(dst, pos, utf8_to_32(ss.str()));
   }
 
