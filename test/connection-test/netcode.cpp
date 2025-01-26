@@ -1,4 +1,5 @@
 #include <cassert>
+#include <sstream>
 #include "netcode.hpp"
 #include "test-packets.hpp"
 #include "game/core/scenes.hpp"
@@ -15,21 +16,34 @@
 struct Netcode::Impl {
   net::Udp_packet_mgr _upm {};
 
-  inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port)
-  {
+  inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
     hpw_log (
       "start " + Str(is_server ? "server" : "client") + " mode:\n" +
       "- input ip: " + ip_v4 + "\n" +
       "- input port: " + n2s(port) + "\n"
     );
+
     if (is_server)
       _upm.start_server(ip_v4, port);
     else
       _upm.start_client(ip_v4, port);
+
+    // если кастомного имени, сгенерить случайное
+    if (hpw::player_name.empty()) {
+      hpw::player_name = U"ʕ•ᴥ•ʔ Тестовый игрок №";
+      cauto rnd_num = rndu_fast(999);
+      hpw::player_name += n2s<utf32>(rnd_num);
+    }
   }
 
   inline void draw(Image& dst) const {
-    // TODO
+    crauto font = graphic::font;
+    assert(font);
+    std::stringstream ss;
+    ss << "N E T P L A Y   I N F O :\n";
+    ss << "- self name: " << utf32_to_8(hpw::player_name) << "\n";
+    const Vec pos(60, 80);
+    font->draw(dst, pos, utf8_to_32(ss.str()));
   }
 
   inline void update(const Delta_time dt) {
