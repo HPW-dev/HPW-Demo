@@ -138,6 +138,7 @@ struct Client::Impl {
     text += U"* Name " + (_server_name.empty() ? U"-" : _server_name) + U"\n";
     text += U"* Players " + (_server_ipv4.empty() ? U"-" : n2s<utf32>(_server_players)) + U"\n";
     text += U"* Ping " + (_server_ping < 0 ? U"-" : (n2s<utf32>(_server_ping) + U" ms.")) + U"\n";
+    text += U"* Connected? " + utf32(_connected ? U"yes" : U"no") + U"\n";
     const Vec pos(60, 80);
     font->draw(dst, pos, text);
   }
@@ -154,6 +155,14 @@ struct Client::Impl {
 
   inline void send_connection() {
     _upm.push(get_connection_packet(), _server_ipv4);
+    _upm.push(get_packet_connected(), _server_ipv4);
+  }
+
+  inline net::Packet get_packet_connected() const {
+    net::Packet ret = new_packet<Packet_connected>();
+    rauto raw = net::bytes_to_packet<Packet_connected>(ret.bytes);
+    raw.hash = net::get_hash(ret);
+    return ret;
   }
 
   // разбор полученных пакетов
@@ -185,9 +194,21 @@ struct Client::Impl {
         case Tag::SERVER_INFO: process_broadcast(packet); break;
         case Tag::CLIENT_INFO: hpw_log("client connect, ignore\n"); break;
         case Tag::DISCONNECT: process_disconnect(packet); break;
+        case Tag::CONNECTED: process_connected(packet); break;
         default: hpw_log("unknown tag, ignore\n"); break;
       }
     } // for packets
+  }
+
+  inline void process_connected(cr<net::Packet> src) {
+    hpw_log("process connected info...\n");
+
+    if (src.bytes.size() != sizeof(Packet_connected)) {
+      hpw_log("размер пакета несовпадает с Packet_connected, игнор\n");
+      return;
+    }
+
+    _connected = true;
   }
 
   inline void process_disconnect(cr<net::Packet> src) {
@@ -209,7 +230,7 @@ struct Client::Impl {
     _server_ipv4.clear();
     _server_name.clear();
     _server_ping = -1;
-    _connected = {};
+    _connected = false;
   }
 
   inline void process_broadcast(cr<net::Packet> packet) {

@@ -20,6 +20,7 @@
 struct Player_info {
   Str ip_v4 {};
   utf32 short_nickname {};
+  bool connected {};
 };
 
 struct Server::Impl {
@@ -65,6 +66,7 @@ struct Server::Impl {
         // дать подключившимся по ipv4 игрокам инфу о сервере
         for (crauto [ipv4, info]: _players) {
           _upm.push(get_server_info_packet(), info.ip_v4);
+          _upm.push(get_packet_connected(), info.ip_v4);
         }
       } // if broadcast timer
     } // if _ump active
@@ -109,7 +111,9 @@ struct Server::Impl {
     } else {
       for (crauto player: _players) {
         text += U"Player " + utf8_to_32(player.second.ip_v4) +
-          U" \"" + player.second.short_nickname + U"\"\n";
+          U" \"" + player.second.short_nickname + U"\" " +
+          (player.second.connected ? U"connected" : U"waiting connection...") +
+          U"\n";
       }
     }
     const Vec pos(50, 60);
@@ -143,13 +147,25 @@ struct Server::Impl {
         case Tag::ERROR: error("tag error"); break;
         case Tag::EMPTY: hpw_log("empty tag, ignore\n"); break;
         case Tag::SERVER_INFO: hpw_log("broadcast tag, ignore\n"); break;
-        case Tag::CLIENT_INFO: process_connection(packet); break;
+        case Tag::CLIENT_INFO: process_clinet_info(packet); break;
+        case Tag::CONNECTED: process_connected(packet); break;
         default: hpw_log("unknown tag, ignore\n"); break;
       }
     } // for packets
   }
 
-  inline void process_connection(cr<net::Packet> packet) {
+  inline void process_connected(cr<net::Packet> src) {
+    hpw_log("process connected info...\n");
+
+    if (src.bytes.size() != sizeof(Packet_connected)) {
+      hpw_log("размер пакета несовпадает с Packet_connected, игнор\n");
+      return;
+    }
+
+    _players[src.ip_v4].connected = true;
+  }
+
+  inline void process_clinet_info(cr<net::Packet> packet) {
     hpw_log("process connection packet...\n");
 
     if (packet.bytes.size() != sizeof(Packet_client_info)) {
@@ -173,6 +189,13 @@ struct Server::Impl {
 
     // сразу дать игроку знать что сейчас на сервере
     _upm.push(get_server_info_packet(), packet.ip_v4);
+  }
+
+  inline net::Packet get_packet_connected() const {
+    net::Packet ret = new_packet<Packet_connected>();
+    rauto raw = net::bytes_to_packet<Packet_connected>(ret.bytes);
+    raw.hash = net::get_hash(ret);
+    return ret;
   }
 
   inline net::Packet get_server_info_packet() const {

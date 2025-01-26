@@ -60,6 +60,14 @@ struct Packet_disconnect {
 };
 #pragma pack(pop)
 
+#pragma pack(push, 1)
+// сигнал об успешном подключении
+struct Packet_connected {
+  Tag tag {Tag::CONNECTED};
+  net::Hash hash {};
+};
+#pragma pack(pop)
+
 template <class T>
 net::Packet new_packet() {
   net::Packet dst {};
