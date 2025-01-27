@@ -4,6 +4,7 @@
 #include "netcode.hpp"
 #include "packet/connection-info.hpp"
 #include "packet/connected.hpp"
+#include "packet/disconnected.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
@@ -54,7 +55,10 @@ struct Netcode::Impl {
   }
 
   inline ~Impl() {
-    /*_upm.broadcast_push(net::Pck_disconnected().to_packet(), _upm.port());*/
+    if (_upm.is_server())
+      _upm.broadcast_push(net::Pck_disconnected().to_packet(), _upm.port());
+    elif (!_server_ip.empty())
+      _upm.push(net::Pck_disconnected().to_packet(), _server_ip, _upm.port());
     ++_sended_packets;
   }
 
@@ -219,7 +223,18 @@ struct Netcode::Impl {
   }
 
   inline void process_disconnect(cr<net::Packet> src) {
-    error("need impl");
+    net::Pck_disconnected raw;
+    raw.from_packet(src);
+    iferror (raw.disconnect_you, "need impl");
+    
+    if (_upm.is_server()) {
+      try {
+        _players.at(src.ip_v4).connected = false;
+      } catch (...) {}
+    } else {
+      _server_ip = {};
+      _players.clear();
+    }
   }
 
   inline void process_connected(cr<net::Packet> src) {
