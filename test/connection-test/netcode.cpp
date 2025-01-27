@@ -92,11 +92,18 @@ struct Netcode::Impl {
   }
 
   inline void connect_to_broadcast() {
-    // TODO
+    error("need impl");
   }
 
   inline void connect_to(cr<Str> ip_v4) {
-    // TODO
+    try {
+      _upm.push(get_connect_packet(), ip_v4, _upm.port());
+    } catch (...) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
+        U"не удалось подключиться по IP: " + utf8_to_32(ip_v4) + U"\n",
+        get_locale_str("common.warning")
+      ) );
+    }
   }
 
   inline net::Packet get_broadcast_packet() {
@@ -135,11 +142,18 @@ struct Netcode::Impl {
   }
 
   inline void process_connection_info(cr<net::Packet> src) {
+    net::Pck_connection_info raw;
+    raw.from_packet(src);
+
     if (_upm.is_server()) {
-      hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
+      if (raw.is_server) {
+        hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
+      } else {
+        hpw_log("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
+          + "   ip: " + src.ip_v4 + "\n");
+      }
     } else { // client
-      net::Pck_connection_info raw;
-      raw.from_packet(src);
+      // TODO
       /*std::stringstream info;
       info << "получен пакет с инфой о подключении:\n";
       info << "- имя сервера: " << utf32_to_8(raw.self_nickname) << "\n";
@@ -154,6 +168,13 @@ struct Netcode::Impl {
 
   inline void process_connected(cr<net::Packet> src) {
     error("need impl");
+  }
+
+  inline net::Packet get_connect_packet() {
+    net::Pck_connection_info raw;
+    raw.is_server = false;
+    raw.self_nickname = hpw::player_name;
+    return raw.to_packet();
   }
 };
 
