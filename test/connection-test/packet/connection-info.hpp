@@ -19,7 +19,7 @@ public:
   bool is_server {};
 
   void from_packet(cr<Packet> src) override;
-  Packet to_packet() const override;
+  Packet to_packet(bool with_hash = true) const override;
   inline Tag tag() const override { return Tag::CONNECTION_INFO; }
 };
 

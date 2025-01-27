@@ -9,8 +9,8 @@ void Pck_connection_info::from_packet(cr<Packet> src) {
   cauto tag = read_data<Tag>(src.bytes, pos);
   iferror(tag != this->tag(), "теги пакета не совпадают");
 
-  is_server = read_data<bool>(src.bytes, pos);
-  self_nickname = read_short_nickname(src.bytes, pos);
+  this->is_server = read_data<bool>(src.bytes, pos);
+  this->self_nickname = read_short_nickname(src.bytes, pos);
 
   const u32_t player_count = read_data<u32_t>(src.bytes, pos);
   assert(player_count < 2'000);
@@ -23,11 +23,11 @@ void Pck_connection_info::from_packet(cr<Packet> src) {
   }
 
   cauto hash = read_data<Hash>(src.bytes, pos);
-  cauto local_hash = get_packet_hash(to_packet());
+  cauto local_hash = get_packet_hash(to_packet(false));
   iferror(hash != local_hash, "чексумма пакета не совпадает");
 }
 
-Packet Pck_connection_info::to_packet() const {
+Packet Pck_connection_info::to_packet(bool with_hash) const {
   Packet ret;
   push_data(ret.bytes, this->tag());
   push_data(ret.bytes, is_server);
@@ -40,7 +40,8 @@ Packet Pck_connection_info::to_packet() const {
     push_data(ret.bytes, player.connected);
   }
   
-  push_data(ret.bytes, get_packet_hash(ret));
+  if (with_hash)
+    push_data(ret.bytes, get_packet_hash(ret));
   return ret;
 }
 

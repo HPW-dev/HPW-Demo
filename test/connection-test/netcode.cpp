@@ -7,6 +7,8 @@
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
 #include "game/util/keybits.hpp"
+#include "game/util/locale.hpp"
+#include "game/scene/msgbox/msgbox-enter.hpp"
 #include "graphic/image/image.hpp"
 #include "util/net/udp-packet-mgr.hpp"
 #include "util/log.hpp"
@@ -23,10 +25,19 @@ struct Netcode::Impl {
   uint _sended_packets {};
 
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
-    if (is_server)
-      _upm.start_server(ip_v4, port);
-    else
-      _upm.start_client(ip_v4, port);
+    try {
+      if (is_server)
+        _upm.start_server(ip_v4, port);
+      else
+        _upm.start_client(ip_v4, port);
+    } catch (...) {
+      hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
+        U"ошибка при установлении соединения, проверьте настройки\n",
+        get_locale_str("common.warning")
+      ) );
+      hpw::scene_mgr.back();
+      return;
+    }
 
     hpw_log("created " + Str(_upm.is_server() ? "server" : "client") +
       " at ip:port " + _upm.ip_v4() + ":" + n2s(_upm.port()) + "\n");
@@ -127,7 +138,13 @@ struct Netcode::Impl {
     if (_upm.is_server()) {
       hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
     } else { // client
-      hpw_log("получен пакет с инфой о подключении\n");
+      net::Pck_connection_info raw;
+      raw.from_packet(src);
+      /*std::stringstream info;
+      info << "получен пакет с инфой о подключении:\n";
+      info << "- имя сервера: " << utf32_to_8(raw.self_nickname) << "\n";
+      info << "- число игроков на сервере: " << raw.players.size() << "\n";
+      hpw_log(info.str());*/
     }
   }
 

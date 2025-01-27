@@ -13,7 +13,7 @@ public:
   Pck_gen_base() = default;
   virtual ~Pck_gen_base() = default;
   virtual void from_packet(cr<Packet> src) = 0;
-  virtual Packet to_packet() const = 0;
+  virtual Packet to_packet(bool with_hash = true) const = 0;
   virtual Tag tag() const = 0;
 };
 
