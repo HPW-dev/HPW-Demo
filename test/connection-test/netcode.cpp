@@ -68,12 +68,16 @@ struct Netcode::Impl {
   }
 
   inline void update(const Delta_time dt) {
+    _upm.update();
+
     if (--_background_actions_timer == 0) {
       _background_actions_timer = BACKGROUND_ACTIONS_TIMER;
 
       if (_upm.is_server())
         _upm.broadcast_push(get_broadcast_packet(), _upm.port());
     }
+
+    process_packets();
   }
 
   inline void connect_to_broadcast() {
@@ -91,6 +95,48 @@ struct Netcode::Impl {
     for (crauto [_, player]: _players)
       raw.players.push_back(player);
     return raw.to_packet();
+  }
+
+  inline void process_packets() {
+    return_if(!_upm.is_active());
+    return_if(!_upm.has_packets());
+
+    for (crauto packet: _upm.unload_all()) {
+      try {
+        switch (net::get_packet_tag(packet)) {
+          case net::Tag::EMPTY: error("пакет с пустой меткой. Источник " + packet.ip_v4 + ". Игнор пакета..."); break;
+          case net::Tag::MESSAGE: process_message(packet); break;
+          case net::Tag::CONNECTION_INFO: process_connection_info(packet); break;
+          case net::Tag::DISCONNECT: process_disconnect(packet); break;
+          case net::Tag::CONNECTED: process_connected(packet); break;
+          default: hpw_warning("неизвестная метка пакета. Игнор пакета...\n"); break;
+        }
+      } catch (cr<hpw::Error> err) {
+        hpw_warning(Str("Ошибка при обработке пакета: ") + err.what() + "\n");
+      } catch (...) {
+        hpw_warning("Неизвестная ошибка при обработке пакета. Игнор пакета...\n");
+      }
+    } // for packets
+  }
+
+  inline void process_message(cr<net::Packet> src) {
+    error("need impl");
+  }
+
+  inline void process_connection_info(cr<net::Packet> src) {
+    if (_upm.is_server()) {
+      hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
+    } else { // client
+      hpw_log("получен пакет с инфой о подключении\n");
+    }
+  }
+
+  inline void process_disconnect(cr<net::Packet> src) {
+    error("need impl");
+  }
+
+  inline void process_connected(cr<net::Packet> src) {
+    error("need impl");
   }
 };
 
