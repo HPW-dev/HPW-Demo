@@ -30,6 +30,7 @@ def accept_config():
   ])
 
   match hpw_config.system:
+    case System.linux: pass
     case System.windows:
       inc_path.extend([thirdparty_dir + "include/_windows_only"])
       lib_path.extend([
