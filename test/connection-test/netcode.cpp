@@ -23,6 +23,7 @@ struct Netcode::Impl {
   std::unordered_map<Str, net::Player_info> _players {}; // <Ip, Info>
   uint _received_packets {};
   uint _sended_packets {};
+  uint _ignored_packets {};
 
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
     try {
@@ -58,8 +59,9 @@ struct Netcode::Impl {
     ss << "N E T P L A Y   I N F O :\n";
     ss << "- self name \"" << utf32_to_8(hpw::player_name) << "\"\n";
     ss << "- data packets:\n";
-    ss << "  * received " << _received_packets << "\n";
     ss << "  * sended " << _sended_packets << "\n";
+    ss << "  * received " << _received_packets << "\n";
+    ss << "  * ignored " << _ignored_packets << "\n";
     ss << "- players:";
 
     // показать игроков
@@ -84,8 +86,10 @@ struct Netcode::Impl {
     if (--_background_actions_timer == 0) {
       _background_actions_timer = BACKGROUND_ACTIONS_TIMER;
 
-      if (_upm.is_server())
+      if (_upm.is_server()) {
         _upm.broadcast_push(get_broadcast_packet(), _upm.port());
+        ++_sended_packets;
+      }
     }
 
     process_packets();
@@ -93,11 +97,13 @@ struct Netcode::Impl {
 
   inline void connect_to_broadcast() {
     error("need impl");
+    ++_sended_packets;
   }
 
   inline void connect_to(cr<Str> ip_v4) {
     try {
       _upm.push(get_connect_packet(), ip_v4, _upm.port());
+      ++_sended_packets;
     } catch (...) {
       hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
         U"не удалось подключиться по IP: " + utf8_to_32(ip_v4) + U"\n",
@@ -120,19 +126,31 @@ struct Netcode::Impl {
     return_if(!_upm.has_packets());
 
     for (crauto packet: _upm.unload_all()) {
+      ++_received_packets;
+
       try {
         switch (net::get_packet_tag(packet)) {
-          case net::Tag::EMPTY: error("пакет с пустой меткой. Источник " + packet.ip_v4 + ". Игнор пакета..."); break;
+          case net::Tag::EMPTY: {
+            error("пакет с пустой меткой. Источник " + packet.ip_v4 + ". Игнор пакета...");
+            ++_ignored_packets;
+            break;
+          }
           case net::Tag::MESSAGE: process_message(packet); break;
           case net::Tag::CONNECTION_INFO: process_connection_info(packet); break;
           case net::Tag::DISCONNECT: process_disconnect(packet); break;
           case net::Tag::CONNECTED: process_connected(packet); break;
-          default: hpw_warning("неизвестная метка пакета. Игнор пакета...\n"); break;
+          default: {
+            hpw_warning("неизвестная метка пакета. Игнор пакета...\n");
+            ++_ignored_packets;
+            break;
+          }
         }
       } catch (cr<hpw::Error> err) {
-        hpw_warning(Str("Ошибка при обработке пакета: ") + err.what() + "\n");
+        hpw_warning(Str("Ошибка при обработке пакета: ") + err.what() + ". Игнор пакета...\n");
+        ++_ignored_packets;
       } catch (...) {
         hpw_warning("Неизвестная ошибка при обработке пакета. Игнор пакета...\n");
+        ++_ignored_packets;
       }
     } // for packets
   }
@@ -148,6 +166,7 @@ struct Netcode::Impl {
     if (_upm.is_server()) {
       if (raw.is_server) {
         hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
+        ++_ignored_packets;
       } else {
         hpw_debug("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
           + "   ip: " + src.ip_v4 + "\n");
