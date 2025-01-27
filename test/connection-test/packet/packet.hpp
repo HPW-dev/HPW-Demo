@@ -17,6 +17,8 @@ public:
   virtual Tag tag() const = 0;
 };
 
+// по данным пакета определить метку
+Tag get_packet_tag(cr<Packet> src);
 // по данным пакета генерит его хэш
 Hash get_packet_hash(cr<Packet> src);
 // записать байты в поток

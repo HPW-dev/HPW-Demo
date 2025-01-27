@@ -123,4 +123,11 @@ Hash get_packet_hash(cr<Packet> src) {
   return hasher(src.bytes.data(), data_sz - sizeof(Hash));;
 }
 
+Tag get_packet_tag(cr<Packet> src) {
+  cauto data_sz = src.bytes.size();
+  iferror(data_sz < sizeof(Tag), "метки нету в пакете");
+  Tag ret = *(cptr2ptr<cp<Tag>>(src.bytes.data()));
+  return ret;
+}
+
 } // net ns
