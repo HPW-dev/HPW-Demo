@@ -4,22 +4,47 @@
 namespace net {
 
 void push_bytes(Bytes& dst, cp<byte> src, std::size_t src_sz) {
-  // TODO
-}
-
-void read_bytes(cr<Bytes> src, byte* dst, std::size_t dst_sz, std::size_t& pos) {
-  // TODO
+  ret_if (src_sz == 0);
+  ret_if (!src);
+  iferror(src_sz >= 512 * 1024 * 1024, "слишком много данных");
+  dst.reserve(dst.size() + src_sz);
+  dst.insert(dst.end(), src, src + src_sz);
 }
 
 void push_short_nickname(Bytes& dst, cr<utf32> nickname) {
-  // TODO
+  // лимитировать длину ника
+  const u32_t nick_sz = std::min<u32_t>(nickname.size(), net::SHORT_NICKNAME_SZ);
+  // отправить длину ника
+  push_data(dst, nick_sz);
+  // отправить символы ника
+  if (nick_sz != 0) {
+    push_bytes(dst, cptr2ptr<cp<byte>>(nickname.data()), nick_sz * sizeof(utf32::value_type));
+  }
 }
 
 void push_str(Bytes& dst, cr<Str> str) {
-  // TODO
+  const u32_t sz = str.size();
+  iferror(sz >= 512 * 1024 * 1024, "строка слишком большая");
+  // отправить длину строки
+  push_data(dst, sz);
+  // отправить символы строки
+  if (sz != 0) {
+    push_bytes(dst, cptr2ptr<cp<byte>>(str.data()), sz * sizeof(Str::value_type));
+  }
 }
 
 void push_utf32(Bytes& dst, cr<utf32> str) {
+  const u32_t sz = str.size();
+  iferror(sz >= 512 * 1024 * 1024, "строка слишком большая");
+  // отправить длину строки
+  push_data(dst, sz);
+  // отправить символы строки
+  if (sz != 0) {
+    push_bytes(dst, cptr2ptr<cp<byte>>(str.data()), sz * sizeof(utf32::value_type));
+  }
+}
+
+void read_bytes(cr<Bytes> src, byte* dst, std::size_t dst_sz, std::size_t& pos) {
   // TODO
 }
 
