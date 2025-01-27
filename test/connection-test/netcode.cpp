@@ -25,6 +25,7 @@ struct Netcode::Impl {
   uint _received_packets {};
   uint _sended_packets {};
   uint _ignored_packets {};
+  Str _server_ip {};
 
   inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
     try {
@@ -101,7 +102,13 @@ struct Netcode::Impl {
           _upm.push(net::Pck_connected().to_packet(), addr, _upm.port());
           ++_sended_packets;
         } // for players
-      } // if server
+      } else { // client
+        // дать серваку знать о успешном подключении
+        if (!_server_ip.empty()) {
+          _upm.push(net::Pck_connected().to_packet(), _server_ip, _upm.port());
+          ++_sended_packets;
+        }
+      }
     } // background actions timer
 
     process_packets();
@@ -199,8 +206,9 @@ struct Netcode::Impl {
       _players[src.ip_v4] = net::Player_info {
         .nickname = raw.self_nickname,
         .ip_v4 = src.ip_v4,
-        .connected = false,
+        .connected = true,
       };
+      _server_ip = src.ip_v4;
 
       std::stringstream info;
       info << "получен пакет с инфой о подключении:\n";
