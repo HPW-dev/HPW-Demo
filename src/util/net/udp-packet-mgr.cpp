@@ -110,23 +110,15 @@ struct Udp_packet_mgr::Impl {
 
       if (err) {
         hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
-        start_waiting_packets();
-      }
-
-      if (bytes == 0) {
+      } elif (bytes == 0) {
         hpw_debug("данные не отправлены\n");
-        start_waiting_packets();
-      }
-
-      if (bytes >= net::PACKET_BUFFER_SZ) {
+      } elif (bytes >= net::PACKET_BUFFER_SZ) {
         hpw_debug("недопустимый размер пакета\n");
-        start_waiting_packets();
+      } else {
+        hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+        if (cb)
+          cb();
       }
-      
-      hpw_debug("отправлено " + n2s(bytes) + " байт\n");
-
-      if (cb)
-        cb();
         
       // удалить пакет из списка
       std::erase_if(_packets_to_send, [_for_delete](cr<Packet> packet){ return std::addressof(packet) == _for_delete; });
@@ -159,23 +151,15 @@ struct Udp_packet_mgr::Impl {
 
       if (err) {
         hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
-        start_waiting_packets();
-      }
-
-      if (bytes == 0) {
+      } elif (bytes == 0) {
         hpw_debug("данные не отправлены\n");
-        start_waiting_packets();
-      }
-
-      if (bytes >= net::PACKET_BUFFER_SZ) {
+      } elif (bytes >= net::PACKET_BUFFER_SZ) {
         hpw_debug("недопустимый размер пакета\n");
-        start_waiting_packets();
+      } else {
+        hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+        if (cb)
+          cb();
       }
-
-      hpw_debug("отправлено " + n2s(bytes) + " байт\n");
-
-      if (cb)
-        cb();
         
       // удалить пакет из списка
       std::erase_if(_packets_to_send, [_for_delete](cr<Packet> packet){ return std::addressof(packet) == _for_delete; });
@@ -226,30 +210,24 @@ struct Udp_packet_mgr::Impl {
       [this](cr<std::error_code> err, std::size_t bytes)->void { // handler
         return_if(!_status.is_active);
 
-        if(err) {
+        if (err) {
           hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
-          start_waiting_packets();
-        }
-
-        if(bytes == 0) {
+        } elif (bytes == 0) {
           hpw_debug("данные не прочитаны\n");
-          start_waiting_packets();
-        }
-
-        if(bytes >= net::PACKET_BUFFER_SZ) {
+        } elif (bytes >= net::PACKET_BUFFER_SZ) {
           hpw_debug("недопустимый размер пакета\n");
-          start_waiting_packets();
+        } else {
+          if (_if_loaded_cb)
+            _if_loaded_cb();
+
+          _input_packet.bytes.resize(bytes); // сократить размер пакета
+          _input_packet.ip_v4 = _input_addr.address().to_v4().to_string();
+          _input_packet.port = _input_addr.port();
+          // передать загруженный пакет в буффер загрузок и запустить следующий приём пакетов
+          _loaded_packets.emplace_back(std::move(_input_packet));
+          _input_packet = {};
         }
 
-        if (_if_loaded_cb)
-          _if_loaded_cb();
-
-        _input_packet.bytes.resize(bytes); // сократить размер пакета
-        _input_packet.ip_v4 = _input_addr.address().to_v4().to_string();
-        _input_packet.port = _input_addr.port();
-
-        // передать загруженный пакет в буффер загрузок и запустить следующий приём пакетов
-        _loaded_packets.emplace_back(std::move(_input_packet));
         start_waiting_packets();
       }
     );
