@@ -117,10 +117,7 @@ static inline Hash hasher(cp<byte> src, const std::size_t src_sz, Hash prev=0xFF
 }
 
 Hash get_packet_hash(cr<Packet> src) {
-  cauto data_sz = src.bytes.size();
-  iferror(data_sz < sizeof(Hash), "в пакете нету данных о чексумме");
-  // в конце данных пакета не учитывать данные хэша
-  return hasher(src.bytes.data(), data_sz - sizeof(Hash));
+  return hasher(src.bytes.data(), src.bytes.size());
 }
 
 Tag get_packet_tag(cr<Packet> src) {

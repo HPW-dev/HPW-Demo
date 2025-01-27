@@ -60,16 +60,19 @@ def accept_config():
     case Compiler.clang: env['CXX'] = 'clang++'
     case _: raise ValueError
   
-  used_libs.extend([
-    "ws2_32",
-    "mswsock",
-    "yaml-cpp",
-  ])
+  used_libs.extend(["yaml-cpp"])
   hpw_config.cxx_defines.extend([
-    "-D_WIN32_WINNT=0x0601",
     "-DASIO_STANDALONE",
-    "-DDISABLE_REPLAY", "-DDISABLE_SOUND", "-DDISABLE_CONFIG", "",
+    "-DDISABLE_REPLAY", "-DDISABLE_SOUND", "-DDISABLE_CONFIG",
   ])
+
+  # зависимости ASIO для винды
+  if hpw_config.system == System.windows:
+    used_libs.extend([
+      "ws2_32",
+      "mswsock",
+    ])
+    hpw_config.cxx_defines.extend(["-D_WIN32_WINNT=0x0601"])
 
 def init_sources():
   global sources

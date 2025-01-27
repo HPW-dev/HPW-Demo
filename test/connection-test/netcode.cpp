@@ -3,6 +3,7 @@
 #include <sstream>
 #include "netcode.hpp"
 #include "packet/connection-info.hpp"
+#include "packet/connected.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
@@ -51,6 +52,11 @@ struct Netcode::Impl {
     }
   }
 
+  inline ~Impl() {
+    /*_upm.broadcast_push(net::Pck_disconnected().to_packet(), _upm.port());*/
+    ++_sended_packets;
+  }
+
   inline void draw(Image& dst) const {
     crauto font = graphic::system_mono;
     assert(font);
@@ -89,8 +95,14 @@ struct Netcode::Impl {
       if (_upm.is_server()) {
         _upm.broadcast_push(get_broadcast_packet(), _upm.port());
         ++_sended_packets;
-      }
-    }
+
+        // дать игрокам знать что они законнектились
+        for (crauto [addr, player]: _players) {
+          _upm.push(net::Pck_connected().to_packet(), addr, _upm.port());
+          ++_sended_packets;
+        } // for players
+      } // if server
+    } // background actions timer
 
     process_packets();
   }
@@ -131,13 +143,13 @@ struct Netcode::Impl {
       try {
         switch (net::get_packet_tag(packet)) {
           case net::Tag::EMPTY: {
-            error("пакет с пустой меткой. Источник " + packet.ip_v4 + ". Игнор пакета...");
+            hpw_warning("пакет с пустой меткой. Источник " + packet.ip_v4 + "\n");
             ++_ignored_packets;
             break;
           }
           case net::Tag::MESSAGE: process_message(packet); break;
           case net::Tag::CONNECTION_INFO: process_connection_info(packet); break;
-          case net::Tag::DISCONNECT: process_disconnect(packet); break;
+          case net::Tag::DISCONNECTED: process_disconnect(packet); break;
           case net::Tag::CONNECTED: process_connected(packet); break;
           default: {
             hpw_warning("неизвестная метка пакета. Игнор пакета...\n");
@@ -170,6 +182,7 @@ struct Netcode::Impl {
       } else {
         hpw_debug("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
           + "   ip: " + src.ip_v4 + "\n");
+        // добавить игрока в список
         _players[src.ip_v4] = net::Player_info {
           .nickname = raw.self_nickname,
           .ip_v4 = src.ip_v4,
@@ -202,7 +215,12 @@ struct Netcode::Impl {
   }
 
   inline void process_connected(cr<net::Packet> src) {
-    error("need impl");
+    net::Pck_connected raw;
+    raw.from_packet(src);
+    
+    try {
+      _players.at(src.ip_v4).connected = true;
+    } catch (...) {}
   }
 
   inline net::Packet get_connect_packet() {
