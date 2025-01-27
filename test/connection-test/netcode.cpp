@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <sstream>
 #include "netcode.hpp"
-#include "test-packets.hpp"
+#include "packet/connection-info.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/user.hpp"
@@ -14,14 +14,11 @@
 #include "util/str-util.hpp"
 #include "util/math/random.hpp"
 
-struct Player_info {
-  utf32 nickname {};
-  bool connected {};
-};
-
 struct Netcode::Impl {
+  constx uint BACKGROUND_ACTIONS_TIMER = 240 * 1.5;
+  uint _background_actions_timer {BACKGROUND_ACTIONS_TIMER};
   net::Udp_packet_mgr _upm {};
-  std::unordered_map<Str, Player_info> _players {}; // <Ip, Info>
+  std::unordered_map<Str, net::Player_info> _players {}; // <Ip, Info>
   uint _received_packets {};
   uint _sended_packets {};
 
@@ -40,12 +37,6 @@ struct Netcode::Impl {
       cauto rnd_num = rndu_fast(999);
       hpw::player_name += n2s<utf32>(rnd_num);
     }
-
-    // добавить самого себя в список игроков
-    _players[_upm.ip_v4()] = Player_info {
-      .nickname = hpw::player_name,
-      .connected = true
-    };
   }
 
   inline void draw(Image& dst) const {
@@ -77,7 +68,12 @@ struct Netcode::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    // TODO
+    if (--_background_actions_timer == 0) {
+      _background_actions_timer = BACKGROUND_ACTIONS_TIMER;
+
+      if (_upm.is_server())
+        _upm.broadcast_push(get_broadcast_packet(), _upm.port());
+    }
   }
 
   inline void connect_to_broadcast() {
@@ -86,6 +82,15 @@ struct Netcode::Impl {
 
   inline void connect_to(cr<Str> ip_v4) {
     // TODO
+  }
+
+  inline net::Packet get_broadcast_packet() {
+    net::Pck_connection_info raw;
+    raw.is_server = _upm.is_server();
+    raw.self_nickname = hpw::player_name;
+    for (crauto [_, player]: _players)
+      raw.players.push_back(player);
+    return raw.to_packet();
   }
 };
 

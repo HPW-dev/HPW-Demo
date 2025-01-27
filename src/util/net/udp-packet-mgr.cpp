@@ -140,7 +140,13 @@ struct Udp_packet_mgr::Impl {
 
   inline void broadcast_push(cr<Packet> src, const Port port, Action&& cb) {
     iferror(!_status.is_active, "not initialized");
-    iferror(src.bytes.empty(), "нет данных для оптравки");
+    iferror(!_status.is_server, "use broadcast in server only");
+    
+    if (src.bytes.empty()) {
+      hpw_warning("нет данных для оптравки\n");
+      return;
+    }
+
     iferror(src.bytes.size() >= net::PACKET_BUFFER_SZ,
       "данных для отправки больше чем допустимый размер пакета");
 

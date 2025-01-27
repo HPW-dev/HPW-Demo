@@ -3,39 +3,29 @@
 
 namespace net {
 
-inline static void hash_step(Hash& dst, cp<byte> src, const std::size_t sz) {
-  assert(sz != 0);
-  assert(sz < 512 * 1024 * 1024);
-  assert(src);
+Hash gen_hash(cp<byte> src, const std::size_t src_sz, Hash prev) {
+  ret_if (!src, prev);
+  ret_if (src_sz == 0, prev);
+  assert(src_sz < 512 * 1024 * 1024);
 
   constexpr Hash MUL = 255;
   constexpr Hash ADD = 1;
-  cfor (i, sz) {
-    dst *= MUL;
-    dst += scast<Hash>(*src);
+  cfor (i, src_sz) {
+    prev *= MUL;
+    prev += scast<Hash>(*src);
     ++src;
-    dst += ADD;
+    prev += ADD;
   }
+  
+  return prev;
 }
 
-Hash get_hash(cr<Packet> src) {
-  iferror(src.bytes.empty(), "packet is empty");
-  // не учитывать сами данные контрольной суммы
-  auto data_size = src.bytes.size();
-  iferror(data_size <= sizeof(Hash), "пакет слишком короткий");
-  data_size -= sizeof(Hash);
-
-  Hash ret {0xFFFFu};
-  hash_step(ret, src.bytes.data(), data_size);
+Hash gen_packet_hash(cr<Packet> src) {
+  // учесть тег пакета
+  Hash ret = gen_hash(cptr2ptr<cp<byte>>(&src.tag), sizeof(src.tag));
+  // учесть данные пакета
+  ret = gen_hash(src.bytes.data(), src.bytes.size(), ret);
   return ret;
-}
-
-Hash find_packet_hash(cr<Packet> src) {
-  assert(!src.bytes.empty());
-  cauto data_size = src.bytes.size();
-  assert(data_size - sizeof(Hash) > 0);
-  cauto hash_addr = src.bytes.data() + data_size - sizeof(Hash);
-  return *(cptr2ptr<cp<Hash>>(hash_addr));
 }
 
 } // net ns
