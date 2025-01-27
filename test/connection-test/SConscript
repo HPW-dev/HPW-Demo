@@ -136,7 +136,6 @@ def init_sources():
     src_dir + "util/math/timer.cpp",
 
     src_dir + 'util/net/udp-packet-mgr.cpp',
-    src_dir + 'util/net/net.cpp',
   
     Glob('packet/*.cpp'),
     Glob('*.cpp'),

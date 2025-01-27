@@ -28,16 +28,9 @@ enum class Tag: byte {
 struct Packet final {
   Port port {DEFAULT_PORT};
   Str ip_v4 {MY_IPV4};
-  net::Tag tag {net::Tag::EMPTY};
-  net::Hash hash {};
   Bytes bytes {};
 };
 
 using Packets = Vector<Packet>;
-
-// генерирует контрольную сумму по данным
-Hash gen_hash(cp<byte> src, const std::size_t src_sz, Hash prev=0xFFFFu);
-// по данным пакета генерит его хэш
-Hash gen_packet_hash(cr<Packet> src);
 
 } // net ns

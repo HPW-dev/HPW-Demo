@@ -8,6 +8,8 @@ namespace net {
 // интерфейс для генераци пакетов и чтения данных из потока байтов
 class Pck_gen_base {
 public:
+  net::Hash hash {};
+
   Pck_gen_base() = default;
   virtual ~Pck_gen_base() = default;
   virtual void from_packet(cr<Packet> src) = 0;
@@ -15,6 +17,8 @@ public:
   virtual Tag tag() const = 0;
 };
 
+// по данным пакета генерит его хэш
+Hash get_packet_hash(cr<Packet> src);
 // записать байты в поток
 void push_bytes(Bytes& dst, cp<byte> src, std::size_t src_sz);
 // записать в поток укороченное имя игрока

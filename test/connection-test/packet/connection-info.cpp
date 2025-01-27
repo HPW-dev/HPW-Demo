@@ -1,9 +1,14 @@
 #include "connection-info.hpp"
+#include "util/error.hpp"
 
 namespace net {
 
 void Pck_connection_info::from_packet(cr<Packet> src) {
   std::size_t pos {};
+
+  cauto tag = read_data<Tag>(src.bytes, pos);
+  iferror(tag != this->tag(), "теги пакета не совпадают");
+
   is_server = read_data<bool>(src.bytes, pos);
   self_nickname = read_short_nickname(src.bytes, pos);
 
@@ -16,11 +21,15 @@ void Pck_connection_info::from_packet(cr<Packet> src) {
     player.connected = read_data<bool>(src.bytes, pos);
     players.emplace_back(std::move(player));
   }
+
+  cauto hash = read_data<Hash>(src.bytes, pos);
+  cauto local_hash = get_packet_hash(to_packet());
+  iferror(hash != local_hash, "чексумма пакета не совпадает");
 }
 
 Packet Pck_connection_info::to_packet() const {
   Packet ret;
-  ret.tag = net::Tag::CONNECTION_INFO;
+  push_data(ret.bytes, this->tag());
   push_data(ret.bytes, is_server);
   push_short_nickname(ret.bytes, self_nickname);
 
@@ -30,7 +39,8 @@ Packet Pck_connection_info::to_packet() const {
     push_str(ret.bytes, player.ip_v4);
     push_data(ret.bytes, player.connected);
   }
-
+  
+  push_data(ret.bytes, get_packet_hash(ret));
   return ret;
 }
 

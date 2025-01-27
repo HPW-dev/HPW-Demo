@@ -98,4 +98,29 @@ utf32 read_utf32(cr<Bytes> dst, std::size_t& pos) {
   return ret;
 }
 
+// генерирует контрольную сумму по данным
+static inline Hash hasher(cp<byte> src, const std::size_t src_sz, Hash prev=0xFFFFu) {
+  ret_if (!src, prev);
+  ret_if (src_sz == 0, prev);
+  iferror(src_sz >= 512 * 1024 * 1024, "недопустимый размер данных");
+
+  constexpr Hash MUL = 255;
+  constexpr Hash ADD = 1;
+  cfor (i, src_sz) {
+    prev *= MUL;
+    prev += scast<Hash>(*src);
+    ++src;
+    prev += ADD;
+  }
+  
+  return prev;
+}
+
+Hash get_packet_hash(cr<Packet> src) {
+  cauto data_sz = src.bytes.size();
+  iferror(data_sz < sizeof(Hash), "в пакете нету данных о чексумме");
+  // в конце данных пакета не учитывать данные хэша
+  return hasher(src.bytes.data(), data_sz - sizeof(Hash));;
+}
+
 } // net ns
