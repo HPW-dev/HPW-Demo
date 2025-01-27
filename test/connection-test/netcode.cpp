@@ -125,7 +125,7 @@ struct Netcode::Impl {
 
   inline void connect_to(cr<Str> ip_v4) {
     try {
-      _upm.push(get_connect_packet(), ip_v4, _upm.port());
+      _upm.send(get_connect_packet(), ip_v4, _upm.port());
       ++_sended_packets;
     } catch (...) {
       hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
