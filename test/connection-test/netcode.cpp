@@ -149,16 +149,32 @@ struct Netcode::Impl {
       if (raw.is_server) {
         hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
       } else {
-        hpw_log("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
+        hpw_debug("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
           + "   ip: " + src.ip_v4 + "\n");
+        _players[src.ip_v4] = net::Player_info {
+          .nickname = raw.self_nickname,
+          .ip_v4 = src.ip_v4,
+          .connected = false,
+        };
       }
     } else { // client
-      // TODO
-      /*std::stringstream info;
+      for (crauto player: raw.players)
+        _players[player.ip_v4] = net::Player_info {
+          .nickname = player.nickname,
+          .ip_v4 = player.ip_v4,
+          .connected = player.connected,
+        };
+      _players[src.ip_v4] = net::Player_info {
+        .nickname = raw.self_nickname,
+        .ip_v4 = src.ip_v4,
+        .connected = false,
+      };
+
+      std::stringstream info;
       info << "получен пакет с инфой о подключении:\n";
       info << "- имя сервера: " << utf32_to_8(raw.self_nickname) << "\n";
       info << "- число игроков на сервере: " << raw.players.size() << "\n";
-      hpw_log(info.str());*/
+      hpw_debug(info.str());
     }
   }
 
