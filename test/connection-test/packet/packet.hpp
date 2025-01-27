@@ -24,7 +24,7 @@ void push_str(Bytes& dst, cr<Str> str);
 // отправить в поток UTF-32 строку
 void push_utf32(Bytes& dst, cr<utf32> str);
 // прочитать байты из потока
-void read_bytes(cr<Bytes> src, byte* dst, std::size_t dst_sz, std::size_t& pos);
+void read_bytes(cr<Bytes> src, byte* dst, std::size_t sz, std::size_t& pos);
 // прочитать из потока укороченное имя игрока
 utf32 read_short_nickname(cr<Bytes> dst, std::size_t& pos);
 // прочитать из потока UTF-8 строку

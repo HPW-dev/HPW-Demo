@@ -1,5 +1,6 @@
 #include "packet.hpp"
 #include "util/error.hpp"
+#include "util/log.hpp"
 
 namespace net {
 
@@ -44,20 +45,57 @@ void push_utf32(Bytes& dst, cr<utf32> str) {
   }
 }
 
-void read_bytes(cr<Bytes> src, byte* dst, std::size_t dst_sz, std::size_t& pos) {
-  // TODO
+void read_bytes(cr<Bytes> src, byte* dst, std::size_t sz, std::size_t& pos) {
+  iferror(!dst, "dst is null");
+  iferror(src.empty(), "src is empty");
+  iferror(pos >= src.size(), "невозможно прочитать больше данных, чем есть в потоке (" <<
+    pos << "/" << src.size() << ")");
+  std::memcpy(ptr2ptr<void*>(dst), cptr2ptr<cp<void>>(src.data() + pos), sz);
+  pos += sz;
 }
 
 utf32 read_short_nickname(cr<Bytes> dst, std::size_t& pos) {
-  return {}; // TODO
+  // получить длину строки
+  const u32_t sz = read_data<u32_t>(dst, pos);
+  if (sz >= net::SHORT_NICKNAME_SZ)
+    hpw_warning("размер никнейма превышает лимит\n");
+  iferror(sz >= 512 * 1024 * 1024, "недопустимый размер строки");
+  
+  utf32 ret;
+  // загрузить символы строки
+  if (sz != 0) {
+    ret.resize(sz);
+    read_bytes(dst, ptr2ptr<byte*>(ret.data()), sz * sizeof(utf32::value_type), pos);
+  }
+  return ret;
 }
 
 Str read_str(cr<Bytes> dst, std::size_t& pos) {
-  return {}; // TODO
+  // получить длину строки
+  const u32_t sz = read_data<u32_t>(dst, pos);
+  iferror(sz >= 512 * 1024 * 1024, "недопустимый размер строки");
+  
+  Str ret;
+  // загрузить символы строки
+  if (sz != 0) {
+    ret.resize(sz);
+    read_bytes(dst, ptr2ptr<byte*>(ret.data()), sz * sizeof(Str::value_type), pos);
+  }
+  return ret;
 }
 
 utf32 read_utf32(cr<Bytes> dst, std::size_t& pos) {
-  return {}; // TODO
+  // получить длину строки
+  const u32_t sz = read_data<u32_t>(dst, pos);
+  iferror(sz >= 512 * 1024 * 1024, "недопустимый размер строки");
+  
+  utf32 ret;
+  // загрузить символы строки
+  if (sz != 0) {
+    ret.resize(sz);
+    read_bytes(dst, ptr2ptr<byte*>(ret.data()), sz * sizeof(utf32::value_type), pos);
+  }
+  return ret;
 }
 
 } // net ns
