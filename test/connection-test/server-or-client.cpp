@@ -17,7 +17,7 @@
 
 struct Server_or_client::Impl {
   Unique<Menu> _menu {};
-  Str _ip_v4 {"0.0.0.0"};
+  Str _ip_v4 {"127.0.0.1"};
   net::Port _port {net::DEFAULT_PORT};
 
   inline Impl() {

@@ -101,7 +101,7 @@ struct Netcode::Impl {
         for (crauto [addr, player]: _players) {
           _upm.push(net::Pck_connected().to_packet(), addr, _upm.port());
           ++_sended_packets;
-        } // for players
+        }
       } else { // client
         // дать серваку знать о успешном подключении
         if (!_server_ip.empty()) {
