@@ -13,6 +13,7 @@
 #include "graphic/image/image.hpp"
 #include "util/net/net.hpp"
 #include "util/unicode.hpp"
+#include "util/str-util.hpp"
 
 struct Server_or_client::Impl {
   Unique<Menu> _menu {};
@@ -36,7 +37,7 @@ struct Server_or_client::Impl {
           U"Escape чтобы выйти, Enter чтобы подтвердить",
           U"Port: ",
           n2s<utf32>(_port),
-          [this](cr<utf32> text) { _port = s2n<utf32, net::Port>(text, std::ios::dec); }
+          [this](cr<utf32> text) { _port = s2n<int>(utf32_to_8(text)); }
         )); }),
         new_shared<Menu_text_item>(U"задать никнейм", [this]{ hpw::scene_mgr.add(new_shared<Scene_enter_text>(
           U"Введите ник (50 символов макс.)",
