@@ -15,7 +15,7 @@ struct Connection_ctx {
 // рулит сетевым взаимодействием в этом тесте
 class Netcode final {
 public:
-  explicit Netcode(bool is_server, const Connection_ctx ctx);
+  explicit Netcode(bool is_server, cr<Connection_ctx> ctx);
   ~Netcode();
   // если есть широковещательное приглашение, то законектиться к нему
   void connect_to_broadcast();

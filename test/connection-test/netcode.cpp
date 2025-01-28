@@ -28,7 +28,7 @@ struct Netcode::Impl {
   net::Port _target_tcp_port {}; // к какому TCP порту подключаться
   net::Port _target_udp_port {}; // к какому UDP порту подключаться
 
-  inline explicit Impl(bool is_server, const Connection_ctx ctx) {
+  inline explicit Impl(bool is_server, cr<Connection_ctx> ctx) {
     try {
       if (is_server) {
         _pck_mgr.start_server(ctx.ip_v4, ctx.udp_server, ctx.tcp_server);
@@ -252,7 +252,7 @@ struct Netcode::Impl {
   }
 };
 
-Netcode::Netcode(bool is_server, const Connection_ctx ctx): _impl{new_unique<Impl>(is_server, ctx)} {}
+Netcode::Netcode(bool is_server, cr<Connection_ctx> ctx): _impl{new_unique<Impl>(is_server, ctx)} {}
 Netcode::~Netcode() {}
 void Netcode::connect_to(cr<Str> ip_v4) { _impl->connect_to(ip_v4); }
 void Netcode::connect_to_broadcast() { _impl->connect_to_broadcast(); }

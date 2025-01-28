@@ -10,7 +10,7 @@ class Server final: public Scene {
   Unique<Impl> _impl {};
 
 public:
-  explicit Server(const Connection_ctx ctx);
+  explicit Server(cr<Connection_ctx> ctx);
   ~Server();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;

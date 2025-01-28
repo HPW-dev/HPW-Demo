@@ -5,6 +5,14 @@
 
 namespace net {
 
+struct Connection_ctx {
+  Str ip_v4 {net::SELF_IPV4};
+  net::Port udp_server {net::UDP_SERVER_PORT};
+  net::Port tcp_server {net::TCP_SERVER_PORT};
+  net::Port udp_client {net::UDP_CLIENT_PORT};
+  net::Port tcp_client {net::TCP_CLIENT_PORT};
+};
+
 // ассинхронно получает или передаёт сетевые пакеты
 class Packet_mgr {
 public:

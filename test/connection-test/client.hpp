@@ -10,7 +10,7 @@ class Client final: public Scene {
   Unique<Impl> _impl {};
 
 public:
-  explicit Client(const Connection_ctx ctx);
+  explicit Client(cr<Connection_ctx> ctx);
   ~Client();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;

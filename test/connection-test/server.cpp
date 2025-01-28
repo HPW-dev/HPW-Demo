@@ -12,7 +12,7 @@ struct Server::Impl {
   Unique<Netcode> _netcode {};
   Unique<Menu> _menu {};
 
-  inline explicit Impl(const Connection_ctx ctx)
+  inline explicit Impl(cr<Connection_ctx> ctx)
   : _netcode {new_unique<Netcode>(true, ctx)}
   {
     _menu = new_unique<Text_menu>(
@@ -36,7 +36,7 @@ struct Server::Impl {
   }
 }; // Impl 
 
-Server::Server(const Connection_ctx ctx): _impl {new_unique<Impl>(ctx)} {}
+Server::Server(cr<Connection_ctx> ctx): _impl {new_unique<Impl>(ctx)} {}
 Server::~Server() {}
 void Server::update(const Delta_time dt) { _impl->update(dt); }
 void Server::draw(Image& dst) const { _impl->draw(dst); }

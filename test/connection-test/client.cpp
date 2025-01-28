@@ -14,7 +14,7 @@ struct Client::Impl {
   Unique<Menu> _menu {};
   Str _server_ipv4 {};
 
-  inline explicit Impl(const Connection_ctx ctx)
+  inline explicit Impl(cr<Connection_ctx> ctx)
   : _netcode {new_unique<Netcode>(false, ctx)}
   {
     _menu = new_unique<Text_menu>(
@@ -55,7 +55,7 @@ struct Client::Impl {
   }
 }; // Impl 
 
-Client::Client(const Connection_ctx ctx): _impl {new_unique<Impl>(ctx)} {}
+Client::Client(cr<Connection_ctx> ctx): _impl {new_unique<Impl>(ctx)} {}
 Client::~Client() {}
 void Client::update(const Delta_time dt) { _impl->update(dt); }
 void Client::draw(Image& dst) const { _impl->draw(dst); }

@@ -150,6 +150,12 @@
       "args": ["script/connection-test.py"]
     },
     {
+      "label": "net test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/net-test.py"]
+    },
+    {
       "label": "buttons transmit test",
       "type": "shell",
       "command": "python",
