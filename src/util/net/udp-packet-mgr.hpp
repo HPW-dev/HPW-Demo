@@ -19,6 +19,8 @@ public:
   [[nodiscard]] bool is_active() const;
   [[nodiscard]] cr<Port> port() const; // узнать свой порт
   [[nodiscard]] cr<Str> ip_v4() const; // узнать свой IPv4
+  [[nodiscard]] uint received_packets() const;
+  [[nodiscard]] uint sended_packets() const;
   void update();
   /** асинхронная широковещательная отправка пакета
   * @param src данные отправки

@@ -23,8 +23,6 @@ struct Netcode::Impl {
   uint _background_actions_timer {BACKGROUND_ACTIONS_TIMER};
   net::Udp_packet_mgr _upm {};
   std::unordered_map<Str, net::Player_info> _players {}; // <Ip, Info>
-  uint _received_packets {};
-  uint _sended_packets {};
   uint _ignored_packets {};
   Str _server_ip {};
 
@@ -59,7 +57,6 @@ struct Netcode::Impl {
       _upm.broadcast_push(net::Pck_disconnected().to_packet(), _upm.port());
     elif (!_server_ip.empty())
       _upm.push(net::Pck_disconnected().to_packet(), _server_ip, _upm.port());
-    ++_sended_packets;
   }
 
   inline void draw(Image& dst) const {
@@ -70,8 +67,8 @@ struct Netcode::Impl {
     ss << "N E T P L A Y   I N F O :\n";
     ss << "- self name \"" << utf32_to_8(hpw::player_name) << "\"\n";
     ss << "- data packets:\n";
-    ss << "  * sended " << _sended_packets << "\n";
-    ss << "  * received " << _received_packets << "\n";
+    ss << "  * sended " << _upm.sended_packets() << "\n";
+    ss << "  * received " << _upm.received_packets() << "\n";
     ss << "  * ignored " << _ignored_packets << "\n";
     ss << "- players:";
 
@@ -99,18 +96,15 @@ struct Netcode::Impl {
 
       if (_upm.is_server()) {
         _upm.broadcast_push(get_broadcast_packet(), _upm.port());
-        ++_sended_packets;
 
         // дать игрокам знать что они законнектились
         for (crauto [addr, player]: _players) {
           _upm.push(net::Pck_connected().to_packet(), addr, _upm.port());
-          ++_sended_packets;
         }
       } else { // client
         // дать серваку знать о успешном подключении
         if (!_server_ip.empty()) {
           _upm.push(net::Pck_connected().to_packet(), _server_ip, _upm.port());
-          ++_sended_packets;
         }
       }
     } // background actions timer
@@ -120,13 +114,11 @@ struct Netcode::Impl {
 
   inline void connect_to_broadcast() {
     error("need impl");
-    ++_sended_packets;
   }
 
   inline void connect_to(cr<Str> ip_v4) {
     try {
       _upm.send(get_connect_packet(), ip_v4, _upm.port());
-      ++_sended_packets;
     } catch (...) {
       hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
         U"не удалось подключиться по IP: " + utf8_to_32(ip_v4) + U"\n",
@@ -149,8 +141,6 @@ struct Netcode::Impl {
     return_if(!_upm.has_packets());
 
     for (crauto packet: _upm.unload_all()) {
-      ++_received_packets;
-
       try {
         switch (net::get_packet_tag(packet)) {
           case net::Tag::EMPTY: {

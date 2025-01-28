@@ -29,6 +29,8 @@ struct Udp_packet_mgr::Impl {
   Action _if_loaded_cb {}; // действие при загрузке пакета
   ip_udp::endpoint _input_addr {}; // адрес от входящего пакета
   Packet _input_packet {}; // промежуточный пакет для записи в него входящих пакетов
+  uint _received {}; // сколько пакетов получено
+  uint _sended {}; // сколько пакетов отправлено
 
   inline ~Impl() { disconnect(); }
 
@@ -81,6 +83,7 @@ struct Udp_packet_mgr::Impl {
     _status.is_active = false;
     _packets_to_send.clear();
     _loaded_packets.clear();
+    _received = _sended = 0;
   }
 
   inline void send(cr<Packet> src, cr<Str> ip_v4, const Port port) {
@@ -92,6 +95,7 @@ struct Udp_packet_mgr::Impl {
     ip_udp::endpoint endpoint(asio::ip::address_v4::from_string(ip_v4), port);
     assert(_socket);
     cauto sended = _socket->send_to(asio::buffer(src.bytes), endpoint);
+    ++_sended;
     iferror(sended == 0, "данные не отправлены");
   }
 
@@ -116,8 +120,11 @@ struct Udp_packet_mgr::Impl {
         hpw_debug("недопустимый размер пакета\n");
       } else {
         hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+
         if (cb)
           cb();
+        
+        ++_sended;
       }
         
       // удалить пакет из списка
@@ -157,8 +164,11 @@ struct Udp_packet_mgr::Impl {
         hpw_debug("недопустимый размер пакета\n");
       } else {
         hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+        
         if (cb)
           cb();
+
+        ++_sended;
       }
         
       // удалить пакет из списка
@@ -217,15 +227,17 @@ struct Udp_packet_mgr::Impl {
         } elif (bytes >= net::PACKET_BUFFER_SZ) {
           hpw_debug("недопустимый размер пакета\n");
         } else {
-          if (_if_loaded_cb)
-            _if_loaded_cb();
-
           _input_packet.bytes.resize(bytes); // сократить размер пакета
           _input_packet.ip_v4 = _input_addr.address().to_v4().to_string();
           _input_packet.port = _input_addr.port();
           // передать загруженный пакет в буффер загрузок и запустить следующий приём пакетов
           _loaded_packets.emplace_back(std::move(_input_packet));
           _input_packet = {};
+
+          if (_if_loaded_cb)
+            _if_loaded_cb();
+
+          ++_received;
         }
 
         start_waiting_packets();
@@ -237,6 +249,8 @@ struct Udp_packet_mgr::Impl {
   inline bool is_server() const { return is_active() && _status.is_server; }
   inline bool is_client() const { return is_active() && !_status.is_server; }
   inline bool is_active() const { return _status.is_active; }
+  inline uint received_packets() const { return _received; }
+  inline uint sended_packets() const { return _sended; }
 }; // Impl
 
 Udp_packet_mgr::Udp_packet_mgr(): _impl{new_unique<Impl>()} {}
@@ -258,5 +272,7 @@ bool Udp_packet_mgr::is_active() const { return _impl->is_active(); }
 Packets Udp_packet_mgr::unload_all() { return _impl->unload_all(); }
 bool Udp_packet_mgr::has_packets() const { return _impl->has_packets(); }
 void Udp_packet_mgr::action_if_loaded(Action&& cb) { _impl->action_if_loaded(std::move(cb)); }
+uint Udp_packet_mgr::received_packets() const { return _impl->received_packets(); }
+uint Udp_packet_mgr::sended_packets() const { return _impl->sended_packets(); }
 
 } // net ns
