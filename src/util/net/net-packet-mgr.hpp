@@ -29,9 +29,8 @@ public:
   /** асинхронная широковещательная отправка пакета
   * @param src данные отправки
   * @param port порт получателя
-  * @param udp_mode true - использовать UDP, false - TCP
   * @param cb действие при завершении отправки */
-  void broadcast_push(cr<Packet> src, Port port, bool udp_mode, Action&& cb={});
+  void broadcast_push(cr<Packet> src, Port port, Action&& cb={});
   /** асинхронная отправка пакета
   * @param src данные отправки
   * @param ip_v4 адрес получателя

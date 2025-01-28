@@ -60,7 +60,6 @@ struct Packet_mgr::Impl {
     _udp_socket->set_option(ip_udp::socket::reuse_address(true));
     _tcp_socket->set_option(ip_udp::socket::reuse_address(true));
     _udp_socket->set_option(ip_udp::socket::broadcast(true));
-    _tcp_socket->set_option(ip_udp::socket::broadcast(true));
     _status.is_active = true;
     _status.is_server = true;
     start_waiting_packets(true);
@@ -115,8 +114,8 @@ struct Packet_mgr::Impl {
 
   inline void send(cr<Packet> src, cr<Str> ip_v4, Port port, bool udp_mode) {
     iferror(!_status.is_active, "not initialized");
-    iferror(_udp_socket, "_udp_socket is null");
-    iferror(_tcp_socket, "_tcp_socket is null");
+    iferror(!_udp_socket, "_udp_socket is null");
+    iferror(!_tcp_socket, "_tcp_socket is null");
     iferror(src.bytes.empty(), "нет данных для оптравки");
     iferror(src.bytes.size() >= (udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET),
       "данных для отправки больше чем допустимый размер пакета");
@@ -141,8 +140,8 @@ struct Packet_mgr::Impl {
 
   inline void push(cr<Packet> src, cr<Str> ip_v4, Port port, bool udp_mode, Action&& cb) {
     iferror(!_status.is_active, "not initialized");
-    iferror(_udp_socket, "_udp_socket is null");
-    iferror(_tcp_socket, "_tcp_socket is null");
+    iferror(!_udp_socket, "_udp_socket is null");
+    iferror(!_tcp_socket, "_tcp_socket is null");
     iferror(src.bytes.empty(), "нет данных для оптравки");
     iferror(src.bytes.size() >= (udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET),
       "данных для отправки больше чем допустимый размер пакета");
@@ -188,18 +187,17 @@ struct Packet_mgr::Impl {
     }
   }
 
-  inline void broadcast_push(cr<Packet> src, Port port, bool udp_mode, Action&& cb) {
+  inline void broadcast_push(cr<Packet> src, Port port, Action&& cb) {
     iferror(!_status.is_active, "not initialized");
-    iferror(_udp_socket, "_udp_socket is null");
-    iferror(_tcp_socket, "_tcp_socket is null");
+    iferror(!_udp_socket, "_udp_socket is null");
     iferror(src.bytes.empty(), "нет данных для оптравки");
-    iferror(src.bytes.size() >= (udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET),
+    iferror(src.bytes.size() >= net::MAX_UDP_PACKET,
       "данных для отправки больше чем допустимый размер пакета");
 
     _packets_to_send.push_back(src);
     auto* for_delete = &_packets_to_send.back();
 
-    auto handler = [this, mode=udp_mode, _for_delete=for_delete, cb=std::move(cb)]
+    auto handler = [this, _for_delete=for_delete, cb=std::move(cb)]
     (cr<std::error_code> err, std::size_t bytes) {
       return_if(!_status.is_active);
 
@@ -207,7 +205,7 @@ struct Packet_mgr::Impl {
         hpw_debug(Str("системная ошибка: ") + err.message() + " - " + err.category().name() + "\n");
       } elif (bytes == 0) {
         hpw_debug("данные не отправлены\n");
-      } elif (bytes >= (mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET)) {
+      } elif (bytes >= net::MAX_UDP_PACKET) {
         hpw_debug("недопустимый размер пакета\n");
       } else {
         hpw_debug("отправлено " + n2s(bytes) + " байт\n");
@@ -224,17 +222,8 @@ struct Packet_mgr::Impl {
 
     hpw_debug("ассинхронная отправка бродскаста " + n2s(for_delete->bytes.size()) + " байт...\n");
     
-    if (udp_mode) {
-      ip_udp::endpoint ep(asio::ip::address_v4::broadcast(), port);
-      _udp_socket->async_send_to(asio::buffer(for_delete->bytes), ep, handler);
-    } else {
-      ip_tcp::endpoint ep(asio::ip::address_v4::broadcast(), port);
-      if (_last_tcp_addr != ep) {
-        _tcp_socket->bind(ep);
-        _last_tcp_addr = ep;
-      }
-      _tcp_socket->async_send(asio::buffer(for_delete->bytes), handler);
-    }
+    ip_udp::endpoint ep(asio::ip::address_v4::broadcast(), port);
+    _udp_socket->async_send_to(asio::buffer(for_delete->bytes), ep, handler);
   }
 
   inline Packets unload_all() {
@@ -270,8 +259,8 @@ struct Packet_mgr::Impl {
   inline void start_waiting_packets(bool udp_mode) {
     return_if(!_last_tcp_addr);
     iferror(!_status.is_active, "not initialized");
-    iferror(_udp_socket, "_udp_socket is null");
-    iferror(_tcp_socket, "_tcp_socket is null");
+    iferror(!_udp_socket, "_udp_socket is null");
+    iferror(!_tcp_socket, "_tcp_socket is null");
 
     // размер пакета изначально больше чем принимаемые данные
     _input_packet = {};
@@ -331,8 +320,8 @@ Packet_mgr::~Packet_mgr() {}
 void Packet_mgr::start_server(cr<Str> ip_v4, Port udp_port, Port tcp_port) { _impl->start_server(ip_v4, udp_port, tcp_port); }
 void Packet_mgr::start_client(cr<Str> ip_v4, Port udp_port, Port tcp_port) { _impl->start_client(ip_v4, udp_port, tcp_port); }
 void Packet_mgr::update() { _impl->update(); }
-void Packet_mgr::broadcast_push(cr<Packet> src, Port port, bool udp_mode, Action&& cb)
-  { _impl->broadcast_push(src, port, udp_mode, std::move(cb)); }
+void Packet_mgr::broadcast_push(cr<Packet> src, Port port, Action&& cb)
+  { _impl->broadcast_push(src, port, std::move(cb)); }
 void Packet_mgr::push(cr<Packet> src, cr<Str> ip_v4, Port port, bool udp_mode, Action&& cb)
   { _impl->push(src, ip_v4, port, udp_mode, std::move(cb)); }
 void Packet_mgr::send(cr<Packet> src, cr<Str> ip_v4, Port port, bool udp_mode)

@@ -62,7 +62,7 @@ struct Netcode::Impl {
 
   inline ~Impl() {
     if (_pck_mgr.is_server())
-      _pck_mgr.broadcast_push(net::Pck_disconnected().to_packet(), _target_udp_port, true);
+      _pck_mgr.broadcast_push(net::Pck_disconnected().to_packet(), _target_udp_port);
     elif (!_server_ip.empty())
       _pck_mgr.push(net::Pck_disconnected().to_packet(), _server_ip, _target_tcp_port, false);
   }
@@ -103,7 +103,7 @@ struct Netcode::Impl {
       _background_actions_timer = BACKGROUND_ACTIONS_TIMER;
 
       if (_pck_mgr.is_server()) {
-        _pck_mgr.broadcast_push(get_broadcast_packet(), _target_udp_port, true);
+        _pck_mgr.broadcast_push(get_broadcast_packet(), _target_udp_port);
 
         // дать игрокам знать что они законнектились
         for (crauto [addr, player]: _players) {
