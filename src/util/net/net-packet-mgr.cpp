@@ -82,8 +82,8 @@ struct Packet_mgr::Impl {
       _ip_v4 = ip_v4;
 
     cauto tmp_ip = asio::ip::address_v4::from_string(_ip_v4);
-    init_unique(_udp_socket, _udp_io, ip_udp::endpoint(tmp_ip, _udp_port));
-    init_unique(_tcp_socket, _tcp_io, ip_tcp::endpoint(tmp_ip, _tcp_port));
+    init_unique(_udp_socket, _udp_io, ip_udp::endpoint(tmp_ip, udp_port));
+    init_unique(_tcp_socket, _tcp_io, ip_tcp::endpoint(tmp_ip, tcp_port));
     _ip_v4 = _tcp_socket->local_endpoint().address().to_v4().to_string();
     _udp_port = _udp_socket->local_endpoint().port();
     _tcp_port = _tcp_socket->local_endpoint().port();
