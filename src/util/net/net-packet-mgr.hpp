@@ -6,12 +6,12 @@
 namespace net {
 
 // ассинхронно получает или передаёт сетевые пакеты
-class Udp_packet_mgr {
+class Packet_mgr {
 public:
   using Action = std::function<void ()>;
 
-  Udp_packet_mgr();
-  virtual ~Udp_packet_mgr();
+  Packet_mgr();
+  virtual ~Packet_mgr();
   void start_server(cr<Str> ip={}, Port port=net::DEFAULT_PORT);
   void start_client(cr<Str> ip={}, Port port=net::DEFAULT_PORT);
   [[nodiscard]] bool is_server() const;

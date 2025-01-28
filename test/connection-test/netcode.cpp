@@ -12,7 +12,7 @@
 #include "game/util/locale.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "graphic/image/image.hpp"
-#include "util/net/udp-packet-mgr.hpp"
+#include "util/net/net-packet-mgr.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/str-util.hpp"
@@ -21,7 +21,7 @@
 struct Netcode::Impl {
   constx uint BACKGROUND_ACTIONS_TIMER = 240 * 1.5;
   uint _background_actions_timer {BACKGROUND_ACTIONS_TIMER};
-  net::Udp_packet_mgr _upm {};
+  net::Packet_mgr _upm {};
   std::unordered_map<Str, net::Player_info> _players {}; // <Ip, Info>
   uint _ignored_packets {};
   Str _server_ip {};

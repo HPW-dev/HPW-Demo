@@ -1,5 +1,5 @@
 #include "game/core/canvas.hpp"
-#include "util/net/udp-packet-mgr.hpp"
+#include "util/net/net-packet-mgr.hpp"
 #include "host/glfw3/host-glfw.hpp"
 #include "graphic/image/image.hpp"
 

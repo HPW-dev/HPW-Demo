@@ -4,7 +4,7 @@
 
 // порядок инклудов не нарушать, иначе взрыв!
 #include "util/str-util.hpp"
-#include "udp-packet-mgr.hpp"
+#include "net-packet-mgr.hpp"
 #include <asio/asio.hpp>
 
 #include "util/error.hpp"
@@ -13,7 +13,7 @@
 namespace net {
 using ip_udp = asio::ip::udp;
 
-struct Udp_packet_mgr::Impl {
+struct Packet_mgr::Impl {
   struct Status {
     bool is_server: 1 {};
     bool is_active: 1 {};
@@ -36,7 +36,7 @@ struct Udp_packet_mgr::Impl {
 
   inline void start_server(cr<Str> ip_v4, Port port) {
     disconnect();
-    hpw_debug("Udp_packet_mgr.start_server\n");
+    hpw_debug("Packet_mgr.start_server\n");
 
     _port = port;
     if (_port < 1024 || _port > 49'150)
@@ -57,7 +57,7 @@ struct Udp_packet_mgr::Impl {
 
   inline void start_client(cr<Str> ip_v4, Port port=net::DEFAULT_PORT) {
     disconnect();
-    hpw_debug("Udp_packet_mgr.start_client\n");
+    hpw_debug("Packet_mgr.start_client\n");
     _port = port;
     if (ip_v4.empty())
       _ip_v4 = MY_IPV4;
@@ -77,7 +77,7 @@ struct Udp_packet_mgr::Impl {
   }
 
   inline void disconnect() {
-    hpw_debug("Udp_packet_mgr.disconnect\n");
+    hpw_debug("Packet_mgr.disconnect\n");
     _io.stop();
     _socket = {};
     _status.is_active = false;
@@ -253,26 +253,26 @@ struct Udp_packet_mgr::Impl {
   inline uint sended_packets() const { return _sended; }
 }; // Impl
 
-Udp_packet_mgr::Udp_packet_mgr(): _impl{new_unique<Impl>()} {}
-Udp_packet_mgr::~Udp_packet_mgr() {}
-void Udp_packet_mgr::start_server(cr<Str> ip_v4, Port port) { _impl->start_server(ip_v4, port); }
-void Udp_packet_mgr::start_client(cr<Str> ip, Port port) { _impl->start_client(ip, port); }
-void Udp_packet_mgr::update() { _impl->update(); }
-void Udp_packet_mgr::broadcast_push(cr<Packet> src, const Port port, Action&& cb)
+Packet_mgr::Packet_mgr(): _impl{new_unique<Impl>()} {}
+Packet_mgr::~Packet_mgr() {}
+void Packet_mgr::start_server(cr<Str> ip_v4, Port port) { _impl->start_server(ip_v4, port); }
+void Packet_mgr::start_client(cr<Str> ip, Port port) { _impl->start_client(ip, port); }
+void Packet_mgr::update() { _impl->update(); }
+void Packet_mgr::broadcast_push(cr<Packet> src, const Port port, Action&& cb)
   { _impl->broadcast_push(src, port, std::move(cb)); }
-void Udp_packet_mgr::push(cr<Packet> src, cr<Str> ip_v4, const Port port, Action&& cb)
+void Packet_mgr::push(cr<Packet> src, cr<Str> ip_v4, const Port port, Action&& cb)
   { _impl->push(src, ip_v4, port, std::move(cb)); }
-void Udp_packet_mgr::send(cr<Packet> src, cr<Str> ip_v4, const Port port)
+void Packet_mgr::send(cr<Packet> src, cr<Str> ip_v4, const Port port)
   { _impl->send(src, ip_v4, port); }
-cr<Port> Udp_packet_mgr::port() const { return _impl->port(); }
-cr<Str> Udp_packet_mgr::ip_v4() const { return _impl->ip_v4(); }
-bool Udp_packet_mgr::is_server() const { return _impl->is_server(); }
-bool Udp_packet_mgr::is_client() const { return _impl->is_client(); }
-bool Udp_packet_mgr::is_active() const { return _impl->is_active(); }
-Packets Udp_packet_mgr::unload_all() { return _impl->unload_all(); }
-bool Udp_packet_mgr::has_packets() const { return _impl->has_packets(); }
-void Udp_packet_mgr::action_if_loaded(Action&& cb) { _impl->action_if_loaded(std::move(cb)); }
-uint Udp_packet_mgr::received_packets() const { return _impl->received_packets(); }
-uint Udp_packet_mgr::sended_packets() const { return _impl->sended_packets(); }
+cr<Port> Packet_mgr::port() const { return _impl->port(); }
+cr<Str> Packet_mgr::ip_v4() const { return _impl->ip_v4(); }
+bool Packet_mgr::is_server() const { return _impl->is_server(); }
+bool Packet_mgr::is_client() const { return _impl->is_client(); }
+bool Packet_mgr::is_active() const { return _impl->is_active(); }
+Packets Packet_mgr::unload_all() { return _impl->unload_all(); }
+bool Packet_mgr::has_packets() const { return _impl->has_packets(); }
+void Packet_mgr::action_if_loaded(Action&& cb) { _impl->action_if_loaded(std::move(cb)); }
+uint Packet_mgr::received_packets() const { return _impl->received_packets(); }
+uint Packet_mgr::sended_packets() const { return _impl->sended_packets(); }
 
 } // net ns
