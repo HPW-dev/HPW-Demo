@@ -884,7 +884,7 @@
 # endif // !defined(ASIO_HAS_DEV_POLL)
 #endif // defined(__sun)
 
-// Serial ports.
+// Serial ctx.
 #if !defined(ASIO_HAS_SERIAL_PORT)
 # if defined(ASIO_HAS_IOCP) \
   || !defined(ASIO_WINDOWS) \

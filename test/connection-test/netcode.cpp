@@ -21,17 +21,24 @@
 struct Netcode::Impl {
   constx uint BACKGROUND_ACTIONS_TIMER = 240 * 1.5;
   uint _background_actions_timer {BACKGROUND_ACTIONS_TIMER};
-  net::Packet_mgr _upm {};
+  net::Packet_mgr _pck_mgr {};
   std::unordered_map<Str, net::Player_info> _players {}; // <Ip, Info>
   uint _ignored_packets {};
   Str _server_ip {};
+  net::Port _target_tcp_port {}; // к какому TCP порту подключаться
+  net::Port _target_udp_port {}; // к какому UDP порту подключаться
 
-  inline explicit Impl(bool is_server, cr<Str> ip_v4, const net::Port port) {
+  inline explicit Impl(bool is_server, const Connection_ctx ctx) {
     try {
-      if (is_server)
-        _upm.start_server(ip_v4, port);
-      else
-        _upm.start_client(ip_v4, port);
+      if (is_server) {
+        _pck_mgr.start_server(ctx.ip_v4, ctx.udp_server, ctx.tcp_server);
+        _target_udp_port = ctx.udp_client;
+        _target_tcp_port = ctx.tcp_client;
+      } else {
+        _pck_mgr.start_client(ctx.ip_v4, ctx.udp_client, ctx.tcp_client);
+        _target_udp_port = ctx.udp_server;
+        _target_tcp_port = ctx.tcp_server;
+      }
     } catch (...) {
       hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
         U"ошибка при установлении соединения, проверьте настройки\n",
@@ -41,8 +48,9 @@ struct Netcode::Impl {
       return;
     }
 
-    hpw_log("created " + Str(_upm.is_server() ? "server" : "client") +
-      " at ip:port " + _upm.ip_v4() + ":" + n2s(_upm.port()) + "\n");
+    hpw_log("created " + Str(_pck_mgr.is_server() ? "server" : "client") +
+      " at ip:port udp/tcp " + _pck_mgr.ip_v4() + ":" +
+      n2s(_pck_mgr.udp_port()) + "/" +  n2s(_pck_mgr.tcp_port()) + "\n");
 
     // если кастомного имени, сгенерить случайное
     if (hpw::player_name.empty()) {
@@ -53,10 +61,10 @@ struct Netcode::Impl {
   }
 
   inline ~Impl() {
-    if (_upm.is_server())
-      _upm.broadcast_push(net::Pck_disconnected().to_packet(), _upm.port());
+    if (_pck_mgr.is_server())
+      _pck_mgr.broadcast_push(net::Pck_disconnected().to_packet(), _target_udp_port, true);
     elif (!_server_ip.empty())
-      _upm.push(net::Pck_disconnected().to_packet(), _server_ip, _upm.port());
+      _pck_mgr.push(net::Pck_disconnected().to_packet(), _server_ip, _target_tcp_port, false);
   }
 
   inline void draw(Image& dst) const {
@@ -67,8 +75,8 @@ struct Netcode::Impl {
     ss << "N E T P L A Y   I N F O :\n";
     ss << "- self name \"" << utf32_to_8(hpw::player_name) << "\"\n";
     ss << "- data packets:\n";
-    ss << "  * sended " << _upm.sended_packets() << "\n";
-    ss << "  * received " << _upm.received_packets() << "\n";
+    ss << "  * sended " << _pck_mgr.sended_packets() << "\n";
+    ss << "  * received " << _pck_mgr.received_packets() << "\n";
     ss << "  * ignored " << _ignored_packets << "\n";
     ss << "- players:";
 
@@ -78,7 +86,7 @@ struct Netcode::Impl {
     } else {
       ss << "\n";
       for (crauto [ip, info]: _players) {
-        ss << "  * " << ip << ":" << _upm.port() << " ";
+        ss << "  * " << ip << ":" << _pck_mgr.tcp_port() << " ";
         ss << "\"" << utf32_to_8(info.nickname) << "\" - ";
         ss << (info.connected ? "connected" : "waiting for connection...") << "\n";
       }
@@ -89,22 +97,22 @@ struct Netcode::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    _upm.update();
+    _pck_mgr.update();
 
     if (--_background_actions_timer == 0) {
       _background_actions_timer = BACKGROUND_ACTIONS_TIMER;
 
-      if (_upm.is_server()) {
-        _upm.broadcast_push(get_broadcast_packet(), _upm.port());
+      if (_pck_mgr.is_server()) {
+        _pck_mgr.broadcast_push(get_broadcast_packet(), _target_udp_port, true);
 
         // дать игрокам знать что они законнектились
         for (crauto [addr, player]: _players) {
-          _upm.push(net::Pck_connected().to_packet(), addr, _upm.port());
+          _pck_mgr.push(net::Pck_connected().to_packet(), addr, _target_tcp_port, false);
         }
       } else { // client
         // дать серваку знать о успешном подключении
         if (!_server_ip.empty()) {
-          _upm.push(net::Pck_connected().to_packet(), _server_ip, _upm.port());
+          _pck_mgr.push(net::Pck_connected().to_packet(), _server_ip, _target_tcp_port, false);
         }
       }
     } // background actions timer
@@ -118,7 +126,7 @@ struct Netcode::Impl {
 
   inline void connect_to(cr<Str> ip_v4) {
     try {
-      _upm.send(get_connect_packet(), ip_v4, _upm.port());
+      _pck_mgr.send(get_connect_packet(), ip_v4, _target_tcp_port, false);
     } catch (...) {
       hpw::scene_mgr.add( new_shared<Scene_msgbox_enter>(
         U"не удалось подключиться по IP: " + utf8_to_32(ip_v4) + U"\n",
@@ -129,7 +137,7 @@ struct Netcode::Impl {
 
   inline net::Packet get_broadcast_packet() {
     net::Pck_connection_info raw;
-    raw.is_server = _upm.is_server();
+    raw.is_server = _pck_mgr.is_server();
     raw.self_nickname = hpw::player_name;
     for (crauto [_, player]: _players)
       raw.players.push_back(player);
@@ -137,10 +145,10 @@ struct Netcode::Impl {
   }
 
   inline void process_packets() {
-    return_if(!_upm.is_active());
-    return_if(!_upm.has_packets());
+    return_if(!_pck_mgr.is_active());
+    return_if(!_pck_mgr.has_packets());
 
-    for (crauto packet: _upm.unload_all()) {
+    for (crauto packet: _pck_mgr.unload_all()) {
       try {
         switch (net::get_packet_tag(packet)) {
           case net::Tag::EMPTY: {
@@ -176,7 +184,7 @@ struct Netcode::Impl {
     net::Pck_connection_info raw;
     raw.from_packet(src);
 
-    if (_upm.is_server()) {
+    if (_pck_mgr.is_server()) {
       if (raw.is_server) {
         hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
         ++_ignored_packets;
@@ -217,7 +225,7 @@ struct Netcode::Impl {
     raw.from_packet(src);
     iferror (raw.disconnect_you, "need impl");
     
-    if (_upm.is_server()) {
+    if (_pck_mgr.is_server()) {
       try {
         _players.at(src.ip_v4).connected = false;
       } catch (...) {}
@@ -244,8 +252,7 @@ struct Netcode::Impl {
   }
 };
 
-Netcode::Netcode(bool is_server, cr<Str> ip_v4, const net::Port port)
-  : _impl{new_unique<Impl>(is_server, ip_v4, port)} {}
+Netcode::Netcode(bool is_server, const Connection_ctx ctx): _impl{new_unique<Impl>(is_server, ctx)} {}
 Netcode::~Netcode() {}
 void Netcode::connect_to(cr<Str> ip_v4) { _impl->connect_to(ip_v4); }
 void Netcode::connect_to_broadcast() { _impl->connect_to_broadcast(); }

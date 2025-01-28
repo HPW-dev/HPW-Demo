@@ -12,8 +12,8 @@ struct Server::Impl {
   Unique<Netcode> _netcode {};
   Unique<Menu> _menu {};
 
-  inline explicit Impl(cr<Str> ip_v4, const net::Port port)
-  : _netcode {new_unique<Netcode>(true, ip_v4, port)}
+  inline explicit Impl(const Connection_ctx ctx)
+  : _netcode {new_unique<Netcode>(true, ctx)}
   {
     _menu = new_unique<Text_menu>(
       Menu_items { new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }), },
@@ -36,7 +36,7 @@ struct Server::Impl {
   }
 }; // Impl 
 
-Server::Server(cr<Str> ip_v4, const net::Port port): _impl {new_unique<Impl>(ip_v4, port)} {}
+Server::Server(const Connection_ctx ctx): _impl {new_unique<Impl>(ctx)} {}
 Server::~Server() {}
 void Server::update(const Delta_time dt) { _impl->update(dt); }
 void Server::draw(Image& dst) const { _impl->draw(dst); }

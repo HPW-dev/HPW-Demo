@@ -12,9 +12,14 @@ namespace net {
 using Hash = u32_t;
 using Port = u16_t;
 
-constexpr static const std::size_t PACKET_BUFFER_SZ = 508;
-constexpr static const Port DEFAULT_PORT = 49'099;
-constexpr static const auto MY_IPV4 = "127.0.0.1";
+constexpr static const std::size_t MAX_UDP_PACKET = 508;
+constexpr static const std::size_t MAX_TCP_PACKET = 8192;
+constexpr static const Port UDP_SERVER_PORT = 49'099;
+constexpr static const Port UDP_CLIENT_PORT = 49'098;
+constexpr static const Port TCP_SERVER_PORT = 49'097;
+constexpr static const Port TCP_CLIENT_PORT = 49'096;
+constexpr static const Port AUTO_PORT = 64'444; // для автоматического назначения в UDP/TCP
+constexpr static const auto SELF_IPV4 = "0.0.0.0";
 constexpr static const u32_t SHORT_NICKNAME_SZ = 50;
 
 enum class Tag: byte {
@@ -26,8 +31,8 @@ enum class Tag: byte {
 };
 
 struct Packet final {
-  Port port {DEFAULT_PORT};
-  Str ip_v4 {MY_IPV4};
+  Port port {};
+  Str ip_v4 {};
   Bytes bytes {};
 };
 
