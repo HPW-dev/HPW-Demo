@@ -48,7 +48,7 @@
       "request": "launch",
       "name": "connection test x64",
       "program": "${workspaceRoot}/build/bin/connection-test.exe",
-      "args": ["-w"],
+      "args": [],
       "cwd": "${workspaceRoot}/",
     },
     {
@@ -58,7 +58,7 @@
       "request": "launch",
       "name": "net test x64",
       "program": "${workspaceRoot}/build/bin/net-test.exe",
-      "args": ["-w"],
+      "args": [],
       "cwd": "${workspaceRoot}/",
     },
   ]

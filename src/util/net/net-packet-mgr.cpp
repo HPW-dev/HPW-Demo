@@ -34,8 +34,8 @@ struct Packet_mgr::Impl {
     _status.server = cfg.is_server;
     _init_udp(cfg);
     _init_tcp(cfg);
-    _start_waiting_packets(true);
     _status.active = true;
+    _start_waiting_packets(true);
   }
 
   inline void disconnect() {
@@ -63,9 +63,10 @@ struct Packet_mgr::Impl {
   inline void send(cr<Packet> src, cr<Target_info> target) {
     iferror(!_status.active, "not initialized");
     iferror(!target.broadcast && target.ip_v4.empty(), "target ip v4 is empty");
-    iferror(target.port < 1024, "target port < 1024");
     iferror(src.bytes.empty(), "packet data is empty");
     iferror(src.bytes.size() >= (target.udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET), "packet data >= MAX_PACKET");
+    if (target.port != 0 && target.port < 1024)
+      hpw_warning("target port < 1024");
 
     _packets_to_send.push_back(src);
     auto* for_delete = &_packets_to_send.back();
@@ -126,6 +127,7 @@ struct Packet_mgr::Impl {
     for (rauto packet: _loaded_packets)
       ret.emplace_back(std::move(packet));
     _loaded_packets.clear();
+    _status.has_packets = false;
     return ret;
   }
 
@@ -133,9 +135,9 @@ struct Packet_mgr::Impl {
   inline ~Impl() { disconnect(); }
 
   inline void _check_config(cr<Packet_mgr::Config> cfg) {
-    iferror (cfg.port_udp < 1024, "используйте для UDP порты больше 1024");
-    iferror (cfg.port_tcp < 1024, "используйте для TCP порты больше 1024");
-    iferror (cfg.ip_v4.empty(), "ip v4 адрес пуст");
+    iferror (cfg.port_udp != 0 && cfg.port_udp < 1024, "use UDP port > 1024");
+    iferror (cfg.port_tcp != 0 && cfg.port_tcp < 1024, "use TCP port > 1024");
+    iferror (cfg.ip_v4.empty(), "ip v4 is empty");
   }
 
   inline void _init_udp(cr<Config> cfg) {
@@ -160,7 +162,7 @@ struct Packet_mgr::Impl {
   }
 
   inline void _start_waiting_packets(bool udp_mode) {
-    return_if(!_status.binded);
+    return_if(!udp_mode && !_status.binded);
     iferror(!_status.active, "not initialized");
 
     // размер пакета изначально больше чем принимаемые данные
@@ -197,6 +199,7 @@ struct Packet_mgr::Impl {
         if (_receive_cb)
           _receive_cb();
 
+        _status.has_packets = true;
         ++_status.received_packets;
       }
 
