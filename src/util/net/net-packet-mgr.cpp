@@ -131,9 +131,8 @@ struct Packet_mgr::Impl {
     return ret;
   }
 
-  inline void wait_connection() {
+  inline Target_info wait_connection() {
     iferror(!_status.active, "not initialized")
-    //_socket_tcp = new_unique<ip_tcp::socket>(_io_tcp);
     _socket_tcp->close();
     const ip_tcp::endpoint ep(asio::ip::address_v4::from_string(_status.ip_v4), _status.port_tcp);
     ip_tcp::acceptor acceptor(_io_tcp, ep);
@@ -142,13 +141,24 @@ struct Packet_mgr::Impl {
     _last_binded_addr = _socket_tcp->remote_endpoint();
     _status.connected = true;
     _start_waiting_packets(false);
+
+    Target_info ret;
+    ret.ip_v4 = _last_binded_addr.address().to_v4().to_string();
+    ret.port = _last_binded_addr.port();
+    return ret;
   }
 
   inline void connect_to(cr<Target_info> target) {
     iferror(!_status.active, "not initialized")
     iferror(target.ip_v4.empty(), "target ip v4 is empty");
-    hpw_info("TCP binding for " + target.ip_v4 + ":" + n2s(target.port) + "\n");
     ip_tcp::endpoint ep(asio::ip::address_v4::from_string(target.ip_v4), target.port);
+    
+    if (ep == _last_binded_addr) {
+      hpw_info("TCP connection with " + target.ip_v4 + ":" + n2s(target.port) + " already established\n");
+      return;
+    }
+
+    hpw_info("TCP connect to " + target.ip_v4 + ":" + n2s(target.port) + "\n");
     _socket_tcp->connect(ep);
     _last_binded_addr = ep;
     _status.connected = true;
@@ -246,7 +256,7 @@ void Packet_mgr::update() { _impl->update(); }
 void Packet_mgr::send(cr<Packet> src, cr<Target_info> target) { _impl->send(src, target); }
 Packets Packet_mgr::unload_all() { return _impl->unload_all(); }
 cr<Packet_mgr::Status> Packet_mgr::status() const { return _impl->status(); }
-void Packet_mgr::wait_connection() { _impl->wait_connection(); }
+Packet_mgr::Target_info Packet_mgr::wait_connection() { return _impl->wait_connection(); }
 void Packet_mgr::connect_to(cr<Target_info> target) { _impl->connect_to(target); }
 
 } // net ns

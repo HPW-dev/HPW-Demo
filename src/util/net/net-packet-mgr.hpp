@@ -47,7 +47,7 @@ public:
   Packet_mgr();
   virtual ~Packet_mgr();
   void start(cr<Config> cfg);
-  void wait_connection(); // ждать TCP соединения
+  [[nodiscard]] Target_info wait_connection(); // ждать TCP соединения
   void connect_to(cr<Target_info> target); // законнектиться к TCP интерфейсу
   void disconnect();
   void update(); // это обязательно вызывать чтобы ассинорхонные отправки завершались
