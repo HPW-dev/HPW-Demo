@@ -36,7 +36,7 @@ public:
     bool broadcast:1{};       // разрешён бродкаст
     bool server:1{};          // режим сервера
     bool has_packets:1{};     // доступны принятые пакеты
-    bool binded:1{};          // забиндили TCP адрес
+    bool connected:1{};       // установлено TCP соединение
     uint received_packets {}; // сколько пакетов принято
     uint sended_packets {};   // сколько пакетов отправено
     Str ip_v4 {};
@@ -47,6 +47,8 @@ public:
   Packet_mgr();
   virtual ~Packet_mgr();
   void start(cr<Config> cfg);
+  void wait_connection(); // ждать TCP соединения
+  void connect_to(cr<Target_info> target); // законнектиться к TCP интерфейсу
   void disconnect();
   void update(); // это обязательно вызывать чтобы ассинорхонные отправки завершались
   void send(cr<Packet> src, cr<Target_info> target); // отправка пакета

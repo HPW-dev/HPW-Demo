@@ -111,7 +111,7 @@ struct Packet_mgr::Impl {
       }
     } else { // TCP mode
       iferror(_last_binded_addr.address().to_v4().to_string() != target.ip_v4,
-        "last binded address and target ip v4 is not equal");
+        "last connected address and target ip v4 is not equal");
       if (target.async) {
         _socket_tcp->async_send(asio::buffer(for_delete->bytes), handler);
       } else {
@@ -131,6 +131,30 @@ struct Packet_mgr::Impl {
     return ret;
   }
 
+  inline void wait_connection() {
+    iferror(!_status.active, "not initialized")
+    //_socket_tcp = new_unique<ip_tcp::socket>(_io_tcp);
+    _socket_tcp->close();
+    const ip_tcp::endpoint ep(asio::ip::address_v4::from_string(_status.ip_v4), _status.port_tcp);
+    ip_tcp::acceptor acceptor(_io_tcp, ep);
+    hpw_info("waiting for TCP connection...\n");
+    acceptor.accept(*_socket_tcp);
+    _last_binded_addr = _socket_tcp->remote_endpoint();
+    _status.connected = true;
+    _start_waiting_packets(false);
+  }
+
+  inline void connect_to(cr<Target_info> target) {
+    iferror(!_status.active, "not initialized")
+    iferror(target.ip_v4.empty(), "target ip v4 is empty");
+    hpw_info("TCP binding for " + target.ip_v4 + ":" + n2s(target.port) + "\n");
+    ip_tcp::endpoint ep(asio::ip::address_v4::from_string(target.ip_v4), target.port);
+    _socket_tcp->connect(ep);
+    _last_binded_addr = ep;
+    _status.connected = true;
+    _start_waiting_packets(false);
+  }
+  
   inline cr<Status> status() const { return _status; }
   inline ~Impl() { disconnect(); }
 
@@ -162,7 +186,7 @@ struct Packet_mgr::Impl {
   }
 
   inline void _start_waiting_packets(bool udp_mode) {
-    return_if(!udp_mode && !_status.binded);
+    return_if(!udp_mode && !_status.connected);
     iferror(!_status.active, "not initialized");
 
     // размер пакета изначально больше чем принимаемые данные
@@ -186,7 +210,7 @@ struct Packet_mgr::Impl {
           _input_packet.ip_v4 = _input_udp_addr.address().to_v4().to_string();
           _input_packet.port = _input_udp_addr.port();
         } else {
-          iferror(!_status.binded, "address not binded");
+          iferror(!_status.connected, "address not connected");
           _input_packet.by_udp = false;
           _input_packet.ip_v4 = _last_binded_addr.address().to_v4().to_string();
           _input_packet.port = _last_binded_addr.port();
@@ -222,5 +246,7 @@ void Packet_mgr::update() { _impl->update(); }
 void Packet_mgr::send(cr<Packet> src, cr<Target_info> target) { _impl->send(src, target); }
 Packets Packet_mgr::unload_all() { return _impl->unload_all(); }
 cr<Packet_mgr::Status> Packet_mgr::status() const { return _impl->status(); }
+void Packet_mgr::wait_connection() { _impl->wait_connection(); }
+void Packet_mgr::connect_to(cr<Target_info> target) { _impl->connect_to(target); }
 
 } // net ns

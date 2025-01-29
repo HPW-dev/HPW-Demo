@@ -60,7 +60,7 @@ void init_pck_mgr(net::Packet_mgr& dst) {
 }
 
 void test_1(net::Packet_mgr& mgr) {
-  hpw_info("test 1 - TCP sending byte to server\n");
+  hpw_info("test 1 - UDP sending byte to server\n");
 
   if (_connection_info.is_server) {
     hpw_info("server loop start\n");
@@ -92,7 +92,51 @@ void test_1(net::Packet_mgr& mgr) {
     net::Packet_mgr::Target_info target;
     target.ip_v4 = _connection_info.target_ip_v4;
     target.port = _connection_info.target_udp_port;
-    target.udp_mode = true; // TODO del
+    target.udp_mode = true;
+    mgr.send(pck, target);
+    mgr.update();
+  }
+}
+
+void test_2(net::Packet_mgr& mgr) {
+  hpw_info("test 2 - TCP sending byte to server\n");
+
+  if (_connection_info.is_server) {
+    hpw_info("waiting for TCP connection...\n");
+    mgr.wait_connection();
+    hpw_info("server loop start\n");
+
+    while (true) {
+      mgr.update();
+
+      if (mgr.status().has_packets) {
+        for (crauto packet: mgr.unload_all()) {
+          std::stringstream txt;
+          txt << "received packet info:\n";
+          txt << "- source ip v4: " << packet.ip_v4 << "\n";
+          txt << "- source port: " << packet.port << "\n";
+          txt << "- packet size: " << packet.bytes.size() << "\n";
+          assert(packet.bytes.size() == 1);
+          txt << "- packet byte: " << +packet.bytes[0] << "\n";
+          hpw_info(txt.str());
+        }
+        break;
+      }
+    }
+
+    hpw_info("total received packets: " + n2s(mgr.status().received_packets) + "\n");
+    hpw_info("server loop end\n");
+  } else { // client
+    net::Packet_mgr::Target_info target;
+    target.port = _connection_info.target_tcp_port;
+    target.ip_v4 = _connection_info.target_ip_v4;
+    
+    hpw_info("connect to TCP server...\n");
+    mgr.connect_to(target);
+
+    net::Packet pck;
+    pck.bytes.push_back(99);
+    hpw_log("send byte to ip v4 " + target.ip_v4 + ", " + n2s(target.port) + "\n");
     mgr.send(pck, target);
     mgr.update();
   }
@@ -105,4 +149,5 @@ int main(int argc, char** argv) {
   net::Packet_mgr pck_mgr;
   init_pck_mgr(pck_mgr);
   test_1(pck_mgr);
+  test_2(pck_mgr);
 }
