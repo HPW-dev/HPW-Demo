@@ -14,11 +14,11 @@ using Port = u16_t;
 
 constexpr static const std::size_t MAX_UDP_PACKET = 508;
 constexpr static const std::size_t MAX_TCP_PACKET = 8192;
-constexpr static const Port UDP_SERVER_PORT = 49'091;
-constexpr static const Port TCP_SERVER_PORT = 49'092;
-constexpr static const Port UDP_CLIENT_PORT = UDP_SERVER_PORT;
-constexpr static const Port TCP_CLIENT_PORT = TCP_SERVER_PORT;
-constexpr static const Port AUTO_PORT = 64'444; // для автоматического назначения в UDP/TCP
+constexpr static const Port AUTO_PORT = 65'355; // для автоматического назначения в UDP/TCP
+constexpr static const Port SERVER_UDP_PORT = 49'091;
+constexpr static const Port SERVER_TCP_PORT = 49'092;
+constexpr static const Port CLIENT_UDP_PORT = AUTO_PORT;
+constexpr static const Port CLIENT_TCP_PORT = AUTO_PORT-1;
 constexpr static const auto SELF_IPV4 = "0.0.0.0";
 constexpr static const u32_t SHORT_NICKNAME_SZ = 50;
 

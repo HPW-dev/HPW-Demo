@@ -6,10 +6,10 @@ class Image;
 
 struct Connection_ctx {
   Str ip_v4 {net::SELF_IPV4};
-  net::Port udp_server {net::UDP_SERVER_PORT};
-  net::Port tcp_server {net::TCP_SERVER_PORT};
-  net::Port udp_client {net::UDP_CLIENT_PORT};
-  net::Port tcp_client {net::TCP_CLIENT_PORT};
+  net::Port udp_server {net::SERVER_UDP_PORT};
+  net::Port tcp_server {net::SERVER_TCP_PORT};
+  net::Port udp_client {net::CLIENT_UDP_PORT};
+  net::Port tcp_client {net::CLIENT_TCP_PORT};
 };
 
 // рулит сетевым взаимодействием в этом тесте

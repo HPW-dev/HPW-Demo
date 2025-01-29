@@ -5,55 +5,52 @@
 
 namespace net {
 
-struct Connection_ctx {
-  Str ip_v4 {net::SELF_IPV4};
-  net::Port udp_server {net::UDP_SERVER_PORT};
-  net::Port tcp_server {net::TCP_SERVER_PORT};
-  net::Port udp_client {net::UDP_CLIENT_PORT};
-  net::Port tcp_client {net::TCP_CLIENT_PORT};
-};
-
-// ассинхронно получает или передаёт сетевые пакеты
+// для передачи пакетов по сети
 class Packet_mgr {
 public:
+  // для колбэков
   using Action = std::function<void ()>;
+
+  // конфигурация при запуске
+  struct Config {
+    Str ip_v4 {net::SELF_IPV4}; // какой IP назначить себе
+    net::Port port_udp {net::SERVER_UDP_PORT}; // порт для UDP потока
+    net::Port port_tcp {net::SERVER_TCP_PORT}; // порт для TCP потока
+    bool is_server {true}; // в режиме сервера работает бродкаст
+    Action receive_cb {}; // действие выполняющиеся при получении пакета
+  };
+
+  // информация о назначении пакетов
+  struct Target_info {
+    Str ip_v4 {}; // IP назначения (при бродкасте можно не писать)
+    net::Port port {};
+    Action send_cb {}; // действие при завершении отправки пакета
+    bool udp_mode {};
+    bool broadcast {}; // широковещательная отправка
+    bool async {}; // ассинхронный режим отправки без дожидания завершения (потом вызывай .update())
+  };
+
+  // флаги
+  struct Status {
+    bool active:1{}; // true - класс нормально функционирует. Disconnect выключит всё
+    bool broadcast:1{}; // разрешён бродкаст
+    bool server:1{}; // режим сервера
+    bool has_packets:1{}; // доступны принятые пакеты
+    uint received_packets {}; // сколько пакетов принято
+    uint sended_packets {}; // сколько пакетов отправено
+    Str ip_v4 {};
+    net::Port port_tcp {};
+    net::Port port_tcp {};
+  };
 
   Packet_mgr();
   virtual ~Packet_mgr();
-  void start_server(cr<Str> ip=net::SELF_IPV4, Port udp_port=net::UDP_SERVER_PORT, Port tcp_port=net::TCP_SERVER_PORT);
-  void start_client(cr<Str> ip=net::SELF_IPV4, Port udp_port=net::TCP_CLIENT_PORT, Port tcp_port=net::TCP_CLIENT_PORT);
-  [[nodiscard]] bool is_server() const;
-  [[nodiscard]] bool is_client() const;
-  [[nodiscard]] bool is_active() const;
-  [[nodiscard]] cr<Port> udp_port() const; // узнать свой UDP порт
-  [[nodiscard]] cr<Port> tcp_port() const; // узнать свой TCP порт
-  [[nodiscard]] cr<Str> ip_v4() const; // узнать свой IPv4
-  [[nodiscard]] uint received_packets() const; // узнать сколько пакетов получено
-  [[nodiscard]] uint sended_packets() const; // узнать сколько пакетов отправлено
+  void start(cr<Config> cfg);
+  void disconnect();
+  void update(); // это обязательно вызывать чтобы ассинорхонные отправки завершались
+  void send(cr<Packet> src, cr<Target_info> target); // отправка пакета
   [[nodiscard]] Packets unload_all(); // выгрузить все скачанные пакеты
-  [[nodiscard]] bool has_packets() const; // проверить что есть входящие пакеты
-  void set_receive_cb(Action&& cb); // задать действие выполняющиеся при получении пакета
-  void update(); // это обязательно вызывать, ассинорхонные отправки завершались
-  /** асинхронная широковещательная отправка пакета
-  * @param src данные отправки
-  * @param port порт получателя
-  * @param cb действие при завершении отправки */
-  void broadcast_push(cr<Packet> src, Port port, Action&& cb={});
-  /** асинхронная отправка пакета
-  * @param src данные отправки
-  * @param ip_v4 адрес получателя
-  * @param port порт получателя
-  * @param udp_mode true - использовать UDP, false - TCP
-  * @param cb действие при завершении отправки */
-  void push(cr<Packet> src, cr<Str> ip_v4, Port port, bool udp_mode, Action&& cb={});
-  /** синхронная отправка пакета
-  * @param src данные отправки
-  * @param ip_v4 адрес получателя
-  * @param port порт получателя
-  * @param udp_mode true - использовать UDP, false - TCP
-  * @param cb действие при завершении отправки */
-  void send(cr<Packet> src, cr<Str> ip_v4, Port port, bool udp_mode);
-
+  [[nodiscard]] cr<Status> status() const;
 private:
   struct Impl;
   Unique<Impl> _impl {};
