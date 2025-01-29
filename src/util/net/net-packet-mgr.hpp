@@ -36,6 +36,7 @@ public:
     bool broadcast:1{};       // разрешён бродкаст
     bool server:1{};          // режим сервера
     bool has_packets:1{};     // доступны принятые пакеты
+    bool binded:1{};          // забиндили TCP адрес
     uint received_packets {}; // сколько пакетов принято
     uint sended_packets {};   // сколько пакетов отправено
     Str ip_v4 {};

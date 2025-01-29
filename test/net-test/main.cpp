@@ -88,7 +88,7 @@ void test_1(net::Packet_mgr& mgr) {
     net::Packet_mgr::Target_info target;
     target.ip_v4 = _connection_info.target_ip_v4;
     target.port = _connection_info.target_udp_port;
-    target.udp_mode = true;
+    target.udp_mode = true; // TODO del
     mgr.send(pck, target);
     mgr.update();
   }

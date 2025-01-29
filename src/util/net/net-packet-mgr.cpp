@@ -34,7 +34,7 @@ struct Packet_mgr::Impl {
     _status.server = cfg.is_server;
     _init_udp(cfg);
     _init_tcp(cfg);
-    _start_waiting_packets();
+    _start_waiting_packets(true);
     _status.active = true;
   }
 
@@ -77,7 +77,7 @@ struct Packet_mgr::Impl {
       if (err) {
         hpw_warning(Str("system error: ") + err.message() + " - " + err.category().name() + "\n");
       } elif (bytes == 0) {
-        hpw_debug("sended 0 bytes\n");
+        hpw_warning("sended 0 bytes\n");
       } elif (bytes >= (tgt.udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET)) {
         hpw_warning("packet size >= MAX_PACKET\n");
       } else {
@@ -159,8 +159,55 @@ struct Packet_mgr::Impl {
     hpw_info("TCP connection setup to " + _status.ip_v4 + ":" + n2s(_status.port_tcp) + "\n");
   }
 
-  inline void _start_waiting_packets() {
-    // TODO
+  inline void _start_waiting_packets(bool udp_mode) {
+    return_if(!_status.binded);
+    iferror(!_status.active, "not initialized");
+
+    // размер пакета изначально больше чем принимаемые данные
+    _input_packet = {};
+    _input_packet.bytes.resize(udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET);
+    
+    auto handler = [this, mode=udp_mode](cr<std::error_code> err, std::size_t bytes)->void {
+      return_if(!_status.active);
+
+      if (err) {
+        hpw_warning(Str("system error: ") + err.message() + " - " + err.category().name() + "\n");
+      } elif (bytes == 0) {
+        hpw_warning("packet data is empty\n");
+      } elif (bytes >= (mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET)) {
+        hpw_warning("packet data >= MAX_PACKET\n");
+      } else {
+        _input_packet.bytes.resize(bytes); // сократить размер пакета
+
+        if (mode) {
+          _input_packet.by_udp = true;
+          _input_packet.ip_v4 = _input_udp_addr.address().to_v4().to_string();
+          _input_packet.port = _input_udp_addr.port();
+        } else {
+          iferror(!_status.binded, "address not binded");
+          _input_packet.by_udp = false;
+          _input_packet.ip_v4 = _last_binded_addr.address().to_v4().to_string();
+          _input_packet.port = _last_binded_addr.port();
+        }
+
+        // передать загруженный пакет в буффер загрузок и запустить следующий приём пакетов
+        _loaded_packets.emplace_back(std::move(_input_packet));
+        _input_packet = {};
+
+        if (_receive_cb)
+          _receive_cb();
+
+        ++_status.received_packets;
+      }
+
+      _start_waiting_packets(mode);
+    }; // handler
+
+    if (udp_mode) {
+      _socket_udp->async_receive_from(asio::buffer(_input_packet.bytes), _input_udp_addr, handler);
+    } else {
+      _socket_tcp->async_receive(asio::buffer(_input_packet.bytes), handler);
+    }
   }
 }; // Impl
 
