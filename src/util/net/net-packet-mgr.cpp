@@ -24,6 +24,7 @@ struct Packet_mgr::Impl {
   std::deque<Packet> _loaded_packets {}; // полученные пакеты
   Packet _input_packet {}; // промежуточный пакет для записи в него входящих пакетов
   ip_udp::endpoint _input_udp_addr {}; // адрес от входящего UDP пакета
+  ip_tcp::endpoint _last_binded_addr {}; // последний адресс, на который биндились по TCP
   Action _receive_cb {}; // действие выполняющиеся при получении пакета
 
   inline void start(cr<Config> cfg) {
@@ -53,15 +54,79 @@ struct Packet_mgr::Impl {
   }
 
   inline void update() {
-    // TODO
+    iferror(!_status.active, "not initialized");
+    constexpr auto TIMEOUT = std::chrono::seconds(1);
+    _io_udp.run_for(TIMEOUT);
+    _io_tcp.run_for(TIMEOUT);
   }
 
   inline void send(cr<Packet> src, cr<Target_info> target) {
-    // TODO
+    iferror(!_status.active, "not initialized");
+    iferror(!target.broadcast && target.ip_v4.empty(), "target ip v4 is empty");
+    iferror(target.port < 1024, "target port < 1024");
+    iferror(src.bytes.empty(), "packet data is empty");
+    iferror(src.bytes.size() >= (target.udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET), "packet data >= MAX_PACKET");
+
+    _packets_to_send.push_back(src);
+    auto* for_delete = &_packets_to_send.back();
+
+    auto handler = [this, _for_delete=for_delete, tgt=target]
+    (cr<std::error_code> err, std::size_t bytes) {
+      ret_if(!_status.active);
+
+      if (err) {
+        hpw_warning(Str("system error: ") + err.message() + " - " + err.category().name() + "\n");
+      } elif (bytes == 0) {
+        hpw_debug("sended 0 bytes\n");
+      } elif (bytes >= (tgt.udp_mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET)) {
+        hpw_warning("packet size >= MAX_PACKET\n");
+      } else {
+        hpw_debug("отправлено " + n2s(bytes) + " байт\n");
+        
+        if (tgt.send_cb)
+          tgt.send_cb();
+
+        ++_status.sended_packets;
+      }
+        
+      // удалить пакет из списка
+      std::erase_if(_packets_to_send, [_for_delete](cr<Packet> packet){ return std::addressof(packet) == _for_delete; });
+    };
+
+    hpw_debug("отправка " + n2s(for_delete->bytes.size()) + " байт...\n");
+    asio::ip::address_v4 ip = asio::ip::address_v4::from_string(target.ip_v4);
+    
+    if (target.udp_mode) {
+      if (target.broadcast)
+        ip = asio::ip::address_v4::broadcast();
+
+      ip_udp::endpoint ep(ip, target.port);
+
+      if (target.async) {
+        _socket_udp->async_send_to(asio::buffer(for_delete->bytes), ep, handler);
+      } else {
+        _socket_udp->send_to(asio::buffer(for_delete->bytes), ep);
+        _packets_to_send.pop_back(); // хвост отправили сразу, он уже не нужен
+      }
+    } else { // TCP mode
+      iferror(_last_binded_addr.address().to_v4().to_string() != target.ip_v4,
+        "last binded address and target ip v4 is not equal");
+      if (target.async) {
+        _socket_tcp->async_send(asio::buffer(for_delete->bytes), handler);
+      } else {
+        _socket_tcp->send(asio::buffer(for_delete->bytes));
+        _packets_to_send.pop_back(); // хвост отправили сразу, он уже не нужен
+      }
+    }
   }
 
   inline Packets unload_all() {
-    return {}; // TODO
+    iferror(!_status.active, "not initialized");
+    Packets ret;
+    for (rauto packet: _loaded_packets)
+      ret.emplace_back(std::move(packet));
+    _loaded_packets.clear();
+    return ret;
   }
 
   inline cr<Status> status() const { return _status; }
