@@ -53,17 +53,18 @@ void print_params() {
 void print_pck_mgr_info(cr<net::Packet_mgr> src) {
   std::stringstream txt;
   txt << "network packet manager info:\n";
-  txt << "- self ip v4: " << src.ip_v4() << "\n";
-  txt << "- UDP port: " << src.udp_port() << "\n";
-  txt << "- TCP port: " << src.tcp_port() << "\n";
+  txt << "- self ip v4: " << src.status().ip_v4 << "\n";
+  txt << "- UDP port: " << src.status().port_udp << "\n";
+  txt << "- TCP port: " << src.status().port_tcp << "\n";
   hpw_info(txt.str());
 }
 
 void init_pck_mgr(net::Packet_mgr& dst) {
-  if (_connection_info.is_server)
-    dst.start_server(_connection_info.source_ip_v4, _connection_info.source_udp_port, _connection_info.source_tcp_port);
-  else
-    dst.start_client(_connection_info.source_ip_v4, _connection_info.source_udp_port, _connection_info.source_tcp_port);
+  net::Packet_mgr::Config cfg;
+  cfg.port_udp = _connection_info.source_udp_port;
+  cfg.port_tcp = _connection_info.source_tcp_port;
+  cfg.is_server = _connection_info.is_server;
+  dst.start(cfg);
 }
 
 void test_1(net::Packet_mgr& mgr) {
@@ -73,7 +74,7 @@ void test_1(net::Packet_mgr& mgr) {
   if (_connection_info.is_server) {
     while (true) {
       mgr.update();
-      if (mgr.has_packets()) {
+      if (mgr.status().has_packets) {
         for (crauto packet: mgr.unload_all()) {
           std::stringstream txt;
           txt << "received packet info:\n";
@@ -85,7 +86,7 @@ void test_1(net::Packet_mgr& mgr) {
           hpw_info(txt.str());
         }
 
-        hpw_info("total received packets: " + n2s(mgr.received_packets()) + "\n");
+        hpw_info("total received packets: " + n2s(mgr.status().received_packets) + "\n");
         break;
       }
     }
@@ -93,7 +94,11 @@ void test_1(net::Packet_mgr& mgr) {
     net::Packet pck;
     pck.bytes.push_back(99);
     hpw_log("send byte to ip v4 " + _connection_info.target_ip_v4 + ", " + n2s(_connection_info.target_udp_port) + "\n");
-    mgr.send(pck, _connection_info.target_ip_v4, _connection_info.target_udp_port, true);
+    net::Packet_mgr::Target_info target;
+    target.ip_v4 = _connection_info.target_ip_v4;
+    target.port = _connection_info.target_udp_port;
+    target.udp_mode = true;
+    mgr.send(pck, target);
     mgr.update();
   }
 

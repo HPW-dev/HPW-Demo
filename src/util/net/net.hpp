@@ -31,9 +31,10 @@ enum class Tag: byte {
 };
 
 struct Packet final {
-  Port port {};
-  Str ip_v4 {};
-  Bytes bytes {};
+  Port port {}; // порт, по которому пришёл пакет
+  Str ip_v4 {}; // ip v4, по которому пришёл пакет
+  Bytes bytes {}; // данные для отправки или принятые
+  bool by_udp {}; // true - пакет был отправлен по udp
 };
 
 using Packets = Vector<Packet>;
