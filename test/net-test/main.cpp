@@ -4,10 +4,10 @@
 #include "util/str-util.hpp"
 
 struct Connection_info {
-  net::Port source_udp_port = net::CLIENT_UDP_PORT;
-  net::Port source_tcp_port = net::CLIENT_TCP_PORT;
-  net::Port target_udp_port = net::SERVER_UDP_PORT;
-  net::Port target_tcp_port = net::SERVER_TCP_PORT;
+  net::Port source_udp_port = net::SERVER_UDP_PORT;
+  net::Port source_tcp_port = net::SERVER_TCP_PORT;
+  net::Port target_udp_port = net::CLIENT_UDP_PORT;
+  net::Port target_tcp_port = net::CLIENT_TCP_PORT;
   Str source_ip_v4 = net::SELF_IPV4;
   Str target_ip_v4 = "127.0.0.1";
   bool is_server {true};
@@ -47,15 +47,6 @@ void print_params() {
   txt << "  * target:\n";
   txt << "    + UDP: " << _connection_info.target_udp_port << "\n";
   txt << "    + TCP: " << _connection_info.target_tcp_port << "\n";
-  hpw_info(txt.str());
-}
-
-void print_pck_mgr_info(cr<net::Packet_mgr> src) {
-  std::stringstream txt;
-  txt << "network packet manager info:\n";
-  txt << "- self ip v4: " << src.status().ip_v4 << "\n";
-  txt << "- UDP port: " << src.status().port_udp << "\n";
-  txt << "- TCP port: " << src.status().port_tcp << "\n";
   hpw_info(txt.str());
 }
 
@@ -111,6 +102,5 @@ int main(int argc, char** argv) {
 
   net::Packet_mgr pck_mgr;
   init_pck_mgr(pck_mgr);
-  print_pck_mgr_info(pck_mgr);
   test_1(pck_mgr);
 }
