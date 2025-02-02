@@ -63,6 +63,7 @@ private:
   mutable Vec _old_contour_draw_pos {};
   mutable Vec _contour_draw_pos {};
   mutable bool _first_draw {true}; // true объект рисуется впервые на экране
+  mutable bool _motion_interp_reset{}; // когда true, сбрасывается предыдущая позиция отрисовки объекта
 
   void next_frame_idx(Entity &entity);
   // обратный порядок кадров

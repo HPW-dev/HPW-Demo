@@ -116,11 +116,11 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
     _contour_draw_pos = entity.phys.get_pos() + contour_direct->offset + offset;
 
   // фикс артефакта, когда объект прилетает из нулевых координат
-  if (_first_draw || graphic::motion_interp_reset) {
+  if (_first_draw || _motion_interp_reset) {
     _old_draw_pos = _draw_pos;
     _old_contour_draw_pos = _contour_draw_pos;
     _first_draw = false;
-    graphic::motion_interp_reset = false;
+    _motion_interp_reset = false;
   }
 
   Vec cur_draw_pos = _draw_pos;
@@ -134,7 +134,7 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
     cur_contour_draw_pos.x = std::lerp<real>(_old_contour_draw_pos.x, _contour_draw_pos.x, graphic::lerp_alpha);
     cur_contour_draw_pos.y = std::lerp<real>(_old_contour_draw_pos.y, _contour_draw_pos.y, graphic::lerp_alpha);
   } else {
-    graphic::motion_interp_reset = true;
+    _motion_interp_reset = true;
   }
 
   if (graphic::motion_blur_mode != Motion_blur_mode::disabled) // рендер с блюром
