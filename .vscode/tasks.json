@@ -156,6 +156,12 @@
       "args": ["script/net-test.py"]
     },
     {
+      "label": "motion interpolation test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/motion-interpolation.py"]
+    },
+    {
       "label": "buttons transmit test",
       "type": "shell",
       "command": "python",
