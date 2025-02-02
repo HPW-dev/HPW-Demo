@@ -1,4 +1,5 @@
 #pragma once
+#include <utility>
 #include "util/bytes.hpp"
 #include "game/util/resource.hpp"
 
@@ -9,5 +10,6 @@ struct File: public Resource {
   Bytes data {};
 
   File() = default;
-  File(cr<Bytes> _data, cr<Str> _path);
+  inline File(cr<Bytes> _data, cr<Str> _path): Resource(_path), data {_data} {}
+  inline File(Bytes&& _data, cr<Str> _path): Resource(_path), data {std::move(_data)} {}
 };

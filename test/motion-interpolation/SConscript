@@ -73,8 +73,6 @@ def init_sources():
   global sources
 
   sources.extend([
-    Glob(thirdparty_dir + "include/zip/*.c"),
-
     src_dir + "graphic/effect/blur.cpp",
     src_dir + "graphic/image/color-table.cpp",
     src_dir + "graphic/image/color.cpp",
@@ -95,7 +93,6 @@ def init_sources():
     src_dir + "game/menu/item/item.cpp",
 
     src_dir + "game/util/keybits.cpp",
-    src_dir + "game/util/game-archive.cpp",
     src_dir + "game/util/locale.cpp",
     src_dir + "game/util/logo.cpp",
     src_dir + "game/util/sync.cpp",
@@ -111,10 +108,9 @@ def init_sources():
     src_dir + "host/host-util.cpp",
     src_dir + "host/windows/windows-keycodes.cpp",
 
-    src_dir + "util/file/archive.cpp",
+    src_dir + "util/file/yaml.cpp",
     src_dir + "util/file/file.cpp",
     src_dir + "util/file/file-io.cpp",
-    src_dir + "util/file/yaml.cpp",
     src_dir + "util/math/mat.cpp",
     src_dir + "util/math/vec-util.cpp",
     src_dir + "util/math/random.cpp",

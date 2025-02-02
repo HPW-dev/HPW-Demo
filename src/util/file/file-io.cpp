@@ -1,5 +1,6 @@
 #include <fstream>
 #include <filesystem>
+#include "file.hpp"
 #include "file-io.hpp"
 #include "util/error.hpp"
 

@@ -11,8 +11,11 @@
 #include "util/str-util.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/common.hpp"
-#include "game/util/game-archive.hpp"
 #include "game/util/resource-helper.hpp"
+
+#ifndef DISABLE_ARCHIVE
+#include "game/util/game-archive.hpp"
+#endif
 
 // грузит спрайт либо из файловой системы, либо из архива
 static inline Shared<Sprite> sprite_loader(cr<Str> name) {
@@ -186,7 +189,7 @@ File load_res(cr<Str> name) {
   assert(!name.empty());
 
   // попытка загрузить ресурс с архива:
-  #ifndef EDITOR
+  #if !defined(EDITOR) && !defined(DISABLE_ARCHIVE)
   try {
     iferror(!hpw::archive, "hpw::archive не инициализирован\n");
     return hpw::archive->get_file(name);
@@ -204,7 +207,9 @@ File load_res(cr<Str> name) {
 }
 
 Strs get_all_res_names(const bool with_folders) {
+  #ifndef DISABLE_ARCHIVE
   return_if (hpw::archive, hpw::archive->get_all_names(with_folders));
+  #endif
 
   hpw_log("не удалось получить все имена ресурсов из архива.\n"
     "Попытка получить их из ОС...\n", Log_stream::debug);

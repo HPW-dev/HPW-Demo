@@ -5,14 +5,18 @@
 #include "host/command.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
+#include "util/str-util.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/palette.hpp"
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/resource-helper.hpp"
-#include "game/util/game-archive.hpp"
-#include "game/core/palette.hpp"
 #include "graphic/image/color.hpp"
+
+#ifndef DISABLE_CONFIG
+#include "game/util/game-archive.hpp"
+#endif
 
 // --------- [!] ---------
 // не переносить вверх!
@@ -22,7 +26,9 @@
 Host_ogl::Host_ogl(int argc, char *argv[])
 : Protownd(argc, argv) {
   m_pixels = scast<decltype(m_pixels)>(graphic::canvas->data());
-  init_archive(); // из архива понадобятся шейдеры
+  #ifndef DISABLE_CONFIG
+    init_archive(); // из архива понадобятся шейдеры
+  #endif
   #ifndef ECOMEM
     load_color_tables();
   #endif
