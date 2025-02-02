@@ -39,7 +39,6 @@ struct Object {
     crauto spr = hpw::sprites.find("object");
     assert(spr);
     const auto spr_center = Vec(spr->X(), spr->Y()) / 2.0;
-    old_draw_pos = cur_draw_pos;
     cur_draw_pos = pos - spr_center;
     
     auto draw_pos = cur_draw_pos;
@@ -50,7 +49,7 @@ struct Object {
       draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
       draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
     }
-    cur_draw_pos = draw_pos;
+    old_draw_pos = draw_pos;
     
     insert(dst, *spr, draw_pos);
   }

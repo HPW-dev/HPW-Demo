@@ -109,40 +109,47 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
   return_if(!direct);
   return_if(direct->sprite.expired());
 
-  _old_draw_pos = _draw_pos;
   _draw_pos = entity.phys.get_pos() + direct->offset + offset;
 
-  _old_contour_draw_pos = _contour_draw_pos;
   cauto contour_direct = _get_contour_direct(degree);
   if (contour_direct)
     _contour_draw_pos = entity.phys.get_pos() + contour_direct->offset + offset;
 
-  const bool use_interp = !entity.status.no_motion_interp ||
-    graphic::enable_motion_interp || !graphic::render_lag;
-  if (use_interp) { // применить интерполированные координаты для рисования объекта
-    _draw_pos.x = std::lerp<real>(_old_draw_pos.x, _draw_pos.x, graphic::lerp_alpha);
-    _draw_pos.y = std::lerp<real>(_old_draw_pos.y, _draw_pos.y, graphic::lerp_alpha);
-    _contour_draw_pos.x = std::lerp<real>(_old_contour_draw_pos.x, _contour_draw_pos.x, graphic::lerp_alpha);
-    _contour_draw_pos.y = std::lerp<real>(_old_contour_draw_pos.y, _contour_draw_pos.y, graphic::lerp_alpha);
-  }
-
   // фикс артефакта, когда объект прилетает из нулевых координат
-  if (_first_draw) {
+  if (_first_draw || graphic::motion_interp_reset) {
     _old_draw_pos = _draw_pos;
     _old_contour_draw_pos = _contour_draw_pos;
+    _first_draw = false;
+    graphic::motion_interp_reset = false;
+  }
+
+  Vec cur_draw_pos = _draw_pos;
+  Vec cur_contour_draw_pos = _contour_draw_pos;
+
+  const bool use_interp = graphic::enable_motion_interp && !graphic::render_lag &&
+     !entity.status.no_motion_interp;
+  if (use_interp) { // применить интерполированные координаты для рисования объекта
+    cur_draw_pos.x = std::lerp<real>(_old_draw_pos.x, _draw_pos.x, graphic::lerp_alpha);
+    cur_draw_pos.y = std::lerp<real>(_old_draw_pos.y, _draw_pos.y, graphic::lerp_alpha);
+    cur_contour_draw_pos.x = std::lerp<real>(_old_contour_draw_pos.x, _contour_draw_pos.x, graphic::lerp_alpha);
+    cur_contour_draw_pos.y = std::lerp<real>(_old_contour_draw_pos.y, _contour_draw_pos.y, graphic::lerp_alpha);
+  } else {
+    graphic::motion_interp_reset = true;
   }
 
   if (graphic::motion_blur_mode != Motion_blur_mode::disabled) // рендер с блюром
-    insert_blured(dst, *direct->sprite.lock(), _old_draw_pos, _draw_pos, blend_f, entity.uid);
+    insert_blured(dst, *direct->sprite.lock(), _old_draw_pos, cur_draw_pos, blend_f, entity.uid);
   else // рендер без блюра
-    insert(dst, *direct->sprite.lock(), _draw_pos, blend_f, entity.uid);
-  _first_draw = false;
+    insert(dst, *direct->sprite.lock(), cur_draw_pos, blend_f, entity.uid);
     
   // нарисовать контур
   const bool use_contour = contour_direct &&
     !contour_direct->sprite.expired() && !entity.status.disable_contour;
   if (use_contour)
-    insert(dst, *contour_direct->sprite.lock(), _contour_draw_pos, contour_bf);
+    insert(dst, *contour_direct->sprite.lock(), cur_contour_draw_pos, contour_bf);
+  
+  _old_draw_pos = cur_draw_pos;
+  _old_contour_draw_pos = cur_contour_draw_pos;
 } 
 
 void Anim_ctx::set_anim(cp<Anim> new_anim) {

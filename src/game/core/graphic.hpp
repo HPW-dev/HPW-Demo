@@ -22,6 +22,7 @@ inline Delta_time effect_state {};     // используется в графи
 // interpolation:
 inline Delta_time lerp_alpha     {};     // для интерполяции движение при рендерере
 inline bool enable_motion_interp {true}; // плавное движение
+inline bool motion_interp_reset  {};     // когда true, сбрасывается предыдущая позиция отрисовки объекта
 
 // frameskip:
 inline uint frame_skip      {3};    // сколько кадров пропускать

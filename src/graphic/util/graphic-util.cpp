@@ -468,8 +468,9 @@ void expand_color_8_buf(Image& dst, Image& tmp, const Pal8 color) {
   }
 }
 
-void insert_blured(Image& dst, cr<Sprite> src,
-const Vec old_pos, const Vec cur_pos, blend_pf bf, Uid uid) {
+void insert_blured(Image& dst, cr<Sprite> src, Vec old_pos, Vec cur_pos, blend_pf bf, Uid uid) {
+  old_pos = floor(old_pos);
+  cur_pos = floor(cur_pos);
   cauto traveled = distance(old_pos, cur_pos);
   // если мало прошли, то не блюрить
   const bool small_len = traveled <= graphic::insert_blured_traveled_limit;

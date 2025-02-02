@@ -85,8 +85,7 @@ void expand_color_8(Image& dst, const Pal8 color);
 // версия expand_color_8 с внешним tmp буффером
 void expand_color_8_buf(Image& dst, Image& tmp, const Pal8 color);
 
-void insert_blured(Image& dst, cr<Sprite> src, const Vec old_pos,
-  const Vec cur_pos, blend_pf bf, Uid uid=0);
+void insert_blured(Image& dst, cr<Sprite> src, Vec old_pos, Vec cur_pos, blend_pf bf, Uid uid=0);
 // определяет какую область src надо копировать в пределах dst
 [[nodiscard]] Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept;
 // контраст (0 .. 1 .. inf)
