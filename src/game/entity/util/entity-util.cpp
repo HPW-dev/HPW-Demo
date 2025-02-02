@@ -227,8 +227,8 @@ Vec predict(cr<Phys> self, cr<Phys> target) {
 
   // двигать объекты пока src не достигнет радиуса попадания в dst
   cfor (_, TIMEOUT) {
-    src.update(hpw::target_update_time);
-    dst.update(hpw::target_update_time);
+    src.update(hpw::target_tick_time);
+    dst.update(hpw::target_tick_time);
     if (length(src.get_pos() - start) >= length(dst.get_pos() - start))
       return dst.get_pos();
   }

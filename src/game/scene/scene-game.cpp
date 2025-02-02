@@ -160,7 +160,7 @@ Scene_game::~Scene_game() {
 } // d-tor
 
 void Scene_game::update(const Delta_time dt) {
-  assert(dt == hpw::target_update_time);
+  assert(dt == hpw::target_tick_time);
   m_impl->update(dt);
 
   // input:

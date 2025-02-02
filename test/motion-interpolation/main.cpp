@@ -23,6 +23,10 @@
 constexpr real BORDER_TOP = 40;
 constexpr real BORDER_BOTTOM = 384 - BORDER_TOP;
 
+static bool _clamp_alpha {true};
+static bool _use_interp {true};
+static bool _future_interp {false};
+
 struct Object {
   Vec pos {};
   Vec fut_pos {};
@@ -43,7 +47,23 @@ struct Object {
     old_draw_pos = cur_draw_pos;
     cur_draw_pos = cur_pos;
     fut_draw_pos = fut_pos;
-    insert(dst, *spr, cur_pos);
+    
+    auto draw_pos = cur_draw_pos;
+    if (_use_interp) {
+      auto alpha = get_alpha();
+      if (_clamp_alpha)
+        alpha = std::clamp<real>(alpha, 0, 1);
+      hpw_log("alpha: " + n2s(alpha) + "\n");
+      if (_future_interp) {
+        draw_pos.x = std::lerp<real>(cur_draw_pos.x, fut_draw_pos.x, alpha);
+        draw_pos.y = std::lerp<real>(cur_draw_pos.y, fut_draw_pos.y, alpha);
+      } else {
+        draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
+        draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
+      }
+    }
+    
+    insert(dst, *spr, draw_pos);
   }
 
   inline void update(Delta_time dt) {
@@ -58,6 +78,10 @@ struct Object {
       pos.y = BORDER_BOTTOM - 1;
       vel.y *= -1;
     }
+  }
+
+  static Delta_time get_alpha() {
+    return (hpw::soft_draw_start_time - hpw::tick_start_time) / hpw::target_tick_time;
   }
 }; // Object
 
@@ -117,9 +141,9 @@ private:
         _tickrate = std::clamp(val, 5, 360);
         set_target_ups(_tickrate);
       }, 5),
-      new_shared<Menu_bool_item>(U"использовать интерполяцию", [this]{ return _use_interp; }, [this](bool val){ _use_interp = val; }),
-      new_shared<Menu_bool_item>(U"предсказание движения", [this]{ return _future_interp; }, [this](bool val){ _future_interp = val; }),
-      new_shared<Menu_bool_item>(U"лимитировать коэф-т интерп-и", [this]{ return _clamp_alpha; }, [this](bool val){ _clamp_alpha = val; }),
+      new_shared<Menu_bool_item>(U"использовать интерполяцию", []{ return _use_interp; }, [](bool val){ _use_interp = val; }),
+      new_shared<Menu_bool_item>(U"предсказание движения", []{ return _future_interp; }, [](bool val){ _future_interp = val; }),
+      new_shared<Menu_bool_item>(U"лимитировать коэф-т интерп-и", []{ return _clamp_alpha; }, [](bool val){ _clamp_alpha = val; }),
       new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::soft_exit(); }),
     };
     const Rect rect(Vec{12, 12}, Vec{280, 130});
@@ -145,9 +169,6 @@ private:
     }
   }
 
-  bool _clamp_alpha {true};
-  bool _use_interp {true};
-  bool _future_interp {false};
   int _fps {60};
   int _tickrate {30};
   Unique<Advanced_text_menu> _menu {};

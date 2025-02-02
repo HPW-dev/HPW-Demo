@@ -99,7 +99,7 @@ struct Entity_mgr::Impl {
     update_entitys(dt);
 
     cauto ed = hpw::get_time();
-    m_update_lag = (ed - st) >= hpw::target_update_time * 1.1;
+    m_update_lag = (ed - st) >= hpw::target_tick_time * 1.1;
   } // update
   
   // применить список на добавление объектов из очереди m_registrate_list

@@ -353,8 +353,8 @@ void Host_glfw::game_update(const Delta_time dt) {
   return_if (dt <= 0 || dt >= 10);
   process_fast_forward();
 
-  while (m_update_time >= hpw::target_update_time && m_is_ran) {
-    m_update_time -= hpw::target_update_time;
+  while (m_update_time >= hpw::target_tick_time && m_is_ran) {
+    m_update_time -= hpw::target_tick_time;
     m_start_update_time = get_time();
 
     glfwPollEvents();
@@ -364,7 +364,7 @@ void Host_glfw::game_update(const Delta_time dt) {
     if (graphic::step_mode) // пошагово
       need_update = hpw::any_key_pressed;
     if (need_update) {
-      update(hpw::target_update_time);
+      update(hpw::target_tick_time);
       ++m_upf;
       ++m_ups;
     }
@@ -404,7 +404,7 @@ void Host_glfw::apply_update_delay() {
 void Host_glfw::calc_lerp_alpha() {
   cauto start_draw_time = get_time() - m_start_update_time;
   // для интеропляции движения 
-  graphic::lerp_alpha = safe_div(start_draw_time, hpw::target_update_time);
+  graphic::lerp_alpha = safe_div(start_draw_time, hpw::target_tick_time);
   // лимит значения чтобы при тормозах окна объекты не растягивались
   graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
 }
@@ -524,5 +524,5 @@ void Host_glfw::_set_fullscreen(bool enable) {
 
 void Host_glfw::process_fast_forward() {
   if (graphic::get_fast_forward())
-    m_update_time = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
+    m_update_time = hpw::target_tick_time * graphic::FAST_FWD_UPD_SPDUP;
 }

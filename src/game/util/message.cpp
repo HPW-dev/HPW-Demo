@@ -24,7 +24,7 @@ struct Message_mgr::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    assert(dt == hpw::target_update_time);
+    assert(dt == hpw::target_tick_time);
 
     // обновить таймер жизни сообщений и удалить истёкшие
     std::erase_if(m_messages, [dt](rauto msg) {

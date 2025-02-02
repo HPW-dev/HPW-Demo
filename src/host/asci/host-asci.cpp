@@ -188,10 +188,10 @@ struct Host_asci::Impl {
     return_if (dt <= 0 || dt >= 10);
 
     if (graphic::get_fast_forward())
-      m_update_time = hpw::target_update_time * graphic::FAST_FWD_UPD_SPDUP;
+      m_update_time = hpw::target_tick_time * graphic::FAST_FWD_UPD_SPDUP;
 
-    while (m_update_time >= hpw::target_update_time) {
-      m_update_time -= hpw::target_update_time;
+    while (m_update_time >= hpw::target_tick_time) {
+      m_update_time -= hpw::target_tick_time;
       m_start_update_time = get_time();
 
       // обработка специальных кнопок
@@ -202,9 +202,9 @@ struct Host_asci::Impl {
       // обновить игровое состояние
       if (graphic::step_mode) { // пошагово
         if (hpw::any_key_pressed)
-          m_master.update(hpw::target_update_time);
+          m_master.update(hpw::target_tick_time);
       } else { // каждый раз
-        m_master.update(hpw::target_update_time);
+        m_master.update(hpw::target_tick_time);
       }
 
       hpw::any_key_pressed = false;
@@ -366,7 +366,7 @@ struct Host_asci::Impl {
   inline void calc_lerp_alpha() {
     cauto start_draw_time = get_time() - m_start_update_time;
     // для интеропляции движения 
-    graphic::lerp_alpha = safe_div(start_draw_time, hpw::target_update_time);
+    graphic::lerp_alpha = safe_div(start_draw_time, hpw::target_tick_time);
     // лимит значения чтобы при тормозах окна объекты не растягивались
     graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
   }

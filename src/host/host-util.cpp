@@ -18,7 +18,7 @@ static Vector<GLfloat> m_ogl_palette {};
 void set_target_ups(int new_ups) {
   assert(new_ups > 0);
   hpw::target_ups = new_ups;
-  hpw::target_update_time = 1.0 / hpw::target_ups;
+  hpw::target_tick_time = 1.0 / hpw::target_ups;
 }
 
 Vector<GLfloat> load_ogl_palette(cr<Str> fname) {

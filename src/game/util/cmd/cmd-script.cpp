@@ -79,7 +79,7 @@ public:
     Str line;
     while (std::getline(m_file, line)) {
       hpw::cmd.exec(line);
-      hpw::entity_mgr->update(hpw::target_update_time);
+      hpw::entity_mgr->update(hpw::target_tick_time);
     }
       
     kill();

@@ -64,7 +64,7 @@ struct Collider_optimizer::Impl {
     }
 
     // если ничего не леагает, то и не надо
-    return_if (m_entity_mgr.collider_time() < hpw::target_update_time * 1.1);
+    return_if (m_entity_mgr.collider_time() < hpw::target_tick_time * 1.1);
 
     // если первый раз
     if (m_cur_collider >= 999'999'999) {
