@@ -88,7 +88,9 @@ def init_sources():
     src_dir + "graphic/sprite/sprite-io.cpp",
 
     src_dir + "game/menu/menu.cpp",
-    src_dir + "game/menu/text-menu.cpp",
+    src_dir + "game/menu/advanced-text-menu.cpp",
+    src_dir + "game/menu/item/int-item.cpp",
+    src_dir + "game/menu/item/bool-item.cpp",
     src_dir + "game/menu/item/text-item.cpp",
     src_dir + "game/menu/item/item.cpp",
 
@@ -97,6 +99,7 @@ def init_sources():
     src_dir + "game/util/logo.cpp",
     src_dir + "game/util/sync.cpp",
     src_dir + "game/util/version.cpp",
+    src_dir + "game/util/vec-helper.cpp",
     src_dir + "game/util/task.cpp",
     src_dir + "game/util/screenshot.cpp",
     src_dir + "game/util/font-helper.cpp",
