@@ -20,7 +20,7 @@
 #include "util/hpw-util.hpp"
 #include "util/str-util.hpp"
 
-constexpr real BORDER_TOP = 25;
+constexpr real BORDER_TOP = 40;
 constexpr real BORDER_BOTTOM = 384 - BORDER_TOP;
 
 struct Object {
@@ -33,7 +33,8 @@ struct Object {
   inline void draw(Image& dst) const {
     crauto spr = hpw::sprites.find("object");
     assert(spr);
-    insert(dst, *spr, pos);
+    const Vec POS = pos - Vec(spr->X(), spr->Y()) / 2.0;
+    insert(dst, *spr, POS);
   }
 
   inline void update(Delta_time dt) {
@@ -60,7 +61,7 @@ protected:
   inline void draw_game_frame() const override {
     rauto dst = *graphic::canvas;
 
-    dst.fill(Pal8::from_real(1.0 / 3.0, true));
+    dst.fill(Pal8::black);
     for (crauto obj: _objects)
       obj.draw(dst);
     assert(_menu);
@@ -128,7 +129,7 @@ private:
 
     _objects.resize(8);
     for (int i = 0; rauto obj: _objects) {
-      obj.pos = Vec(15 + i * 64, BORDER_TOP);
+      obj.pos = Vec(40 + i * 64, BORDER_TOP);
       obj.vel.y = (i + 1) * 3.0_pps;
       ++i;
     }
