@@ -25,7 +25,11 @@ constexpr real BORDER_BOTTOM = 384 - BORDER_TOP;
 
 struct Object {
   Vec pos {};
+  Vec fut_pos {};
   Vec vel {};
+  mutable Vec old_draw_pos {};
+  mutable Vec cur_draw_pos {};
+  mutable Vec fut_draw_pos {};
 
   Object() = default;
   ~Object() = default;
@@ -33,12 +37,18 @@ struct Object {
   inline void draw(Image& dst) const {
     crauto spr = hpw::sprites.find("object");
     assert(spr);
-    const Vec POS = pos - Vec(spr->X(), spr->Y()) / 2.0;
-    insert(dst, *spr, POS);
+    const auto spr_center = Vec(spr->X(), spr->Y()) / 2.0;
+    const Vec cur_pos = pos - spr_center;
+    const Vec fut_pos = fut_pos - spr_center;
+    old_draw_pos = cur_draw_pos;
+    cur_draw_pos = cur_pos;
+    fut_draw_pos = fut_pos;
+    insert(dst, *spr, cur_pos);
   }
 
   inline void update(Delta_time dt) {
     pos += vel * dt;
+    fut_pos = pos + vel * dt;
 
     if (pos.y < BORDER_TOP) {
       pos.y = BORDER_TOP;
