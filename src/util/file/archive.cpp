@@ -7,11 +7,6 @@ extern "C" {
 #include "util/str-util.hpp"
 #include "util/file/file-io.hpp"
 
-File::File(cr<Bytes> _data, cr<Str> _path)
-: Resource {_path}
-, data {_data}
-{}
-
 Archive::Archive(Str fname) {
   conv_sep(fname);
   hpw_log("Archive: load \"" + fname + "\"\n", Log_stream::debug);

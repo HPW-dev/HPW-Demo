@@ -125,7 +125,7 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
     m_old_draw_pos = m_draw_pos;
 
   // рендер без интерполяции
-  if (entity.status.no_motion_interp || !graphic::enable_motion_interp) {
+  if (entity.status.no_motion_interp || !graphic::enable_motion_interp || graphic::render_lag) {
     insert(dst, *direct->sprite.lock(), m_draw_pos + direct->offset + offset,
       blend_f, entity.uid);
     m_drawed_pos = m_draw_pos;
