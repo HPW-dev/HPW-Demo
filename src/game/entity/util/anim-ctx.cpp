@@ -99,67 +99,51 @@ void Anim_ctx::goto_rnd_frame()
   { m_frame_idx = rndu(m_anim->frame_count()-1); }
 
 void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
-  // TODO сделать межкадровый дизеринг
-
-  // взять текущий кадр анимации
-  return_if( !m_anim);
-  auto frame = m_anim->get_frame(m_frame_idx);
-  return_if( !frame);
-
-  // получить направление анимации
-  auto degree = get_degree_with_flags(entity.phys.get_deg(), entity);
-  if (entity.status.rnd_deg_evr_frame)
-    degree = rand_degree_graphic();
-  auto direct = frame->get_direct(degree);
-  return_if( !direct);
+  return_if(!m_anim);
+  cauto frame = m_anim->get_frame(m_frame_idx);
+  return_if(!frame);
+  cauto degree = entity.status.rnd_deg_evr_frame
+    ? rand_degree_graphic()
+    : get_degree_with_flags(entity.phys.get_deg(), entity);
+  cauto direct = frame->get_direct(degree);
+  return_if(!direct);
   return_if(direct->sprite.expired());
 
-  // вычислить корды вставки анимации
-  m_draw_pos = entity.phys.get_pos();
-  Vec contour_pos = m_draw_pos;
+  _old_draw_pos = _draw_pos;
+  _draw_pos = entity.phys.get_pos() + direct->offset + offset;
 
-  /* если m_old_draw_pos нулевой, то с высокой вероятностью отрисовка
-  происходит в первый раз, поэтому нужно задать хоть какое-то значение,
-  иначе вся анимация размажется по экрану */
-  if (!m_old_draw_pos.not_zero())
-    m_old_draw_pos = m_draw_pos;
+  _old_contour_draw_pos = _contour_draw_pos;
+  cauto contour_direct = _get_contour_direct(degree);
+  if (contour_direct)
+    _contour_draw_pos = entity.phys.get_pos() + contour_direct->offset + offset;
 
-  // рендер без интерполяции
-  if (entity.status.no_motion_interp || !graphic::enable_motion_interp || graphic::render_lag) {
-    insert(dst, *direct->sprite.lock(), m_draw_pos + direct->offset + offset,
-      blend_f, entity.uid);
-    m_drawed_pos = m_draw_pos;
-  } else { // рендер с интерполяцией
-    auto interp_pos = get_interpolated_pos();
-    contour_pos = interp_pos;
-    // то же, что и с m_old_draw_pos (см.выше)
-    if (m_old_interp_pos.is_zero())
-      m_old_interp_pos = interp_pos;
+  const bool use_interp = !entity.status.no_motion_interp ||
+    graphic::enable_motion_interp || !graphic::render_lag;
+  if (use_interp) { // применить интерполированные координаты для рисования объекта
+    _draw_pos.x = std::lerp<real>(_old_draw_pos.x, _draw_pos.x, graphic::lerp_alpha);
+    _draw_pos.y = std::lerp<real>(_old_draw_pos.y, _draw_pos.y, graphic::lerp_alpha);
+    _contour_draw_pos.x = std::lerp<real>(_old_contour_draw_pos.x, _contour_draw_pos.x, graphic::lerp_alpha);
+    _contour_draw_pos.y = std::lerp<real>(_old_contour_draw_pos.y, _contour_draw_pos.y, graphic::lerp_alpha);
+  }
 
-    if (graphic::motion_blur_mode != Motion_blur_mode::disabled) { // рендер с размытием
-      insert_blured( dst, *direct->sprite.lock(),
-        m_old_interp_pos + direct->offset + offset,
-        interp_pos + direct->offset + offset, blend_f, entity.uid );
-    } else { // обычный рендер
-      insert(dst, *direct->sprite.lock(),
-        interp_pos + direct->offset + offset, blend_f, entity.uid);
-    }
+  // фикс артефакта, когда объект прилетает из нулевых координат
+  if (_first_draw) {
+    _old_draw_pos = _draw_pos;
+    _old_contour_draw_pos = _contour_draw_pos;
+  }
+
+  if (graphic::motion_blur_mode != Motion_blur_mode::disabled) // рендер с блюром
+    insert_blured(dst, *direct->sprite.lock(), _old_draw_pos, _draw_pos, blend_f, entity.uid);
+  else // рендер без блюра
+    insert(dst, *direct->sprite.lock(), _draw_pos, blend_f, entity.uid);
+  _first_draw = false;
     
-    m_drawed_pos = interp_pos;
-    m_old_interp_pos = interp_pos;
-  } // else motion interp
-
-  m_old_draw_pos = m_draw_pos;
-  if (!entity.status.disable_contour)
-    draw_contour(dst, contour_pos + offset, degree);
-} // draw
-
-Vec Anim_ctx::get_interpolated_pos() const {
-  return Vec (
-    std::lerp<Delta_time>(m_old_draw_pos.x, m_draw_pos.x, graphic::lerp_alpha),
-    std::lerp<Delta_time>(m_old_draw_pos.y, m_draw_pos.y, graphic::lerp_alpha)
-  );
-}
+  // нарисовать контур
+  const bool use_contour = contour_direct &&
+    !contour_direct->sprite.expired() && !entity.status.disable_contour;
+  if (use_contour)
+    insert(dst, *contour_direct->sprite.lock(), _contour_draw_pos, contour_bf);
+} 
 
 void Anim_ctx::set_anim(cp<Anim> new_anim) {
   *this = {};
@@ -215,12 +199,9 @@ cp<Frame> Anim_ctx::get_cur_frame() const {
 
 void Anim_ctx::set_default_deg(real deg) { m_fixed_deg = ring_deg(deg); }
 
-void Anim_ctx::draw_contour(Image& dst, const Vec offset, real degree) const {
-  return_if (!m_contour);
-  auto contour_frame = m_contour->get_frame(m_frame_idx);
-  return_if (!contour_frame);
-  auto contour_direct = contour_frame->get_direct(degree);
-  return_if (!contour_direct || contour_direct->sprite.expired());
-  auto contour_sprite = contour_direct->sprite.lock();
-  insert(dst, *contour_sprite, contour_direct->offset + offset, contour_bf);
-} // draw_contour
+cp<Direct> Anim_ctx::_get_contour_direct(real degree) const {
+  return_if (!m_contour, nullptr);
+  cauto contour_frame = m_contour->get_frame(m_frame_idx);
+  return_if (!contour_frame, nullptr);
+  return contour_frame->get_direct(degree);
+}

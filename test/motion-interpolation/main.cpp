@@ -28,11 +28,9 @@ static bool _use_interp {true};
 
 struct Object {
   Vec pos {};
-  Vec fut_pos {};
   Vec vel {};
   mutable Vec old_draw_pos {};
   mutable Vec cur_draw_pos {};
-  mutable Vec fut_draw_pos {};
 
   Object() = default;
   ~Object() = default;

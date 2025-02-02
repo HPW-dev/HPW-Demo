@@ -46,7 +46,7 @@ public:
   void set_default_deg(real deg);
   inline real get_default_deg() const { return m_fixed_deg; }
   // координаты, в которых объект был нарисован
-  inline Vec get_drawed_pos() const { return m_drawed_pos; }
+  inline Vec get_drawed_pos() const { return _draw_pos; }
   // получение угла поворота с учётом флагов
   real get_degree_with_flags(real src, cr<Entity> entity) const;
 
@@ -58,15 +58,13 @@ private:
   real m_fixed_deg {}; // поворот по умолчанию, для флага m_fixed_deg
   std::size_t m_frame_idx {}; // текущий кадр в анимации
   std::size_t m_prev_frame_idx {}; // предыдущий кадр
-  mutable Vec m_draw_pos {}; // место, где сейчас нарисовался объект
-  mutable Vec m_old_draw_pos {}; // место, где был нарисован объект
-  // место, где был нарисован объект с интерполяцией
-  mutable Vec m_old_interp_pos {};
-  mutable Vec m_drawed_pos {}; // здесь объект был нарисован
+  mutable Vec _old_draw_pos {}; // место, где объект был нарисован
+  mutable Vec _draw_pos {}; // место, где объект будет нарисован в текущем кадре
+  mutable Vec _old_contour_draw_pos {};
+  mutable Vec _contour_draw_pos {};
+  mutable bool _first_draw {true}; // true объект рисуется впервые на экране
 
-  Vec get_interpolated_pos() const;
   void next_frame_idx(Entity &entity);
-  void draw_contour(Image& dst, const Vec offset, real degree) const;
   // обратный порядок кадров
   void goto_prev_frame(Entity &entity);
   // сделать следующий кадр случайный
@@ -75,4 +73,6 @@ private:
   void return_back_frame(Entity &entity);
   // запустить анимацию заново
   void reset_animation(Entity &entity);
+  // получть анимацию направления для контура
+  cp<Direct> _get_contour_direct(real degree) const;
 }; // Anim_ctx
