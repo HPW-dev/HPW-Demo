@@ -10,6 +10,8 @@
 #include "util/math/vec-util.hpp"
 #include "util/log.hpp"
 #include "graphic/image/image.hpp"
+#include "graphic/animation/frame.hpp"
+#include "graphic/animation/direct.hpp"
 #include "graphic/effect/light.hpp"
 
 Player_dark::Player_dark(): Player() {}
@@ -188,6 +190,10 @@ void Player_dark::draw_stars(Image& dst) const {
     assert(m_window_star_len > 0);
     star.radius = ratio * rndr_fast(0, m_window_star_len);
     star.flags.no_sphere = true;
-    star.draw(dst, window_pos + anim_ctx.get_drawed_pos());
+    cauto frame = anim_ctx.get_cur_frame();
+    assert(frame);
+    cauto direct = frame->get_direct(anim_ctx.get_degree_with_flags(phys.get_deg(), *this));
+    assert(direct);
+    star.draw(dst, window_pos + anim_ctx.get_drawed_pos() - direct->offset);
   }
 } // draw_stars

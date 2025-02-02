@@ -110,10 +110,13 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
   return_if(direct->sprite.expired());
 
   _draw_pos = entity.phys.get_pos() + direct->offset + offset;
+  //_old_draw_pos = entity.phys.get_old_pos() + direct->offset + offset;
 
   cauto contour_direct = _get_contour_direct(degree);
-  if (contour_direct)
+  if (contour_direct) {
     _contour_draw_pos = entity.phys.get_pos() + contour_direct->offset + offset;
+    //_old_contour_draw_pos = entity.phys.get_old_pos() + contour_direct->offset + offset;
+  }
 
   // фикс артефакта, когда объект прилетает из нулевых координат
   if (_first_draw || _motion_interp_reset) {
@@ -123,14 +126,14 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
     _motion_interp_reset = false;
   }
 
-  Vec cur_draw_pos = _draw_pos;
+  _drawed_pos = _draw_pos;
   Vec cur_contour_draw_pos = _contour_draw_pos;
 
   const bool use_interp = graphic::enable_motion_interp && !graphic::render_lag &&
      !entity.status.no_motion_interp;
   if (use_interp) { // применить интерполированные координаты для рисования объекта
-    cur_draw_pos.x = std::lerp<real>(_old_draw_pos.x, _draw_pos.x, graphic::lerp_alpha);
-    cur_draw_pos.y = std::lerp<real>(_old_draw_pos.y, _draw_pos.y, graphic::lerp_alpha);
+    _drawed_pos.x = std::lerp<real>(_old_draw_pos.x, _draw_pos.x, graphic::lerp_alpha);
+    _drawed_pos.y = std::lerp<real>(_old_draw_pos.y, _draw_pos.y, graphic::lerp_alpha);
     cur_contour_draw_pos.x = std::lerp<real>(_old_contour_draw_pos.x, _contour_draw_pos.x, graphic::lerp_alpha);
     cur_contour_draw_pos.y = std::lerp<real>(_old_contour_draw_pos.y, _contour_draw_pos.y, graphic::lerp_alpha);
   } else {
@@ -138,9 +141,9 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
   }
 
   if (graphic::motion_blur_mode != Motion_blur_mode::disabled) // рендер с блюром
-    insert_blured(dst, *direct->sprite.lock(), _old_draw_pos, cur_draw_pos, blend_f, entity.uid);
+    insert_blured(dst, *direct->sprite.lock(), _old_draw_pos, _drawed_pos, blend_f, entity.uid);
   else // рендер без блюра
-    insert(dst, *direct->sprite.lock(), cur_draw_pos, blend_f, entity.uid);
+    insert(dst, *direct->sprite.lock(), _drawed_pos, blend_f, entity.uid);
     
   // нарисовать контур
   const bool use_contour = contour_direct &&
@@ -148,7 +151,7 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
   if (use_contour)
     insert(dst, *contour_direct->sprite.lock(), cur_contour_draw_pos, contour_bf);
   
-  _old_draw_pos = cur_draw_pos;
+  _old_draw_pos = _drawed_pos;
   _old_contour_draw_pos = cur_contour_draw_pos;
 } 
 

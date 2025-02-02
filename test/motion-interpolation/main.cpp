@@ -77,8 +77,8 @@ public:
 protected:
   inline void draw_game_frame() const override {
     hpw::soft_draw_start_time = get_time();
-    graphic::lerp_alpha = std::clamp<Delta_time>(
-      safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time), 0, 1);
+    graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time);
+    graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
 
     rauto dst = *graphic::canvas;
     dst.fill(Pal8::black);

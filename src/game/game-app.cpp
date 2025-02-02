@@ -122,14 +122,21 @@ void Game_app::draw_game_frame() const {
   
   // лимит значения чтобы при тормозах окна объекты не растягивались
   hpw::soft_draw_start_time = st;
-  graphic::lerp_alpha = std::clamp<Delta_time>(
-    safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time), 0, 1);
+  graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time);
+  graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
 
   assert(graphic::canvas);
   auto& dst = *graphic::canvas;
 
   hpw::scene_mgr.draw(dst);
   post_draw(dst);
+
+  hpw_info(
+    "alpha: " + n2s(graphic::lerp_alpha) +
+    "  draw start: " + n2s(hpw::soft_draw_start_time) +
+    "  tick end: " + n2s(hpw::tick_end_time) +
+    "  tgt tick: " + n2s(hpw::target_tick_time) +
+    "\n");
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
