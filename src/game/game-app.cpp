@@ -95,7 +95,6 @@ Game_app::~Game_app() {
 void Game_app::update(const Delta_time dt) {
   ALLOW_STABLE_RAND
   assert(dt == hpw::target_tick_time);
-  hpw::tick_start_time = get_time();
   update_graphic_autoopt(dt);
   
   Host_class::update(dt);
@@ -113,7 +112,8 @@ void Game_app::update(const Delta_time dt) {
   }
 
   check_errors();
-  hpw::tick_time = get_time() - st;
+  hpw::tick_end_time = get_time();
+  hpw::tick_time = hpw::tick_end_time - st;
 }
 
 void Game_app::draw_game_frame() const {

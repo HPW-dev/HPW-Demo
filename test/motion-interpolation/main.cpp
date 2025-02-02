@@ -74,7 +74,7 @@ struct Object {
   }
 
   static Delta_time get_alpha() {
-    return (hpw::soft_draw_start_time - hpw::tick_start_time) / hpw::target_tick_time;
+    return (hpw::soft_draw_start_time - hpw::tick_end_time) / hpw::target_tick_time;
   }
 }; // Object
 
@@ -86,8 +86,8 @@ public:
 
 protected:
   inline void draw_game_frame() const override {
-    hpw::soft_draw_start_time = get_time();
     rauto dst = *graphic::canvas;
+    hpw::soft_draw_start_time = get_time();
 
     dst.fill(Pal8::black);
     for (crauto obj: _objects)
@@ -114,8 +114,6 @@ private:
   }
 
   inline void update(const Delta_time dt) override {
-    hpw::tick_start_time = get_time();
-
     if (is_pressed_once(hpw::keycode::escape))
       hpw::soft_exit();
 
@@ -124,6 +122,7 @@ private:
 
     assert(_menu);
     _menu->update(dt);
+    hpw::tick_end_time = get_time();
   }
 
   inline void init_menu() {
