@@ -20,11 +20,14 @@
 #include "game/util/screenshot.hpp"
 #include "util/log.hpp"
 #include "util/path.hpp"
-#include "util/pparser.hpp"
 #include "util/str-util.hpp"
 #include "util/math/random.hpp"
 #include "util/file/yaml.hpp"
 #include "graphic/image/color-table.hpp"
+
+#ifndef DISABLE_ARGS
+#include "util/pparser.hpp"
+#endif
 
 // если перенести это вверх, то всё взорвётся >_<
 #ifdef WINDOWS
@@ -53,6 +56,7 @@ struct Host::Impl final {
   explicit inline Impl(Host& master): _master {master} {}
 
   inline void parse_args(int argc, char** argv) {
+  #ifndef DISABLE_ARGS
     Pparser ret( Pparser::v_param_t {
       {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
       {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(false)); }},
@@ -73,6 +77,7 @@ struct Host::Impl final {
     } );
     ret.skip_empty = true;
     ret(argc, argv);
+  #endif
   }
 }; // Impl
 

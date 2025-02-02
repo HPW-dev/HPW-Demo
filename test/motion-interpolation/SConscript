@@ -62,7 +62,12 @@ def accept_config():
     case _: raise ValueError
   
   used_libs.extend(["yaml-cpp"])
-  hpw_config.cxx_defines.extend(["-DDISABLE_REPLAY", "-DDISABLE_SOUND", "-DDISABLE_CONFIG"])
+  hpw_config.cxx_defines.extend([
+    "-DDISABLE_REPLAY",
+    "-DDISABLE_SOUND",
+    "-DDISABLE_CONFIG",
+    "-DDISABLE_ARGS",
+  ])
 
 def init_sources():
   global sources
@@ -114,7 +119,6 @@ def init_sources():
     src_dir + "util/math/vec-util.cpp",
     src_dir + "util/math/random.cpp",
     src_dir + "util/math/timer.cpp",
-    src_dir + "util/pparser.cpp",
     src_dir + "util/platform.cpp",
     src_dir + "util/str-util.cpp",
     src_dir + "util/hpw-util.cpp",
