@@ -1,10 +1,13 @@
-#include "game/core/canvas.hpp"
 #include "host/glfw3/host-glfw.hpp"
 #include "host/host-util.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/sprites.hpp"
 #include "game/core/locales.hpp"
 #include "game/core/common.hpp"
 #include "game/core/core.hpp"
 #include "game/core/graphic.hpp"
+#include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/int-item.hpp"
 #include "game/menu/item/bool-item.hpp"
@@ -14,17 +17,52 @@
 #include "game/util/font-helper.hpp"
 #include "game/util/keybits.hpp"
 #include "util/log.hpp"
+#include "util/hpw-util.hpp"
 #include "util/str-util.hpp"
+
+constexpr real BORDER_TOP = 25;
+constexpr real BORDER_BOTTOM = 384 - BORDER_TOP;
+
+struct Object {
+  Vec pos {};
+  Vec vel {};
+
+  Object() = default;
+  ~Object() = default;
+
+  inline void draw(Image& dst) const {
+    crauto spr = hpw::sprites.find("object");
+    assert(spr);
+    insert(dst, *spr, pos);
+  }
+
+  inline void update(Delta_time dt) {
+    pos += vel * dt;
+
+    if (pos.y < BORDER_TOP) {
+      pos.y = BORDER_TOP;
+      vel.y *= -1;
+    }
+    if (pos.y >= BORDER_BOTTOM) {
+      pos.y = BORDER_BOTTOM - 1;
+      vel.y *= -1;
+    }
+  }
+}; // Object
+
+using Objects = Vector<Object>;
 
 class Test_app final: public Host_glfw {
 public:
   inline explicit Test_app(int argc, char *argv[]): Host_glfw(argc, argv) {}
 
 protected:
-  void draw_game_frame() const override {
+  inline void draw_game_frame() const override {
     rauto dst = *graphic::canvas;
 
     dst.fill(Pal8::from_real(1.0 / 3.0, true));
+    for (crauto obj: _objects)
+      obj.draw(dst);
     assert(_menu);
     _menu->draw(dst);
 
@@ -32,7 +70,7 @@ protected:
   }
 
 private:
-  void init() override {
+  inline void init() override {
     Host_glfw::init();
     load_locale(hpw::locale_path);
     load_fonts();
@@ -42,12 +80,16 @@ private:
     graphic::set_vsync(false);
     graphic::set_disable_frame_limit(false);
     graphic::set_target_fps(_fps);
+    init_objects();
     init_menu();
   }
 
-  void update(const Delta_time dt) override {
+  inline void update(const Delta_time dt) override {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::soft_exit();
+
+    for (rauto obj: _objects)
+      obj.update(dt);
 
     assert(_menu);
     _menu->update(dt);
@@ -77,12 +119,28 @@ private:
     init_unique(_menu, title, items, rect, config);
   }
 
+  inline void init_objects() {
+    // добавить картинку для объектов
+    Shared<Sprite> obj_spr = new_shared<Sprite>(24, 24);
+    obj_spr->mask().fill(Pal8::mask_visible);
+    obj_spr->image().fill(Pal8::red);
+    hpw::sprites.move("object", std::move(obj_spr));
+
+    _objects.resize(8);
+    for (int i = 0; rauto obj: _objects) {
+      obj.pos = Vec(15 + i * 64, BORDER_TOP);
+      obj.vel.y = (i + 1) * 3.0_pps;
+      ++i;
+    }
+  }
+
   bool _clamp_alpha {true};
   bool _use_interp {true};
   bool _future_interp {false};
   int _fps {60};
   int _tickrate {30};
   Unique<Advanced_text_menu> _menu {};
+  Objects _objects {};
 }; // Test_app
 
 int main(int argc, char *argv[]) {
