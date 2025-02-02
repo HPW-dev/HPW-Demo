@@ -276,8 +276,8 @@ void save_config() {
   graphic_node.set_bool ("draw_border",         graphic::draw_border);
   graphic_node.set_bool ("show_mouse_cursour",  graphic::show_mouse_cursour);
   graphic_node.set_int  ("resize_mode",         scast<int>(graphic::resize_mode) );
-  graphic_node.set_bool ("motion_blur_mode",    scast<int>(graphic::motion_blur_mode) );
-  graphic_node.set_bool ("blur_mode",           scast<int>(graphic::blur_mode) );
+  graphic_node.set_int  ("motion_blur_mode",    scast<int>(graphic::motion_blur_mode) );
+  graphic_node.set_int  ("blur_mode",           scast<int>(graphic::blur_mode) );
   graphic_node.set_real ("motion_blur_quality_mul", graphic::motion_blur_quality_mul);
   graphic_node.set_bool ("blink_particles",     graphic::blink_particles);
   graphic_node.set_real ("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
