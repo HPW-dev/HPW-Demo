@@ -139,7 +139,7 @@ private:
       }, 5),
       new_shared<Menu_bool_item>(U"использовать интерполяцию", []{ return _use_interp; }, [](bool val){ _use_interp = val; }),
       new_shared<Menu_bool_item>(U"лимитировать коэф-т интерп-и", []{ return _clamp_alpha; }, [](bool val){ _clamp_alpha = val; }),
-      new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::soft_exit(); }),
+      new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::soft_exit(); }),
     };
     const Rect rect(Vec{12, 12}, Vec{280, 130});
     Advanced_text_menu_config config;
