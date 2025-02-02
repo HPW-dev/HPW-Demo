@@ -61,5 +61,15 @@
       "args": [],
       "cwd": "${workspaceRoot}/",
     },
+    {
+      "type":"cppdbg",
+      "miDebuggerPath": "O:/dev/mingw64/bin/gdb.exe",
+      "targetArchitecture": "x64",
+      "request": "launch",
+      "name": "motion interpolation test x64",
+      "program": "${workspaceRoot}/build/bin/motion-interpolation.exe",
+      "args": [],
+      "cwd": "${workspaceRoot}/",
+    },
   ]
 }

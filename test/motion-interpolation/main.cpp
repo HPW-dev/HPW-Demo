@@ -25,7 +25,6 @@ constexpr real BORDER_BOTTOM = 384 - BORDER_TOP;
 
 static bool _clamp_alpha {true};
 static bool _use_interp {true};
-static bool _future_interp {false};
 
 struct Object {
   Vec pos {};
@@ -42,33 +41,27 @@ struct Object {
     crauto spr = hpw::sprites.find("object");
     assert(spr);
     const auto spr_center = Vec(spr->X(), spr->Y()) / 2.0;
-    const Vec cur_pos = pos - spr_center;
-    const Vec fut_pos = fut_pos - spr_center;
     old_draw_pos = cur_draw_pos;
-    cur_draw_pos = cur_pos;
-    fut_draw_pos = fut_pos;
+    cur_draw_pos = pos - spr_center;
     
     auto draw_pos = cur_draw_pos;
     if (_use_interp) {
       auto alpha = get_alpha();
       if (_clamp_alpha)
         alpha = std::clamp<real>(alpha, 0, 1);
-      hpw_log("alpha: " + n2s(alpha) + "\n");
-      if (_future_interp) {
-        draw_pos.x = std::lerp<real>(cur_draw_pos.x, fut_draw_pos.x, alpha);
-        draw_pos.y = std::lerp<real>(cur_draw_pos.y, fut_draw_pos.y, alpha);
-      } else {
-        draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
-        draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
-      }
+      draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
+      draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
     }
+    cur_draw_pos = draw_pos;
     
     insert(dst, *spr, draw_pos);
   }
 
   inline void update(Delta_time dt) {
     pos += vel * dt;
-    fut_pos = pos + vel * dt;
+    
+    fut_pos = pos;
+    fut_pos += vel * dt;
 
     if (pos.y < BORDER_TOP) {
       pos.y = BORDER_TOP;
@@ -93,6 +86,7 @@ public:
 
 protected:
   inline void draw_game_frame() const override {
+    hpw::soft_draw_start_time = get_time();
     rauto dst = *graphic::canvas;
 
     dst.fill(Pal8::black);
@@ -120,6 +114,8 @@ private:
   }
 
   inline void update(const Delta_time dt) override {
+    hpw::tick_start_time = get_time();
+
     if (is_pressed_once(hpw::keycode::escape))
       hpw::soft_exit();
 
@@ -142,7 +138,6 @@ private:
         set_target_ups(_tickrate);
       }, 5),
       new_shared<Menu_bool_item>(U"использовать интерполяцию", []{ return _use_interp; }, [](bool val){ _use_interp = val; }),
-      new_shared<Menu_bool_item>(U"предсказание движения", []{ return _future_interp; }, [](bool val){ _future_interp = val; }),
       new_shared<Menu_bool_item>(U"лимитировать коэф-т интерп-и", []{ return _clamp_alpha; }, [](bool val){ _clamp_alpha = val; }),
       new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::soft_exit(); }),
     };
