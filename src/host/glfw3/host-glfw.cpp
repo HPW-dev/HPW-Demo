@@ -121,7 +121,6 @@ void Host_glfw::init_commands() {
 }
 
 void Host_glfw::init() {
-  m_start_update_time = get_time();
   set_target_ups(hpw::target_ups);
   graphic::set_target_fps(graphic::get_target_fps());
   hpw::safe_dt = graphic::get_target_frame_time();
@@ -330,7 +329,6 @@ void Host_glfw::game_frame(const Delta_time dt) {
     calc_upf();
     
     if (!graphic::skip_cur_frame) { // не рисовать кадр при этом флаге
-      calc_lerp_alpha();
       draw_game_frame();
       glfwSwapBuffers(m_window);
       m_frame_drawn = true;
@@ -355,7 +353,6 @@ void Host_glfw::game_update(const Delta_time dt) {
 
   while (m_update_time >= hpw::target_tick_time && m_is_ran) {
     m_update_time -= hpw::target_tick_time;
-    m_start_update_time = get_time();
 
     glfwPollEvents();
     hpw::any_key_pressed = is_any_key_pressed();
@@ -399,14 +396,6 @@ void Host_glfw::apply_update_delay() {
     #endif
   }
   #endif
-}
-
-void Host_glfw::calc_lerp_alpha() {
-  cauto start_draw_time = get_time() - m_start_update_time;
-  // для интеропляции движения 
-  graphic::lerp_alpha = safe_div(start_draw_time, hpw::target_tick_time);
-  // лимит значения чтобы при тормозах окна объекты не растягивались
-  graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
 }
 
 void Host_glfw::calc_upf() {

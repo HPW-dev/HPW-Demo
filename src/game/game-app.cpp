@@ -118,7 +118,12 @@ void Game_app::update(const Delta_time dt) {
 
 void Game_app::draw_game_frame() const {
   cauto st = get_time();
+  
+  // лимит значения чтобы при тормозах окна объекты не растягивались
   hpw::soft_draw_start_time = st;
+  graphic::lerp_alpha = std::clamp<Delta_time>(
+    safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time), 0, 1);
+
   assert(graphic::canvas);
   auto& dst = *graphic::canvas;
 

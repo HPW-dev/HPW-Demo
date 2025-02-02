@@ -46,7 +46,7 @@ struct Object {
     
     auto draw_pos = cur_draw_pos;
     if (_use_interp) {
-      auto alpha = get_alpha();
+      auto alpha = graphic::lerp_alpha;
       if (_clamp_alpha)
         alpha = std::clamp<real>(alpha, 0, 1);
       draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
@@ -72,10 +72,6 @@ struct Object {
       vel.y *= -1;
     }
   }
-
-  static Delta_time get_alpha() {
-    return (hpw::soft_draw_start_time - hpw::tick_end_time) / hpw::target_tick_time;
-  }
 }; // Object
 
 using Objects = Vector<Object>;
@@ -86,9 +82,11 @@ public:
 
 protected:
   inline void draw_game_frame() const override {
-    rauto dst = *graphic::canvas;
     hpw::soft_draw_start_time = get_time();
+    graphic::lerp_alpha = std::clamp<Delta_time>(
+      safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time), 0, 1);
 
+    rauto dst = *graphic::canvas;
     dst.fill(Pal8::black);
     for (crauto obj: _objects)
       obj.draw(dst);

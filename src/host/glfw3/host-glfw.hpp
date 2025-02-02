@@ -28,7 +28,6 @@ protected:
   uint m_ips {};
   Delta_time m_frame_time {};
   Delta_time m_update_time {};
-  Delta_time m_start_update_time {}; // нужен для интерполяции движения
   bool m_frame_drawn {false}; // для плавного апдейта игры
 
   void game_set_dt(const Delta_time gameloop_time);
@@ -36,7 +35,6 @@ protected:
   void game_frame(const Delta_time dt);
   void game_update(const Delta_time dt);
   bool is_ran() const;
-  void calc_lerp_alpha();
   void calc_upf();
   void set_update_time(const Delta_time dt); // контроль плавности апдейта
   void apply_render_delay();
