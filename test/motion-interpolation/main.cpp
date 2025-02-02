@@ -60,13 +60,16 @@ private:
         _fps = std::clamp(val, 5, 240);
         graphic::set_target_fps(_fps);
       }, 5),
-      new_shared<Menu_int_item>(U"tickrate", [this]{ return _tickrate; }, [this](int val){
+      new_shared<Menu_int_item>(U"тикрейт", [this]{ return _tickrate; }, [this](int val){
         _tickrate = std::clamp(val, 5, 360);
         set_target_ups(_tickrate);
       }, 5),
+      new_shared<Menu_bool_item>(U"использовать интерполяцию", [this]{ return _use_interp; }, [this](bool val){ _use_interp = val; }),
+      new_shared<Menu_bool_item>(U"предсказание движения", [this]{ return _future_interp; }, [this](bool val){ _future_interp = val; }),
+      new_shared<Menu_bool_item>(U"лимитировать коэф-т интерп-и", [this]{ return _clamp_alpha; }, [this](bool val){ _clamp_alpha = val; }),
       new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::soft_exit(); }),
     };
-    const Rect rect(Vec{15, 10}, Vec{220, 130});
+    const Rect rect(Vec{12, 12}, Vec{280, 130});
     Advanced_text_menu_config config;
     config.without_desc = true;
     config.bf_bg = &blend_158;
