@@ -56,9 +56,6 @@ struct Object {
 
   inline void update(Delta_time dt) {
     pos += vel * dt;
-    
-    fut_pos = pos;
-    fut_pos += vel * dt;
 
     if (pos.y < BORDER_TOP) {
       pos.y = BORDER_TOP;
