@@ -5,7 +5,6 @@
 #include "util/math/mat.hpp"
 #include "util/hpw-util.hpp"
 
-cr<decltype(Phys::m_old_pos)> Phys::get_old_pos() const { return m_old_pos; }
 cr<decltype(Phys::m_pos)> Phys::get_pos() const { return m_pos; }
 cr<decltype(Phys::m_deg)> Phys::get_deg() const { return m_deg; }
 cr<decltype(Phys::m_accel)> Phys::get_accel() const { return m_accel; }
@@ -40,7 +39,6 @@ Vec Phys::get_vel() const {
 
 void Phys::set_pos( cr<decltype(m_pos)> val) {
   m_pos = val;
-  m_old_pos = val;
 }
 
 void Phys::set_deg( cr<decltype(m_deg)> val) { m_deg = ring_deg(val); }
@@ -79,7 +77,6 @@ void Phys::set_vel(const Vec val) {
 
 void Phys::update(const Delta_time dt) {
   cauto fdt = dt;
-  m_old_pos = get_pos();
 
   // применение вращения
   m_rotate_speed += m_rotate_accel * fdt * 0.5f;
@@ -98,7 +95,7 @@ void Phys::update(const Delta_time dt) {
   _speed -= _force * fdt * 0.5f;
   set_speed(std::max<real>(0.0f, _speed));
 
-  set_pos( get_pos() + (vel * fdt) );
+  m_pos += vel * fdt;
 
   // докручиваем чтоб было ровно по интегралу
   m_rotate_speed += m_rotate_accel * fdt * 0.5f;
@@ -116,4 +113,4 @@ void Phys::update(const Delta_time dt) {
 
   assert(get_deg() >= 0.0f && get_deg() <= 360);
   set_vel(vel);
-} // update
+}

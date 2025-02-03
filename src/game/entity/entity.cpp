@@ -39,6 +39,7 @@ void Entity::process_remove() {
 }
 
 void Entity::update(const Delta_time dt) {
+  _old_pos = _cur_pos;
   Entity_animated::update(dt);
 
   if (!status.disable_motion)
@@ -46,6 +47,7 @@ void Entity::update(const Delta_time dt) {
 
   process_update_cbs(dt);
   check_out_of_screen();
+  _cur_pos = phys.get_pos();
 }
 
 void Entity::set_master(Master new_master) {

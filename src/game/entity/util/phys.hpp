@@ -3,7 +3,6 @@
 
 // Physical context
 class Phys final {
-  mutable Vec m_old_pos {-9999, 9999}; // старая позиция
   mutable Vec m_old_vel {-9999, 9999}; // для кеширования
   mutable Vec m_cached_dir {-999, 999}; // для кеширования
   mutable Vec m_cached_vel {-999, 999}; // для кеширования
@@ -24,7 +23,6 @@ public:
   Phys() = default;
   ~Phys() = default;
 
-  cr<decltype(m_old_pos)> get_old_pos() const;
   cr<decltype(m_pos)> get_pos() const;
   Vec get_vel() const;
   Vec get_direction() const;

@@ -9,7 +9,10 @@ inline Delta_time cur_ups {}; // апдейты в секунду
 inline Delta_time safe_dt {}; // dt для игры
 inline Delta_time real_dt {}; // текущий dt как есть (не юзать в фиксированных апдейтах)
 inline Delta_time tick_time {}; // время одного тика игры
+inline Delta_time tick_start_time {}; // когда начался текущий тик
+inline Delta_time tick_start_time_prev {}; // время начала предыдущего тика
 inline Delta_time tick_end_time {}; // когда завершился последний тик
+inline Delta_time tick_time_accum {}; // сумма пройденного времени между апдейтами
 inline Delta_time soft_draw_start_time {}; // время начала софтверной отрисовки кадра
 inline uint game_ticks {}; // столько апдейтов случилось с начала сцены игры
 inline uint global_ticks {}; // столько апдейтов случилось со старта игры

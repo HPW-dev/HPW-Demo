@@ -351,8 +351,8 @@ void Host_glfw::game_update(const Delta_time dt) {
   return_if (dt <= 0 || dt >= 10);
   process_fast_forward();
 
-  while (m_update_time >= hpw::target_tick_time && m_is_ran) {
-    m_update_time -= hpw::target_tick_time;
+  while (hpw::tick_time_accum >= hpw::target_tick_time && m_is_ran) {
+    hpw::tick_time_accum -= hpw::target_tick_time;
 
     glfwPollEvents();
     hpw::any_key_pressed = is_any_key_pressed();
@@ -414,13 +414,13 @@ void Host_glfw::set_update_time(const Delta_time dt) {
   ) {
     // ждать завершения отрисовки кадра
     if (m_frame_drawn) {
-      m_update_time += graphic::get_vsync()
+      hpw::tick_time_accum += graphic::get_vsync()
         ? graphic::get_target_vsync_frame_time()
         : graphic::get_target_frame_time();
       m_frame_drawn = false;
     }
   } else {
-    m_update_time += dt;
+    hpw::tick_time_accum += dt;
   }
 } // set_update_time
 
@@ -453,7 +453,7 @@ void Host_glfw::check_frame_skip() {
 
 void Host_glfw::frame_wait() {
   // ожидание для v-sync
-  auto delay = graphic::get_target_frame_time() - m_frame_time - m_update_time;
+  auto delay = graphic::get_target_frame_time() - m_frame_time - hpw::tick_time_accum;
   /*constx Delta_time delay_timeout = 1.0 / 10.0;
   delay = std::clamp<Delta_time>(delay, 0, delay_timeout);*/
   delay = std::clamp<Delta_time>(delay, 0, 1);
@@ -513,5 +513,5 @@ void Host_glfw::_set_fullscreen(bool enable) {
 
 void Host_glfw::process_fast_forward() {
   if (graphic::get_fast_forward())
-    m_update_time = hpw::target_tick_time * graphic::FAST_FWD_UPD_SPDUP;
+    hpw::tick_time_accum = hpw::target_tick_time * graphic::FAST_FWD_UPD_SPDUP;
 }

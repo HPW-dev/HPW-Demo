@@ -39,19 +39,18 @@ struct Object {
     crauto spr = hpw::sprites.find("object");
     assert(spr);
     const auto spr_center = Vec(spr->X(), spr->Y()) / 2.0;
+    old_draw_pos = cur_draw_pos;
     cur_draw_pos = pos - spr_center;
     
-    auto draw_pos = cur_draw_pos;
     if (_use_interp) {
       auto alpha = graphic::lerp_alpha;
       if (_clamp_alpha)
         alpha = std::clamp<real>(alpha, 0, 1);
-      draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
-      draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
+      cur_draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
+      cur_draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
     }
-    old_draw_pos = draw_pos;
     
-    insert(dst, *spr, draw_pos);
+    insert(dst, *spr, cur_draw_pos);
   }
 
   inline void update(Delta_time dt) {

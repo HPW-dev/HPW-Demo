@@ -93,13 +93,15 @@ Game_app::~Game_app() {
 }
 
 void Game_app::update(const Delta_time dt) {
+  hpw::tick_start_time_prev = hpw::tick_start_time;
+  hpw::tick_start_time = get_time();
+
   ALLOW_STABLE_RAND
   assert(dt == hpw::target_tick_time);
   update_graphic_autoopt(dt);
   
   Host_class::update(dt);
 
-  auto st = get_time();
 
   if (hpw::replay_read_mode)
     replay_load_keys();
@@ -114,7 +116,7 @@ void Game_app::update(const Delta_time dt) {
   check_errors();
   
   hpw::tick_end_time = get_time();
-  hpw::tick_time = hpw::tick_end_time - st;
+  hpw::tick_time = std::max<Delta_time>(0, hpw::tick_end_time - hpw::tick_start_time);
 }
 
 void Game_app::draw_game_frame() const {
@@ -122,21 +124,44 @@ void Game_app::draw_game_frame() const {
   
   // лимит значения чтобы при тормозах окна объекты не растягивались
   hpw::soft_draw_start_time = st;
+  /*
+  //graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_time, (hpw::target_tick_time - hpw::tick_time));
+  //graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_time, hpw::target_tick_time);
+  graphic::lerp_alpha = safe_div(hpw::tick_time_accum, hpw::target_tick_time);
+  //graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_start_time, hpw::target_tick_time);
+  graphic::lerp_alpha = std::clamp<Delta_time>((1.0 - graphic::lerp_alpha), 0, 0.9999999);
+  //graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 0.9999999);
+  std::stringstream txt;
+  txt << "timings:" << "\n";
+  txt << "- alpha: " << graphic::lerp_alpha << "\n";
+  //txt << "- draw start: " << hpw::soft_draw_start_time << "\n";
+  //txt << "- tick start: " << hpw::tick_start_time << "\n";
+  //txt << "- tick end: " << hpw::tick_end_time << "\n";
+  txt << "- Dt: " << hpw::real_dt << "\n";
+  txt << "- tick accum: " << hpw::tick_time_accum << "\n";
+  txt << "- tick time: " << hpw::target_tick_time << "\n";
+  hpw_log(txt.str());
+  */
   graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time);
-  graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 1);
+  graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 0.9999999);
+  //graphic::lerp_alpha = std::clamp<Delta_time>(1.0 - graphic::lerp_alpha, 0, 0.9999999);
+  /*std::stringstream txt;
+  txt << "timings:" << "\n";
+  txt << "- alpha: " << graphic::lerp_alpha << "\n";
+  txt << "- Dt: " << hpw::real_dt << "\n";
+  txt << "- draw start: " << hpw::soft_draw_start_time << "\n";
+  txt << "- tick start: " << hpw::tick_start_time << "\n";
+  txt << "- tick draw - start: " << hpw::soft_draw_start_time - hpw::tick_start_time << "\n";
+  txt << "- tick end: " << hpw::tick_end_time << "\n";
+  txt << "- tick accum: " << hpw::tick_time_accum << "\n";
+  txt << "- tick time: " << hpw::target_tick_time << "\n";
+  hpw_log(txt.str());*/
 
   assert(graphic::canvas);
   auto& dst = *graphic::canvas;
 
   hpw::scene_mgr.draw(dst);
   post_draw(dst);
-
-  hpw_info(
-    "alpha: " + n2s(graphic::lerp_alpha) +
-    "  draw start: " + n2s(hpw::soft_draw_start_time) +
-    "  tick end: " + n2s(hpw::tick_end_time) +
-    "  tgt tick: " + n2s(hpw::target_tick_time) +
-    "\n");
 
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();

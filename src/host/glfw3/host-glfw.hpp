@@ -27,7 +27,6 @@ protected:
   uint m_upf {};
   uint m_ips {};
   Delta_time m_frame_time {};
-  Delta_time m_update_time {};
   bool m_frame_drawn {false}; // для плавного апдейта игры
 
   void game_set_dt(const Delta_time gameloop_time);
