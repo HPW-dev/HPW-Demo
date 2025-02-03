@@ -39,7 +39,7 @@ void Entity::process_remove() {
 }
 
 void Entity::update(const Delta_time dt) {
-  _old_pos = _cur_pos;
+  _old_pos = cur_pos();
   Entity_animated::update(dt);
 
   if (!status.disable_motion)
@@ -47,7 +47,6 @@ void Entity::update(const Delta_time dt) {
 
   process_update_cbs(dt);
   check_out_of_screen();
-  _cur_pos = phys.get_pos();
 }
 
 void Entity::set_master(Master new_master) {
@@ -63,6 +62,15 @@ void Entity::check_out_of_screen() {
     (pos.x >= graphic::width + BOUND) ||
     (pos.y <= -BOUND) ||
     (pos.y >= graphic::height + BOUND);
+}
+
+const Vec Entity::cur_pos() const { return phys.get_pos(); }
+
+
+const Vec Entity::old_pos() const {
+  return_if (_old_pos.has_value(), _old_pos.value());
+  _old_pos = cur_pos();
+  return _old_pos.value();
 }
 
 void Entity::move_it(const Delta_time dt) { phys.update(dt); }

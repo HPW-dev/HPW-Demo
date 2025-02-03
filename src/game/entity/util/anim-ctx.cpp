@@ -3,8 +3,6 @@
 #include <algorithm>
 #include "phys.hpp"
 #include "anim-ctx.hpp"
-#include "util/log.hpp" // TODO del
-#include "util/str-util.hpp" // TODO del
 #include "util/error.hpp"
 #include "util/math/random.hpp"
 #include "util/math/mat.hpp"
@@ -14,7 +12,6 @@
 #include "game/entity/entity.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp" // TODO del
 #include "graphic/animation/anim.hpp"
 #include "graphic/animation/frame.hpp"
 
@@ -113,55 +110,49 @@ void Anim_ctx::draw(Image& dst, cr<Entity> entity, const Vec offset) const {
   return_if(!direct);
   return_if(direct->sprite.expired());
 
-  _old_draw_pos = _cur_draw_pos;
-  _cur_draw_pos = entity.phys.get_pos() + direct->offset + offset;
-
-  if (entity.cur_pos() != entity.old_pos()) {
-    cauto pos_diff = entity.old_pos() - entity.cur_pos();
-    hpw_log("dpos: " + n2s(pos_diff.x) + ", " + n2s(pos_diff.y) + "\n");
-  }
+  _old_drawed_pos = _drawed_pos;
+  Vec old_draw_pos = entity.old_pos() + direct->offset + offset;
+  Vec cur_draw_pos = entity.cur_pos() + direct->offset + offset;
+  Vec old_contour_draw_pos {};
+  Vec cur_contour_draw_pos {};
 
   cauto contour_direct = _get_contour_direct(degree);
   if (contour_direct) {
-    _old_contour_draw_pos = _cur_contour_draw_pos;
-    _cur_contour_draw_pos = entity.phys.get_pos() + contour_direct->offset + offset;
+    old_contour_draw_pos = entity.old_pos() + contour_direct->offset + offset;
+    cur_contour_draw_pos = entity.cur_pos() + contour_direct->offset + offset;
   }
 
   // фикс артефакта, когда объект прилетает из нулевых координат
   if (_first_draw || _motion_interp_reset) {
-    _old_draw_pos = _cur_draw_pos;
+    _old_drawed_pos = old_draw_pos = cur_draw_pos;
     if (contour_direct)
-      _old_contour_draw_pos = _cur_contour_draw_pos;
+      old_contour_draw_pos = cur_contour_draw_pos;
     _first_draw = false;
     _motion_interp_reset = false;
   }
 
-  _draw_pos = _cur_draw_pos;
+  _drawed_pos = cur_draw_pos;
   const bool use_interp = graphic::enable_motion_interp && !graphic::render_lag &&
      !entity.status.no_motion_interp;
   if (use_interp) { // применить интерполированные координаты для рисования объекта
-    _cur_draw_pos.x = std::lerp<real>(_old_draw_pos.x, _cur_draw_pos.x, graphic::lerp_alpha);
-    _cur_draw_pos.y = std::lerp<real>(_old_draw_pos.y, _cur_draw_pos.y, graphic::lerp_alpha);
-    _cur_contour_draw_pos.x = std::lerp<real>(_old_contour_draw_pos.x, _cur_contour_draw_pos.x, graphic::lerp_alpha);
-    _cur_contour_draw_pos.y = std::lerp<real>(_old_contour_draw_pos.y, _cur_contour_draw_pos.y, graphic::lerp_alpha);
+    _drawed_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, graphic::lerp_alpha);
+    _drawed_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, graphic::lerp_alpha);
+    cur_contour_draw_pos.x = std::lerp<real>(old_contour_draw_pos.x, cur_contour_draw_pos.x, graphic::lerp_alpha);
+    cur_contour_draw_pos.y = std::lerp<real>(old_contour_draw_pos.y, cur_contour_draw_pos.y, graphic::lerp_alpha);
   } else {
     _motion_interp_reset = true;
   }
 
   if (graphic::motion_blur_mode != Motion_blur_mode::disabled) // рендер с блюром
-    insert_blured(dst, *direct->sprite.lock(), _old_draw_pos, _cur_draw_pos, blend_f, entity.uid);
+    insert_blured(dst, *direct->sprite.lock(), _old_drawed_pos, _drawed_pos, blend_f, entity.uid);
   else // рендер без блюра
-    insert(dst, *direct->sprite.lock(), _cur_draw_pos, blend_f, entity.uid);
+    insert(dst, *direct->sprite.lock(), _drawed_pos, blend_f, entity.uid);
     
   // нарисовать контур
   const bool use_contour = contour_direct &&
     !contour_direct->sprite.expired() && !entity.status.disable_contour;
   if (use_contour)
-    insert(dst, *contour_direct->sprite.lock(), _cur_contour_draw_pos, contour_bf);
-
-  // TODO del
-  draw_line(dst, _old_draw_pos, _draw_pos, Pal8::white);
-  draw_line(dst, _draw_pos, _cur_draw_pos, Pal8::red);
+    insert(dst, *contour_direct->sprite.lock(), cur_contour_draw_pos, contour_bf);
 } 
 
 void Anim_ctx::set_anim(cp<Anim> new_anim) {

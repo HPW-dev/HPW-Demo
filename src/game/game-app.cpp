@@ -124,38 +124,8 @@ void Game_app::draw_game_frame() const {
   
   // лимит значения чтобы при тормозах окна объекты не растягивались
   hpw::soft_draw_start_time = st;
-  /*
-  //graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_time, (hpw::target_tick_time - hpw::tick_time));
-  //graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_time, hpw::target_tick_time);
-  graphic::lerp_alpha = safe_div(hpw::tick_time_accum, hpw::target_tick_time);
-  //graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_start_time, hpw::target_tick_time);
-  graphic::lerp_alpha = std::clamp<Delta_time>((1.0 - graphic::lerp_alpha), 0, 0.9999999);
-  //graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 0.9999999);
-  std::stringstream txt;
-  txt << "timings:" << "\n";
-  txt << "- alpha: " << graphic::lerp_alpha << "\n";
-  //txt << "- draw start: " << hpw::soft_draw_start_time << "\n";
-  //txt << "- tick start: " << hpw::tick_start_time << "\n";
-  //txt << "- tick end: " << hpw::tick_end_time << "\n";
-  txt << "- Dt: " << hpw::real_dt << "\n";
-  txt << "- tick accum: " << hpw::tick_time_accum << "\n";
-  txt << "- tick time: " << hpw::target_tick_time << "\n";
-  hpw_log(txt.str());
-  */
   graphic::lerp_alpha = safe_div(hpw::soft_draw_start_time - hpw::tick_end_time, hpw::target_tick_time);
   graphic::lerp_alpha = std::clamp<Delta_time>(graphic::lerp_alpha, 0, 0.9999999);
-  //graphic::lerp_alpha = std::clamp<Delta_time>(1.0 - graphic::lerp_alpha, 0, 0.9999999);
-  /*std::stringstream txt;
-  txt << "timings:" << "\n";
-  txt << "- alpha: " << graphic::lerp_alpha << "\n";
-  txt << "- Dt: " << hpw::real_dt << "\n";
-  txt << "- draw start: " << hpw::soft_draw_start_time << "\n";
-  txt << "- tick start: " << hpw::tick_start_time << "\n";
-  txt << "- tick draw - start: " << hpw::soft_draw_start_time - hpw::tick_start_time << "\n";
-  txt << "- tick end: " << hpw::tick_end_time << "\n";
-  txt << "- tick accum: " << hpw::tick_time_accum << "\n";
-  txt << "- tick time: " << hpw::target_tick_time << "\n";
-  hpw_log(txt.str());*/
 
   assert(graphic::canvas);
   auto& dst = *graphic::canvas;

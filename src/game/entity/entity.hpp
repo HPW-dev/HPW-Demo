@@ -1,4 +1,5 @@
 #pragma once
+#include <optional>
 #include "status.hpp"
 #include "entity-type.hpp"
 #include "entity-animated.hpp"
@@ -36,16 +37,15 @@ public:
   
   inline cr<Str> name() const { return _name; }
   inline void set_name(cr<Str> new_name) { _name = new_name; }
-  inline const Vec cur_pos() const { return _cur_pos; }
-  inline const Vec old_pos() const { return _old_pos; }
+  const Vec cur_pos() const;
+  const Vec old_pos() const;
 
 private:
   nocopy(Entity);
 
   Str _name {}; // имя через которое соспавнили объект
   Master _master {}; // объект - создатель
-  Vec _cur_pos {};
-  Vec _old_pos {};
+  mutable std::optional<Vec> _old_pos {};
 
   void move_it(const Delta_time dt);
   void check_out_of_screen();
