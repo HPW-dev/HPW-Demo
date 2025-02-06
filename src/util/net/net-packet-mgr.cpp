@@ -115,10 +115,18 @@ struct Packet_mgr::Impl {
       if (target.async) {
         _socket_tcp->async_send(asio::buffer(for_delete->bytes), handler);
       } else {
-        _socket_tcp->send(asio::buffer(for_delete->bytes));
+        cauto sended = _socket_tcp->send(asio::buffer(for_delete->bytes));
+        iferror(sended == 0, "данные не отправлены");
+        
+        hpw_debug("отправлено " + n2s(sended) + " байт\n");
+        ++_status.sended_packets;
+
+        if (target.send_cb)
+          target.send_cb();
+          
         _packets_to_send.pop_back(); // хвост отправили сразу, он уже не нужен
-      }
-    }
+      } // else sync
+    } // else TCP mode
   }
 
   inline Packets unload_all() {
@@ -246,6 +254,8 @@ struct Packet_mgr::Impl {
       _socket_tcp->async_receive(asio::buffer(_input_packet.bytes), handler);
     }
   }
+
+  inline void set_receive_cb(cr<Action> cb) { _receive_cb = cb; }
 }; // Impl
 
 Packet_mgr::Packet_mgr(): _impl{new_unique<Impl>()} {}
@@ -258,5 +268,6 @@ Packets Packet_mgr::unload_all() { return _impl->unload_all(); }
 cr<Packet_mgr::Status> Packet_mgr::status() const { return _impl->status(); }
 Packet_mgr::Target_info Packet_mgr::wait_connection() { return _impl->wait_connection(); }
 void Packet_mgr::connect_to(cr<Target_info> target) { _impl->connect_to(target); }
+void Packet_mgr::set_receive_cb(cr<Action> cb) { _impl->set_receive_cb(cb); }
 
 } // net ns

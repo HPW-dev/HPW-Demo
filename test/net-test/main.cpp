@@ -1,6 +1,7 @@
 #include "util/net/net-packet-mgr.hpp"
 #include "util/pparser.hpp"
 #include "util/log.hpp"
+#include "util/error.hpp"
 #include "util/str-util.hpp"
 
 struct Connection_info {
@@ -184,6 +185,61 @@ void test_3(net::Packet_mgr& mgr) {
   }
 }
 
+void test_4_client(net::Packet_mgr& mgr) {
+  hpw_info("packet waiting loop...\n");
+  bool test_ran = true;
+  mgr.set_receive_cb([] { hpw_info("(Cb test) end of receiving\n"); });
+
+  while (test_ran) {
+    mgr.update(); 
+
+    if (mgr.status().has_packets)
+      for (crauto packet: mgr.unload_all()) {
+        auto sz = packet.bytes.size();
+        hpw_info("packet size " + n2s(sz) + "\n");
+        hpw_info("packet check...\n");
+        cfor (i, sz)
+          iferror(scast<byte>(i) != packet.bytes[i], "bad packet data");
+        test_ran = false;
+      }
+  }
+
+  hpw_info("end of loop\n");
+  mgr.set_receive_cb({});
+}
+
+void test_4_server(net::Packet_mgr& mgr) {
+  hpw_info("send packet...\n");
+
+  auto sz = 400;
+  hpw_info("packet size " + n2s(sz) + "\n");
+  net::Packet pck;
+  pck.bytes.resize(sz);
+  cfor (i, sz)
+    pck.bytes[i] = scast<byte>(i);
+
+  net::Packet_mgr::Target_info tgt;
+  tgt.async = false;
+  tgt.udp_mode = false;
+  tgt.ip_v4 = _connection_info.target_ip_v4;
+  tgt.port = _connection_info.target_tcp_port;
+  tgt.send_cb = [] { hpw_info("(Cb test) end of packet sending\n"); };
+
+  mgr.send(pck, tgt);
+  mgr.update(); 
+}
+
+void test_4(net::Packet_mgr& mgr) {
+  hpw_info("test 4 - medium packet send\n");
+
+  if (_connection_info.is_server)
+    test_4_server(mgr);
+  else
+    test_4_client(mgr);
+
+  hpw_info("test 4 - end\n");
+}
+
 int main(int argc, char** argv) {
   parse_args(argc, argv);
   print_params();
@@ -193,4 +249,5 @@ int main(int argc, char** argv) {
   test_1(pck_mgr);
   test_2(pck_mgr);
   test_3(pck_mgr);
+  test_4(pck_mgr);
 }
