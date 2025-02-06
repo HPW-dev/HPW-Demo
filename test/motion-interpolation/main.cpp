@@ -27,10 +27,9 @@ static bool _clamp_alpha {true};
 static bool _use_interp {true};
 
 struct Object {
+  Vec old_pos {};
   Vec pos {};
   Vec vel {};
-  mutable Vec old_draw_pos {};
-  mutable Vec cur_draw_pos {};
 
   Object() = default;
   ~Object() = default;
@@ -39,21 +38,22 @@ struct Object {
     crauto spr = hpw::sprites.find("object");
     assert(spr);
     const auto spr_center = Vec(spr->X(), spr->Y()) / 2.0;
-    old_draw_pos = cur_draw_pos;
-    cur_draw_pos = pos - spr_center;
+    Vec draw_pos = pos;
     
     if (_use_interp) {
       auto alpha = graphic::lerp_alpha;
       if (_clamp_alpha)
-        alpha = std::clamp<real>(alpha, 0, 1);
-      cur_draw_pos.x = std::lerp<real>(old_draw_pos.x, cur_draw_pos.x, alpha);
-      cur_draw_pos.y = std::lerp<real>(old_draw_pos.y, cur_draw_pos.y, alpha);
+        alpha = std::clamp<real>(alpha, 0, 0.99999);
+      draw_pos.x = std::lerp<real>(old_pos.x, pos.x, alpha);
+      draw_pos.y = std::lerp<real>(old_pos.y, pos.y, alpha);
     }
-    
-    insert(dst, *spr, cur_draw_pos);
+
+    draw_pos -= spr_center;
+    insert(dst, *spr, draw_pos);
   }
 
   inline void update(Delta_time dt) {
+    old_pos = pos;
     pos += vel * dt;
 
     if (pos.y < BORDER_TOP) {
