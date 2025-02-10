@@ -32,7 +32,7 @@ build/replays
 
 # Code:
 .vscode/settings.json
-HPW.code-workspace
+/HPW.code-workspace
 build/cmd-test-helper.txt
 build/cmd-test.txt
 build/test.yml
