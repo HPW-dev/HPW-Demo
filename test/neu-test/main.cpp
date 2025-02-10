@@ -69,12 +69,27 @@ Unique<neu::Simple> make_xor_net(neu::Weight& a, neu::Weight& b, neu::Weight& ds
 
 void xor_test() {
   hpw_info("-- NEU: XOR TEST --\n");
-  neu::Weight a = 0;
-  neu::Weight b = 0;
-  neu::Weight result = 0;
+
+  struct Item { neu::Weight a {}, b {}, res {}; };
+  Vector<Item> table {
+    Item {.a=0, .b=0, .res=0},
+    Item {.a=1, .b=0, .res=1},
+    Item {.a=0, .b=1, .res=1},
+    Item {.a=1, .b=1, .res=0},
+  };
+  neu::Weight a;
+  neu::Weight b;
+  neu::Weight result;
 
   auto net = make_xor_net(a, b, result);
   assert(net);
+
+  for (crauto item: table) {
+    a = item.a;
+    b = item.b;
+    net->update();
+    hpw_info("a = " + n2s(a, 0) + ", b = " + n2s(b, 0) + ", xor result = " + n2s(result, 5) + "\n");
+  }
 }
 
 int main() {
