@@ -5,8 +5,10 @@ namespace neu {
 
 struct Simple::Impl {
   Simple& _master;
+  Simple_config _config {};
 
-  inline Impl(Simple& master): _master {master} {}
+  inline explicit Impl(Simple& master, cr<Simple_config> config)
+  : _master {master}, _config {config} {}
 
   inline void save(Yaml& dst) {
     // TODO
@@ -26,7 +28,7 @@ struct Simple::Impl {
   }
 }; // Impl
 
-Simple::Simple(): _impl{new_unique<Impl>(*this)} {}
+Simple::Simple(cr<Simple_config> config): _impl{new_unique<Impl>(*this, config)} {}
 Simple::~Simple() {}
 void Simple::save(Yaml& dst) { _impl->save(dst); }
 void Simple::load(cr<Yaml> src) { _impl->load(src); }

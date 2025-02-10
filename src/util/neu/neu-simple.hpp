@@ -4,10 +4,15 @@
 
 namespace neu {
 
+// настройки для neu::Simple
+struct Simple_config {
+
+};
+
 // простая нейросеть из полносвязных перцептронов
 class Simple: public Base {
 public:
-  Simple();
+  explicit Simple(cr<Simple_config> config);
   ~Simple();
 
   void save(Yaml& dst) override;

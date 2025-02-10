@@ -23,7 +23,9 @@ void softmax_test() {
 void randomization_test() {
   hpw_info("-- NEU: RANDOMIZATION TEST --\n");
 
-  neu::Simple net;
+  neu::Simple_config config;
+
+  neu::Simple net(config);
   neu::randomize(net);
   std::stringstream txt;
   txt << "randomized weights: [";
