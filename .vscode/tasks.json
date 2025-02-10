@@ -156,6 +156,12 @@
       "args": ["script/net-test.py"]
     },
     {
+      "label": "neu test",
+      "type": "shell",
+      "command": "python",
+      "args": ["script/neu-test.py"]
+    },
+    {
       "label": "motion interpolation test",
       "type": "shell",
       "command": "python",
