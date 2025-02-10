@@ -38,14 +38,11 @@ def init_sources():
   global sources
 
   sources.extend([
-    #src_dir + "util/platform.cpp",
-    #src_dir + "util/unicode.cpp",
-    #src_dir + "util/pparser.cpp",
     src_dir + "util/str-util.cpp",
-    src_dir + "util/hpw-util.cpp",
     src_dir + "util/error.cpp",
     src_dir + "util/log.cpp",
     src_dir + "util/math/random.cpp",
+    src_dir + "util/neu/neu-util.cpp",
     Glob('*.cpp'),
   ])
 
