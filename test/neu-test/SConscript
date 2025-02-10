@@ -28,6 +28,15 @@ def accept_config():
     src_dir,
     thirdparty_dir + 'include/',
   ])
+  used_libs.extend(["yaml-cpp"])
+
+  match hpw_config.system:
+    case System.windows:
+      inc_path.extend([thirdparty_dir + "include/_windows_only"])
+      lib_path.extend([
+        thirdparty_dir + "lib/yaml-cpp/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),
+      ])
+    case _: raise ValueError 
 
   match hpw_config.compiler:
     case Compiler.gcc: env['CXX'] = 'g++'
@@ -42,7 +51,9 @@ def init_sources():
     src_dir + "util/error.cpp",
     src_dir + "util/log.cpp",
     src_dir + "util/math/random.cpp",
+    src_dir + "util/file/yaml.cpp",
     src_dir + "util/neu/neu-util.cpp",
+    src_dir + "util/neu/neu-simple.cpp",
     Glob('*.cpp'),
   ])
 

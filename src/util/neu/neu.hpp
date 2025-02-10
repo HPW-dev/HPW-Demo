@@ -17,7 +17,7 @@ public:
 
   virtual void save(Yaml& dst) = 0;
   virtual void load(cr<Yaml> src) = 0;
-  virtual Base* operator =(cr<Base> other) = 0;
+  virtual Base& operator =(cr<Base> other) = 0;
   virtual void update() = 0;
 
   inline Weights& hiden_weights() { return _hiden_weights; };
