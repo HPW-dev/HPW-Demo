@@ -7,7 +7,7 @@
 namespace neu {
 
 void randomize(Base& dst, Weight wmin, Weight wmax, bool allow_zero) {
-  auto& weights = dst.hiden_weights();
+  auto& weights = dst.weights();
 
   for (rauto w: weights) {
     w = rndr(wmin, wmax);
