@@ -12,7 +12,7 @@ struct Simple_config {
 
   struct Input_neuron {
     Str name {};
-    Setter setter {};
+    Getter getter {};
   };
 
   struct Input_neurons {
@@ -22,7 +22,7 @@ struct Simple_config {
 
   struct Output_neuron {
     Str name {};
-    Getter getter {};
+    Setter setter {};
   };
 
   struct Output_neurons {

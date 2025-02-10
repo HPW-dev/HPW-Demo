@@ -23,7 +23,13 @@ struct Simple::Impl {
   }
 
   inline Base& operator =(cr<Base> other) {
-    // TODO
+    return_if(std::addressof(_master) == std::addressof(other), _master);
+    cauto casted = dcast<cp<Simple>>(&other);
+    assert(casted);
+    assert(casted->_impl);
+
+    _master.weights() = other.weights();
+    _config = casted->_impl->_config;
     return _master;
   }
 
@@ -38,7 +44,8 @@ struct Simple::Impl {
 
     for (crauto x: _config.inputs.neurons) {
       assert(!x.name.empty());
-      assert(x.setter);
+      assert(x.getter);
+      
     }
 
     for (crauto x: _config.hiden_layers)
@@ -46,7 +53,7 @@ struct Simple::Impl {
     
     for (crauto x: _config.outputs.neurons) {
       assert(!x.name.empty());
-      assert(x.getter);
+      assert(x.setter);
     }
   }
 
