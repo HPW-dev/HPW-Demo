@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iomanip>
 #include <sstream>
 #include "util/error.hpp"
@@ -47,23 +48,33 @@ void randomization_test() {
   hpw_info(txt.str());
 }
 
-void xor_test() {
-  hpw_info("-- NEU: XOR TEST --\n");
-
+Unique<neu::Simple> make_xor_net(neu::Weight& a, neu::Weight& b, neu::Weight& dst) {
   neu::Simple_config config;
   config.inputs.neurons = {
-    neu::Simple_config::Input_neuron {.name = "a", .getter = []->neu::Weight { return 0; }},
+    neu::Simple_config::Input_neuron {.name = "a", .getter = [&]->neu::Weight { return a; }},
+    neu::Simple_config::Input_neuron {.name = "b", .getter = [&]->neu::Weight { return b; }},
   };
   config.hiden_layers = {
     neu::Simple_config::Hiden_layer{.hiden_neurons = 3},
-    neu::Simple_config::Hiden_layer{.hiden_neurons = 3},
+    neu::Simple_config::Hiden_layer{.hiden_neurons = 2},
   };
   config.outputs.neurons = {
-    neu::Simple_config::Output_neuron {.name = "test", .setter = [](neu::Weight){}},
+    neu::Simple_config::Output_neuron {.name = "result", .setter = [&](const neu::Weight out){ dst = out; }},
   };
 
-  neu::Simple net(config);
-  neu::randomize(net);
+  auto net = new_unique<neu::Simple>(config);
+  neu::randomize(*net);
+  return net;
+}
+
+void xor_test() {
+  hpw_info("-- NEU: XOR TEST --\n");
+  neu::Weight a = 0;
+  neu::Weight b = 0;
+  neu::Weight result = 0;
+
+  auto net = make_xor_net(a, b, result);
+  assert(net);
 }
 
 int main() {
