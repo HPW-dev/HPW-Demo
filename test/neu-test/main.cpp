@@ -92,8 +92,22 @@ void xor_test() {
   }
 }
 
+void save_test() {
+  hpw_info("-- NEU: SAVE TEST --\n");
+
+  // TODO
+}
+
+void load_test() {
+  hpw_info("-- NEU: LOAD TEST --\n");
+
+  // TODO
+}
+
 int main() {
   softmax_test();
   randomization_test();
   xor_test();
+  save_test();
+  load_test();
 }
