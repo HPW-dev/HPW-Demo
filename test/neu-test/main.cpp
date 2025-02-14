@@ -1,9 +1,11 @@
 #include <cassert>
 #include <iomanip>
+#include <ctime>
 #include <sstream>
 #include "util/error.hpp"
 #include "util/log.hpp"
 #include "util/str-util.hpp"
+#include "util/math/random.hpp"
 #include "util/neu/neu-simple.hpp"
 #include "util/neu/neu-util.hpp"
 
@@ -105,6 +107,7 @@ void load_test() {
 }
 
 int main() {
+  set_rnd_seed(std::time({}));
   softmax_test();
   randomization_test();
   xor_test();
