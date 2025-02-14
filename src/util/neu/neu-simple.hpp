@@ -13,6 +13,7 @@ struct Simple_config {
   struct Input_neuron {
     Str name {};
     Getter getter {};
+    Weight value {};
   };
 
   struct Input_neurons {
@@ -23,6 +24,7 @@ struct Simple_config {
   struct Output_neuron {
     Str name {};
     Setter setter {};
+    Weight value {};
   };
 
   struct Output_neurons {
@@ -30,8 +32,13 @@ struct Simple_config {
     Activator activator {};
   };
 
+  struct Hiden_neuron {
+    Weight value {};
+  };
+  using Hiden_neurons = Vector<Hiden_neuron>;
+
   struct Hiden_layer {
-    uint hiden_neurons {}; // сколько нейронов на скрытом слое
+    Hiden_neurons hiden_neurons {}; // сколько нейронов на скрытом слое
     Weight bias {};
     Activator activator {};
   };

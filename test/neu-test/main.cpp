@@ -31,8 +31,8 @@ void randomization_test() {
    neu::Simple_config::Input_neuron {.name = "test", .getter = []->neu::Weight { return 0; }},
   };
   config.hiden_layers = {
-   neu::Simple_config::Hiden_layer{.hiden_neurons = 2},
-   neu::Simple_config::Hiden_layer{.hiden_neurons = 2},
+   neu::Simple_config::Hiden_layer{.hiden_neurons = neu::Simple_config::Hiden_neurons(2)},
+   neu::Simple_config::Hiden_layer{.hiden_neurons = neu::Simple_config::Hiden_neurons(3)},
   };
   config.outputs.neurons = {
    neu::Simple_config::Output_neuron {.name = "test", .setter = [](neu::Weight){}},
@@ -57,8 +57,8 @@ Unique<neu::Simple> make_xor_net(neu::Weight& a, neu::Weight& b, neu::Weight& ds
     neu::Simple_config::Input_neuron {.name = "b", .getter = [&]->neu::Weight { return b; }},
   };
   config.hiden_layers = {
-    neu::Simple_config::Hiden_layer{.hiden_neurons = 3},
-    neu::Simple_config::Hiden_layer{.hiden_neurons = 2},
+    neu::Simple_config::Hiden_layer{.hiden_neurons = neu::Simple_config::Hiden_neurons(3)},
+    neu::Simple_config::Hiden_layer{.hiden_neurons = neu::Simple_config::Hiden_neurons(2)},
   };
   config.outputs.neurons = {
     neu::Simple_config::Output_neuron {.name = "result", .setter = [&](const neu::Weight out){ dst = out; }},

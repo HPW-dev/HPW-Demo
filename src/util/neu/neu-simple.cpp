@@ -44,12 +44,11 @@ struct Simple::Impl {
 
     for (crauto x: _config.inputs.neurons) {
       assert(!x.name.empty());
-      assert(x.getter);
-      
+      assert(x.getter);   
     }
 
     for (crauto x: _config.hiden_layers)
-      assert(x.hiden_neurons > 0);
+      assert(!x.hiden_neurons.empty());
     
     for (crauto x: _config.outputs.neurons) {
       assert(!x.name.empty());
@@ -59,17 +58,16 @@ struct Simple::Impl {
 
   inline void init() {
     uint weight_count {};
-    weight_count += _config.inputs.neurons.size() * _config.hiden_layers.at(0).hiden_neurons;
-    weight_count += _config.outputs.neurons.size() * _config.hiden_layers.back().hiden_neurons;
+    weight_count += _config.inputs.neurons.size() * _config.hiden_layers.at(0).hiden_neurons.size();
+    weight_count += _config.outputs.neurons.size() * _config.hiden_layers.back().hiden_neurons.size();
 
     cauto layers = _config.hiden_layers.size();
-    if (layers) {
-      cfor (i, layers-1) {
-        weight_count +=
-          _config.hiden_layers.at(i).hiden_neurons *
-          _config.hiden_layers.at(i+1).hiden_neurons;
-      }
-    } 
+    assert (layers > 0);
+    cfor (i, layers-1) {
+      weight_count +=
+        _config.hiden_layers.at(i).hiden_neurons.size() *
+        _config.hiden_layers.at(i+1).hiden_neurons.size();
+    }
 
     assert(weight_count > 0);
     _master.weights().resize(weight_count);
