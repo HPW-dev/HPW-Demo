@@ -1,5 +1,8 @@
 #!/usr/bin/env python
-import helper
+if __name__ != "__main__":
+  print("is not a python module")
+  
+from .. import helper
 
 opts = \
   ' -Q enable_omp=1' \

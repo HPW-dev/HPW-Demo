@@ -1,6 +1,10 @@
 #!/usr/bin/env python
-# скрипт удаляющий файлы билда
-import helper
+''' :file: скрипт удаляющий файлы билда '''
+
+if __name__ != "__main__":
+  print("is not a python module")
+
+from . import helper
 
 helper.rem_all('**/delme.html')
 helper.rem_all('**/*.exe')
