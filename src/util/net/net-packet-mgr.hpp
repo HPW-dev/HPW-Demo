@@ -52,6 +52,7 @@ public:
   void disconnect();
   void update(); // это обязательно вызывать чтобы ассинорхонные отправки завершались
   void send(cr<Packet> src, cr<Target_info> target); // отправка пакета
+  void set_receive_cb(cr<Action> cb); // установить колбэк при получении пакета
   [[nodiscard]] Packets unload_all(); // выгрузить все скачанные пакеты
   [[nodiscard]] cr<Status> status() const;
 private:

@@ -24,9 +24,17 @@
 Для сборки потребуется [система сборки SCons](https://scons.org/) и [Python3](https://www.python.org/) (python2 не подойдёт).\
 Команда на скачиваение SCons через pip: ```py -m pip install --user scons```
 
-#### Команды на скачивание и сборку игры:
+#### Сборка игры из исходников
+Прочитайте пункты выше для правильной подготовки зависимостей.
+
+_Команды на скачивание и сборку игры:_
 ```
-git clone --depth=1 https://github.com/HPW-dev/HPW-Demo
+git clone --depth=1 https://github.com/HPW-dev.HPW-Demo
 cd HPW-Demo
-python "script/build-game-release.py"
+python -m script.build.game-glfw3-rel
+```
+
+_Если у вас x32 система, то пишите это в конце:_
+```
+python -m script.build.game-glfw3-rel-x32
 ```

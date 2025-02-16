@@ -49,7 +49,7 @@ void Graphic_test::init() {
   // первый фон случайный
   cur_bg = rndu(v_bg.size() - 1);
   init_shared(strawberry);
-  load(*strawberry, hpw::cur_dir + "../test/graphic/strawberry.png");
+  load(*strawberry, hpw::cur_dir + "../../test/graphic/strawberry.png");
   init_shared(board_2, graphic::canvas->X - 30, 40);
   text = U"EN: ABCDEFG abcdefg\n"
     U"RU: АБВГДЖЗ абвгджз\n"
