@@ -7,6 +7,7 @@ namespace neu {
 struct Simple::Impl {
   Simple& _master;
   Simple_config _config {};
+  std::size_t _total_layers {};
 
   inline explicit Impl(Simple& master, cr<Simple_config> config)
   : _master {master}, _config {config} {
@@ -71,6 +72,7 @@ struct Simple::Impl {
 
     assert(weight_count > 0);
     _master.weights().resize(weight_count);
+    _total_layers += layers + 2; // 2 - input/output
   }
 }; // Impl
 
