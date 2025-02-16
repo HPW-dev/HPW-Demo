@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 '''
 Module usage:
-import diff_checker 
-diff_checker.compress_diffs("data/", "./data", ".tmp/data_diff.pickle")
+  import diff_checker 
+  diff_checker.compress_diffs("data/", "./data", ".tmp/data_diff.pickle")
 '''
 
 import pickle
