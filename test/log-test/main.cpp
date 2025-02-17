@@ -128,10 +128,16 @@ void reopen_log_file(cr<Str> fname) {
   Logger::config.file.open(fname, std::ios_base::app);
   return_if(Logger::config.file.bad());
   
-  Logger::config.file << "\n=== start logging at " << std::chrono::system_clock::now() << " ===\n";
+  Logger::config.file << std::format("\n::::::::: start logging at {0:%H:%M %d.%m.%Y} :::::::::\n",
+    std::chrono::system_clock::now());
 }
 
-void close_log_file() { Logger::config.file.close(); }
+void close_log_file() {
+  return_if(!Logger::config.file);
+  Logger::config.file << std::format("\nstop logging at {0:%H:%M %d.%m.%Y}\n",
+    std::chrono::system_clock::now());
+  Logger::config.file.close();
+}
 
 } // npw ns
 
