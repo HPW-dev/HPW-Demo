@@ -1,6 +1,8 @@
+#include "util/str-util.hpp"
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <filesystem>
 #include <source_location>
 #include <iostream>
 #include <sstream>
@@ -125,8 +127,17 @@ inline Logger logger {};
 // открыть файл лога для вставки в конец
 void reopen_log_file(cr<Str> fname) {
   iferror(fname.empty(), "log file name is empty");
-  Logger::config.file.open(fname, std::ios_base::app);
-  return_if(Logger::config.file.bad());
+
+  try {
+    auto path = fname;
+    conv_sep(path);
+    path = std::filesystem::weakly_canonical(path).string();
+    Logger::config.file.open(std::filesystem::path(path), std::ios_base::app);
+    return_if(Logger::config.file.bad());
+  } catch (...) {
+    std::cerr << "[Error] log file not created at \"" << fname << "\"\n";
+    return;
+  }
   
   Logger::config.file << std::format("\n::::::::: start logging at {0:%H:%M %d.%m.%Y} :::::::::\n",
     std::chrono::system_clock::now());
@@ -134,7 +145,7 @@ void reopen_log_file(cr<Str> fname) {
 
 void close_log_file() {
   return_if(!Logger::config.file);
-  Logger::config.file << std::format("\nstop logging at {0:%H:%M %d.%m.%Y}\n",
+  Logger::config.file << std::format("stop logging at {0:%H:%M %d.%m.%Y}\n",
     std::chrono::system_clock::now());
   Logger::config.file.close();
 }
