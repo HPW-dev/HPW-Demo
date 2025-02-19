@@ -1,99 +1,103 @@
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
 #include "log.hpp"
-#include <cassert>
-#include <syncstream>
-#include <fstream>
-#include <iostream>
+#include "util/str-util.hpp"
+#include <windows.h>
 #include <filesystem>
-#include <string>
-#include <mutex>
+#include <iostream>
+#include <chrono>
 #include <format>
-#include "macro.hpp"
-#include "error.hpp"
-#include "str-util.hpp"
+#include "util/platform.hpp"
+#include "util/error.hpp"
 
-namespace { 
-  Log_config g_config {};
-  std::string g_log_fname {};
-  std::ofstream g_log_file {};
-  std::recursive_mutex g_log_file_mu {};
+namespace hpw {
+
+Logger::~Logger() {
+  // вернуть цвета как были
+  set_color(Logger_stream::standard);
+  close_log_file();
 }
 
-Log_config& log_get_config() noexcept { return ::g_config; }
+void Logger::set_stream(Logger_stream stream) {
+  Logger::config.stream = stream;
+}
 
-void log_set_config(cr<Log_config> cfg) noexcept { ::g_config = cfg; }
-
-void hpw_log(const std::string_view msg, const Log_stream stream,
-const std::source_location location) noexcept {
-  // фильтрация потоков
-  const bool DEBUG_ENABLED = stream == Log_stream::debug && ::g_config.stream_debug;
-  const bool INFO_ENABLED = stream == Log_stream::info && ::g_config.stream_info;
-  const bool WARNING_ENABLED = stream == Log_stream::warning && ::g_config.stream_warning;
-  const bool LOG_ENABLED = DEBUG_ENABLED || INFO_ENABLED || WARNING_ENABLED;
-  return_if (!LOG_ENABLED);
-  
-  // добавить инфу о источнике
-  std::string source;
-  if (::g_config.print_source)
-    source = std::format("{}:{}: ", location.file_name(), location.line());
-  
-  // определить в какой поток выводить:
-  // cout
-  if (::g_config.to_stdout) {
-    std::osyncstream synced_out(std::cout);
-    synced_out << source << msg;
+void Logger::set_color(Logger_stream stream) {
+#ifdef WINDOWS
+  // выбор винапишного цвета
+  WORD color_console;
+  switch (stream) {
+    default:
+    case Logger_stream::info: color_console = FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN; break;
+    case Logger_stream::warning: color_console = FOREGROUND_INTENSITY | FOREGROUND_RED | FOREGROUND_GREEN; break;
+    case Logger_stream::debug: color_console = FOREGROUND_INTENSITY | FOREGROUND_BLUE; break;
+    case Logger_stream::error: color_console = FOREGROUND_INTENSITY | FOREGROUND_RED; break;
   }
 
-  // cerr
-  if (::g_config.to_stderr) {
-    std::osyncstream synced_out(std::cerr);
-    synced_out << source << msg;
-  }
+  ::HANDLE stdout_console = ::GetStdHandle(STD_OUTPUT_HANDLE);
+  ::HANDLE stderr_console = ::GetStdHandle(STD_ERROR_HANDLE);
+  if (stdout_console != INVALID_HANDLE_VALUE)
+    ::SetConsoleTextAttribute(stdout_console, color_console);
+  if (stderr_console != INVALID_HANDLE_VALUE)
+    ::SetConsoleTextAttribute(stderr_console, color_console);
+#else // Linux
+  #pragma message("TODO need Linux cli colors")
+#endif
+}
 
-  // в файл
-  if (::g_config.to_file) {
-    std::lock_guard lock(g_log_file_mu);
-    if (g_log_file.is_open()) {
-      ::g_log_file << source << msg;
-      ::g_log_file.flush();
+void Logger::_print(std::stringstream& ss) const {
+  return_if (Logger::config.stream == Logger_stream::null);
+
+  if (Logger::config.use_endl)
+    ss << std::endl;
+  
+  std::lock_guard lock(Logger::mu);
+
+  if (Logger::config.use_terminal) {
+    if (Logger::config.stream == Logger_stream::error) {
+      std::cerr << ss.str();
+    } else {
+      std::cout << ss.str();
+      std::cout.flush();
     }
   }
+  
+  if (Logger::config.file) {
+    Logger::config.file << ss.str();
+    Logger::config.file.flush();
+  }
 }
 
-void log_open_file(const char* fname) noexcept {
+Str Logger::get_source_location(cr<std::source_location> sl) {
+  if (Logger::config.print_source)
+    return std::format("{}:{}: ", sl.file_name(), sl.line());
+  
+  return {};
+}
+
+void reopen_log_file(cr<Str> fname) {
+  iferror(fname.empty(), "log file name is empty");
+
   try {
-    iferror(fname == nullptr || Str(fname).empty(), "fname is empty");
-
-    std::lock_guard lock(g_log_file_mu);
-    cauto old_name = ::g_log_fname;
-    ::g_log_fname = fname;
-    conv_sep(::g_log_fname);
-    ::g_log_fname = std::filesystem::weakly_canonical(::g_log_fname).string();
-
-    if (old_name != ::g_log_fname) {
-      ::g_log_file.open(std::filesystem::path(::g_log_fname));
-        
-      if (::g_log_file.is_open())
-        std::cout << "log file \"" << ::g_log_fname << "\" created\n";
-      else
-        error("log file is not opened");
-    }
-  } catch (cr<hpw::Error> err) {
-    std::cerr << "error while creating log file (\"" << ::g_log_fname << "\":)\n" <<
-      err.what() << '\n' <<
-      "Output to log file disabled\n";
-    g_config.to_file = false;
+    auto path = fname;
+    conv_sep(path);
+    path = std::filesystem::weakly_canonical(path).string();
+    Logger::config.file.open(std::filesystem::path(path), std::ios_base::app);
+    return_if(Logger::config.file.bad());
   } catch (...) {
-    std::cerr << "error while creating log file (\"" << ::g_log_fname << "\")\n" <<
-      "Output to log file disabled\n";
-    g_config.to_file = false;
+    std::cerr << "[Error] log file not created at \"" << fname << "\"\n";
+    return;
   }
+  
+  Logger::config.file << std::format("\n::::::::: start logging at {0:%H:%M %d.%m.%Y} :::::::::\n",
+    std::chrono::system_clock::now());
 }
 
-void hpw_info(const std::string_view msg, const std::source_location location) noexcept
-  { hpw_log(msg, Log_stream::info, location); }
+void close_log_file() {
+  return_if(!Logger::config.file);
+  Logger::config.file << std::format("stop logging at {0:%H:%M %d.%m.%Y}\n",
+    std::chrono::system_clock::now());
+  Logger::config.file.close();
+}
 
-void hpw_warning(const std::string_view msg, const std::source_location location) noexcept
-  { hpw_log(msg, Log_stream::warning, location); }
-
-void hpw_debug(const std::string_view msg, const std::source_location location) noexcept
-  { hpw_log(msg, Log_stream::debug, location); }
+} // npw ns

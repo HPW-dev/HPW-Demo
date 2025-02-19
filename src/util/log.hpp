@@ -1,42 +1,110 @@
 #pragma once
 #include <source_location>
-#include <string_view>
+#include <sstream>
+#include <mutex>
+#include <fstream>
+#include "util/macro.hpp"
+#include "util/str.hpp"
 
-// для распределения логов по потокам
-enum class Log_stream {
-  null = 0, // вникуда
-  info,
+namespace hpw {
+
+// Названия потоков
+enum class Logger_stream {
+  standard = 0,
+  info = standard,
   warning,
   debug,
+  error,
+  null,
 };
-
+  
 // настройки логгера
-struct Log_config {
-  bool to_stdout      : 1 {true}; // вывод в консоль
-  bool to_stderr      : 1 {};     // вывод в поток ошибок в консоли
-  bool to_file        : 1 {};     // вывод логов в файл
-  //bool to_screen      : 1 {true}; // вывод на экран игры TODO
-  bool stream_info    : 1 {true}; // канал обычной инфы
-  bool stream_warning : 1 {true}; // канал предупреждений
-  bool print_source   : 1 {true}; // показывать из какой строки кода и файла был вызва лог
-  bool stream_debug   : 1 {};     // канал с более детальным выводом
-}; // Log_config
+struct Logger_config {
+  bool print_source {true};
+  bool use_endl {true};
+  bool use_terminal {true};
+  Logger_stream stream {};
+  std::ofstream file {};
+};
+  
+// главный класс логгера
+class Logger final {
+  nocopy(Logger);
+  inline static std::mutex mu; // для запрета одновременной записи
 
-Log_config& log_get_config() noexcept;
-void log_set_config(const Log_config& config) noexcept;
-// создаёт файл для вывода лога, если уже открыт - не перезаписывает
-void log_open_file(const char* fname) noexcept;
+  void _print(std::stringstream& ss) const;
+  
+public:
+  inline static Logger_config config;
+  
+  Logger() = default;
+  ~Logger();
 
-// выводит лог в консоль или в файл
-void hpw_log(
-  const std::string_view msg,
-  const Log_stream stream = Log_stream::info,
-  const std::source_location location = std::source_location::current()
-) noexcept;
+  inline Logger& operator << (auto val) {
+    std::stringstream ss;
+    ss << val;
+    _print(ss);
+    return *this;
+  }
 
-// сообщения в потоке для информации
-void hpw_info(const std::string_view msg, const std::source_location location = std::source_location::current()) noexcept;
-// сообщения в потоке для предупреждений
-void hpw_warning(const std::string_view msg, const std::source_location location = std::source_location::current()) noexcept;
-// сообщения в потоке для отладки
-void hpw_debug(const std::string_view msg, const std::source_location location = std::source_location::current()) noexcept;
+  void set_stream(Logger_stream stream);
+  static void set_color(Logger_stream stream);
+  static Str get_source_location(cr<std::source_location> sl = std::source_location::current());
+}; // Logger
+
+inline Logger logger {};
+
+void close_log_file();
+// открыть файл лога для вставки в конец
+void reopen_log_file(cr<Str> fname);
+
+} // npw ns
+
+#define log_info { \
+  cauto tmp = hpw::Logger::config.use_endl; \
+  hpw::Logger::config.use_endl = false; \
+  hpw::Logger::set_color(hpw::Logger_stream::info); \
+  hpw::logger.set_stream(hpw::Logger_stream::info); \
+  hpw::logger << "Info    | "; \
+  hpw::logger << hpw::Logger::get_source_location(); \
+  hpw::Logger::config.use_endl = tmp; \
+} \
+hpw::logger
+
+#define log_error { \
+  cauto tmp = hpw::Logger::config.use_endl; \
+  hpw::Logger::config.use_endl = false; \
+  hpw::Logger::set_color(hpw::Logger_stream::error); \
+  hpw::logger.set_stream(hpw::Logger_stream::error); \
+  hpw::logger << "Error   | "; \
+  hpw::logger << hpw::Logger::get_source_location(); \
+  hpw::Logger::config.use_endl = tmp; \
+} \
+hpw::logger
+
+#define log_debug { \
+  cauto tmp = hpw::Logger::config.use_endl; \
+  hpw::Logger::config.use_endl = false; \
+  hpw::Logger::set_color(hpw::Logger_stream::debug); \
+  hpw::logger.set_stream(hpw::Logger_stream::debug); \
+  hpw::logger << "Debug   | "; \
+  hpw::logger << hpw::Logger::get_source_location(); \
+  hpw::Logger::config.use_endl = tmp; \
+} \
+hpw::logger
+
+#define log_warning { \
+  cauto tmp = hpw::Logger::config.use_endl; \
+  hpw::Logger::config.use_endl = false; \
+  hpw::Logger::set_color(hpw::Logger_stream::warning); \
+  hpw::logger.set_stream(hpw::Logger_stream::warning); \
+  hpw::logger << "Warning | "; \
+  hpw::logger << hpw::Logger::get_source_location(); \
+  hpw::Logger::config.use_endl = tmp; \
+} \
+hpw::logger
+
+#define log_null { \
+  hpw::logger.set_stream(hpw::Logger_stream::null); \
+} \
+hpw::logger
