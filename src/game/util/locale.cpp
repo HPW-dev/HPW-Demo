@@ -28,7 +28,7 @@ std::optional<utf32> get_locale_str_with_check(cr<Str> key) {
   if (auto ret = hpw::store_locale->find(key); ret)
     return ret->str;
   
-  log_error << "not found string: \"" + key + "\"";
+  log_debug << "not found string: \"" + key + "\"";
   return {};
 }
 

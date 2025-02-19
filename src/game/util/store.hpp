@@ -53,7 +53,7 @@ Store<T>::Velue Store<T>::find(cr<Str> name) const {
   } catch (...) {
     return_if (m_find_err_cb, m_find_err_cb(name));
     if (!name.empty())
-      log_error << "resource \"" + name + "\" not finded";
+      log_debug << "resource \"" + name + "\" not finded";
   }
   return {};
 }

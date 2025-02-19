@@ -82,7 +82,7 @@ struct Yaml::Impl {
         ret.emplace_back(str.as<T>());
       return ret;
     } catch (...) {
-      log_warning << "\nWARNING: Yaml._get_v: not finded \"" + name
+      log_debug << "Yaml._get_v: not finded \"" + name
         + "\" in file \"" + _master.get_path()
         + "\". Loaded default value";
     }
