@@ -6,6 +6,7 @@ int main() {
   log_error << "error text test";
   log_debug << "debug text test";
   log_null << "null text test";
+  log_info << "more " << "more " << "more " << "more";
   
   hpw::reopen_log_file("delme.txt");
   hpw::logger.config.use_terminal = false;

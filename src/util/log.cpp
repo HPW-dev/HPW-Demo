@@ -48,9 +48,6 @@ void Logger::set_color(Logger_stream stream) {
 void Logger::_print(std::stringstream& ss) const {
   return_if (Logger::config.stream == Logger_stream::null);
 
-  if (Logger::config.use_endl)
-    ss << std::endl;
-  
   std::lock_guard lock(Logger::mu);
 
   if (Logger::config.use_terminal) {
@@ -99,5 +96,18 @@ void close_log_file() {
     std::chrono::system_clock::now());
   Logger::config.file.close();
 }
+
+Logger::Logger_proxy::~Logger_proxy() {
+  if (Logger::config.use_endl)
+    _ss << std::endl;
+
+  _master._print(_ss);
+}
+
+Logger::Logger_proxy::Logger_proxy(Logger& master): _master {master} {}
+Logger::Logger_proxy::Logger_proxy(cr<Logger::Logger_proxy> other)
+  : _master {other._master} { _ss << other._ss.str(); }
+Logger::Logger_proxy::Logger_proxy(Logger::Logger_proxy&& other)
+  : _master {other._master}, _ss {std::move(other._ss)} {}
 
 } // npw ns

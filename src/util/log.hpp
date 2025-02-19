@@ -36,15 +36,32 @@ class Logger final {
   
 public:
   inline static Logger_config config;
-  
+
+  // для накопления данных и вызова endl в конце
+  class Logger_proxy final {
+  public:
+    Logger_proxy(Logger& master);
+    Logger_proxy(cr<Logger_proxy> other);
+    Logger_proxy(Logger_proxy&& other);
+    ~Logger_proxy();
+
+    Logger_proxy& operator << (auto val) {
+      _ss << val;
+      return *this;
+    }
+
+  private:
+    Logger& _master;
+    std::stringstream _ss {};
+  }; // Logger_proxy
+
   Logger() = default;
   ~Logger();
 
-  inline Logger& operator << (auto val) {
-    std::stringstream ss;
-    ss << val;
-    _print(ss);
-    return *this;
+  inline Logger_proxy operator << (auto val) {
+    Logger_proxy proxy(*this);
+    proxy << val;
+    return proxy;
   }
 
   void set_stream(Logger_stream stream);

@@ -112,8 +112,8 @@ struct Timer_stat {
 };
 
 void calibrate_delay(const Seconds target) {
-  hpw_info("delay timer calibration...\n");
-  hpw_debug(std::format("целевая задержка {} сек.\n", target));
+  hpw_info << "delay timer calibration...";
+  hpw_debug << std::format("целевая задержка {} сек.", target);
   assert(target >= 1.0 / 10'000.0 && target <= 1.0);
 
   Vector<Timer_stat> statistic {
