@@ -23,6 +23,10 @@ struct Logger_config {
   bool print_source {true};
   bool use_endl {true};
   bool use_terminal {true};
+  bool use_stream_info {true};
+  bool use_stream_warning {true};
+  bool use_stream_error {true};
+  bool use_stream_debug {false};
   Logger_stream stream {};
   std::ofstream file {};
 };

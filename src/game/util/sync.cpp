@@ -24,7 +24,7 @@ void set_vsync(bool val) {
   if (hpw::set_vsync)
     hpw::set_vsync(val);
   else
-    log_warning << "graphic::set_vsync был вызван без иниц-го hpw::set_vsync";
+    log_debug << "graphic::set_vsync: был вызван без иниц-го hpw::set_vsync";
 
   if (val) {
     set_disable_frame_limit(false);

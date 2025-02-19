@@ -30,41 +30,27 @@
 #endif
 
 static inline void load_log_config(cr<Yaml> config) {
-  /*
-  auto cfg = log_get_config();
-  cfg.print_source = config.get_bool("print_source", cfg.print_source);
   hpw::log_file_path = config.get_str("file_name", hpw::log_file_path);
-  
-  auto output_node = config["output"];
-  cfg.to_file = output_node.get_bool("file", cfg.to_file);
-  cfg.to_stdout = output_node.get_bool("stdout", cfg.to_stdout);
-  cfg.to_stderr = output_node.get_bool("stderr", cfg.to_stderr);
+  hpw::reopen_log_file(hpw::cur_dir + hpw::log_file_path);
 
-  auto streams_node = config["streams_enabled"];
-  cfg.stream_debug = streams_node.get_bool("debug", cfg.stream_debug);
-  cfg.stream_info = streams_node.get_bool("info", cfg.stream_info);
-  cfg.stream_warning = streams_node.get_bool("warning", cfg.stream_warning);
-
-  log_set_config(cfg);
-  */
+  auto streams_node = config["streams"];
+  rauto cfg = hpw::logger.config;
+  cfg.use_terminal       = streams_node.get_bool("terminal", cfg.use_terminal);
+  cfg.use_stream_info    = streams_node.get_bool("info",     cfg.use_stream_info);
+  cfg.use_stream_warning = streams_node.get_bool("warning",  cfg.use_stream_warning);
+  cfg.use_stream_debug   = streams_node.get_bool("debug",    cfg.use_stream_debug);
+  cfg.use_stream_error   = streams_node.get_bool("error",    cfg.use_stream_error);
 }
 
 static inline void save_log_config(Yaml& config) {
-  /*
-  cauto cfg = log_get_config();
-  config.set_bool("print_source", cfg.print_source);
   config.set_str("file_name", hpw::log_file_path);
   
-  auto output_node = config.make_node("output");
-  output_node.set_bool("file", cfg.to_file);
-  output_node.set_bool("stdout", cfg.to_stdout);
-  output_node.set_bool("stderr", cfg.to_stderr);
-
-  auto streams_node = config.make_node("streams_enabled");
-  streams_node.set_bool("debug", cfg.stream_debug);
-  streams_node.set_bool("info", cfg.stream_info);
-  streams_node.set_bool("warning", cfg.stream_warning);
-  */
+  auto streams_node = config.make_node("streams");
+  streams_node.set_bool("terminal", hpw::logger.config.use_terminal);
+  streams_node.set_bool("info", hpw::logger.config.use_stream_info);
+  streams_node.set_bool("warning", hpw::logger.config.use_stream_warning);
+  streams_node.set_bool("debug", hpw::logger.config.use_stream_debug);
+  streams_node.set_bool("error", hpw::logger.config.use_stream_error);
 }
 
 int get_scancode(const hpw::keycode keycode) {
@@ -96,23 +82,6 @@ static inline void load_heat_distort_mode(cr<Yaml> config) {
 
 static inline void save_heat_distort_mode(Yaml& config)
   { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
-
-static inline void setup_log() {
-  /* TODO log
-  auto cfg = log_get_config();
-  // создавать лог-файлы по умолчанию
-  if (hpw::first_start) {
-    cfg.to_file = true;
-    #ifdef RELEASE
-    cfg.to_stderr = false;
-    cfg.to_stdout = false;
-    #endif
-    log_set_config(cfg);
-  }
-  if (cfg.to_file)
-    log_open_file(Str(hpw::cur_dir + hpw::log_file_path).c_str());
-  */
-}
 
 static inline void save_nickname() {
   static_assert(std::is_same_v<utf32, decltype(hpw::player_name)>);
@@ -370,6 +339,4 @@ void load_config() {
 
   cauto input_node = config["input"];
   load_config_input(input_node);
-
-  setup_log();
 }

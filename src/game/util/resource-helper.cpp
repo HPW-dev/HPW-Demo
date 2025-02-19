@@ -191,10 +191,10 @@ File load_res(cr<Str> name) {
   // попытка загрузить ресурс с архива:
   #if !defined(EDITOR) && !defined(DISABLE_ARCHIVE)
   try {
-    iferror(!hpw::archive, "hpw::archive не инициализирован\n");
+    iferror(!hpw::archive, "hpw::archive не инициализирован");
     return hpw::archive->get_file(name);
   } catch(cr<hpw::Error> err) {
-    log_error << "Ошибка при загрузке ресурса \"" + name + "\" из архива: " + err.what();
+    log_debug << "Ошибка при загрузке ресурса \"" + name + "\" из архива: " + err.what();
   } catch(...) {
     log_error << "не удалось загрузить ресурс \"" + name + "\" из архива";
   }

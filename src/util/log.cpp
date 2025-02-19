@@ -47,6 +47,10 @@ void Logger::set_color(Logger_stream stream) {
 
 void Logger::_print(std::stringstream& ss) const {
   return_if (Logger::config.stream == Logger_stream::null);
+  return_if (Logger::config.stream == Logger_stream::info && !Logger::config.use_stream_info);
+  return_if (Logger::config.stream == Logger_stream::warning && !Logger::config.use_stream_warning);
+  return_if (Logger::config.stream == Logger_stream::debug && !Logger::config.use_stream_debug);
+  return_if (Logger::config.stream == Logger_stream::error && !Logger::config.use_stream_error);
 
   std::lock_guard lock(Logger::mu);
 
@@ -74,20 +78,22 @@ Str Logger::get_source_location(cr<std::source_location> sl) {
 
 void reopen_log_file(cr<Str> fname) {
   iferror(fname.empty(), "log file name is empty");
+  Str path;
 
   try {
-    auto path = fname;
+    path = fname;
     conv_sep(path);
     path = std::filesystem::weakly_canonical(path).string();
     Logger::config.file.open(std::filesystem::path(path), std::ios_base::app);
-    return_if(Logger::config.file.bad());
   } catch (...) {
     std::cerr << "[Error] log file not created at \"" << fname << "\"\n";
     return;
   }
   
+  return_if(Logger::config.file.bad());
   Logger::config.file << std::format("\n::::::::: start logging at {0:%H:%M %d.%m.%Y} :::::::::\n",
     std::chrono::system_clock::now());
+  log_info << "log file opened at \"" << path << "\"";
 }
 
 void close_log_file() {

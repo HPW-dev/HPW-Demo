@@ -194,7 +194,7 @@ struct Yaml::Impl {
       // путь в ресурсе нельзя трогать, он должен указывать на рутовую ноду
       return Impl(_master, node, _master.get_path());
     }  catch(...) {
-      log_warning << "WARNING: node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"";
+      log_debug << "node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"";
     }
 
     Yaml ret;
