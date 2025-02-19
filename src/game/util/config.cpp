@@ -30,6 +30,7 @@
 #endif
 
 static inline void load_log_config(cr<Yaml> config) {
+  /*
   auto cfg = log_get_config();
   cfg.print_source = config.get_bool("print_source", cfg.print_source);
   hpw::log_file_path = config.get_str("file_name", hpw::log_file_path);
@@ -45,9 +46,11 @@ static inline void load_log_config(cr<Yaml> config) {
   cfg.stream_warning = streams_node.get_bool("warning", cfg.stream_warning);
 
   log_set_config(cfg);
+  */
 }
 
 static inline void save_log_config(Yaml& config) {
+  /*
   cauto cfg = log_get_config();
   config.set_bool("print_source", cfg.print_source);
   config.set_str("file_name", hpw::log_file_path);
@@ -61,6 +64,7 @@ static inline void save_log_config(Yaml& config) {
   streams_node.set_bool("debug", cfg.stream_debug);
   streams_node.set_bool("info", cfg.stream_info);
   streams_node.set_bool("warning", cfg.stream_warning);
+  */
 }
 
 int get_scancode(const hpw::keycode keycode) {
@@ -94,6 +98,7 @@ static inline void save_heat_distort_mode(Yaml& config)
   { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
 
 static inline void setup_log() {
+  /* TODO log
   auto cfg = log_get_config();
   // создавать лог-файлы по умолчанию
   if (hpw::first_start) {
@@ -106,6 +111,7 @@ static inline void setup_log() {
   }
   if (cfg.to_file)
     log_open_file(Str(hpw::cur_dir + hpw::log_file_path).c_str());
+  */
 }
 
 static inline void save_nickname() {
@@ -139,15 +145,15 @@ static inline void load_nickname() {
     assert(hpw::player_name.size() == nick_sz / sizeof(char32_t));
     fr.read(ptr2ptr<byte*>(hpw::player_name.data()), nick_sz);
   } catch (...) {
-    hpw_warning("не удалось загрузить файл с никнеймом игрока. Ник будет пустым\n");
+    log_warning << "не удалось загрузить файл с никнеймом игрока. Ник будет пустым";
     hpw::player_name = {};
   }
 }
 
 static inline void node_check(cr<Yaml> config) {
   if (!config.check())
-    hpw_log("не удалось загрузить конфиг: \"" + config.get_path() +
-      "\". Будут загружены значения по умолчанию\n", Log_stream::warning);
+    log_warning << "не удалось загрузить конфиг: \"" + config.get_path() +
+      "\". Будут загружены значения по умолчанию";
 }
 
 static inline void save_game_config(Yaml& config) {
@@ -177,7 +183,7 @@ void load_config_game(cr<Yaml> config) {
     hpw::locale_path = config.get_str("locale", hpw::locale_path);
     load_locale(hpw::locale_path);
   } catch (...) {
-    hpw_log("не удалось загрузить файл локализации \"" + hpw::locale_path + "\"\n", Log_stream::debug);
+    log_error << "не удалось загрузить файл локализации \"" + hpw::locale_path + "\"";
   }
 }
 
@@ -328,10 +334,10 @@ void save_config() {
 }
 
 void load_config() {
-  hpw_log("чтение конфига...\n");
+  log_info << "чтение конфига...";
   make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
   init_shared(hpw::config, hpw::cur_dir + hpw::config_path, true);
-  hpw_log("файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"\n");
+  log_info << "файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"";
 
   crauto config = *hpw::config;
   hpw::first_start = config.get_bool("first_start", true);

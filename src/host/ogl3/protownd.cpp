@@ -46,15 +46,15 @@ void Protownd::_gen_palette() {
   m_pal_rgb[255 * 3 + 2] = 1;
 // показать все цвета палитры:
 #if defined(DEBUG) && defined(PALPRINT)
-  hpw_log("Palette:\n");
-  hpw_log("INDEX\tR,     G,     B\n");
+  log_debug << "Palette:";
+  log_debug << "INDEX\tR,     G,     B";
   for (int i = 0; i < 256; ++i) {
-    hpw_log(n2s(i) << "\t" <<
+    log_debug << i << "\t" <<
       n2s(m_pal_rgb[i * 3 + 0], 3) << ", " <<
       n2s(m_pal_rgb[i * 3 + 1], 3) << ", " <<
-      n2s(m_pal_rgb[i * 3 + 2], 3) << "\n");
+      n2s(m_pal_rgb[i * 3 + 2], 3);
   }
-  hpw_log("\n"); // endl
+  log_debug << "\n"; // endl
 #endif
 } // _gen_palette
 

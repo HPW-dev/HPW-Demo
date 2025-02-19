@@ -29,7 +29,7 @@ void parse_args(int argc, char** argv) {
   } );
 
   if (argc == 1)
-    hpw_info << "Usage:\n" + arg_parser.get_info();
+    log_info << "Usage:\n" + arg_parser.get_info();
 
   arg_parser.skip_empty = true;
   arg_parser(argc, argv);
@@ -48,7 +48,7 @@ void print_params() {
   txt << "  * target:\n";
   txt << "    + UDP: " << _connection_info.target_udp_port << "\n";
   txt << "    + TCP: " << _connection_info.target_tcp_port << "\n";
-  hpw_info << txt.str();
+  log_info << txt.str();
 }
 
 void init_pck_mgr(net::Packet_mgr& dst) {
@@ -61,10 +61,10 @@ void init_pck_mgr(net::Packet_mgr& dst) {
 }
 
 void test_1(net::Packet_mgr& mgr) {
-  hpw_info << "test 1 - UDP sending byte to server";
+  log_info << "test 1 - UDP sending byte to server";
 
   if (_connection_info.is_server) {
-    hpw_info << "server loop start";
+    log_info << "server loop start";
 
     while (true) {
       mgr.update();
@@ -78,18 +78,19 @@ void test_1(net::Packet_mgr& mgr) {
           txt << "- packet size: " << packet.bytes.size() << "\n";
           assert(packet.bytes.size() == 1);
           txt << "- packet byte: " << +packet.bytes[0] << "\n";
-          hpw_info << txt.str();
+          log_info << txt.str();
         }
         break;
       }
     }
 
-    hpw_info << "total received packets: " << mgr.status().received_packets;
-    hpw_info << "server loop end";
+    log_info << "total received packets: " << mgr.status().received_packets;
+    log_info << "server loop end";
   } else { // client
     net::Packet pck;
     pck.bytes.push_back(99);
-    hpw_log("send byte to ip v4 " + _connection_info.target_ip_v4 + ":" + n2s(_connection_info.target_udp_port) + "\n");
+    log_info << "send byte to ip v4 " << _connection_info.target_ip_v4 << ":" <<
+      << _connection_info.target_udp_port;
     net::Packet_mgr::Target_info target;
     target.ip_v4 = _connection_info.target_ip_v4;
     target.port = _connection_info.target_udp_port;
@@ -100,14 +101,14 @@ void test_1(net::Packet_mgr& mgr) {
 }
 
 void test_2(net::Packet_mgr& mgr) {
-  hpw_info << "test 2 - TCP sending byte to server";
+  log_info << "test 2 - TCP sending byte to server";
 
   if (_connection_info.is_server) {
-    hpw_info << "waiting for TCP connection...";
+    log_info << "waiting for TCP connection...";
     cauto net_target = mgr.wait_connection();
     _connection_info.target_ip_v4 = net_target.ip_v4;
     _connection_info.target_tcp_port = net_target.port;
-    hpw_info << "server loop start";
+    log_info << "server loop start";
 
     while (true) {
       mgr.update();
@@ -121,32 +122,32 @@ void test_2(net::Packet_mgr& mgr) {
           txt << "- packet size: " << packet.bytes.size() << "\n";
           assert(packet.bytes.size() == 1);
           txt << "- packet byte: " << +packet.bytes[0] << "\n";
-          hpw_info << txt.str();
+          log_info << txt.str();
         }
         break;
       }
     }
 
-    hpw_info << "total received packets: " + n2s(mgr.status().received_packets);
-    hpw_info << "server loop end";
+    log_info << "total received packets: " + n2s(mgr.status().received_packets);
+    log_info << "server loop end";
   } else { // client
     net::Packet_mgr::Target_info target;
     target.port = _connection_info.target_tcp_port;
     target.ip_v4 = _connection_info.target_ip_v4;
     
-    hpw_info << "connect to TCP server...";
+    log_info << "connect to TCP server...";
     mgr.connect_to(target);
 
     net::Packet pck;
     pck.bytes.push_back(88);
-    hpw_info << "send byte to ip v4 " + target.ip_v4 + ":" << target.port;
+    log_info << "send byte to ip v4 " + target.ip_v4 + ":" << target.port;
     mgr.send(pck, target);
     mgr.update();
   }
 }
 
 void test_3(net::Packet_mgr& mgr) {
-  hpw_info << "test 3 - TCP sending byte to client from server";
+  log_info << "test 3 - TCP sending byte to client from server";
   assert(mgr.status().connected);
 
   if (_connection_info.is_server) {
@@ -156,11 +157,11 @@ void test_3(net::Packet_mgr& mgr) {
 
     net::Packet pck;
     pck.bytes.push_back(77);
-    hpw_info << "send byte to ip v4 " + target.ip_v4 + ":" << target.port;
+    log_info << "send byte to ip v4 " + target.ip_v4 + ":" << target.port;
     mgr.send(pck, target);
     mgr.update();    
   } else { // client
-    hpw_info << "client loop start";
+    log_info << "client loop start";
 
     while (true) {
       mgr.update();
@@ -174,21 +175,21 @@ void test_3(net::Packet_mgr& mgr) {
           txt << "- packet size: " << packet.bytes.size() << "\n";
           assert(packet.bytes.size() == 1);
           txt << "- packet byte: " << +packet.bytes[0] << "\n";
-          hpw_info << txt.str();
+          log_info << txt.str();
         }
         break;
       }
     }
 
-    hpw_info << "total received packets: " + n2s(mgr.status().received_packets);
-    hpw_info << "client loop end";
+    log_info << "total received packets: " + n2s(mgr.status().received_packets);
+    log_info << "client loop end";
   }
 }
 
 void test_4_client(net::Packet_mgr& mgr) {
-  hpw_info << "packet waiting loop...";
+  log_info << "packet waiting loop...";
   bool test_ran = true;
-  mgr.set_receive_cb([] { hpw_info << "(Cb test) end of receiving"; });
+  mgr.set_receive_cb([] { log_info << "(Cb test) end of receiving"; });
 
   while (test_ran) {
     mgr.update(); 
@@ -196,23 +197,23 @@ void test_4_client(net::Packet_mgr& mgr) {
     if (mgr.status().has_packets)
       for (crauto packet: mgr.unload_all()) {
         auto sz = packet.bytes.size();
-        hpw_info << "packet size " + n2s(sz);
-        hpw_info << "packet check...";
+        log_info << "packet size " + n2s(sz);
+        log_info << "packet check...";
         cfor (i, sz)
           iferror(scast<byte>(i) != packet.bytes[i], "bad packet data");
         test_ran = false;
       }
   }
 
-  hpw_info << "end of loop";
+  log_info << "end of loop";
   mgr.set_receive_cb({});
 }
 
 void test_4_server(net::Packet_mgr& mgr) {
-  hpw_info << "send packet...";
+  log_info << "send packet...";
 
   auto sz = 400;
-  hpw_info << "packet size " << sz;
+  log_info << "packet size " << sz;
   net::Packet pck;
   pck.bytes.resize(sz);
   cfor (i, sz)
@@ -223,21 +224,21 @@ void test_4_server(net::Packet_mgr& mgr) {
   tgt.udp_mode = false;
   tgt.ip_v4 = _connection_info.target_ip_v4;
   tgt.port = _connection_info.target_tcp_port;
-  tgt.send_cb = [] { hpw_info("(Cb test) end of packet sending\n"); };
+  tgt.send_cb = [] { log_info << "(Cb test) end of packet sending"; };
 
   mgr.send(pck, tgt);
   mgr.update(); 
 }
 
 void test_4(net::Packet_mgr& mgr) {
-  hpw_info("test 4 - medium packet send\n");
+  log_info << "test 4 - medium packet send";
 
   if (_connection_info.is_server)
     test_4_server(mgr);
   else
     test_4_client(mgr);
 
-  hpw_info("test 4 - end\n");
+  log_info << "test 4 - end";
 }
 
 int main(int argc, char** argv) {

@@ -57,12 +57,12 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   load_sounds();
 
   // управление сценами
-  hpw_log("настройка игровых сцен...\n");
+  log_info << "настройка игровых сцен...";
   #ifndef DEBUG
   hpw::empty_level_first = false;
   #endif
   if (hpw::empty_level_first) {
-    hpw_log("start debug level...\n");
+    log_info << "start debug level...";
     hpw::scene_mgr.add( new_shared<Scene_game>() );
   } else {
     hpw::scene_mgr.add( new_shared<Scene_main_menu>() );
@@ -84,7 +84,7 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   }
   hpw::first_start = false;
 
-  hpw_log("загрузка завершена\n");
+  log_info << "загрузка завершена";
 } // c-tor
 
 Game_app::~Game_app() {
@@ -109,7 +109,7 @@ void Game_app::update(const Delta_time dt) {
     replay_save_keys();
 
   if ( !hpw::scene_mgr.update(dt) ) {
-    hpw_log("scenes are over, call soft_exit\n", Log_stream::debug);
+    log_debug << "scenes are over, call soft_exit";
     hpw::soft_exit();
   }
 
@@ -221,7 +221,7 @@ void Game_app::replay_load_keys() {
     }
   } else {
     // по завершению реплея выходить из сцены обратно
-    hpw_log("replay end\n");
+    log_info << "replay end";
     hpw::replay_read_mode = false;
     hpw::replay = {};
     //hpw::scene_mgr.back(); TODO?

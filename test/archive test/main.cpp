@@ -7,18 +7,18 @@ void print_raw(cr<Bytes> raw) {
   if (raw.empty())
     return;
   Str str(raw.begin(), raw.end());
-  hpw_log(str << "\n");
+  log_info << (str << "\n");
 }
 
 int main(int /*argc*/, char *argv[]) {
   auto launch_dir {launch_dir_from_argv0(argv)};
   Archive archive(launch_dir + "../test/archive test/test.zip");
 
-  hpw_log("\nfiles:\n");
+  log_info << ("\nfiles:\n");
   auto names {archive.get_all_names()};
   for (crauto name: names)
-    hpw_log("\"" << name << "\"\n")
-  hpw_log("\n");
+    log_info << ("\"" << name << "\"\n")
+  log_info << ("\n");
 
   auto file_1 {archive.get_file("file 1.txt")};
   print_raw(file_1.data);

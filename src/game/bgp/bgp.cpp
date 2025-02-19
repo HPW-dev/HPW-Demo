@@ -132,7 +132,7 @@ static std::unordered_map<Str, bgp_pf> _g_bgps {
     return _g_bgps.at(name);
   } catch (...) {}
 
-  hpw_warning("не удалось найти фон с именем \"" + name + "\", будет выбран фон \"copy_1\"");
+  log_error << "не удалось найти фон с именем \"" + name + "\", будет выбран фон \"copy_1\"";
   return &bgp_copy_1;
 }
 

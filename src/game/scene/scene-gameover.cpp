@@ -94,7 +94,7 @@ struct Scene_gameover::Impl {
   inline void exit() {
     if (hpw::difficulty != Difficulty::easy) {
       if (rndr() <= (1.f / 6.f)) {
-        hpw_log("вам повезло зайти в секретный уровень, но он ещё не реализован!\n");
+        log_info << "вам повезло зайти в секретный уровень, но он ещё не реализован!";
         // TODO call scene secret_level
         // return;
       }

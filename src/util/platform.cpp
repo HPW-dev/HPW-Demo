@@ -112,8 +112,8 @@ struct Timer_stat {
 };
 
 void calibrate_delay(const Seconds target) {
-  hpw_info << "delay timer calibration...";
-  hpw_debug << std::format("целевая задержка {} сек.", target);
+  log_info << "delay timer calibration...";
+  log_debug << std::format("целевая задержка {} сек.", target);
   assert(target >= 1.0 / 10'000.0 && target <= 1.0);
 
   Vector<Timer_stat> statistic {
@@ -147,7 +147,7 @@ void calibrate_delay(const Seconds target) {
     stat.delay_error = std::abs(avg - target);
     Str txt = "Неточность для таймера " + stat.name + " = ";
     txt += n2s(stat.delay_error, 14) + " сек.";
-    hpw_debug(txt + '\n');
+    log_debug << txt;
   }
 
   // найти самый точный таймер
@@ -161,7 +161,7 @@ void calibrate_delay(const Seconds target) {
   set_timer(best_timer->name);
   g_delay_error = best_timer->delay_error;
   
-  hpw_debug( std::format("коррекция таймера: {} сек.\n", n2s(g_delay_error, 14)) );
+  log_debug << std::format("коррекция таймера: {} сек.", n2s(g_delay_error, 14));
 } // calibrate_delay
 
 void set_timer(cr<Str> name) {
@@ -185,13 +185,13 @@ void set_timer(cr<Str> name) {
     g_timer_name = "std_delay";
   }
 
-  hpw_log("selected delay timer: " + g_timer_name + '\n');
+  log_info << "selected delay timer: " << g_timer_name;
 } // set_timer
 
 Str get_timer() { return g_timer_name; }
 
 void set_priority(Priority mode) {
-  hpw_debug("set process priority " + n2s(scast<int>(mode)) + "\n");
+  log_debug << "set process priority " << scast<int>(mode);
 
 #ifdef WINDOWS
   static const std::unordered_map<Priority, ::DWORD> priority_classez {
@@ -210,14 +210,14 @@ void set_priority(Priority mode) {
 
   auto ret = ::SetPriorityClass(::GetCurrentProcess(), priority_classez.at(mode));
   if (!ret)
-    hpw_warning("ошибка при смене приоритета процесса\n");
+    log_error << "ошибка при смене приоритета процесса";
     
   ret = ::SetThreadPriority(::GetCurrentThread(), thread_priority_classez.at(mode));
   if (!ret)
-    hpw_warning("ошибка при смене приоритета потока\n");
+    log_error << "ошибка при смене приоритета потока";
 #else // LINUX
   #pragma message("need impl for set_priority in Linux")
-  hpw_warning("need impl for set_priority in Linux\n");
+  log_error << "need impl for set_priority in Linux";
 #endif
 }
 

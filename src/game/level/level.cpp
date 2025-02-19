@@ -44,7 +44,7 @@ struct Level::Impl {
     txt += "circle check: " + n2s<Str>(hpw::circle_checks);
     txt += ", poly: " + n2s<Str>(hpw::poly_checks);
     txt += ", collided: " + n2s<Str>(hpw::total_collided);
-    hpw_log(txt << "\n");
+    log_info << txt;
     hpw::circle_checks = 0;
     hpw::poly_checks = 0;
     hpw::total_collided = 0;

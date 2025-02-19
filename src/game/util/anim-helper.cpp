@@ -10,7 +10,7 @@
 // создаёт спрайт только с белыми контурами по исходному спрайту
 inline static Sprite extract_contour(cr<Sprite> src) {
   if (!src) {
-    hpw_log("extract_contour src is empty\n", Log_stream::warning);
+    log_warning << "extract_contour src is empty";
     return {};
   }
   // расширение спрайта во все стороны на 1 пиксель (нужна только маска)

@@ -85,7 +85,7 @@ void Emit_wnd::draw_anim_list() {
 
 void Emit_wnd::delete_anim_by_name(cr<Str> name) {
   return_if (name.empty());
-  hpw_debug("delete anim \"" + name + "\n");
+  log_debug("delete anim \"" + name + "\n");
   hpw::anim_mgr->remove_anim(name);
   select_anim_by_name(get_avaliable_first_anim());
 }
@@ -96,7 +96,7 @@ void Emit_wnd::select_anim_by_name(cr<Str> name) {
   auto anim = hpw::anim_mgr->find_anim(editor::anim_name).get();
   assert(anim);
   editor::entity->anim_ctx.set_anim(anim);
-  hpw_debug("select anim \"" + editor::anim_name + "\n");
+  log_debug("select anim \"" + editor::anim_name + "\n");
 }
 
 void Emit_wnd::make_new_anim() {
@@ -109,7 +109,7 @@ void Emit_wnd::make_new_anim() {
         try {
           hpw::anim_mgr->add_anim(low_name, anim);
         } catch (cr<hpw::Error> ex) {
-          hpw_log(ex.get_msg() + '\n');
+          log_info << (ex.get_msg() + '\n');
           return;
         }
         select_anim_by_name(low_name);

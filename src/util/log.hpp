@@ -77,51 +77,14 @@ void reopen_log_file(cr<Str> fname);
 
 } // npw ns
 
-#define log_info { \
-  cauto tmp = hpw::Logger::config.use_endl; \
-  hpw::Logger::config.use_endl = false; \
-  hpw::Logger::set_color(hpw::Logger_stream::info); \
-  hpw::logger.set_stream(hpw::Logger_stream::info); \
-  hpw::logger << "Info    | "; \
-  hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = tmp; \
-} \
-hpw::logger
+hpw::Logger& config_log_to_info();
+hpw::Logger& config_log_to_warning();
+hpw::Logger& config_log_to_debug();
+hpw::Logger& config_log_to_error();
+hpw::Logger& config_log_to_none();
 
-#define log_error { \
-  cauto tmp = hpw::Logger::config.use_endl; \
-  hpw::Logger::config.use_endl = false; \
-  hpw::Logger::set_color(hpw::Logger_stream::error); \
-  hpw::logger.set_stream(hpw::Logger_stream::error); \
-  hpw::logger << "Error   | "; \
-  hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = tmp; \
-} \
-hpw::logger
-
-#define log_debug { \
-  cauto tmp = hpw::Logger::config.use_endl; \
-  hpw::Logger::config.use_endl = false; \
-  hpw::Logger::set_color(hpw::Logger_stream::debug); \
-  hpw::logger.set_stream(hpw::Logger_stream::debug); \
-  hpw::logger << "Debug   | "; \
-  hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = tmp; \
-} \
-hpw::logger
-
-#define log_warning { \
-  cauto tmp = hpw::Logger::config.use_endl; \
-  hpw::Logger::config.use_endl = false; \
-  hpw::Logger::set_color(hpw::Logger_stream::warning); \
-  hpw::logger.set_stream(hpw::Logger_stream::warning); \
-  hpw::logger << "Warning | "; \
-  hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = tmp; \
-} \
-hpw::logger
-
-#define log_null { \
-  hpw::logger.set_stream(hpw::Logger_stream::null); \
-} \
-hpw::logger
+#define log_info config_log_to_info()
+#define log_warning config_log_to_warning()
+#define log_debug config_log_to_debug()
+#define log_error config_log_to_error()
+#define log_none config_log_to_none()

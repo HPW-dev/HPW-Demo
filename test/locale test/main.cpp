@@ -5,11 +5,11 @@
 #include "game/locale.hpp"
 
 void test(cr<Str> fname) {
-  hpw_log("\nLoading \"" << fname << "\"\n");
+  log_info << ("\nLoading \"" << fname << "\"\n");
   auto yml {load_res("resource/locale/" + fname)};
   Yaml locale_yml(yml);
   hpw::locale->load(locale_yml.get_kv_table());
-#define PRINT(str) hpw_log("\t" str ": " \
+#define PRINT(str) log_info << ("\t" str ": " \
 << sconv<Str>(hpw::locale->get(str)) << '\n');
   PRINT("info.author");
   PRINT("info.name");

@@ -53,7 +53,7 @@ Store<T>::Velue Store<T>::find(cr<Str> name) const {
   } catch (...) {
     return_if (m_find_err_cb, m_find_err_cb(name));
     if (!name.empty())
-      hpw_log("resource \"" + name + "\" not finded\n", Log_stream::debug);
+      log_error << "resource \"" + name + "\" not finded";
   }
   return {};
 }
@@ -65,26 +65,24 @@ Store<T>::Velue Store<T>::operator[](cr<Str> name) const {
 
 template <class T>
 Store<T>::Velue& Store<T>::push(cr<Str> name, cr<Velue> res) {
-  hpw_log("Store.push: " + name + "\n", Log_stream::debug);
+  log_debug << "Store.push: " + name;
   res->set_path(name);
   if (m_table.count(name) != 0)
-    hpw_log (
+    log_warning << 
       "Store.push: reinit resource "
-      "(это может стать причиной ошибки access free-object error)\n",
-      Log_stream::debug );
+      "(это может стать причиной ошибки access free-object error)";
   m_table[name] = res;
   return m_table.at(name);
 }
 
 template <class T>
 Store<T>::Velue& Store<T>::move(cr<Str> name, Velue&& res) {
-  hpw_log("Store.move: " + name + "\n", Log_stream::debug);
+  log_debug << "Store.move: " + name;
   res->set_path(name);
   if (m_table.count(name) != 0)
-    hpw_log (
+    log_warning << 
       "Store.move: reinit resource "
-      "(это может стать причиной ошибки access free-object error)\n",
-      Log_stream::debug);
+      "(это может стать причиной ошибки access free-object error)";
   m_table[name] = std::move(res);
   return m_table.at(name);
 }

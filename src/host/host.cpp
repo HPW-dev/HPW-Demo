@@ -71,7 +71,7 @@ struct Host::Impl final {
         cauto ver = get_game_version();
         cauto creation_date = get_game_creation_date();
         cauto creation_time = get_game_creation_time();
-        hpw_log(std::format("game version: {} ({} {})\n", ver, creation_date, creation_time));
+        log_info << std::format("game version: {} ({} {})", ver, creation_date, creation_time);
         std::exit(EXIT_SUCCESS);
       }},
     } );
@@ -105,9 +105,9 @@ Host::Host(int argc, char** argv)
   else
     seed = time({});
   set_rnd_seed(seed);
-  hpw_log(std::format("Сид рандома: {}\n", seed), Log_stream::debug);
+  log_debug << std::format("Сид рандома: {}\n", seed);
 
-  hpw_log('\n' + get_random_logo() + '\n');
+  log_info << '\n' << get_random_logo();
   callbacks_init();
 
   // узнать в какойо папке игра запущена
@@ -116,7 +116,7 @@ Host::Host(int argc, char** argv)
   #ifndef DISABLE_CONFIG
     load_config();
   #endif
-  hpw_log("Директория запуска игры: \"" + hpw::cur_dir + "\"\n", Log_stream::debug);
+  log_debug << "Директория запуска игры: \"" + hpw::cur_dir + "\"";
 } // c-tor
 
 Host::~Host() {
@@ -124,11 +124,11 @@ Host::~Host() {
     save_config();
   #endif
   free_app_mutex();
-  hpw_log("Корректное завершение H.P.W\n");
+  log_info << "Корректное завершение H.P.W";
 }
 
 void Host::exit() {
-  hpw_log("вызов программного выхода из игры...\n");
+  log_info << "вызов программного выхода из игры...";
   m_is_ran = false;
 }
  
@@ -138,7 +138,7 @@ void Host::callbacks_init() {
     if (graphic::canvas)
       save_screenshot(*graphic::canvas);
     else
-      hpw_log("не удалось сохранить скриншот, так как graphic::canvas ещё не инициализирован\n");
+      log_error << "не удалось сохранить скриншот, так как graphic::canvas ещё не инициализирован";
   };
 }
 

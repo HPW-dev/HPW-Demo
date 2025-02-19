@@ -8,7 +8,7 @@
 #include "graphic/font/microfont-mono.hpp"
 
 void load_fonts() {
-  hpw_log("загрузка шрифтов...\n");
+  log_info << "загрузка шрифтов...";
   auto mem = load_res("resource/font/unifont-13.0.06.ttf");
   init_unique<Unifont>(graphic::font, mem, 16, true);
   init_unique<Unifont>(graphic::font_shop, mem, 32, true);

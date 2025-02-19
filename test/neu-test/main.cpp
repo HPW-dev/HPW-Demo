@@ -10,7 +10,7 @@
 #include "util/neu/neu-util.hpp"
 
 void softmax_test() {
-  hpw_info("-- NEU: SOFTMAX TEST --\n");
+  log_info << "-- NEU: SOFTMAX TEST --";
 
   auto ret = neu::softmax( neu::Weights{-1, 2, 4, -2} );
   std::stringstream txt;
@@ -20,11 +20,11 @@ void softmax_test() {
    txt << n2s(x, 2) << ", ";
 
   txt << "]\n";
-  hpw_info(txt.str());
+  log_info << txt.str();
 }
 
 void randomization_test() {
-  hpw_info("-- NEU: RANDOMIZATION TEST --\n");
+  log_info << "-- NEU: RANDOMIZATION TEST --";
 
   neu::Simple_config config;
   config.inputs.neurons = {
@@ -47,7 +47,7 @@ void randomization_test() {
    txt << n2s(w, 2) << ", ";
 
   txt << "]\n";
-  hpw_info(txt.str());
+  log_info << txt.str();
 }
 
 Unique<neu::Simple> make_xor_net(neu::Weight& a, neu::Weight& b, neu::Weight& dst) {
@@ -70,7 +70,7 @@ Unique<neu::Simple> make_xor_net(neu::Weight& a, neu::Weight& b, neu::Weight& ds
 }
 
 void xor_test() {
-  hpw_info("-- NEU: XOR TEST --\n");
+  log_info << "-- NEU: XOR TEST --";
 
   struct Item { neu::Weight a {}, b {}, res {}; };
   Vector<Item> table {
@@ -90,18 +90,18 @@ void xor_test() {
     a = item.a;
     b = item.b;
     net->update();
-    hpw_info("a = " + n2s(a, 0) + ", b = " + n2s(b, 0) + ", xor result = " + n2s(result, 5) + "\n");
+    log_info << "a = " + n2s(a, 0) + ", b = " + n2s(b, 0) + ", xor result = " + n2s(result, 5);
   }
 }
 
 void save_test() {
-  hpw_info("-- NEU: SAVE TEST --\n");
+  log_info << "-- NEU: SAVE TEST --";
 
   // TODO
 }
 
 void load_test() {
-  hpw_info("-- NEU: LOAD TEST --\n");
+  log_info << "-- NEU: LOAD TEST --";
 
   // TODO
 }

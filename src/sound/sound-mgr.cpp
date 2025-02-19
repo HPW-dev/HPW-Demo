@@ -102,7 +102,7 @@ struct Sound_mgr_oal::Impl {
     return_if (amplify <= 0, BAD_AUDIO);
 
     if (m_audio_infos.size() >= m_config.sounds) {
-      hpw_log("no more OAL buffer/source\n", Log_stream::debug);
+      log_debug << "no more OAL buffer/source";
       return BAD_AUDIO;
     }
 
@@ -160,7 +160,7 @@ struct Sound_mgr_oal::Impl {
   inline void make_update_thread() {
     m_update_thread_live = true;
     m_update_thread = std::thread( [this] {
-      hpw_log("Sound_mgr_oal: start update thread\n", Log_stream::debug);
+      log_debug << "Sound_mgr_oal: start update thread";
 
       while (true) {
         return_if (!m_update_thread_live);
@@ -174,7 +174,7 @@ struct Sound_mgr_oal::Impl {
         std::this_thread::sleep_for(50ms);
       }
       
-      hpw_log("Sound_mgr_oal: end of update thread\n", Log_stream::debug);
+      log_debug << "Sound_mgr_oal: end of update thread";
     } );
   }
 
@@ -205,7 +205,7 @@ struct Sound_mgr_oal::Impl {
 
   inline void stop(const Audio_id sound_id) {
     if ( !is_playing(sound_id)) {
-      hpw_log("попытка остановить звук, который уже не играет (ID: " + n2s(sound_id) + ")\n", Log_stream::debug);
+      log_warning << "попытка остановить звук, который уже не играет (ID: " + n2s(sound_id) + ")";
       return;
     }
 
@@ -248,18 +248,19 @@ struct Sound_mgr_oal::Impl {
 
   inline void set_amplify(const Audio_id sound_id, const real amplify) {
     if ( !is_playing(sound_id)) {
-      hpw_log("попытка остановить звук, который уже не играет (ID: "
-        + n2s(sound_id) + ")\n", Log_stream::debug);
+      log_warning << "попытка остановить звук, который уже не играет (ID: "
+        + n2s(sound_id) + ")";
       return;
     }
+
     std::lock_guard lock(m_mutex);
     error("need impl");
   }
 
   inline void set_position(const Audio_id sound_id, const Vec3 new_pos) {
     if ( !is_playing(sound_id)) {
-      hpw_log("попытка изменить позицию звуку, который уже не играет (ID: "
-        + n2s(sound_id) + ")\n", Log_stream::debug);
+      log_warning << "попытка изменить позицию звуку, который уже не играет (ID: "
+        + n2s(sound_id) + ")";
       return;
     }
     std::lock_guard lock(m_mutex);
@@ -272,8 +273,8 @@ struct Sound_mgr_oal::Impl {
 
   inline void set_velocity(const Audio_id sound_id, const Vec3 new_vel) {
     if ( !is_playing(sound_id)) {
-      hpw_log("попытка изменить скорость движения звуку, который уже не играет (ID: "
-        + n2s(sound_id) + ")\n", Log_stream::debug);
+      log_warning << "попытка изменить скорость движения звуку, который уже не играет (ID: "
+        + n2s(sound_id) + ")";
       return;
     }
     std::lock_guard lock(m_mutex);
@@ -298,8 +299,8 @@ struct Sound_mgr_oal::Impl {
 
   void set_pitch(const Audio_id sound_id, const real pitch) {
     if ( !is_playing(sound_id)) {
-      hpw_log("попытка изменить тон звуку, который уже не играет (ID: "
-        + n2s(sound_id) + ")\n", Log_stream::debug);
+      log_warning << "попытка изменить тон звуку, который уже не играет (ID: "
+        + n2s(sound_id) + ")";
     }
     std::lock_guard lock(m_mutex);
     auto finded_audio_info = m_audio_infos.find(sound_id);
@@ -339,7 +340,7 @@ struct Sound_mgr_oal::Impl {
   }
 
   inline void init_openal() {
-    hpw_log("init OpenAL\n", Log_stream::debug);
+    log_debug << "init OpenAL";
     // открыть аудио устройство по умолчанию (TODO сделать выбор)
     auto oal_device = alcOpenDevice({});
     iferror(!oal_device, "alcOpenDevice error " + decode_oal_error(alGetError()));
@@ -347,12 +348,12 @@ struct Sound_mgr_oal::Impl {
     alcMakeContextCurrent(oal_context);
     // Check for EAX 2.0 support
     m_eax_2_0_compat = alIsExtensionPresent("EAX2.0"); 
-    hpw_log(Str("EAX 2.0 support: ") + s2yn(m_eax_2_0_compat) + '\n', Log_stream::debug);
+    log_debug << Str("EAX 2.0 support: ") + s2yn(m_eax_2_0_compat);
     alGetError(); // clear error code 
   } // init_openal
 
   inline void close_oal() {
-    hpw_log("disable OpenAL\n", Log_stream::debug);
+    log_debug << "disable OpenAL\n";
     for (crauto audio_info: m_audio_infos) {
       disable(audio_info.first);
       alDeleteSources(1, &audio_info.second.oal_source_id);
@@ -397,8 +398,10 @@ struct Sound_mgr_oal::Impl {
     Bytes ret(samples * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
     auto src_p = rcast<cp<src_t>>(src.data());
+
     cfor (i, samples)
       dst_p[i] = src_p[i] * 0x7FFF;
+
     return ret;
   }
 
@@ -412,8 +415,10 @@ struct Sound_mgr_oal::Impl {
     Bytes ret(samples * 2 * sizeof(dst_t));
     auto dst_p = rcast<dst_t*>(ret.data());
     auto src_p = rcast<cp<src_t>>(src.data());
+
     cfor (i, samples * 2)
       dst_p[i] = src_p[i] * 0x7FFF;
+
     return ret;
   }
 
@@ -429,10 +434,12 @@ struct Sound_mgr_oal::Impl {
       {.channel = 2, .sound_format = Audio::Format::raw_pcm_s16, .oal_format = AL_FORMAT_STEREO16, .converter = &conv_stereo_s16_to_s16, .bytes_per_sample = 2},
       {.channel = 2, .sound_format = Audio::Format::raw_pcm_u8,  .oal_format = AL_FORMAT_STEREO8,  .converter = &conv_stereo_u8_to_u8,   .bytes_per_sample = 1},
     };
+
     for (crauto format_info: format_table) {
       if (sound.channels == format_info.channel && sound.format == format_info.sound_format)
         return format_info;
     }
+
     error("not finded OAL format for sound \"" << sound.get_path() << "\"");
     return *rcast<Format_game_to_oal*>(0);
   }
@@ -453,6 +460,7 @@ struct Sound_mgr_oal::Impl {
     // обновить буферы
     for (rauto audio_info: m_audio_infos)
       audio_info.second.update(this);
+
     // удалить из списка все треки, которые уже не играют
     std::erase_if (
       m_audio_infos,
@@ -539,7 +547,7 @@ Strs parse_raw_list(Cstr raw_list) {
     }
     return ret;
   } catch (...) {
-    hpw_log("audio devices not finded");
+    log_info << ("audio devices not finded");
   }
   return {};
 } // get_audio_devices

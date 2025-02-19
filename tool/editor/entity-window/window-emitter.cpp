@@ -33,7 +33,7 @@ struct Window_emitter::Impl {
   , m_uid {get_uid()}
   {
     m_title = "Эмиттер " + n2s(m_uid);
-    hpw_debug("добавлено окно эмиттера (№" + n2s(m_uid) + ")\n");
+    log_debug("добавлено окно эмиттера (№" + n2s(m_uid) + ")\n");
     m_spawn_phys.set_pos( get_screen_center() + Vec(0, 40) );
   }
 

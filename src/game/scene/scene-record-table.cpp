@@ -18,7 +18,7 @@ void Scene_record_table::init_menu() {
     new_shared<Menu_text_item>(
       //get_locale_str("input.exit_and_save"), TODO locale
       U"save replay",
-      [] { hpw_log("need impl. for save replay\n"); } // TODO call save replay
+      [] { log_error << "need impl. for save replay"; } // TODO call save replay
     ),
     new_shared<Menu_text_item>(
       get_locale_str("input.exit_and_save"),

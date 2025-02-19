@@ -35,7 +35,7 @@ void load_pge_params_only();
 
 void load_pge(Str libname) {
   if (libname.empty()) {
-    hpw_log("loading empty plugin (ignore)\n", Log_stream::debug);
+    log_debug << "loading empty plugin (ignore)";
     disable_pge();
     return;
   }
@@ -44,7 +44,7 @@ void load_pge(Str libname) {
     disable_pge();
     conv_sep(libname);
     libname = std::filesystem::weakly_canonical(libname).string();
-    hpw_log("загрузка плагина: " + libname + '\n');
+    log_info << "загрузка плагина: " + libname;
 
     #ifdef WINDOWS
       init_shared<DyLib>(g_lib_loader, std::filesystem::path(libname).wstring().c_str());
@@ -77,13 +77,13 @@ void load_pge(Str libname) {
     g_pge_name = get_filename(g_pge_path);
     // попытаться найти настройки плагина в конфиге
     load_pge_params_only();
-    hpw_log("плагин " + g_pge_name + " успешно загружен.\n");
+    log_info << "плагин " + g_pge_name + " успешно загружен.";
     g_pge_loaded = true;
   } catch (cr<hpw::Error> err) {
-    hpw_log("ошибка загрузки плагина: " + err.get_msg() + '\n', Log_stream::warning);
+    log_error << "ошибка загрузки плагина: " + err.get_msg();
     disable_pge();
   } catch (...) {
-    hpw_log("неизвестная ошибка при загрузке плагина\n");
+    log_error << "неизвестная ошибка при загрузке плагина";
     disable_pge();
   }
 } // load_pge
@@ -94,7 +94,7 @@ void apply_pge(const uint32_t state) {
 }
 
 void disable_pge() {
-  hpw_log("отключение плагина " + get_cur_pge_name() + '\n', Log_stream::debug);
+  log_debug << "отключение плагина " + get_cur_pge_name();
   g_pge_params.clear();
   g_pge_name.clear();
   g_pge_path.clear();

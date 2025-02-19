@@ -111,3 +111,52 @@ Logger::Logger_proxy::Logger_proxy(Logger::Logger_proxy&& other)
   : _master {other._master}, _ss {std::move(other._ss)} {}
 
 } // npw ns
+
+hpw::Logger& config_log_to_info() {
+  cauto tmp = hpw::Logger::config.use_endl;
+  hpw::Logger::config.use_endl = false;
+  hpw::Logger::set_color(hpw::Logger_stream::info);
+  hpw::logger.set_stream(hpw::Logger_stream::info);
+  hpw::logger << "Info    | ";
+  hpw::logger << hpw::Logger::get_source_location();
+  hpw::Logger::config.use_endl = tmp;
+  return hpw::logger;
+}
+  
+hpw::Logger& config_log_to_error() {
+  cauto tmp = hpw::Logger::config.use_endl;
+  hpw::Logger::config.use_endl = false;
+  hpw::Logger::set_color(hpw::Logger_stream::error);
+  hpw::logger.set_stream(hpw::Logger_stream::error);
+  hpw::logger << "Error   | ";
+  hpw::logger << hpw::Logger::get_source_location();
+  hpw::Logger::config.use_endl = tmp;
+  return hpw::logger;
+}
+
+hpw::Logger& config_log_to_debug() {
+  cauto tmp = hpw::Logger::config.use_endl;
+  hpw::Logger::config.use_endl = false;
+  hpw::Logger::set_color(hpw::Logger_stream::debug);
+  hpw::logger.set_stream(hpw::Logger_stream::debug);
+  hpw::logger << "Debug   | ";
+  hpw::logger << hpw::Logger::get_source_location();
+  hpw::Logger::config.use_endl = tmp;
+  return hpw::logger;
+}
+  
+hpw::Logger& config_log_to_warning() {
+  cauto tmp = hpw::Logger::config.use_endl;
+  hpw::Logger::config.use_endl = false;
+  hpw::Logger::set_color(hpw::Logger_stream::warning);
+  hpw::logger.set_stream(hpw::Logger_stream::warning);
+  hpw::logger << "Warning | ";
+  hpw::logger << hpw::Logger::get_source_location();
+  hpw::Logger::config.use_endl = tmp;
+  return hpw::logger;
+}
+  
+hpw::Logger& config_log_to_none() {
+  hpw::logger.set_stream(hpw::Logger_stream::null);
+  return hpw::logger;
+}

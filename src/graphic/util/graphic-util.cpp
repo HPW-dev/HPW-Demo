@@ -88,7 +88,7 @@ Vec center_point(cr<Image> src)
 
 Vec center_point(cr<Sprite> src) {
   if (!src) {
-    hpw_log("WARNING: center_point src is empty\n");
+    log_warning << "WARNING: center_point src is empty";
     return {};
   }
   return Vec{src.X() / 2.0, src.Y() / 2.0};
@@ -186,7 +186,7 @@ Sprite optimize_size(cr<Sprite> src, Vec& offset) {
 
 void insert_x2(Image& dst, cr<Image> src, Vec pos) {
   if (!dst || !src) {
-    hpw_log("WARNING: insert_x2 dst or src is empty\n");
+    log_warning << "WARNING: insert_x2 dst or src is empty";
     return;
   }
   
@@ -236,7 +236,7 @@ Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept {
 void insert(Image& dst, cr<Sprite> src, Vec pos, blend_pf bf,
 int optional) {
   if (!src || !dst) {
-    hpw_log("WARNING: src or dst is empty\n", Log_stream::warning);
+    log_warning << "WARNING: src or dst is empty";
     return;
   }
   crauto src_image = src.image();

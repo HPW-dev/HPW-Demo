@@ -193,7 +193,7 @@ struct Scene_pge::Impl {
           load_pge( get_current_effect() );
       }
     } catch (...) {
-      hpw_log("произошла ошибка при загрузке плагинов. Загрузка отменена\n");
+      log_error << "произошла ошибка при загрузке плагинов. Загрузка отменена";
     }
   } // init_plugins
 

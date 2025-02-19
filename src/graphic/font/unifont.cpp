@@ -22,7 +22,7 @@ Unifont::Unifont(cr<File> file, int height, bool mono) {
 }
 
 void Unifont::init(cr<File> file, int height, bool mono) {
-  hpw_log("loading font \"" + file.get_path() + "\"\n", Log_stream::debug);
+  log_debug << "loading font \"" + file.get_path() + "\"";
   mono_ = mono;
   font_file_mem_ = file.data;
   h_ = height;
@@ -115,7 +115,7 @@ Shared<Unifont::Glyph> Unifont::_load_glyph(char32_t ch) const {
   if ( !bitmap) {
     std::stringstream ss;
     ss << "stbtt_GetCodepointBitmap error (" << std::hex << int(ch) << ")\n";
-    hpw_log(ss.str(), Log_stream::debug);
+    log_debug << ss.str();
     return {};
   }
 

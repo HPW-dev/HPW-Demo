@@ -32,7 +32,7 @@ void write_test() {
   _array.at(1) = 3.14f;
   _array.at(2) = 97.997f;
 
-  hpw_log("test writing to \"" + fname + "\"\n");
+  log_info << ("test writing to \"" + fname + "\"\n");
   File_writer writer(fname);
   writer.write(_u8);
   writer.write(_i16);
@@ -45,12 +45,12 @@ void write_test() {
   writer.close();
 
   iferror( !file_exists(fname), "file \"" + fname + "\" not created");
-  hpw_log("writed: " + n2s(writer.writed()) + " bytes\n\n");
+  log_info << ("writed: " + n2s(writer.writed()) + " bytes\n\n");
 }
 
 void read_test() {
   const Str fname = "delme.dat";
-  hpw_log("test reading from \"" + fname + "\"\n");
+  log_info << ("test reading from \"" + fname + "\"\n");
 
   std::uint8_t _u8;
   std::int16_t _i16;
@@ -87,11 +87,11 @@ void read_test() {
   iferror(_array.at(2) != 97.997f,        "_array.at(2) != 97.997f");
 
   reader.size();
-  hpw_log("file size: " + n2s(reader.size()) + " bytes\n\n");
+  log_info << ("file size: " + n2s(reader.size()) + " bytes\n\n");
 }
 
 int main() {
-  hpw_log("file I/O test\n\n");
+  log_info << ("file I/O test\n\n");
   write_test();
   read_test();
 }

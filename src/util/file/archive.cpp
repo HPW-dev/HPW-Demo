@@ -9,7 +9,7 @@ extern "C" {
 
 Archive::Archive(Str fname) {
   conv_sep(fname);
-  hpw_log("Archive: load \"" + fname + "\"\n", Log_stream::debug);
+  log_debug << "Archive: load \"" + fname + "\"";
   strm_buf = mem_from_file(fname);
   zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
     strm_buf.size(), 0, 'r');
@@ -19,7 +19,7 @@ Archive::Archive(Str fname) {
 
 Archive::Archive(cr<File> file_mem) {
   cauto path = file_mem.get_path();
-  hpw_log("Archive: load from memory \"" + path + "\"\n", Log_stream::debug);
+  log_debug << "Archive: load from memory \"" + path + "\"";
   strm_buf = file_mem.data;
   zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
     strm_buf.size(), 0, 'r');
@@ -29,7 +29,7 @@ Archive::Archive(cr<File> file_mem) {
 
 Archive::Archive(File&& file_mem) {
   cauto path = file_mem.get_path();
-  hpw_log("Archive: load from memory \"" + path + "\"\n", Log_stream::debug);
+  log_debug << "Archive: load from memory \"" + path + "\"";
   strm_buf = std::move(file_mem.data);
   zip = zip_stream_open(cptr2ptr<Cstr>(strm_buf.data()),
     strm_buf.size(), 0, 'r');
@@ -43,13 +43,13 @@ File Archive::get_file(Str fname) const {
   replace_all(fname, "\\", "/");
   replace_all(fname, "//", "/");
   delete_all(fname, "./");
-  hpw_log("Archive.get_file:\"" + fname + "\"\n", Log_stream::debug);
+  log_debug << "Archive.get_file:\"" + fname + "\"";
   _zip_check(zip_entry_open(zip, fname.c_str()),
     "Archive.get_file: zip_entry_open \"" + fname + "\"");
 
   auto out_size = zip_entry_size(zip);
   if (out_size < 1) {
-    hpw_log("Archive.get_file: file \"" + fname + "\" is empty\n");
+    log_warning << "Archive.get_file: file \"" + fname + "\" is empty";
     return {};
   }
   

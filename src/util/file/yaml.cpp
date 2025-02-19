@@ -53,8 +53,8 @@ struct Yaml::Impl {
     try {
       return root[name].as<T>();
     } catch (...) {
-      hpw_log(std::format("\nWARNING: Yaml._get: not finded \"{}\" in file \"{}\". Loaded default: {}\n",
-        name, _master.get_path(), default_val), Log_stream::debug);
+      log_debug << std::format("WARNING: Yaml._get: not finded \"{}\" in file \"{}\". Loaded default: {}",
+        name, _master.get_path(), default_val);
       return default_val;
     }
   } // _get
@@ -64,9 +64,9 @@ struct Yaml::Impl {
     try {
       return sconv<utf8>(root[name].as<Str>());
     } catch (...) {
-      hpw_log("\nWARNING: Yaml._get: not finded \"" + name
+      log_warning << "WARNING: Yaml._get: not finded \"" + name
         + "\" in file \"" + _master.get_path()
-        + "\". Loaded default str\n", Log_stream::debug);
+        + "\". Loaded default str";
       return default_val;
     }
   } // _get utf8
@@ -82,9 +82,9 @@ struct Yaml::Impl {
         ret.emplace_back(str.as<T>());
       return ret;
     } catch (...) {
-      hpw_log("\nWARNING: Yaml._get_v: not finded \"" + name
+      log_warning << "\nWARNING: Yaml._get_v: not finded \"" + name
         + "\" in file \"" + _master.get_path()
-        + "\". Loaded default value\n", Log_stream::debug);
+        + "\". Loaded default value";
     }
     return default_val;
   } // _get_v
@@ -101,7 +101,7 @@ struct Yaml::Impl {
     conv_sep(fname);
     fname = std::filesystem::weakly_canonical(fname).string();
     _master.set_path(fname);
-    hpw_log("Yaml: loading \"" + fname + "\"\n", Log_stream::debug);
+    log_debug << "Yaml: loading \"" + fname + "\"";
 
     try {
       std::ifstream file(std::filesystem::path(fname), std::ios_base::binary);
@@ -109,7 +109,7 @@ struct Yaml::Impl {
       root = YAML::Load(file);
     } catch (...) { // если файла нет, то создать его с нуля
       if (make_if_not_exist) {
-        hpw_log("файл \"" + fname + "\" отсутствует. Пересоздание\n");
+        log_warning << "файл \"" + fname + "\" отсутствует. Пересоздание";
         std::ofstream file(std::filesystem::path(fname), std::ios_base::binary);
         file.close();
       }
@@ -122,7 +122,7 @@ struct Yaml::Impl {
 
   inline Impl(Yaml& master, cr<File> file): _master{master} {
     _master.set_path(file.get_path());
-    hpw_log("Yaml: loading from memory \"" + file.get_path() + "\"\n", Log_stream::debug);
+    log_debug << "Yaml: loading from memory \"" + file.get_path() + "\"";
     root = YAML::Load({file.data.begin(), file.data.end()});
   }
 
@@ -156,7 +156,7 @@ struct Yaml::Impl {
   inline void save(Str fname) const {
     assert( !fname.empty());
     conv_sep(fname);
-    hpw_log("save to file \"" + fname + "\"\n", Log_stream::debug);
+    log_debug << "save to file \"" + fname + "\"";
     std::ofstream file(std::filesystem::path(fname), std::ios_base::trunc); // удалить старый файл
     YAML::Emitter emt;
     emt << root;
@@ -194,8 +194,7 @@ struct Yaml::Impl {
       // путь в ресурсе нельзя трогать, он должен указывать на рутовую ноду
       return Impl(_master, node, _master.get_path());
     }  catch(...) {
-      hpw_log("WARNING: node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"\n",
-        Log_stream::debug);
+      log_warning << "WARNING: node \"" + name + "\" not finded in yaml \"" + _master.get_path() + "\"";
     }
 
     Yaml ret;

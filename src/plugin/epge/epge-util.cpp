@@ -123,8 +123,8 @@ void load_epges(cr<Yaml> config) {
       if (param_title == param_node.get_str("title")) {
         param->set_value(param_node.get_str("value"));
       } else {
-        hpw_log(Str("Несовпадение параметра \"") + param_title + "\" эффекта \"" +
-          epge_name + "\". Параметр проигнорирован\n", Log_stream::warning);
+        log_warning << "Несовпадение параметра \"" << param_title << "\" эффекта \"" <<
+          epge_name << "\". Параметр проигнорирован";
       }
     } // params
   } // epges
@@ -151,7 +151,7 @@ Unique<epge::Base> make_epge(cr<Str> name) {
     return ::_epge_makers.at(name) (); // создать EPGE
   } catch (...) {}
 
-  hpw_log("не удалось загрузить EPGE эффект \"" + name + "\"\n", Log_stream::warning);
+  log_error << "не удалось загрузить EPGE эффект \"" + name + "\"";
   return {};
 }
 

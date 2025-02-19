@@ -18,14 +18,14 @@ inline void init_store_sound() {
 }
 
 void load_sounds() {
-  hpw_log("загрузка звуков...\n");
+  log_info << "загрузка звуков...";
 
   try {
     // TODO применение настроек при создании
     init_unique<Sound_mgr_oal>(hpw::sound_mgr);
   } catch (cr<hpw::Error> err) {
-    hpw_log("Error while initialize OpenAL sound system. Sound disabled\n", Log_stream::warning);
-    hpw_log(Str("Details: ") + err.what() + '\n', Log_stream::warning);
+    log_error << "Error while initialize OpenAL sound system. Sound disabled";
+    log_error << Str("Details: ") + err.what();
     hpw::sound_mgr_init_error = true;
     init_unique<Sound_mgr_nosound>(hpw::sound_mgr);
   }

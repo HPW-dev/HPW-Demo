@@ -48,7 +48,7 @@ struct Netcode::Impl {
       return;
     }
 
-    hpw_log("created " + Str(_pck_mgr.is_server() ? "server" : "client") +
+    log_info << ("created " + Str(_pck_mgr.is_server() ? "server" : "client") +
       " at ip:port udp/tcp " + _pck_mgr.ip_v4() + ":" +
       n2s(_pck_mgr.udp_port()) + "/" +  n2s(_pck_mgr.tcp_port()) + "\n");
 
@@ -186,10 +186,10 @@ struct Netcode::Impl {
 
     if (_pck_mgr.is_server()) {
       if (raw.is_server) {
-        hpw_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
+        log_debug("игнор пакета с инфой о подключении от " + src.ip_v4 + "\n");
         ++_ignored_packets;
       } else {
-        hpw_debug("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
+        log_debug("пытается покдлючиться игрок " + utf32_to_8(raw.self_nickname)
           + "   ip: " + src.ip_v4 + "\n");
         // добавить игрока в список
         _players[src.ip_v4] = net::Player_info {

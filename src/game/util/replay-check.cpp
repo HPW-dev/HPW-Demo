@@ -22,7 +22,7 @@ void phys_log(const Phys& phys) {
   ss << "spd: " << phys.get_speed() << "\n";
   ss << "deg: " << phys.get_deg() << "\n";
   ss << "frc: " << phys.get_force() << "\n";
-  hpw_log(ss.str());
+  log_info << ss.str();
 }
 
 void rnd_log() {
@@ -33,15 +33,15 @@ void rnd_log() {
   ss << "  rndu: " << rndu() << "\n";
   ss << "  rndr: " << rndr() << "\n";
   ss << "  rndb: " << +rndb() << "\n";
-  hpw_log(ss.str());
+  log_info << ss.str();
 }
 
 void entities_log() {
-  hpw_log("entities:\n");
+  log_info << "entities:";
 
   cauto entities = hpw::entity_mgr->get_entities();
   if (entities.empty()) {
-    hpw_log("no entities data\n");
+    log_info << "no entities data\n";
     return;
   }
 
@@ -63,7 +63,7 @@ void entities_log() {
       ss << "hp: " << collidable->get_hp() << "\n";
     }
 
-    hpw_log(ss.str());
+    log_info << ss.str();
     phys_log(entity->phys);
   }
 } // entities_log
@@ -101,7 +101,7 @@ void player_log() {
   ss << "hp: " << player->get_hp() << "\n";
   ss << "fuel: " << player->m_fuel << "\n";
 
-  hpw_log(ss.str());
+  log_info << ss.str();
   phys_log(player->phys);
 } // player_log
 
@@ -118,7 +118,7 @@ void input_log() {
   ss << (is_pressed(hpw::keycode::focus) ? 1 : 0);
   ss << (is_pressed(hpw::keycode::enable) ? 1 : 0);
   ss << "\n";
-  hpw_log(ss.str());
+  log_info << ss.str();
 }
 
 void replay_stable_log() {
@@ -132,7 +132,7 @@ void replay_stable_log() {
   input_log();
 
   ss << "\n";
-  hpw_log(ss.str());
+  log_info << ss.str();
 } // replay_stable_log
 
 #endif // STABLE_REPLAY
