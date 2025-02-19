@@ -112,46 +112,46 @@ Logger::Logger_proxy::Logger_proxy(Logger::Logger_proxy&& other)
 
 } // npw ns
 
-hpw::Logger& config_log_to_info() {
+hpw::Logger& config_log_to_info(cr<std::source_location> sl) {
   cauto tmp = hpw::Logger::config.use_endl;
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::info);
   hpw::logger.set_stream(hpw::Logger_stream::info);
   hpw::logger << "Info    | ";
-  hpw::logger << hpw::Logger::get_source_location();
+  hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
 }
   
-hpw::Logger& config_log_to_error() {
+hpw::Logger& config_log_to_error(cr<std::source_location> sl) {
   cauto tmp = hpw::Logger::config.use_endl;
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::error);
   hpw::logger.set_stream(hpw::Logger_stream::error);
   hpw::logger << "Error   | ";
-  hpw::logger << hpw::Logger::get_source_location();
+  hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
 }
 
-hpw::Logger& config_log_to_debug() {
+hpw::Logger& config_log_to_debug(cr<std::source_location> sl) {
   cauto tmp = hpw::Logger::config.use_endl;
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::debug);
   hpw::logger.set_stream(hpw::Logger_stream::debug);
   hpw::logger << "Debug   | ";
-  hpw::logger << hpw::Logger::get_source_location();
+  hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
 }
   
-hpw::Logger& config_log_to_warning() {
+hpw::Logger& config_log_to_warning(cr<std::source_location> sl) {
   cauto tmp = hpw::Logger::config.use_endl;
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::warning);
   hpw::logger.set_stream(hpw::Logger_stream::warning);
   hpw::logger << "Warning | ";
-  hpw::logger << hpw::Logger::get_source_location();
+  hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
 }

@@ -77,11 +77,11 @@ void reopen_log_file(cr<Str> fname);
 
 } // npw ns
 
-hpw::Logger& config_log_to_info();
-hpw::Logger& config_log_to_warning();
-hpw::Logger& config_log_to_debug();
-hpw::Logger& config_log_to_error();
-hpw::Logger& config_log_to_none();
+hpw::Logger& config_log_to_info(cr<std::source_location> sl = std::source_location::current());
+hpw::Logger& config_log_to_warning(cr<std::source_location> sl = std::source_location::current());
+hpw::Logger& config_log_to_debug(cr<std::source_location> sl = std::source_location::current());
+hpw::Logger& config_log_to_error(cr<std::source_location> sl = std::source_location::current());
+hpw::Logger& config_log_to_none(cr<std::source_location> sl = std::source_location::current());
 
 #define log_info config_log_to_info()
 #define log_warning config_log_to_warning()
