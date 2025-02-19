@@ -1,6 +1,6 @@
-#include "util/str-util.hpp"
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
+#include "util/str-util.hpp"
 #include <windows.h>
 #include <filesystem>
 #include <source_location>
@@ -31,6 +31,7 @@ enum class Logger_stream {
 struct Logger_config {
   bool print_source {true};
   bool use_endl {true};
+  bool use_terminal {true};
   Logger_stream stream {};
   std::ofstream file {};
 };
@@ -102,11 +103,13 @@ void Logger::_print(std::stringstream& ss) const {
   
   std::lock_guard lock(Logger::mu);
 
-  if (Logger::config.stream == Logger_stream::error) {
-    std::cerr << ss.str();
-  } else {
-    std::cout << ss.str();
-    std::cout.flush();
+  if (Logger::config.use_terminal) {
+    if (Logger::config.stream == Logger_stream::error) {
+      std::cerr << ss.str();
+    } else {
+      std::cout << ss.str();
+      std::cout.flush();
+    }
   }
   
   if (Logger::config.file) {
@@ -153,42 +156,51 @@ void close_log_file() {
 } // npw ns
 
 #define log_info { \
+  cauto tmp = hpw::Logger::config.use_endl; \
   hpw::Logger::config.use_endl = false; \
   hpw::Logger::set_color(hpw::Logger_stream::info); \
   hpw::logger.set_stream(hpw::Logger_stream::info); \
-  hpw::logger << "[Info] "; \
+  hpw::logger << "Info    | "; \
   hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = true; \
+  hpw::Logger::config.use_endl = tmp; \
 } \
 hpw::logger
 
 #define log_error { \
+  cauto tmp = hpw::Logger::config.use_endl; \
   hpw::Logger::config.use_endl = false; \
   hpw::Logger::set_color(hpw::Logger_stream::error); \
   hpw::logger.set_stream(hpw::Logger_stream::error); \
-  hpw::logger << "[Error] "; \
+  hpw::logger << "Error   | "; \
   hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = true; \
+  hpw::Logger::config.use_endl = tmp; \
 } \
 hpw::logger
 
 #define log_debug { \
+  cauto tmp = hpw::Logger::config.use_endl; \
   hpw::Logger::config.use_endl = false; \
   hpw::Logger::set_color(hpw::Logger_stream::debug); \
   hpw::logger.set_stream(hpw::Logger_stream::debug); \
-  hpw::logger << "[Debug] "; \
+  hpw::logger << "Debug   | "; \
   hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = true; \
+  hpw::Logger::config.use_endl = tmp; \
 } \
 hpw::logger
 
 #define log_warning { \
+  cauto tmp = hpw::Logger::config.use_endl; \
   hpw::Logger::config.use_endl = false; \
   hpw::Logger::set_color(hpw::Logger_stream::warning); \
   hpw::logger.set_stream(hpw::Logger_stream::warning); \
-  hpw::logger << "[Warning] "; \
+  hpw::logger << "Warning | "; \
   hpw::logger << hpw::Logger::get_source_location(); \
-  hpw::Logger::config.use_endl = true; \
+  hpw::Logger::config.use_endl = tmp; \
+} \
+hpw::logger
+
+#define log_null { \
+  hpw::logger.set_stream(hpw::Logger_stream::null); \
 } \
 hpw::logger
 
@@ -197,7 +209,13 @@ int main() {
   log_warning << "warning text test";
   log_error << "error text test";
   log_debug << "debug text test";
+  log_null << "null text test";
   
   hpw::reopen_log_file("delme.txt");
+  hpw::logger.config.use_terminal = false;
   log_info << "output to log file test";
+  log_error << "output to log file test";
+  log_warning << "output to log file test";
+  log_debug << "output to log file test";
+  log_null << "output to log file test";
 }
