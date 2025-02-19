@@ -58,6 +58,7 @@ void Graphic_test::init() {
     U"Symbols: 🍓+-/\\=:;.,|*&^%$#@!?\n"
     U"Nums: 0123456789\n";
   load_fonts();
+  press(hpw::keycode::shoot); // чтобы выключить VSync
 } // init
 
 void Graphic_test::update(const Delta_time dt) {
@@ -70,10 +71,13 @@ void Graphic_test::update(const Delta_time dt) {
   static bool fps_lock = graphic::get_vsync();
   if (is_pressed_once(hpw::keycode::shoot)) {
     fps_lock = !fps_lock;
-    log_info << (Str("VSync:") + s2yn(fps_lock) + "\n", Log_stream::debug);
+    log_debug << "VSync:" << s2yn(fps_lock);
     graphic::set_disable_frame_limit(fps_lock);
     graphic::wait_frame_bak = graphic::wait_frame = fps_lock;
   }
+
+  if (is_pressed_once(hpw::keycode::fulscrn))
+    hpw::set_fullscreen(!graphic::fullscreen);
 
   if (is_pressed_once(hpw::keycode::left)) {
     prev_gr();
