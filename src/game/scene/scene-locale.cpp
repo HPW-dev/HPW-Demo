@@ -52,7 +52,7 @@ struct Scene_locale_select::Impl {
         info.author = utf8_to_32(info_node.get_str("author"));
         _locale_infos.emplace_back(std::move(info));
       } catch (...) {
-        hpw_log("проблемы при загрузке локализации в \"" + path + "\"\n", Log_stream::warning);
+        log_info << "проблемы при загрузке локализации в \"" + path + "\"";
       }
     }
   } // load_locale_info

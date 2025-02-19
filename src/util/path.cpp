@@ -65,7 +65,7 @@ static inline Str cp_acp_to_utf8(Cstr src) {
     }
   }
 
-  hpw_log("не удалось преобразовать строку \"" + Str(src) + "\"\n", Log_stream::warning);
+  log_error << "не удалось преобразовать строку \"" << src << "\"";
   return Str(src);
 }
 #endif // WINDOWS
@@ -99,7 +99,7 @@ Str launch_dir_from_argv0(char** argv) {
   try {
     return fs::exists(path);
   } catch (...) {
-    hpw_log("не удалось определить, существует ли файл \"" + fname + "\"\n", Log_stream::warning);
+    log_warning << "не удалось определить, существует ли файл \"" + fname + "\"";
   }
 
   return false;

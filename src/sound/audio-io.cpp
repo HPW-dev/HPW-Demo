@@ -68,12 +68,12 @@ Audio load_flac(cr<Bytes> mem, cr<Str> path) {
   ret.compression = Audio::Compression::flac;
   drflac_free(flac_info, {});
 
-  hpw_log("channels: "    + n2s(ret.channels) + '\n', Log_stream::debug);
-  hpw_log("compression: " + n2s(scast<int>(ret.compression)) + '\n', Log_stream::debug);
-  hpw_log("format: "      + n2s(scast<int>(ret.format)) + '\n', Log_stream::debug);
-  hpw_log("frequency: "   + n2s(ret.frequency) + '\n', Log_stream::debug);
-  hpw_log("data.sz: "     + n2s(ret.data.size()) + '\n', Log_stream::debug);
-  hpw_log("samples: "     + n2s(ret.samples) + '\n', Log_stream::debug);
+  log_debug << "channels: "    << ret.channels;
+  log_debug << "compression: " << scast<int>(ret.compression);
+  log_debug << "format: "      << scast<int>(ret.format);
+  log_debug << "frequency: "   << ret.frequency;
+  log_debug << "data.sz: "     << ret.data.size();
+  log_debug << "samples: "     << ret.samples;
   return ret;
 }
 
@@ -101,12 +101,12 @@ Audio load_vorbis(cr<Bytes> mem, cr<Str> path) {
   ret.frequency = vorbis_info.sample_rate;
   ret.data = std::move(mem);
   ret.samples = stream_length_in_samples;
-  hpw_log("channels: "    + n2s(ret.channels) + '\n', Log_stream::debug);
-  hpw_log("compression: " + n2s(scast<int>(ret.compression)) + '\n', Log_stream::debug);
-  hpw_log("format: "      + n2s(scast<int>(ret.format)) + '\n', Log_stream::debug);
-  hpw_log("frequency: "   + n2s(ret.frequency) + '\n', Log_stream::debug);
-  hpw_log("data.sz: "     + n2s(ret.data.size()) + '\n', Log_stream::debug);
-  hpw_log("samples: "     + n2s(ret.samples) + '\n', Log_stream::debug);
+  log_debug << "channels: "    << ret.channels;
+  log_debug << "compression: " << scast<int>(ret.compression);
+  log_debug << "format: "      << scast<int>(ret.format);
+  log_debug << "frequency: "   << ret.frequency;
+  log_debug << "data.sz: "     << ret.data.size();
+  log_debug << "samples: "     << ret.samples;
   return ret;
 } // load_vorbis
 

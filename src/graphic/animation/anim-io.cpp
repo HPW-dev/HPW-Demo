@@ -80,7 +80,7 @@ inline void load_hitbox(Anim& anim, cr<Yaml> hitbox_node) {
 } // save_hitbox
 
 void read_anims(cr<Yaml> src) {
-  hpw_log("read all anims\n", Log_stream::debug);
+  log_debug << "read all anims...";
 
   // прочитать все анимации
   auto animations_node = src["animations"];
@@ -149,7 +149,7 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
 
 void save_anims(Yaml& dst) {
   assert (hpw::anim_mgr);
-  hpw_log("save all anims\n");
+  log_info << "save all anims...";
   dst.clear();
 
   // нода с анимациями

@@ -11,13 +11,13 @@
 struct Replay::Impl {};
 
  // TODO
-Replay::Replay(cr<Str> path, bool write_mode) { hpw_log("need impl\n", Log_stream::warning); }
-Replay::~Replay() { hpw_log("need impl\n", Log_stream::warning); }
-void Replay::close() { hpw_log("need impl\n", Log_stream::warning); }
-void Replay::push(cr<Key_packet> key_packet) { hpw_log("need impl\n", Log_stream::debug); }
-std::optional<Key_packet> Replay::pop() { hpw_log("need impl\n", Log_stream::debug); return {}; }
-Replay::Info Replay::get_info(cr<Str> path) { hpw_log("need impl\n", Log_stream::warning); return {}; }
-utf32 Replay::warnings() const { hpw_log("need impl\n", Log_stream::warning); return {}; }
+Replay::Replay(cr<Str> path, bool write_mode) { log_error << "need impl"; }
+Replay::~Replay() { log_error << "need impl"; }
+void Replay::close() { log_error << "need impl"; }
+void Replay::push(cr<Key_packet> key_packet) { log_error << "need impl"; }
+std::optional<Key_packet> Replay::pop() { log_error << "need impl"; return {}; }
+Replay::Info Replay::get_info(cr<Str> path) { log_error << "need impl"; return {}; }
+utf32 Replay::warnings() const {log_error << "need impl"; return {}; }
 
 Str get_random_replay_name() {
   std::stringstream name;
@@ -122,7 +122,7 @@ public:
   inline void update(const Delta_time dt) override {
     cauto msg = utf32_to_8(get_locale_str("replay.error.while_save_to"))
       + " \"" + (_path) + "\"";
-    hpw_log("Error: " + msg + '\n', Log_stream::warning);
+    log_info << ("Error: " + msg + '\n', Log_stream::warning);
     cauto title = get_locale_str("common.error");
     hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(utf8_to_32(msg), title));
     this->kill();

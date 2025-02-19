@@ -14,7 +14,7 @@ struct Dummy {
 };
 
 int main() {
-  hpw_log("mem pool tests start\n");
+  log_info << ("mem pool tests start\n");
 
   { // создание пулов
     Mem_pool pool_0;
@@ -114,5 +114,5 @@ int main() {
     assert(x->val_2 == 30);
   }
 
-  hpw_log("mem pool tests end\n");
+  log_info << ("mem pool tests end\n");
 }

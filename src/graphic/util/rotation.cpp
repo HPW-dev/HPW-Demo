@@ -62,7 +62,7 @@ Image rotate_270(cr<Image> src) {
 
 Image rotate_90(cr<Image> src, uint pass) {
   if (!src) {
-    hpw_log("WARNING: rotate_90 src is empty\n");
+    log_warning << "WARNING: rotate_90 src is empty";
     return {};
   }
 
@@ -83,7 +83,7 @@ Image rotate_90(cr<Image> src, uint pass) {
 
 Sprite rotate_90(cr<Sprite> src, uint pass) {
   if (!src) {
-    hpw_log("WARNING: rotate_90 src is empty\n");
+    log_warning << "WARNING: rotate_90 src is empty";
     return {};
   }
   Sprite dst;
@@ -129,7 +129,7 @@ const Vec offset, real degree) {
 void rotate(cr<Sprite> src, Sprite &dst, const Vec center,
 const Vec offset, real degree) {
   if (!src || !dst) {
-    hpw_log("WARNING: rotate_90 src or dst is empty\n");
+    log_warning << "WARNING: rotate_90 src or dst is empty";
     return;
   }
   rotate(src.image(), dst.image(), center, offset, degree);

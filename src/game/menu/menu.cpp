@@ -81,14 +81,14 @@ struct Menu::Impl {
   , _items(items)
   {
     if (_items.empty())
-      hpw_log("_items empty\n", Log_stream::warning);
+      log_warning << "_items empty";
   }
 
   // перейти к следующему элементу
   inline void next_item() {
     return_if(_items.empty());
     if (_items.empty())
-      hpw_log("Menu.next_item: _items is empty", Log_stream::warning);
+      log_warning << "Menu.next_item: _items is empty";
     
     ++_cur_item;
     if (_cur_item >= _items.size())
@@ -99,7 +99,7 @@ struct Menu::Impl {
   inline void prev_item() {
     return_if(_items.empty());
   if (_items.empty())
-    hpw_log("Menu.prev_item: _items is empty\n", Log_stream::debug);
+    log_debug << "Menu.prev_item: _items is empty";
 
   if (_cur_item == 0) {
     _cur_item = _items.size() - 1;

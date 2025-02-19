@@ -157,7 +157,7 @@ Strs Cmd::command_matches(cr<Str> cmd_and_args) {
 
 void Cmd::print_to_console(cr<Str> text) const {
   return_if(!m_log_console);
-  hpw_log(text + '\n');
+  log_info << text;
 }
 
 void Cmd::print_to_screen(cr<Str> text) const {

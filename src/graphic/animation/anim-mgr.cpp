@@ -17,7 +17,7 @@ struct Anim_mgr::Impl {
   inline std::size_t anim_count() const { return table.size(); }
 
   inline void add_anim(cr<Str> str, cr<Shared<Anim>> new_anim) {
-    hpw_log("Anim_mgr.add_anim: \"" + str + "\"\n", Log_stream::debug);
+    log_debug << "Anim_mgr.add_anim: \"" + str + "\"";
     auto str_low = str_tolower(str);
     new_anim->set_name(str_low);
     table[str_low] = new_anim; 
@@ -28,20 +28,21 @@ struct Anim_mgr::Impl {
       return table.at(str_tolower(name));
     } catch (...) {
       if (hpw::lazy_load_anim) {
-        hpw_log("анимация \"" + name + "\" не загружена.\nзагрузка \"" +
-          name + "\"\n", Log_stream::debug);
-
+        log_debug << "анимация \"" + name + "\" не загружена.\nзагрузка \"" + name + "\"";
         add_anim(name, load_from_config(name));
+
         try {
           return table.at(str_tolower(name));
         } catch (...) {
-          error("не удалось загрузить \"" + name + "\"");
+          log_error << "не удалось загрузить \"" + name + "\"";
         }
       } else {
-        error("Anim_mgr.find_anim: animation \"" <<
-          name << "\" not found");
+        log_error << "Anim_mgr.find_anim: animation \"" << name << "\" not found";
       }
     }
+
+    static Shared<Anim> null_anim {}; // заглушка для анализатора
+    return null_anim;
   } // find_anim
 
   inline cp<Direct> get_direct(cr<Str> str,

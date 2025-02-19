@@ -157,8 +157,8 @@ struct Shop_task::Impl {
     for (crauto item: _shopping_items) {
       if (item.solded) {
         // TODO назначить игроку способность
-        hpw_log("куплена способность \"" + utf32_to_8(item.name) + "\" за "
-          + n2s(item.price) + " (нужна реализация покупки)\n", Log_stream::debug);
+        log_debug << "куплена способность \"" + utf32_to_8(item.name) + "\" за "
+          + n2s(item.price) + " (нужна реализация покупки)";
         hpw::add_score_normalized(-item.price);
         _master.kill();
       }

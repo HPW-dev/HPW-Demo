@@ -14,9 +14,10 @@ cr<utf32> get_locale_str(cr<Str> key) {
   if (auto ret = hpw::store_locale->find(key); ret)
     return ret->str;
   else
-    hpw_log("not found string: \"" + key + "\"\n", Log_stream::debug);
+    log_error << "not found string: \"" + key + "\"";
+
   static utf32 last_error;
-  hpw_log("not finded string \"" + key + "\"\n", Log_stream::debug);
+  log_error << "not finded string \"" + key + "\"";
   last_error = U"_ERR_(" + sconv<utf32>(key) + U")";
   return last_error;
 }
@@ -27,12 +28,12 @@ std::optional<utf32> get_locale_str_with_check(cr<Str> key) {
   if (auto ret = hpw::store_locale->find(key); ret)
     return ret->str;
   
-  hpw_log("not found string: \"" + key + "\"\n", Log_stream::debug);
+  log_error << "not found string: \"" + key + "\"";
   return {};
 }
 
 void load_locale(cr<Str> user_path) {
-  hpw_log("загрузка локализации...\n");
+  log_info << "загрузка локализации...";
 
   File mem; 
   cauto path = (user_path.empty() && hpw::config)
@@ -42,8 +43,8 @@ void load_locale(cr<Str> user_path) {
   try {
     mem = load_res(path);
   } catch (...) {
-    hpw_log("ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
-      + hpw::fallback_locale_path + "\"\n", Log_stream::debug);
+    log_error << "ошибка при загрузке перевода \"" + path + "\". Попытка загрузить перевод \""
+      + hpw::fallback_locale_path + "\"";
     mem = load_res(hpw::fallback_locale_path);
   }
 

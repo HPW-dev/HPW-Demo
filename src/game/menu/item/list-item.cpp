@@ -45,8 +45,7 @@ void Menu_list_item::update(const Delta_time dt) {
     if (overrided_idx < m_items.size()) {
       m_selected = overrided_idx;
     } else {
-      hpw_log("WARNING: неверный id переопределённого элемента (" + n2s(overrided_idx) + ")\n"
-        , Log_stream::warning);
+      log_warning << "WARNING: неверный id переопределённого элемента (" + n2s(overrided_idx) + ")";
       m_selected = overrided_idx % m_items.size();
     }
 

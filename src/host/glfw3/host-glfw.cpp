@@ -44,14 +44,14 @@ Host_glfw::~Host_glfw() {
 }
 
 void Host_glfw::init_keymapper() {
-  hpw_log("инициализация кей-маппера...\n");
+  log_info << "инициализация кей-маппера...";
   init_shared(m_key_mapper);
   m_key_mapper->reset();
   hpw::keys_info = m_key_mapper->get_info();
 }
 
 void Host_glfw::init_glfw() {
-  hpw_log("инициализация GLFW...\n");
+  log_info << "инициализация GLFW...";
   glfwSetErrorCallback(error_callback);
   iferror(!glfwInit(), "!glfwInit");
 }
@@ -97,7 +97,7 @@ void Host_glfw::init_commands() {
   };
 
   hpw::set_vsync = [](const bool enable) {
-    hpw_log("vsync: " + n2s(enable) + '\n', Log_stream::debug);
+    log_debug << "vsync: " << yn2s(enable);
     glfwSwapInterval(enable ? 1 : 0);
   };
 
@@ -152,8 +152,7 @@ void Host_glfw::run() {
 void Host_glfw::reshape(int w, int h) {
   return_if (w == 0 || h == 0);
   if (w < 0 || h < 0) {
-    hpw_log("Warning: при растягивании окна были неверно заданы параметры: w = "
-      + n2s(w) + ", h = " + n2s(h) + "\n", Log_stream::warning);
+    log_error << "Warning: при растягивании окна были неверно заданы параметры: w = " << w << ", h = " << h;
     return;
   }
 
@@ -176,7 +175,7 @@ void Host_glfw::game_set_dt(const Delta_time gameloop_time) {
 }
 
 void Host_glfw::_set_double_buffering(bool enable) {
-  hpw_log("Host_glfw._set_double_buffering: " + n2s(enable) + "\n", Log_stream::debug);
+  log_debug << "Host_glfw._set_double_buffering: " << yn2s(enable);
   graphic::double_buffering = enable;
   init_window();
 }
@@ -188,7 +187,7 @@ void Host_glfw::set_gamma(const double gamma) {
 }
 
 void Host_glfw::init_window() {
-  hpw_log("создание окна игры...\n");
+  log_info << "создание окна игры...";
   if (m_window) // на случай реинита
     glfwDestroyWindow(m_window);
 
@@ -237,8 +236,8 @@ void Host_glfw::init_window() {
   cauto ogl_ver_cstr = glGetString(GL_VERSION);
   iferror( !ogl_ver_cstr, "не удалось получить версию OpenGL\n");
   const Str ogl_ver( cptr2ptr<Cstr>(ogl_ver_cstr) );
-  hpw_log("OpenGL version: " + ogl_ver + "\n", Log_stream::debug);
-  hpw_log("GLEW init\n", Log_stream::debug);
+  log_debug << "OpenGL version: " << ogl_ver;
+  log_debug << "GLEW init";
   iferror(glewInit() != GLEW_OK, "GLEW init error");
   ogl_post_init();
   glfwSetWindowSizeCallback(m_window, reshape_callback);
@@ -483,16 +482,16 @@ void Host_glfw::init_icon() {
     iferror(channels != 4, "цветовых каналов в изображении " << n2s(channels) << ", а нужно 4");
     glfwSetWindowIcon(m_window, 1, &icon); 
   } catch (cr<hpw::Error> err) {
-    hpw_log(Str("не удалось установить иконку для окна.\nОшибка: ") + err.what() + "\n", Log_stream::warning);
+    log_error << "не удалось установить иконку для окна: " << err.what();
   } catch (...) {
-    hpw_log("не удалось установить иконку для окна. Неизвестная ошибка\n", Log_stream::warning);
+    log_error << "не удалось установить иконку для окна. Неизвестная ошибка";
   }
 
   stbi_image_free(icon.pixels);
 } // init_icon
 
 void Host_glfw::_set_fullscreen(bool enable) {
-  hpw_log("fullscreen mode: " + n2s(enable) + '\n', Log_stream::debug);
+  log_debug << "fullscreen mode: " << yn2s(enable);
   graphic::fullscreen = enable;
   
   if (enable) {

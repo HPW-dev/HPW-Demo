@@ -92,9 +92,9 @@ struct Scene_replay_select::Impl {
         cauto info = Replay::get_info(replay_file);
         m_replay_info_table.push_back(info);
       } catch (cr<hpw::Error> error) {
-        hpw_log(Str("не удалось загрузить один из реплеев: ") + error.what() + "\n");
+        log_error << "не удалось загрузить один из реплеев: " << error.what();
       } catch (...) {
-        hpw_log("не удалось загрузить один из реплеев\n");
+        log_error << "не удалось загрузить один из реплеев";
       }
     }
   } // load_replays

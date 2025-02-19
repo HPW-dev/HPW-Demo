@@ -30,7 +30,7 @@ Graphic_test::Graphic_test(int argc, char *argv[])
 void Graphic_test::init() {
   Host_glfw::init();
   graphic_tests();
-  hpw_log("Gpragic test usage: shoot back key - VSync\n");
+  log_info << ("Gpragic test usage: shoot back key - VSync\n");
   init_shared(bg_tmr, 5.0);
   init_shared(board_2_tmr, 0.5);
   // добавление фонов
@@ -70,7 +70,7 @@ void Graphic_test::update(const Delta_time dt) {
   static bool fps_lock = graphic::get_vsync();
   if (is_pressed_once(hpw::keycode::shoot)) {
     fps_lock = !fps_lock;
-    hpw_log(Str("VSync:") + s2yn(fps_lock) + "\n", Log_stream::debug);
+    log_info << (Str("VSync:") + s2yn(fps_lock) + "\n", Log_stream::debug);
     graphic::set_disable_frame_limit(fps_lock);
     graphic::wait_frame_bak = graphic::wait_frame = fps_lock;
   }

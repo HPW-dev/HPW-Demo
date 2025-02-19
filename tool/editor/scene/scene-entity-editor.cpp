@@ -111,7 +111,7 @@ struct Scene_entity_editor::Impl {
   inline void save() { entity_editor_save(m_ctx); }
 
   inline void reload() {
-    hpw_log("reloading entity editor...\n");
+    log_info << ("reloading entity editor...\n");
     init();
   }
 
@@ -130,7 +130,7 @@ struct Scene_entity_editor::Impl {
     { m_emitters.emplace_back(std::move(other)); }
 
   inline void init() {
-    hpw_debug("entity editor init...\n");
+    log_debug("entity editor init...\n");
     // graphic:
     graphic::cpu_safe = false;
     graphic::set_vsync(false);
@@ -177,7 +177,7 @@ struct Scene_entity_editor::Impl {
     log_txt << "  entity loaders = " << hpw::entity_mgr->entity_loaders_sz() << '\n';
     log_txt << "  shmup mode = " << std::boolalpha << hpw::shmup_mode << '\n';
     log_txt << "  collider autoopt = " << std::boolalpha << hpw::collider_autoopt << '\n';
-    hpw_log(log_txt.str(), Log_stream::debug);
+    log_info << (log_txt.str(), Log_stream::debug);
 
     // load entity editor data
     entity_editor_load(m_ctx);
@@ -188,7 +188,7 @@ struct Scene_entity_editor::Impl {
     m_windows.clear();
     m_windows.push_back(new_unique<Wnd_ent_edit_menu>(m_master));
     m_windows.push_back(new_unique<Wnd_ent_edit_opts>(m_ctx));
-    hpw_debug("windows initialized\n");
+    log_debug("windows initialized\n");
   }
 }; // Impl
 

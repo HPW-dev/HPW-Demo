@@ -24,7 +24,7 @@ static inline Shared<Sprite> sprite_loader(cr<Str> name) {
     load(load_res(name), *spr);
     return spr;
   } catch (...) {
-    hpw_log("не удалось найти спрайт с имененм \"" + name + "\"\n", Log_stream::debug);
+    log_error << "не удалось найти спрайт с имененм \"" + name + "\"";
   }
   
   return {};
@@ -34,7 +34,7 @@ static inline decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
   auto name {_name};
   cauto spr = sprite_loader(name);
   if (!spr)
-    hpw_log("sprite \"" + name + "\" not finded\n", Log_stream::debug);
+    log_error << "sprite \"" + name + "\" not finded";
   // закинуть недостающий ресурс в банк
   if (spr)
     hpw::sprites.push(name, spr);
@@ -42,7 +42,7 @@ static inline decltype(hpw::sprites)::Velue find_err_cb(cr<Str> _name) {
 }
 
 void load_resources() {
-  hpw_log("загрузка ресурсов...\n");
+  log_info << "загрузка ресурсов...";
   hpw::sprites.clear();
   auto names = get_all_res_names();
 
@@ -191,12 +191,12 @@ File load_res(cr<Str> name) {
   // попытка загрузить ресурс с архива:
   #if !defined(EDITOR) && !defined(DISABLE_ARCHIVE)
   try {
-    iferror(!hpw::archive, "hpw::archive не инициализирован\n");
+    iferror(!hpw::archive, "hpw::archive не инициализирован");
     return hpw::archive->get_file(name);
   } catch(cr<hpw::Error> err) {
-    hpw_log(Str("Ошибка при загрузке ресурса \"") + name + "\" из архива\n" + err.what(), Log_stream::debug);
+    log_debug << "Ошибка при загрузке ресурса \"" + name + "\" из архива: " + err.what();
   } catch(...) {
-    hpw_log(Str("не удалось загрузить ресурс \"") + name + "\" из архива\n", Log_stream::debug);
+    log_error << "не удалось загрузить ресурс \"" + name + "\" из архива";
   }
   #endif
 
@@ -211,8 +211,8 @@ Strs get_all_res_names(const bool with_folders) {
   return_if (hpw::archive, hpw::archive->get_all_names(with_folders));
   #endif
 
-  hpw_log("не удалось получить все имена ресурсов из архива.\n"
-    "Попытка получить их из ОС...\n", Log_stream::debug);
+  log_warning << "не удалось получить все имена ресурсов из архива.\n"
+    "Попытка получить их из ОС...";
 
   auto ret = files_in_dir(hpw::cur_dir + hpw::os_resources_dir, true);
   for (rauto fname: ret)

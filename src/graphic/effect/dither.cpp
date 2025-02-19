@@ -85,7 +85,7 @@ cr<Table> get_table(Dither type) {
   try {
     return map.at(type);
   } catch (...) {
-    hpw_log("need impl for other tables\n");
+    log_error << "need impl for other tables";
     return null_table;
   }
 } // get_table

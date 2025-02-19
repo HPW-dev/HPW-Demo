@@ -84,7 +84,7 @@ void Frame_wnd::draw_direction_count_edit(Frame& frame) {
     1, 1, ImGuiInputTextFlags_EnterReturnsTrue)
   ) {
     max_directions = std::clamp(max_directions, 0, 128);
-    hpw_debug("set new direction count for \"" + frame.get_name() + "\" - "
+    log_debug("set new direction count for \"" + frame.get_name() + "\" - "
       + n2s(max_directions) + "\n");
     frame.source_ctx.max_directions = max_directions;
     frame.init_directions( std::move(frame.source_ctx) );
@@ -114,7 +114,7 @@ void Frame_wnd::draw_path_edit(Frame& frame) {
     hpw::scene_mgr.add(
       new_shared<Sprite_select>(
         [this, &frame](Shared<Sprite> sprite, cr<Str> path) {
-          hpw_debug("new sprite selected for frame \"" + frame.get_name() + "\"\n");
+          log_debug("new sprite selected for frame \"" + frame.get_name() + "\"\n");
           auto new_ctx = frame.source_ctx;
           new_ctx.direct_0.sprite = sprite;
           // чтобы показать хоть какой-то спрайт
@@ -391,7 +391,7 @@ void Frame_wnd::update_hitbox(Pool_ptr(Hitbox) dst) {
 void Frame_wnd::edit_hitbox(Frame& frame) {
   auto hitbox = get_hitbox_source();
   if ( !hitbox) {
-    hpw_log("unable to set hitbox for entity\n");
+    log_info << ("unable to set hitbox for entity\n");
     return;
   }
 

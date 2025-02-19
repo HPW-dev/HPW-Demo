@@ -34,6 +34,6 @@ void init_validation_info() {
   mem = mem_from_file(path);
   hpw::data_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
-  hpw_log("game executable SHA256: " + hpw::exe_sha256 + "\n");
-  hpw_log("game data.zip SHA256: " + hpw::data_sha256 + "\n");
+  log_info << "game executable SHA256: " + hpw::exe_sha256;
+  log_info << "game data.zip SHA256: " + hpw::data_sha256;
 }

@@ -49,7 +49,7 @@ void Editor::update(const Delta_time dt) {
   Host_imgui::update(dt);
   auto st = Editor::get_time();
   if ( !hpw::scene_mgr.update(dt) ) {
-    hpw_debug("scenes are over, call soft_exit\n");
+    log_debug("scenes are over, call soft_exit\n");
     hpw::soft_exit();
   }
   hpw::tick_time = Editor::get_time() - st;

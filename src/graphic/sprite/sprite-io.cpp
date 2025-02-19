@@ -70,12 +70,12 @@ inline void _data_to_sprite(Sprite &dst, cr<File> file) {
 } // _data_to_sprite
 
 void load(Sprite &dst, cr<File> file) {
-  hpw_log("Sprite.load_file \"" + file.get_path() + "\"\n", Log_stream::debug);
+  log_debug << "Sprite.load_file \"" + file.get_path() + "\"";
   _data_to_sprite(dst, file);
 } // load
 
 void load(Sprite &dst, cr<Str> name) {
-  hpw_log("Sprite.load_file(F) \"" + name + "\"\n", Log_stream::debug);
+  log_debug << "Sprite.load_file(F) \"" + name + "\"";
   _data_to_sprite(dst, file_load(name));
 } // load
 
@@ -89,7 +89,7 @@ void save(cr<Sprite> src, Str file_name) {
   assert(!file_name.empty());
   
   conv_sep(file_name);
-  hpw_log("сохранение спрайта \"" + file_name + "\"\n");
+  log_info << "сохранение спрайта \"" + file_name + "\"";
 
   // pal8 to rgb24
   constexpr uint comp = 4;

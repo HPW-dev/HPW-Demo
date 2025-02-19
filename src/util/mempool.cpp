@@ -51,8 +51,8 @@ void Mem_pool::sub_used_bytes(std::size_t sz) {
 
 void Mem_pool::print_used_bytes() {
 #ifndef ECOMEM
-  hpw_log(Str("max mem usage in pool: ") + n2s(mem_pool_max_bytes_used.load()) + " (" +
-    n2s(scast<real>(mem_pool_max_bytes_used) / (1024*1024), 3) + " mb)\n", Log_stream::debug);
+  log_debug << "max mem usage in pool: " << mem_pool_max_bytes_used.load() << " (" <<
+    n2s(scast<real>(mem_pool_max_bytes_used) / (1024*1024), 3) << " mb)";
 #endif
 }
 

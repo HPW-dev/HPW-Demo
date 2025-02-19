@@ -50,7 +50,7 @@ struct Packet_mgr::Impl {
     _input_packet = {};
     _input_udp_addr = {};
     _receive_cb = {};
-    hpw_info("network packet manager disconnected\n");
+    log_info << "network packet manager disconnected";
   }
 
   inline void update() {
@@ -144,7 +144,7 @@ struct Packet_mgr::Impl {
     _socket_tcp->close();
     const ip_tcp::endpoint ep(asio::ip::address_v4::from_string(_status.ip_v4), _status.port_tcp);
     ip_tcp::acceptor acceptor(_io_tcp, ep);
-    hpw_info("waiting for TCP connection...\n");
+    log_info << "waiting for TCP connection...";
     acceptor.accept(*_socket_tcp);
     _last_binded_addr = _socket_tcp->remote_endpoint();
     _status.connected = true;
@@ -162,11 +162,11 @@ struct Packet_mgr::Impl {
     ip_tcp::endpoint ep(asio::ip::address_v4::from_string(target.ip_v4), target.port);
     
     if (ep == _last_binded_addr) {
-      hpw_info("TCP connection with " + target.ip_v4 + ":" + n2s(target.port) + " already established\n");
+      log_info << "TCP connection with " << target.ip_v4 << ":" << target.port << " already established";
       return;
     }
 
-    hpw_info("TCP connect to " + target.ip_v4 + ":" + n2s(target.port) + "\n");
+    log_info << "TCP connect to " + target.ip_v4 + ":" << target.port;
     _socket_tcp->connect(ep);
     _last_binded_addr = ep;
     _status.connected = true;
@@ -191,7 +191,7 @@ struct Packet_mgr::Impl {
       _socket_udp->set_option(ip_udp::socket::reuse_address(true));
     _socket_udp->set_option(ip_udp::socket::broadcast(true));
     _status.broadcast = true;
-    hpw_info("UDP connection setup to " + _status.ip_v4 + ":" + n2s(_status.port_udp) + "\n");
+    log_info << "UDP connection setup to " + _status.ip_v4 + ":" << _status.port_udp;
   }
 
   inline void _init_tcp(cr<Config> cfg) {   
@@ -200,7 +200,7 @@ struct Packet_mgr::Impl {
     _status.port_tcp = _socket_tcp->local_endpoint().port();
     if (cfg.is_server)
       _socket_tcp->set_option(ip_tcp::socket::reuse_address(true));
-    hpw_info("TCP connection setup to " + _status.ip_v4 + ":" + n2s(_status.port_tcp) + "\n");
+    log_info << "TCP connection setup to " + _status.ip_v4 + ":" << _status.port_tcp;
   }
 
   inline void _start_waiting_packets(bool udp_mode) {
@@ -215,11 +215,11 @@ struct Packet_mgr::Impl {
       return_if(!_status.active);
 
       if (err) {
-        hpw_warning(Str("system error: ") + err.message() + " - " + err.category().name() + "\n");
+        log_warning << Str("system error: ") + err.message() + " - " + err.category().name();
       } elif (bytes == 0) {
-        hpw_warning("packet data is empty\n");
+        log_warning << "packet data is empty";
       } elif (bytes >= (mode ? net::MAX_UDP_PACKET : net::MAX_TCP_PACKET)) {
-        hpw_warning("packet data >= MAX_PACKET\n");
+        log_warning << "packet data >= MAX_PACKET";
       } else {
         _input_packet.bytes.resize(bytes); // сократить размер пакета
 

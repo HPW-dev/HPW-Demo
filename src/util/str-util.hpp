@@ -9,6 +9,7 @@
 #include "math/num-types.hpp"
 
 inline constexpr Cstr s2yn(const bool cond) { return cond ? "yes" : "no"; }
+inline constexpr Cstr yn2s(bool comp) { return comp ? "YES" : "NO"; }
 
 // замена разделительных символов на совместимые с системой
 void conv_sep(Str& str, char bad_separator=NSEPARATOR,

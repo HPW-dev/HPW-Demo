@@ -16,7 +16,7 @@ void entity_editor_save(cr<Entity_editor_ctx> ctx) {
   auto entities_yml_path = hpw::cur_dir + hpw::os_resources_dir + ::g_entities_yml_path;
   conv_sep(entities_yml_path);
   ctx.entities_yml.save(entities_yml_path);
-  hpw_log("entity editor data saved\n");
+  log_info << ("entity editor data saved\n");
 }
 
 void entity_editor_load(Entity_editor_ctx& ctx) {
@@ -36,7 +36,7 @@ void entity_editor_load(Entity_editor_ctx& ctx) {
   hpw::entity_mgr->register_types();
   // выбрать коллайдер
   set_default_collider();
-  hpw_log("entity editor data loaded\n");
+  log_info << ("entity editor data loaded\n");
 }
 
 void edit_flags(Entity& entity) {

@@ -3,11 +3,11 @@
 #include "util/log.hpp"
 
 Ability_dummy:: Ability_dummy() {
-  hpw_log("dummy c-tor\n");
+  log_info << "dummy c-tor";
 }
 
 Ability_dummy::~Ability_dummy() {
-  hpw_log("dummy d-tor\n");
+  log_info << "dummy d-tor";
 }
 
 Ability_id Ability_dummy::id() const {
@@ -16,25 +16,22 @@ Ability_id Ability_dummy::id() const {
 
 void Ability_dummy::draw_bg(Image& dst, const Vec offset) {
   Ability::draw_bg(dst, offset);
-  // hpw_log("dummy draw BG\n");
 }
 
 void Ability_dummy::draw_fg(Image& dst, const Vec offset) {
   Ability::draw_fg(dst, offset);
-  // hpw_log("dummy draw FG\n");
 }
 
 void Ability_dummy::update(Delta_time dt) {
   Ability::update(dt);
-  // hpw_log("dummy update\n");
 }
 
 void Ability_dummy::on_upgrade() {
   Ability::on_upgrade();
-  hpw_log( std::format("dummy upgraded. New lvl = {}\n", level()) );
+  log_info << std::format("dummy upgraded. New lvl = {}", level());
 }
 
 void Ability_dummy::on_downgrade() {
   Ability::on_downgrade();
-  hpw_log( std::format("dummy downgraded. New lvl = {}\n", level()) );
+  log_info << std::format("dummy downgraded. New lvl = {}", level());
 }

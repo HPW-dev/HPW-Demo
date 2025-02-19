@@ -159,7 +159,7 @@ void Host_ogl::compile_program() {
   if (info_len > 0) {
     Vector<char> info_msg(info_len + 1);
     glGetProgramInfoLog(m_shader_prog, info_len, {}, info_msg.data());
-    hpw_log("Shader program info: " + Str(info_msg.begin(), info_msg.end()) + "\n", Log_stream::debug);
+    log_debug << "Shader program info: " << Str(info_msg.begin(), info_msg.end());
   }
 } // compile_program
 
@@ -178,7 +178,7 @@ void Host_ogl::compie_vertex_shader() {
   if (info_len > 0) {
     Vector<char> info_msg(info_len + 1);
     glGetShaderInfoLog(m_vert_shader, info_len, {}, info_msg.data());
-    hpw_log( "Vertex shader info: " + Str(info_msg.begin(), info_msg.end()) );
+    log_debug << "Vertex shader info: " << Str(info_msg.begin(), info_msg.end());
   }
 } // compie_vertex_shader
 
@@ -197,7 +197,7 @@ void Host_ogl::compie_fragment_shader() {
   if (info_len > 0) {
     Vector<char> info_msg(info_len + 1);
     glGetShaderInfoLog(m_frag_shader, info_len, {}, info_msg.data());
-    hpw_log( "Fragment shader info: " + Str(info_msg.begin(), info_msg.end()) );
+    log_debug << "Fragment shader info: " << Str(info_msg.begin(), info_msg.end());
   }
 } // compie_fragment_shader
 
@@ -228,8 +228,8 @@ void Host_ogl::pal_tex_init() {
   } catch (...) {
     // если палитру не удастся получить, то сгенерировать её
     if (!graphic::current_palette_file.empty()) {
-      hpw_log("не удалось загрузить файл палитры \"" +
-        graphic::current_palette_file + "\". Будет выбрана стандартная палитра\n", Log_stream::warning);
+      log_warning << "не удалось загрузить файл палитры \"" <<
+        graphic::current_palette_file << "\". Будет выбрана стандартная палитра";
       graphic::current_palette_file = graphic::DEFAULT_PALETTE_FILE;
     }
     _gen_palette();
@@ -243,7 +243,7 @@ void Host_ogl::check_max_gltex_sz() {
   auto max_canvas_sz = std::max(graphic::width, graphic::height);
   GLint avaliable_max_sz = -1;
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &avaliable_max_sz);
-  hpw_log("max texture size: " + n2s(avaliable_max_sz) + '\n', Log_stream::debug);
+  log_debug << "max texture size: " << avaliable_max_sz;
   // если эта ошибка выстрелит, то напиши разбивку на тайлы и их рендери
   iferror(avaliable_max_sz < max_canvas_sz,
     "GL_MAX_TEXTURE_SIZE < " << n2s(max_canvas_sz));
