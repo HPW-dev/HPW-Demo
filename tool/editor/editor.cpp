@@ -64,10 +64,10 @@ void Editor::draw_game_frame() const {
 }
 
 void Editor::imgui_exec() const {
-  auto scene {hpw::scene_mgr.get_current()};
+  auto scene {hpw::scene_mgr.current()};
   return_if (!scene);
 
-  auto editor_scene {dcast<Editor_scene_base*>(scene)};
+  auto editor_scene {dcast<Editor_scene_base*>(scene.get())};
   return_if (!editor_scene);
   
   editor_scene->imgui_exec();

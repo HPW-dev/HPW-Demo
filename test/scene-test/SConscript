@@ -1,0 +1,62 @@
+#!/usr/bin/env python
+from script.helper import *
+Import(['env'])
+
+hpw_config = env['hpw_config']
+assert hpw_config
+
+lib_path = []
+inc_path = []
+used_libs = []
+sources = []
+prog_name = 'scene-test'
+build_dir = '../../build/'
+src_dir = '../../src/'
+thirdparty_dir = '../../thirdparty/'
+
+def accept_config():
+  global env
+  global inc_path
+  global lib_path
+  global used_libs
+  global hpw_config
+
+  inc_path.extend([
+    '.',
+    src_dir,
+    thirdparty_dir + 'include/',
+  ])
+
+  match hpw_config.compiler:
+    case Compiler.gcc: env['CXX'] = 'g++'
+    case Compiler.clang: env['CXX'] = 'clang++'
+    case _: raise ValueError
+
+def init_sources():
+  global sources
+
+  sources.extend([
+    src_dir + 'util/str-util.cpp',
+    src_dir + 'util/error.cpp',
+    src_dir + 'util/log.cpp',
+    src_dir + 'game/scene/scene.cpp',
+    src_dir + 'game/scene/scene-mgr.cpp',
+    'main.cpp',
+  ])
+
+def build():
+  env.Program(
+    target = build_dir + 'bin/' + prog_name,
+    source = sources,
+    LIBPATH = lib_path,
+    LIBS = used_libs,
+    CPPDEFINES = hpw_config.cxx_defines,
+    CXXFLAGS = hpw_config.cxx_flags,
+    LINKFLAGS = hpw_config.cxx_ldflags,
+    CPPPATH = inc_path,
+  )
+
+# main section:
+accept_config()
+init_sources()
+build()

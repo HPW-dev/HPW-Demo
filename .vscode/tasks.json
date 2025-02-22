@@ -21,7 +21,7 @@
       "label": "graphic test (Debug)",
       "type": "shell",
       "command": "python",
-      "args": ["-m", "script.test.graphic-deb"]
+      "args": ["-m", "script.test.graphic"]
     },
     {
       "label": "graphic test",
@@ -33,7 +33,7 @@
       "label": "build game (Debug)",
       "type": "shell",
       "command": "python",
-      "args": ["-m", "script.build.game-glfw3-deb"]
+      "args": ["-m", "script.build.game-glfw3"]
     },
     {
       "label": "build game",
