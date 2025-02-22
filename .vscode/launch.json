@@ -71,5 +71,15 @@
       "args": [],
       "cwd": "${workspaceRoot}/",
     },
+    {
+      "type":"cppdbg",
+      "miDebuggerPath": "O:/dev/mingw64/bin/gdb.exe",
+      "targetArchitecture": "x64",
+      "request": "launch",
+      "name": "scene test x64",
+      "program": "${workspaceRoot}/build/bin/scene-test.exe",
+      "args": [],
+      "cwd": "${workspaceRoot}/",
+    },
   ]
 }

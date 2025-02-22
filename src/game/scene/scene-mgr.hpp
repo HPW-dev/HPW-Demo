@@ -13,7 +13,7 @@ public:
   struct Status {
     bool came_back: 1 {}; // было возвращение из сцены
     bool next_scene: 1 {}; // был переход в новую сцену
-    bool empty: 1 {}; // сцены кончились
+    bool empty: 1 {true}; // сцены кончились
   };
 
   Scene_mgr();
@@ -21,10 +21,11 @@ public:
   void add(cr<Shared<Scene>> scene); // добавить новую сцену
   void draw(Image& dst) const;
   void back(uint count=1); // вернуться обратно по стеку сцен <count> раз
+  void clear();
   [[nodiscard]] bool update(Delta_time dt); // @return false если сцены кончились
   [[nodiscard]] cr<Status> status() const;
   [[nodiscard]] Shared<Scene> current() const;
-  [[nodiscard]] Strs list() const; // имена имеющихся сцен
+  [[nodiscard]] Strs names() const; // имена имеющихся сцен
 
 private:
   struct Impl;

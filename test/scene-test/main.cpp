@@ -12,11 +12,11 @@ private:
   Str _name {"Scene_empty"};
 };
 
-Str get_scenes_list() {
-  cauto list = hpw::scene_mgr.list();
+Str get_scene_names() {
+  cauto names = hpw::scene_mgr.names();
   Str result {};
 
-  for (crauto name: list)
+  for (crauto name: names)
     result += name + " ";
 
   if (result.empty())
@@ -33,10 +33,14 @@ void test_1() {
   hpw::scene_mgr.add(new_shared<Scene_empty>("B"));
   hpw::scene_mgr.add(new_shared<Scene_empty>("C"));
   hpw::scene_mgr.add(new_shared<Scene_empty>("D"));
+  hpw::scene_mgr.update(0.016);
 
   const Str question = "A B C D ";
-  cauto result = get_scenes_list();
-  iferror(result != question, "test 1 failed");
+  cauto result = get_scene_names();
+  iferror(result != question, "bad result");
+  iferror(hpw::scene_mgr.status().empty, "empty scenes");
+  iferror(!hpw::scene_mgr.status().next_scene, "!next_scene (need next_scene == true)");
+  iferror(hpw::scene_mgr.status().came_back, "came_back (need came_back == false)");
 }
 
 int main() {
