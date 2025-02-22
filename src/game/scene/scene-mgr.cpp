@@ -49,18 +49,15 @@ struct Scene_mgr::Impl {
   }
 
   inline void back(uint count) {
-    cfor (i, count) {
-      _actions.emplace (
-        [this] {
-          if (!_scenes.empty()) {
-            _scenes.pop_back();
-            _status.came_back = true;
-          } else {
-            _status.empty = true;
-          }
+    cfor (i, count)
+      _actions.emplace ( [this] {
+        if (!_scenes.empty()) {
+          _scenes.pop_back();
+          _status.came_back = true;
+        } else {
+          _status.empty = true;
         }
-      );
-    }
+      } );
   }
 
   inline Shared<Scene> current() const {
