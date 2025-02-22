@@ -89,7 +89,7 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
 
 Game_app::~Game_app() {
   disable_pge();
-  hpw::scene_mgr = {};
+  hpw::scene_mgr.clear();
 }
 
 void Game_app::update(const Delta_time dt) {

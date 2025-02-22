@@ -27,7 +27,7 @@ struct Scene_options::Impl {
     _menu->update(dt);
 
     // чтобы перезагрузить локализацию строк
-  if (hpw::scene_mgr.status.came_back)
+  if (hpw::scene_mgr.status().came_back)
     init_menu();
   }
 

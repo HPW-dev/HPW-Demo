@@ -61,7 +61,7 @@ struct Scene_mgr::Impl {
   }
 
   inline Shared<Scene> current() const {
-    return_if (!_scenes.empty(), _scenes.front());
+    return_if (!_scenes.empty(), _scenes.back());
     return {};
   }
 

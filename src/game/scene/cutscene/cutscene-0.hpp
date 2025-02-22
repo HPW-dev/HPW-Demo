@@ -11,4 +11,5 @@ public:
   ~Cutscene_0();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-}; // Cutscene_0
+  inline Str name() const override { return "cutscene #0"; }
+};

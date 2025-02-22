@@ -35,7 +35,7 @@ struct Scene_epge::Impl {
       exit_from_scene();
 
     // при выборе эффекта менюшку надо дополнить
-    if (hpw::scene_mgr.status.came_back || _need_reinit_menu) {
+    if (hpw::scene_mgr.status().came_back || _need_reinit_menu) {
       init_menu();
       _need_reinit_menu = false;
     }

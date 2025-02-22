@@ -12,4 +12,5 @@ public:
   ~Scene_find_server();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
+  inline Str name() const override { return "find server"; }
 };

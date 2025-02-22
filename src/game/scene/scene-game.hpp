@@ -24,4 +24,5 @@ private:
   Vec get_level_vel() const; // безопасно получить сдвиг кординат уровня
   void save_named_replay();
   void startup_script();
+  inline Str name() const override { return "game"; }
 };

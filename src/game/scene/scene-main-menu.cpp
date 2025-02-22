@@ -55,7 +55,7 @@ void Scene_main_menu::update(const Delta_time dt) {
   update_bg_order(dt);
 
   // чтобы перезагрузить локализацию строк
-  if (hpw::scene_mgr.status.came_back)
+  if (hpw::scene_mgr.status().came_back)
     init_menu();
 }
 
@@ -280,7 +280,7 @@ void Scene_main_menu::update_bg_order(const Delta_time dt) {
   ret_if(!hpw::autoswith_bgp);
   
   // поменять фон возвращаясь из сцены
-  const bool came_back = hpw::scene_mgr.status.came_back;
+  const bool came_back = hpw::scene_mgr.status().came_back;
   // поменять фон через кнопку
   const bool fast_forward = is_pressed_once(hpw::keycode::fast_forward);
   // поменять фон по таймеру

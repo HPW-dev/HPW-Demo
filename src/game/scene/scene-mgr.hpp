@@ -9,6 +9,8 @@ class Image;
 
 // управление сценами
 class Scene_mgr final {
+  nocopy(Scene_mgr);
+
 public:
   struct Status {
     bool came_back: 1 {}; // было возвращение из сцены

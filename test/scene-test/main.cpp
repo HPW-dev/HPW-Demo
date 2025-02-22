@@ -6,7 +6,7 @@
 class Scene_empty: public Scene {
 public:
   inline explicit Scene_empty(cr<Str> name): _name {name} {}
-  inline cr<Str> name() const override { return _name; }
+  inline Str name() const override { return _name; }
 
 private:
   Str _name {"Scene_empty"};

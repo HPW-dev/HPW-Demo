@@ -14,4 +14,5 @@ public:
   Scene_debug();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
+  inline Str name() const override { return "debug"; }
 };

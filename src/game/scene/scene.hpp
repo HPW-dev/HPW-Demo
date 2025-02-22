@@ -12,5 +12,5 @@ public:
   virtual ~Scene() = default;
   virtual void update(const Delta_time dt);
   virtual void draw(Image& dst) const;
-  virtual cr<Str> name() const = 0;
+  virtual Str name() const = 0;
 };

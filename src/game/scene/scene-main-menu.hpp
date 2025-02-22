@@ -39,4 +39,5 @@ public:
   ~Scene_main_menu();
   void update(const Delta_time dt) override final;
   void draw(Image& dst) const noexcept override final;
+  inline Str name() const override { return "main menu"; }
 };

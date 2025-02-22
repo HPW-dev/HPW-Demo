@@ -17,4 +17,5 @@ public:
   Scene_loading(std::function<void ()>&& _scene_maker);
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
+  inline Str name() const override { return "loading"; }
 };
