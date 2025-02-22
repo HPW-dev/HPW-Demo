@@ -68,7 +68,7 @@ Store<T>::Velue& Store<T>::push(cr<Str> name, cr<Velue> res) {
   log_debug << "Store.push: " + name;
   res->set_path(name);
   if (m_table.count(name) != 0)
-    log_warning << 
+    log_debug << 
       "Store.push: reinit resource "
       "(это может стать причиной ошибки access free-object error)";
   m_table[name] = res;
@@ -80,7 +80,7 @@ Store<T>::Velue& Store<T>::move(cr<Str> name, Velue&& res) {
   log_debug << "Store.move: " + name;
   res->set_path(name);
   if (m_table.count(name) != 0)
-    log_warning << 
+    log_debug << 
       "Store.move: reinit resource "
       "(это может стать причиной ошибки access free-object error)";
   m_table[name] = std::move(res);
