@@ -10,6 +10,7 @@
 #include "util/error.hpp"
 #include "util/path.hpp"
 #include "util/vector-types.hpp"
+#include "util/delay-for.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
 
@@ -42,12 +43,7 @@ void test_sine() {
 
   // проиграть звук
   cauto audio_id = sound_mgr.play("sine wave");
-
-  // не закрывать прогу, пока трек играет
-  while (true) {
-    break_if (!sound_mgr.is_playing(audio_id));
-    std::this_thread::yield();
-  }
+  wait_for([&]{ return !sound_mgr.is_playing(audio_id); }, 15);
 } // test_sine
 
 void test_motion_sine() {
@@ -97,12 +93,7 @@ void test_noise() {
 
   // проиграть звук
   cauto audio_id = sound_mgr.play("noise", {}, {}, 0.01);
-
-  // не закрывать прогу, пока трек играет
-  while (true) {
-    break_if (!sound_mgr.is_playing(audio_id));
-    std::this_thread::yield();
-  }
+  wait_for([&]{ return !sound_mgr.is_playing(audio_id); }, 15);
 } // test_sine
 
 void test_mix() {
@@ -175,9 +166,7 @@ void test_file(cr<Str> fname) {
   sound_mgr.add_audio("music test", track);
   cauto audio_id = sound_mgr.play("music test");
   iferror(audio_id == BAD_AUDIO, "Bad audio ID");
-  using namespace std::chrono_literals;
-  std::this_thread::sleep_for(2s);
-  //sound_mgr.stop(audio_id);
+  wait_for([&]{ return !sound_mgr.is_playing(audio_id); }, 4);
 } // test_file
 
 int main(int argc, char *argv[]) {
