@@ -1,9 +1,16 @@
 #!/usr/bin/env python
-import helper
+if __name__ != "__main__":
+  print("is not a python module")
 
-script = "test/sound-test/SConscript"
-#compiler = "clang++"
-compiler = "g++"
-is_debug = 1
-helper.exec_cmd(f'scons -j4 -Q debug={is_debug} -Q script={script} -Q compiler={compiler}')
-helper.exec_cmd('build/HPW')
+from .. import helper
+
+opts = \
+  ' -Q use_data_zip=0' \
+  ' -Q use_netplay=0' \
+  ' -Q compiler=gcc' \
+  ' -Q disable_graphic=1' \
+  ' -Q opt_level=debug'
+NUM_THREADS = helper.get_max_threads() + 1
+print(f'threads for building: {NUM_THREADS}')
+helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=test/sound-test/SConscript' + opts)
+helper.exec_cmd('build/bin/sound-test')

@@ -2,14 +2,11 @@
 #include <cassert>
 #include <filesystem>
 #include "resource-helper.hpp"
-#include "graphic/sprite/sprite-io.hpp"
-#include "graphic/util/util-templ.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/path.hpp"
 #include "util/file/file-io.hpp"
 #include "util/str-util.hpp"
-#include "game/core/sprites.hpp"
 #include "game/core/common.hpp"
 #include "game/util/resource-helper.hpp"
 
@@ -17,6 +14,13 @@
 #include "game/util/game-archive.hpp"
 #endif
 
+#ifndef DISABLE_GRAPHIC
+#include "game/core/sprites.hpp"
+#include "graphic/sprite/sprite-io.hpp"
+#include "graphic/util/util-templ.hpp"
+#endif
+
+#ifndef DISABLE_GRAPHIC
 // грузит спрайт либо из файловой системы, либо из архива
 static inline Shared<Sprite> sprite_loader(cr<Str> name) {
   try {
@@ -184,6 +188,7 @@ std::size_t sizeof_all_sprites() {
   }
   return ret;
 }
+#endif // ifdef DISABLE_GRAPHIC
 
 File load_res(cr<Str> name) {
   assert(!name.empty());

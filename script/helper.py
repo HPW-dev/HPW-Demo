@@ -26,6 +26,7 @@ class Hpw_config:
   use_ccache = False
   use_data_zip = True # грузить данные из архива с ресурсами игры
   use_netplay = False # использовать LAN
+  disable_graphic = False # не использовать графику
   static_link = False # статически слинковать все библиотеки
   build_script = '' # какой скрипт для SCons использовать для сборки кода
   custom_cxx: str # свой путь до компилятора C++

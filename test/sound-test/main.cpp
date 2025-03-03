@@ -9,6 +9,7 @@
 #include "sound/audio-io.hpp"
 #include "util/error.hpp"
 #include "util/vector-types.hpp"
+#include "game/util/resource-helper.hpp"
 
 Audio make_sin_wave(const float freq) {
   Audio sine_wave;
