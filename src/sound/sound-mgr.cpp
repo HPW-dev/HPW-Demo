@@ -205,7 +205,7 @@ struct Sound_mgr_oal::Impl {
 
   inline void stop(const Audio_id sound_id) {
     if ( !is_playing(sound_id)) {
-      log_warning << "попытка остановить звук, который уже не играет (ID: " + n2s(sound_id) + ")";
+      log_warning << "attempt to stop a sound that is no longer playing (ID: " + n2s(sound_id) + ")";
       return;
     }
 
@@ -248,7 +248,7 @@ struct Sound_mgr_oal::Impl {
 
   inline void set_amplify(const Audio_id sound_id, const real amplify) {
     if ( !is_playing(sound_id)) {
-      log_warning << "попытка остановить звук, который уже не играет (ID: "
+      log_warning << "attempt to stop a sound that is no longer playing (ID: "
         + n2s(sound_id) + ")";
       return;
     }
@@ -259,7 +259,7 @@ struct Sound_mgr_oal::Impl {
 
   inline void set_position(const Audio_id sound_id, const Vec3 new_pos) {
     if ( !is_playing(sound_id)) {
-      log_warning << "попытка изменить позицию звуку, который уже не играет (ID: "
+      log_warning << "attempt to change the position of a sound that is no longer playing (ID: "
         + n2s(sound_id) + ")";
       return;
     }
@@ -273,7 +273,7 @@ struct Sound_mgr_oal::Impl {
 
   inline void set_velocity(const Audio_id sound_id, const Vec3 new_vel) {
     if ( !is_playing(sound_id)) {
-      log_warning << "попытка изменить скорость движения звуку, который уже не играет (ID: "
+      log_warning << "attempt to change the speed of a sound that is no longer playing (ID: "
         + n2s(sound_id) + ")";
       return;
     }
@@ -299,7 +299,7 @@ struct Sound_mgr_oal::Impl {
 
   void set_pitch(const Audio_id sound_id, const real pitch) {
     if ( !is_playing(sound_id)) {
-      log_warning << "попытка изменить тон звуку, который уже не играет (ID: "
+      log_warning << "an attempt to change the tone of a sound that is no longer playing (ID: "
         + n2s(sound_id) + ")";
     }
     std::lock_guard lock(m_mutex);
