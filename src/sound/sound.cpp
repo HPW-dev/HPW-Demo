@@ -1,7 +1,10 @@
 #include <cassert>
 #include "sound.hpp"
+#include "sound-io.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
+#include "util/file/file.hpp"
+#include "game/util/resource-helper.hpp"
 
 namespace sound {
 
@@ -53,12 +56,24 @@ Info info() { return _info; }
 
 Shared<Track> play(cr<Str> path) {
   ret_if(!_info.enabled, {});
-  return {}; // TODO
+  cauto file = load_res(path);
+  cauto buffer = file_to_buffer(file);
+  return play(buffer);
 }
 
 Shared<Track> play(cr<Buffer> buf) {
   ret_if(!_info.enabled, {});
+
+  log_debug << "play audio-buffer \"" << buf.source_path << "\":";
+  hpw::logger.config.print_source = false;
+  log_debug << "- channels: " << buf.channels;
+  log_debug << "- frequency: " << buf.frequency;
+  log_debug << "- samples: " << buf.samples;
+  log_debug << "- data size: " << buf.data.size() << " bytes";
+  hpw::logger.config.print_source = true;
+
   _check_audio_buffer(buf);
+  // TODO...
   return {}; // TODO
 }
 
