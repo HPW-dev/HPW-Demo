@@ -10,7 +10,7 @@
 //#include "sound/audio-io.hpp"
 
 void test_init_status() {
-  log_info << "Audio test: check empty status";
+  log_info << "::: Audio test ::: check empty status :::";
 
   // проверить что звук инициализирован и ничего не проигрывается
   sound::init();
@@ -20,14 +20,23 @@ void test_init_status() {
 }
 
 void test_bad_name() {
-  log_info << "Audio test: check bad track name";
+  log_info << "::: Audio test ::: check bad track name :::";
   Shared<sound::Track> track {};
+  bool passed {false};
 
   // проверить создание несуществующего трека и реакции на это
   try {
     track = sound::play("unknown name test.wav");
+  } catch (cr<hpw::Error> err) {
+    log_info << "planned error: " << err.get_msg();
+    passed = true;
   } catch (...) {
-    iferror(!track, "track is not empty");
+    log_warning << "unknown error";
+    passed = true;
+  }
+
+  if (passed) {
+    iferror(track, "track is not empty");
     log_info << "passed";
     return;
   }
@@ -57,7 +66,7 @@ sound::Buffer make_sin_wave(const float freq) {
 
 void test_sine_1() {
   /*
-  log_info << "Audio test: playing sine wave (1)";
+  log_info << "::: Audio test ::: playing sine wave (1) :::";
 
   Sound_mgr mgr;
 
@@ -77,7 +86,7 @@ void test_sine_1() {
 /*
 
 void test_motion_sine() {
-  log_info << "Audio test: motion sine wave";
+  log_info << "::: Audio test ::: motion sine wave :::";
 
   // добавить звук в базу
   Sound_mgr_oal sound_mgr;
@@ -103,7 +112,7 @@ void test_motion_sine() {
 } // test_motion_sine
 
 void test_noise() {
-  log_info << "Audio test: playing noise";
+  log_info << "::: Audio test ::: playing noise :::";
 
   // сделать стерео шум
   Audio noise;
@@ -127,7 +136,7 @@ void test_noise() {
 } // test_sine
 
 void test_mix() {
-  log_info << "Audio test: mixing audio";
+  log_info << "::: Audio test ::: mixing audio :::";
   auto track_1 = make_sin_wave(0.007);
   auto track_2 = make_sin_wave(0.01);
   auto track_3 = make_sin_wave(0.05);
@@ -149,7 +158,7 @@ void test_mix() {
 } // test_mix
 
 void test_play_after() {
-  log_info << "Audio test: playing after";
+  log_info << "::: Audio test ::: playing after :::";
   auto track_1 = make_sin_wave(0.007);
   auto track_2 = make_sin_wave(0.014);
 
@@ -170,7 +179,7 @@ void test_play_after() {
 } // test_play_after
 
 void test_overplay() {
-  log_info << "Audio test: overplay";
+  log_info << "::: Audio test ::: overplay :::";
 
   // добавить звук в базу
   Sound_mgr_oal sound_mgr;
@@ -190,7 +199,7 @@ void test_overplay() {
 } // test_overplay
 
 void test_file(cr<Str> fname) {
-  log_info << "Audio test: loading file \"" << hpw::cur_dir + fname << "\"";
+  log_info << "::: Audio test ::: loading file \"" << hpw::cur_dir + fname << "\" :::";
   cauto track = load_audio(fname);
   Sound_mgr_oal sound_mgr;
   sound_mgr.add_audio("music test", track);

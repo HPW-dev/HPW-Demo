@@ -44,6 +44,7 @@ struct Info final {
   uint tracks_playing_now {}; // сколько треков играет сейчас
   uint tracks_stoped_now {};  // сколько треков на паузе сейчас
   uint total_played {};       // сколько треков было проиграно
+  Str device_name {};         // название устройства вывода аудио
 };
 
 using Tracks = Vector<Shared<Track>>;
