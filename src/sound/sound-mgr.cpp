@@ -1,3 +1,4 @@
+/*
 #include <OpenAL-soft/AL/al.h>
 #include <OpenAL-soft/AL/alc.h>
 #include <atomic>
@@ -579,3 +580,45 @@ cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
   error("called find_audio in nosound mode");
   return *rcast<Audio*>(0); // заглушка для анализатора
 }
+*/
+
+#include "sound-mgr.hpp"
+
+struct Sound_mgr::Impl {
+  Status _status {};
+
+  inline explicit Impl(cr<Config> cfg) {
+    // TODO
+  }
+
+  inline void clear() {
+    // TODO
+  }
+
+  inline void stop_all() {
+    // TODO
+  }
+
+  inline void continue_all() {
+    // TODO
+  }
+
+  inline void update() {
+    // TODO
+  }
+
+  inline cr<Status> status() const { return _status; }
+
+  inline Weak<Audio> make(cr<Str> name) {
+    return {}; // TODO
+  }
+}; // Impl
+
+Sound_mgr::Sound_mgr(cr<Sound_mgr::Config> cfg): _impl{new_unique<Impl>(cfg)} {}
+Sound_mgr::~Sound_mgr() {}
+void Sound_mgr::clear() { _impl->clear(); }
+void Sound_mgr::stop_all() { _impl->stop_all(); }
+void Sound_mgr::continue_all() { _impl->continue_all(); }
+void Sound_mgr::update() { _impl->update(); }
+cr<Sound_mgr::Status> Sound_mgr::status() const { return _impl->status(); }
+Weak<Sound_mgr::Audio> Sound_mgr::make(cr<Str> name) { return _impl->make(name); }

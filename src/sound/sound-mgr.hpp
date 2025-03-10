@@ -1,3 +1,53 @@
+#pragma once
+#include "util/macro.hpp"
+#include "util/mem-types.hpp"
+#include "util/math/num-types.hpp"
+#include "util/str-util.hpp"
+
+// Управляет аудио-системой
+class Sound_mgr final {
+private:
+  struct Impl;
+
+public:
+  // для стартовой настройки аудиосистемы
+  struct Config {
+    std::size_t buffers = 4; // число сменяющихся буферов потока
+    std::size_t buffer_sz = 1024 * 16; // размер одного буфера потока в байтах
+    uint sounds = 100; // сколько звуков можно проиграть одновременно
+  };
+
+  // состояние аудио-системы
+  struct Status {
+    uint audios_running_now {};
+    bool enabled {}; // false - звукy
+  };
+
+  // для упралвения конкретным звуком
+  class Audio final {
+  public:
+    inline explicit Audio(Sound_mgr::Impl& master): _master {master} {}
+    ~Audio() = default;
+  
+  private:
+    Sound_mgr::Impl& _master;
+  };
+
+  explicit Sound_mgr(cr<Config> cfg);
+  ~Sound_mgr();
+  void clear(); // убрать все звуки
+  void stop_all(); // останавливает все звуки (не удаляя их)
+  void continue_all(); // продолжает воспроизведение всех звуков
+  void update();
+  cr<Status> status() const; // узнать текущее состояние аудио-системы
+  Weak<Audio> make(cr<Str> name); // запустить звук
+
+private:
+  struct Impl;
+  Unique<Impl> _impl {};
+};
+
+/*
 #pragma once 
 #include "util/mem-types.hpp"
 #include "util/macro.hpp"
@@ -134,3 +184,4 @@ public:
   inline void stop_all() override {}
   inline void continue_all() override {}
 }; // Sound_mgr_nosound
+*/

@@ -4,8 +4,6 @@
 #include <utility>
 #include <thread>
 #include <cmath>
-#include "sound/sound-mgr.hpp"
-#include "sound/audio-io.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/path.hpp"
@@ -13,7 +11,10 @@
 #include "util/delay-for.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
+#include "sound/sound-mgr.hpp"
+//#include "sound/audio-io.hpp"
 
+/*
 Audio make_sin_wave(const float freq) {
   Audio sine_wave;
   sine_wave.channels = 1;
@@ -32,19 +33,35 @@ Audio make_sin_wave(const float freq) {
   std::memcpy(sine_wave.data.data(), f32_wave.data(), sine_wave.data.size());
   return sine_wave;
 }
+*/
 
 void test_sine() {
-  log_info << "Audio test: playing sine wave";
+  log_info << "Audio test: playing sine wave (1)";
 
+  Sound_mgr mgr({});
+
+  // добавление звука в базу
+  // TODO...
+
+  // запуск звука
+  mgr.make("sine test 1");
+
+  // ожидание пока все звуки завершатся
+  error_if (!wait_for([&]{ return mgr.status().audios_running_now == 0; }, 15));
+
+  /*
   // добавить звук в базу
   Sound_mgr_oal sound_mgr;
-  auto sine_wave = make_sin_wave(0.007);
+  auto sine_wave = make_sin_wave(0.15);
   sound_mgr.move_audio("sine wave", std::move(sine_wave));
 
   // проиграть звук
   cauto audio_id = sound_mgr.play("sine wave");
   wait_for([&]{ return !sound_mgr.is_playing(audio_id); }, 15);
+  */
 } // test_sine
+
+/*
 
 void test_motion_sine() {
   log_info << "Audio test: motion sine wave";
@@ -168,18 +185,19 @@ void test_file(cr<Str> fname) {
   iferror(audio_id == BAD_AUDIO, "Bad audio ID");
   wait_for([&]{ return !sound_mgr.is_playing(audio_id); }, 4);
 } // test_file
+*/
 
 int main(int argc, char *argv[]) {
   try {
     hpw::cur_dir = launch_dir_from_argv0(argv);
     test_sine();
-    test_noise();
+    /*test_noise();
     test_motion_sine();
     test_mix();
     test_play_after();
     test_overplay();
     test_file("resource/audio/sfx/recharge/recharge.flac");
-    test_file("resource/audio/sfx/recharge/recharge fast 2.flac");
+    test_file("resource/audio/sfx/recharge/recharge fast 2.flac");*/
   } catch (cr<hpw::Error> err) {
     hpw::Logger::config.print_source = false;
     log_error << err.what();
