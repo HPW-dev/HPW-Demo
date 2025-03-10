@@ -30,7 +30,7 @@ struct Config final {
   bool enabled {true}; // false - без звука
   uint buffers = 4; // число сменяющихся буферов потока
   uint buffer_sz = 1024 * 16; // размер одного буфера потока в байтах
-  uint sounds = 100; // сколько звуков можно проиграть одновременно
+  uint max_sounds = 100; // сколько звуков можно проиграть одновременно
 };
 
 struct Info final {
@@ -43,8 +43,8 @@ struct Info final {
 void init(cr<Config> cfg = {}); // запуск аудио-системы
 void update(); // обновить состояние воспроизводимых треков
 Info info(); // получить текущий статус аудио-системы
-Shared<Track> play(cr<Str> name);
-Shared<Track> play(cr<Buffer> buf);
+Shared<Track> play(cr<Str> path); // запустить трек из ресурсов
+Shared<Track> play(cr<Buffer> buf); // запустить трек из аудио-буффера
 
 using Tracks = Vector<Shared<Track>>;
 Tracks all_tracks(); // получить все треки, которые проигрываются или на паузе
