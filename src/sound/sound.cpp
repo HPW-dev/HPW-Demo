@@ -107,6 +107,7 @@ inline static void _finalize() {
   ret_if (!_info.enabled);
   log_debug << "disable sound system...";
   log_warning << "TODO need impl"; // TODO
+  _close_oal();
 }
 
 void init(cr<Config> cfg) {
@@ -179,7 +180,8 @@ void Track::set_config(cr<Track::Config> cfg) {
   log_warning << "TODO need impl"; // TODO
 }
 
-struct Autoclear { inline ~Autoclear() { _close_oal(); } };
+// класс, который вызывает деструктор в конце работы игры и выключает OAL
+struct Autoclear { inline ~Autoclear() { _finalize(); } };
 static Autoclear _autoclear {};
 
 } // sound ns
