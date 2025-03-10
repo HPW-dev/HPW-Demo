@@ -53,6 +53,7 @@ sound::Buffer make_sin_wave(const float freq) {
   ret.format = sound::Format::f32;
   ret.frequency = 48'000;
   ret.samples = ret.frequency * 4;
+  ret.source_path = "generated sine wave, freq: " + n2s(freq, 5);
   Vector<float> f32_wave(ret.samples * ret.channels);
   float step {};
 
@@ -61,8 +62,9 @@ sound::Buffer make_sin_wave(const float freq) {
     step += freq;
   }
 
-  ret.data.resize(ret.samples * sizeof(float) * ret.channels);
-  std::memcpy(ret.data.data(), f32_wave.data(), ret.data.size());
+  init_shared(ret.data);
+  ret.data->resize(ret.samples * sizeof(float) * ret.channels);
+  std::memcpy(ret.data->data(), f32_wave.data(), ret.data->size());
   return ret;
 }
 

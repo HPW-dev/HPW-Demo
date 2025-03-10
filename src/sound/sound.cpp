@@ -3,6 +3,7 @@
 #include <OpenAL-soft/AL/al.h>
 #include <OpenAL-soft/AL/alc.h>
 #include <cassert>
+#include <unordered_map>
 #include "sound.hpp"
 #include "sound-io.hpp"
 #include "util/error.hpp"
@@ -12,12 +13,19 @@
 
 namespace sound {
 
+struct Oal_track {
+  Shared<Track> track {};
+  Buffer buffer {};
+};
+  
 Info _info {};
 Config _config {};
+Uid _cur_uid {};
 
 namespace oal {
-bool initialized {};
-bool eax_2_0_compat {}; // совместимость с OpenAL EAX 2.0
+  bool initialized {};
+  bool eax_2_0_compat {}; // совместимость с OpenAL EAX 2.0
+  std::unordered_map<Uid, Oal_track> tracks {};
 } // oal ns
 
 inline static Str _decode_oal_error(const ALenum error_enum) {
@@ -46,8 +54,9 @@ inline static void _check_audio_buffer(cr<Buffer> buf) {
   iferror(buf.frequency == 0, "frequency is 0");
   iferror(buf.frequency >= 600'000, "frequency >= 600K");
   iferror(buf.samples == 0, "audio samples is empty");
-  iferror(buf.data.size() >= 1024 * 1024 * 1024 * 1.5, "audio data >= 1.5 Gb");
-  iferror(buf.data.empty(), "data is empty");
+  iferror(!buf.data, "data ptr is empty");
+  iferror(buf.data->size() >= 1024 * 1024 * 1024 * 1.5, "audio data >= 1.5 Gb");
+  iferror(buf.data->empty(), "data is empty");
 }
 
 inline static void _close_oal() {
@@ -110,6 +119,28 @@ inline static void _finalize() {
   _close_oal();
 }
 
+// добавить трек в базу для проигрывания
+inline static Shared<Track> _attach_track(cr<Buffer> buf) {
+  assert(buf.data);
+  log_debug << "attach audio-buffer \"" << buf.source_path << "\"";
+  
+  ++_cur_uid;
+  oal::tracks[_cur_uid] = Oal_track{};
+  auto oal_track = oal::tracks.at(_cur_uid);
+  init_shared(oal_track.track);
+  oal_track.track->uid = _cur_uid;
+  oal_track.track->name = buf.source_path;
+  oal_track.buffer = buf;
+  return oal_track.track;
+}
+
+// запустить трек через OpenAL
+inline static void _oal_play(cr<Shared<Track>> track) {
+  assert(track);
+  log_debug << "play track \"" << track->name << "\" (uid " << track->uid << ") by OpenAL";
+  log_warning << "TODO need impl"; // TODO
+}
+
 void init(cr<Config> cfg) {
   _finalize();
 
@@ -158,12 +189,14 @@ Shared<Track> play(cr<Buffer> buf) {
   log_debug << "- channels: " << buf.channels;
   log_debug << "- frequency: " << buf.frequency;
   log_debug << "- samples: " << buf.samples;
-  log_debug << "- data size: " << buf.data.size() << " bytes";
+  log_debug << "- data size: " << buf.data->size() << " bytes";
   hpw::logger.config.print_source = true;
 
   _check_audio_buffer(buf);
-  log_warning << "TODO need impl"; // TODO
-  return {}; // TODO
+  auto track = _attach_track(buf);
+  _oal_play(track);
+  ++_info.tracks_playing_now;
+  return track;
 }
 
 Tracks all_tracks() {

@@ -1,5 +1,6 @@
 #pragma once
 #include "util/bytes.hpp"
+#include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
 #include "util/str-util.hpp"
 
@@ -29,7 +30,7 @@ struct Buffer final {
   uint channels {}; // число аудио-каналов
   uint frequency {}; // частота трека
   uint samples {}; // число выборок в треке
-  Bytes data {}; // данные выборок
+  Shared<Bytes> data {}; // данные выборок
 };
 
 } // sound ns

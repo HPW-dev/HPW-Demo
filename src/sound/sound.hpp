@@ -1,7 +1,6 @@
 #pragma once
 #include "sound-buffer.hpp"
 #include "util/macro.hpp"
-#include "util/mem-types.hpp"
 
 namespace sound {
 
@@ -17,7 +16,7 @@ public:
   };
 
   Uid uid {};
-  cr<Str> name {};
+  Str name {};
 
   Track() = default;
   ~Track() = default;
