@@ -43,7 +43,7 @@ void init(cr<Config> cfg) {
 
   _config = cfg;
   _init_oal();
-  _info.enabled = _config.enabled;
+  _info.enabled &= _config.enabled;
   log_debug << "sound system is initialized";
 }
 
