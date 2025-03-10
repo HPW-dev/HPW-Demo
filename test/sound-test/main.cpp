@@ -37,6 +37,8 @@ void test_bad_name() {
 
   if (passed) {
     iferror(track, "track is not empty");
+    iferror(sound::info().total_played != 0, "total_played != 0");
+    iferror(sound::info().tracks_playing_now != 0, "tracks_playing_now != 0");
     log_info << "passed";
     return;
   }
@@ -65,22 +67,14 @@ sound::Buffer make_sin_wave(const float freq) {
 }
 
 void test_sine_1() {
-  /*
   log_info << "::: Audio test ::: playing sine wave (1) :::";
-
-  Sound_mgr mgr;
-
-  // добавление звука в базу
-  cauto data = make_sin_wave(0.15);
-  mgr.registrate("sine test 1.mono_pcm_f32", data);
-
-  // запуск звука
-  mgr.make("sine test 1.mono_pcm_f32");
+  cauto buf = make_sin_wave(0.15);
+  sound::play(buf);
+  iferror(sound::info().tracks_playing_now != 1, "tracks_playing_now != 1");
 
   // ожидание пока все звуки завершатся
-  if (!wait_for([&]{ return mgr.status().audios_running_now == 0; }, 15))
+  if (!wait_for([&]{ return sound::info().tracks_playing_now == 0; }, 15))
     log_error << "timeout!";
-  */
 }
 
 /*
@@ -227,9 +221,9 @@ int main(int argc, char *argv[]) {
     log_info << "end of tests";
   } catch (cr<hpw::Error> err) {
     hpw::Logger::config.print_source = false;
-    log_error << err.what();
+    log_error << "audio test failed in: " << err.what();
   } catch (...) {
     hpw::Logger::config.print_source = false;
-    log_error << "unknown error";
+    log_error << "test failed: unknown error";
   }
 }
