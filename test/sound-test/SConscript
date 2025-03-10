@@ -52,6 +52,7 @@ def init_sources():
     thirdparty_dir + "include/stb/stb_vorbis.c",
     src_dir + "sound/sound.cpp",
     src_dir + "sound/sound-io.cpp",
+    src_dir + "sound/sound-util.cpp",
     src_dir + "game/util/resource-helper.cpp",
     src_dir + "util/log.cpp",
     src_dir + "util/delay-for.cpp",
