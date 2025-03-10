@@ -582,6 +582,8 @@ cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
 }
 */
 
+/*
+#include <unordered_map>
 #include <cassert>
 #include "sound-mgr.hpp"
 #include "util/error.hpp"
@@ -589,6 +591,7 @@ cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
 
 struct Sound_mgr::Impl {
   Status _status {};
+  std::unordered_map<Str, Audio_buffer> _content {}; // звуковые файлы и их имена
 
   inline explicit Impl(cr<Sound_config> cfg) {
     // TODO
@@ -621,7 +624,9 @@ struct Sound_mgr::Impl {
   inline cr<Audio_buffer> _find_audio(cr<Str> name) const {
     iferror(name.empty(), "name is empty");
     log_debug << "search audio track by name \"" << name << "\"";
+
     error("TODO need impl"); // TODO
+
     return *((cp<Audio_buffer>)0); // заглушка
   }
 
@@ -629,8 +634,7 @@ struct Sound_mgr::Impl {
     iferror(name.empty(), "name is empty");
     _check_audio_buffer(buf);
     log_debug << "registrate new audio: \"" << name << "\" (" << buf.data.size() << " bytes)";
-
-    log_error << "TODO need impl"; // TODO
+    _content[name] = buf;
   }
 
   void _check_audio_buffer(cr<Audio_buffer> buf) {
@@ -643,6 +647,10 @@ struct Sound_mgr::Impl {
     iferror(buf.data.size() >= 1024 * 1024 * 1024 * 1.5, "audio data >= 1.5 Gb");
     iferror(buf.data.empty(), "data is empty");
   }
+
+  Strs Sound_mgr::content() const {
+    return Strs;
+  }
 }; // Impl
 
 Sound_mgr::Sound_mgr(cr<Sound_config> cfg): _impl{new_unique<Impl>(cfg)} {}
@@ -654,3 +662,47 @@ void Sound_mgr::update() { _impl->update(); }
 cr<Sound_mgr::Status> Sound_mgr::status() const { return _impl->status(); }
 Weak<Sound_mgr::Audio> Sound_mgr::make(cr<Str> name) { return _impl->make(name); }
 void Sound_mgr::registrate(cr<Str> name, cr<Audio_buffer> data) { _impl->registrate(name, data); }
+Strs Sound_mgr::content() const { return _impl->content(); }
+*/
+
+#include <cassert>
+#include "sound.hpp"
+#include "util/error.hpp"
+#include "util/log.hpp"
+
+namespace sound {
+
+void init(cr<Config> cfg) {
+  //iferror(cfg.)
+  // TODO
+}
+
+void update() {
+  // TODO
+}
+
+Info info() {
+  return {}; // TODO
+}
+
+Shared<Track> play(cr<Str> name) {
+  return {}; // TODO
+}
+
+Shared<Track> play(cr<Buffer> buf) {
+  return {}; // TODO
+}
+
+Tracks all_tracks() {
+  return {}; // TODO
+}
+
+Track::Config Track::get_config() const {
+  return {}; // TODO
+}
+
+void Track::set_config(cr<Track::Config> cfg) {
+  // TODO
+}
+
+} // sound ns

@@ -1,51 +1,55 @@
 #pragma once
-#include "audio-buffer.hpp"
+#include "sound-buffer.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 
-// для стартовой настройки аудиосистемы
-struct Sound_config {
-  std::size_t buffers {4}; // число сменяющихся буферов потока
-  std::size_t buffer_sz {1024 * 16}; // размер одного буфера потока в байтах
-  uint sounds {100}; // сколько звуков можно проиграть одновременно
-};
+namespace sound {
 
-// Управляет аудио-системой
-class Sound_mgr final {
-private:
-  struct Impl;
-
+// контролирует воспроизведение отдельного трека
+class Track final {
 public:
-  // состояние аудио-системы
-  struct Status {
-    uint audios_running_now {};
-    bool enabled {}; // false - воспроизведение звука невозможно или выключено
+  struct Config {
+    bool playing {}; // false - выключить трек
+    bool stoped {}; // true - поставить трек на паузу
+    real gain {}; // громкость трека
+    real pitch {}; // тон трека
+    // TODO 3d vec
   };
 
-  // для упралвения конкретным звуком
-  class Audio final {
-  public:
-    inline explicit Audio(Sound_mgr::Impl& master): _master {master} {}
-    ~Audio() = default;
-  
-  private:
-    Sound_mgr::Impl& _master;
-  };
+  Uid uid {};
+  cr<Str> name {};
 
-  explicit Sound_mgr(cr<Sound_config> cfg = {});
-  void registrate(cr<Str> name, cr<Audio_buffer> buf); // связывает аудио-данные с именем
-  ~Sound_mgr();
-  void clear(); // убрать все звуки
-  void stop_all(); // останавливает все звуки (не удаляя их)
-  void continue_all(); // продолжает воспроизведение всех звуков
-  void update();
-  [[nodiscard]] cr<Status> status() const; // узнать текущее состояние аудио-системы
-  Weak<Audio> make(cr<Str> name); // запустить звук
+  Track() = default;
+  ~Track() = default;
+  Config get_config() const;
+  void set_config(cr<Config> cfg); // изменить параметры воспроизведения
+}; // Track
 
-private:
-  struct Impl;
-  Unique<Impl> _impl {};
+// для стартовой настройки аудиосистемы
+struct Config final {
+  bool enabled {true}; // false - без звука
+  uint buffers = 4; // число сменяющихся буферов потока
+  uint buffer_sz = 1024 * 16; // размер одного буфера потока в байтах
+  uint sounds = 100; // сколько звуков можно проиграть одновременно
 };
+
+struct Info final {
+  bool enabled {}; // удио система включена?
+  uint tracks_playing_now {}; // сколько треков играет сейчас
+  uint tracks_stoped_now {}; // сколько треков на паузе сейчас
+  uint total_played {}; // сколько треков было проиграно
+};
+
+void init(cr<Config> cfg = {}); // запуск аудио-системы
+void update(); // обновить состояние воспроизводимых треков
+Info info(); // получить текущий статус аудио-системы
+Shared<Track> play(cr<Str> name);
+Shared<Track> play(cr<Buffer> buf);
+
+using Tracks = Vector<Shared<Track>>;
+Tracks all_tracks(); // получить все треки, которые проигрываются или на паузе
+
+} // sound ns
 
 /*
 #pragma once 
