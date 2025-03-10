@@ -582,12 +582,15 @@ cr<Audio> Sound_mgr_nosound::find_audio(cr<Str> sound_name) const {
 }
 */
 
+#include <cassert>
 #include "sound-mgr.hpp"
+#include "util/error.hpp"
+#include "util/log.hpp"
 
 struct Sound_mgr::Impl {
   Status _status {};
 
-  inline explicit Impl(cr<Config> cfg) {
+  inline explicit Impl(cr<Sound_config> cfg) {
     // TODO
   }
 
@@ -610,11 +613,39 @@ struct Sound_mgr::Impl {
   inline cr<Status> status() const { return _status; }
 
   inline Weak<Audio> make(cr<Str> name) {
+    crauto audio_data = _find_audio(name);
+    // TODO..
     return {}; // TODO
+  }
+
+  inline cr<Audio_buffer> _find_audio(cr<Str> name) const {
+    iferror(name.empty(), "name is empty");
+    log_debug << "search audio track by name \"" << name << "\"";
+    error("TODO need impl"); // TODO
+    return *((cp<Audio_buffer>)0); // заглушка
+  }
+
+  inline void registrate(cr<Str> name, cr<Audio_buffer> buf) {
+    iferror(name.empty(), "name is empty");
+    _check_audio_buffer(buf);
+    log_debug << "registrate new audio: \"" << name << "\" (" << buf.data.size() << " bytes)";
+
+    log_error << "TODO need impl"; // TODO
+  }
+
+  void _check_audio_buffer(cr<Audio_buffer> buf) {
+    iferror(buf.channels < 1 || buf.channels > 2, "bad count of audio-channels: " << buf.channels);
+    iferror(buf.compression == Audio_compression::unknown, "unknown audio compression format");
+    iferror(buf.format == Sample_format::unknown, "unknown audio sample format");
+    iferror(buf.frequency == 0, "frequency is 0");
+    iferror(buf.frequency >= 600'000, "frequency >= 600K");
+    iferror(buf.samples == 0, "audio samples is empty");
+    iferror(buf.data.size() >= 1024 * 1024 * 1024 * 1.5, "audio data >= 1.5 Gb");
+    iferror(buf.data.empty(), "data is empty");
   }
 }; // Impl
 
-Sound_mgr::Sound_mgr(cr<Sound_mgr::Config> cfg): _impl{new_unique<Impl>(cfg)} {}
+Sound_mgr::Sound_mgr(cr<Sound_config> cfg): _impl{new_unique<Impl>(cfg)} {}
 Sound_mgr::~Sound_mgr() {}
 void Sound_mgr::clear() { _impl->clear(); }
 void Sound_mgr::stop_all() { _impl->stop_all(); }
@@ -622,3 +653,4 @@ void Sound_mgr::continue_all() { _impl->continue_all(); }
 void Sound_mgr::update() { _impl->update(); }
 cr<Sound_mgr::Status> Sound_mgr::status() const { return _impl->status(); }
 Weak<Sound_mgr::Audio> Sound_mgr::make(cr<Str> name) { return _impl->make(name); }
+void Sound_mgr::registrate(cr<Str> name, cr<Audio_buffer> data) { _impl->registrate(name, data); }

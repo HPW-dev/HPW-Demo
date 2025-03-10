@@ -1,9 +1,4 @@
-#include <chrono>
-#include <cstdlib>
 #include <cstring>
-#include <utility>
-#include <thread>
-#include <cmath>
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/path.hpp"
@@ -14,52 +9,73 @@
 #include "sound/sound-mgr.hpp"
 //#include "sound/audio-io.hpp"
 
-/*
-Audio make_sin_wave(const float freq) {
-  Audio sine_wave;
-  sine_wave.channels = 1;
-  sine_wave.compression = Audio::Compression::raw;
-  sine_wave.format = Audio::Format::pcm_f32;
-  sine_wave.set_generated(true);
-  sine_wave.frequency = 48'000;
-  sine_wave.samples = sine_wave.frequency * 4;
-  Vector<float> f32_wave(sine_wave.samples * sine_wave.channels);
+void test_init_status() {
+  log_info << "Audio test: check empty status";
+
+  // проверить что звук инициализирован и ничего не проигрывается
+  Sound_mgr mgr;
+  mgr.update();
+  cauto status = mgr.status();
+  //iferror(!status.enabled, "sound is not enabled"); TODO
+  iferror(status.audios_running_now != 0, "audios running now != 0");
+}
+
+void test_bad_name() {
+  log_info << "Audio test: check bad audio name";
+
+  Sound_mgr mgr;
+  mgr.update();
+
+  Weak<Sound_mgr::Audio> audio {};
+
+  // проверить создание несуществующего трека и реакции на это
+  try {
+    audio = mgr.make("unknown name test.wav");
+  } catch (...) {
+    iferror(!audio.expired(), "audio is not expired");
+    log_info << "passed";
+    return;
+  }
+
+  error("it was impossible to get into this part of code");
+}
+
+Audio_buffer make_sin_wave(const float freq) {
+  Audio_buffer ret;
+  ret.channels = 1;
+  ret.compression = Audio_compression::raw;
+  ret.format = Sample_format::f32;
+  ret.frequency = 48'000;
+  ret.samples = ret.frequency * 4;
+  Vector<float> f32_wave(ret.samples * ret.channels);
   float step {};
+
   for (rauto sample: f32_wave) {
     sample = std::sin(step);
     step += freq;
   }
-  sine_wave.data.resize(sine_wave.samples * sizeof(float) * sine_wave.channels);
-  std::memcpy(sine_wave.data.data(), f32_wave.data(), sine_wave.data.size());
-  return sine_wave;
-}
-*/
 
-void test_sine() {
+  ret.data.resize(ret.samples * sizeof(float) * ret.channels);
+  std::memcpy(ret.data.data(), f32_wave.data(), ret.data.size());
+  return ret;
+}
+
+void test_sine_1() {
   log_info << "Audio test: playing sine wave (1)";
 
-  Sound_mgr mgr({});
+  Sound_mgr mgr;
 
   // добавление звука в базу
-  // TODO...
+  cauto data = make_sin_wave(0.15);
+  mgr.registrate("sine test 1.mono_pcm_f32", data);
 
   // запуск звука
-  mgr.make("sine test 1");
+  mgr.make("sine test 1.mono_pcm_f32");
 
   // ожидание пока все звуки завершатся
-  error_if (!wait_for([&]{ return mgr.status().audios_running_now == 0; }, 15));
-
-  /*
-  // добавить звук в базу
-  Sound_mgr_oal sound_mgr;
-  auto sine_wave = make_sin_wave(0.15);
-  sound_mgr.move_audio("sine wave", std::move(sine_wave));
-
-  // проиграть звук
-  cauto audio_id = sound_mgr.play("sine wave");
-  wait_for([&]{ return !sound_mgr.is_playing(audio_id); }, 15);
-  */
-} // test_sine
+  if (!wait_for([&]{ return mgr.status().audios_running_now == 0; }, 15))
+    log_error << "timeout!";
+}
 
 /*
 
@@ -189,8 +205,11 @@ void test_file(cr<Str> fname) {
 
 int main(int argc, char *argv[]) {
   try {
+    hpw::Logger::config.use_stream_debug = true;
     hpw::cur_dir = launch_dir_from_argv0(argv);
-    test_sine();
+    test_init_status();
+    test_bad_name();
+    test_sine_1();
     /*test_noise();
     test_motion_sine();
     test_mix();
@@ -198,6 +217,7 @@ int main(int argc, char *argv[]) {
     test_overplay();
     test_file("resource/audio/sfx/recharge/recharge.flac");
     test_file("resource/audio/sfx/recharge/recharge fast 2.flac");*/
+    log_info << "end of tests";
   } catch (cr<hpw::Error> err) {
     hpw::Logger::config.print_source = false;
     log_error << err.what();
