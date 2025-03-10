@@ -1,3 +1,4 @@
+#ifndef DISABLE_SOUND
 #include <cassert>
 #include "sound.hpp"
 #include "sound-io.hpp"
@@ -92,3 +93,4 @@ void Track::set_config(cr<Track::Config> cfg) {
 }
 
 } // sound ns
+#endif // DISABLE_SOUND

@@ -37,6 +37,7 @@ def parse_args():
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
   hpw_config.use_data_zip = bool(int(ARGUMENTS.get('use_data_zip', 1)))
   hpw_config.use_netplay = bool(int(ARGUMENTS.get('use_netplay', 0)))
+  hpw_config.disable_sound = bool(int(ARGUMENTS.get('disable_sound', 0)))
   hpw_config.disable_graphic = bool(int(ARGUMENTS.get('disable_graphic', 0)))
   hpw_config.use_ccache = bool(int(ARGUMENTS.get('use_ccache', 0)))
   assert hpw_config.build_script, 'path to build script needed'
@@ -80,6 +81,7 @@ def print_params():
   print(f'Static link: {yn2s(hpw_config.static_link)}')
   print(f'OpenMP: {yn2s(hpw_config.enable_omp)}');
   print(f'Netplay: {yn2s(hpw_config.use_netplay)}')
+  print(f'Sound: {yn2s(not hpw_config.disable_sound)}')
   print(f'Graphic: {yn2s(not hpw_config.disable_graphic)}')
   print(f'ASAN checks: {yn2s(hpw_config.enable_asan)}')
   print(f'CXX: {green_text(hpw_config.custom_cxx) if hpw_config.custom_cxx else yelow_text('default')}')
@@ -191,6 +193,10 @@ def accept_params():
   # сетевая игра
   if hpw_config.use_netplay:
     hpw_config.cxx_defines.append('-DUSE_NETPLAY')
+
+  # сетевая игра
+  if hpw_config.disable_sound:
+    hpw_config.cxx_defines.append('-DDISABLE_SOUND')
   
   # режим без графики
   if hpw_config.disable_graphic:
