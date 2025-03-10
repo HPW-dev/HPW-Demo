@@ -25,7 +25,7 @@ inline static void _check_audio_buffer(cr<Buffer> buf) {
 
 // init OpenAL
 inline static void _init_oal() {
-  // TODO
+  log_warning << "TODO need impl"; // TODO
 }
 
 void init(cr<Config> cfg) {
@@ -49,7 +49,7 @@ void init(cr<Config> cfg) {
 
 void update() {
   ret_if(!_info.enabled);
-  // TODO
+  log_warning << "TODO need impl"; // TODO
 }
 
 Info info() { return _info; }
@@ -73,20 +73,22 @@ Shared<Track> play(cr<Buffer> buf) {
   hpw::logger.config.print_source = true;
 
   _check_audio_buffer(buf);
-  // TODO...
+  log_warning << "TODO need impl"; // TODO
   return {}; // TODO
 }
 
 Tracks all_tracks() {
+  log_warning << "TODO need impl"; // TODO
   return {}; // TODO
 }
 
 Track::Config Track::get_config() const {
+  log_warning << "TODO need impl"; // TODO
   return {}; // TODO
 }
 
 void Track::set_config(cr<Track::Config> cfg) {
-  // TODO
+  log_warning << "TODO need impl"; // TODO
 }
 
 } // sound ns
