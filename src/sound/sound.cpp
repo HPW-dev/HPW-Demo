@@ -7,6 +7,7 @@
 #include "sound.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
+#include "game/util/resource-helper.hpp"
 
 namespace sound {
 
@@ -19,27 +20,66 @@ struct Oal_track {
 Info _info {};
 Config _config {};
 Uid _cur_uid {};
+std::unordered_map<Str, Buffer> _store {}; // связка <путь до буффера, буффер>
 
 // привязать аудио-буффер к названию
-Shared<Buffer> _registrate_buffer(cr<Str> path, cr<Buffer> buf) { 
+cr<Buffer> _registrate_buffer(cr<Str> path, cr<Buffer> buf) { 
   iferror(path.empty(), "audio-buffer path is empty");
   iferror(buf.file.data.empty(), "audio-buffer data is empty");
+  
+  if (_store.find(path) != _store.end()) {
+    log_warning << "audio-buffer with path \"" << path << "\" has already been added. " <<
+      "this could be a mistake \"use heap after free\"";
+  }
+  
   log_debug << "registrate audio buffer by path \"" << path << "\" in the audio-store";
+  _store[path] = buf;
+  return _store[path];
+}
 
-  log_warning << "TODO need impl for registation buffer";  // TODO
+// привязать аудио-буффер к названию (через move)
+cr<Buffer> _move_buffer(cr<Str> path, Buffer&& buf) { 
+  iferror(path.empty(), "audio-buffer path is empty");
+  iferror(buf.file.data.empty(), "audio-buffer data is empty");
+  
+  if (_store.find(path) != _store.end()) {
+    log_warning << "audio-buffer with path \"" << path << "\" has already been added. " <<
+      "this could be a mistake \"use heap after free\"";
+  }
+  
+  log_debug << "registrate (using std::move) audio buffer by path \"" << path << "\" in the audio-store";
+  _store[path] = std::move(buf);
+  return _store[path];
+}
+
+// определяет по данным из файла формат аудио-буффера
+Buffer _move_file_to_buffer(File&& file) {
+  log_warning << "TODO need impl";
   return {}; // TODO
 }
 
 cr<Buffer> _load_buffer(cr<Str> path) {
-  log_warning << "TODO need impl"; // TODO + lazy loading
-  error("TODO need impl");
-  return *((const Buffer*)0); // TODO
+  try {
+    log_debug << "loading audio-buffer \"" << path << "\"...";
+    return _store.at(path);
+  } catch (...) {
+    if (_config.lazy_loading) {
+      log_debug << "audio-buffer \"" << path << "\" not finded in audio-store. " <<
+        "Trying to find audio-file in game-resources...";
+      auto file = load_res(path);
+      _move_buffer(path, _move_file_to_buffer(std::move(file)));
+    }
+  }
+
+  error("error while loading audio-buffer");
+  return *((const Buffer*)0); // заглушка для анализатора
 }
 
 // удалить все привязанные аудио-файлы
 void _clear_store() {
   log_debug << "clear audio-store...";
-  log_warning << "TODO need impl";
+  iferror(info().enabled, "audio-system is not closed");
+  _store.clear();
 }
 
 namespace oal {
@@ -134,6 +174,7 @@ inline static void _init_oal() {
 inline static void _finalize() {
   ret_if (!_info.enabled);
   log_debug << "disable sound system...";
+  _info.enabled = false;
   log_warning << "TODO need impl"; // TODO
   _close_oal();
 }
@@ -167,6 +208,7 @@ void init(cr<Config> cfg) {
 
   hpw::logger.config.print_source = false;
   log_debug << "- enabled: " << yn2s(cfg.enabled);
+  log_debug << "- lazy loading audio-files: " << yn2s(cfg.lazy_loading);
   log_debug << "- buffer size: " << cfg.buffer_sz << " bytes ";
   log_debug << "- buffers: " << cfg.buffers;
   log_debug << "- max sounds: " << cfg.max_sounds;

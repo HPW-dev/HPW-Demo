@@ -33,13 +33,14 @@ public:
 // для стартовой настройки аудиосистемы
 struct Config final {
   bool enabled {true};        // false - без звука
+  bool lazy_loading {true};   // true - грузить аудио файлы только в момент обращения к ним
   uint buffers = 4;           // число сменяющихся буферов потока
   uint buffer_sz = 1024 * 16; // размер одного буфера потока в байтах
   uint max_sounds = 100;      // сколько звуков можно проиграть одновременно
 };
 
 struct Info final {
-  bool enabled {};            // аудио-система включена?
+  bool enabled {};            // true - аудио-система включена
   uint tracks_playing_now {}; // сколько треков играет сейчас
   uint tracks_stoped_now {};  // сколько треков на паузе сейчас
   uint total_played {};       // сколько треков было проиграно
