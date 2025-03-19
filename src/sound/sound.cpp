@@ -5,22 +5,42 @@
 #include <cassert>
 #include <unordered_map>
 #include "sound.hpp"
-#include "sound-io.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
-#include "util/file/file.hpp"
-#include "game/util/resource-helper.hpp"
 
 namespace sound {
 
 struct Oal_track {
   Shared<Track> track {};
-  Buffer buffer {};
+  Track::Config track_config {};
+  cp<Buffer> buffer_p {};
 };
   
 Info _info {};
 Config _config {};
 Uid _cur_uid {};
+
+// привязать аудио-буффер к названию
+Shared<Buffer> _registrate_buffer(cr<Str> path, cr<Buffer> buf) { 
+  iferror(path.empty(), "audio-buffer path is empty");
+  iferror(buf.file.data.empty(), "audio-buffer data is empty");
+  log_debug << "registrate audio buffer by path \"" << path << "\" in the audio-store";
+
+  log_warning << "TODO need impl for registation buffer";  // TODO
+  return {}; // TODO
+}
+
+cr<Buffer> _load_buffer(cr<Str> path) {
+  log_warning << "TODO need impl"; // TODO + lazy loading
+  error("TODO need impl");
+  return *((const Buffer*)0); // TODO
+}
+
+// удалить все привязанные аудио-файлы
+void _clear_store() {
+  log_debug << "clear audio-store...";
+  log_warning << "TODO need impl";
+}
 
 namespace oal {
   bool initialized {};
@@ -54,9 +74,8 @@ inline static void _check_audio_buffer(cr<Buffer> buf) {
   iferror(buf.frequency == 0, "frequency is 0");
   iferror(buf.frequency >= 600'000, "frequency >= 600K");
   iferror(buf.samples == 0, "audio samples is empty");
-  iferror(!buf.data, "data ptr is empty");
-  iferror(buf.data->size() >= 1024 * 1024 * 1024 * 1.5, "audio data >= 1.5 Gb");
-  iferror(buf.data->empty(), "data is empty");
+  iferror(buf.file.data.size() >= 1024 * 1024 * 1024 * 1.5, "audio data >= 1.5 Gb");
+  iferror(buf.file.data.empty(), "data is empty");
 }
 
 inline static void _close_oal() {
@@ -121,16 +140,15 @@ inline static void _finalize() {
 
 // добавить трек в базу для проигрывания
 inline static Shared<Track> _attach_track(cr<Buffer> buf) {
-  assert(buf.data);
-  log_debug << "attach audio-buffer \"" << buf.source_path << "\"";
+  assert(!buf.file.data.empty());
+  log_debug << "attach audio-buffer \"" << buf.file.get_path() << "\"";
   
   ++_cur_uid;
   oal::tracks[_cur_uid] = Oal_track{};
   auto oal_track = oal::tracks.at(_cur_uid);
   init_shared(oal_track.track);
   oal_track.track->uid = _cur_uid;
-  oal_track.track->name = buf.source_path;
-  oal_track.buffer = buf;
+  oal_track.buffer_p = &buf;
   return oal_track.track;
 }
 
@@ -174,30 +192,28 @@ void update() {
 
 Info info() { return _info; }
 
-Shared<Track> play(cr<Str> path) {
-  ret_if(!_info.enabled, {});
-  cauto file = load_res(path);
-  cauto buffer = file_to_buffer(file);
-  return play(buffer);
-}
-
 Shared<Track> play(cr<Buffer> buf) {
   ret_if(!_info.enabled, {});
 
-  log_debug << "play audio-buffer \"" << buf.source_path << "\":";
+  log_debug << "play audio-buffer \"" << buf.file.get_path() << "\":";
   hpw::logger.config.print_source = false;
+  log_debug << "- generated: " << yn2s(buf.file.is_generated());
   log_debug << "- channels: " << buf.channels;
   log_debug << "- frequency: " << buf.frequency;
   log_debug << "- samples: " << buf.samples;
-  log_debug << "- data size: " << buf.data->size() << " bytes";
+  log_debug << "- data size: " << buf.file.data.size() << " bytes";
   hpw::logger.config.print_source = true;
 
   _check_audio_buffer(buf);
+  if (cauto path = buf.file.get_path(); !path.empty())
+    _registrate_buffer(path, buf);
   auto track = _attach_track(buf);
   _oal_play(track);
   ++_info.tracks_playing_now;
   return track;
 }
+
+Shared<Track> play(cr<Str> path) { return play(_load_buffer(path)); }
 
 Tracks all_tracks() {
   log_warning << "TODO need impl"; // TODO
@@ -205,8 +221,13 @@ Tracks all_tracks() {
 }
 
 Track::Config Track::get_config() const {
-  log_warning << "TODO need impl"; // TODO
-  return {}; // TODO
+  try {
+    return oal::tracks[this->uid].track_config;
+  } catch (...) {
+    log_warning << "no access to config";
+  }
+
+  return {};
 }
 
 void Track::set_config(cr<Track::Config> cfg) {
@@ -214,7 +235,12 @@ void Track::set_config(cr<Track::Config> cfg) {
 }
 
 // класс, который вызывает деструктор в конце работы игры и выключает OAL
-struct Autoclear { inline ~Autoclear() { _finalize(); } };
+struct Autoclear {
+  inline ~Autoclear() {
+    _finalize();
+    _clear_store();
+  }
+};
 static Autoclear _autoclear {};
 
 } // sound ns

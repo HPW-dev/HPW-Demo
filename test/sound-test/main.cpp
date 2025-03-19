@@ -4,10 +4,10 @@
 #include "util/path.hpp"
 #include "util/vector-types.hpp"
 #include "util/delay-for.hpp"
+#include "game/util/resource.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
 #include "sound/sound.hpp"
-//#include "sound/audio-io.hpp"
 
 void test_init_status() {
   log_info << "::: Audio test ::: check empty status :::";
@@ -46,14 +46,14 @@ void test_bad_name() {
   error("it was impossible to get into this part of code");
 }
 
-sound::Buffer make_sin_wave(const float freq) {
+sound::Buffer make_sin_wave(float freq) {
   sound::Buffer ret;
   ret.channels = 1;
   ret.compression = sound::Compression::raw;
   ret.format = sound::Format::f32;
   ret.frequency = 48'000;
   ret.samples = ret.frequency * 4;
-  ret.source_path = "generated sine wave, freq: " + n2s(freq, 5);
+  ret.file.set_path("sine wave (freq " + n2s(freq, 3) + ").mono_pcm_f32");
   Vector<float> f32_wave(ret.samples * ret.channels);
   float step {};
 
@@ -62,15 +62,14 @@ sound::Buffer make_sin_wave(const float freq) {
     step += freq;
   }
 
-  init_shared(ret.data);
-  ret.data->resize(ret.samples * sizeof(float) * ret.channels);
-  std::memcpy(ret.data->data(), f32_wave.data(), ret.data->size());
+  ret.file.data.resize(ret.samples * sizeof(float) * ret.channels);
+  std::memcpy(ret.file.data.data(), f32_wave.data(), ret.file.data.size());
   return ret;
 }
 
 void test_sine_1() {
   log_info << "::: Audio test ::: playing sine wave (1) :::";
-  cauto buf = make_sin_wave(0.15);
+  auto buf = make_sin_wave(0.15);
   sound::play(buf);
   iferror(sound::info().tracks_playing_now != 1, "tracks_playing_now != 1");
 

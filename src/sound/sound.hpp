@@ -52,15 +52,15 @@ using Tracks = Vector<Shared<Track>>;
   inline void init(cr<Config> cfg = {}) {}
   inline void update() {}
   inline Info info() { return {}; }
-  inline Shared<Track> play(cr<Str> path) { return {}; }
   inline Shared<Track> play(cr<Buffer> buf) { return {}; }
+  inline Shared<Track> play(cr<Str> path) { return {}; }
   inline Tracks all_tracks() { return {}; }
 #else
   void init(cr<Config> cfg = {});     // запуск аудио-системы
   void update();                      // обновить состояние воспроизводимых треков
   Info info();                        // получить текущий статус аудио-системы
-  Shared<Track> play(cr<Str> path);   // запустить трек из ресурсов
   Shared<Track> play(cr<Buffer> buf); // запустить трек из аудио-буффера
+  Shared<Track> play(cr<Str> path);   // поискать трек по имени из ресурсов
   Tracks all_tracks();                // получить все треки, которые проигрываются или на паузе
 #endif
 
