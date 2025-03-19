@@ -189,6 +189,7 @@ inline static Shared<Track> _attach_track(cr<Buffer> buf) {
   auto oal_track = oal::tracks.at(_cur_uid);
   init_shared(oal_track.track);
   oal_track.track->uid = _cur_uid;
+  oal_track.track->name = buf.file.get_path();
   oal_track.buffer_p = &buf;
   return oal_track.track;
 }

@@ -54,6 +54,7 @@ sound::Buffer make_sin_wave(float freq) {
   ret.frequency = 48'000;
   ret.samples = ret.frequency * 4;
   ret.file.set_path("sine wave (freq " + n2s(freq, 3) + ").mono_pcm_f32");
+  ret.file.set_generated(true);
   Vector<float> f32_wave(ret.samples * ret.channels);
   float step {};
 
