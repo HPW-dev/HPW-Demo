@@ -1,12 +1,14 @@
 import argparse
 
-def parse_args():
+def parse():
   ''' Парсит команды запуска '''
+
   parser = argparse.ArgumentParser (
     prog='python -m script.build',
     description='Script for build H.P.W',
     epilog='Copyright (c) 2020-2025 HPW-dev <hpwdev0@gmail.com>',
   )
+
   parser.add_argument('-t', '--threads', type=int, default=0, help='custom CPU\'s thread number for building')
   parser.add_argument('-i', '--info', action='store_true', help='disable building (use for watching options)')
   parser.add_argument('-p', '--platform', type=str, help='supported platforms: win32, win64, lin64')
@@ -18,14 +20,17 @@ def parse_args():
   parser.add_argument('-l', '--level', type=str, default='stable', help='optimization levels: debug, stable, ecomem, fast')
   parser.add_argument('-d', '--disable', action='store_true', help='list for disable: netplay, sound, config, replays')
   parser.add_argument('--tests', nargs='+', help='avaliable tests: graphic, math, random, sound, yaml, file-io, network')
+  
   args = parser.parse_args()
   parser.print_help()
+
   if args.info:
     print(f'argparse args: {args}')
-  return args
 
-def prepare_config():
-  ''' Подготавливает команды для конфига '''
-  args = parse_args()
-  return None
+  return prepare(args)
   
+  
+def prepare(args):
+  ''' Подготавливает команды для конфига '''
+  # TODO
+  return args

@@ -9,4 +9,4 @@ except:
   print('try this for start: python -m script.build -h')
   quit()
 
-config = arg_parser.prepare_config()
+config = arg_parser.parse()
