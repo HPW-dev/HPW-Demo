@@ -22,15 +22,17 @@ def parse():
   parser.add_argument('--tests', nargs='+', help='avaliable tests: graphic, math, random, sound, yaml, file-io, network')
   
   args = parser.parse_args()
+  args = prepare(args)
   parser.print_help()
 
   if args.info:
     print(f'argparse args: {args}')
 
-  return prepare(args)
+  return args
   
-  
+
 def prepare(args):
   ''' Подготавливает команды для конфига '''
-  # TODO
+  args.cxx_defines = []
+  args.cxx_flags = []
   return args
