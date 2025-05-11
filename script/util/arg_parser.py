@@ -1,5 +1,6 @@
 import argparse
 
+
 def parse():
   ''' Парсит команды запуска '''
 
@@ -20,6 +21,7 @@ def parse():
   parser.add_argument('-l', '--level', type=str, default='stable', help='optimization levels: debug, stable, ecomem, fast')
   parser.add_argument('-d', '--disable', action='store_true', help='list for disable: netplay, sound, config, replays')
   parser.add_argument('--tests', nargs='+', help='avaliable tests: graphic, math, random, sound, yaml, file-io, network')
+  parser.add_argument('--launch', nargs='+', help='post-build launcher: hpw, editor, tests')
   
   args = parser.parse_args()
   args = prepare(args)
