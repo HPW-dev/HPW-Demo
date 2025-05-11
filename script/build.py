@@ -3,6 +3,10 @@ if __name__ != "__main__":
   print("is not a python module (try command: python -m script.build -h)")
   quit()
 
-from .util import arg_parser
+try:
+  from .util import arg_parser
+except:
+  print('try this for start: python -m script.build -h')
+  quit()
 
 config = arg_parser.prepare_config()

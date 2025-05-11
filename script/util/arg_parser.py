@@ -13,17 +13,15 @@ def parse_args():
   parser.add_argument('-c', '--cpu', type=str, default='x86-64', help='supported CPU\'s: pentium2, atom, core2, x86-64, x86-64-v4')
   parser.add_argument('-o', '--omp', default=True, action='store_true', help='use OpenMP multithreading')
   parser.add_argument('-a', '--asan', default=False, action='store_true', help='use ASAN profiler')
+  parser.add_argument('--host', type=str, default='glfw3', help='supported hosts: sdl2, glfw3, null, asci')
   parser.add_argument('--compiler', type=str, default='g++')
   parser.add_argument('-l', '--level', type=str, default='stable', help='optimization levels: debug, stable, ecomem, fast')
-  parser.add_argument('--disable-netplay', type=str, action='store_true')
-  parser.add_argument('--disable-sound', type=str, action='store_true')
-  parser.add_argument('--disable-replays', type=str, action='store_true')
-  parser.add_argument('--disable-config', type=str, action='store_true')
-  parser.add_argument('--disable-graphic-dlls', type=str, default=True, action='store_true')
+  parser.add_argument('-d', '--disable', action='store_true', help='list for disable: netplay, sound, config, replays')
   parser.add_argument('--tests', nargs='+', help='avaliable tests: graphic, math, random, sound, yaml, file-io, network')
   args = parser.parse_args()
-  #print(args)
   parser.print_help()
+  if args.info:
+    print(f'argparse args: {args}')
   return args
 
 def prepare_config():

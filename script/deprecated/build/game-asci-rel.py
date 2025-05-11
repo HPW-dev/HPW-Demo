@@ -7,7 +7,6 @@ from .. import helper
 opts = \
   ' -Q enable_omp=1' \
   ' -Q enable_asan=0' \
-  ' -Q host=glfw3' \
   ' -Q host=asci' \
   ' -Q compiler=gcc' \
   ' -Q use_netplay=1' \
