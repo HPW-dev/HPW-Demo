@@ -1,41 +1,10 @@
 import sys
+import platform
 import os
 import time
 import subprocess
 import glob
 import shutil
-from enum import Enum
-
-Bitness = Enum('Bitness', ['x32', 'x64'])
-System = Enum('System', ['windows', 'linux'])
-Compiler = Enum('Compiler', ['gcc', 'clang', 'msvc'])
-Opt_level = Enum('Opt_level', ['fast', 'debug', 'optimized_debug', 'stable',
-  'x86_64_v1', 'x86_64_v4', 'ecomem', 'core2', 'atom', 'i386_stable', 'i386'])
-Host = Enum('Host', ['glfw3', 'sdl2', 'asci', 'none'])
-
-class Hpw_config:
-  '''хранит настройки билда'''
-  # управляющие переменные:
-  bitness = Bitness.x64 # разрядность системы для которой билдят
-  system = System.windows # система для которой билдят
-  compiler = Compiler.gcc
-  opt_level = Opt_level.debug
-  host = Host.glfw3
-  enable_omp = True
-  enable_asan = False
-  use_ccache = False
-  use_data_zip = True # грузить данные из архива с ресурсами игры
-  use_netplay = False # использовать LAN
-  disable_graphic = False # не использовать графику
-  static_link = False # статически слинковать все библиотеки
-  build_script = '' # какой скрипт для SCons использовать для сборки кода
-  custom_cxx: str # свой путь до компилятора C++
-  custom_cc: str # свой путь до компилятора C
-
-  # опции билда C++:
-  cxx_defines = []
-  cxx_ldflags = []
-  cxx_flags = []
 
 def set_work_dir(path):
   "cd"
@@ -186,3 +155,9 @@ def check_python_version():
   except:
     print(f'error while getting version of python')
   return 'unknown'
+
+def get_system_info():
+  ''':return: system name, bitness'''
+  name = platform.system() # 'Windows', 'Linux', 'Darwin' (macOS)
+  bitness = 'x32' if platform.architecture()[0] == '32bit' else 'x64'
+  return name.lower(), bitness

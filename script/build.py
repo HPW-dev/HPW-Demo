@@ -4,15 +4,22 @@ if __name__ != "__main__":
   quit()
 
 try:
+  from .util import helper
+  helper.check_python_version()
+
   from .util import arg_parser
   from .util import build_info
   from .util import builder
   from .util import launcher
+
+  import colorama
+  colorama.init()
 except:
-  print('try this for start: python -m script.build -h')
+  print(colorama.Fore.RED + 'try this for start: python -m script.build -h' + colorama.Style.RESET_ALL)
   quit()
 
 config = arg_parser.parse()
+config = build_info.prepare(config)
 build_info.print_info(config)
 
 if config.info: # print info only
