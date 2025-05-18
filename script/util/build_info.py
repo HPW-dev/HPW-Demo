@@ -28,6 +28,47 @@ def check_value(value):
     return colorama.Fore.YELLOW + str(value) + colorama.Style.RESET_ALL
   return colorama.Fore.LIGHTBLACK_EX + "❔ ???" + colorama.Style.RESET_ALL
 
+def need_impl():
+  assert False, colorama.Fore.BLUE + 'need impl' + colorama.Style.RESET_ALL
+
+
+def prepare_opts(config):
+  '''подготавливает опции для GCC/Clang компилятора'''
+  config.cxx_flags.extend([
+    '-std=c++23',
+    '-Wall', '-Wfatal-errors', # останавливать компиляцию при первой ошибке
+    # '-Wextra', '-pedantic', '-Wno-unused-parameter', # больше ворнингов!
+    '-finput-charset=UTF-8', '-fextended-identifiers', # поддержка UTF-8
+    '-m32' if config.bitness == 'x32' else '-m64',
+  ])
+  config.defines.extend(['-DWINDOWS' if config.system == 'windows' else '-DLINUX'])
+  if config.system == 'linux':
+    config.cxx_flags.extend(['-fdiagnostics-color=always'])
+
+  match config.target:
+    case 'win_x64_debug' | 'win_x32_debig' | 'lin_x64_debug':
+      config.cxx_flags.extend(['-O0', '-g0'])
+      config.defines.extend(['-DDEBUG'])
+    case 'win_xp': quit(colorama.Fore.RED + 'now Windows XP is not supported' + colorama.Style.RESET_ALL) # TODO
+    case 'win_atom':
+      config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=atom', '-mtune=atom'])
+      config.ld_flags.extend(['-mwindows', '-flto=auto'])
+      config.defines.extend(['-DNDEBUG', '-DRELEASE'])
+    case 'win_core2':
+      config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=core2', '-mtune=core2'])
+      config.ld_flags.extend(['-mwindows', '-flto=auto'])
+      config.defines.extend(['-DNDEBUG', '-DRELEASE'])
+    case 'win_x64' | 'lin_x64':
+      config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=x86-64', '-mtune=generic'])
+      config.ld_flags.extend(['-mwindows', '-flto=auto'])
+      config.defines.extend(['-DNDEBUG', '-DRELEASE'])
+    case 'win_x64_v4'| 'lin_x64_v4':  
+      config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=x86-64-v4', '-mtune=generic'])
+      config.ld_flags.extend(['-mwindows', '-flto=auto'])
+      config.defines.extend(['-DNDEBUG', '-DRELEASE'])
+    case 'lin_x32': need_impl() # TODO
+    case _: quit(colorama.Fore.RED + f'unknown target {config.target}' + colorama.Style.RESET_ALL)
+  return config
 
 def prepare(config):
   ''' докидывают дополнительную информацию в конфиг '''
@@ -56,6 +97,7 @@ def prepare(config):
       config.cc = os_cc
     else:
       config.cc = 'gcc'
+  config = prepare_opts(config)
   return config
 
 
