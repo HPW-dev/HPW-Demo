@@ -1,5 +1,6 @@
 from . import helper
 import colorama
+import os
 
 
 def quess_target(config):
@@ -14,8 +15,19 @@ def quess_target(config):
     else:
       return 'lin_x64'
   else:
-    print(colorama.Fore.RED + f'unknown target system {config.system}' + colorama.Style.RESET_ALL)
-    quit()
+    quit(colorama.Fore.RED + f'unknown target system {config.system}' + colorama.Style.RESET_ALL)
+
+def is_enable(config, value):
+  ''' Enabled Or Disabled '''
+  if config.enable and value in config.enable:
+    return colorama.Fore.GREEN + "✅ enabled" + colorama.Style.RESET_ALL
+  return colorama.Fore.RED + "❌ disabled" + colorama.Style.RESET_ALL
+
+def check_value(value):
+  if value:
+    return colorama.Fore.YELLOW + str(value) + colorama.Style.RESET_ALL
+  return colorama.Fore.LIGHTBLACK_EX + "❔ ???" + colorama.Style.RESET_ALL
+
 
 def prepare(config):
   ''' докидывают дополнительную информацию в конфиг '''
@@ -30,24 +42,30 @@ def prepare(config):
     config.system, config.bitness = helper.get_system_info()
   if not config.target:
     config.target = quess_target(config)
+  if config.system == 'windows' and config.enable and 'asan' in config.enable:
+    quit(colorama.Fore.RED + f'ASAN not allowed in Windows' + colorama.Style.RESET_ALL)
+  if not config.cxx:
+    os_cxx = os.getenv('CXX')
+    if os_cxx:
+      config.cxx = os_cxx
+    else:
+      config.cxx = 'g++'
+  if not config.cc:
+    os_cc = os.getenv('CC')
+    if os_cc:
+      config.cc = os_cc
+    else:
+      config.cc = 'gcc'
   return config
-
-
-def is_enable(config, value):
-  ''' Enabled Or Disabled '''
-  if config.enable and value in config.enable:
-    return colorama.Fore.GREEN + "enabled" + colorama.Style.RESET_ALL
-  return colorama.Fore.RED + "disabled" + colorama.Style.RESET_ALL
-
-def check_value(value):
-  if value:
-    return colorama.Fore.YELLOW + str(value) + colorama.Style.RESET_ALL
-  return colorama.Fore.LIGHTBLACK_EX + "???" + colorama.Style.RESET_ALL
 
 
 def print_info(config):
   ''' общая сводка билда '''
   print('\n--------------------------------{ Building info }--------------------------------')
+  if config.info:
+    print(f'argparse args: {check_value(config)}')
+    print('')
+
   print(f"Python version: {check_value(config.python_ver)}")
   print(f"Game version: {check_value(config.game_ver)}")
   print(f"Last commit: {check_value(config.commit_date)}")

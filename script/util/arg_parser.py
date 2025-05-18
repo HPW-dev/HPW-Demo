@@ -18,8 +18,8 @@ def parse():
   parser.add_argument('-e', '--enable',  nargs='+', help='enable options: asan omp replay netplay '
     'sound data config static')
   parser.add_argument('--host', type=str, default='glfw3', help='supported hosts: sdl2 glfw3 null asci')
-  parser.add_argument('--cxx', type=str, default='g++', help='default C++ compiler')
-  parser.add_argument('--cc', type=str, default='gcc', help='default C compiler')
+  parser.add_argument('--cxx', type=str, help='default C++ compiler')
+  parser.add_argument('--cc', type=str, help='default C compiler')
   parser.add_argument('--tests', nargs='+', help='avaliable tests: graphic math random sound yaml '
     'file-io network')
   parser.add_argument('--launch', nargs='+', help='post-build launch: hpw editor tests')
@@ -27,9 +27,6 @@ def parse():
   args = parser.parse_args()
   args = prepare(args)
   parser.print_help()
-
-  if args.info:
-    print(f'argparse args: {args}')
 
   return args
   

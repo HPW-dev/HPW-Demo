@@ -1,7 +1,6 @@
 # защита от запуска скрипта как питоновского модуля
 if __name__ != "__main__":
-  print("is not a python module (try command: python -m script.build -h)")
-  quit()
+  quit("is not a python module (try command: python -m script.build -h)")
 
 try:
   from .util import helper
@@ -15,15 +14,14 @@ try:
   import colorama
   colorama.init()
 except:
-  print(colorama.Fore.RED + 'try this for start: python -m script.build -h' + colorama.Style.RESET_ALL)
-  quit()
+  quit(colorama.Fore.RED + 'try this for start: python -m script.build -h' + colorama.Style.RESET_ALL)
 
 config = arg_parser.parse()
 config = build_info.prepare(config)
 build_info.print_info(config)
 
 if config.info: # print info only
-  quit()
+  quit(0)
 
 builder.build(config)
 launcher.launch(config)
