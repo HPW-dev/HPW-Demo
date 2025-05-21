@@ -1,20 +1,20 @@
+#!/usr/bin/env python
+# How to build: "cd" to project root & call "python script/build.py"
+
 # защита от запуска скрипта как питоновского модуля
 if __name__ != "__main__":
-  quit("is not a python module (try command: python -m script.build -h)")
+  quit("is not a python module (try command: python script/build.py -h)")
 
-try:
-  from .util import helper
-  helper.check_python_version()
+import colorama
+colorama.init()
 
-  from .util import arg_parser
-  from .util import build_info
-  from .util import builder
-  from .util import launcher
+from util import helper
+helper.check_python_version()
 
-  import colorama
-  colorama.init()
-except:
-  quit(colorama.Fore.RED + 'try this for start: python -m script.build -h' + colorama.Style.RESET_ALL)
+from util import arg_parser
+from util import build_info
+from util import builder
+from util import launcher
 
 config = arg_parser.parse()
 config = build_info.prepare(config)
