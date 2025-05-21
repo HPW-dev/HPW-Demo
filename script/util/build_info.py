@@ -2,7 +2,6 @@ from . import helper
 import colorama
 import os
 
-
 def quess_target(config):
   if config.system == 'windows':
     if config.bitness == 'x32':
@@ -30,7 +29,6 @@ def check_value(value):
 
 def need_impl():
   assert False, colorama.Fore.BLUE + 'need impl' + colorama.Style.RESET_ALL
-
 
 def prepare_opts(config):
   '''подготавливает опции для GCC/Clang компилятора'''
@@ -100,7 +98,6 @@ def prepare(config):
   config = prepare_opts(config)
   return config
 
-
 def print_info(config):
   ''' общая сводка билда '''
   print('\n--------------------------------{ Building info }--------------------------------')
@@ -134,3 +131,16 @@ def print_info(config):
   print(f'Config I/O: {is_enable(config, "config")}')
   print(f'Data.zip I/O: {is_enable(config, "data")}')
   
+def dir_exists(name):
+  if not os.path.isdir(name):
+    quit(colorama.Fore.RED + f'directory \"{name} not founded' + colorama.Style.RESET_ALL)
+
+def file_exists(name):
+  if not os.path.isfile(name):
+    quit(colorama.Fore.RED + f'file \"{name} not founded' + colorama.Style.RESET_ALL)
+
+def env_test():
+  print('checking folders...')
+  dir_exists('./.tmp')
+  dir_exists('./build')
+  file_exists('./SConstruct')

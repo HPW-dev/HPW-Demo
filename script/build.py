@@ -17,6 +17,7 @@ from util import builder
 from util import launcher
 
 config = arg_parser.parse()
+build_info.env_test()
 config = build_info.prepare(config)
 build_info.print_info(config)
 
