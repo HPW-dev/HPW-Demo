@@ -132,15 +132,19 @@ def print_info(config):
   print(f'Data.zip I/O: {is_enable(config, "data")}')
   
 def dir_exists(name):
-  if not os.path.isdir(name):
+  if os.path.isdir(name):
+    print(f'directory \"{name}\" founded')
+  else:
     quit(colorama.Fore.RED + f'directory \"{name} not founded' + colorama.Style.RESET_ALL)
 
 def file_exists(name):
-  if not os.path.isfile(name):
+  if os.path.isfile(name):
+    print(f'file \"{name}\" founded')
+  else:
     quit(colorama.Fore.RED + f'file \"{name} not founded' + colorama.Style.RESET_ALL)
 
 def env_test():
-  print('checking folders...')
+  print('\n--------------------------------{ Check folders }--------------------------------')
   dir_exists('./.tmp')
   dir_exists('./build')
   file_exists('./SConstruct')

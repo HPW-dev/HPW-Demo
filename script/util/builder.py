@@ -6,7 +6,7 @@ bin_dir = build_dir + "bin/"
 test_dir = 'test/'
 src_dir = 'src/'
 
-def compilation_test():
+def compilation_test(config):
   print('\n--------------------------------{ Compilation test }--------------------------------')
   cxx_target = bin_dir + "cxx-test.exe"
   sources = test_dir + "cxx/main.cpp"
@@ -29,7 +29,7 @@ def compilation_test():
     quit('cxx test status: failure')
 
 def build(config):
-  compilation_test()
+  compilation_test(config)
 
   print('\n--------------------------------{ Build H.P.W }--------------------------------')
   # TODO передать конфиг в sconscript и скопировать лицензии с ресурсами куда надо
