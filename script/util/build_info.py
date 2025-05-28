@@ -57,13 +57,21 @@ def prepare_opts(config):
       config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=core2', '-mtune=core2'])
       config.ld_flags.extend(['-mwindows', '-flto=auto'])
       config.defines.extend(['-DNDEBUG', '-DRELEASE'])
-    case 'win_x64' | 'lin_x64':
+    case 'win_x64':
       config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=x86-64', '-mtune=generic'])
       config.ld_flags.extend(['-mwindows', '-flto=auto'])
       config.defines.extend(['-DNDEBUG', '-DRELEASE'])
-    case 'win_x64_v4'| 'lin_x64_v4':  
+    case 'lin_x64':
+      config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=x86-64', '-mtune=generic'])
+      config.ld_flags.extend(['-flto=auto'])
+      config.defines.extend(['-DNDEBUG', '-DRELEASE'])
+    case 'win_x64_v4':  
       config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=x86-64-v4', '-mtune=generic'])
       config.ld_flags.extend(['-mwindows', '-flto=auto'])
+      config.defines.extend(['-DNDEBUG', '-DRELEASE'])
+    case 'lin_x64_v4':  
+      config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=x86-64-v4', '-mtune=generic'])
+      config.ld_flags.extend(['-flto=auto'])
       config.defines.extend(['-DNDEBUG', '-DRELEASE'])
     case 'lin_x32': need_impl() # TODO
     case _: quit(Fore.RED + f'unknown target {config.target}' + Style.RESET_ALL)
