@@ -1,5 +1,5 @@
 from .helper import get_game_version, check_python_version, get_max_threads, get_system_info
-from colorama import Fore, Style
+from .color_text import TXT_RED, TXT_RST, TXT_GREEN, TXT_YELLOW, TXT_GRAY
 from os import path as os_path, getenv as os_getenv
 
 def quess_target(config):
@@ -14,21 +14,21 @@ def quess_target(config):
     else:
       return 'lin_x64'
   else:
-    quit(Fore.RED + f'unknown target system {config.system}' + Style.RESET_ALL)
+    quit(TXT_RED + f'unknown target system {config.system}' + TXT_RST)
 
 def is_enable(config, value):
   ''' Enabled Or Disabled '''
   if config.enable and value in config.enable:
-    return Fore.GREEN + "✅ enabled" + Style.RESET_ALL
-  return Fore.RED + "❌ disabled" + Style.RESET_ALL
+    return TXT_GREEN + "✅ enabled" + TXT_RST
+  return TXT_RED + "❌ disabled" + TXT_RST
 
 def check_value(value):
   if value:
-    return Fore.YELLOW + str(value) + Style.RESET_ALL
-  return Fore.LIGHTBLACK_EX + "❔ ???" + Style.RESET_ALL
+    return TXT_YELLOW + str(value) + TXT_RST
+  return TXT_GRAY + "❔ ???" + TXT_RST
 
 def need_impl():
-  assert False, Fore.BLUE + 'need impl' + Style.RESET_ALL
+  assert False, Fore.BLUE + 'need impl' + TXT_RST
 
 def prepare_opts(config):
   '''подготавливает опции для GCC/Clang компилятора'''
@@ -48,7 +48,7 @@ def prepare_opts(config):
     case 'win_x64_debug' | 'win_x32_debig' | 'lin_x64_debug':
       config.cxx_flags.extend(['-O0', '-g0'])
       config.defines.extend(['-DDEBUG'])
-    case 'win_xp': quit(Fore.RED + 'now Windows XP is not supported' + Style.RESET_ALL) # TODO
+    case 'win_xp': quit(TXT_RED + 'now Windows XP is not supported' + TXT_RST) # TODO
     case 'win_atom':
       config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=atom', '-mtune=atom'])
       config.ld_flags.extend(['-mwindows', '-flto=auto'])
@@ -74,7 +74,7 @@ def prepare_opts(config):
       config.ld_flags.extend(['-flto=auto'])
       config.defines.extend(['-DNDEBUG', '-DRELEASE'])
     case 'lin_x32': need_impl() # TODO
-    case _: quit(Fore.RED + f'unknown target {config.target}' + Style.RESET_ALL)
+    case _: quit(TXT_RED + f'unknown target {config.target}' + TXT_RST)
   return config
 
 def prepare(config):
@@ -91,7 +91,7 @@ def prepare(config):
   if not config.target:
     config.target = quess_target(config)
   if config.system == 'windows' and config.enable and 'asan' in config.enable:
-    quit(Fore.RED + f'ASAN not allowed in Windows' + Style.RESET_ALL)
+    quit(TXT_RED + f'ASAN not allowed in Windows' + TXT_RST)
   if not config.cxx:
     os_cxx = os_getenv('CXX')
     if os_cxx:
@@ -144,13 +144,13 @@ def dir_exists(name):
   if os_path.isdir(name):
     print(f'directory \"{name}\" founded')
   else:
-    quit(Fore.RED + f'directory \"{name} not founded' + Style.RESET_ALL)
+    quit(TXT_RED + f'directory \"{name} not founded' + TXT_RST)
 
 def file_exists(name):
   if os_path.isfile(name):
     print(f'file \"{name}\" founded')
   else:
-    quit(Fore.RED + f'file \"{name} not founded' + Style.RESET_ALL)
+    quit(TXT_RED + f'file \"{name} not founded' + TXT_RST)
 
 def env_test():
   print('\n--------------------------------{ Check folders }--------------------------------')

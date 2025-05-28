@@ -1,6 +1,6 @@
-from util.helper import exec_cmd
+from .helper import exec_cmd
+from .color_text import TXT_RED, TXT_RST
 from random import randint
-from colorama import Fore, Style
 
 build_dir = "build/"
 bin_dir = build_dir + "bin/"
@@ -20,7 +20,7 @@ def compilation_test(config):
   try:
     exec_cmd(cmd)
   except:
-    quit(Fore.RED + 'error while compilation test app' + Style.RESET_ALL)
+    quit(TXT_RED + 'error while compilation test app' + TXT_RST)
 
   test_val = randint(1, 999999)
   exec_cmd(f'{cxx_target} {test_val}')

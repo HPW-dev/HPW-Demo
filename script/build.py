@@ -5,9 +5,6 @@
 if __name__ != "__main__":
   quit("is not a python module (try command: python script/build.py -h)")
 
-from colorama import init as cl_init
-cl_init()
-
 from util.helper import check_python_version
 check_python_version()
 
