@@ -1,17 +1,16 @@
-import argparse
-
+from argparse import ArgumentParser
 
 def parse():
   ''' Парсит команды запуска '''
 
-  parser = argparse.ArgumentParser (
+  parser = ArgumentParser (
     prog='python -m script.build',
     description='Script for build H.P.W',
     epilog='Copyright (c) 2020-2025 HPW-dev <hpwdev0@gmail.com>',
   )
 
   parser.add_argument('--threads', type=int, default=0, help='custom CPU\'s thread number for building')
-  parser.add_argument('-c', '--clean', type=bool, default=False, help='clean .o/.exe/.dll files aftre compilation')
+  parser.add_argument('-c', '--clean', action='store_true', help='clean .o/.exe/.dll files aftre compilation')
   parser.add_argument('-i', '--info', action='store_true', help='disable building (use for watching options)')
   parser.add_argument('-t', '--target', type=str, help='supported targets: win_x64_debug win_x32_debig '
     'lin_x64_debug win_xp win_atom win_core2 win_x64 win_x64_v4 lin_x32 lin_x64 lin_x64_v4')

@@ -1,5 +1,6 @@
-from util import helper
-import random
+from util.helper import exec_cmd
+from random import randint
+from colorama import Fore, Style
 
 build_dir = "build/"
 bin_dir = build_dir + "bin/"
@@ -16,10 +17,13 @@ def compilation_test(config):
   cmd += f' HOST_SYSTEM={config.system}'
   cmd += f' LD_FLAGS={'@'.join(config.ld_flags)}'
   cmd += f' CXX_FLAGS={'@'.join(config.cxx_flags)}'
-  helper.exec_cmd(cmd)
+  try:
+    exec_cmd(cmd)
+  except:
+    quit(Fore.RED + 'error while compilation test app' + Style.RESET_ALL)
 
-  test_val = random.randint(1, 999999)
-  helper.exec_cmd(f'{cxx_target} {test_val}')
+  test_val = randint(1, 999999)
+  exec_cmd(f'{cxx_target} {test_val}')
   readed_val = -1
   with open('.tmp/empty-prog-question.txt', 'r') as file:
     line = file.readline()

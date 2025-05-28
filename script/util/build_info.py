@@ -1,6 +1,6 @@
-from . import helper
-import colorama
-import os
+from .helper import get_game_version, check_python_version, get_max_threads, get_system_info
+from colorama import Fore, Style
+from os import path as os_path, getenv as os_getenv
 
 def quess_target(config):
   if config.system == 'windows':
@@ -14,21 +14,21 @@ def quess_target(config):
     else:
       return 'lin_x64'
   else:
-    quit(colorama.Fore.RED + f'unknown target system {config.system}' + colorama.Style.RESET_ALL)
+    quit(Fore.RED + f'unknown target system {config.system}' + Style.RESET_ALL)
 
 def is_enable(config, value):
   ''' Enabled Or Disabled '''
   if config.enable and value in config.enable:
-    return colorama.Fore.GREEN + "✅ enabled" + colorama.Style.RESET_ALL
-  return colorama.Fore.RED + "❌ disabled" + colorama.Style.RESET_ALL
+    return Fore.GREEN + "✅ enabled" + Style.RESET_ALL
+  return Fore.RED + "❌ disabled" + Style.RESET_ALL
 
 def check_value(value):
   if value:
-    return colorama.Fore.YELLOW + str(value) + colorama.Style.RESET_ALL
-  return colorama.Fore.LIGHTBLACK_EX + "❔ ???" + colorama.Style.RESET_ALL
+    return Fore.YELLOW + str(value) + Style.RESET_ALL
+  return Fore.LIGHTBLACK_EX + "❔ ???" + Style.RESET_ALL
 
 def need_impl():
-  assert False, colorama.Fore.BLUE + 'need impl' + colorama.Style.RESET_ALL
+  assert False, Fore.BLUE + 'need impl' + Style.RESET_ALL
 
 def prepare_opts(config):
   '''подготавливает опции для GCC/Clang компилятора'''
@@ -48,7 +48,7 @@ def prepare_opts(config):
     case 'win_x64_debug' | 'win_x32_debig' | 'lin_x64_debug':
       config.cxx_flags.extend(['-O0', '-g0'])
       config.defines.extend(['-DDEBUG'])
-    case 'win_xp': quit(colorama.Fore.RED + 'now Windows XP is not supported' + colorama.Style.RESET_ALL) # TODO
+    case 'win_xp': quit(Fore.RED + 'now Windows XP is not supported' + Style.RESET_ALL) # TODO
     case 'win_atom':
       config.cxx_flags.extend(['-Ofast', '-flto=auto', '-march=atom', '-mtune=atom'])
       config.ld_flags.extend(['-mwindows', '-flto=auto'])
@@ -66,32 +66,32 @@ def prepare_opts(config):
       config.ld_flags.extend(['-mwindows', '-flto=auto'])
       config.defines.extend(['-DNDEBUG', '-DRELEASE'])
     case 'lin_x32': need_impl() # TODO
-    case _: quit(colorama.Fore.RED + f'unknown target {config.target}' + colorama.Style.RESET_ALL)
+    case _: quit(Fore.RED + f'unknown target {config.target}' + Style.RESET_ALL)
   return config
 
 def prepare(config):
   ''' докидывают дополнительную информацию в конфиг '''
-  ver, date, time = helper.get_game_version()
+  ver, date, time = get_game_version()
   config.game_ver = ver
   config.commit_date = date
   config.commit_time = time
-  config.python_ver = helper.check_python_version()
+  config.python_ver = check_python_version()
   if not config.threads or config.threads <= 0:
-    config.threads = helper.get_max_threads() + 1
+    config.threads = get_max_threads() + 1
   if not config.bitness or not config.system:
-    config.system, config.bitness = helper.get_system_info()
+    config.system, config.bitness = get_system_info()
   if not config.target:
     config.target = quess_target(config)
   if config.system == 'windows' and config.enable and 'asan' in config.enable:
-    quit(colorama.Fore.RED + f'ASAN not allowed in Windows' + colorama.Style.RESET_ALL)
+    quit(Fore.RED + f'ASAN not allowed in Windows' + Style.RESET_ALL)
   if not config.cxx:
-    os_cxx = os.getenv('CXX')
+    os_cxx = os_getenv('CXX')
     if os_cxx:
       config.cxx = os_cxx
     else:
       config.cxx = 'g++'
   if not config.cc:
-    os_cc = os.getenv('CC')
+    os_cc = os_getenv('CC')
     if os_cc:
       config.cc = os_cc
     else:
@@ -133,19 +133,25 @@ def print_info(config):
   print(f'Data.zip I/O: {is_enable(config, "data")}')
   
 def dir_exists(name):
-  if os.path.isdir(name):
+  if os_path.isdir(name):
     print(f'directory \"{name}\" founded')
   else:
-    quit(colorama.Fore.RED + f'directory \"{name} not founded' + colorama.Style.RESET_ALL)
+    quit(Fore.RED + f'directory \"{name} not founded' + Style.RESET_ALL)
 
 def file_exists(name):
-  if os.path.isfile(name):
+  if os_path.isfile(name):
     print(f'file \"{name}\" founded')
   else:
-    quit(colorama.Fore.RED + f'file \"{name} not founded' + colorama.Style.RESET_ALL)
+    quit(Fore.RED + f'file \"{name} not founded' + Style.RESET_ALL)
 
 def env_test():
   print('\n--------------------------------{ Check folders }--------------------------------')
   dir_exists('./.tmp')
   dir_exists('./build')
+  dir_exists('./src')
+  dir_exists('./thirdparty')
+  dir_exists('./script')
+  dir_exists('./data')
+  dir_exists('./test')
   file_exists('./SConstruct')
+  file_exists('./test/cxx/main.cpp')

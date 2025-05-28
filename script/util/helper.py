@@ -1,30 +1,31 @@
-import sys
-import platform
-import os
-import time
-import subprocess
-import glob
-import shutil
+from sys import version_info as sys_version_info
+from platform import system as platform_system, architecture as platform_architecture
+from os import chdir, path as os_path, remove as os_remove, makedirs, linesep as os_linesep
+from os import cpu_count as os_cpu_count
+from time import time
+from subprocess import PIPE as subproc_pipe, run as subproc_run, check_output as subproc_check_output
+from glob import glob
+from shutil import rmtree, copyfile
 
 def set_work_dir(path):
   "cd"
   print (f'set working dir: \"{path}\"')
-  os.chdir(path)
+  chdir(path)
 
 def rem_if_exist(fname):
   "удалить файл, если он есть"
-  if os.path.exists (fname):
+  if os_path.exists(fname):
     print (f'remove {fname}')
-    os.remove (fname)
+    os_remove(fname)
 
 def rem_dir(dname, ignore_errors=True):
   "удалить папку"
-  shutil.rmtree (dname, ignore_errors=ignore_errors, onerror=None)
-  assert os.path.exists (dname) == False, f"dir \"{dname}\" is not deleted!"
+  rmtree(dname, ignore_errors=ignore_errors, onerror=None)
+  assert os_path.exists (dname) == False, f"dir \"{dname}\" is not deleted!"
 
 def rem_all(fname_mask):
   "удалить по маске"
-  list = glob.glob (fname_mask, recursive=True)
+  list = glob (fname_mask, recursive=True)
   for fname in list:
     rem_if_exist (fname)
 
@@ -32,15 +33,15 @@ def exec_cmd(cmd, without_print=False):
   '''выполнить команду
   
   :return: вывод команды stdout, stderr'''
-  cmd_tm_st = time.time()
-  cmd = os.path.normpath (cmd) 
+  cmd_tm_st = time()
+  cmd = os_path.normpath (cmd) 
   print (cmd)
   if without_print:
-    result = subprocess.run(cmd.split(), check=True, universal_newlines=True,
-      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subproc_run(cmd.split(), check=True, universal_newlines=True,
+      stdout=subproc_pipe, stderr=subproc_pipe)
   else:
-    result = subprocess.run(cmd.split(), check=True)
-  cmd_tm_ed = time.time()
+    result = subproc_run(cmd.split(), check=True)
+  cmd_tm_ed = time()
   print (f'e.t: { round(cmd_tm_ed - cmd_tm_st, 1) }s')
   print()
   return result.stdout, result.stderr
@@ -57,9 +58,9 @@ def get_game_version():
     cmd_date = "git --no-pager log -1 --pretty=format:%cd --date=format:%d.%m.%Y"
     cmd_time = "git --no-pager log -1 --pretty=format:%cd --date=format:%H:%M"
     # выполнить команды и сохранить их вывод из консоли
-    version = subprocess.check_output(cmd_ver.split()).decode().strip()
-    date = subprocess.check_output(cmd_date.split()).decode().strip()
-    time = subprocess.check_output(cmd_time.split()).decode().strip()
+    version = subproc_check_output(cmd_ver.split()).decode().strip()
+    date = subproc_check_output(cmd_date.split()).decode().strip()
+    time = subproc_check_output(cmd_time.split()).decode().strip()
   except:
     print("[!] Error when getting game version")
 
@@ -86,9 +87,9 @@ def write_game_version():
 def copy_license():
   "копирует файл LICENSE.txt и NOTICE.txt в нужную папку"
   try:
-    os.makedirs("build/info/", exist_ok=True)
-    shutil.copyfile('LICENSE.txt', 'build/info/LICENSE.txt')
-    shutil.copyfile('NOTICE.txt',  'build/info/NOTICE.txt')
+    makedirs("build/info/", exist_ok=True)
+    copyfile('LICENSE.txt', 'build/info/LICENSE.txt')
+    copyfile('NOTICE.txt',  'build/info/NOTICE.txt')
   except:
     print("error copying license file")
 
@@ -98,9 +99,9 @@ def prepare_strs(strs: list[str]):
 def save_version(build_dir, used_libs, hpw_config, cxx, cc):
   "создаёт файл build_dir/info/version info с инфой о компиляции"
   try:
-    os.makedirs("build/info/", exist_ok=True)
+    makedirs("build/info/", exist_ok=True)
 
-    with open(file=f'{build_dir}info/version info.txt', mode='w', encoding="utf-8", newline=os.linesep) as file:
+    with open(file=f'{build_dir}info/version info.txt', mode='w', encoding="utf-8", newline=os_linesep) as file:
       game_ver, game_date, game_time = get_game_version()
       file.writelines([
         "H.P.W build info:\n",
@@ -138,7 +139,7 @@ def save_version(build_dir, used_libs, hpw_config, cxx, cc):
 def get_max_threads():
   '''позволяет узнать сколько доступно потоков процессора'''
   try:
-    return os.cpu_count()
+    return os_cpu_count()
   except:
     print('ошибка при получении числа потоков процессора; Будет использоваться 1 по умолчанию')
     return 1
@@ -146,7 +147,7 @@ def get_max_threads():
 def check_python_version():
   '''проверка нужной версии интерпритатора'''
   try:
-    ver = sys.version_info
+    ver = sys_version_info
     if ver < (3,12,0):
       print('WARNING: требуется версия python не ниже 3.12.0')
     else:
@@ -158,6 +159,6 @@ def check_python_version():
 
 def get_system_info():
   ''':return: system name, bitness'''
-  name = platform.system() # 'Windows', 'Linux', 'Darwin' (macOS)
-  bitness = 'x32' if platform.architecture()[0] == '32bit' else 'x64'
+  name = platform_system() # 'Windows', 'Linux', 'Darwin' (macOS)
+  bitness = 'x32' if platform_architecture()[0] == '32bit' else 'x64'
   return name.lower(), bitness
