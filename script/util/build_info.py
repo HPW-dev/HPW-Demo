@@ -34,15 +34,16 @@ def prepare_opts(config):
   '''подготавливает опции для GCC/Clang компилятора'''
   config.cxx_flags.extend([
     '-std=c++23',
+    '-pipe',
     '-Wall', '-Wfatal-errors', # останавливать компиляцию при первой ошибке
     # '-Wextra', '-pedantic', '-Wno-unused-parameter', # больше ворнингов!
     '-finput-charset=UTF-8', '-fextended-identifiers', # поддержка UTF-8
     '-m32' if config.bitness == 'x32' else '-m64',
   ])
+  config.ld_flags.append('-pipe'),
   config.defines.extend(['-DWINDOWS' if config.system == 'windows' else '-DLINUX'])
   if config.system == 'linux':
     config.cxx_flags.extend(['-fdiagnostics-color=always'])
-
   match config.target:
     case 'win_x64_debug' | 'win_x32_debig' | 'lin_x64_debug':
       config.cxx_flags.extend(['-O0', '-g0'])

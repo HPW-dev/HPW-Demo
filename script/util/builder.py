@@ -9,11 +9,13 @@ src_dir = 'src/'
 def compilation_test(config):
   print('\n--------------------------------{ Compilation test }--------------------------------')
   cxx_target = bin_dir + "cxx-test.exe"
-  sources = test_dir + "cxx/main.cpp"
+  sources = [test_dir + "cxx/main.cpp"]
   cmd = 'scons'
   cmd += f' PROG_NAME={cxx_target}'
-  cmd += f' SOURCES={sources}'
+  cmd += f' SOURCES={'@'.join(sources)}'
   cmd += f' HOST_SYSTEM={config.system}'
+  cmd += f' LD_FLAGS={'@'.join(config.ld_flags)}'
+  cmd += f' CXX_FLAGS={'@'.join(config.cxx_flags)}'
   helper.exec_cmd(cmd)
 
   test_val = random.randint(1, 999999)
