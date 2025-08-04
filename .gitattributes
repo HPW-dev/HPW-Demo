@@ -84,6 +84,7 @@ _tmp_version_ text
 
 # Archive:
 *.xz binary
+*.7z binary
 *.zip binary
 *.zst binary
 *.gz binary
@@ -93,5 +94,7 @@ _tmp_version_ text
 # Other binary
 *.ods binary
 *.ttf binary
+*.dat binary
+*.bin binary
 *.otf binary
 *.hpw_replay binary

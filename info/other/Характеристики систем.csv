@@ -1,0 +1,17 @@
+name,cpu,ram,vram,screen,disk
+pc,x32/x64,384M,64M,512x384,48M
+android,x32/x64,256M,32M,480x320,48M
+ps1,x32,2M,1M,256x224,650M
+ps2,x64,32M,4M/≈32M,320x240/512x384,650M
+ps3,x64,256M,256M,,650M
+psp,x32,24M,2M,480x272,32M
+3ds,x32,128M,6M,400x240/800x480,1G/8G
+msx,,,,
+sega md,x16/x32,72K,64K,320x224,4M
+nes,x8,16K,16K,256x240,1M
+zx 48k,,,,
+amiga,x16/x32,256K/2M,,640x512,48M
+amigaone,x32/x64,256M/512M,,512x384,48M
+pico8,,4M,≈4M,128x128,32K
+liko12,,,,192x128,50M
+tic-80,,12K,16K,240x136,
