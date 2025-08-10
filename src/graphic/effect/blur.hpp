@@ -1,7 +1,6 @@
 #pragma once
 #include "util/macro.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // размытие по алгоритму BoxBlur (аккуратные края + для серого изображения)
 void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz=1);

@@ -5,9 +5,9 @@
 #include "util/mem-types.hpp"
 #include "util/str.hpp"
 #include "util/math/vec.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Level;
-class Image;
 
 // Управление уровнями
 class Level_mgr final {

@@ -2,8 +2,7 @@
 #include "util/macro.hpp"
 #include "util/str.hpp"
 #include "graphic/image/color.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 class Sprite;
 
 // содержит блок из 5/9 соседних пикселей

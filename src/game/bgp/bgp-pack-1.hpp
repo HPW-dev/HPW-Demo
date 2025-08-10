@@ -1,6 +1,5 @@
 #pragma once
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // битовой узор 1
 void bgp_bit_1(Image& dst, const int bg_state);

@@ -1,6 +1,5 @@
 #pragma once
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // заблюренная жижа
 void bgp_liquid(Image& dst, const int bg_state);

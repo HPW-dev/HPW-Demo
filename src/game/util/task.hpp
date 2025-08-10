@@ -4,8 +4,7 @@
 #include "util/vector-types.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // Базовый класс для задач в геймлупе
 class Task {

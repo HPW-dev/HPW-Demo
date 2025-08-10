@@ -4,9 +4,9 @@
 #include "util/macro.hpp"
 #include "util/math/vec.hpp"
 #include "game/entity/util/anim-ctx.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Entity;
-class Image;
 class Anim;
 class Heat_distort;
 class Light;

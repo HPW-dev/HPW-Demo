@@ -1,8 +1,7 @@
 #pragma once
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 /** Создаёт шум похожий на шум Перлена
 * @param dst куда рисуем

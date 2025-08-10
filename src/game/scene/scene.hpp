@@ -2,8 +2,7 @@
 #include "util/math/num-types.hpp"
 #include "util/str.hpp"
 #include "util/macro.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {

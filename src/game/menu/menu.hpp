@@ -4,8 +4,8 @@
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
+#include "graphic/image/image-fwd.hpp"
 
-class Image;
 class Menu_item;
 using Menu_items = Vector<Shared<Menu_item>>;
 using Menu_select_callback = std::function<void (Menu_item&)>;

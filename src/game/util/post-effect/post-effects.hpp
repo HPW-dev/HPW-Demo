@@ -2,8 +2,7 @@
 #include <functional>
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // применяет список эффектов к картинке
 class Effect_mgr final {

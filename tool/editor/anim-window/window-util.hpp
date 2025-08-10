@@ -5,8 +5,8 @@
 #include "util/vector-types.hpp"
 #include "util/mempool.hpp"
 #include "util/str.hpp"
+#include "graphic/image/image-fwd.hpp"
 
-class Image;
 class Entity;
 class Anim;
 

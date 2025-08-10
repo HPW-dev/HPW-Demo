@@ -1,4 +1,5 @@
 #pragma once
+#include "graphic/image/image-fwd.hpp"
 
 #ifdef HOST_GLFW3
 #include "host/glfw3/host-glfw.hpp"
@@ -12,8 +13,6 @@ using Host_class = Host_sdl2;
 #include "host/asci/host-asci.hpp"
 using Host_class = Host_asci;
 #endif
-
-class Image;
 
 class Game_app: public Host_class {
   nocopy(Game_app);

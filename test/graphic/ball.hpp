@@ -2,8 +2,7 @@
 #include <utility>
 #include "util/math/vec.hpp"
 #include "graphic/image/color.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // ball for graphic-test
 class Ball final {

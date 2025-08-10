@@ -1,8 +1,7 @@
 #pragma once
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // рисует дебажную статистику в виде графиков
 class Dbg_plots {

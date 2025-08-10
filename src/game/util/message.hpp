@@ -6,8 +6,7 @@
 #include "util/mem-types.hpp"
 #include "util/unicode.hpp"
 #include "graphic/image/color-blend.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // сообщение для игрового лога на экране
 struct Message {

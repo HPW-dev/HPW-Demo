@@ -1,8 +1,7 @@
 #pragma once
 #include "util/mem-types.hpp"
 #include "util/net/net.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 struct Connection_ctx {
   Str ip_v4 {net::SELF_IPV4};

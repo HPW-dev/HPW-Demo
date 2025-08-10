@@ -8,13 +8,13 @@
 #include "game/entity/entity-type.hpp"
 #include "game/entity/entity.hpp"
 #include "util/math/vec.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Collider;
 class Entity;
 class Phys;
 class Hitbox;
 class Player;
-class Image;
 struct Scatter;
 
 namespace hpw {

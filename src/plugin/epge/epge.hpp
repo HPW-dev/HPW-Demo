@@ -1,8 +1,7 @@
 #pragma once
 #include "epge-params.hpp"
 #include "util/math/num-types.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 namespace epge {
 

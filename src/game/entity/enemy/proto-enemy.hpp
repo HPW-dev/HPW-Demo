@@ -2,9 +2,9 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/entity-loader.hpp"
 #include "util/math/vec.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Yaml;
-class Image;
 
 // общая база для изичного построения врагов
 class Proto_enemy: public Collidable {

@@ -2,8 +2,7 @@
 #include "util/macro.hpp"
 #include "util/str.hpp"
 #include "util/file/file.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // load from mem
 void load(Image& dst, cr<Bytes> mem);

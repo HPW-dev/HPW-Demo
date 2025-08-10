@@ -3,9 +3,9 @@
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Scene;
-class Image;
 
 // управление сценами
 class Scene_mgr final {
