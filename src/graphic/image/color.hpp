@@ -4,15 +4,17 @@
 #include "util/math/num-types.hpp"
 
 struct Rgb24 final {
-  struct Null_tag final {}; // чтобы указать на constexpr c-tor
-
   using value_t = byte;
   value_t r {}, g {}, b {};
-
+  
   Rgb24() noexcept = default;
   Rgb24(int ir, int ig, int ib) noexcept;
+
+  struct Null_tag final {}; // чтобы указать на constexpr c-tor
   inline constexpr Rgb24(byte _r, byte _g, byte _b, const Null_tag tag) noexcept
     : r{_r}, g{_g}, b{_b} {}
+  
+  inline static constexpr Rgb24 neutral() { return {}; }
 };
 
 /** Индексированные цвета HPW
@@ -48,6 +50,7 @@ struct Pal8 final {
   void set_red_nosafe(int value) noexcept;
   static Pal8 get_gray(int value) noexcept;
   inline constexpr static Pal8 get_red(int value) noexcept;
+  inline constexpr static Pal8 neutral() noexcept { return Pal8{Pal8::none}; }
   static Pal8 get_red_nosafe(int value) noexcept;
   bool is_red() const noexcept;
   bool is_white() const noexcept;

@@ -5,6 +5,7 @@
 #include "image.hpp"
 #include "util/macro.hpp"
 #include "util/log.hpp"
+#include "util/error.hpp"
 
 #define IMGTMPL Image_templ<PIX_FMT>
 template <class PIX_FMT> IMGTMPL::Image_templ(cr<IMGTMPL> img) noexcept { init(img); }
@@ -64,8 +65,14 @@ void IMGTMPL::init(int nx, int ny, std::optional<PIX_FMT> col) noexcept {
 } // init
 
 template <class PIX_FMT>
-void IMGTMPL::fill(const PIX_FMT col) noexcept
-  { memset(scast<void*>(pix.data()), col.val, pix.size()); }
+void IMGTMPL::fill(const PIX_FMT col) noexcept {
+  if constexpr (sizeof(PIX_FMT) == 1) {
+    std::memset(scast<void*>(pix.data()), col.val, pix.size());
+  } else {
+    for (auto& p: pix)
+      p = col;
+  }
+}
 
 template <class PIX_FMT>
 void IMGTMPL::init(cr<IMGTMPL> img) noexcept {
@@ -222,14 +229,63 @@ void IMGTMPL::free() noexcept {
 template <class PIX_FMT>
 void IMGTMPL::set(int i, const PIX_FMT col, blend_pf bf, int optional) noexcept {
   auto src = this->get(i);
-  this->set(i, bf(col, src, optional));
+  if constexpr (std::is_same_v<PIX_FMT, Pal8>) {
+    this->set(i, bf(col, src, optional));
+  } elif constexpr (std::is_same_v<PIX_FMT, Rgb24>) {
+    #pragma message("blend funcs for Rgb24 is not supported")
+    this->set(i, col);
+  } else {
+    error("need impl. for unknown type");
+  }
 }
 
 template <class PIX_FMT>
 void IMGTMPL::set(int x, int y, const PIX_FMT col, blend_pf bf, int optional) noexcept {
   auto src = this->get(x, y);
-  this->set(x, y, bf(col, src, optional));
+  if constexpr (std::is_same_v<PIX_FMT, Pal8>) {
+    this->set(x, y, bf(col, src, optional));
+  } elif constexpr (std::is_same_v<PIX_FMT, Rgb24>) {
+    #pragma message("blend funcs for Rgb24 is not supported")
+    this->set(x, y, col);
+  } else {
+    error("need impl. for unknown type");
+  }
 }
 
-extern template class Image_templ<Pal8>;
-extern template class Image_templ<Rgb24>;
+template <class PIX_FMT>
+IMGTMPL::operator bool() const noexcept { return !pix.empty(); }
+
+template <class PIX_FMT>
+PIX_FMT* IMGTMPL::data() noexcept { return pix.data(); }
+
+template <class PIX_FMT>
+cp<PIX_FMT> IMGTMPL::data() const noexcept { return pix.data(); }
+
+template <class PIX_FMT>
+PIX_FMT& IMGTMPL::operator [](int i) noexcept { return pix[i]; }
+
+template <class PIX_FMT>
+PIX_FMT& IMGTMPL::operator ()(int x, int y) noexcept { return pix[y * X + x]; }
+
+template <class PIX_FMT>
+const PIX_FMT IMGTMPL::operator [](int i) const noexcept { return pix[i]; }
+
+template <class PIX_FMT>
+const PIX_FMT IMGTMPL::operator ()(int x, int y) const noexcept { return pix[y * X + x]; }
+
+template <class PIX_FMT>
+cr<PIX_FMT> IMGTMPL::fast_get(int x, int y) const noexcept { return pix[y * X + x]; }
+
+template <class PIX_FMT> [[gnu::const]] IMGTMPL::iterator IMGTMPL::begin() noexcept { return pix.begin(); }
+template <class PIX_FMT> [[gnu::const]] IMGTMPL::const_iterator IMGTMPL::begin() const noexcept { return pix.begin(); }
+template <class PIX_FMT> [[gnu::const]] IMGTMPL::iterator IMGTMPL::end() noexcept { return pix.end(); }
+template <class PIX_FMT> [[gnu::const]] IMGTMPL::const_iterator IMGTMPL::end() const noexcept { return pix.end(); }
+template <class PIX_FMT> [[gnu::const]] IMGTMPL::const_iterator IMGTMPL::cbegin() const noexcept { return pix.cbegin(); }
+template <class PIX_FMT> [[gnu::const]] IMGTMPL::const_iterator IMGTMPL::cend() const noexcept { return pix.cend(); }
+
+template <class PIX_FMT> void IMGTMPL::unknown_type_error() {
+  error("need impl. for unknown type");
+}
+
+template class Image_templ<Pal8>;
+template class Image_templ<Rgb24>;
