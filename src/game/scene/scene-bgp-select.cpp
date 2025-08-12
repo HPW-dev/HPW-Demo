@@ -10,11 +10,15 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/bgp/bgp.hpp"
 #include "util/hpw-util.hpp"
+#include "util/math/timer.hpp"
 #include "graphic/image/image.hpp"
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};
   Delta_time _bgp_state {};
+
+  Timer _hide_menu_timer {6}; 
+  bool _hide_menu = false; // крывать окно меню при бездействии
 
   inline Impl() {
     if (!hpw::menu_bgp)
@@ -65,12 +69,20 @@ struct Scene_bgp_select::Impl {
 
     _bgp_state += dt;
 
+    if (is_any_key_pressed()) {
+      _hide_menu = false;
+      _hide_menu_timer.reset();
+    } else {
+      _hide_menu |= _hide_menu_timer.update(dt);
+    }
+
     assert(_menu);
     _menu->update(dt);
 
-    // если выбирается строка с именем фона, то сразу применять этот фон
+    // любое перемещение в меню вызывает мгновенную смену фона
     if (_menu->moved()) {
       crauto item = _menu->get_cur_item();
+      // последняя экнока - выход из меню, её надо проигнорить
       crauto exit_from_menu = _menu->get_items().back();
       if (exit_from_menu != item)
         item->enable();
@@ -85,8 +97,10 @@ struct Scene_bgp_select::Impl {
     assert(hpw::menu_bgp);
     hpw::menu_bgp(dst, std::floor(pps(_bgp_state)));
 
-    assert(_menu);
-    _menu->draw(dst);
+    if (!_hide_menu) {
+      assert(_menu);
+      _menu->draw(dst);
+    }
   }
 }; // Impl 
 

@@ -71,4 +71,4 @@ bool is_pressed(hpw::keycode code);
 // узнать что кнопка нажата один раз
 bool is_pressed_once(hpw::keycode code);
 // узнать что любая из кнопок нажата
-bool is_any_key_pressed();
+[[nodiscard]] bool is_any_key_pressed();
