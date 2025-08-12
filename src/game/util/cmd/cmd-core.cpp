@@ -7,6 +7,7 @@
 #include "cmd-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/tasks.hpp"
+#include "game/core/scenes.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/core.hpp"
 #include "game/core/debug.hpp"
@@ -352,6 +353,11 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 
 void call_abort(Cmd_maker&, Cmd&, cr<Strs>) { std::abort(); }
 
+void scene_select(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  cauto name = args.at(0);
+  //hpw::scene_mgr.add(name);
+}
+
 void cmd_core_init(Cmd& cmd) {
   #define MAKE_CMD(NAME, DESC, EXEC_F, MATCH_F) \
     cmd.move( new_unique<Cmd_maker>(cmd, NAME, DESC, EXEC_F, \
@@ -422,6 +428,10 @@ void cmd_core_init(Cmd& cmd) {
     "abort",
     "fast exit (unsafe)",
     &call_abort, {} )
+  MAKE_CMD (
+    "scene",
+    "select game scene",
+    &scene_select, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
