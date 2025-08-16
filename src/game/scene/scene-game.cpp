@@ -21,7 +21,6 @@
 #include "game/core/replays.hpp"
 #include "game/core/levels.hpp"
 #include "game/core/scenes.hpp"
-#include "game/core/messages.hpp"
 #include "game/core/huds.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/debug.hpp"
@@ -142,7 +141,6 @@ Scene_game::Scene_game(const bool start_tutorial)
   graphic::hud = make_hud(graphic::cur_hud);
   hpw::save_last_replay = false;
   hpw::sound_mgr->shutup();
-  init_unique(hpw::message_mgr);
   startup_script();
 } // c-tor
 
@@ -169,8 +167,6 @@ void Scene_game::update(const Delta_time dt) {
   #ifdef DEBUG
   if (is_pressed_once(hpw::keycode::debug))
     hpw::scene_mgr.add(new_shared<Scene_debug>());
-  if (is_pressed_once(hpw::keycode::console))
-    hpw::scene_mgr.add(new_shared<Scene_cmd>());
   if (is_pressed_once(hpw::keycode::fast_forward))
     graphic::set_fast_forward( !graphic::get_fast_forward() );
   #endif
@@ -187,7 +183,6 @@ void Scene_game::update(const Delta_time dt) {
   hpw::entity_mgr->update(dt);
   graphic::camera->update(dt);
   graphic::post_effects->update(dt);
-  hpw::message_mgr->update(dt);
   
   ++hpw::game_ticks;
 
@@ -202,7 +197,6 @@ void Scene_game::update(const Delta_time dt) {
 void Scene_game::draw(Image& dst) const {
   hpw::level_mgr->draw(dst);
   hpw::task_mgr.draw_post_bg(dst);
-  hpw::message_mgr->draw(dst);
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
   graphic::post_effects->draw(dst);

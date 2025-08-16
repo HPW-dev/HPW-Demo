@@ -34,8 +34,10 @@ struct Scene_cmd::Impl {
     // выход
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
-    if (is_pressed_once(hpw::keycode::console))
+    if (is_pressed_once(hpw::keycode::console)) {
       hpw::scene_mgr.back();
+      release(hpw::keycode::console); // иначе отсюда не выйти
+    }
     // стирание текста
     if (is_pressed_once(hpw::keycode::text_delete)) {
       if (!hpw::text_input.empty()) {
@@ -91,6 +93,7 @@ struct Scene_cmd::Impl {
   inline void draw(Image& dst) const {
     insert_fast(dst, bg);
     sub_brightness(dst, 30);
+    assert(hpw::message_mgr);
     hpw::message_mgr->draw(dst);
     sub_brightness(dst, 110);
     print_input(dst);
