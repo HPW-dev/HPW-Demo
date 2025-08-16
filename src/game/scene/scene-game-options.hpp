@@ -8,9 +8,11 @@ class Scene_game_options final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "game options";
+
   Scene_game_options();
   ~Scene_game_options();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "game options"; }
+  inline Str name() const override { return NAME; }
 };

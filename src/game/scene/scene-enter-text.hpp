@@ -11,11 +11,12 @@ class Scene_enter_text final: public Scene {
 
 public:
   using Text_processor = std::function<void (cr<utf32>)>; // для обработки введёного текста
+  constx Str NAME = "enter text";
 
   explicit Scene_enter_text(cr<utf32> title, cr<utf32> desc, cr<utf32> edit_title,
     cr<utf32> stast_text, cr<Text_processor> proc);
   ~Scene_enter_text();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "enter text"; }
+  inline Str name() const override { return NAME; }
 };

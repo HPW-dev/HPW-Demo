@@ -400,7 +400,7 @@ struct Replay::Impl {
       std::ofstream file(std::filesystem::path(m_path), std::ios_base::binary);
 
       if (!file.is_open()) {
-        hpw::global_task_mgr.add(new_shared<Save_error>(m_path));
+        hpw::task_mgr.add(new_shared<Save_error>(m_path));
         return;
       }
 

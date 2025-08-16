@@ -21,6 +21,7 @@ public:
   Scene_mgr();
   ~Scene_mgr();
   void add(cr<Shared<Scene>> scene); // добавить новую сцену
+  void add(cr<Str> name); // добавить новую сцену по названию
   void draw(Image& dst) const;
   void back(uint count=1); // вернуться обратно по стеку сцен <count> раз
   void clear();

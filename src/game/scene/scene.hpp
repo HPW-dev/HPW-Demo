@@ -7,6 +7,8 @@
 // базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {
 public:
+  constx Str NAME = "base scene";
+
   Scene() = default;
   virtual ~Scene() = default;
   virtual void update(const Delta_time dt);

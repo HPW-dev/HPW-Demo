@@ -8,7 +8,9 @@
 #include "game/scene/scene-game.hpp"
 #include "game/scene/scene-graphic.hpp"
 #include "game/scene/scene-nickname.hpp"
+#include "game/scene/scene-cmd.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
+#include "game/core/messages.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/core.hpp"
 #include "game/core/epges.hpp"
@@ -39,6 +41,16 @@
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 
+#ifdef DEBUG
+#include "game/scene/scene-cmd.hpp"
+#include "game/util/cmd/cmd-script.hpp"
+#endif
+
+void Game_app::startup_script() {
+  if (!hpw::start_script.empty())
+    hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
+}
+
 Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   #ifdef RELEASE
     init_validation_info();
@@ -55,6 +67,8 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   load_config();
   load_pge_from_config();
   load_sounds();
+
+  init_unique(hpw::message_mgr);
 
   // управление сценами
   log_info << "настройка игровых сцен...";
@@ -74,6 +88,8 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
       hpw::scene_mgr.add( new_shared<Scene_locale_select>() );
     }
   }
+
+  startup_script();
 
   if (hpw::first_start) {
     #ifndef DEBUG
@@ -99,9 +115,8 @@ void Game_app::update(const Delta_time dt) {
   ALLOW_STABLE_RAND
   assert(dt == hpw::target_tick_time);
   update_graphic_autoopt(dt);
-  
-  Host_class::update(dt);
 
+  Host_class::update(dt);
 
   if (hpw::replay_read_mode)
     replay_load_keys();
@@ -112,6 +127,17 @@ void Game_app::update(const Delta_time dt) {
     log_debug << "scenes are over, call soft_exit";
     hpw::soft_exit();
   }
+  
+  #ifdef DEBUG
+  // консоль команд
+  if (is_pressed_once(hpw::keycode::console)) {
+    hpw::scene_mgr.add(new_shared<Scene_cmd>());
+    release(hpw::keycode::console); // клавиша должна отлипнуть, иначе будет вход и выход сразу
+  }
+  #endif
+
+  assert(hpw::message_mgr);
+  hpw::message_mgr->update(dt);
 
   check_errors();
   
@@ -235,7 +261,9 @@ void Game_app::post_draw(Image& dst) const {
   if (graphic::draw_border) // рамка по краям
     draw_border(dst);
 
-  hpw::global_task_mgr.draw(dst);
+  hpw::task_mgr.draw(dst);
+  assert(hpw::message_mgr);
+  hpw::message_mgr->draw(dst);
 
   // EPGE effects:
   for (crauto epge: graphic::epges) {
