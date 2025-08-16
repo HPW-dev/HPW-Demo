@@ -8,9 +8,11 @@ class Scene_gamma final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "gamma";
+
   Scene_gamma();
   ~Scene_gamma();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "gamma"; }
+  inline Str name() const override { return NAME; }
 };

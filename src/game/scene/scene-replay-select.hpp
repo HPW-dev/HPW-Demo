@@ -8,9 +8,11 @@ class Scene_replay_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "replay select";
+
   Scene_replay_select();
   ~Scene_replay_select();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "replay select"; }
+  inline Str name() const override { return NAME; }
 };

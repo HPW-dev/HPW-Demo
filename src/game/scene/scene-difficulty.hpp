@@ -11,8 +11,10 @@ class Scene_difficulty final: public Scene {
   void init_menu();
 
 public:
+  constx Str NAME = "difficulty";
+
   Scene_difficulty();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "difficulty"; }
+  inline Str name() const override { return NAME; }
 };

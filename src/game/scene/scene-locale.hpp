@@ -9,11 +9,12 @@ class Scene_locale_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "locale select";
   Scene_locale_select();
   ~Scene_locale_select();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "locale select"; }
+  inline Str name() const override { return NAME; }
 };
 
 namespace hpw {

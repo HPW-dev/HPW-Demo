@@ -5,6 +5,7 @@
 #include <chrono>
 #include "cmd-core.hpp"
 #include "cmd-util.hpp"
+#include "game/scene/scene-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/scenes.hpp"
@@ -354,8 +355,31 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 void call_abort(Cmd_maker&, Cmd&, cr<Strs>) { std::abort(); }
 
 void scene_select(Cmd_maker& command, Cmd& console, cr<Strs> args) {
-  cauto name = args.at(0);
-  //hpw::scene_mgr.add(name);
+  iferror (args.size() < 2, "need args for scene_select");
+  Str name;
+  for (uint i = 1; i < args.size(); ++i)
+    name += args[i] + " ";
+  name.resize(name.size()-1);
+  hpw::scene_mgr.add(name);
+}
+
+Strs scene_select_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  Strs ret;
+  cauto cmd_name = args.at(0);
+  if (args.size() < 2) {
+    // предложить системы из списка
+    for (crauto name: scene_names())
+      ret.push_back(cmd_name + ' ' + name);
+    return ret;
+  }
+
+  // по вводу определить что взять из списка автодополнения
+  cauto arg_name = args.at(1);
+  cauto name_filter = [&](cr<Str> it)
+    { return it.find(arg_name) == 0; };
+  for (crauto name: scene_names() | std::views::filter(name_filter))
+    ret.push_back(cmd_name + ' ' + name);
+  return ret;
 }
 
 void cmd_core_init(Cmd& cmd) {
@@ -431,7 +455,7 @@ void cmd_core_init(Cmd& cmd) {
   MAKE_CMD (
     "scene",
     "select game scene",
-    &scene_select, {} )
+    &scene_select, &scene_select_matches )
     
   #undef MAKE_CMD
 } // cmd_core_init

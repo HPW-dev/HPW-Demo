@@ -9,9 +9,11 @@ class Scene_nickname final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "nickname";
+
   Scene_nickname();
   ~Scene_nickname();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "nickname"; }
+  inline Str name() const override { return NAME; }
 };

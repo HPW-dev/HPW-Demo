@@ -4,6 +4,7 @@
 #include <functional>
 #include "scene-mgr.hpp"
 #include "scene.hpp"
+#include "scene-util.hpp"
 
 struct Scene_mgr::Impl {
   using Scenes = Vector<Shared<Scene>>;
@@ -22,10 +23,8 @@ struct Scene_mgr::Impl {
     });
   }
 
-  inline void add(cr<Strs> name) {
-    //assert(scene);
-
-    // TODO дописать
+  inline void add(cr<Str> name) {
+    add(find_scene(name));
   }
 
   inline bool update(Delta_time dt) {
@@ -94,7 +93,7 @@ struct Scene_mgr::Impl {
 Scene_mgr::Scene_mgr(): _impl {new_unique<Impl>()} {}
 Scene_mgr::~Scene_mgr() {}
 void Scene_mgr::add(cr<Shared<Scene>> scene) { _impl->add(scene); }
-void Scene_mgr::add(cr<Strs> name) { _impl->add(name); }
+void Scene_mgr::add(cr<Str> name) { _impl->add(name); }
 bool Scene_mgr::update(Delta_time dt) { return _impl->update(dt); }
 void Scene_mgr::draw(Image& dst) const { _impl->draw(dst); }
 void Scene_mgr::back(uint count) { _impl->back(count); }
