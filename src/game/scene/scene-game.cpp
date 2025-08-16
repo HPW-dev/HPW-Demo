@@ -196,7 +196,6 @@ void Scene_game::draw(Image& dst) const {
   hpw::entity_mgr->draw(dst, graphic::camera->get_offset());
   hpw::level_mgr->draw_upper_layer(dst);
   graphic::post_effects->draw(dst);
-  hpw::task_mgr.draw(dst);
   if (graphic::hud)
     graphic::hud->draw(dst);
   post_draw(dst);
