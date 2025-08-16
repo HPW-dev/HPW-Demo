@@ -372,6 +372,15 @@ void scene_back(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   }
 }
 
+void scene_order(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  std::stringstream txt;
+  txt << "\nScenes:\n";
+  cauto scenes = hpw::scene_mgr.names();
+  for (uint i = 0; crauto scene: scenes)
+    txt << ++i << ". " << scene << "\n";
+  console.print(txt.str());
+}
+
 Strs scene_select_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   Strs ret;
   cauto cmd_name = args.at(0);
@@ -469,6 +478,10 @@ void cmd_core_init(Cmd& cmd) {
     "scene_back",
     "scene_back <num> - goto previous x<num> scenes",
     &scene_back, {} )
+  MAKE_CMD (
+    "scene_order",
+    "print list of current scenes",
+    &scene_order, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
