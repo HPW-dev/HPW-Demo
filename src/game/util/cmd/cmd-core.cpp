@@ -363,6 +363,15 @@ void scene_select(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   hpw::scene_mgr.add(name);
 }
 
+void scene_back(Cmd_maker& command, Cmd& console, cr<Strs> args) {
+  if (args.size() < 2) {
+    hpw::scene_mgr.back();
+  } else {
+    auto num = std::stoi(args.at(1));
+    hpw::scene_mgr.back(num);
+  }
+}
+
 Strs scene_select_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   Strs ret;
   cauto cmd_name = args.at(0);
@@ -454,8 +463,12 @@ void cmd_core_init(Cmd& cmd) {
     &call_abort, {} )
   MAKE_CMD (
     "scene",
-    "select game scene",
+    "scene <name> - select game scene",
     &scene_select, &scene_select_matches )
+  MAKE_CMD (
+    "scene_back",
+    "scene_back <num> - goto previous x<num> scenes",
+    &scene_back, {} )
     
   #undef MAKE_CMD
 } // cmd_core_init
