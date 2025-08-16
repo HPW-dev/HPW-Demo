@@ -41,6 +41,16 @@
 #include "util/hpw-util.hpp"
 #include "util/log.hpp"
 
+#ifdef DEBUG
+#include "game/scene/scene-cmd.hpp"
+#include "game/util/cmd/cmd-script.hpp"
+#endif
+
+void Game_app::startup_script() {
+  if (!hpw::start_script.empty())
+    hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
+}
+
 Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   #ifdef RELEASE
     init_validation_info();
@@ -78,6 +88,8 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
       hpw::scene_mgr.add( new_shared<Scene_locale_select>() );
     }
   }
+
+  startup_script();
 
   if (hpw::first_start) {
     #ifndef DEBUG
@@ -249,7 +261,7 @@ void Game_app::post_draw(Image& dst) const {
   if (graphic::draw_border) // рамка по краям
     draw_border(dst);
 
-  hpw::global_task_mgr.draw(dst);
+  hpw::task_mgr.draw(dst);
   assert(hpw::message_mgr);
   hpw::message_mgr->draw(dst);
 

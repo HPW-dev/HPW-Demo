@@ -26,6 +26,7 @@ class Game_app: public Host_class {
   void replay_save_keys();
   void replay_load_keys();
   void post_draw(Image& dst) const;
+  void startup_script();
 
 public:
   explicit Game_app(int argc, char *argv[]);
