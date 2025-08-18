@@ -18,7 +18,7 @@ struct Scene_bgp_select::Impl {
   Delta_time _bgp_state {};
 
   Timer _hide_menu_timer {6}; 
-  bool _hide_menu = false; // крывать окно меню при бездействии
+  bool _hide_menu = false; // закрывать окно меню при бездействии
 
   inline Impl() {
     if (!hpw::menu_bgp)
