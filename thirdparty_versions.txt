@@ -1,20 +1,20 @@
 GLEW: v2.2.0
 KHR: (2021)
-GLFW: v3.3
-DyLib: v1.6.1
-ImGui: v1.87
-OpenAL-soft: v1.23.1
+GLFW: v3.4
+DyLib: v1.7.0
+ImGui: v1.92.2b
+OpenAL-soft: v1.24.3
 robin-hood-hashing: v3.11.5
 stb_truetype: v1.26
 stb_image_write: v1.16
-stb_image: v2.28
-dr_flac: v0.12.42
-dr_mp3: v0.6.39
-YAML-cpp: commit hash 35b4498026b6293bfadc75f9ee325cb16d6975af (24 jul. 2023)
+stb_image: v2.27
+dr_flac: v0.13.1
+dr_mp3: v0.7.1
+YAML-cpp: commit hash 2f86d13775d119edbb69af52e5f566fd65c6953b (Apr 30, 2025)
 Miniz: v1.15
-asio: v1.30.2
+asio: v1.36.0
 hash_sha256: (30 mar. 2023)
-GCC (Windows x32): v14.1.0.r2 MinGW-W64 xi686-ucrt-posix-dwarf, built by Brecht Sanders
-GCC (Windows x64): v14.2.0.r1 MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders
-SCons: v4.7.0
+GCC (Windows x32): v15.2.0, MinGW-W64 i686-ucrt-posix-dwarf, built by Brecht Sanders, r1
+GCC (Windows x64): v15.2.0 MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1
+SCons: v4.7.0.265be6883fadbb5a545612265acc919595158366, Sun, 17 Mar 2024 17:33:54 -0700, by bdbaddog on M1Dog2021
 UPX: v4.2.3
