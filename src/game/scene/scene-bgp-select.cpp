@@ -63,34 +63,40 @@ struct Scene_bgp_select::Impl {
     init_unique<Advanced_text_menu>(_menu, title, items, rect, atm_config);
   }
 
-  inline void update(const Delta_time dt) {
+  inline void update_input(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
+    
+    // при выборе тоже выходить
+    if (is_pressed_once(hpw::keycode::enable))
+      hpw::scene_mgr.back();
 
-    _bgp_state += dt;
-
+    // если долго не нежимать, то меню скроется с экрана
     if (is_any_key_pressed()) {
       _hide_menu = false;
       _hide_menu_timer.reset();
     } else {
       _hide_menu |= _hide_menu_timer.update(dt);
     }
+  }
 
+  inline void update_menu(const Delta_time dt) {
     assert(_menu);
     _menu->update(dt);
 
     // любое перемещение в меню вызывает мгновенную смену фона
     if (_menu->moved()) {
+      crauto exit_from_menu = _menu->get_items().back(); // последняя кнока - выход из меню, её надо проигнорить
       crauto item = _menu->get_cur_item();
-      // последняя экнока - выход из меню, её надо проигнорить
-      crauto exit_from_menu = _menu->get_items().back();
       if (exit_from_menu != item)
         item->enable();
     }
+  }
 
-    // при выборе тоже выходить
-    if (is_pressed_once(hpw::keycode::enable))
-      hpw::scene_mgr.back();
+  inline void update(const Delta_time dt) {
+    _bgp_state += dt;
+    update_input(dt);
+    update_menu(dt);
   }
 
   inline void draw(Image& dst) const {
