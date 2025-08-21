@@ -16,7 +16,6 @@
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};
   Delta_time _bgp_state {};
-
   Timer _hide_menu_timer {6}; 
   bool _hide_menu = false; // закрывать окно меню при бездействии
 
@@ -31,6 +30,18 @@ struct Scene_bgp_select::Impl {
     atm_config.bf_border = &blend_avr_max;
 
     init_unique<Advanced_text_menu>(_menu, title, _get_items(), rect, atm_config);
+    _find_bgp(hpw::menu_bgp_name);
+  }
+
+  // докрутить выбор в меню до установленного фона
+  inline void _find_bgp(cr<Str> name) {
+    for (uint id = 0; crauto item: _menu->get_items()) {
+      if (item->to_text() == utf8_to_32(name)) {
+        _menu->set_cur_item_id(id);
+        return;
+      }
+      ++id;
+    }
   }
 
   inline Menu_items _get_items() const {

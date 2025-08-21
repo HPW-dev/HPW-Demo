@@ -22,6 +22,7 @@ public:
   virtual void draw(Image& dst) const = 0;
   virtual void update(const Delta_time dt);
   std::size_t get_cur_item_id() const;
+  void set_cur_item_id(std::size_t id);
   cr<Menu_items::value_type> get_cur_item() const;
   cr<Menu_items> get_items() const;
   bool item_selected() const; // проверить что был выбран один из пунктов меню

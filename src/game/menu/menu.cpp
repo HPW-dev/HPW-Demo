@@ -98,14 +98,13 @@ struct Menu::Impl {
   // перейти к предыдущему элементу
   inline void prev_item() {
     return_if(_items.empty());
-  if (_items.empty())
-    log_debug << "Menu.prev_item: _items is empty";
-
-  if (_cur_item == 0) {
-    _cur_item = _items.size() - 1;
-    return;
-  }
-  --_cur_item;
+    if (_items.empty())
+      log_debug << "Menu.prev_item: _items is empty";
+    if (_cur_item == 0) {
+      _cur_item = _items.size() - 1;
+      return;
+    }
+    --_cur_item;
   }
 
   inline bool holded() const { return _key_holded; }
@@ -163,6 +162,15 @@ struct Menu::Impl {
     }
   }
 
+  inline void set_cur_item_id(std::size_t id) {
+    if (id >= _items.size()) {
+      log_warning << "menu item id " << id << " not selected (max " << _items.size() << ")";
+      return;
+    }
+
+    _cur_item = id;
+  }
+
   inline void reset_sticking() { _sticking.reset(); }
   inline std::size_t get_cur_item_id() const { return _cur_item; }
   inline cr<Menu_items::value_type> get_cur_item() const { return _items.at(_cur_item); }
@@ -186,3 +194,4 @@ void Menu::set_move_cursor_callback(cr<Menu_select_callback> callback) { _impl->
 void Menu::reset_sticking() { _impl->reset_sticking(); }
 bool Menu::holded() const { return _impl->holded(); }
 void Menu::next_item() { _impl->next_item(); }
+void Menu::set_cur_item_id(std::size_t id) { _impl->set_cur_item_id(id); }
