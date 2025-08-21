@@ -30,7 +30,12 @@ struct Scene_bgp_select::Impl {
     atm_config.bf_bg = &blend_avr;
     atm_config.bf_border = &blend_avr_max;
 
-    Menu_items items {};
+    init_unique<Advanced_text_menu>(_menu, title, _get_items(), rect, atm_config);
+  }
+
+  inline Menu_items _get_items() const {
+    Menu_items items;
+
     // случайный фон
     items.push_back(
       new_shared<Menu_text_item>(
@@ -44,6 +49,7 @@ struct Scene_bgp_select::Impl {
         get_locale_str("bgp_select.random_bg.desc")
       )
     );
+
     // добавить все фоны
     auto bgps = get_bgp_names();
     std::sort(bgps.begin(), bgps.end());
@@ -57,13 +63,14 @@ struct Scene_bgp_select::Impl {
         }
       ));
     }
+
     // выйти
     items.push_back(new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }));
-
-    init_unique<Advanced_text_menu>(_menu, title, items, rect, atm_config);
+    
+    return items;
   }
 
-  inline void update_input(const Delta_time dt) {
+  inline void _update_input(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
     
@@ -80,7 +87,7 @@ struct Scene_bgp_select::Impl {
     }
   }
 
-  inline void update_menu(const Delta_time dt) {
+  inline void _update_menu(const Delta_time dt) {
     assert(_menu);
     _menu->update(dt);
 
@@ -95,8 +102,8 @@ struct Scene_bgp_select::Impl {
 
   inline void update(const Delta_time dt) {
     _bgp_state += dt;
-    update_input(dt);
-    update_menu(dt);
+    _update_input(dt);
+    _update_menu(dt);
   }
 
   inline void draw(Image& dst) const {
