@@ -19,7 +19,7 @@ sconst std::unordered_map<Str, Hud_maker> g_huds {
   {"HEX", []{ return new_unique<Hud_hex>(); }},
   //{"ROMAN II", []{ error("need impl for Roman II HUD"); return Unique<Hud>{}; }}, // TODO
   {"ROMAN I", []{ return new_unique<Hud_roman>(); }},
-  {"MINIMAL", []{ error("need impl for Minimal HUD"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }}, // TODO
+  //{"MINIMAL", []{ error("need impl for Minimal HUD"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }}, // TODO
   {"ASCI", []{ return new_unique<Hud_asci>(); }},
 };
 
