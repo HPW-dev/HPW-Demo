@@ -15,9 +15,9 @@ using Hud_maker = std::function<Unique<Hud> ()>;
 
 sconst std::unordered_map<Str, Hud_maker> g_huds {
   {"NONE", []{ return new_unique<Hud_none>(); }},
-  {"BRAILLE", []{ error("need impl for Braille HUD"); return Unique<Hud>{}; }}, // TODO
+  //{"BRAILLE", []{ error("need impl for Braille HUD"); return Unique<Hud>{}; }}, // TODO
   {"HEX", []{ return new_unique<Hud_hex>(); }},
-  {"ROMAN II", []{ error("need impl for Roman II HUD"); return Unique<Hud>{}; }}, // TODO
+  //{"ROMAN II", []{ error("need impl for Roman II HUD"); return Unique<Hud>{}; }}, // TODO
   {"ROMAN I", []{ return new_unique<Hud_roman>(); }},
   {"MINIMAL", []{ error("need impl for Minimal HUD"); return Unique<Hud>{}; /*return new_unique<Hud_minimal>();*/ }}, // TODO
   {"ASCI", []{ return new_unique<Hud_asci>(); }},
