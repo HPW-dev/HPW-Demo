@@ -20,4 +20,5 @@ public:
   unsigned update(const Delta_time dt);
   // ставит таймер на случайную позицию
   void randomize_stable();
+  inline operator bool() const { return m_timer_max > 0; }
 }; // Timer

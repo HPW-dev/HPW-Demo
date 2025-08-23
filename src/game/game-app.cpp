@@ -182,16 +182,19 @@ void Game_app::check_errors() {
     hpw::sound_mgr_init_error = false;
     hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(
       get_locale_str("sound_settings.device_init_error"),
-      get_locale_str("common.error")
+      get_locale_str("common.error"),
+      []{}, 15. // автоскип предупреждения через несколько сек
     ));
   }
 
-  // ошибка при мультиоконном запуске
+  // предупреждение при мультиоконном запуске
   if (hpw::multiple_apps) {
+    log_warning << "multiwindow start";
     hpw::multiple_apps = false;
     hpw::scene_mgr.add(new_shared<Scene_msgbox_enter>(
       get_locale_str("common.multiapp_warning"),
-      get_locale_str("common.warning")
+      get_locale_str("common.warning"),
+      []{}, 15. // автоскип предупреждения через несколько сек
     ));
   }
 
