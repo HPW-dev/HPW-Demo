@@ -14,6 +14,7 @@
 #include "game/core/difficulty.hpp"
 #include "util/str-util.hpp"
 #include "util/math/mat.hpp"
+#include "util/log.hpp"
 
 struct Hud_roman::Impl {
   constx std::int64_t MAX_ROMAN_NUMBER = 3'999;
@@ -26,7 +27,9 @@ struct Hud_roman::Impl {
   //Rect _pts_rect {};
   //Rect _player_rect {};
 
-  inline Impl(Hud& master): _master{master} {}
+  inline Impl(Hud& master): _master{master} {
+    log_warning << "[TODO] need impl for Roman UI hitbox";
+  }
 
   inline void update(const Delta_time dt) {
     resolve_collisions();

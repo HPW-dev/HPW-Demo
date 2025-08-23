@@ -11,13 +11,13 @@
 struct Replay::Impl {};
 
  // TODO
-Replay::Replay(cr<Str> path, bool write_mode) { log_error << "need impl"; }
-Replay::~Replay() { log_error << "need impl"; }
-void Replay::close() { log_error << "need impl"; }
+Replay::Replay(cr<Str> path, bool write_mode) { log_warning << "[TODO] need impl"; }
+Replay::~Replay() { log_warning << "[TODO] need impl"; }
+void Replay::close() { log_warning << "[TODO] need impl"; }
 void Replay::push(cr<Key_packet> key_packet) { log_debug << "need impl"; }
 std::optional<Key_packet> Replay::pop() { log_debug << "need impl"; return {}; }
 Replay::Info Replay::get_info(cr<Str> path) { log_error << "need impl"; return {}; }
-utf32 Replay::warnings() const {log_error << "need impl"; return {}; }
+utf32 Replay::warnings() const {log_warning << "[TODO] need impl"; return {}; }
 
 Str get_random_replay_name() {
   std::stringstream name;
