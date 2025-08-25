@@ -17,6 +17,19 @@ struct Rgb24 final {
   inline static constexpr Rgb24 neutral() { return {}; }
 };
 
+// Hue Saturation Lightness
+struct HSL final {
+  using value_t = real;
+  value_t h {}, s {}, l {};
+  
+  HSL() noexcept = default;
+
+  inline constexpr HSL(value_t _h, value_t _s, value_t _l) noexcept
+    : h{_h}, s{_s}, l{_l} {}
+  
+  inline static constexpr HSL neutral() { return {}; }
+};
+
 /** Индексированные цвета HPW
 *@details Диапазоны: 0 B, 0..222 BW, 223..254 Red, 255 W. */
 struct Pal8 final {
