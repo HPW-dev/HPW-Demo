@@ -3,6 +3,8 @@
 #
 # Русские символы
 # €s‘џљ
+#\n\\n \n \\\ '"'"" '
+# start_script: ../../script/cmd/basic.txt
 
 # тест вывода текста:
 print test message 1
@@ -28,6 +30,6 @@ print only console text 2
 log_screen 1
 
 # тест открытия файла скрипта:
-script cmd-test-helper.txt
+script ../../script/cmd/basic-helper.txt
 
 # comment test 2
