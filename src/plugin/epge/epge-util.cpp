@@ -20,6 +20,7 @@
 #include "pixels-per-frame.hpp"
 #include "epge-resize.hpp"
 #include "mirror.hpp"
+#include "video-noise.hpp"
 #include "color-rotation.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
@@ -45,6 +46,7 @@ inline static void init_epge_list() {
   add_epge<epge::Pixelate>();
   add_epge<epge::Inversion>();
   add_epge<epge::Mirror>();
+  add_epge<epge::Video_noise>();
   add_epge<epge::Display_3d>();
   add_epge<epge::Resize>();
   add_epge<epge::Glow>();

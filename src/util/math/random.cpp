@@ -23,6 +23,7 @@ namespace {
   inline auto rnd_gen {std::minstd_rand()};
   inline auto rndu_gen {std::minstd_rand()};
   inline auto rndr_gen {std::minstd_rand()};
+  inline auto rndr_graphic_gen {std::minstd_rand()};
   inline std::uint8_t table_idx {0};
 }
 
@@ -88,6 +89,7 @@ void set_rnd_seed(std::uint32_t new_seed RND_SRC_LOC_ARG) {
     rndb_lcg_state = seed;
     rnd_gen.seed(seed);
     rndr_gen.seed(seed);
+    rndr_graphic_gen.seed(seed);
     rndu_gen.seed(seed);
     table_idx = std::uint8_t(seed);
 
@@ -189,4 +191,10 @@ std::uint32_t rndu_fast(std::uint32_t rmax) {
 }
 real rndr_fast(real rmin, real rmax) {
   return (rndr_fast() * (rmax + std::abs(rmin))) - std::abs(rmin);
+}
+
+real rndr_graphic(real rmin, real rmax) {
+  return_if (rmin >= rmax, rmin);
+  std::uniform_real_distribution<real> dist(rmin, rmax);
+  return dist(rndr_graphic_gen);
 }

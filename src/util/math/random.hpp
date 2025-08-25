@@ -40,3 +40,4 @@ std::uint32_t rndu_fast();
 real rndr(real rmin=0, real rmax=1 RND_SRC_LOC_ARG_DEF);
 real rndr_fast(real rmin, real rmax);
 real rndr_fast();
+real rndr_graphic(real rmin=0, real rmax=1);
