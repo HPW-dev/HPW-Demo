@@ -2,10 +2,10 @@
 #include "util/mempool.hpp"
 #include "util/math/vec.hpp"
 #include "graphic/image/color-blend.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Anim;
 class Frame;
-class Image;
 class Entity;
 class Direct;
 class Hitbox;

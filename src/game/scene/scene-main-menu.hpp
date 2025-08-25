@@ -35,9 +35,11 @@ class Scene_main_menu final: public Scene {
   void update_bg_order(const Delta_time dt);
   
 public:
+  constx Str NAME = "main menu";
+
   Scene_main_menu();
   ~Scene_main_menu();
   void update(const Delta_time dt) override final;
   void draw(Image& dst) const noexcept override final;
-  inline Str name() const override { return "main menu"; }
+  inline Str name() const override { return NAME; }
 };

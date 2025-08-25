@@ -2,9 +2,9 @@
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/vec.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 using Polygons = Vector<Polygon>;
-class Image;
 struct Pal8;
 
 class Hitbox final {

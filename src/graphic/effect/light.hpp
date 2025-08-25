@@ -2,8 +2,7 @@
 #include <cstdint>
 #include "graphic/image/color-blend.hpp"
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 enum class Light_quality {
   disabled = 0, // играть без вспышек

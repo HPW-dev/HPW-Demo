@@ -10,9 +10,11 @@ class Scene_epge_config final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "EPGE config";
+
   explicit Scene_epge_config(epge::Base* epge);
   ~Scene_epge_config();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "EPGE config"; }
+  inline Str name() const override { return NAME; }
 };

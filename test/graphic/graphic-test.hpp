@@ -3,10 +3,10 @@
 #include <functional>
 #include "host/glfw3/host-glfw.hpp"
 #include "util/unicode.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Timer;
 class Ball;
-class Image;
 
 // тесты модулей графики
 void graphic_tests();

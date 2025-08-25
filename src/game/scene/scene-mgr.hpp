@@ -3,9 +3,9 @@
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Scene;
-class Image;
 
 // управление сценами
 class Scene_mgr final {
@@ -21,6 +21,7 @@ public:
   Scene_mgr();
   ~Scene_mgr();
   void add(cr<Shared<Scene>> scene); // добавить новую сцену
+  void add(cr<Str> name); // добавить новую сцену по названию
   void draw(Image& dst) const;
   void back(uint count=1); // вернуться обратно по стеку сцен <count> раз
   void clear();

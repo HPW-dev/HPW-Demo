@@ -1,5 +1,4 @@
 #pragma once
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 void draw_virtual_joystick(Image& dst);

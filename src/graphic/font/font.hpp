@@ -2,8 +2,7 @@
 #include "util/unicode.hpp"
 #include "util/math/vec.hpp"
 #include "graphic/image/color-blend.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // базовый класс для шрифтов
 class Font_base {

@@ -1,7 +1,6 @@
 #pragma once
 #include "util/macro.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 /** накладывает src на dst с картой прозрачности в blend_mask
 * @details dst, src и blend_mask должны быть одинаковы по размеру */

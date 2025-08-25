@@ -8,9 +8,11 @@ class Scene_cmd final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "CMD";
+
   Scene_cmd();
   ~Scene_cmd();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "CMD"; }
+  inline Str name() const override { return NAME; }
 };

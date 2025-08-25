@@ -4,9 +4,9 @@
 #include "util/unicode.hpp"
 #include "util/math/rect.hpp"
 #include "util/math/vec.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Font_base;
-class Image;
 
 // нарисовать текст по центру
 void draw_center(cp<Font_base> font, Image& dst,

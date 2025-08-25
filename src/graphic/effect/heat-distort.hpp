@@ -1,8 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // отображает эффект искажения воздуха
 class Heat_distort final {

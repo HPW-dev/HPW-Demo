@@ -1,9 +1,9 @@
 #pragma once
 #include "util/math/vec.hpp"
 #include "resize.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 class Sprite;
-class Image;
 
 /** поворачивает картинку и оптимизирует по размеру краёв
 * @param src что вращается

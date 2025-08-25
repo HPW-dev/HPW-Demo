@@ -11,13 +11,13 @@
 struct Replay::Impl {};
 
  // TODO
-Replay::Replay(cr<Str> path, bool write_mode) { log_error << "need impl"; }
-Replay::~Replay() { log_error << "need impl"; }
-void Replay::close() { log_error << "need impl"; }
+Replay::Replay(cr<Str> path, bool write_mode) { log_warning << "[TODO] need impl"; }
+Replay::~Replay() { log_warning << "[TODO] need impl"; }
+void Replay::close() { log_warning << "[TODO] need impl"; }
 void Replay::push(cr<Key_packet> key_packet) { log_debug << "need impl"; }
 std::optional<Key_packet> Replay::pop() { log_debug << "need impl"; return {}; }
 Replay::Info Replay::get_info(cr<Str> path) { log_error << "need impl"; return {}; }
-utf32 Replay::warnings() const {log_error << "need impl"; return {}; }
+utf32 Replay::warnings() const {log_warning << "[TODO] need impl"; return {}; }
 
 Str get_random_replay_name() {
   std::stringstream name;
@@ -400,7 +400,7 @@ struct Replay::Impl {
       std::ofstream file(std::filesystem::path(m_path), std::ios_base::binary);
 
       if (!file.is_open()) {
-        hpw::global_task_mgr.add(new_shared<Save_error>(m_path));
+        hpw::task_mgr.add(new_shared<Save_error>(m_path));
         return;
       }
 

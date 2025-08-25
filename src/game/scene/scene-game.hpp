@@ -10,12 +10,14 @@ public:
   ~Scene_game();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
+  constx Str NAME = "game";
+  inline Str name() const override { return NAME; }
 
 private:
   bool m_start_tutorial {false};
   struct Impl;
   Unique<Impl> m_impl {};
-
+  
   void init_levels();
   void init_entitys();
   void replay_init();
@@ -23,6 +25,4 @@ private:
   void draw_border(Image& dst) const; // рамка по краям экрана
   Vec get_level_vel() const; // безопасно получить сдвиг кординат уровня
   void save_named_replay();
-  void startup_script();
-  inline Str name() const override { return "game"; }
 };

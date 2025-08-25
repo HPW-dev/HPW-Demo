@@ -1,4 +1,5 @@
 #pragma once
+#include "graphic/image/image-fwd.hpp"
 
 #ifdef HOST_GLFW3
 #include "host/glfw3/host-glfw.hpp"
@@ -13,8 +14,6 @@ using Host_class = Host_sdl2;
 using Host_class = Host_asci;
 #endif
 
-class Image;
-
 class Game_app: public Host_class {
   nocopy(Game_app);
   
@@ -27,6 +26,7 @@ class Game_app: public Host_class {
   void replay_save_keys();
   void replay_load_keys();
   void post_draw(Image& dst) const;
+  void startup_script();
 
 public:
   explicit Game_app(int argc, char *argv[]);

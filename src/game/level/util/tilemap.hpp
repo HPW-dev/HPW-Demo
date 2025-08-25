@@ -4,8 +4,8 @@
 #include "util/str.hpp"
 #include "util/math/vec.hpp"
 #include "graphic/image/color-blend.hpp"
+#include "graphic/image/image-fwd.hpp"
 
-class Image;
 class Yaml;
 
 // Рисует на экране тайловый фон

@@ -2,8 +2,7 @@
 #include "ability-id.hpp"
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 class Ability {
 public:

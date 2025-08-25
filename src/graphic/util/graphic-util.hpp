@@ -7,10 +7,10 @@
 #include "util/math/num-types.hpp"
 #include "graphic/image/color-blend.hpp"
 #include "graphic/image/mode-get.hpp"
+#include "graphic/image/image-fwd.hpp"
 
 struct Polygon;
 struct Pal8;
-class Image;
 class Sprite;
 
 // ищет пиксель-бленд функцию по имени

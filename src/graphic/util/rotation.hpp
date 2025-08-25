@@ -1,7 +1,6 @@
 #pragma once
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 class Sprite;
 
 // отзеркалить по вертикали

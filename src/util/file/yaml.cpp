@@ -2,7 +2,6 @@
 #include <yaml-cpp/yaml.h>
 #include <format>
 #include <codecvt>
-#include <locale>
 #include <cassert>
 #include <utility>
 #include <fstream>
@@ -29,11 +28,9 @@ struct Yaml::Impl {
 
   inline void get_kv32_table_helper(vkvu32_t &v_kv32, cr<Str> key, cr<decltype(root)> v_node) const {
     if (v_node.size() == 0) {
-      using utf8_to_utf32 = std::codecvt_utf8<char32_t>;
-      std::wstring_convert<utf8_to_utf32, char32_t> conv;
       v_kv32.emplace_back(kvu32_t {
         .key = str_tolower(key),
-        .str = conv.from_bytes(v_node.as<Str>())
+        .str = utf8_to_32(v_node.as<Str>())
       } );
     } else {
       for (auto node: v_node)

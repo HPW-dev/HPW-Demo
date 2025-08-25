@@ -10,11 +10,14 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/bgp/bgp.hpp"
 #include "util/hpw-util.hpp"
+#include "util/math/timer.hpp"
 #include "graphic/image/image.hpp"
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};
   Delta_time _bgp_state {};
+  Timer _hide_menu_timer {6}; 
+  bool _hide_menu = false; // закрывать окно меню при бездействии
 
   inline Impl() {
     if (!hpw::menu_bgp)
@@ -26,7 +29,24 @@ struct Scene_bgp_select::Impl {
     atm_config.bf_bg = &blend_avr;
     atm_config.bf_border = &blend_avr_max;
 
-    Menu_items items {};
+    init_unique<Advanced_text_menu>(_menu, title, _get_items(), rect, atm_config);
+    _find_bgp(hpw::menu_bgp_name);
+  }
+
+  // докрутить выбор в меню до установленного фона
+  inline void _find_bgp(cr<Str> name) {
+    for (uint id = 0; crauto item: _menu->get_items()) {
+      if (item->to_text() == utf8_to_32(name)) {
+        _menu->set_cur_item_id(id);
+        return;
+      }
+      ++id;
+    }
+  }
+
+  inline Menu_items _get_items() const {
+    Menu_items items;
+
     // случайный фон
     items.push_back(
       new_shared<Menu_text_item>(
@@ -40,6 +60,7 @@ struct Scene_bgp_select::Impl {
         get_locale_str("bgp_select.random_bg.desc")
       )
     );
+
     // добавить все фоны
     auto bgps = get_bgp_names();
     std::sort(bgps.begin(), bgps.end());
@@ -53,40 +74,57 @@ struct Scene_bgp_select::Impl {
         }
       ));
     }
+
     // выйти
     items.push_back(new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }));
-
-    init_unique<Advanced_text_menu>(_menu, title, items, rect, atm_config);
+    
+    return items;
   }
 
-  inline void update(const Delta_time dt) {
+  inline void _update_input(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
-
-    _bgp_state += dt;
-
-    assert(_menu);
-    _menu->update(dt);
-
-    // если выбирается строка с именем фона, то сразу применять этот фон
-    if (_menu->moved()) {
-      crauto item = _menu->get_cur_item();
-      crauto exit_from_menu = _menu->get_items().back();
-      if (exit_from_menu != item)
-        item->enable();
-    }
-
+    
     // при выборе тоже выходить
     if (is_pressed_once(hpw::keycode::enable))
       hpw::scene_mgr.back();
+
+    // если долго не нежимать, то меню скроется с экрана
+    if (is_any_key_pressed()) {
+      _hide_menu = false;
+      _hide_menu_timer.reset();
+    } else {
+      _hide_menu |= _hide_menu_timer.update(dt);
+    }
+  }
+
+  inline void _update_menu(const Delta_time dt) {
+    assert(_menu);
+    _menu->update(dt);
+
+    // любое перемещение в меню вызывает мгновенную смену фона
+    if (_menu->moved()) {
+      crauto exit_from_menu = _menu->get_items().back(); // последняя кнока - выход из меню, её надо проигнорить
+      crauto item = _menu->get_cur_item();
+      if (exit_from_menu != item)
+        item->enable();
+    }
+  }
+
+  inline void update(const Delta_time dt) {
+    _bgp_state += dt;
+    _update_input(dt);
+    _update_menu(dt);
   }
 
   inline void draw(Image& dst) const {
     assert(hpw::menu_bgp);
     hpw::menu_bgp(dst, std::floor(pps(_bgp_state)));
 
-    assert(_menu);
-    _menu->draw(dst);
+    if (!_hide_menu) {
+      assert(_menu);
+      _menu->draw(dst);
+    }
   }
 }; // Impl 
 

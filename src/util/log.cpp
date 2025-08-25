@@ -78,6 +78,7 @@ Str Logger::get_source_location(cr<std::source_location> sl) {
 
 void reopen_log_file(cr<Str> fname) {
   iferror(fname.empty(), "log file name is empty");
+  Logger::config.file.close();
   Str path;
 
   try {

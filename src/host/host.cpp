@@ -59,8 +59,8 @@ struct Host::Impl final {
   #ifndef DISABLE_ARGS
     Pparser ret( Pparser::v_param_t {
       {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
-      {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(false)); }},
-      {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::global_task_mgr.add(new_shared<Task_fullscreen>(true)); }},
+      {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(false)); }},
+      {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(true)); }},
       {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
         ret.print_info();
         std::exit(EXIT_SUCCESS);
@@ -164,7 +164,7 @@ void Host::free_app_mutex() {
 }
 
 void Host::update(const Delta_time dt) {
-  hpw::global_task_mgr.update(dt);
+  hpw::task_mgr.update(dt);
   ++hpw::global_ticks;
   process_input();
 }

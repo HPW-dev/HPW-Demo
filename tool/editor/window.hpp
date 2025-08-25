@@ -1,7 +1,6 @@
 #pragma once
 #include "util/math/num-types.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // база для окошек imgui в редакторе
 class Window {

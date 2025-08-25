@@ -15,10 +15,10 @@
 
 // ----------- [!] ---------------
 // вверх не перемещать
-#include <DyLib/DyLib.hpp>
+#include <dylib/dylib.hpp>
 // ----------- [!] ---------------
 
-Shared<DyLib> g_lib_loader {}; // для кросплатформ загрузки либ
+Shared<dylib> g_lib_loader {}; // для кросплатформ загрузки либ
 Vector<Shared<Param_pge>> g_pge_params {}; // какие сейчас доступны настройки плагина
 Str g_pge_path {}; // текущий путь к плагину 
 Str g_pge_name {}; // текущее имя плагина
@@ -47,13 +47,13 @@ void load_pge(Str libname) {
     log_info << "загрузка плагина: " + libname;
 
     #ifdef WINDOWS
-      init_shared<DyLib>(g_lib_loader, std::filesystem::path(libname).wstring().c_str());
+      init_shared<dylib>(g_lib_loader, std::filesystem::path(libname).string().c_str());
     #else
-      init_shared<DyLib>(g_lib_loader, libname.c_str());
+      init_shared<dylib>(g_lib_loader, libname.c_str());
     #endif
-    g_plugin_init = g_lib_loader->getFunction<decltype(plugin_init)>("plugin_init");
-    g_plugin_apply = g_lib_loader->getFunction<decltype(plugin_apply)>("plugin_apply");
-    g_plugin_finalize = g_lib_loader->getFunction<decltype(plugin_finalize)>("plugin_finalize");
+    g_plugin_init = g_lib_loader->get_function<decltype(plugin_init)>("plugin_init");
+    g_plugin_apply = g_lib_loader->get_function<decltype(plugin_apply)>("plugin_apply");
+    g_plugin_finalize = g_lib_loader->get_function<decltype(plugin_finalize)>("plugin_finalize");
     iferror( !g_plugin_init, "не удалось получить функцию plugin_init");
     iferror( !g_plugin_apply, "не удалось получить функцию plugin_apply");
     iferror( !g_plugin_finalize, "не удалось получить функцию plugin_finalize");

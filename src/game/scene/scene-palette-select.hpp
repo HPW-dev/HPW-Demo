@@ -8,9 +8,11 @@ class Scene_palette_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
+  constx Str NAME = "palette select";
+
   Scene_palette_select();
   ~Scene_palette_select();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  inline Str name() const override { return "palette select"; }
+  inline Str name() const override { return NAME; }
 };

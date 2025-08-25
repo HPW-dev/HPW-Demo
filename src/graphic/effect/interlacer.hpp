@@ -1,8 +1,7 @@
 #pragma once
 #include "util/math/num-types.hpp"
 #include "util/mem-types.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // эффект поочерёдного отображения пикселей (2D интерлейсинг)
 class Interlacer final {

@@ -1,6 +1,5 @@
 #pragma once
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // https://www.nicovideo.jp/watch/sm7047818
 void bgp_warabimochi(Image& dst, const int bg_state);

@@ -32,7 +32,7 @@ def accept_config():
 
   match hpw_config.system:
     case System.windows:
-      inc_path.extend([thirdparty_dir + "include/_windows_only"])
+      inc_path.extend([thirdparty_dir + "include/_windows_only/GLFW/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32")])
       used_libs.extend(["OpenAL32.dll"])
       lib_path.extend([
         thirdparty_dir + "lib/yaml-cpp/" + ("x64" if hpw_config.bitness == Bitness.x64 else "x32"),

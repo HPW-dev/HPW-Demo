@@ -1,8 +1,7 @@
 #pragma once
 #include "collider.hpp"
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 class Collider_experimental_2 final: public Collider {
   nocopy(Collider_experimental_2);

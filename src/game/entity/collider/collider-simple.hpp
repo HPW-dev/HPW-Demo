@@ -1,8 +1,7 @@
 #pragma once
 #include "collider.hpp"
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // поиск столкновений через перебор всех объектов
 class Collider_simple final: public Collider {

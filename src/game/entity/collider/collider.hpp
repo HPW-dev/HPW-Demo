@@ -2,8 +2,7 @@
 #include "game/entity/entity-type.hpp"
 #include "util/macro.hpp"
 #include "util/math/vec.hpp"
-
-class Image;
+#include "graphic/image/image-fwd.hpp"
 
 // ресолвер коллизий (база)
 class Collider {
