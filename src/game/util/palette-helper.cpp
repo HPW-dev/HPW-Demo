@@ -12,7 +12,6 @@
 #include "util/file/file.hpp"
 #include "util/str.hpp"
 #include "util/path.hpp"
-#include "util/math/mat.hpp"
 #include "util/rnd-table.hpp"
 
 void randomize_palette() {
@@ -56,20 +55,25 @@ inline static real rgb24_to_hue(cr<Rgb24> src) {
 }
 
 // среднее здачение цвета из палитры
-inline static HSL hsl_average(cr<Vector<Rgb24>> pal24) {
+inline static HSL hsl_weighted_average(cr<Vector<Rgb24>> pal24) {
   assert(pal24.size() >= 256);
 
   // брать только первую часть палитры без красных оттенков
   Vector<Rgb24> main_colors(pal24.begin(), pal24.begin() + Pal8::gray_size);
   HSL avg;
-  for (cauto rgb24: main_colors) {
+  for (uint i = 0; cauto rgb24: main_colors) {
     auto hsl = rgb24_to_hsl(rgb24);
-    avg.h += hsl.h;
-    avg.s += hsl.s;
-    avg.l += hsl.l;
+    // для разных частей палитры разные веса
+    real w;
+    if      (i <   Pal8::gray_size/3)    w = 0.1;
+    else if (i <  (Pal8::gray_size/3*2)) w = 0.6;
+    else if (i >= (Pal8::gray_size/3*2)) w = 0.3;
+    avg.h += hsl.h * w;
+    avg.s += hsl.s * w;
+    avg.l += hsl.l * w;
+    ++i;
   }
   avg.h /= main_colors.size();
-  avg.h = ring_deg(avg.h);
   avg.s /= main_colors.size();
   avg.l /= main_colors.size();
   return avg;
@@ -80,8 +84,8 @@ inline static void sort_by_color(Strs& dst_list) {
   cauto comp = [](cr<Str> a, cr<Str> b) {
     cauto a_colors = colors_from_pal24(load_res(a));
     cauto b_colors = colors_from_pal24(load_res(b));
-    cauto a_avg = hsl_average(a_colors);
-    cauto b_avg = hsl_average(b_colors);
+    cauto a_avg = hsl_weighted_average(a_colors);
+    cauto b_avg = hsl_weighted_average(b_colors);
     // Приоритет: оттенок -> насыщенность -> яркость
     if (std::abs(a_avg.h - b_avg.h) > 10.0) return a_avg.h < b_avg.h;
     if (std::abs(a_avg.s - b_avg.s) > 0.1)  return a_avg.s < b_avg.s;
