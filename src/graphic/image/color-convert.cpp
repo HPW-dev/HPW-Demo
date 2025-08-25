@@ -16,11 +16,10 @@ static inline real srgb_to_linear(real c) {
     : (std::pow((c + 0.055) / 1.055, 2.4));
 }
 
-HSL pal8_to_hsl(const Pal8 src) {
-  cauto rgb24 = to_palette_rgb24_default(src);
-  cauto r = linear_to_srgb(rgb24.r);
-  cauto g = linear_to_srgb(rgb24.g);
-  cauto b = linear_to_srgb(rgb24.b);
+HSL rgb24_to_hsl(const Rgb24 src) {
+  cauto r = linear_to_srgb(src.r / 255.0);
+  cauto g = linear_to_srgb(src.g / 255.0);
+  cauto b = linear_to_srgb(src.b / 255.0);
   cauto max = std::max(std::max(r, g), b);
   cauto min = std::min(std::min(r, g), b);
   cauto delta = max - min;
@@ -50,4 +49,9 @@ HSL pal8_to_hsl(const Pal8 src) {
   }
 
   return HSL(h, s, l);
+}
+
+HSL pal8_to_hsl(const Pal8 src) {
+  cauto rgb24 = to_palette_rgb24_default(src);
+  return rgb24_to_hsl(rgb24);
 }

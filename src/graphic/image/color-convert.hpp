@@ -1,5 +1,7 @@
 #pragma once
-struct HSV;
+struct HSL;
 struct Pal8;
+struct Rgb24;
 
-HSV pal8_to_hsv(const Pal8 src);
+HSL pal8_to_hsl(const Pal8 src);
+HSL rgb24_to_hsl(const Rgb24 src);

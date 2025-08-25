@@ -3,14 +3,16 @@
 #include "palette-helper.hpp"
 #include "graphic/image/palette.hpp"
 #include "graphic/image/color.hpp"
+#include "graphic/image/color-convert.hpp"
 #include "game/core/palette.hpp"
-#include "game/util/resource-helper.hpp"
 #include "game/menu/item/list-item.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/locale.hpp"
 #include "host/command.hpp"
 #include "util/file/file.hpp"
 #include "util/str.hpp"
 #include "util/path.hpp"
+#include "util/math/mat.hpp"
 #include "util/rnd-table.hpp"
 
 void randomize_palette() {
@@ -53,28 +55,24 @@ inline static real rgb24_to_hue(cr<Rgb24> src) {
   return hue;
 }
 
-// создаёт код для сравнения цветовых палитр
-inline static uint pal24_score(cr<Vector<Rgb24>> pal24) {
+// среднее здачение цвета из палитры
+inline static HSL hsl_average(cr<Vector<Rgb24>> pal24) {
   assert(pal24.size() >= 256);
-  // взять часть серого сектора и вычислить среднюю цветность
-  const std::size_t ED = Pal8::gray_end * 0.9;
-  const std::size_t ST = Pal8::gray_end * 0.4;
-  cauto LEN = ED - ST;
-  real avg_hue {};
-  for (std::size_t i = ST; i < ED; ++i) {
-    cauto rgb24 = pal24.at(i);
-    avg_hue += rgb24_to_hue(rgb24);
+
+  // брать только первую часть палитры без красных оттенков
+  Vector<Rgb24> main_colors(pal24.begin(), pal24.begin() + Pal8::gray_size);
+  HSL avg;
+  for (cauto rgb24: main_colors) {
+    auto hsl = rgb24_to_hsl(rgb24);
+    avg.h += hsl.h;
+    avg.s += hsl.s;
+    avg.l += hsl.l;
   }
-  avg_hue /= LEN;
-
-  // средняя яркость конца палитры тоже повлияет на результат
-  cauto a = pal24.at(ED * 0.85);
-  cauto b = pal24.at(Pal8::gray_end);
-  cauto a_max = std::max(std::max(a.r, a.g), a.b);
-  cauto b_max = std::max(std::max(b.r, b.g), b.b);
-  cauto ratio = (a_max + b_max) / 2.f;
-
-  return avg_hue * 1'000 + ratio * 100'000;
+  avg.h /= main_colors.size();
+  avg.h = ring_deg(avg.h);
+  avg.s /= main_colors.size();
+  avg.l /= main_colors.size();
+  return avg;
 }
 
 // сортирует список палитр по цветам
@@ -82,9 +80,12 @@ inline static void sort_by_color(Strs& dst_list) {
   cauto comp = [](cr<Str> a, cr<Str> b) {
     cauto a_colors = colors_from_pal24(load_res(a));
     cauto b_colors = colors_from_pal24(load_res(b));
-    cauto a_score = pal24_score(a_colors);
-    cauto b_score = pal24_score(b_colors);
-    return a_score > b_score;
+    cauto a_avg = hsl_average(a_colors);
+    cauto b_avg = hsl_average(b_colors);
+    // Приоритет: оттенок -> насыщенность -> яркость
+    if (std::abs(a_avg.h - b_avg.h) > 10.0) return a_avg.h < b_avg.h;
+    if (std::abs(a_avg.s - b_avg.s) > 0.1)  return a_avg.s < b_avg.s;
+    return a_avg.l < b_avg.l;
   };
   std::sort(dst_list.begin(), dst_list.end(), comp);
 }
