@@ -5,6 +5,7 @@
 #include <chrono>
 #include "cmd-core.hpp"
 #include "cmd-util.hpp"
+#include "cmd-common.hpp"
 #include "game/scene/scene-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/tasks.hpp"
@@ -478,6 +479,10 @@ void cmd_core_init(Cmd& cmd) {
     "scene_back",
     "scene_back <num> - goto previous x<num> scenes",
     &scene_back, {} )
+  MAKE_CMD (
+    "clear",
+    "alias for cls",
+    [](Cmd_maker&, Cmd&, cr<Strs> args){ Cmd_cls().exec(args); }, {} )
   MAKE_CMD (
     "scene_order",
     "print list of current scenes",

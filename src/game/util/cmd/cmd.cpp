@@ -125,11 +125,9 @@ void Cmd::exec(cr<Str> cmd_and_args) {
   try {
     impl_exec(cmd_and_args);
   } catch (cr<hpw::Error> err) {
-    print("error while execute command \"" +
-      cmd_and_args + "\":\n" + err.what());
+    print("error while execute command \"" + cmd_and_args + "\":\n" + err.what(), true);
   } catch (...) {
-    print("undefined error while execute command \"" +
-      cmd_and_args + "\"");
+    print("undefined error while execute command \"" + cmd_and_args + "\"", true);
   }
   
   m_last_cmd = cmd_and_args;
@@ -155,9 +153,12 @@ Strs Cmd::command_matches(cr<Str> cmd_and_args) {
   return cmd_matches;
 } // command_matches
 
-void Cmd::print_to_console(cr<Str> text) const {
+void Cmd::print_to_console(cr<Str> text, bool is_error) const {
   return_if(!m_log_console);
-  log_info << text;
+  if (is_error)
+    log_error << text;
+  else
+    log_info << text;
 }
 
 void Cmd::print_to_screen(cr<Str> text) const {
@@ -169,8 +170,8 @@ void Cmd::print_to_screen(cr<Str> text) const {
   hpw::message_mgr->move(std::move(msg));
 }
 
-void Cmd::print(cr<Str> text) const {
-  print_to_console(text);
+void Cmd::print(cr<Str> text, bool is_error) const {
+  print_to_console(text, is_error);
   print_to_screen(text);
 }
 

@@ -40,7 +40,7 @@ public:
   // разрешить выводить лог в консоль системы
   inline void enable_log_console(const bool yesno) { m_log_console = yesno; }
   // печатает текст на экране игры и в консоль
-  void print(cr<Str> text) const;
+  void print(cr<Str> text, bool is_error=false) const;
   inline Vec last_pos() const { return m_last_pos; }
   inline Uid last_uid() const { return m_last_uid; }
 
@@ -59,7 +59,7 @@ private:
   Strs command_names() const;
   // ищет совпадения в названиях команд
   Strs find_cmd_name_matches(cr<Str> cmd_name) const;
-  void print_to_console(cr<Str> text) const;
+  void print_to_console(cr<Str> text, bool is_error=false) const;
   void print_to_screen(cr<Str> text) const;
   void sort_commands();
 }; // Cmd
