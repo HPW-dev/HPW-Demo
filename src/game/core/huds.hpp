@@ -4,6 +4,7 @@
 #include "util/str.hpp"
 
 namespace graphic {
-inline Str cur_hud {"ASCI"}; // имя выбранного интрфейса
+constx Str DEFAULT_HUD = "asci";
+inline Str cur_hud {DEFAULT_HUD}; // имя выбранного интрфейса
 inline Unique<Hud> hud {}; // HUD в игре
 }
