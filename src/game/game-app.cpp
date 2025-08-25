@@ -47,8 +47,10 @@
 #endif
 
 void Game_app::startup_script() {
+#ifdef DEBUG
   if (!hpw::start_script.empty())
     hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
+#endif
 }
 
 Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
