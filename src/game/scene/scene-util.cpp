@@ -11,6 +11,7 @@
 #include "scene-graphic.hpp"
 #include "scene-hud-select.hpp"
 #include "scene-main-menu.hpp"
+#include "scene-palette-select.hpp"
 
 using Maker = std::function<Shared<Scene> ()>;
 static std::unordered_map<Str, Maker> table {
@@ -25,6 +26,7 @@ static std::unordered_map<Str, Maker> table {
   ITEM(Scene_graphic)
   ITEM(Scene_hud_select)
   ITEM(Scene_main_menu)
+  ITEM(Scene_palette_select)
   #undef ITEM
 };
 
