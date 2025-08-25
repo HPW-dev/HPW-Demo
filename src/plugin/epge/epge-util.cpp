@@ -22,6 +22,7 @@
 #include "mirror.hpp"
 #include "video-noise.hpp"
 #include "color-rotation.hpp"
+#include "crazy-blur.hpp"
 
 using Epge_maker = std::function< Unique<epge::Base> ()>;
 
@@ -42,6 +43,7 @@ inline static void init_epge_list() {
   add_epge<epge::Color_rotation>();
   add_epge<epge::Shuffler>();
   add_epge<epge::Pixels_per_frame>();
+  add_epge<epge::Crazy_blur>();
   add_epge<epge::Shaker>();
   add_epge<epge::Pixelate>();
   add_epge<epge::Inversion>();
