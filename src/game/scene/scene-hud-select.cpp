@@ -43,7 +43,7 @@ struct Scene_hud_select::Impl {
     }
     // дефолт гуй
     items.push_back(new_shared<Menu_text_item>(get_locale_str("hud_select.default"),
-      [name = DEFAULT_UI]{
+      [name = graphic::DEFAULT_HUD]{
         graphic::cur_hud = name;
         graphic::hud = make_hud(name); 
       }
