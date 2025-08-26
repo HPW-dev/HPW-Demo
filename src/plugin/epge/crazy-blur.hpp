@@ -4,7 +4,7 @@
 
 namespace epge {
 
-// случайно растягивает чайсти картинки
+// случайно растягивает части картинки
 class Crazy_blur: public epge::Base {
   struct Impl;
   Unique<Impl> impl {};
