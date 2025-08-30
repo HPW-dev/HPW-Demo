@@ -1,4 +1,5 @@
 #pragma once
+#include "epge-util.hpp"
 #include "epge-params.hpp"
 #include "util/math/num-types.hpp"
 #include "graphic/image/image-fwd.hpp"
@@ -20,6 +21,8 @@ public:
 
 } // epge ns
 
+template <class T> struct Epge_registrator { inline Epge_registrator() { add_epge<T>(); } };
+
 #define EPGE_CLASS_MAKER(NAME) \
 namespace epge { \
   class NAME: public epge::Base { \
@@ -33,6 +36,7 @@ namespace epge { \
     void draw(Image& dst) const noexcept final; \
     Params params() noexcept final; \
   }; \
+  inline Epge_registrator<NAME> _ignore_##NAME {}; \
 }
 
 #define EPGE_IMPL_MAKER(NAME) \
