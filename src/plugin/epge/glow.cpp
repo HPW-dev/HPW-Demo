@@ -75,11 +75,6 @@ struct Glow::Impl final {
   }
 }; // Impl
 
-Glow::Glow(): impl{new_unique<Impl>()} {}
-Glow::~Glow() {}
-Str Glow::name() const noexcept { return impl->name(); }
-Str Glow::desc() const noexcept { return impl->desc(); }
-void Glow::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Glow::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Glow)
 
 } // epge ns

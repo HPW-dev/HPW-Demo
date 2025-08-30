@@ -53,11 +53,6 @@ struct Shaker::Impl final {
   }
 }; // Impl
 
-Shaker::Shaker(): impl{new_unique<Impl>()} {}
-Shaker::~Shaker() {}
-Str Shaker::name() const noexcept { return impl->name(); }
-Str Shaker::desc() const noexcept { return impl->desc(); }
-void Shaker::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Shaker::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Shaker)
 
 } // epge ns

@@ -36,7 +36,7 @@ namespace epge { \
 }
 
 #define EPGE_IMPL_MAKER(NAME) \
-NAME::Interlacer(): impl{new_unique<Impl>()} {} \
+NAME::NAME(): impl{new_unique<Impl>()} {} \
 NAME::~NAME() {} \
 Str NAME::name() const noexcept { return impl->name(); } \
 Str NAME::desc() const noexcept { return impl->desc(); } \

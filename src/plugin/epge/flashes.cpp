@@ -61,11 +61,6 @@ struct Flashes::Impl final {
   }
 }; // Impl
 
-Flashes::Flashes(): impl{new_unique<Impl>()} {}
-Flashes::~Flashes() {}
-Str Flashes::name() const noexcept { return impl->name(); }
-Str Flashes::desc() const noexcept { return impl->desc(); }
-void Flashes::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Flashes::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Flashes)
 
 } // epge ns

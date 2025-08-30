@@ -39,11 +39,6 @@ struct Pixels_per_frame::Impl final {
   }
 }; // Impl
 
-Pixels_per_frame::Pixels_per_frame(): impl{new_unique<Impl>()} {}
-Pixels_per_frame::~Pixels_per_frame() {}
-Str Pixels_per_frame::name() const noexcept { return impl->name(); }
-Str Pixels_per_frame::desc() const noexcept { return impl->desc(); }
-void Pixels_per_frame::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Pixels_per_frame::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Pixels_per_frame)
 
 } // epge ns

@@ -62,11 +62,6 @@ struct Resize::Impl final {
   }
 }; // Impl
 
-Resize::Resize(): impl{new_unique<Impl>()} {}
-Resize::~Resize() {}
-Str Resize::name() const noexcept { return impl->name(); }
-Str Resize::desc() const noexcept { return impl->desc(); }
-void Resize::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Resize::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Resize)
 
 } // epge ns

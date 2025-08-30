@@ -36,11 +36,6 @@ struct Mirror::Impl final {
   }
 }; // Impl
 
-Mirror::Mirror(): impl{new_unique<Impl>()} {}
-Mirror::~Mirror() {}
-Str Mirror::name() const noexcept { return impl->name(); }
-Str Mirror::desc() const noexcept { return impl->desc(); }
-void Mirror::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Mirror::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Mirror)
 
 } // epge ns

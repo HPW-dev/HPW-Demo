@@ -58,11 +58,6 @@ struct Scanline::Impl final {
   }
 }; // Impl
 
-Scanline::Scanline(): impl{new_unique<Impl>()} {}
-Scanline::~Scanline() {}
-Str Scanline::name() const noexcept { return impl->name(); }
-Str Scanline::desc() const noexcept { return impl->desc(); }
-void Scanline::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Scanline::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Scanline)
 
 } // epge ns

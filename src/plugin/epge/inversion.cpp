@@ -33,11 +33,6 @@ struct Inversion::Impl final {
   }
 }; // Impl
 
-Inversion::Inversion(): impl{new_unique<Impl>()} {}
-Inversion::~Inversion() {}
-Str Inversion::name() const noexcept { return impl->name(); }
-Str Inversion::desc() const noexcept { return impl->desc(); }
-void Inversion::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Inversion::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Inversion)
 
 } // epge ns
