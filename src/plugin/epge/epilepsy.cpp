@@ -98,11 +98,6 @@ struct Epilepsy::Impl final {
   }
 }; // Impl
 
-Epilepsy::Epilepsy(): impl{new_unique<Impl>()} {}
-Epilepsy::~Epilepsy() {}
-Str Epilepsy::name() const noexcept { return impl->name(); }
-Str Epilepsy::desc() const noexcept { return impl->desc(); }
-void Epilepsy::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Epilepsy::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Epilepsy)
 
 } // epge ns

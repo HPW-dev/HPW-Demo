@@ -75,11 +75,6 @@ struct Display_3d::Impl final {
   }
 }; // Impl
 
-Display_3d::Display_3d(): impl{new_unique<Impl>()} {}
-Display_3d::~Display_3d() {}
-Str Display_3d::name() const noexcept { return impl->name(); }
-Str Display_3d::desc() const noexcept { return impl->desc(); }
-void Display_3d::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Display_3d::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Display_3d)
 
 } // epge ns

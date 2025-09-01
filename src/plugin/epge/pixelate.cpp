@@ -83,11 +83,6 @@ struct Pixelate::Impl final {
   }
 }; // Impl
 
-Pixelate::Pixelate(): impl{new_unique<Impl>()} {}
-Pixelate::~Pixelate() {}
-Str Pixelate::name() const noexcept { return impl->name(); }
-Str Pixelate::desc() const noexcept { return impl->desc(); }
-void Pixelate::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Pixelate::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Pixelate)
 
 } // epge ns

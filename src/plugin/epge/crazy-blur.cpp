@@ -66,11 +66,6 @@ struct Crazy_blur::Impl final {
   }
 }; // Impl
 
-Crazy_blur::Crazy_blur(): impl{new_unique<Impl>()} {}
-Crazy_blur::~Crazy_blur() {}
-Str Crazy_blur::name() const noexcept { return impl->name(); }
-Str Crazy_blur::desc() const noexcept { return impl->desc(); }
-void Crazy_blur::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Crazy_blur::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Crazy_blur)
 
 } // epge ns

@@ -91,11 +91,6 @@ struct Shuffler::Impl final {
   }
 }; // Impl
 
-Shuffler::Shuffler(): impl{new_unique<Impl>()} {}
-Shuffler::~Shuffler() {}
-Str Shuffler::name() const noexcept { return impl->name(); }
-Str Shuffler::desc() const noexcept { return impl->desc(); }
-void Shuffler::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Shuffler::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Shuffler)
 
 } // epge ns

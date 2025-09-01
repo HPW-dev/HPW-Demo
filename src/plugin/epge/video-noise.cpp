@@ -48,11 +48,6 @@ struct Video_noise::Impl final {
   }
 }; // Impl
 
-Video_noise::Video_noise(): impl{new_unique<Impl>()} {}
-Video_noise::~Video_noise() {}
-Str Video_noise::name() const noexcept { return impl->name(); }
-Str Video_noise::desc() const noexcept { return impl->desc(); }
-void Video_noise::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Video_noise::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Video_noise)
 
 } // epge ns

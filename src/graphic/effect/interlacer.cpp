@@ -9,12 +9,12 @@ struct Interlacer::Impl {
   mutable Image screen {}; // внутренний буффер накопления
 
   inline Impl(uint _mx, uint _my, uint screen_w, uint screen_h)
-  : mx {_mx}
-  , my {_my}
+  : mx {_mx + 1}
+  , my {_my + 1}
   , screen (screen_w, screen_h, Pal8::black)
   {
-    assert(mx);
-    assert(my);
+    assert(mx >= 0);
+    assert(my >= 0);
     assert(screen);
   }
 

@@ -104,12 +104,6 @@ struct Color_rotation::Impl final {
   }
 }; // Impl
 
-Color_rotation::Color_rotation(): impl{new_unique<Impl>()} {}
-Color_rotation::~Color_rotation() {}
-Str Color_rotation::name() const noexcept { return impl->name(); }
-Str Color_rotation::desc() const noexcept { return impl->desc(); }
-void Color_rotation::update(const Delta_time dt) noexcept { impl->update(dt); }
-void Color_rotation::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Color_rotation::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Color_rotation)
 
 } // epge ns

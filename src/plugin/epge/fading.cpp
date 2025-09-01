@@ -78,11 +78,6 @@ struct Fading::Impl final {
   }
 }; // Impl
 
-Fading::Fading(): impl{new_unique<Impl>()} {}
-Fading::~Fading() {}
-Str Fading::name() const noexcept { return impl->name(); }
-Str Fading::desc() const noexcept { return impl->desc(); }
-void Fading::draw(Image& dst) const noexcept { impl->draw(dst); }
-Params Fading::params() noexcept { return impl->params(); }
+EPGE_IMPL_MAKER(Fading)
 
 } // epge ns
