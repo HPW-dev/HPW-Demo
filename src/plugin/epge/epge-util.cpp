@@ -95,8 +95,7 @@ Strs avaliable_epges() {
 }
 
 Unique<epge::Base> make_epge(cr<Str> name) {
-  if (epge::makers.empty())
-    init_epge_list();
+  assert(!epge::makers.empty());
 
   try {
     return epge::makers.at(name) (); // создать EPGE
