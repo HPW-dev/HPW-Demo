@@ -1,7 +1,7 @@
 info:
   author: Мрамор
   name: Русский (с приколом)
-  for_game_version: 0.228.21.0
+  for_game_version: 0.250.0.0
   revision: 1
 common: # общие строки
   author: автор
