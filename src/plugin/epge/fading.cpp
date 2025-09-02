@@ -3,6 +3,7 @@
 #include "fading.hpp"
 #include "graphic/image/color-blend.hpp"
 #include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -19,7 +20,9 @@ struct Fading::Impl final {
   mutable Image buffer {};
 
   inline Str name() const noexcept { return "fading"; }
-  inline Str desc() const noexcept { return "blurring of frames"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.fading." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

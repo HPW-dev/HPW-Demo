@@ -2,6 +2,7 @@
 #include "epge-interlacer.hpp"
 #include "graphic/image/image.hpp"
 #include "game/core/canvas.hpp"
+#include "game/util/locale.hpp"
 #include "graphic/effect/interlacer.hpp"
 
 namespace epge {
@@ -14,7 +15,9 @@ struct Interlacer::Impl final {
   mutable int _old_ly {};
 
   inline Str name() const noexcept { return "interlacer"; }
-  inline Str desc() const noexcept { return "interlaced and columnar pixel output"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.interlacer." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
   
   inline bool _check_values() const noexcept {
     if (_lx == _ly && _lx == 0)

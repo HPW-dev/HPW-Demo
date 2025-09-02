@@ -5,6 +5,7 @@
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "game/core/canvas.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -23,7 +24,9 @@ struct Resize::Impl final {
   bool _black_bg {true};
 
   inline Str name() const noexcept { return "resize"; }
-  inline Str desc() const noexcept { return "changes size of the game frame"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.resize." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline Impl() {
     _w = graphic::width;

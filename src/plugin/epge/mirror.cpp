@@ -3,6 +3,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/rotation.hpp"
 #include "graphic/util/graphic-util.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -12,7 +13,9 @@ struct Mirror::Impl final {
   bool _rotate_180 {false};
 
   inline Str name() const noexcept { return "mirror"; }
-  inline Str desc() const noexcept { return "mirrors the game frame"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.mirror." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

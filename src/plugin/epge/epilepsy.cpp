@@ -3,6 +3,7 @@
 #include "epilepsy.hpp"
 #include "util/math/random.hpp"
 #include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -22,7 +23,9 @@ struct Epilepsy::Impl final {
   int _mode {scast<int>(Mode::_or)};
 
   inline Str name() const noexcept { return "epilepsy"; }
-  inline Str desc() const noexcept { return "various color rotations"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.epilepsy." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

@@ -339,10 +339,10 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_epge_item() {
     return new_shared<Menu_text_item>(
-      get_locale_str("graphic_menu.epge.title"),
+      get_locale_str("epge.title"),
       []{ hpw::scene_mgr.add(new_shared<Scene_epge>()); },
       []->utf32 { return {}; },
-      get_locale_str("graphic_menu.epge.desc")
+      get_locale_str("epge.desc")
     );
   }
 

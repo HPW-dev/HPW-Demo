@@ -5,6 +5,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/effect/light.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -24,7 +25,9 @@ struct Flashes::Impl final {
   mutable std::uniform_real_distribution<double> _dist {0, 1};
 
   inline Str name() const noexcept { return "flashes"; }
-  inline Str desc() const noexcept { return "draws flashes on bright pixels"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.flashes." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline Impl() { _generator.seed( std::time({}) ); }
   

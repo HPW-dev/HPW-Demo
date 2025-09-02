@@ -2,6 +2,7 @@
 #include "scanline.hpp"
 #include "graphic/image/color-blend.hpp"
 #include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -11,7 +12,9 @@ struct Scanline::Impl final {
   bool _shading {true}; // true - уменьшать яркость в полосках. Иначе - увеличивать
 
   inline Str name() const noexcept { return "scanline"; }
-  inline Str desc() const noexcept { return "CRT display scanline simulation"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.scanline." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     cauto SCANLINE_SHADOW = Pal8::from_real(_intense);

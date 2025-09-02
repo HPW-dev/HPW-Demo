@@ -5,6 +5,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "util/math/vec-util.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -17,7 +18,9 @@ struct Glow::Impl final {
   mutable Image _buffer {};
 
   inline Str name() const noexcept { return "glow"; }
-  inline Str desc() const noexcept { return "soft glow"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.glow." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
   
   inline void draw(Image& dst) const noexcept {
     assert(dst);

@@ -3,6 +3,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -12,7 +13,9 @@ struct Pixels_per_frame::Impl final {
   int _ppf {512 * 211};
 
   inline Str name() const noexcept { return "pixels per frame"; }
-  inline Str desc() const noexcept { return "draws a certain number of pixels per frame"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.pixels_per_frame." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

@@ -5,6 +5,7 @@
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "util/math/random.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -19,7 +20,9 @@ struct Crazy_blur::Impl final {
   mutable Image side_b {};
 
   inline Str name() const noexcept { return "crazy blur"; }
-  inline Str desc() const noexcept { return "randomly resize fragments of image"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.crazy_blur." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
   
   inline void draw(Image& dst) const noexcept {
     assert(dst);

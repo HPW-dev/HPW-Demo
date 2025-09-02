@@ -3,6 +3,7 @@
 #include "inversion.hpp"
 #include "graphic/image/color-blend.hpp"
 #include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -10,7 +11,9 @@ struct Inversion::Impl final {
   bool _with_glitchez {};
 
   inline Str name() const noexcept { return "inversion"; }
-  inline Str desc() const noexcept { return "color inversion"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.inversion." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

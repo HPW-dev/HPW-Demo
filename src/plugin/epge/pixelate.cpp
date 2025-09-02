@@ -2,6 +2,7 @@
 #include <cassert>
 #include "pixelate.hpp"
 #include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -16,7 +17,9 @@ struct Pixelate::Impl final {
   int _mode {scast<int>(Mode::average)};
 
   inline Str name() const noexcept { return "pixelate"; }
-  inline Str desc() const noexcept { return "increases pixel sizes"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.pixelate." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

@@ -4,6 +4,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/image/color-blend.hpp"
 #include "util/math/random.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -13,7 +14,9 @@ struct Video_noise::Impl final {
   double _chance {0.7};
 
   inline Str name() const noexcept { return "noise"; }
-  inline Str desc() const noexcept { return "add noise to every frame"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.noise." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
   
   inline void draw(Image& dst) const noexcept {
     assert(dst);

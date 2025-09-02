@@ -3,6 +3,7 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "game/util/vec-helper.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -14,7 +15,9 @@ struct Shaker::Impl final {
   mutable Image _buffer {}; // накладываемый кадр
 
   inline Str name() const noexcept { return "shaker"; }
-  inline Str desc() const noexcept { return "causes frame shaking"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.shaker." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   static inline blend_pf find_blend_pf(const Blend_id id) {
     switch (id) {

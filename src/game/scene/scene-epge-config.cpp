@@ -90,7 +90,7 @@ struct Scene_epge_config::Impl {
     Advanced_text_menu_config config;
     config.bf_border = &blend_avr_max;
     config.bf_bg = &blend_158;
-    init_unique(_menu, utf8_to_32(_epge->name()), menu_items, Rect{30, 10, 350, 300}, config);
+    init_unique(_menu, _epge->localized_name(), menu_items, Rect{30, 10, 350, 300}, config);
   }
 
   // кнопка на удаление этого эффекта
@@ -106,27 +106,27 @@ struct Scene_epge_config::Impl {
 
   inline Shared<Menu_text_item> get_move_up_item() const {
     return new_shared<Menu_text_item> (
-      get_locale_str("graphic_menu.epge.move.up"),
+      get_locale_str("epge.move.up"),
       [this] {
         cauto epge_idx = get_epge_idx(_epge);
         if (epge_idx > 0)
           std::swap(graphic::epges.at(epge_idx - 1), graphic::epges.at(epge_idx));
       },
       []->utf32 { return {}; },
-      get_locale_str("graphic_menu.epge.move.desc")
+      get_locale_str("epge.move.desc")
     );
   }
 
   inline Shared<Menu_text_item> get_move_down_item() const {
     return new_shared<Menu_text_item> (
-      get_locale_str("graphic_menu.epge.move.down"),
+      get_locale_str("epge.move.down"),
       [this] {
         cauto epge_idx = get_epge_idx(_epge);
         if (graphic::epges.size() >= 2 && epge_idx + 1 <= graphic::epges.size() - 1)
           std::swap(graphic::epges.at(epge_idx + 1), graphic::epges.at(epge_idx));
       },
       []->utf32 { return {}; },
-      get_locale_str("graphic_menu.epge.move.desc")
+      get_locale_str("epge.move.desc")
     );
   }
 

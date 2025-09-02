@@ -1,6 +1,7 @@
 #include <omp.h>
 #include "shuffler.hpp"
 #include "game/core/core.hpp"
+#include "game/util/locale.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
@@ -8,7 +9,7 @@
 #include "util/math/limit.hpp"
 
 namespace epge {
-
+  
 struct Shuffler::Impl final {
   int _seed {97'997}; // ALMONDS
   int _block_sz {55};
@@ -21,7 +22,9 @@ struct Shuffler::Impl final {
   mutable Image _buffer {};
 
   inline Str name() const noexcept { return "shuffler"; }
-  inline Str desc() const noexcept { return "breaks image into squares and shuffles them"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.shuffler." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);

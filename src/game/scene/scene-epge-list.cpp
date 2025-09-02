@@ -59,7 +59,7 @@ struct Scene_epge_list::Impl {
       cauto desc = epge->desc();
 
       menu_items.push_back( new_shared<Menu_text_item>(
-        utf8_to_32(name),
+        epge->localized_name(),
         [_name=name]{
           hpw::scene_mgr.back();
           auto epge = make_epge(_name);
@@ -68,7 +68,7 @@ struct Scene_epge_list::Impl {
           graphic::epges.emplace_back(std::move(epge));
         },
         []{ return utf32{}; },
-        utf8_to_32(desc)
+        desc
       ) );
     } // for epge_list
 
@@ -81,7 +81,7 @@ struct Scene_epge_list::Impl {
     Advanced_text_menu_config config;
     config.bf_border = &blend_avr_max;
     config.bf_bg = &blend_158;
-    init_unique(_menu, get_locale_str("graphic_menu.epge.list_title"), menu_items,
+    init_unique(_menu, get_locale_str("epge.list_title"), menu_items,
       Rect{30, 10, 350, 300}, config);
   }
 }; // Impl

@@ -3,6 +3,7 @@
 #include <cassert>
 #include "color-rotation.hpp"
 #include "graphic/image/image.hpp"
+#include "game/util/locale.hpp"
 
 namespace epge {
 
@@ -23,7 +24,9 @@ struct Color_rotation::Impl final {
   Delta_time _state {};
 
   inline Str name() const noexcept { return "color rotation"; }
-  inline Str desc() const noexcept { return "twists colors in a circle"; }
+  #define LOCSTR(NAME) get_locale_str("epge.effect.color_rotation." NAME)
+  inline utf32 localized_name() const { return LOCSTR("name"); }
+  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const noexcept {
     assert(dst);
