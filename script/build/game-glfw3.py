@@ -10,6 +10,7 @@ opts = \
   ' -Q host=glfw3' \
   ' -Q compiler=gcc' \
   ' -Q use_netplay=0' \
+  ' -Q use_tools=1' \
   ' -Q opt_level=debug'
 NUM_THREADS = helper.get_max_threads() + 1
 #NUM_THREADS = 8 # юзать при тормозах

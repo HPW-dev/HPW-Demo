@@ -6,6 +6,7 @@
 #include "util/file/yaml.hpp"
 #include "util/unicode.hpp"
 #include "util/error.hpp"
+#include "util/log.hpp"
 #include "game/util/locale.hpp"
 #include "game/core/scenes.hpp"
 #include "game/scene/scene-locale.hpp"
@@ -26,11 +27,11 @@ inline static Shared<Menu_item> make_text_item(cr<Yaml> item_node, cr<Action_tab
   // колбэк при выборе пункта
   Menu_text_item::Action action;
   cauto action_name = item_node.get_str("action");
-  iferror (action_name.empty(), "требуется действие на кнопке");
+
   try {
     action = actions.at(action_name).cast_to<decltype(action)>();
   } catch (...) {
-    error("ошибка при получении \"" << action_name << "\"");
+    log_error << "не удалось привязать действие \"" << action_name << "\" для кнопки \"" << utf32_to_8(title) << "\"";
   }
 
   // колбэк для получения значения

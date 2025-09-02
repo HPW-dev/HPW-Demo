@@ -37,6 +37,7 @@ def parse_args():
   hpw_config.build_script = ARGUMENTS.get('script', 'test/graphic/SConscript')
   hpw_config.use_data_zip = bool(int(ARGUMENTS.get('use_data_zip', 1)))
   hpw_config.use_netplay = bool(int(ARGUMENTS.get('use_netplay', 0)))
+  hpw_config.use_tools = bool(int(ARGUMENTS.get('use_tools', 0)))
   hpw_config.disable_graphic = bool(int(ARGUMENTS.get('disable_graphic', 0)))
   hpw_config.use_ccache = bool(int(ARGUMENTS.get('use_ccache', 0)))
   assert hpw_config.build_script, 'path to build script needed'
@@ -191,6 +192,10 @@ def accept_params():
   # сетевая игра
   if hpw_config.use_netplay:
     hpw_config.cxx_defines.append('-DUSE_NETPLAY')
+
+  # отладка и тесты
+  if hpw_config.use_tools:
+    hpw_config.cxx_defines.append('-DUSE_TOOLS')
   
   # режим без графики
   if hpw_config.disable_graphic:

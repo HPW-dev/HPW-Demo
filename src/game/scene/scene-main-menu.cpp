@@ -34,6 +34,9 @@
 #ifdef USE_NETPLAY
 #include "game/netplay/scene/scene-netplay-menu.hpp"
 #endif
+#ifdef USE_TOOLS
+#include "game/scene/scene-tools.hpp"
+#endif
 
 Scene_main_menu::Scene_main_menu() {
   init_menu();
@@ -124,6 +127,11 @@ void Scene_main_menu::init_menu() {
       // старт
       new_shared<Menu_text_item>(get_locale_str("main_menu.start"),
         []{ hpw::scene_mgr.add(new_shared<Scene_difficulty>()); }),
+        
+      #ifdef USE_TOOLS
+      // меню тестов и отладки
+      new_shared<Menu_text_item>(get_locale_str("tools.title"), []{ hpw::scene_mgr.add(new_shared<Scene_tools>()); }),
+      #endif
 
       #ifdef USE_NETPLAY
       // LAN

@@ -1,0 +1,11 @@
+title: tools.title
+items:
+  # - locale_prefix: game_opts
+  #   action: game_opts
+
+  - locale_prefix: gpraphic_tests
+  - locale_prefix: interpolation_test
+  - locale_prefix: random_test
+  - locale_prefix: editor
+  - locale_prefix: input_delay_test
+  - type: back_item
