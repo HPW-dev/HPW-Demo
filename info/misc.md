@@ -14,6 +14,7 @@
 - [основные задачи](tasks/main_tasks.md)
 - [план сетевой игры](tasks/HPW_LAN_tasks.md)
 - [устройство реплеев](tasks/replays.md)
+- [переделать хост](tasks/host-decomposition.md)
 - [система игровых объектов](tasks/entity_manager.md)
 - [редактор](tasks/editor.md)
 - [автоматизация сборки](tasks/ci.md)
