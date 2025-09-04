@@ -59,10 +59,10 @@ class Average final {
 template <class T, std::size_t MAX_SAMPLES>
 class Median final {
  private:
-  Ring_buffer<T, MAX_SAMPLES> core {};
+  mutable Ring_buffer<T, MAX_SAMPLES> core {};
 
  public:
-  inline T operator()() {
+  inline T operator()() const {
     return_if (core.samples.empty(), {});
     return_if (core.samples.size() == 1, core.samples[0]);
     return_if (core.samples.size() == 2, (core.samples[0] + core.samples[1]) * 0.5);
