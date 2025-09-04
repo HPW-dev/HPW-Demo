@@ -5,4 +5,4 @@
 
 class Virtual_joystick;
 
-void draw(Image& dst, cr<Virtual_joystick> vrtjoy, const Veci pos);
+void draw_vrtjoy(Image& dst, cr<Virtual_joystick> vrtjoy, const Veci pos);

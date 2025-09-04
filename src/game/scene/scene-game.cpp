@@ -27,7 +27,6 @@
 #include "game/hud/hud-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
-#include "game/util/virt-joystick.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/animation-helper.hpp"
@@ -45,6 +44,8 @@
 #include "game/entity/collider/collider.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
+#include "game/input/vrtjoy.hpp"
+#include "game/input/vrtjoy-visual.hpp"
 
 #ifdef DEBUG
 #include "game/scene/scene-debug.hpp"
@@ -201,8 +202,6 @@ void Scene_game::draw(Image& dst) const {
   post_draw(dst);
 } // draw
 
-
-
 void Scene_game::init_entitys() {
   // для показа хитбоксов
   init_shared(hpw::hitbox_layer, graphic::canvas->X, graphic::canvas->Y);
@@ -217,7 +216,7 @@ void Scene_game::post_draw(Image& dst) const {
   if (graphic::show_grids) // сетки системы коллизий
     hpw::entity_mgr->debug_draw(dst);
   if (graphic::show_virtual_joystick) // нажимаемые кнопки
-    draw_virtual_joystick(dst);
+    draw_vrtjoy(dst, hpw::virtual_joystick, {5, 300});
   if (hpw::show_entity_mem_map) // память занятая объектами
     draw_entity_mem_map(dst, Vec(5, 5));
   #ifdef STABLE_REPLAY
