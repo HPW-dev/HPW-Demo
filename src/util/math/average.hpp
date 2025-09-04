@@ -77,4 +77,5 @@ class Median final {
   }
 
   inline void move(T&& x) { core.move(std::move(x)); }
+  inline void push(const T x) { core.push(x); }
 };
