@@ -21,6 +21,8 @@ struct Scene_input_delay_test::Impl {
   Delta_time _last {};
   Average<uint, 10'000> _avr_frames {};
   Median<uint, 10'000> _med_frames {};
+  uint _min_frames {9999};
+  uint _max_frames {};
   uint _last_frames {};
   Timer _spawn_timer {};
   constx Delta_time TIMER_MIN = 3;
@@ -29,6 +31,8 @@ struct Scene_input_delay_test::Impl {
   Vec _point_pos {}; // позиция квадрата
   bool _show_point {}; // пора показать квадрат
   Seconds _start_time {}; // время начала замера при появлении квадрата
+  Seconds _min_time {9999};
+  Seconds _max_time {};
   mutable uint _frames {}; // сколько кадров прошло от начала замера
 
   inline void _reset_all() {
@@ -39,6 +43,10 @@ struct Scene_input_delay_test::Impl {
     _med_frames = {};
     _last_frames = {};
     _start_time = {};
+    _min_time = {9999};
+    _max_time = {};
+    _min_frames = {9999};
+    _max_frames = {};
   }
 
   inline void _reset_point() {
@@ -70,9 +78,15 @@ struct Scene_input_delay_test::Impl {
       _last = get_cur_time() - _start_time;
       _avr.push(_last);
       _med.push(_last);
+      _min_time = std::min(_min_time, _last);
+      _max_time = std::max(_max_time, _last);
+      
       _last_frames = _frames;
+      _min_frames = std::min(_min_frames, _last_frames);
+      _max_frames = std::max(_max_frames, _last_frames);
       _avr_frames.push(_last_frames);
       _med_frames.push(_last_frames);
+      
       _reset_point();
     }
 
@@ -88,9 +102,11 @@ struct Scene_input_delay_test::Impl {
     
     assert(graphic::font);
     text_bordered(dst, _info_text
-      + U"\nAvr. " + n2s<utf32>(_avr() * 1000., 1) + U" Ms (" + n2s<utf32>(_avr_frames(), 1) + U" Frames)"
-      + U"\nMed. " + n2s<utf32>(_med() * 1000., 1) + U" Ms (" + n2s<utf32>(_med_frames(), 1) + U" Frames)"
-      + U"\nLast " + n2s<utf32>(_last  * 1000., 1) + U" Ms (" + n2s<utf32>(_last_frames, 1) + U" Frames)",
+      + U"\nAvr. " + n2s<utf32>(_avr()    * 1000., 1) + U" Ms (" + n2s<utf32>(_avr_frames()) + U" Frames)"
+      + U"\nMed. " + n2s<utf32>(_med()    * 1000., 1) + U" Ms (" + n2s<utf32>(_med_frames()) + U" Frames)"
+      + U"\nMin. " + n2s<utf32>(_min_time * 1000., 1) + U" Ms (" + n2s<utf32>(_min_frames)   + U" Frames)"
+      + U"\nMax. " + n2s<utf32>(_max_time * 1000., 1) + U" Ms (" + n2s<utf32>(_max_frames)   + U" Frames)"
+      + U"\nLast " + n2s<utf32>(_last     * 1000., 1) + U" Ms (" + n2s<utf32>(_last_frames)  + U" Frames)",
       graphic::font.get(), {5, 150, dst.X, 400}, {5, 5}
     );
 
