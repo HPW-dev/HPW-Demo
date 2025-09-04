@@ -215,8 +215,20 @@ void Scene_game::post_draw(Image& dst) const {
   }
   if (graphic::show_grids) // сетки системы коллизий
     hpw::entity_mgr->debug_draw(dst);
-  if (graphic::show_virtual_joystick) // нажимаемые кнопки
+  if (graphic::show_virtual_joystick) { // нажимаемые кнопки
+    // TODO снести это автонажатие на джойстик:
+    if (is_pressed(hpw::keycode::shoot))  hpw::virtual_joystick.press(Virtual_joystick::Key::A);      else hpw::virtual_joystick.release(Virtual_joystick::Key::A);
+    if (is_pressed(hpw::keycode::focus))  hpw::virtual_joystick.press(Virtual_joystick::Key::B);      else hpw::virtual_joystick.release(Virtual_joystick::Key::B);
+    if (is_pressed(hpw::keycode::enable)) hpw::virtual_joystick.press(Virtual_joystick::Key::ENABLE); else hpw::virtual_joystick.release(Virtual_joystick::Key::ENABLE);
+    if (is_pressed(hpw::keycode::escape)) hpw::virtual_joystick.press(Virtual_joystick::Key::MENU);   else hpw::virtual_joystick.release(Virtual_joystick::Key::MENU);
+    if   (is_pressed(hpw::keycode::up))    hpw::virtual_joystick.set_angle(279, 1);
+    elif (is_pressed(hpw::keycode::down))  hpw::virtual_joystick.set_angle(90,  1);
+    elif (is_pressed(hpw::keycode::left))  hpw::virtual_joystick.set_angle(180, 1);
+    elif (is_pressed(hpw::keycode::right)) hpw::virtual_joystick.set_angle(0,   1);
+    else hpw::virtual_joystick.set_angle(0, 0);
+
     draw_vrtjoy(dst, hpw::virtual_joystick, {5, 300});
+  }
   if (hpw::show_entity_mem_map) // память занятая объектами
     draw_entity_mem_map(dst, Vec(5, 5));
   #ifdef STABLE_REPLAY
