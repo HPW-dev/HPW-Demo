@@ -18,7 +18,7 @@ struct Scene_connect_by_ipv4::Impl {
     _menu = menu_from_yaml(
       config,
       Action_table {
-        /*{"goto_find_server_scene", Action_container( Menu_item::Action([]{
+        /*{"goto_find_server_scene", Action_container( Action([]{
           hpw::scene_mgr.add(new_shared<Scene_connect_by_ipv4>());
         }) )},*/
       }

@@ -1,6 +1,6 @@
 #include <cassert>
-#include <unordered_map>
 #include "menu-from-yaml.hpp"
+#include "menu.hpp"
 #include "advanced-text-menu.hpp"
 #include "menu/item/text-item.hpp"
 #include "util/file/yaml.hpp"
@@ -25,26 +25,21 @@ inline static Shared<Menu_item> make_text_item(cr<Yaml> item_node, cr<Action_tab
   }
 
   // колбэк при выборе пункта
-  Menu_text_item::Action action;
+  Action action;
   cauto action_name = item_node.get_str("action");
 
   try {
-    action = actions.at(action_name).cast_to<decltype(action)>();
+    action = actions.at(action_name);
   } catch (...) {
     log_error << "не удалось привязать действие \"" << action_name << "\" для кнопки \"" << utf32_to_8(title) << "\"";
   }
 
-  // колбэк для получения значения
-  Menu_text_item::Getter getter;
+  #ifndef RELEASE
   cauto getter_name = item_node.get_str("getter");
-  if (!getter_name.empty()) {
-    try {
-      getter = actions.at(getter_name).cast_to<decltype(getter)>();
-    } catch (...) {
-      error("ошибка при получении \"" << getter_name << "\"");
-    }
-  }
+  iferror(!getter_name.empty(), "этот функционал был удалён 04.05.2025");
+  #endif
 
+  auto getter = []->utf32 { return {}; };
   return new_shared<Menu_text_item>(title, action, getter, desc);
 }
 

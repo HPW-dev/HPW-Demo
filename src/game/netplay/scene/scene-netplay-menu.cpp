@@ -18,20 +18,11 @@ struct Scene_netplay_menu::Impl {
   inline Impl() {
     cauto config_file = load_res("resource/menu/netplay menu.yml");
     Yaml config(config_file);
-    _menu = menu_from_yaml(
-      config,
-      Action_table {
-        {"goto_find_server_scene", Action_container( Menu_item::Action([]{
-          hpw::scene_mgr.add(new_shared<Scene_find_server>());
-        }) )},
-        {"goto_connect_by_ipv4_scene", Action_container( Menu_item::Action([]{
-          hpw::scene_mgr.add(new_shared<Scene_connect_by_ipv4>());
-        }) )},
-        {"goto_create_server_scene", Action_container( Menu_item::Action([]{
-          hpw::scene_mgr.add(new_shared<Scene_create_server>());
-        }) )},
-      }
-    );
+    _menu = menu_from_yaml(config, Action_table {
+      {"goto_find_server_scene",     []{ hpw::scene_mgr.add(new_shared<Scene_find_server>()); }},
+      {"goto_connect_by_ipv4_scene", []{ hpw::scene_mgr.add(new_shared<Scene_connect_by_ipv4>()); }},
+      {"goto_create_server_scene",   []{ hpw::scene_mgr.add(new_shared<Scene_create_server>()); }},
+    } );
   }
 
   inline void update(const Delta_time dt) {

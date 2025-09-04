@@ -1,17 +1,16 @@
 #include <cassert>
 #include <ranges>
 #include <queue>
-#include <functional>
 #include "scene-mgr.hpp"
 #include "scene.hpp"
 #include "scene-util.hpp"
+#include "util/action.hpp"
 
 struct Scene_mgr::Impl {
   using Scenes = Vector<Shared<Scene>>;
-  using Actions = std::queue<std::function<void ()>>;
   Status _status {};
   Scenes _scenes {};
-  Actions _actions {};
+  std::queue<Action> _actions {};
 
   inline void add(cr<Shared<Scene>> scene) {
     assert(scene);

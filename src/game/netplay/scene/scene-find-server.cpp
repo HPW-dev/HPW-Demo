@@ -16,14 +16,11 @@ struct Scene_find_server::Impl {
   inline Impl() {
     cauto config_file = load_res("resource/menu/find server.yml");
     Yaml config(config_file);
-    _menu = menu_from_yaml(
-      config,
-      Action_table {
-        /*{"goto_find_server_scene", Action_container( Menu_item::Action([]{
+    _menu = menu_from_yaml(config, Action_table {
+        /*{"goto_find_server_scene", Action_container( Action([]{
           hpw::scene_mgr.add(new_shared<Scene_find_server>());
         }) )},*/
-      }
-    );
+    } );
   }
 
   inline void update(const Delta_time dt) {

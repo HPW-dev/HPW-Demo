@@ -4,7 +4,6 @@
 // пункт меню с числовыми опциями
 class Menu_item_table_row final: public Menu_item {
 public:
-  using Action = std::function<void ()>;
   using Content_getter = std::function<utf32 ()>;
   using Content_getters = Vector<Content_getter>;
 

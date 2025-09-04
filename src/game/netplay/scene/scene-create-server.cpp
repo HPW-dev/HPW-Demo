@@ -18,7 +18,7 @@ struct Scene_create_server::Impl {
     _menu = menu_from_yaml(
       config,
       Action_table {
-        /*{"goto_find_server_scene", Action_container( Menu_item::Action([]{
+        /*{"goto_find_server_scene", Action_container( Action([]{
           hpw::scene_mgr.add(new_shared<Scene_create_server>());
         }) )},*/
       }

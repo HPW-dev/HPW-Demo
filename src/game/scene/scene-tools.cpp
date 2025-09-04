@@ -1,6 +1,8 @@
 #include <cassert>
 #include "scene-tools.hpp"
+#include "scene-input-delay-test.hpp"
 #include "game/core/scenes.hpp"
+#include "game/menu/menu.hpp"
 #include "game/menu/menu-from-yaml.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/keybits.hpp"
@@ -30,11 +32,7 @@ struct Scene_tools::Impl {
     _menu = menu_from_yaml(
       Yaml(load_res("resource/menu/tools.yml")),
       Action_table {        
-        //{"graphic_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }) )},
-        //{"hud_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }) )},
-        //{"input_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_input>()); }) )},
-        //{"game_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }) )},
-        //{"bgp_select", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }) )},
+        {"input_delay_test", []{ hpw::scene_mgr.add(new_shared<Scene_input_delay_test>()); }},
       }
     );
   }

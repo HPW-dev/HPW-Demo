@@ -1,7 +1,7 @@
 #pragma once
 #include <utility>
-#include <functional>
 #include <deque>
+#include "util/action.hpp"
 #include "util/math/num-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/unicode.hpp"
@@ -11,7 +11,6 @@
 // сообщение для игрового лога на экране
 struct Message {
   using Text_gen = std::function< utf32 () >;
-  using Action = std::function< void () >;
 
   Delta_time lifetime {2.5}; // сколько секунд показывать сообщение
   utf32 text {}; // основное сообщение

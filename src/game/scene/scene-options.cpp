@@ -8,6 +8,7 @@
 #include "game/menu/menu-from-yaml.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
+#include "game/menu/menu.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
@@ -41,16 +42,13 @@ struct Scene_options::Impl {
   inline void init_menu() {
     cauto config_file = load_res("resource/menu/options.yml");
     Yaml config(config_file);
-    _menu = menu_from_yaml(
-      config,
-      Action_table {        
-        {"graphic_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }) )},
-        {"hud_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }) )},
-        {"input_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_input>()); }) )},
-        {"game_opts", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }) )},
-        {"bgp_select", Action_container( Menu_item::Action([]{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }) )},
-      }
-    );
+    _menu = menu_from_yaml(config, Action_table {        
+      {"graphic_opts", []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},
+      {"hud_opts",     []{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }},
+      {"input_opts",   []{ hpw::scene_mgr.add(new_shared<Scene_input>()); }},
+      {"game_opts",    []{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }},
+      {"bgp_select",   []{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }},
+    } );
   }
 }; // Impl 
 

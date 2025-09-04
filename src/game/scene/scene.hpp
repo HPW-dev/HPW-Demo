@@ -8,7 +8,7 @@
 // базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {
 public:
-  constx Str NAME = "base scene";
+  cautox NAME = "base scene";
 
   Scene() = default;
   virtual ~Scene() = default;
@@ -22,7 +22,7 @@ class CLASS_NAME final: public Scene { \
   struct Impl; \
   Unique<Impl> impl {}; \
 public: \
-  constx Str NAME = #CLASS_NAME; \
+  cautox NAME = #CLASS_NAME; \
   CLASS_NAME(); \
   ~CLASS_NAME(); \
   void update(const Delta_time dt) override; \

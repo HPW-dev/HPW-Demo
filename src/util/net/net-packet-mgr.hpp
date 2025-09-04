@@ -1,6 +1,6 @@
 #pragma once
-#include <functional>
 #include "net.hpp"
+#include "util/action.hpp"
 #include "util/mem-types.hpp"
 
 namespace net {
@@ -8,9 +8,6 @@ namespace net {
 // для передачи пакетов по сети
 class Packet_mgr {
 public:
-  // для колбэков
-  using Action = std::function<void ()>;
-
   // конфигурация при запуске
   struct Config {
     Str ip_v4 {net::SELF_IPV4}; // какой IP назначить себе
