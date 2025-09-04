@@ -81,6 +81,7 @@ def init_sources():
     Glob(src_dir + "host/*.cpp"),
     Glob(src_dir + "host/windows/*.cpp"),
     Glob(src_dir + "game/*.cpp"),
+    Glob(src_dir + "game/input/*.cpp"),
     Glob(src_dir + "game/util/*.cpp"),
     Glob(src_dir + "game/util/post-effect/*.cpp"),
     Glob(src_dir + "game/util/cmd/*.cpp"),
