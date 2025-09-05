@@ -13,7 +13,7 @@ class Fast_hblur: public epge::Base {
   int _mode = 1;
 
 public:
-  Str name() const { return "fast horizontal blur"; }
+  Str name() const { return "fast_horizontal_blur"; }
   utf32 localized_name() const { return LOCSTR("name"); }
   utf32 desc() const { return LOCSTR("desc"); }
 
