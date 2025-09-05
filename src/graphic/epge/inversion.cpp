@@ -7,15 +7,15 @@
 
 namespace epge {
 
-struct Inversion::Impl final {
+struct Inversion::Impl {
   bool _with_glitchez {};
 
-  inline Str name() const noexcept { return "inversion"; }
+  inline Str name() const { return "inversion"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.inversion." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
     
     if (_with_glitchez) {    
@@ -29,7 +29,7 @@ struct Inversion::Impl final {
     }
   }
 
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_bool>("with glitchez", "less accurate", _with_glitchez),
     };

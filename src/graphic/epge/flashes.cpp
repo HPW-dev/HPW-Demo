@@ -9,7 +9,7 @@
 
 namespace epge {
 
-struct Flashes::Impl final {
+struct Flashes::Impl {
   enum class Mode {
     full_star = 0,
     diagonal,
@@ -24,14 +24,14 @@ struct Flashes::Impl final {
   mutable std::default_random_engine _generator {};
   mutable std::uniform_real_distribution<double> _dist {0, 1};
 
-  inline Str name() const noexcept { return "flashes"; }
+  inline Str name() const { return "flashes"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.flashes." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
   inline Impl() { _generator.seed( std::time({}) ); }
   
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
     cauto is_diagonal = scast<Mode>(_mode) == Mode::diagonal ? true : false;
 
@@ -52,7 +52,7 @@ struct Flashes::Impl final {
     }
   }
 
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_int>("type", "type of flashes:\n  0 - full star, 1 - diagonal star",
         _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),

@@ -7,7 +7,7 @@
 
 namespace epge {
 
-struct Color_rotation::Impl final {
+struct Color_rotation::Impl {
   enum class Mode {
     _xor = 0,
     _and,

@@ -9,7 +9,7 @@
 
 namespace epge {
 
-struct Glow::Impl final {
+struct Glow::Impl {
   int _size {7};
   double _lightness {1.5};
   mutable int _glowmap_sz {};
@@ -17,12 +17,12 @@ struct Glow::Impl final {
   mutable real _glowmap_sum {};
   mutable Image _buffer {};
 
-  inline Str name() const noexcept { return "glow"; }
+  inline Str name() const { return "glow"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.glow." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
   
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
     regen_glowmap();
     assert(!_glowmap.empty());
@@ -70,7 +70,7 @@ struct Glow::Impl final {
     }
   }
 
-  inline Params params() noexcept {
+  inline Params params() {
     return Params {
       new_shared<Param_int>("size", "glow size", _size, 3, 50, 1, 2),
       new_shared<Param_double>("lightness", "brightness of glow", _lightness, 0.1, 4, 0.1, 1),

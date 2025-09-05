@@ -7,7 +7,7 @@
 
 namespace epge {
 
-struct Epilepsy::Impl final {
+struct Epilepsy::Impl {
   enum class Mode {
     _xor = 0,
     _and,
@@ -22,12 +22,12 @@ struct Epilepsy::Impl final {
 
   int _mode {scast<int>(Mode::_or)};
 
-  inline Str name() const noexcept { return "epilepsy"; }
+  inline Str name() const { return "epilepsy"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.epilepsy." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
     cauto rnd = rndu_fast() % 256u;
 
@@ -44,55 +44,55 @@ struct Epilepsy::Impl final {
     }
   }
 
-  inline void xor_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void xor_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val ^= rnd;
   }
 
-  inline void and_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void and_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val &= rnd;
   }
 
-  inline void or_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void or_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val |= rnd;
   }
 
-  inline void plus_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void plus_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val += rnd;
   }
 
-  inline void mul_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void mul_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val *= rnd;
   }
 
-  inline void max_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void max_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val = std::max<unsigned>(dst[i].val, rnd);
   }
 
-  inline void min_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void min_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val = std::min<unsigned>(dst[i].val, rnd);
   }
 
-  inline void avr_blend(Image& dst, const unsigned rnd) const noexcept {
+  inline void avr_blend(Image& dst, const unsigned rnd) const {
     #pragma omp parallel for simd if (dst.size > 64 * 64)
     cfor (i, dst.size)
       dst[i].val = (dst[i].val + rnd) >> 1;
   }
   
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_int>("mode", "pixel blending modes:\n"
         "  0 - XOR, 1 - &, 2 - |, 3 - +,\n"

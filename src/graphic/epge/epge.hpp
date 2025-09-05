@@ -12,14 +12,14 @@ class Base {
 public:
   Base() = default;
   virtual ~Base() = default;
-  virtual Str name() const noexcept = 0;
+  virtual Str name() const = 0;
   virtual utf32 localized_name() const = 0;
   // коммент с описанием плагина
-  virtual inline utf32 desc() const noexcept { return {}; }
-  virtual void draw(Image& dst) const noexcept = 0;
-  virtual inline void update(const Delta_time dt) noexcept {}
+  virtual inline utf32 desc() const { return {}; }
+  virtual void draw(Image& dst) const = 0;
+  virtual inline void update(const Delta_time dt) {}
   // узнать какие параметры есть у плагина
-  virtual Params params() noexcept = 0;
+  virtual Params params() = 0;
 };
 
 } // epge ns
@@ -35,11 +35,11 @@ namespace epge { \
   public: \
     NAME(); \
     ~NAME(); \
-    Str name() const noexcept override final; \
-    utf32 desc() const noexcept override final; \
-    utf32 localized_name() const override final; \
-    void draw(Image& dst) const noexcept override final; \
-    Params params() noexcept override final; \
+    Str name() const; \
+    utf32 desc() const; \
+    utf32 localized_name() const; \
+    void draw(Image& dst) const; \
+    Params params(); \
   }; \
   inline Epge_registrator<NAME> _ignore_##NAME {}; \
 }
@@ -47,8 +47,8 @@ namespace epge { \
 #define EPGE_IMPL_MAKER(NAME) \
 NAME::NAME(): impl{new_unique<Impl>()} {} \
 NAME::~NAME() {} \
-Str NAME::name() const noexcept { return impl->name(); } \
+Str NAME::name() const { return impl->name(); } \
 utf32 NAME::localized_name() const { return impl->localized_name(); } \
-utf32 NAME::desc() const noexcept { return impl->desc(); } \
-void NAME::draw(Image& dst) const noexcept { impl->draw(dst); } \
-Params NAME::params() noexcept { return impl->params(); }
+utf32 NAME::desc() const { return impl->desc(); } \
+void NAME::draw(Image& dst) const { impl->draw(dst); } \
+Params NAME::params() { return impl->params(); }

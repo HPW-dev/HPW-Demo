@@ -7,17 +7,17 @@
 
 namespace epge {
 
-struct Mirror::Impl final {
+struct Mirror::Impl {
   bool _mirror_v {true};
   bool _mirror_h {false};
   bool _rotate_180 {false};
 
-  inline Str name() const noexcept { return "mirror"; }
+  inline Str name() const { return "mirror"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.mirror." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
 
     if (_mirror_v)
@@ -30,7 +30,7 @@ struct Mirror::Impl final {
       insert_fast(dst, rotate_180(dst));
   }
 
-  inline Params params() noexcept {
+  inline Params params() {
     return Params {
       new_shared<Param_bool>("vertical", "mirrors the game frame vertically", _mirror_v),
       new_shared<Param_bool>("horizontal", "mirrors the game frame horizontally", _mirror_h),

@@ -9,7 +9,7 @@
 
 namespace epge {
 
-struct Crazy_blur::Impl final {
+struct Crazy_blur::Impl {
   double _power {0.021};
   int _framents {3};
   int _side {2};

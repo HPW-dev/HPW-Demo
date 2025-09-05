@@ -9,7 +9,7 @@
 
 namespace epge {
 
-struct Resize::Impl final {
+struct Resize::Impl {
   enum class Mode {
     neighbor = 0,
     bilinear,

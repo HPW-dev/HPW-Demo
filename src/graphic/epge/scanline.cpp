@@ -6,17 +6,17 @@
 
 namespace epge {
 
-struct Scanline::Impl final {
+struct Scanline::Impl {
   double _intense {0.25}; // степень затенения полосками
   int _type {0}; // тип полосок: 0 - горизонтальные, 1 - верт-е, 2 - сетка
   bool _shading {true}; // true - уменьшать яркость в полосках. Иначе - увеличивать
 
-  inline Str name() const noexcept { return "scanline"; }
+  inline Str name() const { return "scanline"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.scanline." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     cauto SCANLINE_SHADOW = Pal8::from_real(_intense);
     cauto BLEND_F = _shading ? blend_sub_safe : blend_add_safe;
 
@@ -51,7 +51,7 @@ struct Scanline::Impl final {
     } // switch _type
   }
 
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_double>("intense", "degree of shading/lighting by lines", _intense, 0.005, 1, 0.005, 0.01),
       new_shared<epge::Param_bool>("shading", "reduce brightness in lines", _shading),

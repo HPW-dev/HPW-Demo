@@ -7,7 +7,7 @@
 
 namespace epge {
 
-struct Interlacer::Impl final {
+struct Interlacer::Impl {
   int _lx {0};
   mutable int _ly {1};
   mutable ::Interlacer _frame_maker {0, 1, scast<uint>(graphic::width), scast<uint>(graphic::height)};

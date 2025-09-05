@@ -9,15 +9,15 @@ namespace epge {
 
 enum class Blend_id: int {PAST = 0, AVR, AVR_MAX, MIN, MAX, DIFF, AND, OR, XOR, MAX_VALUE};
 
-struct Shaker::Impl final {
+struct Shaker::Impl {
   double _offset {2}; // как далеко должен смещаться кадр
   int _blend_mode {scast<int>(Blend_id::PAST)};
   mutable Image _buffer {}; // накладываемый кадр
 
-  inline Str name() const noexcept { return "shaker"; }
+  inline Str name() const { return "shaker"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.shaker." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
   static inline blend_pf find_blend_pf(const Blend_id id) {
     switch (id) {
@@ -35,7 +35,7 @@ struct Shaker::Impl final {
     return &blend_past;
   }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     ret_if (_offset <= 0);
     assert(dst);
 
@@ -46,7 +46,7 @@ struct Shaker::Impl final {
     insert(dst, _buffer, pos, BF, {});
   }
 
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_double>("offset", "how far should the frame move", _offset, 0.1, 20, 0.1, 0.5),
       new_shared<epge::Param_int>("blend mode", "pixel blending mode: "

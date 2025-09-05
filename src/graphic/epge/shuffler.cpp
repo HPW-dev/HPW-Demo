@@ -10,7 +10,7 @@
 
 namespace epge {
   
-struct Shuffler::Impl final {
+struct Shuffler::Impl {
   int _seed {97'997}; // ALMONDS
   int _block_sz {55};
   int _rnd_style {2};
@@ -21,12 +21,12 @@ struct Shuffler::Impl final {
   double _randomize_speed {0.12};
   mutable Image _buffer {};
 
-  inline Str name() const noexcept { return "shuffler"; }
+  inline Str name() const { return "shuffler"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.shuffler." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
     check();
     _buffer.init(dst);
@@ -37,7 +37,7 @@ struct Shuffler::Impl final {
     cut_blocks_and_shuffle(dst, _buffer, block_mx, block_my);
   }
 
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_int>("seed", "value of the random generator that shuffles image blocks", _seed, 0, 0x7FFF'FFFF, 1, 10),
       new_shared<epge::Param_int>("block size", "size of cut image blocks", _block_sz, 2, 512, 1, 4),
@@ -56,7 +56,7 @@ struct Shuffler::Impl final {
   }
 
   // нарезать картинку и размешать
-  inline void cut_blocks_and_shuffle(Image& dst, cr<Image> src, const int mx, const int my) const noexcept {
+  inline void cut_blocks_and_shuffle(Image& dst, cr<Image> src, const int mx, const int my) const {
     const int seed = _seed + (_randomize_blocks ? hpw::global_ticks * _randomize_speed : 0);
     const uint pos_mask = _shuffle_blocks ? num_max<uint>() : 0;
     const uint rot_by_90_deg_mask = _rotate_blocks ? num_max<uint>() : 0;
@@ -73,17 +73,17 @@ struct Shuffler::Impl final {
     }
   }
 
-  inline Image cut_block(cr<Image> src, const int x, const int y, const int block_sz) const noexcept {
+  inline Image cut_block(cr<Image> src, const int x, const int y, const int block_sz) const {
     return cut(src, Recti(x * block_sz, y * block_sz, block_sz, block_sz), Image_get::MIRROR);
   }
 
   inline void insert_block(Image& dst, cr<Image> block, const int x, const int y, const int block_sz,
-  const int rot_by_90_deg) const noexcept {
+  const int rot_by_90_deg) const {
     insert(dst, rotate_90(block, rot_by_90_deg), Vec(x * block_sz, y * block_sz));
   }
 
   // получение случайного числа с помощью индексов и без сложного рандомного генератора
-  inline static int rnd_xy(const int seed, const int x, const int y, const int style) noexcept {
+  inline static int rnd_xy(const int seed, const int x, const int y, const int style) {
     switch (style) {
       default:
       case 1: return (seed * ((x >> 4) ^ (y >> 5))) >> 7;

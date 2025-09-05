@@ -8,17 +8,17 @@
 
 namespace epge {
 
-struct Video_noise::Impl final {
+struct Video_noise::Impl {
   int _type {1};
   double _power {0.08};
   double _chance {0.7};
 
-  inline Str name() const noexcept { return "noise"; }
+  inline Str name() const { return "noise"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.noise." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
   
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
 
     #pragma omp parallel for
@@ -42,7 +42,7 @@ struct Video_noise::Impl final {
     }
   }
 
-  inline Params params() noexcept {
+  inline Params params() {
     return Params {
       new_shared<Param_int>("type", "type of noise: 0-add, 1-add/sub, 2-sub, 3-average, 4-or, 5-xor", _type, 0, 5, 1, 2),
       new_shared<Param_double>("power", "power of noise", _power, 0.01, 1, 0.01, 0.1),

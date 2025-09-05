@@ -8,7 +8,7 @@
 
 namespace epge {
 
-struct Display_3d::Impl final {
+struct Display_3d::Impl {
   enum class Blend_mode {
     _xor = 0,
     _or,

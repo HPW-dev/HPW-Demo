@@ -6,7 +6,7 @@
 
 namespace epge {
 
-struct Pixelate::Impl final {
+struct Pixelate::Impl {
   enum class Mode {
     neighbor = 0,
     average,
@@ -16,12 +16,12 @@ struct Pixelate::Impl final {
 
   int _mode {scast<int>(Mode::average)};
 
-  inline Str name() const noexcept { return "pixelate"; }
+  inline Str name() const { return "pixelate"; }
   #define LOCSTR(NAME) get_locale_str("epge.effect.pixelate." NAME)
   inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const noexcept { return LOCSTR("desc"); }
+  inline utf32 desc() const { return LOCSTR("desc"); }
 
-  inline void draw(Image& dst) const noexcept {
+  inline void draw(Image& dst) const {
     assert(dst);
 
     switch (scast<Mode>(_mode)) {
@@ -32,7 +32,7 @@ struct Pixelate::Impl final {
     }
   }
 
-  inline void neighbor_draw(Image& dst) const noexcept {
+  inline void neighbor_draw(Image& dst) const {
     assert(dst.X % 2 == 0);
     assert(dst.Y % 2 == 0);
     #pragma omp parallel for simd collapse(2) if (dst.size > 64 * 64)
@@ -45,7 +45,7 @@ struct Pixelate::Impl final {
     }
   }
 
-  inline void average_draw(Image& dst) const noexcept {
+  inline void average_draw(Image& dst) const {
     assert(dst.X % 2 == 0);
     assert(dst.Y % 2 == 0);
     #pragma omp parallel for simd collapse(2) if (dst.size > 64 * 64)
@@ -61,7 +61,7 @@ struct Pixelate::Impl final {
     }
   }
 
-  inline void maximum_draw(Image& dst) const noexcept {
+  inline void maximum_draw(Image& dst) const {
     assert(dst.X % 2 == 0);
     assert(dst.Y % 2 == 0);
     #pragma omp parallel for simd collapse(2) if (dst.size > 64 * 64)
@@ -77,7 +77,7 @@ struct Pixelate::Impl final {
     }
   }
 
-  inline epge::Params params() noexcept {
+  inline epge::Params params() {
     return epge::Params {
       new_shared<epge::Param_int>("mode", "adjacent pixel blending mode:\n"
         "  0 - neighbor, 1 - average,\n"
