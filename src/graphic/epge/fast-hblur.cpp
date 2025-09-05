@@ -1,3 +1,4 @@
+#include <omp.h>
 #include <cassert>
 #include "epge.hpp"
 #include "game/util/locale.hpp"
@@ -15,6 +16,9 @@ public:
 
   void draw(Image& dst) const {
     assert(dst);
+    #pragma omp parallel for
+    for (uint i = 0; i < dst.size-1; ++i)
+      dst[i] = blend_avr(dst[i+1], dst[i]);
   }
 
   Params params() {
