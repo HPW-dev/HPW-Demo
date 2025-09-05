@@ -6,14 +6,18 @@
 
 namespace epge {
 
-#define LOCSTR(NAME) get_locale_str("epge.effect.fast_hblur." NAME)
+#define EFFECT_NAME fast_hblur
+#define CLASS_NAME CONCAT(Epge_, EFFECT_NAME)
+#define REGISTRATOR_NAME CONCAT(_registrator_for_, EFFECT_NAME)
+#define EFFECT_NAME_STR STRINGIFY(EFFECT_NAME)
+#define LOCSTR(NAME) get_locale_str("epge.effect." EFFECT_NAME_STR "." NAME)
 
-class Fast_hblur: public epge::Base {
+class CLASS_NAME: public epge::Base {
   int _window_sz = 2;
   int _mode = 1;
 
 public:
-  Str name() const { return "fast_horizontal_blur"; }
+  Str name() const { return EFFECT_NAME_STR; }
   utf32 localized_name() const { return LOCSTR("name"); }
   utf32 desc() const { return LOCSTR("desc"); }
 
@@ -86,6 +90,6 @@ public:
   }
 }; // class
 
-inline Epge_registrator<Fast_hblur> _fast_hblur_registrator {}; // чтобы эффект появился в меню
+inline Epge_registrator<CLASS_NAME> REGISTRATOR_NAME; // чтобы эффект появился в меню
 
 } // epge ms
