@@ -48,7 +48,7 @@ public:
   }
 };
 
-struct Host::Impl {
+struct Host::Impl final {
   nocopy(Impl);
   Host& _master;
   std::optional<uint32_t> custom_seed {};

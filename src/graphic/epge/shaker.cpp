@@ -48,9 +48,9 @@ struct Shaker::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_double>("offset", "how far should the frame move", _offset, 0.1, 20, 0.1, 0.5),
-      new_shared<epge::Param_int>("blend mode", "pixel blending mode: "
-        "0-copy-paste; 1-avr; 2-avr-max, 3-min; 4-max; 5-difference; 6-and; 7-or; 8-xor",
+      new_shared<epge::Param_double>("offset", U"offset", U"how far should the frame move", _offset, 0.1, 20, 0.1, 0.5),
+      new_shared<epge::Param_int>("blend_mode", U"blend mode", U"pixel blending mode: "
+        U"0-copy-paste; 1-avr; 2-avr-max, 3-min; 4-max; 5-difference; 6-and; 7-or; 8-xor",
         _blend_mode, 0, scast<int>(Blend_id::MAX_VALUE)-1, 1, 1),
     };
   }

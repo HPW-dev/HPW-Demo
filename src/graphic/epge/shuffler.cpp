@@ -39,14 +39,14 @@ struct Shuffler::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_int>("seed", "value of the random generator that shuffles image blocks", _seed, 0, 0x7FFF'FFFF, 1, 10),
-      new_shared<epge::Param_int>("block size", "size of cut image blocks", _block_sz, 2, 512, 1, 4),
-      new_shared<epge::Param_bool>("blocks rotation", "apply image block rotation", _rotate_blocks),
-      new_shared<epge::Param_bool>("blocks shuffling", "apply image block shuffling", _shuffle_blocks),
-      new_shared<epge::Param_bool>("randomize blocks", "apply randomization of image blocks", _randomize_blocks),
-      new_shared<epge::Param_double>("randomization speed", "speed of applying image block randomization", _randomize_speed, 0, 100, 0.01, 0.03),
-      new_shared<epge::Param_int>("randomization style", "mode of randomization algorithm", _rnd_style, 1, 3, 1, 1),
-      new_shared<epge::Param_bool>("unsafe", "but fast)", _unsafe),
+      new_shared<epge::Param_int>("seed", U"seed", U"value of the random generator that shuffles image blocks", _seed, 0, 0x7FFF'FFFF, 1, 10),
+      new_shared<epge::Param_int>("block_size", U"block size", U"size of cut image blocks", _block_sz, 2, 512, 1, 4),
+      new_shared<epge::Param_bool>("blocks_rotation", U"blocks rotation", U"apply image block rotation", _rotate_blocks),
+      new_shared<epge::Param_bool>("blocks_shuffling", U"blocks shuffling", U"apply image block shuffling", _shuffle_blocks),
+      new_shared<epge::Param_bool>("randomize_blocks", U"randomize blocks", U"apply randomization of image blocks", _randomize_blocks),
+      new_shared<epge::Param_double>("randomization_speed", U"randomization speed", U"speed of applying image block randomization", _randomize_speed, 0, 100, 0.01, 0.03),
+      new_shared<epge::Param_int>("randomization_style", U"randomization style", U"mode of randomization algorithm", _rnd_style, 1, 3, 1, 1),
+      new_shared<epge::Param_bool>("unsafe", U"unsafe", U"but fast)", _unsafe),
     };
   }
 

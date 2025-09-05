@@ -31,7 +31,7 @@ struct Inversion::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_bool>("with glitchez", "less accurate", _with_glitchez),
+      new_shared<epge::Param_bool>("with_glitchez", U"with glitchez", U"less accurate", _with_glitchez),
     };
   }
 }; // Impl

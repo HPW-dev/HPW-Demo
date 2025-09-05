@@ -61,10 +61,10 @@ struct Crazy_blur::Impl {
 
   inline Params params() noexcept {
     return Params {
-      new_shared<Param_int>("fragments", "count of image fragments", _framents, 2, 16, 1, 2),
-      new_shared<Param_double>("power", "power of blur", _power, 0.001, 0.999, 0.001, 0.02),
-      new_shared<Param_int>("side", "side mode: 0-horizontal, 1-vertical, 2-all", _side, 0, 2, 1, 2),
-      new_shared<Param_int>("mode", "interpolation mode: 0-neighbor, 1-bilinear", _interp_mode, 0, 1, 1, 2),
+      new_shared<Param_int>("fragments", U"fragments", U"count of image fragments", _framents, 2, 16, 1, 2),
+      new_shared<Param_double>("power", U"power", U"power of blur", _power, 0.001, 0.999, 0.001, 0.02),
+      new_shared<Param_int>("side", U"side", U"side mode: 0-horizontal, 1-vertical, 2-all", _side, 0, 2, 1, 2),
+      new_shared<Param_int>("mode", U"mode", U"interpolation mode: 0-neighbor, 1-bilinear", _interp_mode, 0, 1, 1, 2),
     };
   }
 }; // Impl

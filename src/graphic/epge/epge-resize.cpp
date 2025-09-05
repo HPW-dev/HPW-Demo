@@ -55,12 +55,12 @@ struct Resize::Impl {
 
   inline Params params() noexcept {
     return Params {
-      new_shared<Param_int>("mode", "resize algorithm:\n"
-        "  0 - neighbor;\n  1 - bilinear.\n", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
-      new_shared<Param_int>("width", "screen width (pixels)", _w, 1, graphic::width*2, 1, 4),
-      new_shared<Param_int>("height", "screen height (pixels)", _h, 1, graphic::height*2, 1, 4),
-      new_shared<Param_bool>("center", "center the game frame", _center),
-      new_shared<Param_bool>("black bg", "use black background color", _black_bg),
+      new_shared<Param_int>("mode", U"mode", U"resize algorithm:\n"
+        U"  0 - neighbor;\n  1 - bilinear.\n", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
+      new_shared<Param_int>("width", U"width", U"screen width (pixels)", _w, 1, graphic::width*2, 1, 4),
+      new_shared<Param_int>("height", U"height", U"screen height (pixels)", _h, 1, graphic::height*2, 1, 4),
+      new_shared<Param_bool>("center", U"center", U"center the game frame", _center),
+      new_shared<Param_bool>("black_bg", U"black bg", U"use black background color", _black_bg),
     };
   }
 }; // Impl

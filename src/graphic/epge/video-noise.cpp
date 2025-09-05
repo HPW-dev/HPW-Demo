@@ -44,9 +44,9 @@ struct Video_noise::Impl {
 
   inline Params params() {
     return Params {
-      new_shared<Param_int>("type", "type of noise: 0-add, 1-add/sub, 2-sub, 3-average, 4-or, 5-xor", _type, 0, 5, 1, 2),
-      new_shared<Param_double>("power", "power of noise", _power, 0.01, 1, 0.01, 0.1),
-      new_shared<Param_double>("chance", "chance for applying noise for one pixel", _chance, 0.01, 1, 0.01, 0.1),
+      new_shared<Param_int>("type", U"type", U"type of noise: 0-add, 1-add/sub, 2-sub, 3-average, 4-or, 5-xor", _type, 0, 5, 1, 2),
+      new_shared<Param_double>("power", U"power", U"power of noise", _power, 0.01, 1, 0.01, 0.1),
+      new_shared<Param_double>("chance", U"chance", U"chance for applying noise for one pixel", _chance, 0.01, 1, 0.01, 0.1),
     };
   }
 }; // Impl

@@ -37,7 +37,7 @@ struct Pixels_per_frame::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_int>("pixels per frame", "number of pixels per frame", _ppf, 1, 512*384 - 1, 100, 1000),
+      new_shared<epge::Param_int>("pixels_per_frame", U"pixels per frame", U"number of pixels per frame", _ppf, 1, 512*384 - 1, 100, 1000),
     };
   }
 }; // Impl

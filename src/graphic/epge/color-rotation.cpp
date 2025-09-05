@@ -94,10 +94,10 @@ struct Color_rotation::Impl {
   
   inline Params params() noexcept {
     return Params {
-      new_shared<Param_int>("mode", "pixel blending modes:\n"
-        "  0 - XOR, 1 - &, 2 - |, 3 - *,\n"
-        "  4 - >,   5 - <, 6 - average", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
-      new_shared<Param_double>("speed", "color flicker speed", _speed, 0.1, 255, 0.1, 1),
+      new_shared<Param_int>("mode", U"mode", U"pixel blending modes:\n"
+        U"  0 - XOR, 1 - &, 2 - |, 3 - *,\n"
+        U"  4 - >,   5 - <, 6 - average", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
+      new_shared<Param_double>("speed", U"speed", U"color flicker speed", _speed, 0.1, 255, 0.1, 1),
     };
   }
 

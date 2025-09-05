@@ -29,14 +29,12 @@ public:
   inline void minus_fast() override { _epge_param->minus_value_fast(); }
 
   inline utf32 to_text() const override {
-    Str ret = _epge_param->title();
-    ret += " : " + _epge_param->get_value();
-    return utf8_to_32(ret);
+    utf32 ret = _epge_param->title();
+    ret += U" : " + utf8_to_32(_epge_param->get_value());
+    return ret;
   }
 
-  inline utf32 get_description() const override {
-    return utf8_to_32( _epge_param->desc() );
-  }
+  inline utf32 get_description() const override { return _epge_param->desc(); }
 }; // Epge_menu_item
 
 struct Scene_epge_config::Impl {

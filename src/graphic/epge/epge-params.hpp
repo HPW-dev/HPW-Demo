@@ -3,16 +3,18 @@
 #include "util/str.hpp"
 #include "util/vector-types.hpp"
 #include "util/macro.hpp"
+#include "util/unicode.hpp"
 
 namespace epge {
 
 // описание параметра для настроек плагина
 class Param {
-  Str _title {}; // отображаемое название опции
-  Str _desc {}; // коммент с пояснением параметра
+  Str _title_id {}; // сохраняемое название для опции
+  utf32 _title {}; // отображаемое название опции
+  utf32 _desc {}; // коммент с пояснением параметра
 
 public:
-  explicit Param(cr<Str> title, cr<Str> desc);
+  explicit Param(cr<Str> title_id, cr<utf32> title, cr<utf32> desc);
   virtual ~Param() = default;
   virtual void set_value(cr<Str> val) = 0;
   virtual Str get_value() const = 0;
@@ -29,8 +31,9 @@ public:
   virtual inline void plus_value_fast() {}
   virtual inline void minus_value_fast() {}
   virtual inline void enable() { plus_value(); }
-  inline cr<Str> title() const { return _title; }
-  inline cr<Str> desc() const { return _desc; }
+  inline cr<Str> title_id() const { return _title_id; }
+  inline cr<utf32> title() const { return _title; }
+  inline cr<utf32> desc() const { return _desc; }
 }; // Param
 
 using Params = Vector< Shared<Param> >;
@@ -43,7 +46,7 @@ class Param_double final: public Param {
   double _fast_step {0.1};
 
 public:
-  explicit Param_double(cr<Str> title, cr<Str> desc, double& value,
+  explicit Param_double(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, double& value,
     double min, double max, double step, double fast_step);
   void set_value(cr<Str> val) final;
   void set_max(cr<Str> val) final;
@@ -69,7 +72,7 @@ class Param_int final: public Param {
   int _fast_step {4};
 
 public:
-  explicit Param_int(cr<Str> title, cr<Str> desc, int& value,
+  explicit Param_int(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, int& value,
     int min, int max, int step, int fast_step);
   void set_value(cr<Str> val) final;
   void set_max(cr<Str> val) final;
@@ -91,7 +94,7 @@ class Param_bool final: public Param {
   bool& _value;
 
 public:
-  explicit Param_bool(cr<Str> title, cr<Str> desc, bool& value);
+  explicit Param_bool(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, bool& value);
   void set_value(cr<Str> val) final;
   Str get_value() const final;
   Str get_max() const final;

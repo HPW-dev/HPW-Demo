@@ -72,8 +72,8 @@ struct Glow::Impl {
 
   inline Params params() {
     return Params {
-      new_shared<Param_int>("size", "glow size", _size, 3, 50, 1, 2),
-      new_shared<Param_double>("lightness", "brightness of glow", _lightness, 0.1, 4, 0.1, 1),
+      new_shared<Param_int>("size", U"size", U"glow size", _size, 3, 50, 1, 2),
+      new_shared<Param_double>("lightness", U"lightness", U"brightness of glow", _lightness, 0.1, 4, 0.1, 1),
     };
   }
 }; // Impl

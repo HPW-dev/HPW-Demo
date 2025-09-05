@@ -5,15 +5,17 @@
 
 namespace epge {
 
-Param::Param(cr<Str> title, cr<Str> desc)
-: _title {title}
+Param::Param(cr<Str> title_id, cr<utf32> title, cr<utf32> desc)
+: _title_id {title_id}
+, _title {title}
 , _desc {desc}
 {
+  assert(!_title_id.empty());
   assert(!_title.empty());
 }
 
-Param_int::Param_int(cr<Str> title, cr<Str> desc, int& value, int min, int max, int step, int fast_step)
-: Param {title, desc}
+Param_int::Param_int(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, int& value, int min, int max, int step, int fast_step)
+: Param {title_id, title, desc}
 , _value {value}
 , _max {max}
 , _min {min}
@@ -40,9 +42,9 @@ void Param_int::minus_value() { _value = std::clamp(_value - _step, _min, _max);
 void Param_int::plus_value_fast() { _value = std::clamp(_value + _fast_step, _min, _max); }
 void Param_int::minus_value_fast() { _value = std::clamp(_value - _fast_step, _min, _max); }
 
-Param_double::Param_double(cr<Str> title, cr<Str> desc, double& value, double min, double max, 
+Param_double::Param_double(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, double& value, double min, double max, 
 double step, double fast_step)
-: Param {title, desc}
+: Param {title_id, title, desc}
 , _value {value}
 , _max {max}
 , _min {min}
@@ -82,12 +84,10 @@ inline static bool s2bool(cr<Str> str) {
   return false;
 }
 
-inline static Str bool2s(const bool val) {
-  return val ? "enabled" : "disabled";
-}
+inline static Str bool2s(const bool val) { return val ? "enabled" : "disabled"; }
 
-Param_bool::Param_bool(cr<Str> title, cr<Str> desc, bool& value)
-: Param {title, desc}
+Param_bool::Param_bool(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, bool& value)
+: Param {title_id, title, desc}
 , _value {value}
 {}
 

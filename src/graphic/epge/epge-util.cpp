@@ -1,9 +1,11 @@
 #include <cassert>
 #include "epge-util.hpp"
 #include "game/core/epges.hpp"
+#include "game/core/locales.hpp"
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
 #include "util/log.hpp"
+#include "util/hpw-util.hpp"
 
 void save_epges(Yaml& config) {
   cauto total_epges = graphic::epges.size();
@@ -29,7 +31,7 @@ void save_epges(Yaml& config) {
       for (int param_idx {}; crauto param: epge_params) {
         cauto param_node_name = "PARAM_" + n2s(param_idx);
         auto param_node = epge_node.make_node(param_node_name);
-        param_node.set_str("title", param->title());
+        param_node.set_str("title_id", param->title_id());
         param_node.set_str("value", param->get_value());
         ++param_idx;
       }
@@ -44,7 +46,11 @@ void load_epges(cr<Yaml> config) {
   cauto total_epges = config.get_int("epge_count");
   ret_if(total_epges <= 0);
   assert(total_epges < 999'999);
-
+  Scope guard(
+    []{ hpw::ignore_locale_errors = true; },
+    []{ hpw::ignore_locale_errors = false; }
+  );
+  
   // загрузить все EPGE
   cfor (epge_idx, total_epges) {
     cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
@@ -71,8 +77,8 @@ void load_epges(cr<Yaml> config) {
 
       auto& param = epge_params.at(param_idx);
       assert(param);
-      cauto param_title = param->title();
-      if (param_title == param_node.get_str("title")) {
+      cauto param_title = param->title_id();
+      if (param_title == param_node.get_str("title_id")) {
         param->set_value(param_node.get_str("value"));
       } else {
         log_warning << "Несовпадение параметра \"" << param_title << "\" эффекта \"" <<

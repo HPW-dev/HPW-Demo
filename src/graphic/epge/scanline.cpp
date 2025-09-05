@@ -53,9 +53,9 @@ struct Scanline::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_double>("intense", "degree of shading/lighting by lines", _intense, 0.005, 1, 0.005, 0.01),
-      new_shared<epge::Param_bool>("shading", "reduce brightness in lines", _shading),
-      new_shared<epge::Param_int>("line type", "type of scanlines:\n0 - horizontal, 1 - vertical, 2 - grid",
+      new_shared<epge::Param_double>("intense", U"intense", U"degree of shading/lighting by lines", _intense, 0.005, 1, 0.005, 0.01),
+      new_shared<epge::Param_bool>("shading", U"shading", U"reduce brightness in lines", _shading),
+      new_shared<epge::Param_int>("line_type", U"line type", U"type of scanlines:\n0 - horizontal, 1 - vertical, 2 - grid",
         _type, 0, 2, 1, 1),
     };
   }

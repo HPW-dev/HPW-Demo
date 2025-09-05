@@ -79,9 +79,9 @@ struct Pixelate::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_int>("mode", "adjacent pixel blending mode:\n"
-        "  0 - neighbor, 1 - average,\n"
-        "  2 - maximum\n", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
+      new_shared<epge::Param_int>("mode", U"mode", U"adjacent pixel blending mode:\n"
+        U"  0 - neighbor, 1 - average,\n"
+        U"  2 - maximum\n", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
     };
   }
 }; // Impl

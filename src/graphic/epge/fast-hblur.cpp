@@ -80,13 +80,12 @@ public:
 
   Params params() {
     return Params {
-      //new_shared<Param_int>(LOCSTR("param.power.name"), LOCSTR("param.power.desc"), _window_sz, 1, 16, 1, 2),
-      new_shared<Param_int>("power", "", _window_sz, 1, 7, 1, 2),
-      new_shared<Param_int>("mode", "0 - blur, 1 - full average, 2 - bidir, 3 - accurate", _mode, 0, 3, 1, 2),
+      new_shared<Param_int>("power", LOCSTR("param.power.name"), LOCSTR("param.power.desc"), _window_sz, 1, 7, 1, 2),
+      new_shared<Param_int>("mode", LOCSTR("param.mode.name"), LOCSTR("param.mode.desc"), _mode, 0, 3, 1, 2),
     };
   }
 }; // class
 
-inline Epge_registrator<Fast_hblur> _ignore_Fast_hblur {};
+inline Epge_registrator<Fast_hblur> _fast_hblur_registrator {}; // чтобы эффект появился в меню
 
 } // epge ms

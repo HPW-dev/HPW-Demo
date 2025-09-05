@@ -37,8 +37,8 @@ struct Interlacer::Impl {
 
   inline Params params() noexcept {
     return Params {
-      new_shared<Param_int>("lines", "number of lines to skip", _lx, 0, 8, 1, 2),
-      new_shared<Param_int>("column", "number of columns to skip", _ly, 0, 8, 1, 2),
+      new_shared<Param_int>("lines", U"lines", U"number of lines to skip", _lx, 0, 8, 1, 2),
+      new_shared<Param_int>("column", U"column", U"number of columns to skip", _ly, 0, 8, 1, 2),
     };
   }
 }; // Impl

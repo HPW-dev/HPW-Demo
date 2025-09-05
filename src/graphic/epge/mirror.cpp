@@ -32,9 +32,9 @@ struct Mirror::Impl {
 
   inline Params params() {
     return Params {
-      new_shared<Param_bool>("vertical", "mirrors the game frame vertically", _mirror_v),
-      new_shared<Param_bool>("horizontal", "mirrors the game frame horizontally", _mirror_h),
-      new_shared<Param_bool>("rotate", "rotate the game frame by 180 degrees", _rotate_180),
+      new_shared<Param_bool>("vertical", U"vertical", U"mirrors the game frame vertically", _mirror_v),
+      new_shared<Param_bool>("horizontal", U"horizontal", U"mirrors the game frame horizontally", _mirror_h),
+      new_shared<Param_bool>("rotate", U"rotate", U"rotate the game frame by 180 degrees", _rotate_180),
     };
   }
 }; // Impl

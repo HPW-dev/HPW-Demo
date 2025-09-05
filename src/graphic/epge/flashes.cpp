@@ -54,12 +54,12 @@ struct Flashes::Impl {
 
   inline epge::Params params() {
     return epge::Params {
-      new_shared<epge::Param_int>("type", "type of flashes:\n  0 - full star, 1 - diagonal star",
+      new_shared<epge::Param_int>("type", U"type", U"type of flashes:\n  0 - full star, 1 - diagonal star",
         _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
-      new_shared<epge::Param_int>("radius", "flash size", _radius, 1, 100, 1, 2),
-      new_shared<epge::Param_double>("chance", "chance of a pixel flash", _chance, 0.01, 1, 0.01, 0.05),
-      new_shared<epge::Param_double>("threadid", "brightness threshold for flash to occur", _threshold, 0, 1, 0.05, 0.1),
-      new_shared<epge::Param_bool>("halo", "display flash halo", _halo),
+      new_shared<epge::Param_int>("radius", U"radius", U"flash size", _radius, 1, 100, 1, 2),
+      new_shared<epge::Param_double>("chance", U"chance", U"chance of a pixel flash", _chance, 0.01, 1, 0.01, 0.05),
+      new_shared<epge::Param_double>("threadid", U"threadid", U"brightness threshold for flash to occur", _threshold, 0, 1, 0.05, 0.1),
+      new_shared<epge::Param_bool>("halo", U"halo", U"display flash halo", _halo),
     };
   }
 }; // Impl
