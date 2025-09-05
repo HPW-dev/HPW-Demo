@@ -15,7 +15,7 @@ namespace epge {
 #define LOCSTR(NAME) get_locale_str("epge.effect." EFFECT_NAME_STR "." NAME)
 
 class CLASS_NAME: public epge::Base {
-  int _shift = 1;
+  int _shift = 2;
   int _mode = 0;
   bool _random = false;
   mutable Image _buf {};
