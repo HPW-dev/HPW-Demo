@@ -39,6 +39,7 @@ namespace epge { \
     utf32 desc() const; \
     utf32 localized_name() const; \
     void draw(Image& dst) const; \
+    void update(const Delta_time dt); \
     Params params(); \
   }; \
   inline Epge_registrator<NAME> _ignore_##NAME {}; \
@@ -51,4 +52,5 @@ Str NAME::name() const { return impl->name(); } \
 utf32 NAME::localized_name() const { return impl->localized_name(); } \
 utf32 NAME::desc() const { return impl->desc(); } \
 void NAME::draw(Image& dst) const { impl->draw(dst); } \
+void NAME::update(const Delta_time dt) { impl->update(dt); } \
 Params NAME::params() { return impl->params(); }

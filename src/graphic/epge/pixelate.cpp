@@ -84,6 +84,8 @@ struct Pixelate::Impl {
         U"  2 - maximum\n", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Pixelate)

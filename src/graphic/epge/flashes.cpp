@@ -62,6 +62,8 @@ struct Flashes::Impl {
       new_shared<epge::Param_bool>("halo", U"halo", U"display flash halo", _halo),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Flashes)

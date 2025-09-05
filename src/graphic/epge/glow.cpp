@@ -76,6 +76,8 @@ struct Glow::Impl {
       new_shared<Param_double>("lightness", U"lightness", U"brightness of glow", _lightness, 0.1, 4, 0.1, 1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Glow)

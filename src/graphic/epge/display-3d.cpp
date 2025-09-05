@@ -77,6 +77,8 @@ struct Display_3d::Impl {
     }
     return &blend_past;
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Display_3d)

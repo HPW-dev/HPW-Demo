@@ -37,6 +37,8 @@ struct Mirror::Impl {
       new_shared<Param_bool>("rotate", U"rotate", U"rotate the game frame by 180 degrees", _rotate_180),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Mirror)

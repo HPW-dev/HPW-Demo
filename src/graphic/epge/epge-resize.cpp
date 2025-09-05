@@ -63,6 +63,8 @@ struct Resize::Impl {
       new_shared<Param_bool>("black_bg", U"black bg", U"use black background color", _black_bg),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Resize)

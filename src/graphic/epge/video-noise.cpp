@@ -49,6 +49,8 @@ struct Video_noise::Impl {
       new_shared<Param_double>("chance", U"chance", U"chance for applying noise for one pixel", _chance, 0.01, 1, 0.01, 0.1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Video_noise)

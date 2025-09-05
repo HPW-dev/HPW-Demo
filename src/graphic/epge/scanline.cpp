@@ -59,6 +59,8 @@ struct Scanline::Impl {
         _type, 0, 2, 1, 1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Scanline)

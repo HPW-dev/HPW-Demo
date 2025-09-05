@@ -54,6 +54,8 @@ struct Shaker::Impl {
         _blend_mode, 0, scast<int>(Blend_id::MAX_VALUE)-1, 1, 1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Shaker)

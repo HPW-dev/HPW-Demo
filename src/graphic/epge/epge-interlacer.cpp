@@ -41,6 +41,8 @@ struct Interlacer::Impl {
       new_shared<Param_int>("column", U"column", U"number of columns to skip", _ly, 0, 8, 1, 2),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Interlacer)

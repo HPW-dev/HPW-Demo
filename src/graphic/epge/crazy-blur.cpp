@@ -67,6 +67,8 @@ struct Crazy_blur::Impl {
       new_shared<Param_int>("mode", U"mode", U"interpolation mode: 0-neighbor, 1-bilinear", _interp_mode, 0, 1, 1, 2),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Crazy_blur)

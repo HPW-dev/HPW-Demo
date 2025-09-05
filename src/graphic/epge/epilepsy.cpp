@@ -99,6 +99,8 @@ struct Epilepsy::Impl {
         U"  4 - *,   5 - >, 6 - <, 7 - average", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Epilepsy)

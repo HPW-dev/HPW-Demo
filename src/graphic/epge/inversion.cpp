@@ -34,6 +34,8 @@ struct Inversion::Impl {
       new_shared<epge::Param_bool>("with_glitchez", U"with glitchez", U"less accurate", _with_glitchez),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Inversion)

@@ -92,6 +92,8 @@ struct Shuffler::Impl {
     }
     return 0;
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Shuffler)

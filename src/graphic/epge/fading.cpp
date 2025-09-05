@@ -79,6 +79,8 @@ struct Fading::Impl {
       new_shared<epge::Param_int>("mode", U"mode", U"pixel blending modes:\n  0 - average, 1 - max, 2 - min", _mode, 0, scast<int>(Mode::MAX)-1, 1, 1),
     };
   }
+
+  inline void update(const Delta_time dt) {}
 }; // Impl
 
 EPGE_IMPL_MAKER(Fading)
