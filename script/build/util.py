@@ -6,6 +6,7 @@ import shutil
 import time
 import glob
 import subprocess
+import datetime
 
 def set_work_dir(path):
   "cd"
@@ -61,7 +62,10 @@ def concat_strlist(strs: list[str]):
 def add_vars():
   '''добавляет дополнительные параметры в окружение SCons'''
   ret = {}
+  ret['build_dir'] = 'build/'
   ret['ld_flags']  = []
   ret['cxx_flags'] = []
   ret['defines']   = []
+  ret['generation_date'] = datetime.datetime.now().strftime("%d.%m.%Y")
+  ret['generation_time'] = datetime.datetime.now().strftime("%H:%M:%S")
   return ret
