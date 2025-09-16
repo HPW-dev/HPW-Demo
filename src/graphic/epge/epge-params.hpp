@@ -107,3 +107,21 @@ public:
 }; // Param_bool
 
 } // epge ns
+
+#define EPGE_PARAM_INT(PARAM_NAME, EFFECT_NAME, VAL, MIN, MAX, STEP, FAST_STEP) \
+new_shared<Param_int>(#PARAM_NAME, \
+  get_locale_str("epge.effect." #EFFECT_NAME ".param." #PARAM_NAME ".name"), \
+  get_locale_str("epge.effect." #EFFECT_NAME ".param." #PARAM_NAME ".desc"), \
+  VAL, MIN, MAX, STEP, FAST_STEP),
+
+#define EPGE_PARAM_DOUBLE(PARAM_NAME, EFFECT_NAME, VAL, MIN, MAX, STEP, FAST_STEP) \
+new_shared<Param_double>(#PARAM_NAME, \
+  get_locale_str("epge.effect." #EFFECT_NAME ".param." #PARAM_NAME ".name"), \
+  get_locale_str("epge.effect." #EFFECT_NAME ".param." #PARAM_NAME ".desc"), \
+  VAL, MIN, MAX, STEP, FAST_STEP),
+
+#define EPGE_PARAM_BOOL(PARAM_NAME, EFFECT_NAME, VAL) \
+new_shared<Param_bool>(#PARAM_NAME, \
+  get_locale_str("epge.effect." #EFFECT_NAME ".param." #PARAM_NAME ".name"), \
+  get_locale_str("epge.effect." #EFFECT_NAME ".param." #PARAM_NAME ".desc"), \
+  VAL),

@@ -5,22 +5,10 @@
 #include "graphic/image/image.hpp"
 #include "game/util/locale.hpp"
 
-namespace epge {
-
-#define EFFECT_NAME inversion
-#define CLASS_NAME CONCAT(Epge_, EFFECT_NAME)
-#define REGISTRATOR_NAME CONCAT(_registrator_for_, EFFECT_NAME)
-#define EFFECT_NAME_STR STRINGIFY(EFFECT_NAME)
-#define LOCSTR(NAME) get_locale_str("epge.effect." EFFECT_NAME_STR "." NAME)
-
-class CLASS_NAME: public epge::Base {
+EPGE_CLASS_BEGIN(inversion)
   bool _with_glitchez {};
 
 public:
-  inline Str name() const { return EFFECT_NAME_STR; }
-  inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const { return LOCSTR("desc"); }
-
   inline void draw(Image& dst) const {
     assert(dst);
     
@@ -40,8 +28,4 @@ public:
       new_shared<epge::Param_bool>("with_glitchez", U"with glitchez", U"less accurate", _with_glitchez),
     };
   }
-}; // class
-
-inline Epge_registrator<CLASS_NAME> REGISTRATOR_NAME; // чтобы эффект появился в меню
-
-} // epge ns
+EPGE_CLASS_END(inversion)

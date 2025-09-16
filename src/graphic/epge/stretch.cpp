@@ -6,25 +6,13 @@
 #include "util/math/random.hpp"
 #include "graphic/image/image.hpp"
 
-namespace epge {
-
-#define EFFECT_NAME stretch
-#define CLASS_NAME CONCAT(Epge_, EFFECT_NAME)
-#define REGISTRATOR_NAME CONCAT(_registrator_for_, EFFECT_NAME)
-#define EFFECT_NAME_STR STRINGIFY(EFFECT_NAME)
-#define LOCSTR(NAME) get_locale_str("epge.effect." EFFECT_NAME_STR "." NAME)
-
-class CLASS_NAME: public epge::Base {
+EPGE_CLASS_BEGIN(stretch)
   int _shift = 2;
   int _mode = 0;
   bool _random = false;
   mutable Image _buf {};
 
 public:
-  Str name() const { return EFFECT_NAME_STR; }
-  utf32 localized_name() const { return LOCSTR("name"); }
-  utf32 desc() const { return LOCSTR("desc"); }
-
   void h_stretch(Image& dst) const {
     _buf = dst;
 
@@ -68,13 +56,9 @@ public:
 
   Params params() {
     return Params {
-      new_shared<Param_int>("shift", LOCSTR("param.shift.name"), LOCSTR("param.shift.desc"), _shift, -32, 32, 1, 2),
-      new_shared<Param_int>("mode", LOCSTR("param.mode.name"), LOCSTR("param.mode.desc"), _mode, 0, 1, 1, 1),
-      new_shared<Param_bool>("random", LOCSTR("param.random.name"), LOCSTR("param.random.desc"), _random),
+      EPGE_PARAM_INT(shift, stretch, _shift, -32, 32, 1, 2)
+      EPGE_PARAM_INT(mode, stretch, _mode, 0, 1, 1, 1)
+      EPGE_PARAM_BOOL(random, stretch, _random)
     };
   }
-}; // class
-
-inline Epge_registrator<CLASS_NAME> REGISTRATOR_NAME; // чтобы эффект появился в меню
-
-} // epge ms
+EPGE_CLASS_END(stretch)

@@ -45,6 +45,7 @@ namespace epge { \
   inline Epge_registrator<NAME> _ignore_##NAME {}; \
 }
 
+// старый способ инициализации реализации эффекта
 #define EPGE_IMPL_MAKER(NAME) \
 NAME::NAME(): impl{new_unique<Impl>()} {} \
 NAME::~NAME() {} \
@@ -54,3 +55,18 @@ utf32 NAME::desc() const { return impl->desc(); } \
 void NAME::draw(Image& dst) const { impl->draw(dst); } \
 void NAME::update(const Delta_time dt) { impl->update(dt); } \
 Params NAME::params() { return impl->params(); }
+
+// новый способ инициализации эффекта
+#define EPGE_CLASS_BEGIN(EFFECT_NAME) \
+namespace epge { \
+class CONCAT(Epge_, EFFECT_NAME): public epge::Base { \
+public: \
+  inline Str name() const { return STRINGIFY(EFFECT_NAME); } \
+  inline utf32 localized_name() const { return get_locale_str("epge.effect." STRINGIFY(EFFECT_NAME) ".name"); } \
+  inline utf32 desc() const { return get_locale_str("epge.effect." STRINGIFY(EFFECT_NAME) ".desc"); } \
+private:
+
+#define EPGE_CLASS_END(EFFECT_NAME) \
+}; \
+inline Epge_registrator<CONCAT(Epge_, EFFECT_NAME)> CONCAT(_registrator_for_, EFFECT_NAME); \
+}

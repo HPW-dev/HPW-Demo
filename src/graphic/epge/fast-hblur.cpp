@@ -4,23 +4,11 @@
 #include "game/util/locale.hpp"
 #include "graphic/image/image.hpp"
 
-namespace epge {
-
-#define EFFECT_NAME fast_hblur
-#define CLASS_NAME CONCAT(Epge_, EFFECT_NAME)
-#define REGISTRATOR_NAME CONCAT(_registrator_for_, EFFECT_NAME)
-#define EFFECT_NAME_STR STRINGIFY(EFFECT_NAME)
-#define LOCSTR(NAME) get_locale_str("epge.effect." EFFECT_NAME_STR "." NAME)
-
-class CLASS_NAME: public epge::Base {
+EPGE_CLASS_BEGIN(fast_hblur)
   int _window_sz = 2;
   int _mode = 1;
 
 public:
-  Str name() const { return EFFECT_NAME_STR; }
-  utf32 localized_name() const { return LOCSTR("name"); }
-  utf32 desc() const { return LOCSTR("desc"); }
-
   void draw_blur(Image& dst) const {
     cauto SZ = uint(_window_sz);
     cauto LINE = dst.size - SZ;
@@ -84,12 +72,8 @@ public:
 
   Params params() {
     return Params {
-      new_shared<Param_int>("power", LOCSTR("param.power.name"), LOCSTR("param.power.desc"), _window_sz, 1, 7, 1, 2),
-      new_shared<Param_int>("mode", LOCSTR("param.mode.name"), LOCSTR("param.mode.desc"), _mode, 0, 3, 1, 2),
+      EPGE_PARAM_INT(power, fast_hblur, _window_sz, 1, 7, 1, 2)
+      EPGE_PARAM_INT(mode, fast_hblur, _mode, 0, 3, 1, 2)
     };
   }
-}; // class
-
-inline Epge_registrator<CLASS_NAME> REGISTRATOR_NAME; // чтобы эффект появился в меню
-
-} // epge ms
+EPGE_CLASS_END(fast_hblur)

@@ -5,15 +5,7 @@
 #include "graphic/image/image.hpp"
 #include "game/util/locale.hpp"
 
-namespace epge {
-
-#define EFFECT_NAME color_rotation
-#define CLASS_NAME CONCAT(Epge_, EFFECT_NAME)
-#define REGISTRATOR_NAME CONCAT(_registrator_for_, EFFECT_NAME)
-#define EFFECT_NAME_STR STRINGIFY(EFFECT_NAME)
-#define LOCSTR(NAME) get_locale_str("epge.effect." EFFECT_NAME_STR "." NAME)
-
-class CLASS_NAME: public epge::Base {
+EPGE_CLASS_BEGIN(color_rotation)
 public:
   enum class Mode {
     _xor = 0,
@@ -29,10 +21,6 @@ public:
   int _mode {scast<int>(Mode::_xor)};
   Delta_time _speed {23};
   Delta_time _state {};
-
-  inline Str name() const { return EFFECT_NAME_STR; }
-  inline utf32 localized_name() const { return LOCSTR("name"); }
-  inline utf32 desc() const { return LOCSTR("desc"); }
 
   inline void draw(Image& dst) const {
     assert(dst);
@@ -111,8 +99,4 @@ public:
     _state += dt * _speed * 255.0 * 60.0;
     _state = std::fmod(_state, 255.0);
   }
-}; // class
-
-inline Epge_registrator<CLASS_NAME> REGISTRATOR_NAME; // чтобы эффект появился в меню
-
-} // epge ns
+EPGE_CLASS_END(color_rotation)
