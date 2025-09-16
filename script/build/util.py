@@ -1,3 +1,6 @@
+if __name__ == "__main__":
+  quit("Запускать через \"python build.py\"")
+
 import os
 import shutil
 import time
@@ -28,15 +31,15 @@ def rem_all(fname_mask):
 
 def exec_cmd(cmd, without_print=False):
   '''выполнить команду
-  
+
   :return: вывод команды stdout, stderr'''
   cmd_tm_st = time.time()
-  cmd = os.path.normpath (cmd) 
-  print (cmd)
+  cmd = os.path.normpath(cmd) 
   if without_print:
     result = subprocess.run(cmd.split(), check=True, universal_newlines=True,
       stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   else:
+    print(cmd)
     result = subprocess.run(cmd.split(), check=True)
   cmd_tm_ed = time.time()
   print(f'e.t: { round(cmd_tm_ed - cmd_tm_st, 1) }s')
@@ -54,3 +57,11 @@ def copy_license():
 
 def concat_strlist(strs: list[str]):
   return ' '.join(filter(None, strs))
+
+def add_vars():
+  '''добавляет дополнительные параметры в окружение SCons'''
+  ret = {}
+  ret['ld_flags']  = []
+  ret['cxx_flags'] = []
+  ret['defines']   = []
+  return ret

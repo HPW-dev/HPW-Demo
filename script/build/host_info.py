@@ -1,5 +1,5 @@
 if __name__ == "__main__":
-  quit("не запускай это как главный скрипт")
+  quit("Запускать через \"python build.py\"")
 
 import sys
 import subprocess
@@ -54,7 +54,7 @@ def system_bitness():
   ''':return: x32 | x64'''
   return 'x32' if platform.architecture()[0] == '32bit' else 'x64'
 
-def prepare_all():
+def prepare():
   info = {}
   info["bitness"] = system_bitness()
   info["system"] = system_name()
