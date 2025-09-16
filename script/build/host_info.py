@@ -3,6 +3,8 @@ if __name__ == "__main__":
 
 import sys
 import subprocess
+import script.build.util as util
+import platform
 
 def python_version():
   '''проверка нужной версии Python'''
@@ -15,6 +17,15 @@ def python_version():
       return str_ver
   except:
     print(f'error while getting version of python')
+  return 'unknown'
+
+def scons_version():
+  '''узнать версию Scons'''
+  try:
+    out, _ = util.exec_cmd("scons --version", True)
+    return out
+  except:
+    print(f'error while getting SCons version')
   return 'unknown'
 
 def game_version():
@@ -34,3 +45,23 @@ def game_version():
     print("[!] Error when getting game version")
 
   return version, date, time
+
+def system_name():
+  ''':return: Windows | Linux | Darwin (macOS)'''
+  return platform.system()
+
+def system_bitness():
+  ''':return: x32 | x64'''
+  return 'x32' if platform.architecture()[0] == '32bit' else 'x64'
+
+def prepare_all():
+  info = {}
+  info["bitness"] = system_bitness()
+  info["system"] = system_name()
+  ver, commit_date, commit_time = game_version()
+  info["game_ver"] = ver
+  info["commit_date"] = commit_date
+  info["commit_time"] = commit_time
+  info["python_ver"] = python_version()
+  info["scons_ver"] = scons_version()
+  return info
