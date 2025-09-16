@@ -95,8 +95,8 @@ public:
     assert(dst);
 
     switch (_mode) {
-      default:
       case 0: draw_error_diff_fast(dst); break;
+      default:
       case 1: draw_error_diff(dst); break;
       case 2: draw_error_diff_flicker(dst); break;
       case 3: draw_weighted_error_diff(dst); break;
