@@ -20,3 +20,8 @@ def in_env(env, val, txt_color=TXT_YELLOW, none_color=TXT_RED, none_val='Unknown
   if val in env and env[val] != None:
     return txt_yellow(f'{txt_color}{env[val]}{TXT_RST}')
   return txt_gray(f'{none_color}{none_val}{TXT_RST}')
+
+def checkbox(env, val):
+  if val in env and env[val] != None:
+    return '✅'
+  return '❌'

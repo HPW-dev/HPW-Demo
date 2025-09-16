@@ -1,7 +1,7 @@
 if __name__ == "__main__":
   quit("Запускать через \"python build.py\"")
 
-from script.build.color_text import *
+from script.build.pretty_txt import *
 
 def print_info(env):
   '''показывает сводку о параметрах билда'''
@@ -14,3 +14,4 @@ def print_info(env):
   print(f'- Версия Python: {in_env(env, 'python_ver')}')
   print(f'- Версия игры: {in_env(env, 'game_ver')}')
   print(f'- Последний коммит: дата {in_env(env, 'commit_date')}, время {in_env(env, 'commit_time')}')
+  print(f'- ASAN {checkbox(env, 'asan')}')
