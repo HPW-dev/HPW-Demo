@@ -5,13 +5,21 @@ from script.build.pretty_txt import *
 
 def print_info(env):
   '''показывает сводку о параметрах билда'''
-  #print(env)
   print(':'*25 + ' ПАРАМЕТРЫ СБОРКИ ' + ':'*25)
+  #print(env)
   print(f'- CXX: {in_env(env, 'cxx', none_color=TXT_GRAY, none_val='default')}')
   print(f'- CC: {in_env(env, 'cc', none_color=TXT_GRAY, none_val='default')}')
   print(f'- Потоков сборки: {in_env(env, 'j')}')
+  print(f'- Битность системы: {in_env(env, 'bitness')}')
+  print(f'- Система хоста: {in_env(env, 'system')}')
+  print(f'- Хост-фреймворк: {in_env(env, 'host')}')
   #print(f'- Версия SCons: {in_env(env, 'scons_ver')}')
   print(f'- Версия Python: {in_env(env, 'python_ver')}')
   print(f'- Версия игры: {in_env(env, 'game_ver')}')
   print(f'- Последний коммит: дата {in_env(env, 'commit_date')}, время {in_env(env, 'commit_time')}')
-  print(f'- ASAN {checkbox(env, 'asan')}')
+  print(f'- ASAN: {checkbox(env, 'asan')}')
+  print(f'- Тесты: {in_env(env, 'tests', none_color=TXT_GRAY, none_val='нет')}')
+  print(f'- Выключенные опции: {in_env(env, 'disabled', none_color=TXT_GRAY, none_val='нет')}')
+  print(f'- Дополнительный софт: {in_env(env, 'soft', none_color=TXT_GRAY, none_val='нет')}')
+  if 'info' in env and env['info'] == True:
+    quit(txt_yellow('остановка билда (--info)'))
