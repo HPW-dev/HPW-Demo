@@ -15,7 +15,7 @@ def txt_white(txt): return f'{TXT_WHITE}{txt}{TXT_RST}'
 def txt_blue(txt): return f'{TXT_BLUE}{txt}{TXT_RST}'
 def txt_red(txt): return f'{TXT_RED}{txt}{TXT_RST}'
 
-def in_env(env, val, txt_color=TXT_YELLOW, none_color=TXT_GRAY, none_val='default'):
+def in_env(env, val, txt_color=TXT_YELLOW, none_color=TXT_RED, none_val='Unknown'):
   '''если параметр val найдётся в env:dict, то в результате будет строка цвета txt_color'''
   if val in env and env[val] != None:
     return txt_yellow(f'{txt_color}{env[val]}{TXT_RST}')

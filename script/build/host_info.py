@@ -17,7 +17,7 @@ def python_version():
       return str_ver
   except:
     print(f'error while getting version of python')
-  return 'unknown'
+  return None
 
 def scons_version():
   '''узнать версию Scons'''
@@ -26,11 +26,11 @@ def scons_version():
     return out
   except:
     print(f'error while getting SCons version')
-  return 'unknown'
+  return None
 
 def game_version():
   ''':return: version, last commit date, last commit time'''
-  version = date = time = ""
+  version = date = time = None
 
   # получить версии
   try:
