@@ -1,8 +1,9 @@
-src/graphic/image/table.cpp
+.tmp
+.vscode
+.git
 HPW.code-workspace
 **/imgui.ini
 __pycache__
-.vscode
-.git
 build
 thirdparty
+ignore me
