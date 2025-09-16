@@ -34,6 +34,41 @@ public:
     }
   }
 
+  void draw_weighted_error_diff(Image& dst) const {
+    cfor (i, dst.size - 4) {
+      cauto bw = _pal8_to_bw_i256[dst[i].val];
+      cauto diff = _pal8_to_i256[dst[i].val] - bw;
+      dst[i] = _i256_to_pal8[bw];
+      cauto idx1 = _pal8_to_i256[dst[i+1].val] + (diff / 2);
+      cauto idx2 = _pal8_to_i256[dst[i+2].val] + (diff / 4);
+      cauto idx3 = _pal8_to_i256[dst[i+3].val] + (diff / 8);
+      cauto idx4 = _pal8_to_i256[dst[i+4].val] + (diff / 16);
+      dst[i + 1] = _i256_to_pal8[std::clamp<int>(idx1, 0, 255)];
+      dst[i + 2] = _i256_to_pal8[std::clamp<int>(idx2, 0, 255)];
+      dst[i + 3] = _i256_to_pal8[std::clamp<int>(idx3, 0, 255)];
+      dst[i + 4] = _i256_to_pal8[std::clamp<int>(idx4, 0, 255)];
+    }
+  }
+
+  void draw_weighted_error_diff_flicker(Image& dst) const {
+    _flicker = !_flicker;
+    cauto mul = _flicker ? -1 : 1;
+
+    cfor (i, dst.size - 4) {
+      cauto bw = _pal8_to_bw_i256[dst[i].val];
+      cauto diff = _pal8_to_i256[dst[i].val] - bw * mul;
+      dst[i] = _i256_to_pal8[bw];
+      cauto idx1 = _pal8_to_i256[dst[i+1].val] + (diff / 2)  * mul;
+      cauto idx2 = _pal8_to_i256[dst[i+2].val] + (diff / 4)  * mul;
+      cauto idx3 = _pal8_to_i256[dst[i+3].val] + (diff / 8)  * mul;
+      cauto idx4 = _pal8_to_i256[dst[i+4].val] + (diff / 16) * mul;
+      dst[i + 1] = _i256_to_pal8[std::clamp<int>(idx1, 0, 255)];
+      dst[i + 2] = _i256_to_pal8[std::clamp<int>(idx2, 0, 255)];
+      dst[i + 3] = _i256_to_pal8[std::clamp<int>(idx3, 0, 255)];
+      dst[i + 4] = _i256_to_pal8[std::clamp<int>(idx4, 0, 255)];
+    }
+  }
+
   void draw_error_diff_flicker(Image& dst) const {
     _flicker = !_flicker;
     cauto mul = _flicker ? -1 : 1;
@@ -64,10 +99,12 @@ public:
       case 0: draw_error_diff_fast(dst); break;
       case 1: draw_error_diff(dst); break;
       case 2: draw_error_diff_flicker(dst); break;
+      case 3: draw_weighted_error_diff(dst); break;
+      case 4: draw_weighted_error_diff_flicker(dst); break;
     }
   }
 
   Params params() { return Params {
-    EPGE_PARAM_INT(mode, fast_dither, _mode, 0, 2, 1, 1)
+    EPGE_PARAM_INT(mode, fast_dither, _mode, 0, 4, 1, 1)
   }; }
 EPGE_CLASS_END(fast_dither)
