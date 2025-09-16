@@ -15,6 +15,7 @@ def prepare():
   parser.add_argument('-j', default=0, type=int, help="число потоков для сборки (0 - авто)")
   #parser.add_argument('-s', '--silent', action='store_true', help='собирать всё без вывода в консоль')
   #parser.add_argument('-c', '--clean', action='store_true', help='очищает папки от .o/.exe/.dll файлов')
+  parser.add_argument('--build_author', type=str, help='позволяет указать автора сборки')
   parser.add_argument('--info', action='store_true', help='позволяет просмотреть информацию о билде без самой сборки')
   parser.add_argument('--target', type=str, help='выбор целевой архитектуры: win32_i386, win32_core2, '
     'win32_atom, win32_stable, win64_stable, win64_v4, lin32_stable, lin64_stable, lin64_v4')
