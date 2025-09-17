@@ -8,6 +8,7 @@
 #include "game/util/vec-helper.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
+#include "util/math/random.hpp"
 
 class Glass_ball::Impl {
   Shared<Sprite> _spr {};
@@ -15,14 +16,14 @@ class Glass_ball::Impl {
   Vec _vel {};
   int _W {};
   int _H {};
-  constx real START_SPEED {150.0_pps}; // с какой скоростью пулять шар
-  constx real AIR_FORCE {1.2};         // сопротивление воздуха
-  constx real G {9.81_pps};            // ускорение падения
-  constx real MASS {30};               // массша шара
-  constx real BOUND_FORCE {0.7};       // замедление шара при столкновении с краями экрана
-  constx real SPEED_THRESHOLD {4};     // ниже этой скорости будет полная остановка шарика
-  constx real GROUND_FORCE {20};       // сопротивление от трения
-  Timer _respawn_timer {3};            // время до респавка шара, если о стоит
+  constx real START_SPEED {400.0_pps};   // с какой скоростью пулять шар
+  constx real AIR_FORCE {4};             // сопротивление воздуха
+  constx real G {9.81_pps};              // ускорение падения
+  constx real MASS {10};                 // массша шара
+  constx real BOUND_FORCE {0.55};        // замедление шара при столкновении с краями экрана
+  constx real SPEED_THRESHOLD {2.0_pps}; // ниже этой скорости будет полная остановка шарика
+  constx real GROUND_FORCE {30};         // сопротивление от трения
+  Timer _respawn_timer {2.25};           // время до респавка шара, если о стоит
 
   inline bool _process_bounds() {
     bool collided = false;
@@ -65,6 +66,7 @@ public:
   }
 
   inline void update(Delta_time dt) {
+    // физика шарика
     const Vec FORCE_AIR = _vel * -AIR_FORCE;
     const Vec FORCE_GRAVITY(0, G * MASS);
     Vec ground_force {};
@@ -73,18 +75,23 @@ public:
     const Vec ACCEL = (FORCE_AIR + FORCE_GRAVITY + ground_force) / MASS;
     _vel += ACCEL * dt;
     _pos += _vel * dt;
+
     _process_bounds();
 
     // если шар слишком замедлился, то его пора респавнить
-    if (length(_vel) <= SPEED_THRESHOLD) {
+    if (length(_vel) <= SPEED_THRESHOLD && _pos.y >= _H-2) {
       if (_respawn_timer.update(dt))
         _respawn();
+    } else {
+      _respawn_timer.reset();
     }
   }
 
   inline void draw(Image& dst) const {
     assert(dst);
-    insert(dst, *_spr, _pos);
+
+    if (rndr_graphic() < _respawn_timer.ratio())
+      insert(dst, *_spr, _pos);
   }
 }; // Impl
 
