@@ -9,7 +9,7 @@ import script.build.build_info as build_info
 
 def main():
   env = init()
-  build(env)
+  env = build(env)
   finalize(env)
 
 # ------------------------------------------------------------------------------------
