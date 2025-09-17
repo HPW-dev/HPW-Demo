@@ -7,6 +7,8 @@ import time
 import glob
 import subprocess
 import datetime
+import hashlib
+from script.build.pretty_txt import *
 
 def set_work_dir(path):
   "cd"
@@ -18,6 +20,10 @@ def rem_if_exist(fname):
   if os.path.exists(fname):
     print (f'remove {fname}')
     os.remove(fname)
+
+def check_dir(dir):
+  '''проверяет что такая папка существует'''
+  return os.path.exists(dir)
 
 def rem_dir(dname, ignore_errors=True):
   "удалить папку"
@@ -47,14 +53,15 @@ def exec_cmd(cmd, without_print=False):
   print()
   return result.stdout, result.stderr
 
-def copy_license():
+def copy_license(dir):
   "копирует файл LICENSE.txt и NOTICE.txt в нужную папку"
   try:
-    shutil.makedirs("build/info/", exist_ok=True)
-    shutil.copyfile('LICENSE.txt', 'build/info/LICENSE.txt')
-    shutil.copyfile('NOTICE.txt',  'build/info/NOTICE.txt')
+    os.makedirs(dir, exist_ok=True)
+    shutil.copyfile('LICENSE.txt', f'{dir}LICENSE.txt')
+    shutil.copyfile('NOTICE.txt',  f'{dir}NOTICE.txt')
+    print(txt_green(f'license files saved in {dir}'))
   except:
-    print("error copying license file")
+    print(txt_red("error copying license file"))
 
 def concat_strlist(strs: list[str]):
   return ' '.join(filter(None, strs))
@@ -62,10 +69,34 @@ def concat_strlist(strs: list[str]):
 def add_vars():
   '''добавляет дополнительные параметры в окружение SCons'''
   ret = {}
-  ret['build_dir'] = 'build/'
+  ret['build_dir'] = './build/'
+  ret['data_dir'] = './data/'
+  ret['data_archive_path'] = f'{ret['build_dir']}data.zip'
+  ret['bin_dir'] = f'{ret['build_dir']}bin/'
+  ret['info_dir'] = f'{ret['build_dir']}info/'
   ret['ld_flags']  = []
   ret['cxx_flags'] = []
   ret['defines']   = []
   ret['generation_date'] = datetime.datetime.now().strftime("%d.%m.%Y")
   ret['generation_time'] = datetime.datetime.now().strftime("%H:%M:%S")
+
+  if not check_dir(ret['build_dir']): quit(txt_red(f'директория {ret['build_dir']} не найдена'))
+  if not check_dir(ret['bin_dir']): quit(txt_red(f'директория {ret['bin_dir']} не найдена'))
   return ret
+
+def file_sha256(fname):
+  try:
+    with open(fname, 'rb', buffering=0) as f:
+      return hashlib.file_digest(f, 'sha256').hexdigest().upper()
+  except:
+    return None
+
+def calculate_checksums(env):
+  info = {}
+  info['exe_sha256'] = file_sha256(env['executable_path'])
+  info['data_sha256'] = file_sha256(env['data_archive_path'])
+
+  print('\n' + ':'*30 + ' КОНТРОЛЬНЫЕ СУММЫ ' + ':'*30)
+  print(f'- SHA256 EXE: {in_env(info, 'exe_sha256')}')
+  print(f'- SHA256 DATA: {in_env(info, 'data_sha256')}')
+  return info

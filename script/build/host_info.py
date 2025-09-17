@@ -28,6 +28,15 @@ def scons_version():
     print(f'error while getting SCons version')
   return None
 
+def compiler_version(env):
+  '''узнать версию компилятора'''
+  try:
+    out, _ = util.exec_cmd(f"{env['CXX']} --version", True)
+    return out
+  except:
+    print(f'error while getting CXX compiler version')
+  return None
+
 def game_version():
   ''':return: version, last commit date, last commit time'''
   version = date = time = None
@@ -54,8 +63,15 @@ def system_bitness():
   ''':return: x32 | x64'''
   return 'x32' if platform.architecture()[0] == '32bit' else 'x64'
 
+def executable_name():
+  system = system_name()
+  bitness = system_bitness()
+  if system == "Windows": return 'HPW.exe'
+  if system == "Linux": return 'HPW.elf64' if bitness == 'x64' else 'HPW.elf32'
+  return 'HPW'
+
 def prepare():
-  info = {}
+  info = util.add_vars()
   info["bitness"] = system_bitness()
   info["system"] = system_name()
   ver, commit_date, commit_time = game_version()
@@ -64,4 +80,6 @@ def prepare():
   info["commit_time"] = commit_time
   info["python_ver"] = python_version()
   info["scons_ver"] = scons_version()
+  info['executable'] = executable_name()
+  info['executable_path'] = f'{info['build_dir']}bin/{info['executable']}'
   return info
