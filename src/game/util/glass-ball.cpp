@@ -5,9 +5,9 @@
 #include "graphic/util/util-templ.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/fonts.hpp"
 #include "game/util/vec-helper.hpp"
 #include "util/hpw-util.hpp"
+#include "util/math/timer.hpp"
 
 class Glass_ball::Impl {
   Shared<Sprite> _spr {};
@@ -15,36 +15,35 @@ class Glass_ball::Impl {
   Vec _vel {};
   int _W {};
   int _H {};
-  real _start_speed {9.0_pps};  // с какой скоростью пулять шар
-  real _air_force {1.2};        // сопротивление воздуха
-  real _g {9.81_pps};           // ускорение падения
-  real _mass {1};               // массша шара
-  real _bound_force {0.3};      // замедление шара при столкновении с краями экрана
-  real _ground_force {0.1};     // трение об землю
+  constx real START_SPEED {150.0_pps}; // с какой скоростью пулять шар
+  constx real AIR_FORCE {1.2};         // сопротивление воздуха
+  constx real G {9.81_pps};            // ускорение падения
+  constx real MASS {30};               // массша шара
+  constx real BOUND_FORCE {0.7};       // замедление шара при столкновении с краями экрана
+  constx real SPEED_THRESHOLD {4};     // ниже этой скорости будет полная остановка шарика
+  constx real GROUND_FORCE {20};       // сопротивление от трения
+  Timer _respawn_timer {3};            // время до респавка шара, если о стоит
 
   inline bool _process_bounds() {
     bool collided = false;
     if (_pos.x < 0) {
       _pos.x *= -1;
-      _vel.x *= -(1.0 - _bound_force);
+      _vel.x *= -(1.0 - BOUND_FORCE);
       collided = true;
     }
     if (_pos.x >= _W) {
       _pos.x = _W - (_pos.x - _W);
-      _vel.x *= -(1.0 - _bound_force);
+      _vel.x *= -(1.0 - BOUND_FORCE);
       collided = true;
     }
     if (_pos.y < 0) {
-      _pos.y = -1;
-      _vel.y *= -(1.0 - _bound_force);
+      _pos.y *= -1;
+      _vel.y *= -(1.0 - BOUND_FORCE);
       collided = true;
     }
     if (_pos.y >= _H) {
       _pos.y = _H - (_pos.y - _H);
-      _vel.y *= -(1.0 - _bound_force);
-      // шар трётся об землю
-      if (std::abs(_vel.y) <= 1)
-        _vel.x *= (1.0 - _ground_force);
+      _vel.y *= -(1.0 - BOUND_FORCE);
       collided = true;
     }
     return collided;
@@ -52,7 +51,8 @@ class Glass_ball::Impl {
 
   inline void _respawn() {
     _pos = get_rand_pos_graphic(0, 0, _W, _H);
-    _vel = rand_normalized_graphic() * _start_speed * _mass;
+    _vel = rand_normalized_graphic() * START_SPEED * MASS;
+    _respawn_timer.reset();
   }
 
 public:
@@ -65,18 +65,26 @@ public:
   }
 
   inline void update(Delta_time dt) {
-    const Vec FORCE_AIR = _vel * _air_force * -1;
-    const Vec FORCE_GRAVITY(0, _g * _mass);
-    const Vec ACCEL = (FORCE_AIR + FORCE_GRAVITY) / _mass;
+    const Vec FORCE_AIR = _vel * -AIR_FORCE;
+    const Vec FORCE_GRAVITY(0, G * MASS);
+    Vec ground_force {};
+    if (std::abs(_vel.y) <= 1.5 && _pos.y >= _H-2)
+      ground_force = _vel * -GROUND_FORCE;
+    const Vec ACCEL = (FORCE_AIR + FORCE_GRAVITY + ground_force) / MASS;
     _vel += ACCEL * dt;
     _pos += _vel * dt;
     _process_bounds();
+
+    // если шар слишком замедлился, то его пора респавнить
+    if (length(_vel) <= SPEED_THRESHOLD) {
+      if (_respawn_timer.update(dt))
+        _respawn();
+    }
   }
 
   inline void draw(Image& dst) const {
     assert(dst);
     insert(dst, *_spr, _pos);
-    graphic::font->draw(dst, {5, 5}, U"vel: " + n2s<utf32>(_vel.x) + U", " + n2s<utf32>(_vel.y));
   }
 }; // Impl
 
