@@ -1,0 +1,3 @@
+# start_script: ../../script/cmd/goto-pal.txt
+scene palette select
+clear

@@ -10,31 +10,37 @@ class Glass_ball::Impl {
   Shared<Sprite> _spr {};
   Vec _pos {};
   Vec _vel {};
-  constx real START_SPEED {0.9};  // с какой скоростью пулять шар
-  constx real AIR_FORCE {0.9};    // сопротивление воздуха
-  constx real G {9};            // ускорение падения
-  constx real MASS {100};          // массша шара
-  constx real BOUND_FORCE {0.5};  // замедление шара при столкновении с краями экрана
+  real _start_speed {9.0_pps};  // с какой скоростью пулять шар
+  real _air_force {0.5};        // сопротивление воздуха
+  real _g {9.0_pps};            // ускорение падения
+  real _mass {40};              // массша шара
+  real _bound_force {0.4};      // замедление шара при столкновении с краями экрана
 
-  inline void _process_bounds() {
+  inline bool _process_bounds() {
     cauto W = graphic::width - _spr->X();
     cauto H = graphic::height - _spr->Y();
+    bool collided = false;
     if (_pos.x < 0) {
       _pos.x *= -1;
-      _vel.x = -_vel.x * BOUND_FORCE;
+      _vel.x *= -(1.0 - _bound_force);
+      collided = true;
     }
     if (_pos.x >= W) {
       _pos.x = W - (_pos.x - W);
-      _vel.x = -_vel.x * BOUND_FORCE;
+      _vel.x *= -(1.0 - _bound_force);
+      collided = true;
     }
     if (_pos.y < 0) {
       _pos.y = -1;
-      _vel.y = -_vel.y * BOUND_FORCE;
+      _vel.y *= -(1.0 - _bound_force);
+      collided = true;
     }
     if (_pos.y >= H) {
       _pos.y = H - (_pos.y - H);
-      _vel.y = -_vel.y * BOUND_FORCE;
+      _vel.y *= -(1.0 - _bound_force);
+      collided = true;
     }
+    return collided;
   }
 
 public:
@@ -44,9 +50,9 @@ public:
   }
 
   inline void update(Delta_time dt) {
-    Vec accel(0, MASS * G);
-    accel += _vel * AIR_FORCE * -1;
-    _vel += (accel / MASS) * dt;
+    Vec accel(0, _mass * _g);
+    accel += _vel * _air_force * -1;
+    _vel += (accel / _mass) * dt;
     _pos += _vel * dt;
     _process_bounds();
   }
