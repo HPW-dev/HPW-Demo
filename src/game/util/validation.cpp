@@ -27,13 +27,13 @@ void init_validation_info() {
     Str path = hpw::cur_dir + "HPW";
   #endif
   auto mem = mem_from_file(path);
-  hpw::exe_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
+  hpw::exe_sha512 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
   // DATA
   path = hpw::cur_dir + hpw::data_path;
   mem = mem_from_file(path);
-  hpw::data_sha256 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
+  hpw::data_sha512 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
-  log_info << "game executable SHA256: " + hpw::exe_sha256;
-  log_info << "game data.zip SHA256: " + hpw::data_sha256;
+  log_info << "game executable SHA256: " + hpw::exe_sha512;
+  log_info << "game data.zip SHA256: " + hpw::data_sha512;
 }

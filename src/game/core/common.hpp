@@ -10,8 +10,8 @@ inline char** argv {}; // аргументы с мейна
 inline Str cur_dir {}; // корневая директория
 inline bool any_key_pressed {}; // факт нажатия нажатия любой клавиши
 inline bool shmup_mode {true}; // традиционный shoot'em-up режим
-inline Str exe_sha256 {}; // чексумма для экзешника игры
-inline Str data_sha256 {}; // чексумма для данных игры
+inline Str exe_sha512 {}; // чексумма для экзешника игры
+inline Str data_sha512 {}; // чексумма для данных игры
 inline bool need_tutorial {true}; // играя первый раз, предлагать туториал первым в списке
 inline bool first_start {};
 inline bool save_last_replay {}; // сохранить последний реплей в именной файл?

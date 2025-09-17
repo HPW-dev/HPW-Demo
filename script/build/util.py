@@ -6,6 +6,7 @@ import shutil
 import time
 import glob
 import subprocess
+import zlib
 import datetime
 import hashlib
 from script.build.pretty_txt import *
@@ -84,19 +85,31 @@ def add_vars():
   if not check_dir(ret['bin_dir']): quit(txt_red(f'директория {ret['bin_dir']} не найдена'))
   return ret
 
-def file_sha256(fname):
+def file_sha512(fname):
   try:
     with open(fname, 'rb', buffering=0) as f:
-      return hashlib.file_digest(f, 'sha256').hexdigest().upper()
+      return hashlib.file_digest(f, 'sha512').hexdigest().upper()
+  except:
+    return None
+
+def file_crc32(fname):
+  try:
+    with open(fname, 'rb', buffering=0) as f:
+      crc = zlib.crc32(f.read())  
+      return '{:08x}'.format(crc & 0xFFFFFFFF).upper()
   except:
     return None
 
 def calculate_checksums(env):
   info = {}
-  info['exe_sha256'] = file_sha256(env['executable_path'])
-  info['data_sha256'] = file_sha256(env['data_archive_path'])
+  info['exe_sha512']  = file_sha512(env['executable_path'])
+  info['exe_crc32']   = file_crc32 (env['executable_path'])
+  info['data_sha512'] = file_sha512(env['data_archive_path'])
+  info['data_crc32']  = file_crc32 (env['data_archive_path'])
 
   print('\n' + ':'*30 + ' КОНТРОЛЬНЫЕ СУММЫ ' + ':'*30)
-  print(f'- SHA256 EXE: {in_env(info, 'exe_sha256')}')
-  print(f'- SHA256 DATA: {in_env(info, 'data_sha256')}')
+  print(f'- CRC32 EXE: {  in_env(info, 'exe_crc32')}')
+  print(f'- CRC32 DATA: { in_env(info, 'data_crc32')}')
+  #print(f'- SHA512 EXE: { in_env(info, 'exe_sha512')}')
+  #print(f'- SHA512 DATA: {in_env(info, 'data_sha512')}')
   return info

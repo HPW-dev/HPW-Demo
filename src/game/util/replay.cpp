@@ -258,8 +258,8 @@ struct Replay::Impl {
     write_data(m_file, get_platform());
     write_data(m_file, get_bits());
     // SHA256
-    write_str(m_file, hpw::exe_sha256);
-    write_str(m_file, hpw::data_sha256);
+    write_str(m_file, hpw::exe_sha512);
+    write_str(m_file, hpw::data_sha512);
     // UPS
     const uint32_t target_ups = hpw::target_ups;
     write_data(m_file, target_ups);
@@ -315,15 +315,15 @@ struct Replay::Impl {
     if (platform != get_platform())
       _warnings << U"реплей записан на системе отличающейся от вашей\n";
     // SHA256
-    auto exe_sha256 = read_str(m_file);
-    auto data_sha256 = read_str(m_file);
-    if (exe_sha256 != hpw::exe_sha256
-    || data_sha256 != hpw::data_sha256) {
+    auto exe_sha512 = read_str(m_file);
+    auto data_sha512 = read_str(m_file);
+    if (exe_sha512 != hpw::exe_sha512
+    || data_sha512 != hpw::data_sha512) {
       _warnings << U"чексуммы в реплее не совпадают\n";
-      _warnings << U"SHA256 EXE игры: " << utf8_to_32(hpw::exe_sha256) << U'\n';
-      _warnings << U"SHA256 EXE реплея: " << utf8_to_32(exe_sha256) << U'\n';
-      _warnings << U"SHA256 DATA игры: " << utf8_to_32(hpw::data_sha256) << U'\n';
-      _warnings << U"SHA256 DATA реплея: " << utf8_to_32(data_sha256) << U'\n';
+      _warnings << U"SHA512 EXE игры: " << utf8_to_32(hpw::exe_sha512) << U'\n';
+      _warnings << U"SHA512 EXE реплея: " << utf8_to_32(exe_sha512) << U'\n';
+      _warnings << U"SHA512 DATA игры: " << utf8_to_32(hpw::data_sha512) << U'\n';
+      _warnings << U"SHA512 DATA реплея: " << utf8_to_32(data_sha512) << U'\n';
     }
     // UPS
     cauto target_ups = read_data<uint32_t>(m_file);
