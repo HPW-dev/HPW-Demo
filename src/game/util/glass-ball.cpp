@@ -13,7 +13,7 @@ class Glass_ball::Impl {
   constx real START_SPEED {0.9};  // с какой скоростью пулять шар
   constx real AIR_FORCE {0.9};    // сопротивление воздуха
   constx real G {9};            // ускорение падения
-  constx real MASS {10};          // массша шара
+  constx real MASS {100};          // массша шара
   constx real BOUND_FORCE {0.5};  // замедление шара при столкновении с краями экрана
 
   inline void _process_bounds() {
@@ -28,11 +28,11 @@ class Glass_ball::Impl {
       _vel.x = -_vel.x * BOUND_FORCE;
     }
     if (_pos.y < 0) {
-      _pos.y *= -1;
+      _pos.y = -1;
       _vel.y = -_vel.y * BOUND_FORCE;
     }
     if (_pos.y >= H) {
-      _pos.y *= H - (_pos.y - H);
+      _pos.y = H - (_pos.y - H);
       _vel.y = -_vel.y * BOUND_FORCE;
     }
   }
