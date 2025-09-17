@@ -1,3 +1,8 @@
+if __name__ == "__main__":
+  quit("Запускать через \"python build.py\"")
+
+import warnings
+
 TXT_RED = '\033[31m'      # Красный текст
 TXT_GREEN = '\033[32m'    # Зелёный текст
 TXT_GRAY = '\033[37m'     # Серый текст
