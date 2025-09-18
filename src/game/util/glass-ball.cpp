@@ -3,9 +3,11 @@
 #include "glass-ball.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
+#include "graphic/util/graphic-util.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/graphic.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/util/sound-helper.hpp"
 #include "util/hpw-util.hpp"
@@ -16,6 +18,7 @@
 class Glass_ball::Impl {
   Shared<Sprite> _spr {};
   Vec _pos {};
+  Vec _old_pos {};
   Vec _vel {};
   int _W {};
   int _H {};
@@ -75,7 +78,7 @@ class Glass_ball::Impl {
   }
 
   inline void _respawn() {
-    _pos = get_rand_pos_graphic(0, 0, _W, _H);
+    _old_pos = _pos = get_rand_pos_graphic(0, 0, _W, _H);
     _vel = rand_normalized_graphic() * START_SPEED;
     _respawn_timer.reset();
   }
@@ -96,6 +99,7 @@ public:
     const Vec FORCE_GRAVITY(0, G * MASS);
     const Vec ACCEL = (FORCE_AIR + FORCE_GRAVITY) / MASS;
     _vel += ACCEL * dt;
+    _old_pos = _pos;
     _pos += _vel * dt;
 
     _process_bounds();
@@ -112,8 +116,13 @@ public:
   inline void draw(Image& dst) const {
     assert(dst);
 
-    if (rndr_graphic() < _respawn_timer.ratio())
-      insert(dst, *_spr, _pos);
+    if (rndr_graphic() < _respawn_timer.ratio()) {
+      //insert(dst, *_spr, _pos);
+      if (graphic::motion_blur_mode != Motion_blur_mode::disabled) // рендер с блюром
+        insert_blured(dst, *_spr, _old_pos, _pos);
+      else // рендер без блюра
+        insert(dst, *_spr, _pos);
+    }
   }
 }; // Impl
 
