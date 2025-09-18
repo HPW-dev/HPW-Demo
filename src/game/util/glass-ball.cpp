@@ -4,8 +4,10 @@
 #include "graphic/image/image.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "game/core/sprites.hpp"
+#include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"
 #include "game/util/vec-helper.hpp"
+#include "game/util/sound-helper.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/random.hpp"
@@ -25,30 +27,39 @@ class Glass_ball::Impl {
   constx real SPEED_THRESHOLD {5.0_pps};  // ниже этой скорости будет полная остановка шарика
   Timer _respawn_timer {1.9};             // время до респавка шара, если о стоит
 
+  inline void _play_hit_sound() {
+    hpw::sound_mgr->play("sfx/hit/glass hit.flac", to_sound_pos(_pos), {}, 0.3);
+  }
+
   inline bool _process_bounds() {
     bool collided = false;
     if (_pos.x < 0) {
       _pos.x *= -1;
       _vel.x *= -(1.0 - BOUND_FORCE);
       _vel.y *= (1.0 - GROUND_FORCE);
+      _play_hit_sound();
       collided = true;
     }
     if (_pos.x >= _W) {
       _pos.x = _W - (_pos.x - _W);
       _vel.x *= -(1.0 - BOUND_FORCE);
       _vel.y *= (1.0 - GROUND_FORCE);
+      _play_hit_sound();
       collided = true;
     }
     if (_pos.y < 0) {
       _pos.y *= -1;
       _vel.x *= (1.0 - GROUND_FORCE);
       _vel.y *= -(1.0 - BOUND_FORCE);
+      _play_hit_sound();
       collided = true;
     }
     if (_pos.y >= _H) {
       _pos.y = _H - (_pos.y - _H);
       _vel.x *= (1.0 - GROUND_FORCE);
       _vel.y *= -(1.0 - BOUND_FORCE);
+      if (std::abs(_vel.y) > 1.0_pps)
+        _play_hit_sound();
       collided = true;
     }
     return collided;
@@ -67,6 +78,7 @@ public:
     _W = graphic::width - _spr->X();
     _H = graphic::height - _spr->Y();
     _respawn();
+    hpw::sound_mgr->set_listener_pos(to_sound_pos({_W/2.0, _H/2.0}));
   }
 
   inline void update(Delta_time dt) {

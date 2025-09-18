@@ -5,6 +5,7 @@
 #include "game/core/entities.hpp"
 #include "game/core/sounds.hpp"
 #include "game/util/camera.hpp"
+#include "game/util/sound-helper.hpp"
 #include "game/entity/util/entity-util.hpp"
 
 Player::Player(): Collidable(GET_SELF_TYPE), Ability_entry(*this) {
