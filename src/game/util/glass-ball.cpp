@@ -11,6 +11,7 @@
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/random.hpp"
+#include "util/rnd-table.hpp"
 
 class Glass_ball::Impl {
   Shared<Sprite> _spr {};
@@ -28,7 +29,15 @@ class Glass_ball::Impl {
   Timer _respawn_timer {1.9};             // время до респавка шара, если о стоит
 
   inline void _play_hit_sound() {
-    hpw::sound_mgr->play("sfx/hit/glass hit.flac", to_sound_pos(_pos), {}, 0.3);
+    sconst Rnd_table<Str> names {Rnd_table<Str>::Values{
+      "sfx/hit/glass/1.flac",
+      "sfx/hit/glass/2.flac",
+      "sfx/hit/glass/3.flac",
+      "sfx/hit/glass/4.flac",
+    }};
+
+    // TODO из файла с настройками брать звук шара
+    hpw::sound_mgr->play(names.rnd_fast(), to_sound_pos(_pos), {}, 1.0);
   }
 
   inline bool _process_bounds() {
