@@ -46,9 +46,9 @@ struct Scene_palette_select::Impl {
 
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
+    _gb.draw(dst);
     _menu->draw(dst);
     draw_palette(dst, Vec(35, 110));
-    _gb.draw(dst);
   }
 
   inline void init_menu() {

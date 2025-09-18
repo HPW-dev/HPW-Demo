@@ -13,6 +13,7 @@
 #include "game/util/pge.hpp"
 #include "game/util/config.hpp"
 #include "game/util/palette-helper.hpp"
+#include "game/util/glass-ball.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
@@ -23,6 +24,7 @@ struct Scene_epge::Impl {
   Unique<Advanced_text_menu> _menu {};
   bool _need_reinit_menu {};
   bool _need_bottom_item {}; // переходит на нижний пункт меню
+  Glass_ball _gb {};
 
   inline explicit Impl() {
     init_menu();
@@ -46,13 +48,16 @@ struct Scene_epge::Impl {
     }
 
     _menu->update(dt);
+    _gb.update(dt);
   }
 
   inline void draw(Image& dst) const {
     draw_test_image(dst);
-
+  
     assert(_menu);
     _menu->draw(dst);
+    
+    _gb.draw(dst);
   }
 
   inline static void exit_from_scene() {
