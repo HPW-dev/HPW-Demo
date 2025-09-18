@@ -49,10 +49,6 @@ real deg_to_target(const Vec self, const Vec target);
 Vec predict(cr<Phys> self, cr<Phys> target);
 // проверяет что объект в пределах экрана
 bool bound_check_for_collisions(cr<Collidable> other);
-// кновертирует ускорение игры в звуковое ускорение
-Vec3 to_sound_vel(const Vec src);
-// кновертирует корды игры в звуковые корды
-Vec3 to_sound_pos(const Vec src);
 // хитбокс игрока в виде прямоугольника
 [[nodiscard]] std::optional<Rect> get_player_rect();
 

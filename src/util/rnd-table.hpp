@@ -14,7 +14,7 @@ public:
 
   Rnd_table() = default;
 
-  constexpr inline Rnd_table(Values_cref values)
+  constexpr inline explicit Rnd_table(Values_cref values)
   : m_values{ values } {}
 
   constexpr inline Rnd_table(Values&& values) noexcept
