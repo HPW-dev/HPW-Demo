@@ -113,3 +113,11 @@ def calculate_checksums(env):
   #print(f'- SHA512 EXE: { in_env(info, 'exe_sha512')}')
   #print(f'- SHA512 DATA: {in_env(info, 'data_sha512')}')
   return info
+
+def max_threads():
+  '''позволяет узнать сколько доступно потоков процессора'''
+  try:
+    return os.cpu_count()
+  except:
+    print('ошибка при получении числа потоков процессора; Будет использоваться 1 по умолчанию')
+    return 1

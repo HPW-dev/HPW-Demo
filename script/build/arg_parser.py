@@ -12,7 +12,7 @@ def prepare():
     epilog='Copyright (c) 2020-2025 HPW-dev <hpwdev0@gmail.com>',
   )
 
-  parser.add_argument('-j', default=0, type=int, help="число потоков для сборки (0 - авто)")
+  parser.add_argument('--threads', default=0, type=int, help="число потоков для сборки (0 - авто)")
   #parser.add_argument('-s', '--silent', action='store_true', help='собирать всё без вывода в консоль')
   #parser.add_argument('-c', '--clean', action='store_true', help='очищает папки от .o/.exe/.dll файлов')
   parser.add_argument('--build_author', type=str, help='позволяет указать автора сборки')

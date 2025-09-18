@@ -24,6 +24,9 @@ def init():
   if 'cc' in env and env['cc'] != None: env['CC'] = env['cc']
   env["compiler_ver"] = host_info.compiler_version(env)
 
+  # если указано 0 потоков, то взять оптимальное число
+  if env['threads'] <= 0: env['threads'] = util.max_threads() + 1
+
   build_info.print_info(env) # показать итоговую сводку о билде
   return env
 

@@ -11,7 +11,7 @@ def print_info(env):
   #print(env)
   print(f'- Автор билда: {in_env(env, 'build_author', txt_color=TXT_GREEN)}')
   print(f'- Файл билда: {in_env(env, 'executable_path')}')
-  print(f'- Потоков сборки: {in_env(env, 'j')}')
+  print(f'- Потоков сборки: {in_env(env, 'threads')}')
   print(f'- Битность системы: {in_env(env, 'bitness')}')
   print(f'- Система хоста: {in_env(env, 'system')}')
   print(f'- Хост-фреймворк: {in_env(env, 'host')}')
