@@ -15,6 +15,7 @@
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/palette-helper.hpp"
+#include "game/util/glass-ball.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
@@ -27,6 +28,7 @@
 struct Scene_palette_select::Impl {
   Unique<Menu> _menu {};
   Shared<Sprite> _test_image {};
+  Glass_ball _gb {};
 
   inline Impl() {
     init_menu();
@@ -39,10 +41,12 @@ struct Scene_palette_select::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
+    _gb.update(dt);
   }
 
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
+    _gb.draw(dst);
     _menu->draw(dst);
     draw_palette(dst, Vec(35, 110));
   }

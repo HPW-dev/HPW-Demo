@@ -7,6 +7,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"
+#include "game/util/glass-ball.hpp"
 #include "graphic/epge/epge.hpp"
 #include "graphic/epge/epge-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
@@ -16,6 +17,7 @@
 
 class Epge_menu_item final: public Menu_item {
   Shared<epge::Param> _epge_param {};
+  Glass_ball _gb {};
 
 public:
   inline explicit Epge_menu_item(Shared<epge::Param> epge_param)
@@ -41,6 +43,7 @@ struct Scene_epge_config::Impl {
   epge::Base* _epge {};
   Unique<Advanced_text_menu> _menu {};
   bool _need_bottom_item {}; // переходит на нижний пункт меню
+  Glass_ball _gb {};
 
   inline explicit Impl(epge::Base* epge): _epge {epge} {
     assert(_epge);
@@ -53,6 +56,7 @@ struct Scene_epge_config::Impl {
 
     assert(_menu);
     _menu->update(dt);
+    _gb.update(dt);
   }
 
   inline void draw(Image& dst) const {
@@ -60,6 +64,8 @@ struct Scene_epge_config::Impl {
 
     assert(_menu);
     _menu->draw(dst);
+
+    _gb.draw(dst);
   }
 
   inline static void exit_from_scene() {
