@@ -16,34 +16,38 @@ class Glass_ball::Impl {
   Vec _vel {};
   int _W {};
   int _H {};
-  constx real START_SPEED {400.0_pps};   // с какой скоростью пулять шар
-  constx real AIR_FORCE {4};             // сопротивление воздуха
-  constx real G {9.81_pps};              // ускорение падения
-  constx real MASS {10};                 // массша шара
-  constx real BOUND_FORCE {0.55};        // замедление шара при столкновении с краями экрана
-  constx real SPEED_THRESHOLD {2.0_pps}; // ниже этой скорости будет полная остановка шарика
-  constx real GROUND_FORCE {30};         // сопротивление от трения
-  Timer _respawn_timer {2.25};           // время до респавка шара, если о стоит
+  constx real START_SPEED {400.0_pps};    // с какой скоростью пулять шар
+  constx real AIR_FORCE {0.3_pps};        // сопротивление воздуха
+  constx real G {30.0_pps};               // ускорение падения
+  constx real MASS {150};                 // массша шара
+  constx real BOUND_FORCE {0.6};          // замедление шара при столкновении с краями экрана
+  constx real GROUND_FORCE {0.01};        // сопротивление от трения
+  constx real SPEED_THRESHOLD {5.0_pps};  // ниже этой скорости будет полная остановка шарика
+  Timer _respawn_timer {1.9};             // время до респавка шара, если о стоит
 
   inline bool _process_bounds() {
     bool collided = false;
     if (_pos.x < 0) {
       _pos.x *= -1;
       _vel.x *= -(1.0 - BOUND_FORCE);
+      _vel.y *= (1.0 - GROUND_FORCE);
       collided = true;
     }
     if (_pos.x >= _W) {
       _pos.x = _W - (_pos.x - _W);
       _vel.x *= -(1.0 - BOUND_FORCE);
+      _vel.y *= (1.0 - GROUND_FORCE);
       collided = true;
     }
     if (_pos.y < 0) {
       _pos.y *= -1;
+      _vel.x *= (1.0 - GROUND_FORCE);
       _vel.y *= -(1.0 - BOUND_FORCE);
       collided = true;
     }
     if (_pos.y >= _H) {
       _pos.y = _H - (_pos.y - _H);
+      _vel.x *= (1.0 - GROUND_FORCE);
       _vel.y *= -(1.0 - BOUND_FORCE);
       collided = true;
     }
@@ -52,7 +56,7 @@ class Glass_ball::Impl {
 
   inline void _respawn() {
     _pos = get_rand_pos_graphic(0, 0, _W, _H);
-    _vel = rand_normalized_graphic() * START_SPEED * MASS;
+    _vel = rand_normalized_graphic() * START_SPEED;
     _respawn_timer.reset();
   }
 
@@ -69,10 +73,7 @@ public:
     // физика шарика
     const Vec FORCE_AIR = _vel * -AIR_FORCE;
     const Vec FORCE_GRAVITY(0, G * MASS);
-    Vec ground_force {};
-    if (std::abs(_vel.y) <= 1.5 && _pos.y >= _H-2)
-      ground_force = _vel * -GROUND_FORCE;
-    const Vec ACCEL = (FORCE_AIR + FORCE_GRAVITY + ground_force) / MASS;
+    const Vec ACCEL = (FORCE_AIR + FORCE_GRAVITY) / MASS;
     _vel += ACCEL * dt;
     _pos += _vel * dt;
 
