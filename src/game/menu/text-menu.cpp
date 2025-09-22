@@ -1,8 +1,8 @@
 #include "text-menu.hpp"
 #include "item/item.hpp"
 #include "game/core/fonts.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 
 Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos, cr<Text_menu_config> config)
 : Menu(_items)

@@ -1,11 +1,11 @@
 #include <cmath>
 #include <ctime>
 #include "graphic-test.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/image/image-io.hpp"
-#include "graphic/font/unifont.hpp"
-#include "graphic/font/unifont-mono.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image-io.hpp"
+#include "engine/graphic/font/unifont.hpp"
+#include "engine/graphic/font/unifont-mono.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/fonts.hpp"

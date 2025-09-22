@@ -2,10 +2,10 @@
 #include <cmath>
 #include <stdfloat>
 #include "hud-hex.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/font/font-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/font/font-util.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/sync.hpp"

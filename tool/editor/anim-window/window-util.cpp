@@ -6,12 +6,12 @@
 #include "game/util/sync.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/animation/frame.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/animation/frame.hpp"
 #include "util/hpw-util.hpp"
 
 void draw_frames(Pool_ptr(Entity) entity, Image& dst, const Vec pos) {

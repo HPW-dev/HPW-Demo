@@ -9,8 +9,8 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/vec-helper.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/font/font-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/font/font-util.hpp"
 
 struct Scene_nickname::Impl {
   cautox TEXT_DELETE_TIMEOUT = 120u;

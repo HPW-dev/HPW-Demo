@@ -1,5 +1,5 @@
 #pragma once
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 bool check_high_blur(); // узнать, можно ли заюзать качественное размытие изображения
 // блюр зависящий от настроек графики

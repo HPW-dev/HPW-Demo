@@ -5,7 +5,7 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "util/str-util.hpp"
 
 struct Server::Impl {

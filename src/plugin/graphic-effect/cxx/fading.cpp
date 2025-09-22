@@ -4,8 +4,8 @@
 #include "pge-util.hpp"
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
-#include "graphic/image/color.hpp"
-#include "graphic/util/convert.hpp"
+#include "engine/graphic/image/color.hpp"
+#include "engine/graphic/util/convert.hpp"
 
 NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED Vector<Pal8> g_buffer {};

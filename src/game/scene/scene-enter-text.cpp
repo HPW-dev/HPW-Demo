@@ -7,7 +7,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/sync.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 struct Scene_enter_text::Impl {
   utf32 _title {};

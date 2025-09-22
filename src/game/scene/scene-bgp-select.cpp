@@ -11,7 +11,7 @@
 #include "game/bgp/bgp.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/timer.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};

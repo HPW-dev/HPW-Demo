@@ -1,8 +1,8 @@
 #include "ball.hpp"
 #include "game/core/canvas.hpp"
 #include "util/math/random.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 Ball::Ball(real speed_, const Pal8 color_)
 : color(color_), speed(speed_) {

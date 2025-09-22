@@ -12,7 +12,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/resource-helper.hpp"
-#include "graphic/image/color.hpp"
+#include "engine/graphic/image/color.hpp"
 
 #ifndef DISABLE_CONFIG
 #include "game/util/game-archive.hpp"

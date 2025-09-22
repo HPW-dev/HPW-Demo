@@ -1,9 +1,9 @@
 #include <cmath>
 #include <algorithm>
 #include "hitbox.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/debug.hpp"
 #include "util/math/vec.hpp"

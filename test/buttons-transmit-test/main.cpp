@@ -1,7 +1,7 @@
 #include "game/core/canvas.hpp"
 #include "util/net/net-packet-mgr.hpp"
 #include "host/glfw3/host-glfw.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 class Test_app final: public Host_glfw {
 public:

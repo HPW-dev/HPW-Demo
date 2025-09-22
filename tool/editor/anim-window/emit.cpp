@@ -17,10 +17,10 @@
 #include "game/scene/scene-mgr.hpp"
 #include "util/file/yaml.hpp"
 #include "util/str-util.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/effect/heat-distort.hpp"
-#include "graphic/effect/light.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/effect/heat-distort.hpp"
+#include "engine/graphic/effect/light.hpp"
 
 Emit_wnd::Emit_wnd() {
   reset();

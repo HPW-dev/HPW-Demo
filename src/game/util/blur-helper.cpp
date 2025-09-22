@@ -1,5 +1,5 @@
 #include "blur-helper.hpp"
-#include "graphic/effect/blur.hpp"
+#include "engine/graphic/effect/blur.hpp"
 #include "util/macro.hpp"
 #include "game/core/graphic.hpp"
 

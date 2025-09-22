@@ -3,7 +3,7 @@
 #include <functional>
 #include "host/glfw3/host-glfw.hpp"
 #include "util/unicode.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Timer;
 class Ball;

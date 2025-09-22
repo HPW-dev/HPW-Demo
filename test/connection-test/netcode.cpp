@@ -11,7 +11,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "util/net/net-packet-mgr.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"

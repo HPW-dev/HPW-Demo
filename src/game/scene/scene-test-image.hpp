@@ -1,6 +1,6 @@
 #pragma once
 #include "util/mem-types.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Menu_list_item;
 

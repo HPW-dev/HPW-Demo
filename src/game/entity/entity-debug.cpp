@@ -5,7 +5,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/canvas.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 void Entity_debug::draw_pos(Image& dst, const Vec offset) const {
   auto pos = _master.phys.get_pos();

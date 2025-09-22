@@ -13,7 +13,7 @@
 #include "util/hpw-util.hpp"
 #include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
-#include "graphic/animation/anim-io.hpp"
+#include "engine/graphic/animation/anim-io.hpp"
 #include "scene/yn.hpp"
 
 inline void save_all_anims() {

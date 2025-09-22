@@ -3,8 +3,8 @@
 #include <sstream>
 #include "screenshot.hpp"
 #include "config.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/image/image-io.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/image/image-io.hpp"
 #include "game/core/common.hpp"
 #include "util/platform.hpp"
 #include "util/str-util.hpp"

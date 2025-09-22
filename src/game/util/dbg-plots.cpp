@@ -13,9 +13,9 @@
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 // рисует графики
 class Plotter {

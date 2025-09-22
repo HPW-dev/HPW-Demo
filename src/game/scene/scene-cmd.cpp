@@ -2,9 +2,9 @@
 #include <utility>
 #include <functional>
 #include "scene-cmd.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "game/core/user.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"

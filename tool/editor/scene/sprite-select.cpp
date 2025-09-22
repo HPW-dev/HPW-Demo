@@ -10,10 +10,10 @@
 #include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
 #include "host/command.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 Sprite_select::Sprite_select(decltype(callback) new_callback)
 : callback(new_callback) {

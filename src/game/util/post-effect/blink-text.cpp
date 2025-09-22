@@ -2,9 +2,9 @@
 #include "blink-text.hpp"
 #include "util/math/timer.hpp"
 #include "util/math/rect.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/sync.hpp"
 

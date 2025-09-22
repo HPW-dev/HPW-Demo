@@ -3,10 +3,10 @@
 #include "graphic-test.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
-#include "graphic/util/rotation.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/sprite/sprite.hpp"
+#include "engine/graphic/util/rotation.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
 #include "game/core/canvas.hpp"
 
 inline void color_check() {

@@ -7,9 +7,9 @@
 #include "game/entity/entity.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/anim-ctx.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/animation/frame.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/animation/frame.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "util/str-util.hpp"
 
 void Anim_wnd::imgui_exec() {

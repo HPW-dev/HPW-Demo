@@ -1,9 +1,9 @@
 #include <cassert>
 #include <ranges>
 #include "palette-helper.hpp"
-#include "graphic/image/palette.hpp"
-#include "graphic/image/color.hpp"
-#include "graphic/image/color-convert.hpp"
+#include "engine/graphic/image/palette.hpp"
+#include "engine/graphic/image/color.hpp"
+#include "engine/graphic/image/color-convert.hpp"
 #include "game/core/palette.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/util/resource-helper.hpp"

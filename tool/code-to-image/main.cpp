@@ -9,9 +9,9 @@
 #include "util/mem-types.hpp"
 #include "util/path.hpp"
 #include "util/platform.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/image/image-io.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/image/image-io.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 using Images = Vector<Image>;
 constexpr static const Pal8 BG_COLOR = Pal8::black;

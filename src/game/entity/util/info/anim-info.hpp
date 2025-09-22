@@ -1,6 +1,6 @@
 #pragma once
-#include "graphic/animation/anim.hpp"
-#include "graphic/image/color-blend.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/image/color-blend.hpp"
 #include "util/math/num-types.hpp"
 #include "util/vector-types.hpp"
 

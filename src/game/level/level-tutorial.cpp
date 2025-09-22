@@ -22,9 +22,9 @@
 #include "game/util/camera.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/bgp/bgp-pack-1.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 struct Level_tutorial::Impl {
   Level_tutorial& master;

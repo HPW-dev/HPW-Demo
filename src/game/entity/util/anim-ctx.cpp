@@ -10,10 +10,10 @@
 #include "game/core/core.hpp"
 #include "game/core/graphic.hpp"
 #include "game/entity/entity.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/animation/frame.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/animation/frame.hpp"
 
 Anim_ctx::Anim_ctx(cp<Anim> new_anim): m_anim {new_anim} { assert(m_anim); }
 

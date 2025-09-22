@@ -1,8 +1,8 @@
 #pragma once
 #include <utility>
 #include "util/math/vec.hpp"
-#include "graphic/image/color.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/color.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 // ball for graphic-test
 class Ball final {

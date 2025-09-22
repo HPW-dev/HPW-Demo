@@ -2,9 +2,9 @@
 #include <cstdlib>
 #include <cmath>
 #include <string>
-#include "graphic/image/image-io.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image-io.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "util/math/rect.hpp"
 #include "util/file/yaml.hpp"
 #include "util/str.hpp"

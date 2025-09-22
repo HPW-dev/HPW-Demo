@@ -7,7 +7,7 @@
 #include "game/core/sprites.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "util/path.hpp"
 
 struct Test_image_path {

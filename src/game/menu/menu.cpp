@@ -5,7 +5,7 @@
 #include "game/core/common.hpp"
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-mgr.hpp"
-#include "graphic/font/font.hpp"
+#include "engine/graphic/font/font.hpp"
 
 struct Sticking {
   hpw::keycode last_pressed_key {hpw::keycode::error};

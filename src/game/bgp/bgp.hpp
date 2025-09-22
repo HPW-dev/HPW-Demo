@@ -1,7 +1,7 @@
 #pragma once
 #include "util/macro.hpp"
 #include "util/str.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 // ссыль на функцию рисующую фон меню
 using bgp_pf = void (*)(Image& dst, const int bg_state);

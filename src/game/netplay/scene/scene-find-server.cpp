@@ -8,7 +8,7 @@
 #include "util/file/file.hpp"
 #include "util/file/yaml.hpp"
 //#include "util/net/tcp-mgr.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 struct Scene_find_server::Impl {
   Unique<Menu> _menu {};

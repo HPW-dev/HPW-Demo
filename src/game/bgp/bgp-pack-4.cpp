@@ -2,10 +2,10 @@
 #include <cassert>
 #include <algorithm>
 #include "bgp-pack-4.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/resize.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/resize.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "util/math/circle.hpp"
 #include "util/math/rect.hpp"
 #include "util/math/xorshift.hpp"

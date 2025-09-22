@@ -26,7 +26,7 @@
 #include "host/command.hpp"
 
 #ifndef NO_EPGE
-#include "graphic/epge/epge-util.hpp"
+#include "engine/graphic/epge/epge-util.hpp"
 #endif
 
 static inline void load_log_config(cr<Yaml> config) {

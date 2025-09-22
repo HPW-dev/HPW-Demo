@@ -1,9 +1,9 @@
 #include <cassert>
 #include <cmath>
 #include "glass-ball.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/canvas.hpp"

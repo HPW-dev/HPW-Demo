@@ -1,6 +1,6 @@
 #pragma once
 #ifndef NO_EPGE
-#include "graphic/epge/epge.hpp"
+#include "engine/graphic/epge/epge.hpp"
 #include "util/vector-types.hpp"
 
 namespace graphic {

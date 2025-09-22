@@ -1,7 +1,7 @@
 #pragma once
 #include "util/mem-types.hpp"
 #include "util/net/net.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 struct Connection_ctx {
   Str ip_v4 {net::SELF_IPV4};

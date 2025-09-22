@@ -5,8 +5,8 @@
 #include "game/util/font-helper.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/resource-helper.hpp"
-#include "graphic/font/unifont.hpp"
-#include "graphic/font/unifont-mono.hpp"
+#include "engine/graphic/font/unifont.hpp"
+#include "engine/graphic/font/unifont-mono.hpp"
 #include "util/error.hpp"
 #include "util/file/file.hpp"
 #include <GLFW/glfw3.h>

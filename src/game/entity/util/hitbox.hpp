@@ -2,7 +2,7 @@
 #include "util/math/circle.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 using Polygons = Vector<Polygon>;
 struct Pal8;

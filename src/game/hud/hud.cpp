@@ -1,6 +1,6 @@
 #include "hud.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 #include "util/math/vec.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/fonts.hpp"

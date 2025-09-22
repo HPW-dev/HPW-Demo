@@ -6,7 +6,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/scene/scene-enter-text.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "util/str-util.hpp"
 
 struct Client::Impl {

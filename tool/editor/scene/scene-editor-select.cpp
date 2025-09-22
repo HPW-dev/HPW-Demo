@@ -4,7 +4,7 @@
 #include "scene-anim-editor.hpp"
 #include "yn.hpp"
 #include "entity-editor-ctx.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
 #include "game/menu/advanced-text-menu.hpp"
