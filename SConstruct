@@ -219,11 +219,12 @@ def accept_params():
 
 def build():
   '''сборка проекта'''
-  env = Environment(ENV=environ.copy())
+  env = None
   # не юзать MSVC
   if hpw_config.system == System.windows:
-    env = Environment(tools = ['mingw'])
+    env = Environment(ENV=environ.copy(), tools = ['mingw'])
   else:
+    env = Environment(ENV=environ.copy())
     pass # env = Environment(tools = ['gcc'])
 
   # скопировать нужные переменные для экспорта
