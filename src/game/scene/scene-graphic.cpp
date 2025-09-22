@@ -31,7 +31,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/font/font.hpp"
-#include "sound/sound-mgr.hpp"
+#include "engine/sound/sound-mgr.hpp"
 #include "util/error.hpp"
 
 void set_high_quality() {

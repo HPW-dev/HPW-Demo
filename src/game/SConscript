@@ -108,7 +108,7 @@ def init_sources():
     Glob(src_dir + "graphic/effect/*.cpp"),
     Glob(src_dir + "graphic/font/*.cpp"),
     Glob(src_dir + "graphic/util/*.cpp"),
-    Glob(src_dir + "sound/*.cpp"),
+    Glob(src_dir + "engine/sound/*.cpp"),
   ])
   
   # LAN

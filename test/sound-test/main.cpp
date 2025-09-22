@@ -4,8 +4,8 @@
 #include <utility>
 #include <thread>
 #include <cmath>
-#include "sound/sound-mgr.hpp"
-#include "sound/audio-io.hpp"
+#include "engine/sound/sound-mgr.hpp"
+#include "engine/sound/audio-io.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
 #include "util/path.hpp"
