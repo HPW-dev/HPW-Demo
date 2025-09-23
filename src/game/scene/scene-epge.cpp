@@ -18,7 +18,7 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/menu-util.hpp"
-#include "graphic/epge/epge-util.hpp"
+#include "engine/graphic/epge/epge-util.hpp"
 
 struct Scene_epge::Impl {
   Unique<Advanced_text_menu> _menu {};

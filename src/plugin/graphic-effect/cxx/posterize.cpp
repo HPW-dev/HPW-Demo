@@ -4,7 +4,7 @@
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include "pge-util.hpp"
 #include "util/macro.hpp"
-#include "graphic/image/color.hpp"
+#include "engine/graphic/image/color.hpp"
 
 NOT_EXPORTED Pal8* g_dst {}; // ссыль на растр от игры
 NOT_EXPORTED uint16_t g_w {}; // ширина растра

@@ -3,7 +3,7 @@
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
 #include "util/unicode.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 // База для интерфейса игрока
 class Hud {

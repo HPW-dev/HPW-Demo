@@ -2,7 +2,7 @@
 #include "cosmic-waiter.hpp"
 #include "util/file/yaml.hpp"
 #include "util/hpw-util.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/util/phys.hpp"

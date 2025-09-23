@@ -13,7 +13,7 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/advanced-text-menu.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "util/math/random.hpp"
 
 struct Scene_gameover::Impl {

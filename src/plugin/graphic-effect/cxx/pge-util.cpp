@@ -1,6 +1,6 @@
 #include "plugin/graphic-effect/hpw-plugin-effect.h"
 #include "pge-util.hpp"
-#include "graphic/image/color.hpp"
+#include "engine/graphic/image/color.hpp"
 
 NOT_EXPORTED
 bool check_params(const context_t* context, result_t* result) {

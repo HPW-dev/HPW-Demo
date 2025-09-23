@@ -1,5 +1,5 @@
 #pragma once
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 #ifdef HOST_GLFW3
 #include "host/glfw3/host-glfw.hpp"

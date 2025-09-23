@@ -1,7 +1,7 @@
 #pragma once
 #include "collider.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 /* разбивает пространство расшияющимися прямоугольниками
 и проверяет столькновения в них */

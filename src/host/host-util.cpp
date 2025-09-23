@@ -9,9 +9,9 @@
 #include "util/error.hpp"
 #include "util/math/random.hpp"
 #include "util/file/file.hpp"
-#include "graphic/util/convert.hpp"
-#include "graphic/image/color.hpp"
-#include "graphic/image/palette.hpp"
+#include "engine/graphic/util/convert.hpp"
+#include "engine/graphic/image/color.hpp"
+#include "engine/graphic/image/palette.hpp"
 
 static Vector<GLfloat> m_ogl_palette {};
 

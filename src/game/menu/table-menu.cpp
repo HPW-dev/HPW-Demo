@@ -2,9 +2,9 @@
 #include <cmath>
 #include <algorithm>
 #include "table-menu.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "item/table-row-item.hpp"
 #include "game/core/fonts.hpp"
 

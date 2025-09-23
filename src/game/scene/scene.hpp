@@ -3,7 +3,7 @@
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 // базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {

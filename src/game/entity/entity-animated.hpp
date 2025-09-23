@@ -4,7 +4,7 @@
 #include "util/macro.hpp"
 #include "util/math/vec.hpp"
 #include "game/entity/util/anim-ctx.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Entity;
 class Anim;

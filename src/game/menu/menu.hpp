@@ -4,7 +4,7 @@
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Menu_item;
 using Menu_items = Vector<Shared<Menu_item>>;

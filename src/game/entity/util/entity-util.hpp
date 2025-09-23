@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include <optional>
-#include "sound/audio.hpp"
+#include "engine/sound/audio.hpp"
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/math/num-types.hpp"

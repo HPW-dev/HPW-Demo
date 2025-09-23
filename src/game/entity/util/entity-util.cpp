@@ -19,10 +19,10 @@
 #include "util/hpw-util.hpp"
 #include "util/math/mat.hpp"
 #include "util/math/vec-util.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/animation/frame.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/sprite/sprite.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/animation/frame.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
 
 static Uid m_entity_uid = 0;
 
