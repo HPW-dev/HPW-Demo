@@ -32,6 +32,24 @@ def init():
 
 def build(env):
   pass # TODO build
+  '''
+  sources = ["main.cpp"]
+  sources.extend( util.find_mask("./test-dir/*.cpp") )
+  builder = Builder(
+    target = "./bin/test.exe",
+    sources = sources,
+    cxx_opts = ["Os", "g0", "std=c++23", "pipe"],
+    defines = ["NDEBUG", "ECOMEM"],
+    ld_opts = ["static", 's'],
+    #libs = [],
+    lib_path = ["."],
+    temp = ".tmp/",
+    include = ["."],
+    #without_print=False
+  )
+  builder.run()
+  '''
+
   env.update( util.calculate_checksums(env) ) # посчитать хэши файлов
   return env
 

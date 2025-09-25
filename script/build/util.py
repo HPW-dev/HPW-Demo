@@ -1,6 +1,8 @@
 if __name__ == "__main__":
   quit("Запускать через \"python build.py\"")
 
+import hashlib
+import re
 import os
 import shutil
 import time
@@ -85,10 +87,17 @@ def add_vars():
   if not check_dir(ret['bin_dir']): quit(txt_red(f'директория {ret['bin_dir']} не найдена'))
   return ret
 
-def file_sha512(fname):
+def file_sha3_512(fname):
   try:
     with open(fname, 'rb', buffering=0) as f:
-      return hashlib.file_digest(f, 'sha512').hexdigest().upper()
+      return hashlib.file_digest(f, 'sha3_512').hexdigest().upper()
+  except:
+    return None
+  
+def file_blake2b(fname):
+  try:
+    with open(fname, 'rb', buffering=0) as f:
+      return hashlib.file_digest(f, 'blake2b').hexdigest().upper()
   except:
     return None
 
@@ -102,10 +111,10 @@ def file_crc32(fname):
 
 def calculate_checksums(env):
   info = {}
-  info['exe_sha512']  = file_sha512(env['executable_path'])
-  info['exe_crc32']   = file_crc32 (env['executable_path'])
-  info['data_sha512'] = file_sha512(env['data_archive_path'])
-  info['data_crc32']  = file_crc32 (env['data_archive_path'])
+  info['exe_crc32'] = file_crc32(env['executable_path'])
+  info['exe_sha3_512'] = file_sha3_512(env['executable_path'])
+  info['data_crc32'] = file_crc32(env['data_archive_path'])
+  info['data_sha3_512'] = file_sha3_512(env['data_archive_path'])
 
   print('\n' + ':'*30 + ' КОНТРОЛЬНЫЕ СУММЫ ' + ':'*30)
   print(f'- CRC32 EXE: {  in_env(info, 'exe_crc32')}')
@@ -121,3 +130,40 @@ def max_threads():
   except:
     print('ошибка при получении числа потоков процессора; Будет использоваться 1 по умолчанию')
     return 1
+
+def list2s(params: list[str], add_sym="") -> str:
+  ":return: params объединённые в одну строку и начинающиеся на add_sym"
+  ret = ""
+  for x in params:
+    ret += f'{add_sym}{x} '
+  return ret.strip() # в начале и в конце убратьпробел
+
+def find_mask(mask: str, recursive=False):
+  "ищет файлы в папке подходящие по шаблону (например test/*.cpp)"
+  ret = []
+  for x in glob.glob(mask, recursive=recursive):
+    ret.append(x)
+  return ret
+
+def extract_includes(file_path: str, max_lines=40):
+  "Извлекает список файлов из директив #include в начале C++ файла"
+  includes = []
+  pattern = re.compile(r'^\s*#include\s*["](.*?)["]')
+  try:
+    with open(file_path, 'r', encoding='utf-8') as file:
+      for line_number, line in enumerate(file):
+        if line_number >= max_lines:
+          break
+        match = pattern.match(line)
+        if match:
+          included_file = match.group(1)
+          includes.append(included_file)
+  except IOError as e:
+    print(f"Ошибка чтения файла {file_path}: {e}")
+  
+  # пути к файлам должны начинаться с рута:
+  includes = list( map(
+    lambda x: x if os.path.exists(x) else f'{os.path.dirname(file_path)}/{x}',
+    includes
+  ) )
+  return includes
