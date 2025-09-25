@@ -69,13 +69,13 @@ def save_json(env, fname):
           "host_framework": safe_env_val(env, 'host'),
         },
         "checksum": {
-          "SHA512": {
-            "exe": safe_env_val(env, 'exe_sha512'),
-            "data": safe_env_val(env, 'data_sha512'),
-          },
           "CRC32": {
             "exe": safe_env_val(env, 'exe_crc32'),
             "data": safe_env_val(env, 'data_crc32'),
+          },
+          "SHA3_512": {
+            "exe": safe_env_val(env, 'exe_sha3_512'),
+            "data": safe_env_val(env, 'data_sha3_512'),
           },
         },
       } # JSON info
