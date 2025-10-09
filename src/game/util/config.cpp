@@ -11,6 +11,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/palette.hpp"
 #include "game/core/replays.hpp"
+#include "game/core/bgps.hpp"
 #include "game/bgp/bgp.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
@@ -131,8 +132,8 @@ static inline void save_game_config(Yaml& config) {
   config.set_str ("locale", hpw::locale_path);
   config.set_str ("hud", graphic::cur_hud);
   config.set_int ("priority", scast<int>(hpw::process_priority));
-  config.set_str ("menu_bgp", hpw::menu_bgp_name);
-  config.set_bool("autoswith_bgp", hpw::autoswith_bgp);
+  config.set_str ("menu_bgp", hpw::bgp_for_menu);
+  config.set_bool("autoswith_bgp", hpw::bgp_auto_swith);
 }
 
 void load_config_game(cr<Yaml> config) {
@@ -143,10 +144,8 @@ void load_config_game(cr<Yaml> config) {
   hpw::process_priority = scast<Priority>( config.get_int("priority", scast<int>(hpw::process_priority)) );
   if (hpw::process_priority != Priority::normal)
     set_priority(hpw::process_priority);
-  hpw::menu_bgp_name = config.get_str("menu_bgp", hpw::menu_bgp_name);
-  if (!hpw::menu_bgp_name.empty())
-    hpw::menu_bgp = get_bgp(hpw::menu_bgp_name);
-  hpw::autoswith_bgp = config.get_bool("autoswith_bgp", hpw::autoswith_bgp);
+  hpw::bgp_for_menu = config.get_str("menu_bgp", hpw::bgp_for_menu);
+  hpw::bgp_auto_swith = config.get_bool("autoswith_bgp", hpw::bgp_auto_swith);
 
   try {
     hpw::locale_path = config.get_str("locale", hpw::locale_path);

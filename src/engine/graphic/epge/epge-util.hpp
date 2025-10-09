@@ -8,16 +8,19 @@
 class Yaml;
 
 namespace epge {
+
 class Base;
 using Maker = std::function< Unique<epge::Base>() >;
-inline std::unordered_map<Str, Maker> makers {};
-}
+using Makers = std::unordered_map<Str, Maker>;
+Makers& get_makers();
+
+} // epge ns
 
 template <class T>
 inline void add_epge() {
   cauto epge = new_unique<T>();
   cauto name = epge->name();
-  epge::makers[name] = []{ return new_unique<T>(); };
+  epge::get_makers()[name] = []{ return new_unique<T>(); };
 }
 
 void save_epges(Yaml& config); // сохранить настройки epge

@@ -7,6 +7,8 @@
 #include "util/math/timer.hpp"
 #include "util/str.hpp"
 #include "util/unicode.hpp"
+#include "game/core/bgps.hpp"
+#include "bgp/bgp.hpp"
 
 class Menu;
 class Sprite;
@@ -16,14 +18,13 @@ class Scene_main_menu final: public Scene {
   Unique<Menu> menu {};
   Unique<Sprite> logo {};
   Vec logo_pos {};
-  Strs m_logo_names {}; // пути к картинкам для лого
   std::once_flag m_logo_load_once {};
-  Delta_time bg_state {}; // чтобы менять узор на фоне
-  Timer change_bg_timer {50}; // таймер сменяющий фон
+  Strs m_logo_names {};       // пути к картинкам для лого
+  Timer change_bg_timer {hpw::BGP_AUTO_SWITCH_DELAY};
+  Shared<bgp::Bgp> _bgp {};        // фоновой узор, который сейчас рисуется
 
   void init_menu();
   void init_logo();
-  void draw_bg(Image& dst) const noexcept;
   void draw_logo(Image& dst) const noexcept;
   void draw_text(Image& dst) const noexcept;
   void draw_wnd(Image& dst) const noexcept;
