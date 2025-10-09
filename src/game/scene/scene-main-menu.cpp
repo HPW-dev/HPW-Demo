@@ -1,3 +1,4 @@
+#include <cassert>
 #include <ctime>
 #include "scene-main-menu.hpp"
 #include "scene-game.hpp"
@@ -22,6 +23,7 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/bgp/bgp.hpp"
+#include "game/bgp/bgp-util.hpp"
 #include "graphic/util/resize.hpp"
 #include "graphic/util/util-templ.hpp"
 #include "graphic/util/graphic-util.hpp"
@@ -40,9 +42,8 @@
 
 Scene_main_menu::Scene_main_menu() {
   init_menu();
-  init_logo();
-  if (hpw::menu_bgp_name.empty())
-    randomize_menu_bgp();
+  if (hpw::bgp_for_menu.empty())
+    next_bg();
 }
 
 Scene_main_menu::~Scene_main_menu() {}
@@ -53,18 +54,13 @@ void Scene_main_menu::update(const Delta_time dt) {
     hpw::scene_mgr.back();
 #endif
 
-  bg_state += dt;
-  menu->update(dt);
+  assert(menu); menu->update(dt);
   update_bg_order(dt);
+  assert(_bgp); _bgp->update(dt);
 
   // чтобы перезагрузить локализацию строк
   if (hpw::scene_mgr.status().came_back)
     init_menu();
-}
-
-void Scene_main_menu::draw_bg(Image& dst) const noexcept {
-  assert(hpw::menu_bgp);
-  hpw::menu_bgp(dst, std::floor(pps(bg_state)));
 }
 
 void Scene_main_menu::init_logo() {
@@ -115,7 +111,7 @@ void Scene_main_menu::draw_wnd(Image& dst) const noexcept {
 } // draw_wnd
 
 void Scene_main_menu::draw(Image& dst) const noexcept {
-  draw_bg(dst);
+  assert(_bgp); _bgp->draw(dst);
   draw_wnd(dst);
   draw_logo(dst);
   draw_text(dst);
@@ -167,7 +163,8 @@ void Scene_main_menu::init_menu() {
 
 void Scene_main_menu::next_bg() {
   init_logo();
-  randomize_menu_bgp();
+  hpw::bgp_for_menu = bgp::random_name();
+  _bgp = bgp::make(hpw::bgp_for_menu);
   change_bg_timer.reset();
 }
 
@@ -285,7 +282,7 @@ void Scene_main_menu::init_menu_sounds() {
 }
 
 void Scene_main_menu::update_bg_order(const Delta_time dt) {
-  ret_if(!hpw::autoswith_bgp);
+  ret_if(!hpw::bgp_auto_swith);
   
   // поменять фон возвращаясь из сцены
   const bool came_back = hpw::scene_mgr.status().came_back;

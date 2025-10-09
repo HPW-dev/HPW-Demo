@@ -21,7 +21,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/vec-helper.hpp"
-#include "game/bgp/bgp-pack-1.hpp"
+#include "game/bgp/legacy/bgp-pack-1.hpp"
 #include "graphic/image/image.hpp"
 #include "graphic/util/graphic-util.hpp"
 #include "graphic/util/util-templ.hpp"
