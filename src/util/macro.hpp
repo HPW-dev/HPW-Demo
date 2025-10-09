@@ -70,3 +70,13 @@ name& operator = (cr<name>) = delete;
   #define do_not_optimize(val) { (void)val; }
   #pragma GCC pop_options
 #endif
+
+// вспомогательный макрос для CONCAT
+#define _CONCAT(a, b) a##b
+// объединяем названия содержащиеся в макросах
+#define CONCAT(a, b) _CONCAT(a, b)
+
+// вспомогательный макрос STRINGIFY
+#define _STRINGIFY(x) #x
+// превращает название в макросе в Си-строку
+#define STRINGIFY(x) _STRINGIFY(x)

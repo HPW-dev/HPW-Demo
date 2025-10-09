@@ -6,16 +6,18 @@
 #include "game/core/epges.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
+#include "game/util/glass-ball.hpp"
 #include "game/util/palette-helper.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/menu-util.hpp"
-#include "plugin/epge/epge-util.hpp"
+#include "graphic/epge/epge-util.hpp"
 
 struct Scene_epge_list::Impl {
   Unique<Advanced_text_menu> _menu {};
   bool _need_bottom_item {}; // переходит на нижний пункт меню
+  Glass_ball _gb {};
 
   inline explicit Impl() {
     init_menu();
@@ -33,15 +35,16 @@ struct Scene_epge_list::Impl {
     }
 
     _menu->update(dt);
+    _gb.update(dt);
   }
 
   inline void draw(Image& dst) const {
-    assert(_menu);
-    
     draw_test_image(dst);
-    // TODO выбранный EPGE так же влияет на фон под меню 
-
+    
+    assert(_menu);
     _menu->draw(dst);
+
+    _gb.draw(dst);
   }
 
   inline static void exit_from_scene() {

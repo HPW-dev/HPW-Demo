@@ -1,20 +1,36 @@
 #pragma once
+#include <functional>
+#include <typeinfo>
 #include "util/macro.hpp"
+#include "util/mem-types.hpp"
 #include "util/str.hpp"
+#include "util/math/num-types.hpp"
 #include "graphic/image/image-fwd.hpp"
 
-// ссыль на функцию рисующую фон меню
-using bgp_pf = void (*)(Image& dst, const int bg_state);
+namespace bgp {
 
-// получить фоновой узор по имени
-[[nodiscard]] bgp_pf get_bgp(cr<Str> name);
-// узнать какие есть названия фонов
-[[nodiscard]] Strs get_bgp_names();
-// ставить случайный фон
-void randomize_menu_bgp();
+// база для создания фонового узора
+class Bgp {
+public:
+  Bgp() = default;
+  virtual ~Bgp() = default;
+  inline virtual void restart() {}
+  inline virtual void update(Delta_time dt) {}
+  virtual void draw(Image& dst) const = 0;
+};
 
-namespace hpw {
-inline Str menu_bgp_name {}; // если ничего не задано, будет случайным
-inline bgp_pf menu_bgp {}; // текущий фон меню
-inline bool autoswith_bgp {true};
-}
+using Maker = std::function< Shared<Bgp>() >; // конструктор фоновых узоров
+[[nodiscard]] Shared<Bgp> make(cr<Str> name); // получить фоновой узор по имениs
+[[nodiscard]] Strs all_names();               // узнать какие есть названия фонов
+void registrate(cr<Str> name, Maker maker);   // добавить фон в базу фонов
+
+// класс для автодобавления узора в список узоров
+template <class BGP> struct Registrator {
+  inline Registrator(cr<Str> name = typeid(BGP).name()) {
+    registrate(name, []()->Shared<Bgp> { return new_shared<BGP>(); } );
+  }
+};
+
+} // bgp ns
+
+#define BGP_REG_MAKER(CLASS_NAME) Registrator<CLASS_NAME> CONCAT(_reg_for__, CLASS_NAME) (STRINGIFY(CLASS_NAME));

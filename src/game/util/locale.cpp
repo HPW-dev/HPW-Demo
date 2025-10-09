@@ -10,14 +10,20 @@
 #include "game/util/resource-helper.hpp"
 
 cr<utf32> get_locale_str(cr<Str> key) {
-  assert(hpw::store_locale);
-  if (auto ret = hpw::store_locale->find(key); ret)
-    return ret->str;
-  else
-    log_error << "not found string: \"" + key + "\"";
+  if (hpw::store_locale) {
+    if (auto ret = hpw::store_locale->find(key); ret) {
+      return ret->str;
+    } elif (!hpw::ignore_locale_errors) {
+      log_error << "not found string: \"" + key + "\"";
+    }
+  } elif (!hpw::ignore_locale_errors) {
+    log_error << "store_locale is not initialized\n";
+  }
+
+  if ((!hpw::ignore_locale_errors))
+    log_error << "not finded string \"" + key + "\"";
 
   static utf32 last_error;
-  log_error << "not finded string \"" + key + "\"";
   last_error = U"_ERR_(" + sconv<utf32>(key) + U")";
   return last_error;
 }

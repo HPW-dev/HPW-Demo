@@ -1,5 +1,6 @@
 #pragma once
 #include <utility>
+#include <cassert>
 #include "math/random.hpp"
 #include "vector-types.hpp"
 
@@ -14,50 +15,52 @@ public:
 
   Rnd_table() = default;
 
-  constexpr inline Rnd_table(Values_cref values)
-  : m_values{ values } {}
+  constexpr inline explicit Rnd_table(Values_cref values)
+  : _values{ values } {}
 
   constexpr inline Rnd_table(Values&& values) noexcept
-  : m_values{ std::move(values) } {}
+  : _values{ std::move(values) } {}
 
   inline Value_cref push(Value_cref val) {
-    m_values.push_back(val);
-    return *m_values.back();
+    _values.push_back(val);
+    return *_values.back();
   }
 
   inline Value_cref push(Value_t&& val) {
-    return m_values.emplace_back(std::move(val));
+    return _values.emplace_back(std::move(val));
   }
 
-  constexpr inline Values_cref values() const { return m_values; }
+  constexpr inline Values_cref values() const { return _values; }
 
   inline Value_cref rnd_stable() const {
-    cauto sz = m_values.size();
+    cauto sz = _values.size();
+    assert(sz > 0);
     if (sz == 1)
-      return m_values[0];
+      return _values[0];
     _last_idx = rndu(sz-1);
-    return m_values.at(_last_idx); 
+    return _values.at(_last_idx); 
   }
   
   inline Value_cref rnd_fast() const {
-    cauto sz = m_values.size();
+    cauto sz = _values.size();
+    assert(sz > 0);
     if (sz == 1)
-      return m_values[0];
+      return _values[0];
     _last_idx = rndu_fast(sz-1);
-    return m_values.at(_last_idx);
+    return _values.at(_last_idx);
   }
 
   // взять элемент по порядку
   inline Value_cref next() const {
-    assert(!m_values.empty());
-    cauto sz = m_values.size();
+    assert(!_values.empty());
+    cauto sz = _values.size();
     if (sz == 1)
-      return m_values[0];
+      return _values[0];
     _last_idx = (_last_idx + 1) % sz;
-    return m_values.at(_last_idx);
+    return _values.at(_last_idx);
   }
 
 private:
-  Values m_values {};
+  Values _values {};
   mutable std::size_t _last_idx {}; // id предыдущего вернутого элемента
 };

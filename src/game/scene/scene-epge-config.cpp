@@ -7,8 +7,9 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"
-#include "plugin/epge/epge.hpp"
-#include "plugin/epge/epge-util.hpp"
+#include "game/util/glass-ball.hpp"
+#include "graphic/epge/epge.hpp"
+#include "graphic/epge/epge-util.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/item/text-item.hpp"
@@ -16,6 +17,7 @@
 
 class Epge_menu_item final: public Menu_item {
   Shared<epge::Param> _epge_param {};
+  Glass_ball _gb {};
 
 public:
   inline explicit Epge_menu_item(Shared<epge::Param> epge_param)
@@ -29,20 +31,19 @@ public:
   inline void minus_fast() override { _epge_param->minus_value_fast(); }
 
   inline utf32 to_text() const override {
-    Str ret = _epge_param->title();
-    ret += " : " + _epge_param->get_value();
-    return utf8_to_32(ret);
+    utf32 ret = _epge_param->title();
+    ret += U" : " + utf8_to_32(_epge_param->get_value());
+    return ret;
   }
 
-  inline utf32 get_description() const override {
-    return utf8_to_32( _epge_param->desc() );
-  }
+  inline utf32 get_description() const override { return _epge_param->desc(); }
 }; // Epge_menu_item
 
 struct Scene_epge_config::Impl {
   epge::Base* _epge {};
   Unique<Advanced_text_menu> _menu {};
   bool _need_bottom_item {}; // переходит на нижний пункт меню
+  Glass_ball _gb {};
 
   inline explicit Impl(epge::Base* epge): _epge {epge} {
     assert(_epge);
@@ -55,6 +56,7 @@ struct Scene_epge_config::Impl {
 
     assert(_menu);
     _menu->update(dt);
+    _gb.update(dt);
   }
 
   inline void draw(Image& dst) const {
@@ -62,6 +64,8 @@ struct Scene_epge_config::Impl {
 
     assert(_menu);
     _menu->draw(dst);
+
+    _gb.draw(dst);
   }
 
   inline static void exit_from_scene() {

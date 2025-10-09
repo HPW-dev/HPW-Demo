@@ -59,3 +59,31 @@ void load_sounds() {
 
   init_store_sound();
 }
+
+#include "game/core/canvas.hpp"
+#include "game/core/sounds.hpp"
+
+Vec3 to_sound_vel(const Vec src) {
+  assert(graphic::width);
+  assert(graphic::height);
+  cauto max_site = std::max(graphic::width, graphic::height);
+
+  return Vec3(
+    (src.x * hpw::SOUND_VEL_AMP) / max_site,
+    (src.y * hpw::SOUND_VEL_AMP) / max_site,
+    0
+  );
+}
+
+Vec3 to_sound_pos(const Vec src) {
+  assert(graphic::width);
+  assert(graphic::height);
+  cauto max_site = std::max(graphic::width, graphic::height);
+
+  return Vec3(
+    (src.x * hpw::SOUND_POS_AMP) / max_site,
+    (src.y * hpw::SOUND_POS_AMP) / max_site,
+    0
+  );
+}
+

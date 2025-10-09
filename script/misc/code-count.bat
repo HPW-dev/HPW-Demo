@@ -1,2 +1,2 @@
 :: запускать из root
-cloc --exclude-list-file=script\.clocignore --windows .
+cloc --exclude-list-file=script\misc\.clocignore --windows .

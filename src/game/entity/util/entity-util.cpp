@@ -9,6 +9,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/sounds.hpp"
+#include "game/util/sound-helper.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/collidable.hpp"
@@ -379,28 +380,6 @@ void Sound_attached::operator()(Entity& ent, const Delta_time dt) {
   cauto vel = to_sound_vel(_entity.phys.get_vel());
   hpw::sound_mgr->set_position(_audio_id, pos);
   hpw::sound_mgr->set_velocity(_audio_id, vel);
-}
-
-Vec3 to_sound_vel(const Vec src) {
-  assert(graphic::width);
-  assert(graphic::height);
-
-  return Vec3(
-    (src.x * hpw::SOUND_POS_AMP) / graphic::width,
-    (src.y * hpw::SOUND_POS_AMP) / graphic::width,
-    0
-  );
-}
-
-Vec3 to_sound_pos(const Vec src) {
-  assert(graphic::width);
-  assert(graphic::height);
-
-  return Vec3(
-    (src.x * hpw::SOUND_VEL_AMP) / graphic::width,
-    (src.y * hpw::SOUND_VEL_AMP) / graphic::width,
-    0
-  );
 }
 
 std::optional<Rect> get_player_rect() {
