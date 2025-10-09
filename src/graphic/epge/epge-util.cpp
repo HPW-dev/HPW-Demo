@@ -7,6 +7,15 @@
 #include "util/log.hpp"
 #include "util/hpw-util.hpp"
 
+namespace epge {
+
+[[nodiscard]] Makers& get_makers() {
+  static Makers makers;
+  return makers;
+}
+
+} // epge ns
+
 void save_epges(Yaml& config) {
   cauto total_epges = graphic::epges.size();
   return_if(total_epges <= 0);
@@ -89,10 +98,10 @@ void load_epges(cr<Yaml> config) {
 }
 
 Strs avaliable_epges() {
-  assert(!epge::makers.empty());
+  assert(!epge::get_makers().empty());
 
   Strs list;
-  for (crauto [name, _]: epge::makers)
+  for (crauto [name, _]: epge::get_makers())
     list.push_back(name);
     
   assert(!list.empty());
@@ -101,10 +110,10 @@ Strs avaliable_epges() {
 }
 
 Unique<epge::Base> make_epge(cr<Str> name) {
-  assert(!epge::makers.empty());
+  assert(!epge::get_makers().empty());
 
   try {
-    return epge::makers.at(name) (); // создать EPGE
+    return epge::get_makers().at(name) (); // создать EPGE
   } catch (...) {}
 
   log_error << "не удалось загрузить EPGE эффект \"" + name + "\"";
