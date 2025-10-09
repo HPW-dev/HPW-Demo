@@ -32,3 +32,5 @@ template <class BGP> struct Registrator {
 };
 
 } // bgp ns
+
+#define BGP_REG_MAKER(CLASS_NAME) Registrator<CLASS_NAME> CONCAT(_reg_for__, CLASS_NAME) (STRINGIFY(CLASS_NAME));
