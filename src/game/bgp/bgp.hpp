@@ -26,7 +26,9 @@ void registrate(cr<Str> name, Maker maker);   // добавить фон в ба
 
 // класс для автодобавления узора в список узоров
 template <class BGP> struct Registrator {
-  inline Registrator() { registrate(typeid(BGP).name(), []()->Shared<Bgp> { return new_shared<BGP>(); } ); }
+  inline Registrator(cr<Str> name = typeid(BGP).name()) {
+    registrate(name, []()->Shared<Bgp> { return new_shared<BGP>(); } );
+  }
 };
 
 } // bgp ns

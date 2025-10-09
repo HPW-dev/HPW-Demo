@@ -17,7 +17,7 @@ public:
   inline void draw(Image& dst) const override { assert(FN), FN(dst, std::floor(pps(_timer))); }
 }; // Bgp_wrapper
 
-#define REG_BGP(FN) inline static bgp::Registrator< Bgp_wrapper<&FN> > CONCAT(_bgp_reg_for__, FN);
+#define REG_BGP(FN) inline static bgp::Registrator< Bgp_wrapper<&FN> > CONCAT(_bgp_reg_for__, FN) (STRINGIFY(FN));
 
 #if 1 // Пак 1:
   REG_BGP(bgp_hpw_text_lines)

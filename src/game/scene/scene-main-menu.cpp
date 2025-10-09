@@ -58,6 +58,14 @@ void Scene_main_menu::update(const Delta_time dt) {
 #endif
 
   assert(menu); menu->update(dt);
+
+  // поменять фон возвращаясь из сцены
+  if (hpw::scene_mgr.status().came_back) {
+    if (hpw::bgp_for_menu.empty())
+      hpw::bgp_for_menu = bgp::random_name();
+    _bgp = bgp::make(hpw::bgp_for_menu);
+  }
+
   update_bg_order(dt);
   assert(_bgp); _bgp->update(dt);
 
@@ -143,7 +151,10 @@ void Scene_main_menu::init_menu() {
         []{ hpw::scene_mgr.add(new_shared<Scene_locale_select>()); }),
 
       // сменить фон
-      new_shared<Menu_text_item>(get_locale_str("main_menu.next_bg"), [this]{ next_bg(); }),
+      new_shared<Menu_text_item>(get_locale_str("main_menu.next_bg"), [this]{
+        hpw::bgp_auto_swith = true;
+        next_bg();
+      }),
       
       get_palette_list(), // сменить палитру
 
@@ -289,13 +300,11 @@ void Scene_main_menu::init_menu_sounds() {
 void Scene_main_menu::update_bg_order(const Delta_time dt) {
   ret_if(!hpw::bgp_auto_swith);
   
-  // поменять фон возвращаясь из сцены
-  const bool came_back = hpw::scene_mgr.status().came_back;
   // поменять фон через кнопку
   const bool fast_forward = is_pressed_once(hpw::keycode::fast_forward);
   // поменять фон по таймеру
   const bool bg_timer_ready = change_bg_timer.update(dt);
 
-  if (came_back || fast_forward || bg_timer_ready)
+  if (fast_forward || bg_timer_ready)
     next_bg();
 }
