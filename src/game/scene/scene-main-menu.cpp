@@ -42,8 +42,11 @@
 
 Scene_main_menu::Scene_main_menu() {
   init_menu();
+  init_logo();
+
   if (hpw::bgp_for_menu.empty())
-    next_bg();
+    hpw::bgp_for_menu = bgp::random_name();
+  _bgp = bgp::make(hpw::bgp_for_menu);
 }
 
 Scene_main_menu::~Scene_main_menu() {}
@@ -163,8 +166,10 @@ void Scene_main_menu::init_menu() {
 
 void Scene_main_menu::next_bg() {
   init_logo();
+
   hpw::bgp_for_menu = bgp::random_name();
   _bgp = bgp::make(hpw::bgp_for_menu);
+
   change_bg_timer.reset();
 }
 
