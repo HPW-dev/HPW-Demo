@@ -23,10 +23,9 @@ struct Scene_bgp_select::Impl {
   mutable Shared<bgp::Bgp> _bgp {};
 
   inline Impl() {
-    if (hpw::bgp_for_menu.empty()) {
+    if (hpw::bgp_for_menu.empty())
       hpw::bgp_for_menu = bgp::random_name();
-      _bgp = bgp::make(hpw::bgp_for_menu);
-    }
+    _bgp = bgp::make(hpw::bgp_for_menu);
 
     cauto title = get_locale_str("bgp_select.title");
     Rect rect {15, 10, 300, 200};
