@@ -16,6 +16,8 @@
 
 void insert_fast(Image& dst, cr<Image> src) {
   return_if(!dst);
+  iferror(dst.size < src.size, "size of image \"" + dst.get_path() +
+    "\" smaller than \"" + src.get_path() + "\"");
   assert(dst.size >= src.size);
   memcpy(dst.data(), src.data(), dst.size * sizeof(Pal8));
 }
