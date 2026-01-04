@@ -14,6 +14,6 @@ public:
     {}
   inline cr<decltype(path)> get_path() const noexcept { return path; }
   inline cr<decltype(generated)> is_generated() const noexcept { return generated; }
-  inline void set_path(cr<decltype(path)> val) noexcept { path = val; }
+  inline virtual void set_path(cr<decltype(path)> val) noexcept { path = val; }
   inline void set_generated(cr<decltype(generated)> val) noexcept { generated = val; }
 }; // Resource
