@@ -1,9 +1,6 @@
 #pragma once
-#include <utility>
-#include "game/util/resource.hpp"
 #include "util/math/vec.hpp"
 #include "graphic/image/image.hpp"
-#include "graphic/image/image-fwd.hpp"
 
 class Sprite final: public Resource {
 protected:
