@@ -5,7 +5,7 @@ import argparse
 
 def prepare():
   ''' Парсит команды запуска
-  :return:  '''
+  :return: словарь ключей и значений '''
 
   p = argparse.ArgumentParser(
     prog='scons',
