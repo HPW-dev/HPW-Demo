@@ -1,8 +1,8 @@
 if __name__ == "__main__":
   quit("Запускать через \"python build.py\"")
 
-import script.build.util as util
-from script.build.pretty_txt import *
+import script.builder.utils as util
+from script.builder.ui import *
 import json
 import os
 import datetime

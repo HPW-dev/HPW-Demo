@@ -11,7 +11,7 @@ import subprocess
 import zlib
 import datetime
 import hashlib
-from script.build.pretty_txt import *
+from script.builder.ui import *
 
 def set_work_dir(path):
   "cd"

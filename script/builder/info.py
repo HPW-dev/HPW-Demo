@@ -1,7 +1,7 @@
 if __name__ == "__main__":
   quit("Запускать через \"python build.py\"")
 
-from script.build.pretty_txt import *
+from script.builder.ui import *
 import json
 import os
 

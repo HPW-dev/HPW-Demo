@@ -3,7 +3,7 @@ if __name__ == "__main__":
 
 import sys
 import subprocess
-import script.build.util as util
+import script.builder.utils as util
 import platform
 
 def python_version():
