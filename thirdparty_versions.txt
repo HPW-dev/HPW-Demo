@@ -16,5 +16,4 @@ asio: v1.36.0
 hash_sha256: (30 mar. 2023)
 GCC (Windows x32): v15.2.0, MinGW-W64 i686-ucrt-posix-dwarf, built by Brecht Sanders, r1
 GCC (Windows x64): v15.2.0 MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1
-SCons: v4.7.0.265be6883fadbb5a545612265acc919595158366, Sun, 17 Mar 2024 17:33:54 -0700, by bdbaddog on M1Dog2021
 UPX: v4.2.3

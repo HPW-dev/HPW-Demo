@@ -75,11 +75,6 @@ GCC:
   SPDX-License-Identifier: GPL-3.0+
   <https://gcc.gnu.org/onlinedocs/libstdc++/manual/license.html>
 
-SCons:
-  Copyright (c) 2001-2024 The SCons Foundation
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
 hash_sha256:
   Copyright (c) 2022-2023 Iliass Mahjoub
   SPDX-License-Identifier: BSL-1.0

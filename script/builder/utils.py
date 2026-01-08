@@ -15,8 +15,8 @@ from script.builder.distr.compiler import *
 def concat_strlist(strs: list[str]):
   return ' '.join(filter(None, strs))
 
-def add_vars():
-  '''добавляет дополнительные параметры в окружение SCons'''
+def extend_vars():
+  'добавляет дополнительные параметры в окружение'
   ret = {}
   ret['build_dir'] = './build/'
   ret['data_dir'] = './data/'

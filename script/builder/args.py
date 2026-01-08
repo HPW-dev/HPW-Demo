@@ -8,7 +8,7 @@ def parse():
   :return: словарь ключей и значений '''
 
   p = argparse.ArgumentParser(
-    prog='scons',
+    prog='build.py',
     description='Сборщик H.P.W',
     epilog='Copyright (c) 2020-2026 HPW-dev <hpwdev0@gmail.com>',
   )

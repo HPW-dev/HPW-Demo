@@ -25,7 +25,7 @@ def executable_name():
   return 'HPW'
 
 def sys_info(env):
-  info = utils.add_vars()
+  info = utils.extend_vars()
   info["bitness"] = system_bitness()
   info["system"] = system_name()
   ver, commit_date, commit_time = utils.game_version()
