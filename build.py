@@ -1,7 +1,6 @@
 if __name__ != "__main__":
   quit("Запускай этот файл через \"python build.py\"")
 
-# --------------------------------- init ---------------------------------
 import script.builder.distr.hosts as hosts
 import script.builder.args as args
 import script.builder.utils as utils
@@ -11,8 +10,9 @@ import script.builder.io.fs as fs
 import script.builder.info as build_info
 import script.builder.distr.compiler as compiler
 
-env = utils.os_env()             # в системе уже могут быть свои переменные
-env.update(args.parse())         # получить параметры с аргументов запуска
+# --------------------------------- init ---------------------------------
+env = utils.os_env()                # в системе уже могут быть свои переменные
+env.update(args.parse())            # получить параметры с аргументов запуска
 env.update(platform.sys_info(env))  # узнать параметры у системы
 
 # переопределить настройки компилятора:
