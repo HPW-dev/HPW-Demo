@@ -1,64 +1,53 @@
 if __name__ != "__main__":
   quit("Запускай этот файл через \"python build.py\"")
 
+# --------------------------------- init ---------------------------------
 import os
-import script.builder.distr.hosts as host_info
-import script.builder.args as arg_parser
-import script.builder.utils as util
+import script.builder.distr.hosts as hosts
+import script.builder.args as args
+import script.builder.utils as utils
 import script.builder.info as build_info
 
-def main():
-  env = init()
-  env = build(env)
-  finalize(env)
+env = os.environ.copy()       # в системе уже могут быть свои переменные
+env.update(args.prepare())    # получить параметры с аргументов запуска
+env.update(hosts.prepare())   # узнать параметры у системы
 
-# ------------------------------------------------------------------------------------
+# переопределить настройки компилятора:
+if 'cxx' in env and env['cxx'] != None: env['CXX'] = env['cxx']
+if 'cc' in env and env['cc'] != None: env['CC'] = env['cc']
+if 'ld' in env and env['ld'] != None: env['LD'] = env['ld']
+env["compiler_ver"] = hosts.compiler_version(env)
 
-def init():
-  env = os.environ.copy()            # в системе уже могут быть свои переменные
-  env.update( arg_parser.prepare() ) # получить параметры с аргументов запуска
-  env.update( host_info.prepare() )  # узнать параметры у системы
+# если указано 0 потоков, то взять оптимальное число
+if env['threads'] <= 0: env['threads'] = utils.max_threads() + 1
 
-  # переопределить настройки компилятора:
-  if 'cxx' in env and env['cxx'] != None: env['CXX'] = env['cxx']
-  if 'cc' in env and env['cc'] != None: env['CC'] = env['cc']
-  env["compiler_ver"] = host_info.compiler_version(env)
+build_info.print_info(env) # показать итоговую сводку о билде
 
-  # если указано 0 потоков, то взять оптимальное число
-  if env['threads'] <= 0: env['threads'] = util.max_threads() + 1
+# --------------------------------- build ---------------------------------
+# TODO
+'''
+sources = ["main.cpp"]
+sources.extend( utils.find_mask("./test-dir/*.cpp") )
+builder = Builder(
+  target = "./bin/test.exe",
+  sources = sources,
+  cxx_opts = ["Os", "g0", "std=c++23", "pipe"],
+  defines = ["NDEBUG", "ECOMEM"],
+  ld_opts = ["static", 's'],
+  #libs = [],
+  lib_path = ["."],
+  temp = ".tmp/",
+  include = ["."],
+  #without_print=False
+)
+builder.run()
+'''
 
-  build_info.print_info(env) # показать итоговую сводку о билде
-  return env
+# посчитать хэши файлов:
+env.update(utils.calculate_checksums(env))
 
-def build(env):
-  pass # TODO build
-  '''
-  sources = ["main.cpp"]
-  sources.extend( util.find_mask("./test-dir/*.cpp") )
-  builder = Builder(
-    target = "./bin/test.exe",
-    sources = sources,
-    cxx_opts = ["Os", "g0", "std=c++23", "pipe"],
-    defines = ["NDEBUG", "ECOMEM"],
-    ld_opts = ["static", 's'],
-    #libs = [],
-    lib_path = ["."],
-    temp = ".tmp/",
-    include = ["."],
-    #without_print=False
-  )
-  builder.run()
-  '''
-
-  env.update( util.calculate_checksums(env) ) # посчитать хэши файлов
-  return env
-
-def finalize(env):
-  info_dir = env['info_dir']
-  info_file = f'{info_dir}build_info.json'
-  build_info.save_json(env, info_file) # засейвить инфу о билде
-  util.copy_license(info_dir)          # копировать инфу о лицензии
-
-# ------------------------------------------------------------------------------------
-
-main()
+# --------------------------------- finalize ---------------------------------
+info_dir = env['info_dir']
+info_file = f'{info_dir}build_info.json'
+build_info.save_json(env, info_file)  # засейвить инфу о билде
+utils.copy_license(info_dir)          # копировать инфу о лицензии
