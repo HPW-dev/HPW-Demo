@@ -3,6 +3,7 @@ if __name__ == "__main__":
 
 from script.builder.ui import *
 import json
+import pathlib
 import os
 
 def print_info(env):
@@ -52,8 +53,8 @@ def save_json(env, fname):
             "target": safe_env_val(env, 'target'),
           },
           "compiler": {
-            "CXX": safe_env_val(env, 'CXX'),
-            "CC": safe_env_val(env, 'CC'),
+            "CXX": pathlib.Path(safe_env_val(env, 'CXX')).name,
+            "CC": pathlib.Path(safe_env_val(env, 'CC')).name,
             "compiler_ver": safe_env_val(env, 'compiler_ver'),
             "python_ver": safe_env_val(env, 'python_ver'),
             "asan": safe_env_val(env, 'asan'),
