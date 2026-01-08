@@ -17,7 +17,6 @@ def print_info(env):
   print(f'- Хост-фреймворк: {in_env(env, 'host')}')
   print(f'- CXX: {in_env(env, 'CXX', none_color=TXT_GRAY, none_val='default')}')
   print(f'- CC: {in_env(env, 'CC', none_color=TXT_GRAY, none_val='default')}')
-  #print(f'- Версия SCons: {in_env(env, 'scons_ver')}')
   #print(f'- Версия CXX компилятора: {in_env(env, 'compiler_ver')}')
   print(f'- Версия Python: {in_env(env, 'python_ver')}')
   print(f'- Целевая система: {in_env(env, 'target')}')
@@ -57,7 +56,6 @@ def save_json(env, fname):
             "CC": safe_env_val(env, 'CC'),
             "compiler_ver": safe_env_val(env, 'compiler_ver'),
             "python_ver": safe_env_val(env, 'python_ver'),
-            "scons_ver": safe_env_val(env, 'scons_ver'),
             "asan": safe_env_val(env, 'asan'),
           }
         },

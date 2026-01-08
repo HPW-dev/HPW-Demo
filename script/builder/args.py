@@ -13,10 +13,11 @@ def parse():
     epilog='Copyright (c) 2020-2026 HPW-dev <hpwdev0@gmail.com>',
   )
 
-  p.add_argument('-t', '--threads', default=0, type=int, help="число потоков для сборки (0 - авто)")
-  #p.add_argument('-s', '--silent', action='store_true', help='собирать всё без вывода в консоль')
-  #p.add_argument('-c', '--clean', action='store_true', help='очищает папки от .o/.exe/.dll файлов')
-  p.add_argument('-a', '--build_author', type=str, help='указать автора сборки')
+  p.add_argument('--threads', default=0, type=int, help="число потоков для сборки (0 - авто)")
+  p.add_argument('--temp_dir', type=str, default='.tmp/', help='папка для временных файлов сборки')
+  p.add_argument('--build_dir', type=str, default='build/', help='папка для собранной игры')
+  p.add_argument('--clean', action='store_true', help='очищает папки от .o/.exe/.dll файлов')
+  p.add_argument('--build_author', type=str, help='указать автора сборки')
   p.add_argument('--info', action='store_true', help='просмотреть информацию о билде без сборки')
   p.add_argument('--target', type=str, help='выбор целевой архитектуры: win32_ecomem, win32_stable, '
     'win64_stable, win64_v4, lin32_stable, lin64_stable, lin64_v4')
@@ -28,7 +29,7 @@ def parse():
   p.add_argument('--cc', type=str, help='sвыбрать свой C компилятор')
   p.add_argument('--ld', type=str, help='sвыбрать свой линкер')
   p.add_argument('--tests', nargs='+', help='включает тесты: graphic, math, random, sound, yaml, '
-    'file-io, network')
+    'file_io, network')
   p.add_argument('--tools', nargs='+', help='сборка дополнительных программ')
   
   return vars(p.parse_args())
