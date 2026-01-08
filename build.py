@@ -8,9 +8,9 @@ import script.builder.args as args
 import script.builder.utils as utils
 import script.builder.info as build_info
 
-env = os.environ.copy()       # в системе уже могут быть свои переменные
-env.update(args.prepare())    # получить параметры с аргументов запуска
-env.update(hosts.prepare())   # узнать параметры у системы
+env = utils.os_env()          # в системе уже могут быть свои переменные
+env.update(args.parse())      # получить параметры с аргументов запуска
+env.update(hosts.sys_info())  # узнать параметры у системы
 
 # переопределить настройки компилятора:
 if 'cxx' in env and env['cxx'] != None: env['CXX'] = env['cxx']

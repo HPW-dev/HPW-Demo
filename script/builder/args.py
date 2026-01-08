@@ -3,7 +3,7 @@ if __name__ == "__main__":
  
 import argparse
 
-def prepare():
+def parse():
   ''' Парсит команды запуска
   :return: словарь ключей и значений '''
 

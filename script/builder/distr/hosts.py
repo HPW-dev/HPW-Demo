@@ -70,7 +70,7 @@ def executable_name():
   if system == "Linux": return 'HPW.elf64' if bitness == 'x64' else 'HPW.elf32'
   return 'HPW'
 
-def prepare():
+def sys_info():
   info = util.add_vars()
   info["bitness"] = system_bitness()
   info["system"] = system_name()

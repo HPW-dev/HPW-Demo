@@ -167,3 +167,7 @@ def extract_includes(file_path: str, max_lines=40):
     includes
   ) )
   return includes
+
+def os_env():
+  'получить все системные переменные'
+  return os.environ.copy()
