@@ -1,6 +1,9 @@
 if __name__ == "__main__":
   quit("Запускать через \"python build.py\"")
 
+import script.builder.io.platform as platform
+import script.builder.distr.compiler as compiler
+import script.builder.args as args
 import re
 import os
 import subprocess
@@ -60,10 +63,6 @@ def extract_includes(file_path: str, max_lines=40):
   ) )
   return includes
 
-def os_env():
-  'получить все системные переменные'
-  return os.environ.copy()
-
 def game_version():
   ''':return: version, last commit date, last commit time'''
   version = date = time = None
@@ -81,3 +80,18 @@ def game_version():
     print(txt_red("[!] Error when getting game version"))
 
   return version, date, time
+
+def init_env():
+  env = os.environ.copy()             # в системе уже могут быть свои переменные
+  env.update(args.parse())            # получить параметры с аргументов запуска
+  env.update(platform.sys_info(env))  # узнать параметры у системы
+
+  # переопределить настройки компилятора:
+  if 'cxx' in env and env['cxx'] != None: env['CXX'] = env['cxx']
+  if 'cc'  in env and env['cc']  != None: env['CC']  = env['cc']
+  if 'ld'  in env and env['ld']  != None: env['LD']  = env['ld']
+  env["compiler_ver"] = compiler.compiler_version(env)
+
+  # если указано 0 потоков, то взять оптимальное число
+  if env['threads'] <= 0: env['threads'] = platform.max_threads() + 1
+  return env
