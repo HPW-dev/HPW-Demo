@@ -15,4 +15,3 @@
 - [переделать хост](tasks/host-decomposition.md)
 - [система игровых объектов](tasks/entity_manager.md)
 - [редактор](tasks/editor.md)
-- [автоматизация сборки](tasks/ci.md)
