@@ -2,6 +2,7 @@ if __name__ == "__main__":
   quit("Запускать через \"python build.py\"")
  
 import argparse
+import sys
 
 def parse():
   ''' Парсит команды запуска
@@ -32,4 +33,6 @@ def parse():
     'file_io, network')
   p.add_argument('--tools', nargs='+', help='сборка дополнительных программ')
   
-  return vars(p.parse_args())
+  ret = vars(p.parse_args())
+  ret.update({"user_args": " ".join(sys.argv[1:]) if len(sys.argv) > 1 else None})
+  return ret

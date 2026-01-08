@@ -10,6 +10,7 @@ def print_info(env):
   '''показывает сводку о параметрах билда'''
   print('\n' + ':'*30 + ' ПАРАМЕТРЫ СБОРКИ ' + ':'*30)
   #print(env)
+  print(f'- Аргументы билда: {in_env(env, 'user_args', txt_color=TXT_YELLOW, none_color=TXT_GRAY, none_val="нет")}')
   print(f'- Автор билда: {in_env(env, 'build_author', txt_color=TXT_GREEN)}')
   print(f'- Файл билда: {in_env(env, 'executable_path')}')
   print(f'- Потоков сборки: {in_env(env, 'threads')}')
@@ -43,6 +44,7 @@ def save_json(env, fname):
     with open(fname, 'w') as file:
       config = {
         "build": {
+          #"user_args": safe_env_val(env, 'user_args'),
           "author": safe_env_val(env, 'build_author'),
           "date": safe_env_val(env, 'generation_date'),
           "time": safe_env_val(env, 'generation_time'),
