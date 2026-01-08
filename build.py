@@ -2,7 +2,6 @@ if __name__ != "__main__":
   quit("Запускай этот файл через \"python build.py\"")
 
 # --------------------------------- init ---------------------------------
-import os
 import script.builder.distr.hosts as hosts
 import script.builder.args as args
 import script.builder.utils as utils
