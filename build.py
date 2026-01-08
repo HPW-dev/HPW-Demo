@@ -38,4 +38,4 @@ env.update(hash.calculate_checksums(env))
 info_dir = env['info_dir']
 info_file = f'{info_dir}build_info.json'
 build_info.save_json(env, info_file)  # засейвить инфу о билде
-fs.copy_license(info_dir)          # копировать инфу о лицензии
+fs.copy_license(info_dir)             # копировать инфу о лицензии
