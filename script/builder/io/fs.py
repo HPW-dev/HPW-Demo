@@ -23,7 +23,7 @@ def check_dir(dir):
 
 def rem_dir(dname, ignore_errors=True):
   "удалить папку"
-  shutil.rmtree(dname, ignore_errors=ignore_errors, onerror=None)
+  shutil.rmtree(dname, ignore_errors=ignore_errors)
   assert os.path.exists(dname) == False, f"dir \"{dname}\" is not deleted!"
 
 def rem_all(fname_mask):
