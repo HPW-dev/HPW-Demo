@@ -20,17 +20,15 @@ def parse():
   p.add_argument('--clean', action='store_true', help='очищает папки от .o/.exe/.dll файлов')
   p.add_argument('--build_author', type=str, help='указать автора сборки')
   p.add_argument('--info', action='store_true', help='просмотреть информацию о билде без сборки')
-  p.add_argument('--target', type=str, help='выбор целевой архитектуры: win32_ecomem, win32_stable, '
-    'win64_stable, win64_v4, lin32_stable, lin64_stable, lin64_v4')
+  p.add_argument('--system', type=str, help='выбор целевой системы: win32, lin32, win64, lin64')
+  p.add_argument('--optmz', type=str, help='как оптимизировать код: ecomem, stable, x86_64_v4')
   p.add_argument('--disabled',  nargs='+', help='выключает опции: omp, replay, netplay, audio, pge')
   p.add_argument('--asan', action='store_true', help='включает мем-санитайзер ASAN')
-  p.add_argument('--host', type=str, default='glfw3', help='выбор хост-фреймворка: '
-    'sdl2, sdl3, glfw3, null, asci')
+  p.add_argument('--host', type=str, default='glfw3', help='выбор хост-фреймворка: sdl2, sdl3, glfw3, null, asci')
   p.add_argument('--cxx', type=str, help='выбрать свой C++ компилятор')
   p.add_argument('--cc', type=str, help='sвыбрать свой C компилятор')
   p.add_argument('--ld', type=str, help='sвыбрать свой линкер')
-  p.add_argument('--tests', nargs='+', help='включает тесты: graphic, math, random, sound, yaml, '
-    'file_io, network')
+  p.add_argument('--tests', nargs='+', help='включает тесты: graphic, math, random, sound, file_io, network')
   p.add_argument('--tools', nargs='+', help='сборка дополнительных программ')
   
   ret = vars(p.parse_args())
