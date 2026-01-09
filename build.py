@@ -6,10 +6,17 @@ import script.builder.utils as utils
 import script.builder.io.hash as hash
 import script.builder.io.fs as fs
 import script.builder.info as build_info
+import os
 
 # --------------------------------- init ---------------------------------
 env = utils.init_env()
 build_info.print_info(env) # показать итоговую сводку о билде
+
+# --------------------------------- clean ---------------------------------
+if 'clean' in env and env['clean'] == True:
+  utils.clean_all()
+  print('завершение без сборки')
+  exit(os.EX_OK) # удалить что надо и выйти
 
 # --------------------------------- build ---------------------------------
 # TODO

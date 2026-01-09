@@ -4,6 +4,7 @@ if __name__ == "__main__":
 import script.builder.io.platform as platform
 import script.builder.distr.compiler as compiler
 import script.builder.args as args
+import script.builder.ui as ui
 import re
 import os
 import subprocess
@@ -95,3 +96,45 @@ def init_env():
   # если указано 0 потоков, то взять оптимальное число
   if env['threads'] <= 0: env['threads'] = platform.max_threads() + 1
   return env
+
+def clean_all():
+  'удаляет объектники, экзешники, скрины и логи'
+  print(ui.txt_green('очистка файлов сборки...'))
+  fs.rem_all('**/delme.html')
+  fs.rem_all('**/*.exe')
+  fs.rem_all('**/*.elf')
+  fs.rem_all('**/*.elf32')
+  fs.rem_all('**/*.elf64')
+  fs.rem_all('**/vgcore.*')
+  fs.rem_all('**/cpplint.txt')
+  fs.rem_all('**/gmon.svg')
+  fs.rem_all('**/*.obj')
+  fs.rem_all('**/*.o')
+  fs.rem_all('**/*.os')
+  fs.rem_all('**/*.out')
+  fs.rem_all('**/*.gch')
+  fs.rem_all('**/log.txt')
+  fs.rem_all('**/*.gcda')
+  fs.rem_all('**/*.gcno')
+  fs.rem_all('**/*.hpw_replay')
+  fs.rem_all('**/imgui.ini')
+  fs.rem_all('**/cpplint.txt')
+  fs.rem_all('**/perf.data.old')
+  fs.rem_all('**/perf.data')
+  fs.rem_dir('__pycache__')
+  fs.rem_dir('script/__pycache__')
+  fs.rem_dir('pgo', True)
+  fs.rem_if_exist('build/bin/HPW.exe')
+  fs.rem_if_exist('build/bin/HPW')
+  fs.rem_if_exist('build/test.yml')
+  fs.rem_if_exist('.sconsign.dblite')
+  fs.rem_all('.tmp/*.txt')
+  fs.rem_all('.tmp/*.pickle')
+  fs.rem_dir('build/screenshots/', True)
+  #fs.rem_all('build/replays/*')
+  fs.rem_dir('build/replays/', True)
+  fs.rem_dir('build/plugin/', True)
+  fs.rem_all('build/debug.txt')
+  fs.rem_all('build/data.zip')
+  fs.rem_dir('build/config/', True)
+  fs.rem_dir('build/info/', True)
