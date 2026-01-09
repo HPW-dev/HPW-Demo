@@ -92,6 +92,7 @@ def init_env():
   if 'cc'  in env and env['cc']  != None: env['CC']  = env['cc']
   if 'ld'  in env and env['ld']  != None: env['LD']  = env['ld']
   env["compiler_ver"] = compiler.compiler_version(env)
+  if env["target"] == None: env["target"] = platform.quess_system(env['system'], env['bitness'])
 
   # если указано 0 потоков, то взять оптимальное число
   if env['threads'] <= 0: env['threads'] = platform.max_threads() + 1

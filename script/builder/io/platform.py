@@ -61,3 +61,22 @@ def exec_cmd(cmd, without_print=False):
   print(f'e.t: { round(cmd_tm_ed - cmd_tm_st, 1) }s')
   print()
   return result.stdout, result.stderr
+
+def quess_system(name: str = None, bits: str = None):
+  '''угадать систему, на которой запустили сборку
+
+  :return: win32 | lin32 | win64 | ...'''
+
+  if name == None: name = system_name()
+  if bits == None: bits = system_bitness()
+  
+  if bits == 'x32':
+    if name == 'Windows': return 'win32'
+    elif name == 'Linux': return 'lin32'
+    else: quit(txt_red(f'unsupported system {name}'))
+  elif bits == 'x64':
+    if name == 'Windows': return 'win64'
+    elif name == 'Linux': return 'lin64'
+    else: quit(txt_red(f'unsupported system {name}'))
+  else:
+    quit(txt_red(f'unknown system bitness {bits}'))

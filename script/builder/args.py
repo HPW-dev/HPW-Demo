@@ -20,7 +20,7 @@ def parse():
   p.add_argument('--clean', action='store_true', help='очищает папки от .o/.exe/.dll файлов')
   p.add_argument('--build_author', type=str, help='указать автора сборки')
   p.add_argument('--info', action='store_true', help='просмотреть информацию о билде без сборки')
-  p.add_argument('--system', type=str, help='выбор целевой системы: win32, lin32, win64, lin64')
+  p.add_argument('--target', type=str, help='выбор целевой системы: win32, lin32, win64, lin64')
   p.add_argument('--optmz', type=str, help='как оптимизировать код: ecomem, stable, x86_64_v4')
   p.add_argument('--disabled',  nargs='+', help='выключает опции: omp, replay, netplay, audio, pge')
   p.add_argument('--asan', action='store_true', help='включает мем-санитайзер ASAN')
