@@ -106,6 +106,7 @@ language_menu:
 palette_select:
   title: палитра
   cur_file: палитра
+  show_gb: тестовый шарик
 graphic_menu:
   title: Настройки графики
   cpu_safe: снижение нагрузки на процессор

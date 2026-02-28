@@ -18,6 +18,7 @@
 #include "game/util/glass-ball.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
+#include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/file/archive.hpp"
@@ -29,6 +30,7 @@ struct Scene_palette_select::Impl {
   Unique<Menu> _menu {};
   Shared<Sprite> _test_image {};
   Glass_ball _gb {};
+  bool _show_gb {true};
 
   inline Impl() {
     init_menu();
@@ -41,14 +43,16 @@ struct Scene_palette_select::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
-    _gb.update(dt);
+    if (_show_gb) _gb.update(dt);
   }
 
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
-    _gb.draw(dst);
+    if (_show_gb) _gb.draw(dst);
     _menu->draw(dst);
-    draw_palette(dst, Vec(35, 110));
+    draw_palette(dst, Vec(
+      _menu->rect().pos.x + 3,
+      _menu->rect().bottom() + 9));
   }
 
   inline void init_menu() {
@@ -59,6 +63,9 @@ struct Scene_palette_select::Impl {
       Menu_items {
         get_palette_list(),
         get_test_image_list(),
+
+        new_shared<Menu_bool_item>(get_locale_str("palette_select.show_gb"),
+          [this]{ return _show_gb; }, [this](bool val){ _show_gb = val; } ),
 
         new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
