@@ -120,3 +120,4 @@ cr<Menu_items> items, cr<utf32> elems_empty_txt)
 
 void Table_menu::draw(Image& dst) const { impl->draw(dst); }
 Table_menu::~Table_menu() {}
+Recti Table_menu::rect() const { error("need impl"); return {}; }

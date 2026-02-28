@@ -22,6 +22,7 @@ public:
   ~Advanced_text_menu();
   void draw(Image& dst) const override;
   void update(const Delta_time dt) override;
+  Recti rect() const override;
 
 private:
   struct Impl;

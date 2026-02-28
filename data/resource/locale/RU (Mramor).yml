@@ -24,6 +24,7 @@ common: # общие строки
   warning: внимание
   high: красиво
   low: быстро
+  hide_nemu: скрыть меню
   multiapp_warning: несколько запущенных окон игры могут вызвать проблемы со стабильностью сохранений
 netplay:
   title: сетеваz игра
@@ -106,6 +107,7 @@ language_menu:
 palette_select:
   title: палитра
   cur_file: палитра
+  show_gb: показывать шарик
 graphic_menu:
   title: Настройки графики
   cpu_safe: снижение нагрузки на процессор
@@ -120,7 +122,7 @@ graphic_menu:
   draw_border: рамка
   double_buffering: Двойнаz буфферизациz
   test_image_list:
-    title: тестовое изображение
+    title: картинка на фоне
   blur_mode:
     title: размытие изображениz
     high_desc: качественное размытие движениz может вызвать тормоза на слабых ПК

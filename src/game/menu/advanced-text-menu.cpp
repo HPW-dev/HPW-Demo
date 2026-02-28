@@ -139,4 +139,10 @@ void Advanced_text_menu::update(const Delta_time dt) {
   impl->update(dt);
 }
 
-Advanced_text_menu::~Advanced_text_menu() {}
+
+Recti Advanced_text_menu::rect() const {
+  error("need impl");
+  return {}; // ?
+}
+
+Advanced_text_menu::~Advanced_text_menu() {} //for Uniq ptr

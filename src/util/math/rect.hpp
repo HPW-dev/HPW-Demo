@@ -1,6 +1,7 @@
 #pragma once
 #include "util/math/vec.hpp"
 
+// Базовый класс под прямоугольники
 template <typename T>
 struct Rect_base {
   using Vec_t = const Vec_base<T>;
@@ -8,9 +9,25 @@ struct Rect_base {
   Vec_base<T> size {};
 
   Rect_base() noexcept = default;
-  inline constexpr Rect_base(have_xy auto _pos, have_xy auto _size) noexcept: pos(_pos), size(_size) {}
+  inline constexpr Rect_base(have_xy auto _pos, have_xy auto _size) noexcept
+    : pos(_pos), size(_size) {}
   inline constexpr Rect_base(auto pos_x, auto pos_y, auto size_x, auto size_y) noexcept
     : pos(pos_x, pos_y), size(size_x, size_y) {}
+  
+  inline constexpr T right() const { return pos.x + size.x; }
+  inline constexpr T bottom() const { return pos.y + size.y; }
+
+  template <class T2>
+  inline constexpr Rect_base& operator =(cr<Rect_base<T2>> other) noexcept {
+    this->pos = other.pos;
+    this->size = other.size;
+    return *this;
+  }
+
+  template <class T2>
+  inline constexpr Rect_base(cr<Rect_base<T2>> other) noexcept {
+    this->operator=(other);
+  }
 };
 
 template <typename T1, typename T2>

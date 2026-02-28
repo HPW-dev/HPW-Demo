@@ -12,8 +12,8 @@ opts = \
   ' -Q use_netplay=0' \
   ' -Q use_tools=1' \
   ' -Q opt_level=debug'
-NUM_THREADS = helper.get_max_threads() + 1
-#NUM_THREADS = 8 # юзать при тормозах
+#NUM_THREADS = helper.get_max_threads() + 1
+NUM_THREADS = 8 # юзать при тормозах
 print(f'threads for building: {NUM_THREADS}')
 helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=src/game/SConscript' + opts)
 helper.exec_cmd(f'scons -j{NUM_THREADS} -Q script=src/plugin/graphic-effect/cxx/SConscript' + opts)

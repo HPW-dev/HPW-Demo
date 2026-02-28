@@ -15,11 +15,14 @@ struct Text_menu_config {
 
 // простое текстовое меню
 class Text_menu final: public Menu {
-  Vec draw_pos {};
-  
 public:
   Text_menu_config _config {};
-
-  Text_menu(cr<Menu_items> _items, const Vec _draw_pos={}, cr<Text_menu_config> config={});
+  
+  Text_menu(cr<Menu_items> _items, const Vec _draw_pos={},
+    cr<Text_menu_config> config={});
   void draw(Image& dst) const override;
+  Recti rect() const override;
+
+private:
+  Vec draw_pos {};
 };
