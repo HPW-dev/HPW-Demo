@@ -52,8 +52,8 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
     buffer_rgb.r = std::max(dst_rgb.r, buffer_rgb.r);
     buffer_rgb.g = std::max(dst_rgb.g, buffer_rgb.g);
     buffer_rgb.b = std::max(dst_rgb.b, buffer_rgb.b);
-    dst_pix = desaturate_bt601(buffer_rgb.r, buffer_rgb.g, buffer_rgb.b);
-    buffer_pix = desaturate_bt601(buffer_rgb.r, buffer_rgb.g, buffer_rgb.b);
+    dst_pix = desaturate_luma(buffer_rgb.r, buffer_rgb.g, buffer_rgb.b);
+    buffer_pix = desaturate_luma(buffer_rgb.r, buffer_rgb.g, buffer_rgb.b);
   }
 } // plugin_apply
 

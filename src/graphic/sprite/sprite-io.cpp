@@ -58,7 +58,7 @@ inline void _data_to_sprite(Sprite &dst, cr<File> file) {
     auto b = decoded[rgba_index + 2];
     auto a = decoded[rgba_index + 3];
     rgba_index += 4;
-    Pal8 col = desaturate_average(r, g, b);
+    Pal8 col = desaturate_luma(r, g, b);
     image.fast_set(i, col, {});
     if (a > 127)
       mask.fast_set(i, Pal8::mask_visible, {}); // не прозрачный пиксель

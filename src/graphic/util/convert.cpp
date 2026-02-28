@@ -2,10 +2,17 @@
 #include "convert.hpp"
 #include "graphic/image/color.hpp"
 
-static Pal8::value_t desr_BT601(int R, int G, int B)
+inline static Pal8::value_t desr_BT601(int R, int G, int B)
   { return R * 0.299 + G * 0.587 + B * 0.114; }
 
-static Pal8::value_t desr_average(int R, int G, int B)
+inline static Pal8::value_t desr_luma(int R, int G, int B) {
+  return
+    R * 0.296952 +
+    G * 0.586612 +
+    B * 0.114436;
+}
+
+inline static Pal8::value_t desr_average(int R, int G, int B)
   { return (R + G + B) / 3; }
 
 // преобразование в палитру hpw
@@ -27,8 +34,8 @@ Pal8 rgb_to_pal8(int R, int G, int B) {
   return ret;
 } // rgb_to_pal8
 
-Pal8 desaturate_bt601(int R, int G, int B)
-  { return rgb_to_pal8<desr_BT601>(R, G, B); }
+Pal8 desaturate_luma(int R, int G, int B)
+  { return rgb_to_pal8<desr_luma>(R, G, B); }
 
 Pal8 desaturate_average(int R, int G, int B)
   { return rgb_to_pal8<desr_average>(R, G, B); }

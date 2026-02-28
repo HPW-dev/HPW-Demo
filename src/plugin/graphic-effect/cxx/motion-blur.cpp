@@ -51,7 +51,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
     rgb_dst.r = rgb_dst.r * dst_ratio + rgb_old.r * old_frame_ratio;
     rgb_dst.g = rgb_dst.g * dst_ratio + rgb_old.g * old_frame_ratio;
     rgb_dst.b = rgb_dst.b * dst_ratio + rgb_old.b * old_frame_ratio;
-    g_dst[i] = desaturate_bt601(rgb_dst.r, rgb_dst.g, rgb_dst.b);
+    g_dst[i] = desaturate_luma(rgb_dst.r, rgb_dst.g, rgb_dst.b);
     g_old_frame[i] = g_dst[i];
   }
 }

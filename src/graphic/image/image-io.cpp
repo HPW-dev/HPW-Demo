@@ -26,7 +26,7 @@ inline void _data_to_image(Image& dst, cr<Bytes> mem) {
   // сконвертировать цвета
   int rgb_index = 0;
   for (int i = 0; i < x * y; ++i) {
-    Pal8 col = desaturate_average(
+    Pal8 col = desaturate_luma(
       decoded[rgb_index + 0],
       decoded[rgb_index + 1],
       decoded[rgb_index + 2]);

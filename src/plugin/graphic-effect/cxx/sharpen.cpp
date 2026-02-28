@@ -71,7 +71,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
       p01.b * g_power * -1      + p11.b * g_power * center + p21.b * g_power * -1 +
       p02.b * g_power * -sin45d + p12.b * g_power * -1     + p22.b * g_power * -sin45d
     ;
-    set_pixel_fast(g_dst, x, y, g_w, desaturate_bt601(
+    set_pixel_fast(g_dst, x, y, g_w, desaturate_luma(
       std::clamp<float>(r, 0, 255),
       std::clamp<float>(g, 0, 255),
       std::clamp<float>(b, 0, 255)

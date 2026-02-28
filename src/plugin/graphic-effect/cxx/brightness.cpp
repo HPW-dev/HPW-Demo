@@ -41,7 +41,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
     rgb.r = std::clamp<int32_t>(rgb.r + g_value, 0, 255);
     rgb.g = std::clamp<int32_t>(rgb.g + g_value, 0, 255);
     rgb.b = std::clamp<int32_t>(rgb.b + g_value, 0, 255);
-    g_dst[i] = desaturate_bt601(rgb.r, rgb.g, rgb.b);
+    g_dst[i] = desaturate_luma(rgb.r, rgb.g, rgb.b);
   }
 }
 

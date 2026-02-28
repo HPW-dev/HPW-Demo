@@ -47,7 +47,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
         cauto b = to_rgb24( get_pixel_fast(g_dst, x+1, y+0, g_w) );
         cauto c = to_rgb24( get_pixel_fast(g_dst, x+0, y+1, g_w) );
         cauto d = to_rgb24( get_pixel_fast(g_dst, x+1, y+1, g_w) );
-        cauto avr = desaturate_bt601(
+        cauto avr = desaturate_luma(
           (a.r + b.r + c.r + d.r) / 4u,
           (a.g + b.g + c.g + d.g) / 4u,
           (a.b + b.b + c.b + d.b) / 4u
@@ -68,7 +68,7 @@ extern "C" EXPORTED void PLUG_CALL plugin_apply(uint32_t state) {
         cauto b = to_rgb24( get_pixel_fast(g_dst, x+1, y+0, g_w) );
         cauto c = to_rgb24( get_pixel_fast(g_dst, x+0, y+1, g_w) );
         cauto d = to_rgb24( get_pixel_fast(g_dst, x+1, y+1, g_w) );
-        cauto max = desaturate_bt601(
+        cauto max = desaturate_luma(
           std::max( std::max(a.r, b.r), std::max(c.r, d.r) ),
           std::max( std::max(a.g, b.g), std::max(c.g, d.g) ),
           std::max( std::max(a.b, b.b), std::max(c.b, d.b) )
