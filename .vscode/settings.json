@@ -3,5 +3,6 @@
   "C_Cpp.intelliSenseCachePath": "M:\\vscode cache",
   "files.eol": "\n",
   "editor.tabSize": 2,
-  "editor.insertSpaces": true
+  "editor.insertSpaces": true,
+  "editor.fontSize": 14
 }
