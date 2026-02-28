@@ -24,6 +24,7 @@
 #include "util/file/archive.hpp"
 #include "util/str-util.hpp"
 #include "util/path.hpp"
+#include "util/math/timer.hpp"
 #include "host/command.hpp"
 
 struct Scene_palette_select::Impl {
@@ -31,6 +32,8 @@ struct Scene_palette_select::Impl {
   Shared<Sprite> _test_image {};
   Glass_ball _gb {};
   bool _show_gb {true};
+  bool _hide_menu {};
+  Timer _after_press {1};
 
   inline Impl() {
     init_menu();
@@ -43,16 +46,24 @@ struct Scene_palette_select::Impl {
       hpw::scene_mgr.back();
 
     _menu->update(dt);
-    if (_show_gb) _gb.update(dt);
+    if (_show_gb)
+      _gb.update(dt);
+
+    // если что-то нажали, меню обратно показываем
+    if (_after_press.update(dt) && is_any_key_pressed())
+      _hide_menu = false;
   }
 
   inline void draw(Image& dst) const {;
     draw_test_image(dst);
-    if (_show_gb) _gb.draw(dst);
-    _menu->draw(dst);
-    draw_palette(dst, Vec(
-      _menu->rect().pos.x + 3,
-      _menu->rect().bottom() + 9));
+
+    if (_show_gb)
+      _gb.draw(dst);
+
+    if (!_hide_menu) {
+      _menu->draw(dst);
+      draw_palette(dst, Vec(_menu->rect().pos.x, _menu->rect().bottom() + 9));
+    }
   }
 
   inline void init_menu() {
@@ -63,30 +74,33 @@ struct Scene_palette_select::Impl {
       Menu_items {
         get_palette_list(),
         get_test_image_list(),
-
         new_shared<Menu_bool_item>(get_locale_str("palette_select.show_gb"),
           [this]{ return _show_gb; }, [this](bool val){ _show_gb = val; } ),
-
+        new_shared<Menu_text_item>(get_locale_str("common.hide_nemu"),
+          [this]{ _hide_menu = true; }),
         new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
           hpw::init_palette_from_archive(graphic::current_palette_file);
           //graphic::cur_test_image_path = graphic::DEFAULT_TEST_IMAGE;
           init_menu();
         }),
-        
-        new_shared<Menu_text_item>(get_locale_str("common.back"), []{ hpw::scene_mgr.back(); }),
+        new_shared<Menu_text_item>(get_locale_str("common.back"),
+          []{ hpw::scene_mgr.back(); }),
       },
 
       Vec{30, 25}, menu_config
     );
   } // init_menu
 
-  inline void draw_palette(Image& dst, const Vec pos) const {
+  inline void draw_palette(Image& dst, Vec pos) const {
+    pos += Vec(2, 2);
+
     cauto pal_w = 256;
     cauto pal_h = 11;
     cfor (x, pal_w)
-      cfor (y, pal_h)
-        dst.set(x + pos.x, y + pos.y, Pal8(x), {});
+    cfor (y, pal_h)
+      dst.set(x + pos.x, y + pos.y, Pal8(x), {});
+
     // рамка вокруг палитры
     draw_rect(dst, Rect(pos - Vec(1, 1), Vec(pal_w, pal_h) + Vec(2, 2)), Pal8::black);
     draw_rect(dst, Rect(pos - Vec(2, 2), Vec(pal_w, pal_h) + Vec(4, 4)), Pal8::white);
