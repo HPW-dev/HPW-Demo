@@ -1,15 +1,11 @@
 #!/usr/bin/env python
-Import([
-  "env",
-  "is_linux",
-  "is_debug",
-  "ld_flags",
-  "cpp_flags",
-  "compiler",
-  "defines",
-  "is_64bit",
-])
-build_dir = "../../build/"
+from script.helper import *
+Import(['env'])
+
+hpw_config = env['hpw_config']
+assert hpw_config
+
+build_dir = "../../build/bin/"
 prog_name = "table gen"
 src_dir = "../../src/"
 thirdparty_dir = "../../thirdparty/"
@@ -25,19 +21,19 @@ sources = [
   src_dir + "graphic/image/color.cpp",
   src_dir + "graphic/util/convert.cpp",
   src_dir + "util/file/file.cpp",
+  src_dir + "util/file/file-io.cpp",
   src_dir + "util/str-util.cpp",
   src_dir + "util/error.cpp",
 ]
-defines.append(["-DNOUSE_TABLE"])
+hpw_config.cxx_defines.append(["-DNOUSE_TABLE"])
 
 env.Program(
   target = build_dir + prog_name,
   source = sources,
-  CXX = compiler,
-  CXXFLAGS = cpp_flags,
   LIBPATH = lib_path,
-  CPPPATH = inc_path,
-  LINKFLAGS = ld_flags,
   LIBS = used_libs,
-  CPPDEFINES = defines,
+  CPPDEFINES = hpw_config.cxx_defines,
+  CXXFLAGS = hpw_config.cxx_flags,
+  LINKFLAGS = hpw_config.cxx_ldflags,
+  CPPPATH = inc_path,
 ) # env.Program

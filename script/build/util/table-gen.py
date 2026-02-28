@@ -5,4 +5,4 @@ if __name__ != "__main__":
 from ... import helper
 
 helper.exec_cmd(f'scons -j4 -Q debug=0 -Q script=tool/table-gen/SConscript')
-helper.exec_cmd("build/table gen")
+helper.exec_cmd("build/bin/table gen")

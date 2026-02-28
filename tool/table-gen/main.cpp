@@ -9,6 +9,7 @@
 #include <string>
 #include "util/str.hpp"
 #include "util/file/file.hpp"
+#include "util/file/file-io.hpp"
 #include "util/macro.hpp"
 #include "graphic/image/color.hpp"
 #include "graphic/util/convert.hpp"
@@ -18,7 +19,7 @@ using Core_func_2d = std::function<Pal8 (int, int)>;
 using Core_func_2d_opt = std::function<Pal8 (int, int, int)>;
 
 //#define desaturate_f desaturate_average
-#define desaturate_f desaturate_bt601
+#define desaturate_f desaturate_luma
 
 // генерит 1D таблицу
 void gen_table_1d(cr<Str> table_name, Core_func_1d core) {
