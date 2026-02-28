@@ -4,6 +4,7 @@
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/num-types.hpp"
+#include "util/math/rect.hpp"
 #include "graphic/image/image-fwd.hpp"
 
 class Menu_item;
@@ -21,6 +22,7 @@ public:
 
   virtual void draw(Image& dst) const = 0;
   virtual void update(const Delta_time dt);
+  virtual Recti rect() const = 0; // узнать размер отрисовываемого меню
   std::size_t get_cur_item_id() const;
   void set_cur_item_id(std::size_t id);
   cr<Menu_items::value_type> get_cur_item() const;

@@ -23,6 +23,7 @@ public:
     cr<Menu_items> items, cr<utf32> elems_empty_txt={});
   ~Table_menu();
   void draw(Image& dst) const override;
+  Recti rect() const override;
 
 private:
   struct Impl;

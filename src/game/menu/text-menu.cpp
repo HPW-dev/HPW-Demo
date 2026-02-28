@@ -6,30 +6,45 @@
 
 Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos, cr<Text_menu_config> config)
 : Menu(_items)
-, draw_pos(_draw_pos)
 , _config {config}
+, draw_pos(_draw_pos)
 {}
 
-void Text_menu::draw(Image& dst) const {
+inline static utf32 _process_text(cr<Text_menu> tm) {
   utf32 text;
-  for (auto item: Menu::get_items()) {
+
+  for (auto item: tm.get_items()) {
     text += item->to_text();
-    if (item == Menu::get_cur_item())
+    if (item == tm.get_cur_item())
       text += U" <";
     text += U'\n';
   }
+
   if (text.back() == U'\n')
     text.pop_back();
 
+  return text;
+}
+
+void Text_menu::draw(Image& dst) const {
+
   // нарисовать рамку позади текста
   if (_config.with_bg) {
-    cauto font_sz = graphic::font->text_size(text);
-    const Rect bg_rect(draw_pos - _config.border_offset, font_sz + (_config.border_offset*2));
+    const Rect bg_rect = this->rect();
     draw_rect_filled(dst, bg_rect, _config.color_bg, _config.bg_bf, {});
-    // рамка
     draw_rect(dst, bg_rect, _config.color_border, _config.border_bf, {});
   }
   
   assert(graphic::font);
+  cauto text = _process_text(*this);
   graphic::font->draw(dst, draw_pos, text, _config.text_bf);
+}
+
+Recti Text_menu::rect() const {
+  cauto text = _process_text(*this);
+  cauto font_sz = graphic::font->text_size(text);
+  const Recti ret(
+    draw_pos - _config.border_offset,
+    font_sz + (_config.border_offset*2));
+  return ret;
 }
