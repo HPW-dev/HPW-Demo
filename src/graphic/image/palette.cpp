@@ -324,12 +324,18 @@ bool by_similar(cr<Palette> a, cr<Palette> b) {
   cauto b_avg_r = pal_average(b, Pal8::gray_size/2, Pal8::gray_size);
 
   // приоритет для второй части палитры
-  cauto a_avg = lerp(a_avg_l, a_avg_r, 0.75);
-  cauto b_avg = lerp(b_avg_l, b_avg_r, 0.75);
+  auto a_avg = lerp(a_avg_l, a_avg_r, 0.75);
+  auto b_avg = lerp(b_avg_l, b_avg_r, 0.75);
+  cauto a_hsl = to_hsl(a_avg);
+  cauto b_hsl = to_hsl(b_avg);
+
+  // если палитра бесцветная, то цвета сдвинуть в конец списка
+  a_avg *= (a_hsl.s <= 0.25) ? 10 : 1;
+  b_avg *= (b_hsl.s <= 0.25) ? 10 : 1;
 
   // получаем угол цветности
-  auto a_hue = normalize_hue(to_hue(a_avg) + 30);
-  auto b_hue = normalize_hue(to_hue(b_avg) + 30);
+  cauto a_hue = normalize_hue(a_hsl.h + 30);
+  cauto b_hue = normalize_hue(b_hsl.h + 30);
 
   // если цвета примерно в одном блоке, то сортировать по яркости:
   if (int(a_hue) * 6 == int(b_hue) * 6)
