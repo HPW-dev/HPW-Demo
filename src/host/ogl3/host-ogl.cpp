@@ -30,7 +30,9 @@ Host_ogl::Host_ogl(int argc, char *argv[])
     init_archive(); // из архива понадобятся шейдеры
   #endif
   #ifndef ECOMEM
-    load_color_tables();
+    #ifndef NOUSE_TABLE
+      load_color_tables();
+    #endif
   #endif
 }
 

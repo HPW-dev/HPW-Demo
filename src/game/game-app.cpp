@@ -58,7 +58,9 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
     init_validation_info();
   #endif
   #ifndef ECOMEM
-    check_color_tables();
+    #ifndef NOUSE_TABLE
+      check_color_tables();
+    #endif
   #endif
   load_resources();
   load_locale();

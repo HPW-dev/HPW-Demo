@@ -27,13 +27,15 @@
 #include "util/math/timer.hpp"
 #include "host/command.hpp"
 
+constx Vec cube_sz(13, 13); // размер квадратика для теста оттенков
+
 struct Scene_palette_select::Impl {
   Unique<Menu> _menu {};
   Shared<Sprite> _test_image {};
   Glass_ball _gb {};
   bool _show_gb {true};
   bool _hide_menu {};
-  Timer _after_press {1};
+  Timer _after_press {0.25};
 
   inline Impl() {
     init_menu();
@@ -50,8 +52,9 @@ struct Scene_palette_select::Impl {
       _gb.update(dt);
 
     // если что-то нажали, меню обратно показываем
-    if (_after_press.update(dt) && is_any_key_pressed())
+    if (_hide_menu && _after_press.update(dt) && is_any_key_pressed()) {
       _hide_menu = false;
+    }
   }
 
   inline void draw(Image& dst) const {;
@@ -62,7 +65,9 @@ struct Scene_palette_select::Impl {
 
     if (!_hide_menu) {
       _menu->draw(dst);
-      draw_palette(dst, Vec(_menu->rect().pos.x, _menu->rect().bottom() + 9));
+      cauto pal_pos = Vec(_menu->rect().pos.x, _menu->rect().bottom() + 9);
+      draw_palette(dst, pal_pos);
+      draw_debug_colors(dst, pal_pos + Vec(0, 30));
     }
   }
 
@@ -104,6 +109,26 @@ struct Scene_palette_select::Impl {
     // рамка вокруг палитры
     draw_rect(dst, Rect(pos - Vec(1, 1), Vec(pal_w, pal_h) + Vec(2, 2)), Pal8::black);
     draw_rect(dst, Rect(pos - Vec(2, 2), Vec(pal_w, pal_h) + Vec(4, 4)), Pal8::white);
+  }
+
+  inline void draw_debug_color(Image& dst, Vec pos, Pal8 color, cr<utf32> title) const {
+  #ifdef DEBUG
+    draw_rect_filled(dst, Rect(pos - Vec(1, 1), cube_sz + Vec(2, 2)), Pal8::black);
+    draw_rect_filled(dst, Rect(pos, cube_sz), color);
+    graphic::font->draw(dst, pos + Vec(cube_sz.x + 4, 0), title, &blend_diff);
+  #endif
+  }
+
+  inline void draw_debug_colors(Image& dst, Vec pos) const {
+  #ifdef DEBUG
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 0), Pal8::black, U"black");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 1), Pal8::gray, U"gray");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 2), Pal8::gray_end, U"gray end");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 3), Pal8::red_start, U"red start");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 4), Pal8::red_mid, U"red mid");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 5), Pal8::red, U"red");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 6), Pal8::white, U"white");
+  #endif
   }
 }; // impl
 
