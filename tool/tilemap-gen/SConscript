@@ -19,7 +19,7 @@ lib_path = [thirdparty_dir + "lib/yaml-cpp"]
 used_libs = ["yaml-cpp"]
 sources = [
   src_dir + "graphic/util/graphic-util.cpp",
-  src_dir + "graphic/util/convert.cpp",
+  src_dir + "graphic/image/color-convert.cpp",
   src_dir + "graphic/image/image.cpp",
   src_dir + "graphic/image/image-io.cpp",
   src_dir + "graphic/image/color-blend.cpp",

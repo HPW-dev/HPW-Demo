@@ -232,7 +232,7 @@ void IMGTMPL::set(int i, const PIX_FMT col, blend_pf bf, int optional) noexcept 
   if constexpr (std::is_same_v<PIX_FMT, Pal8>) {
     this->set(i, bf(col, src, optional));
   } elif constexpr (std::is_same_v<PIX_FMT, Rgb24>) {
-    #pragma message("blend funcs for Rgb24 is not supported")
+    // blend funcs for Rgb24 is not supported
     this->set(i, col);
   } else {
     error("need impl. for unknown type");
@@ -245,7 +245,7 @@ void IMGTMPL::set(int x, int y, const PIX_FMT col, blend_pf bf, int optional) no
   if constexpr (std::is_same_v<PIX_FMT, Pal8>) {
     this->set(x, y, bf(col, src, optional));
   } elif constexpr (std::is_same_v<PIX_FMT, Rgb24>) {
-    #pragma message("blend funcs for Rgb24 is not supported")
+    // blend funcs for Rgb24 is not implemented
     this->set(x, y, col);
   } else {
     error("need impl. for unknown type");

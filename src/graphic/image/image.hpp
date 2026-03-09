@@ -56,8 +56,8 @@ public:
   [[gnu::const]] const_iterator cbegin() const noexcept;
   [[gnu::const]] const_iterator cend() const noexcept;
 
-  [[gnu::const]] const PIX_FMT get(int i, Image_get mode={}, const PIX_FMT default_val=PIX_FMT::neutral()) const noexcept;
-  [[gnu::const]] const PIX_FMT get(int x, int y, Image_get mode={}, const PIX_FMT default_val=PIX_FMT::neutral()) const noexcept;
+  [[gnu::const]] const PIX_FMT get(int i, Image_get mode={}, const PIX_FMT default_val=PIX_FMT{}) const noexcept;
+  [[gnu::const]] const PIX_FMT get(int x, int y, Image_get mode={}, const PIX_FMT default_val=PIX_FMT{}) const noexcept;
   [[gnu::const]] PIX_FMT& get(int i, Image_get mode, PIX_FMT& out_of_bound_val) noexcept;
   [[gnu::const]] PIX_FMT& get(int x, int y, Image_get mode, PIX_FMT& out_of_bound_val) noexcept;
 

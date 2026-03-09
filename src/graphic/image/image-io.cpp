@@ -7,7 +7,7 @@
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
 #include "image.hpp"
-#include "graphic/util/convert.hpp"
+#include "graphic/image/color-convert.hpp"
 #include "util/str-util.hpp"
 #include "util/file/file-io.hpp"
 #include "util/log.hpp"

@@ -19,7 +19,7 @@ used_libs = []
 sources = [
   Glob("*.cpp"),
   src_dir + "graphic/image/color.cpp",
-  src_dir + "graphic/util/convert.cpp",
+  src_dir + "graphic/image/color-convert.cpp",
   src_dir + "util/file/file.cpp",
   src_dir + "util/file/file-io.cpp",
   src_dir + "util/str-util.cpp",

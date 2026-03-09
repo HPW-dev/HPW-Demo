@@ -9,8 +9,9 @@
 #include "util/error.hpp"
 #include "util/math/random.hpp"
 #include "util/file/file.hpp"
-#include "graphic/util/convert.hpp"
+#include "graphic/image/color-convert.hpp"
 #include "graphic/image/color.hpp"
+#include "graphic/image/color-convert.hpp"
 #include "graphic/image/palette.hpp"
 
 static Vector<GLfloat> m_ogl_palette {};
@@ -49,11 +50,11 @@ Vector<GLfloat> load_ogl_palette(cr<Str> fname) {
 
 Rgb24 pal8_to_rgb24_by_file(const Pal8 x) {
   if ( !m_ogl_palette.empty())
-    return Rgb24 {
-      scast<int>(m_ogl_palette.at(x.val * 3 + 0) * 255.0),
-      scast<int>(m_ogl_palette.at(x.val * 3 + 1) * 255.0),
-      scast<int>(m_ogl_palette.at(x.val * 3 + 2) * 255.0)
-    };
+    return to_rgb24(
+      m_ogl_palette.at(x.val * 3 + 0) * 255,
+      m_ogl_palette.at(x.val * 3 + 1) * 255,
+      m_ogl_palette.at(x.val * 3 + 2) * 255
+    );
   return to_rgb24(x);
 }
 

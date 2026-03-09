@@ -12,7 +12,7 @@
 #include "util/file/file-io.hpp"
 #include "util/macro.hpp"
 #include "graphic/image/color.hpp"
-#include "graphic/util/convert.hpp"
+#include "graphic/image/color-convert.hpp"
 
 using Core_func_1d = std::function<Pal8 (int)>;
 using Core_func_2d = std::function<Pal8 (int, int)>;

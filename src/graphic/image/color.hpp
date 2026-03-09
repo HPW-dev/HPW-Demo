@@ -1,21 +1,8 @@
 #pragma once
-#include <algorithm>
-#include "util/macro.hpp"
+#include <cmath>
 #include "util/math/num-types.hpp"
-
-struct Rgb24 final {
-  using value_t = byte;
-  value_t r {}, g {}, b {};
-  
-  Rgb24() noexcept = default;
-  Rgb24(int ir, int ig, int ib) noexcept;
-
-  struct Null_tag final {}; // чтобы указать на constexpr c-tor
-  inline constexpr Rgb24(byte _r, byte _g, byte _b, const Null_tag tag) noexcept
-    : r{_r}, g{_g}, b{_b} {}
-  
-  inline static constexpr Rgb24 neutral() { return {}; }
-};
+#include "util/macro.hpp"
+#include "color-rgb.hpp"
 
 // Hue Saturation Lightness
 struct HSL final {

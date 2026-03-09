@@ -1,4 +1,5 @@
 #include "color.hpp"
+#include <algorithm>
 
 #ifdef ECOMEM
 #define NOUSE_TABLE
@@ -74,9 +75,3 @@ void Pal8::set_gray(int value) noexcept
 
 void Pal8::set_red_nosafe(int value) noexcept
   { val = scast<int>(red_start) + (value % scast<int>(red_size)); }
-
-Rgb24::Rgb24(int ir, int ig, int ib) noexcept
-: r (std::clamp(ir, 0, 255))
-, g (std::clamp(ig, 0, 255))
-, b (std::clamp(ib, 0, 255))
-{}

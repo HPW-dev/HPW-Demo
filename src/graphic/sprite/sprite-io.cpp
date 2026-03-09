@@ -13,7 +13,7 @@
 #include "util/file/file-io.hpp"
 #include "util/log.hpp"
 #include "util/error.hpp"
-#include "graphic/util/convert.hpp"
+#include "graphic/image/color-convert.hpp"
 
 /** делает контур картинки жирнее
 Нужен для картинки в rotsprite, чтобы при повороте не было артефактов */
