@@ -7,6 +7,8 @@ struct Pal8;
 struct Rgb24;
 struct File;
 
+using Palette = Vector<Rgb24>;
+
 Rgb24 to_palette_rgb24_default(const Pal8 x);
 
 using to_palette_rgb24_ft = Rgb24 (*)(const Pal8 x);
@@ -14,4 +16,7 @@ using to_palette_rgb24_ft = Rgb24 (*)(const Pal8 x);
 inline to_palette_rgb24_ft to_palette_rgb24 = &to_palette_rgb24_default;
 
 // список цветов в картинке с палитрой
-Vector<Rgb24> colors_from_pal24(cr<File> src);
+Palette load_palette(cr<File> src);
+
+// помогает сортировать палитры по похожести
+bool by_similar(cr<Palette> a, cr<Palette> b);

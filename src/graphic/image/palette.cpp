@@ -2,6 +2,7 @@
 #include "stb/stb_image.h"
 #include "palette.hpp"
 #include "color.hpp"
+#include "color-convert.hpp"
 #include "util/file/file.hpp"
 #include "util/error.hpp"
 #include "util/hpw-util.hpp"
@@ -267,9 +268,9 @@ constexpr static const std::array<Rgb24, 256> pal8_default_table {
 
 Rgb24 to_palette_rgb24_default(const Pal8 x) { return pal8_default_table[x.val]; }
 
-Vector<Rgb24> colors_from_pal24(cr<File> src) {
+Palette load_palette(cr<File> src) {
   iferror(src.data.empty(), "файл палитр пуст");
-  Vector<Rgb24> ret;
+  Palette ret;
 
   // декодирование:
   int x, y;
@@ -290,4 +291,67 @@ Vector<Rgb24> colors_from_pal24(cr<File> src) {
       }
     );
   return ret;
+}
+
+inline static real rgb24_to_hue(cr<Rgb24> src) {
+  const real r = src.r / 255.f;
+  const real g = src.g / 255.f;
+  const real b = src.b / 255.f;
+  real min = r < g ? r : g;
+  min = min < b ? min : b;
+  real max = r > g ? r : g;
+  max = max > b ? max : b;
+  cauto delta = max - min;
+
+  // undefined, maybe nan?
+  return_if (delta < 0.00001f, 0);
+  return_if(max == 0, 0);
+
+  real hue {};
+  if(r >= max) // > is bogus, just keeps compilor happy
+    return (g - b) / delta; // between yellow & magenta
+  elif (g >= max)
+    hue = 2.0 + (b - r) / delta; // between cyan & yellow
+  else
+    hue = 4.0 + (r - g) / delta; // between magenta & cyan
+  hue *= 60.0; // degrees
+
+  if(hue < 0)
+    hue += 360;
+  return hue;
+}
+
+// среднее здачение цвета из палитры
+inline static HSL hsl_weighted_average(cr<Palette> pal24) {
+  iferror (pal24.size() < 256, "< 256 colors in palette file (" +
+    std::to_string(pal24.size()) + ")");
+    
+  // брать только первую часть палитры без красных оттенков
+  Vector<Rgb24> main_colors(pal24.begin(), pal24.begin() + Pal8::gray_size);
+  HSL avg;
+  for (uint i = 0; cauto rgb24: main_colors) {
+    auto hsl = rgb24_to_hsl(rgb24);
+    // для разных частей палитры разные веса
+    real w;
+    if      (i <   Pal8::gray_size/3)    w = 0.1;
+    else if (i <  (Pal8::gray_size/3*2)) w = 0.6;
+    else if (i >= (Pal8::gray_size/3*2)) w = 0.3;
+    avg.h += hsl.h * w;
+    avg.s += hsl.s * w;
+    avg.l += hsl.l * w;
+    ++i;
+  }
+  avg.h /= main_colors.size();
+  avg.s /= main_colors.size();
+  avg.l /= main_colors.size();
+  return avg;
+}
+
+bool by_similar(cr<Palette> a, cr<Palette> b) {
+  cauto a_avg = hsl_weighted_average(a);
+  cauto b_avg = hsl_weighted_average(b);
+  // Приоритет: оттенок -> насыщенность -> яркость
+  if (std::abs(a_avg.h - b_avg.h) > 10.0) return a_avg.h < b_avg.h;
+  if (std::abs(a_avg.s - b_avg.s) > 0.1)  return a_avg.s < b_avg.s;
+  return a_avg.l < b_avg.l;
 }
