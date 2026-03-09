@@ -22,16 +22,16 @@ struct HSL final {
 struct Pal8 final {
   using value_t = byte;
   constx value_t black {0};
-  constx value_t gray_end {221}; // WHITE2
-  constx value_t red_start {222};
-  constx value_t red {254}; // red end
+  constx value_t gray_end {222}; // WHITE2
+  constx value_t red_start {gray_end+1};
   constx value_t white {255}; // WHITE1
+  constx value_t red {white-1}; // red end
   constx value_t red_black {red_start};
   constx value_t red_end {red};
-  constx value_t red_mid {red_start + (red_end - red_start) / 2};
-  constx value_t red_size {scast<int>(red_end) - scast<int>(red_start)};
-  constx value_t gray_size {scast<int>(gray_end) - scast<int>(black) + 1};
-  constx value_t gray {scast<int>(gray_end) / 2};
+  constx value_t gray_size {gray_end};
+  constx value_t red_size {white-gray_size-1};
+  constx value_t red_mid {red_start + red_size / 2};
+  constx value_t gray {gray_end / 2};
   constx value_t mask_visible {black};
   constx value_t mask_invisible {white};
   constx value_t none {mask_invisible}; // for image get bound func
