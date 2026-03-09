@@ -124,10 +124,10 @@ struct Scene_palette_select::Impl {
     draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 0), Pal8::black, U"black");
     draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 1), Pal8::gray, U"gray");
     draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 2), Pal8::gray_end, U"gray end");
-    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 3), Pal8::red_start, U"red start");
-    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 4), Pal8::red_mid, U"red mid");
-    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 5), Pal8::red, U"red");
-    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 6), Pal8::white, U"white");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 4), Pal8::red_start, U"red start");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 5), Pal8::red_mid, U"red mid");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 6), Pal8::red, U"red");
+    draw_debug_color(dst, pos + Vec(0, (cube_sz.y + 4) * 8), Pal8::white, U"white");
   #endif
   }
 }; // impl
