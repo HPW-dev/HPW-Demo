@@ -1,0 +1,5 @@
+print helper script opened
+print line 1
+print line 2
+print line 3
+print end of helper script

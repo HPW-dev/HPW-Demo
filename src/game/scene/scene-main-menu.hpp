@@ -1,0 +1,46 @@
+#pragma once
+#include <mutex>
+#include <functional>
+#include "scene.hpp"
+#include "util/mem-types.hpp"
+#include "util/math/vec.hpp"
+#include "util/math/timer.hpp"
+#include "util/str.hpp"
+#include "util/unicode.hpp"
+#include "game/core/bgps.hpp"
+#include "bgp/bgp.hpp"
+
+class Menu;
+class Sprite;
+
+// стартовое меню игры
+class Scene_main_menu final: public Scene {
+  Unique<Menu> menu {};
+  Unique<Sprite> logo {};
+  Vec logo_pos {};
+  std::once_flag m_logo_load_once {};
+  Strs m_logo_names {};       // пути к картинкам для лого
+  Timer change_bg_timer {hpw::BGP_AUTO_SWITCH_DELAY};
+  Shared<bgp::Bgp> _bgp {};        // фоновой узор, который сейчас рисуется
+
+  void init_menu();
+  void init_logo();
+  void draw_logo(Image& dst) const noexcept;
+  void draw_text(Image& dst) const noexcept;
+  void draw_wnd(Image& dst) const noexcept;
+  void cache_logo_names();
+  void next_bg();
+  Unique<Sprite> prepare_logo(cr<Str> name) const;
+  utf32 prepare_game_ver() const;
+  void init_menu_sounds();
+  void update_bg_order(const Delta_time dt);
+  
+public:
+  constx Str NAME = "main menu";
+
+  Scene_main_menu();
+  ~Scene_main_menu();
+  void update(const Delta_time dt) override final;
+  void draw(Image& dst) const noexcept override final;
+  inline Str name() const override { return NAME; }
+};

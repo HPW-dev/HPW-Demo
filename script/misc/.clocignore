@@ -1,0 +1,9 @@
+.tmp
+.vscode
+.git
+HPW.code-workspace
+**/imgui.ini
+__pycache__
+build
+thirdparty
+ignore me

@@ -1,0 +1,16 @@
+#pragma once
+#include "game/entity/entity-type.hpp"
+#include "util/macro.hpp"
+#include "util/math/vec.hpp"
+#include "graphic/image/image-fwd.hpp"
+
+// ресолвер коллизий (база)
+class Collider {
+  nocopy(Collider);
+
+public:
+  Collider() = default;
+  virtual ~Collider() = default;
+  virtual void operator()(cr<Entities> entities, Delta_time dt) = 0;
+  inline virtual void debug_draw(Image& dst, const Vec camera_offset) {}
+};

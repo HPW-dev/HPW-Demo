@@ -1,0 +1,81 @@
+﻿# Binary:
+**/*.a
+**/*.o
+**/*.obj
+**/*.dll
+**/*.so
+**/*.os
+**/*.elf
+**/*.elf32
+**/*.elf64
+**/*.exe
+**/*.out
+**/*.svg
+
+# Game:
+!data/**/*
+**/test.hpw_replay
+**/*.hpw_replay
+**/lib
+build/bin/*.dll
+build/data.zip
+build/editor
+build/*.txt
+build/plugin
+build/screenshots
+build/config/
+build/info/
+build/resource
+build/replays
+
+# Code:
+.vscode/settings.json
+#/HPW.code-workspace
+build/cmd-test-helper.txt
+build/cmd-test.txt
+build/test.yml
+src/game/util/version.cpp
+
+# Other:
+!.tmp/.gitkeep
+stats.csv
+ignore me.lnk
+delme.*
+run.py
+**/*.lnk
+**/*.bak
+**/vgcore.*
+**/ignore me
+
+# Temp:
+.tmp/*
+tmp
+imgui.ini
+**/cppcheck.txt
+**/memleaks.txt
+a.txt
+b.txt
+.sconsign.dblite
+pgo/
+**/*.~lock.*
+**/delme 1.txt
+**/delme 2.txt
+**/log.txt
+**/*.gch
+**/err.txt
+**/delme
+**/delme.txt
+**/HPW-test.tar.gz
+**/__pycache__
+**/perf.data
+**/perf.data.old
+**/cpplint.txt
+**/*.gcda
+**/*.gcno
+test/yaml test/test.yml
+src/.sconsign.dblite
+
+# Videos:
+**/*.mkv
+**/*.avi
+**/*.mp4

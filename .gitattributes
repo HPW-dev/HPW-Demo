@@ -1,0 +1,100 @@
+# Default
+* text eol=crlf
+
+# Code:
+*.c text eol=lf diff=cpp
+*.cpp text eol=lf diff=cpp
+*.tpp text eol=lf diff=cpp
+*.ipp text eol=lf diff=cpp
+*.tcc text eol=lf diff=cpp
+*.cc text eol=lf diff=cpp
+*.cxx text eol=lf diff=cpp
+*.h text eol=lf diff=cpp
+*.hh text eol=lf diff=cpp
+*.hxx text eol=lf diff=cpp
+*.hpp text eol=lf diff=cpp
+*.py text eol=lf diff=python
+
+# Shaders:
+*.frag text eol=lf
+*.vert text eol=lf
+
+# Scripts:
+SConscript text eol=lf
+SCsub text eol=lf
+SConstruct text eol=lf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.toml text eol=lf
+*.ini text eol=crlf
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+*.fish text eol=lf
+
+# Others:
+*.txt text eol=crlf
+*.csv text eol=crlf
+_tmp_version_ text
+*.md text diff=markdown
+
+# Binary/Executable
+*.a binary
+*.o binary
+*.obj binary
+*.so binary
+*.dat binary
+*.bin binary
+*.exe binary
+*.dll binary
+*.elf binary
+*.elf32 binary
+*.elf64 binary
+*.lib binary
+*.db binary
+*.pickle binary
+*.pkl binary
+*.pyc binary
+*.pyo binary
+*.pyd binary
+
+# Images:
+*.png binary
+*.tiff binary
+*.jb2 binary
+*.jbig binary
+*.jbib binary
+*.apng binary
+*.gif binary
+*.webp binary
+*.jpg binary
+
+# Audio:
+*.flac binary
+*.wav binary
+*.mp2 binary
+*.mp3 binary
+*.ogg binary
+*.opus binary
+*.aac binary
+*.mp4a binary
+*.mka binary
+
+# Archive:
+*.xz binary
+*.7z binary
+*.zip binary
+*.zst binary
+*.gz binary
+*.rar binary
+*.tar binary
+
+# Other binary
+*.ods binary
+*.ttf binary
+*.dat binary
+*.bin binary
+*.otf binary
+*.hpw_replay binary
