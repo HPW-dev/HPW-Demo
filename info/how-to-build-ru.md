@@ -29,7 +29,7 @@
 
 _Команды на скачивание и сборку игры:_
 ```
-git clone --depth=1 https://github.com/HPW-dev.HPW-Demo
+git clone --depth=1 https://github.com/HPW-dev/HPW-Demo
 cd HPW-Demo
 python -m script.build.game-glfw3-rel
 ```
