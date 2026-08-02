@@ -106,10 +106,7 @@
 		"files.exclude": {
 			"minigame": true,
 			"gmon.svg": true,
-			"build/bin/*.dll": true,
-			"build/bin/*.exe": true,
-			"build/bin/*.elf32": true,
-			"build/bin/*.elf64": true,
+			"build/bin": true,
 			"build/replays": true,
 			"build/plugin": true,
 			"build/screenshots": true,
