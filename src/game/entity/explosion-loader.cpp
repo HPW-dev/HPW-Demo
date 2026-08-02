@@ -7,15 +7,15 @@
 #include "util/hpw-util.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/math/random.hpp"
-#include "graphic/animation/anim.hpp"
+#include "engine/graphic/animation/anim.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/particle.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "game/entity/util/scatter.hpp"
 #include "game/entity/util/info/anim-info.hpp"
-#include "graphic/effect/heat-distort.hpp"
-#include "graphic/effect/heat-distort-util.hpp"
-#include "graphic/effect/light.hpp"
+#include "engine/graphic/effect/heat-distort.hpp"
+#include "engine/graphic/effect/heat-distort-util.hpp"
+#include "engine/graphic/effect/light.hpp"
 
 struct Explosion_loader::Impl {
   Anim_info m_anim_info {};

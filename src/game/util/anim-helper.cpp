@@ -2,10 +2,10 @@
 #include "anim-helper.hpp"
 #include "game/core/anims.hpp"
 #include "game/core/sprites.hpp"
-#include "graphic/animation/anim.hpp"
-#include "graphic/animation/frame.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/animation/anim.hpp"
+#include "engine/graphic/animation/frame.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 // создаёт спрайт только с белыми контурами по исходному спрайту
 inline static Sprite extract_contour(cr<Sprite> src) {

@@ -1,9 +1,9 @@
 #include <cassert>
 #include "shop.hpp"
 #include "score-table.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/font/font-util.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/font/font-util.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"

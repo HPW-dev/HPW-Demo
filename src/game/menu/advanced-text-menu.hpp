@@ -3,8 +3,8 @@
 #include "menu.hpp"
 #include "util/math/rect.hpp"
 #include "util/unicode.hpp"
-#include "graphic/image/color.hpp"
-#include "graphic/image/color-blend.hpp"
+#include "engine/graphic/image/color.hpp"
+#include "engine/graphic/image/color-blend.hpp"
 
 struct Advanced_text_menu_config {
   bool without_desc {};

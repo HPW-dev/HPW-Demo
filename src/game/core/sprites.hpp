@@ -1,6 +1,6 @@
 #pragma once
 #include "game/util/store.hpp"
-#include "graphic/sprite/sprite.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
 
 namespace hpw {
 

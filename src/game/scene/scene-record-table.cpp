@@ -5,7 +5,7 @@
 #include "game/util/keybits.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/locale.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "util/log.hpp"

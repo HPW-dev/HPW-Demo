@@ -3,9 +3,9 @@
 #include "util/log.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/resource-helper.hpp"
-#include "graphic/font/unifont.hpp"
-#include "graphic/font/unifont-mono.hpp"
-#include "graphic/font/microfont-mono.hpp"
+#include "engine/graphic/font/unifont.hpp"
+#include "engine/graphic/font/unifont-mono.hpp"
+#include "engine/graphic/font/microfont-mono.hpp"
 
 void load_fonts() {
   log_info << "загрузка шрифтов...";

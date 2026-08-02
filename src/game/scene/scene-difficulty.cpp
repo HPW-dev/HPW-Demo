@@ -15,7 +15,7 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "util/str-util.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/scene/scene-game.hpp"
 
 Scene_difficulty::Scene_difficulty() {

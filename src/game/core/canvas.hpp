@@ -1,6 +1,6 @@
 #pragma once
 #include "util/mem-types.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 // настройки графики
 namespace graphic {

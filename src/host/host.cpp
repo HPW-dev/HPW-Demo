@@ -23,7 +23,7 @@
 #include "util/str-util.hpp"
 #include "util/math/random.hpp"
 #include "util/file/yaml.hpp"
-#include "graphic/image/color-table.hpp"
+#include "engine/graphic/image/color-table.hpp"
 
 #ifndef DISABLE_ARGS
 #include "util/pparser.hpp"

@@ -2,7 +2,7 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/entity-loader.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Yaml;
 

@@ -10,7 +10,7 @@
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
 #include "util/file/yaml.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 struct Scene_netplay_menu::Impl {
   Unique<Menu> _menu {};

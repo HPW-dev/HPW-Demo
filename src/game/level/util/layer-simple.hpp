@@ -1,7 +1,7 @@
 #pragma once
 #include "tilemap.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/color-blend.hpp"
+#include "engine/graphic/image/color-blend.hpp"
 #include "util/math/num-types.hpp"
 #include "util/str.hpp"
 

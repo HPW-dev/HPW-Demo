@@ -6,8 +6,8 @@
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 
 struct Message_mgr::Impl {
   constx uint LINE_LIMIT = 22;

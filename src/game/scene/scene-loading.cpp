@@ -6,11 +6,11 @@
 #include "game/scene/scene-mgr.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/effect/dither.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/effect/dither.hpp"
 #include "util/math/random.hpp"
 
 Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)

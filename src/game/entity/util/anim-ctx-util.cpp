@@ -2,7 +2,7 @@
 #include "hitbox.hpp"
 #include "anim-ctx.hpp"
 #include "game/entity/entity.hpp"
-#include "graphic/animation/anim.hpp"
+#include "engine/graphic/animation/anim.hpp"
 #include "util/error.hpp"
 
 namespace anim_ctx_util {

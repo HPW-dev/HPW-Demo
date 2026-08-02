@@ -1,8 +1,8 @@
 #include <cmath>
 #include "hud-asci.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/player/player-dark.hpp"
 #include "game/util/score-table.hpp"

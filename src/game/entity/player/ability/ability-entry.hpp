@@ -4,7 +4,7 @@
 #include "util/vector-types.hpp"
 #include "util/math/num-types.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Ability;
 class Player;

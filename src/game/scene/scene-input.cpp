@@ -8,7 +8,7 @@
 #include "game/util/config.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 Scene_input::Scene_input() {
   init_menu();

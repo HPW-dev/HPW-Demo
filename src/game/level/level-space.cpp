@@ -21,10 +21,10 @@
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
 #include "util/math/random.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/graphic-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/effect/dither.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/effect/dither.hpp"
 
 struct Level_space::Impl {
   constx real layer_speed_scale {0.03333}; // влияет на скорость движния фона по горизонтали

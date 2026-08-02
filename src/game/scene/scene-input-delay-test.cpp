@@ -12,9 +12,9 @@
 #include "util/platform.hpp"
 #include "util/math/min-max.hpp"
 #include "util/math/full-stats.hpp"
-#include "graphic/font/font-util.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/font/font-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 
 struct Scene_input_delay_test::Impl {
   utf32 _info_text {};

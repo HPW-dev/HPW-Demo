@@ -17,7 +17,7 @@
 #include "util/math/mat.hpp"
 #include "util/math/random.hpp"
 #include "host/host-util.hpp"
-#include "graphic/effect/image-to-asci.hpp"
+#include "engine/graphic/effect/image-to-asci.hpp"
 
 // -------------- если переместить этот хедевр вверх - всё взорвётся! ------------
 #define WIN32_LEAN_AND_MEAN

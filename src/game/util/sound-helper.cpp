@@ -8,7 +8,7 @@
 #include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
 #include "game/core/sounds.hpp"
-#include "sound/audio-io.hpp"
+#include "engine/sound/audio-io.hpp"
 
 // связывание звуков с банком
 inline void init_store_sound() {

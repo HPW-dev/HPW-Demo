@@ -5,7 +5,7 @@
 #include "scene-loading.hpp"
 #include "scene-mgr.hpp"
 #include "host/command.hpp"
-#include "sound/sound-mgr.hpp"
+#include "engine/sound/sound-mgr.hpp"
 #include "util/str-util.hpp"
 #include "util/math/vec.hpp"
 #include "util/math/random.hpp"
@@ -43,8 +43,8 @@
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "game/entity/collider/collider.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 
 #ifdef DEBUG
 #include "game/scene/scene-debug.hpp"

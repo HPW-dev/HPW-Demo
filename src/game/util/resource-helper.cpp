@@ -16,8 +16,8 @@
 
 #ifndef DISABLE_GRAPHIC
 #include "game/core/sprites.hpp"
-#include "graphic/sprite/sprite-io.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/sprite/sprite-io.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 #endif
 
 #ifndef DISABLE_GRAPHIC

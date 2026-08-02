@@ -4,7 +4,7 @@
 #include "game/util/anim-helper.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/math/random.hpp"
 #include "util/log.hpp"

@@ -2,7 +2,7 @@
 #include "game/entity/enemy/proto-enemy.hpp"
 #include "util/math/timer.hpp"
 #include "util/str.hpp"
-#include "graphic/effect/heat-distort.hpp"
+#include "engine/graphic/effect/heat-distort.hpp"
 
 class Anim;
 

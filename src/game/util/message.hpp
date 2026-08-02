@@ -5,8 +5,8 @@
 #include "util/math/num-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/unicode.hpp"
-#include "graphic/image/color-blend.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/color-blend.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 // сообщение для игрового лога на экране
 struct Message {

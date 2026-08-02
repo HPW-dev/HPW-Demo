@@ -1,7 +1,7 @@
 #pragma once
 #include "menu.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/color-blend.hpp"
+#include "engine/graphic/image/color-blend.hpp"
 
 struct Text_menu_config {
   bool with_bg {}; // включает прямоуголник позади текста

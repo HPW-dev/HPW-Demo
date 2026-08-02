@@ -8,7 +8,7 @@
 #include "game/entity/entity-type.hpp"
 #include "game/entity/entity.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 class Collider;
 class Entity;

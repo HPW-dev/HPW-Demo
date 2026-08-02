@@ -8,7 +8,7 @@
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "graphic/util/util-templ.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 
 struct Collider_grid::Impl {
   using Collidables = Vector<Collidable*>;

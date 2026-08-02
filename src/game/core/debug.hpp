@@ -4,7 +4,7 @@
 #ifdef CLD_DEBUG
 #include <atomic>
 #endif
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 namespace hpw {
 #ifdef CLD_DEBUG

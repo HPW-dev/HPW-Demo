@@ -6,8 +6,8 @@
 #include "game/entity/util/info/anim-info.hpp"
 #include "game/entity/util/info/collidable-info.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "graphic/sprite/sprite.hpp"
-#include "graphic/animation/anim.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/animation/anim.hpp"
 
 struct Player_dark::Loader::Impl {
   Anim_info m_anim_info {};

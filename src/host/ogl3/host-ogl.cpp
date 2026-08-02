@@ -12,7 +12,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/resource-helper.hpp"
-#include "graphic/image/color.hpp"
+#include "engine/graphic/image/color.hpp"
 
 #ifndef DISABLE_CONFIG
 #include "game/util/game-archive.hpp"
@@ -30,7 +30,9 @@ Host_ogl::Host_ogl(int argc, char *argv[])
     init_archive(); // из архива понадобятся шейдеры
   #endif
   #ifndef ECOMEM
-    load_color_tables();
+    #ifndef NOUSE_TABLE
+      load_color_tables();
+    #endif
   #endif
 }
 

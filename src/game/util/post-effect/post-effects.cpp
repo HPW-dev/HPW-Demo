@@ -3,7 +3,7 @@
 #include <utility>
 #include <algorithm>
 #include "post-effects.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 struct Effect_mgr::Impl {
   std::list<Shared<Effect>> effects {}; // эффекты постобработки

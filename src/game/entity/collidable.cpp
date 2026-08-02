@@ -8,7 +8,7 @@
 #include "util/anim-ctx-util.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/entities.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 Collidable::Collidable()
 : Entity(GET_SELF_TYPE)

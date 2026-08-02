@@ -1,7 +1,7 @@
 #pragma once
 #include "collider.hpp"
 #include "util/math/vec.hpp"
-#include "graphic/image/image-fwd.hpp"
+#include "engine/graphic/image/image-fwd.hpp"
 
 // разбиение пространства прямыми
 class Collider_2d_tree final: public Collider {

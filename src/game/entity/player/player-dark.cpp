@@ -9,10 +9,10 @@
 #include "util/math/random.hpp"
 #include "util/math/vec-util.hpp"
 #include "util/log.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/animation/frame.hpp"
-#include "graphic/animation/direct.hpp"
-#include "graphic/effect/light.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/animation/frame.hpp"
+#include "engine/graphic/animation/direct.hpp"
+#include "engine/graphic/effect/light.hpp"
 
 Player_dark::Player_dark(): Player() {}
 

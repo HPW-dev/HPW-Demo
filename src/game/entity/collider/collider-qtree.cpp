@@ -11,9 +11,9 @@
 #include "game/core/debug.hpp"
 #include "host/command.hpp"
 #include "util/math/rect.hpp"
-#include "graphic/image/image.hpp"
-#include "graphic/util/util-templ.hpp"
-#include "graphic/util/graphic-util.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 
 // сколько нужно игровых объектов чтобы запустить многопоточный поиск в QTree
 constexpr std::size_t MAX_ENTS_FOR_MULTY_TEST_PAIRS = 300;
