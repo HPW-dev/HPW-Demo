@@ -16,9 +16,9 @@
 !data/**/*
 **/test.hpw_replay
 **/*.hpw_replay
+**/lib
 build/bin/
 build/bin/*
-**/lib
 build/data.zip
 build/editor
 build/*.txt
@@ -31,8 +31,6 @@ build/resource
 build/replays
 
 # Code:
-.vscode/settings.json
-/HPW.code-workspace
 build/cmd-test-helper.txt
 build/cmd-test.txt
 build/test.yml
