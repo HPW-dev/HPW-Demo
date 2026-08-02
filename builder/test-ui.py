@@ -1,5 +1,10 @@
 from common.ui import *
 
+'''
+cd proj_root
+py builder/test-ui.py
+'''
+
 text = "Тест цветного текста:\n"
 text += f"- строка с {to_red("красным")} текстом\n"
 text += f"- строка с {to_green("зелёным")} текстом\n"
