@@ -1,6 +1,7 @@
 if __name__ != "__main__":
   quit("Запускай этот файл через \"python build.py\"")
 
+'''
 import script.builder.utils as utils
 import script.builder.io.clear as cleaner
 import script.builder.io.hash as hash
@@ -25,7 +26,6 @@ if 'test_deps' in env and env['test_deps'] == True:
   test_deps.build_test_deps()
 
 # TODO
-'''
 sources = ["main.cpp"]
 sources.extend( fs.find_mask("./test-dir/*.cpp") )
 builder = Builder(
@@ -41,7 +41,6 @@ builder = Builder(
   #without_print=False
 )
 builder.run()
-'''
 
 # посчитать хэши файлов:
 env.update(hash.calculate_checksums(env))
@@ -51,3 +50,4 @@ info_dir = env['info_dir']
 info_file = f'{info_dir}build_info.json'
 build_info.save_json(env, info_file)  # засейвить инфу о билде
 fs.copy_license(info_dir)             # копировать инфу о лицензии
+'''
