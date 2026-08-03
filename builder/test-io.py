@@ -1,3 +1,8 @@
+'''
+cd proj_root
+py builder/test-io.py
+'''
+
 import common.io as io
 import common.ui as ui
 

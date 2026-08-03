@@ -1,3 +1,5 @@
+# функции для работы с файлами
+
 import os
 import glob
 import shutil

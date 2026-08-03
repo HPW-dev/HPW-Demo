@@ -1,3 +1,5 @@
+# Для красивых логов
+
 from enum import StrEnum
 
 class Color(StrEnum):

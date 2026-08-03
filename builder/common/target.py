@@ -1,6 +1,9 @@
+# Форматы итоговых бинарников
+
 from dataclasses import dataclass, field
 from enum import StrEnum
 
+# расширения
 class Extention(StrEnum):
   exe   = ".exe"
   elf32 = ".elf32"
