@@ -13,6 +13,7 @@ scripts_to_run = [
   "builder/test-ui.py",
   "builder/test-io.py",
   "builder/test-hash.py",
+  "builder/test-host-info.py",
 ]
 
 for script in scripts_to_run:
