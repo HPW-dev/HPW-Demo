@@ -16,3 +16,6 @@ class Host:
   bitness: Bitness = Bitness.x32
   system: Sys_name = Sys_name.windows
   env: dict = field(default_factory=dict) # переменные среды
+  python_ver: str = None
+  compiler_ver: str = None
+  threads: int = 4
