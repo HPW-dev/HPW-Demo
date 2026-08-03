@@ -3,7 +3,6 @@ cd proj_root
 py builder/test-all.py
 '''
 
-from common.ui import *
 import subprocess
 import sys
 from pathlib import Path
@@ -21,15 +20,15 @@ for script in scripts_to_run:
   if not script_path.exists():
     raise Exception(f"Ошибка: Файл {script} не найден!")
         
-  print(to_green(f"Запуск {script_path.name}..."))
+  print(f"Запуск {script_path.name}...")
     
   try:
     subprocess.run([sys.executable, str(script_path)], check=True)
   except subprocess.CalledProcessError as e:
-    print(to_red(f"\n Ошибка в скрипте {script_path.name}!"))
+    print(f"\n Ошибка в скрипте {script_path.name}!")
     print(f"Код возврата: {e.returncode}")
-    print(to_red("Останов тестов."))
+    print("Останов тестов.")
     sys.exit(e.returncode)
 
 print('='*50)
-print(to_green('> все тесты пройдены'))
+print('> все тесты пройдены')
