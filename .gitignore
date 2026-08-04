@@ -38,6 +38,7 @@ src/game/util/version.cpp
 
 # Other:
 !.tmp/.gitkeep
+.ruff_cache
 stats.csv
 ignore me.lnk
 delme.*
