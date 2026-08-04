@@ -10,10 +10,10 @@ from common.ui import *
 def compiler_version(env):
   '''узнать версию компилятора'''
   try:
-    out, _ = exec_cmd(f"{env['CXX']} --version", True)
+    out, _, _ = exec_cmd([env['CXX'], '--version'])
     return out.rstrip()
-  except:
-    print(to_red('Ошибка при получении версии компилятора из CXX переменной'))
+  except Exception as e:
+    print(to_red(f'Ошибка при получении версии компилятора из CXX переменной:\n  {e}'))
   return None
 
 def python_version():

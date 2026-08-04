@@ -14,6 +14,7 @@ scripts_to_run = [
   "builder/test-ui.py",
   "builder/test-fs.py",
   "builder/test-hash.py",
+  "builder/test-exec.py",
   "builder/test-host-info.py",
 ]
 
