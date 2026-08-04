@@ -3,7 +3,7 @@ cd proj_root
 py builder/test-py
 '''
 
-from common.io import *
+from common.fs import *
 from common.ui import *
 
 print('=== Тест для common/py ===')

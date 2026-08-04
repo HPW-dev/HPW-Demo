@@ -11,7 +11,7 @@ print("Запуск всех тестов...")
 
 scripts_to_run = [
   "builder/test-ui.py",
-  "builder/test-io.py",
+  "builder/test-fs.py",
   "builder/test-hash.py",
   "builder/test-host-info.py",
 ]

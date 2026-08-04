@@ -1,3 +1,5 @@
+'''Функции для работы с файлами'''
+
 import shutil
 from pathlib import Path
 
@@ -36,7 +38,7 @@ def path_full(path: str):
 
 def path_abs(path: str):
   '''конвертит пути файлов в относительные системные пути'''
-  return str(Path(path)) 
+  return str(Path(path))
 
 def exists(path: str):
   '''Проверяет что файл существует'''
