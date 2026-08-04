@@ -6,6 +6,7 @@ py builder/test-py
 from common.fs import *
 from common.ui import *
 
+
 print('=== Тест для common/py ===')
 
 # делаем в .tmp папке файлики для теста

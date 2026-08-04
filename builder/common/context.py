@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from enum import StrEnum
 
+
 # гланый набор настроек для сборки проекта
 @dataclass
 class Context:

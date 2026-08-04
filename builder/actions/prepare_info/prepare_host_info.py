@@ -1,9 +1,11 @@
-from common.ui import *
-from common.host import *
-from common.exec import exec_cmd
-import sys
 import platform
+import sys
 import os
+
+from common.exec import exec_cmd
+from common.host import *
+from common.ui import *
+
 
 def compiler_version(env):
   '''узнать версию компилятора'''
@@ -11,21 +13,18 @@ def compiler_version(env):
     out, _ = exec_cmd(f"{env['CXX']} --version", True)
     return out.rstrip()
   except:
-    print(to_red(f'Ошибка при получении версии компилятора из CXX переменной'))
+    print(to_red('Ошибка при получении версии компилятора из CXX переменной'))
   return None
 
 def python_version():
   '''проверка нужной версии Python'''
-  try:
-    ver = sys.version_info
-    if ver < (3,12,0):
-      print(to_yellow('Требуется версия python не ниже 3.12.0'))
-    else:
-      str_ver = f'{ver.major}.{ver.minor}.{ver.micro}'
-      return str_ver
-  except:
-    print(to_red('Ошибка при получении версии Python'))
-  return None
+  ver = sys.version_info
+  if ver < (3,12,0):
+    print(to_yellow('Требуется версия python не ниже 3.12.0'))
+    return None
+  else:
+    str_ver = f'{ver.major}.{ver.minor}.{ver.micro}'
+    return str_ver
 
 def prepare_host_info() -> Host:
   '''узнать инфу о системе, с которой собирают'''

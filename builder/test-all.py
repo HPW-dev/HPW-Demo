@@ -7,6 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+
 print("Запуск всех тестов...")
 
 scripts_to_run = [

@@ -1,6 +1,7 @@
 from actions.prepare_info import *
 from common.ui import *
 
+
 print('=== Тест инфы о системе-сборщике ===')
 
 info = prepare_host_info()

@@ -1,7 +1,8 @@
-# Форматы итоговых бинарников
+'''Форматы итоговых бинарников и список файлов для сборки'''
 
 from dataclasses import dataclass, field
 from enum import StrEnum
+
 
 class Extention(StrEnum):
   '''расширения'''

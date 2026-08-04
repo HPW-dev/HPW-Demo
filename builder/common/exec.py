@@ -1,8 +1,7 @@
-
-
 import os
 import time
 import subprocess
+
 
 def exec_cmd(cmd, without_print=False, with_normpath=True):
   '''
@@ -15,8 +14,7 @@ def exec_cmd(cmd, without_print=False, with_normpath=True):
   if with_normpath:
     cmd = os.path.normpath(cmd) 
   if without_print:
-    result = subprocess.run(cmd.split(), check=True, universal_newlines=True,
-      stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    result = subprocess.run(cmd.split(), check=True, text=True, capture_output=True)
   else:
     print(cmd)
     result = subprocess.run(cmd.split(), check=True)

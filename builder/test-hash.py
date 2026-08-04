@@ -6,6 +6,7 @@ py builder/test-hash.py
 from common.ui import *
 from common.hash import *
 
+
 print("=== Тест хэшей ===")
 
 # тестовый файл

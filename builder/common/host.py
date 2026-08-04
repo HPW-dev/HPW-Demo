@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from enum import StrEnum
 
+
 class Sys_name(StrEnum):
   linux = 'Linux'
   windows = 'Windows'

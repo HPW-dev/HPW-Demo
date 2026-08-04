@@ -3,6 +3,7 @@
 import shutil
 from pathlib import Path
 
+
 def rem_if_exist(path: str):
   '''Удалить файл, если он есть'''
   p = Path(path)

@@ -1,6 +1,7 @@
-# Для красивых логов
+'''Для красивых логов'''
 
 from enum import StrEnum
+
 
 class Color(StrEnum):
   RED     = '\033[31m' # Красный текст
@@ -20,9 +21,9 @@ def to_white(txt):  return None if txt == None else f'{Color.WHITE}{txt}{Color.R
 def to_blue(txt):   return None if txt == None else f'{Color.BLUE}{txt}{Color.RST}'
 def to_red(txt):    return None if txt == None else f'{Color.RED}{txt}{Color.RST}'
 
-def translate_none(val, msg: str = None):
+def translate_none(val, msg: str = ""):
   if val == None:
-    return to_gray(msg if msg != None else "неизвестно")
+    return to_gray(msg if msg != "" else "неизвестно")
   return val
 
 def in_env(env, val, finded_color=Color.YELLOW, none_color=Color.RED, none_val='Unknown'):
