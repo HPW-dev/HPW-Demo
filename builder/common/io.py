@@ -1,54 +1,43 @@
-# функции для работы с файлами
-
-import os
-import glob
 import shutil
-import pathlib
-from common.ui import *
+from pathlib import Path
 
-def rem_if_exist(fname: str, msg_if_not_exist: str = None):
-  """удалить файл, если он есть"""
-  if os.path.exists(fname):
-    print (f'remove {to_yellow(path_abs(fname))}')
-    os.remove(fname)
-  elif msg_if_not_exist != None:
-    print(msg_if_not_exist)
+def rem_if_exist(path: str):
+  '''Удалить файл, если он есть'''
+  p = Path(path)
+  if p.is_file():
+    p.unlink()
+
+def rem(path: str):
+  '''Удалить файл. Если его нет, не вылетать'''
+  p = Path(path)
+  folder = p.parent
+  mask = p.name
+  if folder.exists() and folder.is_dir():
+    for file in folder.glob(mask):
+      if file.is_file():
+        file.unlink(missing_ok=True)
 
 def make_dir(dir_name: str):
-  try:
-    path = pathlib.Path(dir_name)
-    path.mkdir(parents=True, exist_ok=True)
-    if not path.is_dir():
-      raise
-  except:
-    raise Exception(f"не удалось создать папаку \"{dir_name}\"")
+  '''Создать папку'''
+  Path(dir_name).mkdir(parents=True, exist_ok=True)
 
-def exists(path: str):
-  """проверяет что такая папка/файл существует"""
-  return os.path.exists(path)
-
-def remove_dir(dname: str, ignore_errors=True):
-  """удалить папку"""
+def rem_dir(dname: str, ignore_errors=True):
+  '''Удалить папку'''
   shutil.rmtree(dname, ignore_errors=ignore_errors)
-  assert os.path.exists(dname) == False, f"dir \"{dname}\" is not deleted!"
 
-def remove(fname_mask: str):
-  """удалить по маске"""
-  list = glob.glob(fname_mask, recursive=True)
-  for fname in list:
-    rem_if_exist(fname)
-
-def find(mask: str, recursive=False):
-  """ищет файлы в папке подходящие по шаблону (например test/*.cpp)"""
-  ret = []
-  for x in glob.glob(mask, recursive=recursive):
-    ret.append(x)
-  return ret
+def find(mask: str) -> list[str]:
+  '''Ищет файлы по маске (src/**/*.cpp)'''
+  base = Path(".") # искать от рута
+  return [str(p) for p in base.glob(mask)]
 
 def path_full(path: str):
-  """конвертит пути файлов в полные системные пути"""
-  return str(pathlib.Path(path).resolve())
+  '''конвертит пути файлов в полные системные пути'''
+  return str(Path(path).resolve())
 
 def path_abs(path: str):
-  """конвертит пути файлов в относительные системные пути"""
-  return str(os.path.normpath(path))
+  '''конвертит пути файлов в относительные системные пути'''
+  return str(Path(path)) 
+
+def exists(path: str):
+  '''Проверяет что файл существует'''
+  return Path(path).exists()
