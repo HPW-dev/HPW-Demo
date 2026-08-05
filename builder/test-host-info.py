@@ -1,5 +1,5 @@
 from actions.prepare_info import *
-from common.ui import *
+from utils.ui import *
 
 
 print('=== Тест инфы о системе-сборщике ===')

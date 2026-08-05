@@ -3,7 +3,7 @@ cd proj_root
 py builder/test-ui.py
 '''
 
-from common.ui import *
+from utils.ui import *
 
 
 text = "Тест цветного текста:\n"

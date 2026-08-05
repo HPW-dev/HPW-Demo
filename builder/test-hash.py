@@ -3,8 +3,8 @@ cd proj_root
 py builder/test-hash.py
 '''
 
-from common.ui import *
-from common.hash import *
+from utils.ui import *
+from utils.hash import *
 
 
 print("=== Тест хэшей ===")

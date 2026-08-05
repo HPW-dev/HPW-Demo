@@ -3,10 +3,8 @@ cd proj_root
 py builder/test-exec.py
 '''
 
-from common.ui import *
-
-
-from common.exec import exec_cmd
+from utils.ui import *
+from utils.exec import exec_cmd
 
 
 print("=== Тест выполнения команд системы ===")

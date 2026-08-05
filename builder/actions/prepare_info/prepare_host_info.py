@@ -2,9 +2,9 @@ import platform
 import sys
 import os
 
-from common.exec import exec_cmd
-from common.host import *
-from common.ui import *
+from utils.exec import exec_cmd
+from utils.host import *
+from utils.ui import *
 
 
 def compiler_version(env):
