@@ -3,7 +3,7 @@ import sys
 import os
 
 from utils.exec import exec_cmd
-from utils.host import *
+from structs.host import *
 from utils.ui import *
 
 
