@@ -1,6 +1,7 @@
 '''Функции для работы с файлами'''
 
 import shutil
+import filecmp
 from pathlib import Path
 
 
@@ -46,4 +47,9 @@ def exists(path: str):
   return Path(path).exists()
 
 def copy(src_path: str, dst_path: str):
+  '''копирование файла. Разрешена подмена на другой'''
   shutil.copy(Path(src_path), Path(dst_path))
+
+def equal(src_path: str, dst_path: str) -> bool:
+  '''проверить что два файла одинаковы по содержанию'''
+  return filecmp.cmp(Path(src_path), Path(dst_path), shallow=False)

@@ -81,5 +81,11 @@ except FileNotFoundError:
   with open(dst_txt, "r", encoding="utf-8") as f:
     assert(f.readline() == 'ver 2')
 
+# проверка одинаковых файлов
+print('> тест одинаковых файлов')
+assert(not equal(src_1_txt, src_2_txt))
+assert(equal(src_2_txt, dst_txt))
+
+
 print('='*30)
 print(to_green('> тест пройден'))
