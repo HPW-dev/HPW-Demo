@@ -1,9 +1,18 @@
 {
-  "C_Cpp.errorSquiggles": "disabled",
-  "C_Cpp.intelliSenseCachePath": "M:\\vscode cache",
+  "C_Cpp.default.cppStandard": "c++26",
+  "C_Cpp.default.cStandard": "c23",
   "files.eol": "\n",
+  "files.watcherExclude": {
+    ".git/objects/**": true,
+    ".git/subtree-cache/**": true,
+    ".hg/store/**": true,
+    "*/.git/objects/**": true,
+    "*/.git/subtree-cache/**": true,
+    "*/.hg/store/**": true
+  },
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
-  "terminal.integrated.environmentChangesRelaunch": "never",
-  "editor.fontSize": 14
+  "editor.unicodeHighlight.ambiguousCharacters": false,
+  "editor.unicodeHighlight.nonBasicASCII": false,
+  "editor.rulers": [80, 120]
 }
