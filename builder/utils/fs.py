@@ -44,3 +44,6 @@ def path_abs(path: str):
 def exists(path: str):
   '''Проверяет что файл существует'''
   return Path(path).exists()
+
+def copy(src_path: str, dst_path: str):
+  shutil.copy(Path(src_path), Path(dst_path))
