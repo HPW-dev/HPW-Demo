@@ -3,7 +3,7 @@ from structs.context import *
 from structs.host import *
 from utils.exec import *
 from utils.ui import *
-import utils.fs as fs
+from utils import fs
 
 
 def compile_single(tgt: Target, ctx: Context, host: Host):
@@ -23,4 +23,4 @@ def compile_single(tgt: Target, ctx: Context, host: Host):
   exec_cmd(cmd, timeout=60.0*30.0)
 
   if not fs.exists(tgt.name):
-    raise Exception(f'не удалось создать файл \'{tgt.name}\'')
+    raise FileExistsError(f'не удалось создать файл \'{tgt.name}\'')
