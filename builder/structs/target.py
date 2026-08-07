@@ -15,6 +15,11 @@ class Extention(StrEnum):
 @dataclass
 class Target:
   '''инфа для сборки .exe/.dll/.elf файлов'''
-  name: str
-  ext: Extention = Extention.exe
-  sources: list[str] = field(default_factory=list)
+  defines       : list[str] = field(default_factory=list)
+  options       : list[str] = field(default_factory=list)
+  include_dirs  : list[str] = field(default_factory=list)
+  sources       : list[str] = field(default_factory=list)
+  lib_dirs      : list[str] = field(default_factory=list)
+  ext           : Extention = Extention.exe
+  name          : str = "test.exe"
+  linked_libs   : list[str] = field(default_factory=list)

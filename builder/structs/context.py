@@ -5,12 +5,13 @@ from enum import StrEnum
 # гланый набор настроек для сборки проекта
 @dataclass
 class Context:
-  threads:    int = 0
-  author:     str = "Unknown"
-  tmp_dir:    str = ".tmp/"
-  build_dir:  str = "build/"
-  bin_dir:    str = "build/bin/"
-  info_dir:   str = "build/build info/"
+  threads       : int = 0
+  author        : str = 'Unknown'
+  tmp_dir       : str = '.tmp/'
+  build_dir     : str = 'build/'
+  bin_dir       : str = 'build/bin/'
+  info_dir      : str = 'build/build info/'
+  compiler_path : str = 'g++'
 
   #need_rebuild:           bool = True # принудительный пересбор
   with_compilation:       bool = True # чтобы выключать сборку

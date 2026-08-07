@@ -28,6 +28,8 @@ def prepare_build(ctx: Context):
   check_dir(['src', 'thirdparty', 'data', 'thirdparty'])
 
   # copyright
-  copy('LICENSE.txt', ctx.info_dir)
-  copy('NOTICE.txt', ctx.info_dir)
-  
+  if ctx.with_licenses:
+    copy('LICENSE.txt', ctx.info_dir)
+    copy('NOTICE.txt', ctx.info_dir)
+  if ctx.with_print_build_info:
+    pass # TODO
