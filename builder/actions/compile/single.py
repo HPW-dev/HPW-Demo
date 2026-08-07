@@ -8,7 +8,7 @@ import utils.fs as fs
 
 def compile_single(tgt: Target, ctx: Context, host: Host):
   '''однопоточная простая компиляция без инкрементальной сборки'''
-  print(f'Сборка: \'{to_yellow(tgt.name)}\'')
+  print(f'Сборка \'{to_yellow(tgt.name)}\'...')
   print(f'Исходники:\n  {to_yellow('\n  '.join(tgt.sources))}')
 
   cmd = [ctx.compiler_path]
@@ -22,10 +22,5 @@ def compile_single(tgt: Target, ctx: Context, host: Host):
   print(f'Команда компиляции:\n  {to_yellow(' '.join(cmd))}')
   exec_cmd(cmd, timeout=60.0*30.0)
 
-  assert(fs.exists(tgt.name))
-  result_file = f'{ctx.tmp_dir}single-result.txt'
-  exec_cmd([tgt.name, result_file])
-  with open(result_file, 'r') as f:
-    line = f.readline()
-    print(f'содержимое созданного файла \'{result_file}\':\n  {to_yellow(line)}')
-    assert(line == 'single .cpp compilation test')
+  if not fs.exists(tgt.name):
+    raise Exception(f'не удалось создать файл \'{tgt.name}\'')

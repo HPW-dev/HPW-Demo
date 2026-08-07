@@ -24,7 +24,16 @@ tgt.linked_libs.append('-static')
 tgt.options.extend(['-Wall', '-std=c++26'])
 compile_single(tgt, ctx, host)
 
+assert(exists(tgt.name))
+result_file = f'{ctx.tmp_dir}single-result.txt'
+exec_cmd([tgt.name, result_file])
+with open(result_file, 'r') as f:
+  line = f.readline()
+  print(f'содержимое созданного файла \'{to_yellow(result_file)}\':')
+  print(f'  {to_yellow(line)}')
+  assert(line == 'single .cpp compilation test')
 
-print('='*30)
+
+print('='*50)
 print(to_green('> тест пройден'))
 
