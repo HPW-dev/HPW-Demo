@@ -13,7 +13,7 @@ def check_dir(dirs: list [str]):
   '''если папки нет - взрыв'''
   for dir in dirs:
     if not fs.exists(dir):
-      raise Exception(f'не найдена папка \"{dir}\"')
+      raise FileExistsError(f'не найдена папка \"{dir}\"')
 
 def copy(src: str, dst: str):
   fs.copy(src, dst)

@@ -17,6 +17,7 @@ scripts_to_run = [
   "builder/test-exec.py",
   "builder/test-host-info.py",
   "builder/test-build-info.py",
+  "builder/test-single.py",
 ]
 
 for script in scripts_to_run:

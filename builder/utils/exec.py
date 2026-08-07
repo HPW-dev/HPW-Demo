@@ -34,10 +34,10 @@ def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, floa
   except subprocess.TimeoutExpired as e:
     stdout = (e.stdout or b"").decode() if isinstance(e.stdout, bytes) else (e.stdout or "")
     stderr = (e.stderr or b"").decode() if isinstance(e.stderr, bytes) else (e.stderr or "")
-    raise Exception(f"Превышено время ожидания для команды \"{' '.join(cmd)}\" ({timeout} сек)") from e
+    raise TimeoutError(f"Превышено время ожидания для команды \"{' '.join(cmd)}\" ({timeout} сек)") from e
   
   except FileNotFoundError as e:
-    raise Exception(f'программа \"{cmd[0] if cmd else cmd}\" не найдена') from e
+    raise FileNotFoundError(f'программа \"{cmd[0] if cmd else cmd}\" не найдена') from e
   
   finally:
     cmd_tm_ed = time.perf_counter()
