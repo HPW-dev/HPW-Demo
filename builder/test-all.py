@@ -22,7 +22,7 @@ scripts_to_run = [
 for script in scripts_to_run:
   script_path = Path(script)
   if not script_path.exists():
-    raise Exception(f"Ошибка: Файл {script} не найден!")
+    raise FileNotFoundError(f"Ошибка: Файл {script} не найден!")
         
   print(f"Запуск {script_path.name}...")
     
