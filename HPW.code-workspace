@@ -107,6 +107,7 @@
 			"minigame": true,
 			"gmon.svg": true,
 			"build/bin": true,
+			"build/build info": true,
 			"build/replays": true,
 			"build/plugin": true,
 			"build/screenshots": true,

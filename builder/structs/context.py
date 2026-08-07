@@ -9,7 +9,8 @@ class Context:
   author:     str = "Unknown"
   tmp_dir:    str = ".tmp/"
   build_dir:  str = "build/"
-  root_dir:   str = "./"
+  bin_dir:    str = "build/bin/"
+  info_dir:   str = "build/build info/"
 
   #need_rebuild:           bool = True # принудительный пересбор
   with_compilation:       bool = True # чтобы выключать сборку

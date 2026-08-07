@@ -24,11 +24,12 @@ build/editor
 build/*.txt
 build/plugin
 build/HPW
-build/screenshots
+build/screenshots/
+build/build info/
 build/config/
 build/info/
 build/resource
-build/replays
+build/replays/
 
 # Code:
 build/cmd-test-helper.txt
