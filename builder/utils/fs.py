@@ -11,6 +11,10 @@ def rem_if_exist(path: str):
   if p.is_file():
     p.unlink()
 
+def is_dir(path: str):
+  '''Проверить что это имя папки'''
+  return not Path(path).is_file()
+
 def rem(path: str):
   '''Удалить файл. Если его нет, не вылетать'''
   p = Path(path)
@@ -32,7 +36,7 @@ def rem_dir(dname: str, ignore_errors=True):
 def find(mask: str) -> list[str]:
   '''Ищет файлы по маске (src/**/*.cpp)'''
   base = Path(".") # искать от рута
-  return [str(p) for p in base.glob(mask)]
+  return [path_abs(p) for p in base.glob(mask)]
 
 def path_full(path: str):
   '''конвертит пути файлов в полные системные пути'''
