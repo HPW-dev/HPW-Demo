@@ -30,6 +30,12 @@ assert(exists(root + 'delme/subdir/c'))
 assert(exists(root + 'delme/subdir/d'))
 assert(not exists(root + 'delme/subdir/z'))
 
+assert(not is_dir(root + 'delme/a'))
+assert(not is_dir(root + 'delme/subdir/c'))
+assert(is_dir(root + 'delme/subdir/'))
+assert(is_dir(root + 'delme/subdir'))
+assert(is_dir(root + 'delme/'))
+
 print('> тест поиска по маске *.txt')
 finded = find(root + 'delme/subdir/*.txt')
 assert(finded != [])
