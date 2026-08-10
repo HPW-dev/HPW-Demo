@@ -22,9 +22,16 @@ commands.append(sleep_cmd)
 commands.append(sleep_cmd)
 
 start = time.perf_counter()
-exec_multi(commands)
+out = exec_multi(commands)
 end = time.perf_counter()
 assert end - start < 3.5, 'тесты должны проходиться быстро, несмотря на кучу задержек'
 
+print('\n=== Вывод всех команд ===')
+for out, err, elapsed in out:
+  print(50*'-')
+  print(f'STDOUT ... {out.rstrip()}')
+  print(f'STDERR ... {err.rstrip()}')
+  print(f'ELAPSED .. {elapsed} s')
+
 print(50*'=')
-print('> тесты пройдены')
+print(to_green('> тесты пройдены'))
