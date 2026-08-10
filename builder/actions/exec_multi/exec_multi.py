@@ -10,7 +10,12 @@ def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0):
 
   :exceptions:
     Если ошибка в одной из команд, стопорятся все команды.
+  
+  :return:
+    [(stdout, stderr, elapsed)]
   '''
+
+  result = []
 
   with ThreadPoolExecutor(max_workers=threads) as executor:
     # Запускаем все задачи
@@ -30,10 +35,13 @@ def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0):
           if stderr:
             print(stderr.rstrip(), file=sys.stderr)
           print(to_green(f"Команда: '{cmd_str}' успешно выполнена ({elapsed} сек)"))
+          result.append((stdout, stderr, elapsed))
         except Exception as exc:
           print(to_red(f"Ошибка при выполнении команды '{cmd_str}':\n{exc}\n"), file=sys.stderr)
           executor.shutdown(wait=False, cancel_futures=True)
           raise exc
                     
-    except Exception:
-      print(to_red("Работа пула потоков экстренно завершена."), file=sys.stderr)
+    except Exception as ex:
+      raise Exception("Работа пула потоков экстренно завершена") from ex
+
+  return result
