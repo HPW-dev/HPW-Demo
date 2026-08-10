@@ -4,7 +4,7 @@ import subprocess
 
 def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, float]:
   '''
-  Запускает команды
+  Запускает команду
 
   Returns:
     (stdout, stderr, elapsed_time_sec)
@@ -25,7 +25,7 @@ def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, floa
     # 4. Обработка ошибок упавшей команды
     stdout, stderr = e.stdout, e.stderr
     raise Exception(
-      f'не удалось выполнить команду {cmd}\n' \
+      f'не удалось выполнить команду \'{" ".join(cmd)}\'\n' \
       f'* Код возврата {e.returncode}\n' \
       f'* STDERR: {e.stderr}\n' \
       f'* STDOUT: {e.stdout}') from e
