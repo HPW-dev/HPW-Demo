@@ -16,6 +16,7 @@ scripts_to_run = [
   "builder/test-hash.py",
   "builder/test-exec.py",
   "builder/test-host-info.py",
+  "builder/test-exec-multi.py",
   "builder/test-build-info.py",
   "builder/test-single.py",
   "builder/test-single-2.py",
