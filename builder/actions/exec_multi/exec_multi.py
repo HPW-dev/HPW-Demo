@@ -28,13 +28,14 @@ def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0):
         cmd_str = " ".join(cmd)
 
         try:
+          print(f"> запуск команды '{to_yellow(cmd_str)}'")
           # Если функция exec_cmd взорвалась, future.result() вызовет это исключение
           stdout, stderr, elapsed = future.result()
           if stdout:
             print(stdout.rstrip())
           if stderr:
             print(stderr.rstrip(), file=sys.stderr)
-          print(to_green(f"Команда: '{cmd_str}' успешно выполнена ({elapsed} сек)"))
+          print(to_gray(f"...выполнена за {elapsed} сек"))
           result.append((stdout, stderr, elapsed))
         except Exception as exc:
           print(to_red(f"Ошибка при выполнении команды '{cmd_str}':\n{exc}\n"), file=sys.stderr)

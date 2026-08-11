@@ -8,6 +8,7 @@ class Context:
   threads       : int = 0
   author        : str = 'Unknown'
   tmp_dir       : str = '.tmp/'
+  obj_dir       : str = '.tmp/objects/'
   build_dir     : str = 'build/'
   bin_dir       : str = 'build/bin/'
   info_dir      : str = 'build/build info/'
