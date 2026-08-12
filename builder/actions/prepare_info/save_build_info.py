@@ -22,7 +22,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
   }
 
   json_file = f"{ctx.info_dir}build.json"
-  print(to_gray(f"Сохранение файла '{json_file}'..."))
+  print(to_gray(f"Сохранение инфы о сборке в '{json_file}'..."))
 
   with open(json_file, "w", encoding="utf-8") as file:
     json.dump(info, file, indent=2, ensure_ascii=False)
