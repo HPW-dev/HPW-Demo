@@ -37,3 +37,8 @@ def checkbox(env, val):
   if val in env and env[val] == True:
     return '✅'
   return '❌'
+
+def checkbox(val):
+  if val != None and val == True:
+    return '✅'
+  return '❌'
