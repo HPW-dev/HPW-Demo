@@ -2,5 +2,5 @@
 
 from datetime import datetime, timezone
 
-def utc_time() -> str:
-  return datetime.now(timezone.utc)
+def utc_time():
+  return str(datetime.now(timezone.utc))
