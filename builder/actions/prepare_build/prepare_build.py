@@ -1,6 +1,6 @@
-import utils.fs as fs
-from utils.ui import *
 from structs.context import *
+from utils.ui import *
+from utils import fs
 
 
 def make_if_not_exists(path: str):
@@ -21,7 +21,7 @@ def copy(src: str, dst: str):
 
 def prepare_build(ctx: Context):
   '''подготавливаем всё к сборке игры'''
-  print(to_gray(f'проврка файлов для сборки...'))
+  print(to_gray('проврка файлов для сборки...'))
   make_if_not_exists(ctx.build_dir)
   make_if_not_exists(ctx.bin_dir)
   make_if_not_exists(ctx.info_dir)
