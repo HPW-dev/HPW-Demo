@@ -10,6 +10,8 @@ print("=== Тест очистки ===")
 
 ctx = Context()
 clean(ctx)
+assert(not exists('.ruff_cache'))
+assert(not exists(ctx.info_dir))
 
 print('='*50)
 print(to_green('> тест пройден'))

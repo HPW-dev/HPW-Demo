@@ -11,8 +11,8 @@ def print_build_info(tgt: Target, ctx: Context, host: Host):
   print(f'* Итоговый файл .... {to_yellow(tgt.name)}')
   print(f'* Автор сборки ..... {to_yellow(ctx.author)}')
   print(f'* Время старта ..... {to_yellow(tgt.creation_time)}')
-  print(f'* Компиляция ....... {checkbox(ctx.with_compilation)}')
-  print(f'* Паковать ассеты .. {checkbox(ctx.with_assets)}')
+  print(f'* Компиляция ....... {checkbox2(ctx.with_compilation)}')
+  print(f'* Паковать ассеты .. {checkbox2(ctx.with_assets)}')
   print()
 
   print('=== Информация системы-сборщика ===')

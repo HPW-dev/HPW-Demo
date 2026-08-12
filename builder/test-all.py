@@ -21,6 +21,7 @@ scripts_to_run = [
   "builder/test-single.py",
   "builder/test-single-2.py",
   "builder/test-multi.py",
+  "builder/test-clear.py",
 ]
 
 for script in scripts_to_run:

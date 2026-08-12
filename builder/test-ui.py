@@ -1,8 +1,3 @@
-'''
-cd proj_root
-py builder/test-ui.py
-'''
-
 from utils.ui import *
 
 

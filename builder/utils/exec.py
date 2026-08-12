@@ -1,5 +1,5 @@
-import time
 import subprocess
+import time
 
 
 def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, float]:
@@ -24,7 +24,7 @@ def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, floa
   except subprocess.CalledProcessError as e:
     # 4. Обработка ошибок упавшей команды
     stdout, stderr = e.stdout, e.stderr
-    raise Exception(
+    raise RuntimeError(
       f'не удалось выполнить команду \'{" ".join(cmd)}\'\n' \
       f'* Код возврата {e.returncode}\n' \
       f'* STDERR: {e.stderr}\n' \

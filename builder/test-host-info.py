@@ -10,7 +10,7 @@ print(f'Разрядность ..... {to_yellow(info.bitness)}')
 print(f'Потоков ......... {to_yellow(info.threads)}')
 print(f'Версия Python ... {translate_none(to_yellow(info.python_ver))}')
 print(f'Версия компиля .. {translate_none(to_yellow(info.compiler_ver))}')
-print(f'Переменные среды:')
+print('Переменные среды:')
 for key, val in info.env.items():
   print(f'* {key} = {to_yellow(val)}')
 

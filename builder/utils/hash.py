@@ -1,7 +1,7 @@
 '''хэши файлов'''
 
-import zlib
 import hashlib
+import zlib
 
 
 def sha3_512(path: str):

@@ -2,6 +2,7 @@
 
 import sys
 from actions.prepare_info import *
+from actions.prepare_build import *
 from utils.ui import *
 from utils.timestamp import utc_time
 from structs.host import *
@@ -18,6 +19,7 @@ host = prepare_host_info()
 ctx = Context()
 tgt = Target()
 tgt.creation_time = utc_time()
+prepare_build(ctx)
 
 # показать инфу о сборке
 if ctx.with_print_build_info:
@@ -29,7 +31,6 @@ if ctx.with_print_build_info:
 # TODO - подготавливаем билд, если нужно
 # TODO - собираем нужное
 # TODO - пакуем ассеты
-# TODO - копируем лицухи
 
 # сейвим инфу о сборке
 if ctx.with_build_info_file:

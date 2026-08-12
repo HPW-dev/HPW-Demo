@@ -1,7 +1,7 @@
 '''Функции для работы с файлами'''
 
-import shutil
 import filecmp
+import shutil
 from pathlib import Path
 
 

@@ -17,7 +17,10 @@ def clean(ctx: Context):
   # собираем список кого удалить:
   delete_list = []
   delete_list.extend(find(f'{ctx.bin_dir}*.exe'))
+  delete_list.extend(find(f'{ctx.bin_dir}*.elf32'))
+  delete_list.extend(find(f'{ctx.bin_dir}*.elf64'))
   delete_list.append(ctx.info_dir)
+  delete_list.append('.ruff_cache')
   delete_list.extend(find('**/__pycache__'))
   delete_list.extend(find(f'{ctx.tmp_dir}*'))
   delete_list = [item for item in delete_list if not item.endswith('.gitkeep')]  

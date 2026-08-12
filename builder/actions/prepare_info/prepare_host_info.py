@@ -9,19 +9,25 @@ from utils.ui import *
 
 def compiler_version(env):
   '''узнать версию компилятора'''
+
   try:
     out, _, _ = exec_cmd([env['CXX'], '--version'])
     return out.rstrip()
-  except Exception as e:
+  
+  except RuntimeError as e:
     print(to_red(f'Ошибка при получении версии компилятора из CXX переменной:\n  {e}'))
+
   return None
 
 def python_version():
   '''проверка нужной версии Python'''
+
   ver = sys.version_info
+  
   if ver < (3,12,0):
     print(to_yellow('Требуется версия python не ниже 3.12.0'))
     return None
+  
   else:
     str_ver = f'{ver.major}.{ver.minor}.{ver.micro}'
     return str_ver
