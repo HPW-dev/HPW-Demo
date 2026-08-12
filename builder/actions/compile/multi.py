@@ -44,7 +44,7 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
   '''Многопоточная компиляция без инкрементальной сборки'''
 
   obj_cmds = prepare_obj_cmd(tgt, ctx)
-  print(f'> компиляция объектных файлов...')
+  print('> компиляция объектных файлов...')
   exec_multi(obj_cmds, ctx.threads, 600.0)
 
   print(f'> линковка \'{to_yellow(tgt.name)}\'')

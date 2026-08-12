@@ -37,12 +37,19 @@ def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0):
             print(stderr.rstrip(), file=sys.stderr)
           print(to_gray(f"...выполнена за {elapsed} сек"))
           result.append((stdout, stderr, elapsed))
+        
         except Exception as exc:
-          print(to_red(f"Ошибка при выполнении команды '{cmd_str}':\n{exc}\n"), file=sys.stderr)
+          err_msg = f"Ошибка при выполнении команды '{cmd_str}':\n{exc}\n"
+          print(to_red(err_msg), file=sys.stderr)
           executor.shutdown(wait=False, cancel_futures=True)
-          raise exc
+          raise RuntimeError(err_msg) from exc
                     
     except Exception as ex:
-      raise Exception("Работа пула потоков экстренно завершена") from ex
+      print(to_red("Работа пула потоков экстренно завершена"), file=sys.stderr)
+      raise ex
+
+    finally:
+      # Гарантируем закрытие пула в любом случае
+      executor.shutdown(wait=True)
 
   return result

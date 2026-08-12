@@ -34,7 +34,7 @@ for script in scripts_to_run:
   try:
     subprocess.run([sys.executable, str(script_path)], check=True)
   except subprocess.CalledProcessError as e:
-    print(f"\n Ошибка в скрипте {script_path.name}!")
+    print(f"\nОшибка в скрипте {script_path.name}!")
     print(f"Код возврата: {e.returncode}")
     print("Останов тестов.")
     sys.exit(e.returncode)
