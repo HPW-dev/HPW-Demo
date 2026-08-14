@@ -1,14 +1,15 @@
 '''Глаыный скрипт сборки: py builder'''
 
 import sys
-from actions.accept_args import *
-from actions.prepare_info import *
 from actions.prepare_build import *
-from utils.ui import *
-from utils.timestamp import utc_time
-from structs.host import *
+from actions.prepare_info import *
+from actions.accept_args import *
 from structs.context import *
 from structs.target import *
+from structs.host import *
+from utils.timestamp import utc_time
+from utils.ui import *
+from compile_legacy import compile_legacy
 
 
 if __name__ != "__main__":
@@ -19,8 +20,10 @@ if __name__ != "__main__":
 host = prepare_host_info()
 ctx = Context()
 tgt = Target()
+tgt.name = 'HPW' + tgt.ext
 tgt.creation_time = utc_time()
 
+# применяем аргументы запуска
 accept_args(tgt, ctx, host)
 prepare_build(ctx)
 
@@ -28,10 +31,9 @@ prepare_build(ctx)
 if ctx.with_print_build_info:
   print_build_info(tgt, ctx, host)
 
-# TODO - применяем параметры к контексту, таргету и прочему
-# TODO - пишем что будет сделано
-# TODO - подготавливаем билд, если нужно
-# TODO - собираем нужное
+if ctx.with_compilation:
+  compile_legacy(tgt, ctx, host)
+
 # TODO - пакуем ассеты
 
 # сейвим инфу о сборке

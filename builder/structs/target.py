@@ -24,3 +24,4 @@ class Target:
   name          : str = "test.exe"
   linked_libs   : list[str] = field(default_factory=list)
   creation_time : str = "" # время старта сборки (UTC)
+  use_openmp    : bool = True

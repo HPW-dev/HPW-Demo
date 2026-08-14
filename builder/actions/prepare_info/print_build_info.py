@@ -13,6 +13,7 @@ def print_build_info(tgt: Target, ctx: Context, host: Host):
   print(f'* Время старта ..... {to_yellow(tgt.creation_time)}')
   print(f'* Компиляция ....... {checkbox2(ctx.with_compilation)}')
   print(f'* Паковать ассеты .. {checkbox2(ctx.with_assets)}')
+  print(f'* OpenMP ........... {checkbox2(tgt.use_openmp)}')
   print()
 
   print('=== Информация системы-сборщика ===')

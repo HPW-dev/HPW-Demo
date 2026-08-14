@@ -18,6 +18,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
       'options': ' '.join(tgt.options),
       'defines': ' '.join(tgt.defines),
       'linked libs': ' '.join(tgt.linked_libs),
+      'openmp': tgt.use_openmp,
     }
   }
 

@@ -1,7 +1,6 @@
 from structs.target import *
 from structs.context import *
 from structs.host import *
-from utils.ui import *
 import argparse
 
 
@@ -72,6 +71,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Выключает компиляцию'
   )
+  parser.add_argument(
+    '-nmp', '--no_openmp', 
+    action='store_true', 
+    help='Выключает OpenMP'
+  )
 
   args = parser.parse_args()
 
@@ -83,6 +87,8 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     ctx.with_licenses = False
   if args.no_compilation:
     ctx.with_compilation = False
+  if args.no_openmp:
+    tgt.use_openmp = False
   ctx.compiler_path = args.cxx_dir
   ctx.info_dir = args.info_dir
   ctx.build_dir = args.build_dir
