@@ -3,8 +3,8 @@
 #include <utility>
 #include <unordered_map>
 #include <cmath>
-#include "graphic-util.hpp"
 #include "util-templ.hpp"
+#include "graphic-util.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "util/math/random.hpp"

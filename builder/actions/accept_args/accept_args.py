@@ -8,7 +8,8 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   '''Применяем аргументы запуска'''
 
   parser = argparse.ArgumentParser(
-    usage='py builder --author "YOUR_NICK"'
+    usage='for build:\n  py builder --author "YOUR_NICK" --threads 4\n' \
+      'for clear:\n  py builder -c'
   )
 
   parser.add_argument(
@@ -76,19 +77,19 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Выключает OpenMP'
   )
+  parser.add_argument(
+    '-c', '--clear', 
+    action='store_true', 
+    help='Очищает от файлов сборки и прерывает сборку'
+  )
 
   args = parser.parse_args()
 
-  if args.no_print:
-    ctx.with_print_build_info = False
-  if args.no_info:
-    ctx.with_build_info_file = False
-  if args.no_license:
-    ctx.with_licenses = False
-  if args.no_compilation:
-    ctx.with_compilation = False
-  if args.no_openmp:
-    tgt.use_openmp = False
+  ctx.with_print_build_info = not bool(args.no_print)
+  ctx.with_build_info_file = not bool(args.no_info)
+  ctx.with_licenses = not bool(args.no_license)
+  ctx.with_compilation = not bool(args.no_compilation)
+  tgt.use_openmp = not bool(args.no_openmp)
   ctx.compiler_path = args.cxx_dir
   ctx.info_dir = args.info_dir
   ctx.build_dir = args.build_dir
@@ -97,6 +98,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.obj_dir = args.obj_dir
   ctx.author = args.author
   ctx.threads = max(1, args.threads)
+  ctx.clear_all = bool(args.clear)
 
   return args
   

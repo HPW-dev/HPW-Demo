@@ -2,14 +2,14 @@
 #include "menu-from-yaml.hpp"
 #include "menu.hpp"
 #include "advanced-text-menu.hpp"
-#include "menu/item/text-item.hpp"
 #include "util/file/yaml.hpp"
 #include "util/unicode.hpp"
 #include "util/error.hpp"
 #include "util/log.hpp"
+#include "game/menu/item/text-item.hpp"
+#include "game/scene/scene-locale.hpp"
 #include "game/util/locale.hpp"
 #include "game/core/scenes.hpp"
-#include "game/scene/scene-locale.hpp"
 
 inline static Shared<Menu_item> make_text_item(cr<Yaml> item_node, cr<Action_table> actions) {
   // добавочное имя к адресу локализации

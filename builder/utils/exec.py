@@ -27,8 +27,8 @@ def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, floa
     raise RuntimeError(
       f'не удалось выполнить команду \'{" ".join(cmd)}\'\n' \
       f'* Код возврата {e.returncode}\n' \
-      f'* STDERR: {e.stderr}\n' \
-      f'* STDOUT: {e.stdout}') from e
+      f'* STDERR: {str(e.stderr).rstrip()}\n' if e.stderr else '' \
+      f'* STDOUT: {str(e.stdout).rstrip()}' if e.stdout else '') from e
 
   # обработка таймаута
   except subprocess.TimeoutExpired as e:

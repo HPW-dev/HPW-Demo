@@ -1,6 +1,7 @@
 #pragma once
 #include <functional>
 #include <typeinfo>
+#include "util/math/num-types.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 #include "util/str.hpp"

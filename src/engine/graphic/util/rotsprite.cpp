@@ -1,8 +1,8 @@
 #include <cmath>
 #include <cassert>
 #include <algorithm>
-#include "graphic-util.hpp"
 #include "rotsprite.hpp"
+#include "graphic-util.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/rotation.hpp"

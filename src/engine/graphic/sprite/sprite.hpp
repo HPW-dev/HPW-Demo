@@ -1,6 +1,6 @@
 #pragma once
 #include "util/math/vec.hpp"
-#include "graphic/image/image.hpp"
+#include "engine/graphic/image/image.hpp"
 
 class Sprite final: public Resource {
 protected:

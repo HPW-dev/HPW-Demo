@@ -8,7 +8,7 @@
 #include "util/str.hpp"
 #include "util/unicode.hpp"
 #include "game/core/bgps.hpp"
-#include "bgp/bgp.hpp"
+#include "game/bgp/bgp.hpp"
 
 class Menu;
 class Sprite;
