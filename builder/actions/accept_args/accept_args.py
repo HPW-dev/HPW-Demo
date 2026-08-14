@@ -95,6 +95,8 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.tmp_dir = args.tmp_dir
   ctx.bin_dir = args.bin_dir
   ctx.obj_dir = args.obj_dir
+  ctx.author = args.author
+  ctx.threads = max(1, args.threads)
 
   return args
   

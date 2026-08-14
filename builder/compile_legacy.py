@@ -14,27 +14,34 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
   bits = host.bitness
 
   tgt.options.extend([
-    '-Wall', '-std=c++26', '-pipe',
-    '-s', '-Ofast', '-march=x86-64', '-mtune=generic'
+    'Wall', 'std=c++26', 'pipe',
+    's', 'Ofast', 'march=x86-64', 'mtune=generic'
   ])
   tgt.linked_libs.extend([
     '-lyaml-cpp',
-    '-lglfw3dll', '-lglew32', '-lopengl32', '-lOpenAL32.dll'
+    '-lglfw3dll',
+    '-lglew32',
+    '-lopengl32',
+    '-lOpenAL32.dll',
     '-static-libgcc',
+  ])
+  tgt.lib_dirs.extend([
+    f'{thirdparty_dir}lib/yaml-cpp/{bits}',
+    f'{thirdparty_dir}lib/OpenAL-soft/{bits}',
+    f'{thirdparty_dir}lib/GLEW/{bits}',
+    f'{thirdparty_dir}lib/GLFW/{bits}',
   ])
   if tgt.use_openmp:
     tgt.linked_libs.append('-fopenmp')
   tgt.defines.extend([
-    '-DHOST_GLFW3',
-    '-DWINDOWS',
+    'HOST_GLFW3',
+    'WINDOWS',
   ])
   tgt.include_dirs.extend([
     '.',
     src_dir,
     f'{thirdparty_dir}include/',
-    f"{thirdparty_dir}include/_windows_only/GLFW/{bits}",
-    f"{thirdparty_dir}lib/yaml-cpp/{bits}",
-    f"{thirdparty_dir}lib/OpenAL-soft/{bits}",
+    f'{thirdparty_dir}include/_windows_only/GLFW/{bits}',
   ])
   tgt.sources = find(f'{src_dir}/*.cpp')
 

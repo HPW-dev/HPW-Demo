@@ -28,11 +28,11 @@ def prepare_obj_cmd(tgt: Target, ctx: Context):
 
   for cxx_src in tgt.sources:
     cmd = [ctx.compiler_path]
-    cmd.extend(tgt.defines)
-    cmd.extend(tgt.options)
-    cmd.extend(tgt.include_dirs)
+    cmd.extend([f'-D{define}' for define in tgt.defines])
+    cmd.extend([f'-{opt}' for opt in tgt.options])
+    cmd.extend([f'-I{path}' for path in tgt.include_dirs])
     cmd.extend(['-c', cxx_src])
-    cmd.extend(tgt.lib_dirs)
+    cmd.extend([f'-L{path}' for path in tgt.lib_dirs])
     obj_name = prepare_obj_name(cxx_src)
     cmd.extend(['-o', fs.path_abs(f'{ctx.obj_dir}{obj_name}')])
     cmd.extend(tgt.linked_libs)
@@ -49,11 +49,11 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
 
   print(f'> линковка \'{to_yellow(tgt.name)}\'')
   cmd = [ctx.compiler_path]
-  cmd.extend(tgt.defines)
-  cmd.extend(tgt.options)
-  cmd.extend(tgt.include_dirs)
+  cmd.extend([f'-D{define}' for define in tgt.defines])
+  cmd.extend([f'-{opt}' for opt in tgt.options])
+  cmd.extend([f'-I{path}' for path in tgt.include_dirs])
   cmd.append(f'{ctx.obj_dir}*.o')
-  cmd.extend(tgt.lib_dirs)
+  cmd.extend([f'-L{path}' for path in tgt.lib_dirs])
   cmd.extend(['-o', fs.path_abs(tgt.name)])
   cmd.extend(tgt.linked_libs)
   print(to_yellow(' '.join(cmd)))

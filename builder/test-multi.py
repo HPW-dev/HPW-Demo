@@ -20,7 +20,7 @@ tgt = Target()
 tgt.name = f'{ctx.tmp_dir}multi{tgt.ext}'
 tgt.sources = find("builder/test-progs/multi/**/*.cpp")
 tgt.linked_libs.append('-static')
-tgt.options.extend(['-Wall', '-std=c++26', '-pipe'])
+tgt.options.extend(['Wall', 'std=c++26', 'pipe'])
 compile_multi(tgt, ctx, host)
 
 assert exists(tgt.name), f"файл '{tgt.name}' должен существовать"
