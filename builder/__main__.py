@@ -1,6 +1,8 @@
 '''Глаыный скрипт сборки: py builder'''
 
+import signal
 import sys
+import os
 from actions.compile.compile_legacy import compile_legacy
 from actions.prepare_build import *
 from actions.prepare_info import *
@@ -16,6 +18,13 @@ from utils.ui import *
 if __name__ != "__main__":
   print(to_red('Запускать через "python builder"'), file=sys.stderr)
   sys.exit(1)
+
+# Для прерывания по Ctrl+C
+def signal_handler(sig, frame):
+  print(to_red("\n> Сборка прервана через SIGINT"), file=sys.stderr)
+  os._exit(1)
+
+signal.signal(signal.SIGINT, signal_handler)
 
 # подготовка
 host = prepare_host_info()

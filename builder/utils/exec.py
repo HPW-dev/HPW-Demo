@@ -10,6 +10,9 @@ def exec_cmd(cmd: list [str], timeout: float = 60.0 * 2) -> tuple[str, str, floa
     (stdout, stderr, elapsed_time_sec)
   '''
 
+  if not cmd:
+    raise ValueError("Пустая команда")
+
   cmd_tm_st = time.perf_counter()
   stdout, stderr = "", ""
 
