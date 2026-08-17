@@ -17,14 +17,16 @@ ctx.with_build_info_file = False
 prepare_build(ctx)
 
 tgt = Target()
-tgt.name = f'{ctx.tmp_dir}multi{tgt.ext}'
+tgt.name = f'multi{tgt.ext}'
+ctx.bin_dir = ctx.tmp_dir
 tgt.sources = find("builder/test-progs/multi/**/*.cpp")
 tgt.linked_libs.append('-static')
 tgt.options.extend(['Wall', 'std=c++26', 'pipe'])
 compile_multi(tgt, ctx, host)
 
-assert exists(tgt.name), f"файл '{tgt.name}' должен существовать"
-out, _, _ = exec_cmd([tgt.name])
+exe_path = f'{ctx.tmp_dir}{tgt.name}'
+assert exists(exe_path), f"файл '{exe_path}' должен существовать"
+out, _, _ = exec_cmd([exe_path])
 assert(out == 'result: 2366537086')
 print(f"результат программы: '{to_green(out)}'")
 
