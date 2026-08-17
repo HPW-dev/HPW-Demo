@@ -1,3 +1,4 @@
+from actions.prepare_game_ver import *
 from actions.compile import *
 from structs.target import *
 from structs.context import *
@@ -98,6 +99,7 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
 
   tgt.sources.extend(find(f'{src_dir}*.cpp'))
 
+  generate_game_ver_file(ctx)
   compile_multi(tgt, ctx, host)
 
   if exists(executable):

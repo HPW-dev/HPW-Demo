@@ -14,10 +14,9 @@ def compiler_version(env):
     out, _, _ = exec_cmd([env['CXX'], '--version'])
     return out.rstrip()
   
-  except RuntimeError as e:
-    print(to_red(f'Ошибка при получении версии компилятора из CXX переменной:\n  {e}'))
-
-  return None
+  except Exception as e:
+    print(to_red(f'Ошибка при получении версии компилятора из CXX переменной:\n* {e}'), file=sys.stderr)
+    return None
 
 def python_version():
   '''проверка нужной версии Python'''

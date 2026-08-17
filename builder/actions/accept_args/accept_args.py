@@ -1,3 +1,4 @@
+from actions.prepare_info import compiler_version
 from structs.target import *
 from structs.context import *
 from structs.host import *
@@ -12,12 +13,6 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
       'for clear:\n  py builder -c'
   )
 
-  if 'CXX' not in host.env:
-    parser.add_argument(
-      '-cxx', '--compiler',
-      type=str, required=True,
-      help='Указать путь к компилятору'
-    )
   parser.add_argument(
     '-a', '--author', 
     type=str, default='Unknown',
@@ -54,8 +49,9 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     help='Куда копировать сводку билда (по умолчанию: %(default)s)'
   )
   parser.add_argument(
-    '-cxx', '--cxx_dir', 
+    '-cxx', '--cxx_path', 
     type=str, default=ctx.compiler_path,
+    required=bool('CXX' not in host.env),
     help='Компилятор/Путь до него (по умолчанию: %(default)s)'
   )
   parser.add_argument(
@@ -96,7 +92,12 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_licenses = not bool(args.no_license)
   ctx.with_compilation = not bool(args.no_compilation)
   tgt.use_openmp = not bool(args.no_openmp)
-  ctx.compiler_path = args.cxx_dir
+
+  ctx.compiler_path = args.cxx_path
+  print(f'new {args.cxx_path}')
+  host.env['CXX'] = str(args.cxx_path)
+  host.compiler_ver = compiler_version(host.env)
+
   ctx.info_dir = args.info_dir
   ctx.build_dir = args.build_dir
   ctx.tmp_dir = args.tmp_dir

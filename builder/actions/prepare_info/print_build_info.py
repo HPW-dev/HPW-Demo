@@ -27,7 +27,7 @@ def print_build_info(tgt: Target, ctx: Context, host: Host):
   print(f'* Потоки сборки .... {to_yellow(ctx.threads)}')
   print(f'* Версия питона .... {to_yellow(host.python_ver.rstrip())}')
   print(f'* Компилятор ....... {to_yellow(ctx.compiler_path)}')
-  print(f'* Версия компиля ... {to_yellow(host.compiler_ver.rstrip())}')
+  print(f'* Версия компиля ... {to_yellow(translate_none(host.compiler_ver).rstrip())}')
   print(f'* CXX OPTS ......... {to_yellow(' '.join(tgt.options))}')
   print(f'* CXX DEFINES ...... {to_yellow(' '.join(tgt.defines))}')
   print(f'* CXX LINKED LIBS .. {to_yellow(' '.join(tgt.linked_libs))}')

@@ -14,7 +14,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
 
     'compiler': {
       'python ver': host.python_ver.rstrip(),
-      'c++ ver': host.compiler_ver.rstrip(),
+      'c++ ver': translate_none(host.compiler_ver).rstrip(),
       'options': ' '.join(tgt.options),
       'defines': ' '.join(tgt.defines),
       'linked libs': ' '.join(tgt.linked_libs),
