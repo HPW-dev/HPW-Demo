@@ -8,12 +8,15 @@ from actions.prepare_game_ver import *
 def prepare_game_ver(ctx: Context):
   game_ver, comit_date, comit_time = game_version(ctx)
   date_time = translate_none(None)
+  
   if comit_date and comit_time:
     date_time = to_yellow(' @ '.join([comit_date, comit_time]))
+
   if game_ver:
     game_ver = to_green(game_ver)
   else:
     game_ver = translate_none(None)
+
   return game_ver, date_time
 
 def print_build_info(tgt: Target, ctx: Context, host: Host):
