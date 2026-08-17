@@ -39,7 +39,6 @@ accept_args(tgt, ctx, host)
 if ctx.clear_all:
   print('Очистка от файлов сборки')
   clean(ctx)
-  print(to_gray('Выход...'))
   sys.exit(0)
 
 prepare_build(ctx)
