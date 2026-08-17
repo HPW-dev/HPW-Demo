@@ -12,6 +12,12 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
       'for clear:\n  py builder -c'
   )
 
+  if 'CXX' not in host.env:
+    parser.add_argument(
+      '-cxx', '--compiler',
+      type=str, required=True,
+      help='Указать путь к компилятору'
+    )
   parser.add_argument(
     '-a', '--author', 
     type=str, default='Unknown',
