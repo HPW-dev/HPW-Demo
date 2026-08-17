@@ -2,15 +2,30 @@ from structs.context import *
 from structs.target import *
 from structs.host import *
 from utils.ui import *
+from actions.prepare_game_ver import *
 
+
+def prepare_game_ver(ctx: Context):
+  game_ver, comit_date, comit_time = game_version(ctx)
+  date_time = translate_none(None)
+  if comit_date and comit_time:
+    date_time = to_yellow(' @ '.join([comit_date, comit_time]))
+  if game_ver:
+    game_ver = to_green(game_ver)
+  else:
+    game_ver = translate_none(None)
+  return game_ver, date_time
 
 def print_build_info(tgt: Target, ctx: Context, host: Host):
   '''показывает сводку билда'''
+  game_ver, date_time = prepare_game_ver(ctx)
 
   print('=== Сводка билда ===')
   print(f'* Итоговый файл .... {to_yellow(tgt.name)}')
   print(f'* Автор сборки ..... {to_yellow(ctx.author)}')
-  print(f'* Время старта ..... {to_yellow(tgt.creation_time)}')
+  print(f'* Старт сборки ..... {to_yellow(tgt.creation_time)}')
+  print(f'* Версия игры ...... {game_ver}')
+  print(f'* Дата комита ...... {date_time}')
   print(f'* Компиляция ....... {checkbox2(ctx.with_compilation)}')
   print(f'* Паковать ассеты .. {checkbox2(ctx.with_assets)}')
   print(f'* OpenMP ........... {checkbox2(tgt.use_openmp)}')

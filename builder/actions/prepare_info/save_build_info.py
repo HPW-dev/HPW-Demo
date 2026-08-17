@@ -1,3 +1,4 @@
+from actions.prepare_game_ver import game_version
 from structs.context import *
 from structs.target import *
 from structs.host import *
@@ -8,9 +9,17 @@ import json
 def save_build_info(tgt: Target, ctx: Context, host: Host):
   '''сохраняет инфу о билде в .json'''
 
+  ver, date, time = game_version(ctx)
+
   info = {
     'author': ctx.author,
-    'creation time': tgt.creation_time,
+    'compilation start': tgt.creation_time,
+
+    'game ver': {
+      'version': ver,
+      'comit date': date,
+      'comit time': time,
+    },
 
     'compiler': {
       'python ver': host.python_ver.rstrip(),
