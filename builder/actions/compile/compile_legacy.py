@@ -63,6 +63,9 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}host/ogl3/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}host/*.cpp'))
 
+  # версию надо генерить перед game/util/*, иначе find не найдёт нужное
+  generate_game_version_file(ctx)
+
   tgt.sources.extend(find(f'{src_dir}game/util/post-effect/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/util/cmd/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/util/*.cpp'))
@@ -98,7 +101,6 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
 
   tgt.sources.extend(find(f'{src_dir}*.cpp'))
 
-  generate_game_version_file(ctx)
   compile_multi(tgt, ctx, host)
 
   if exists(executable):
