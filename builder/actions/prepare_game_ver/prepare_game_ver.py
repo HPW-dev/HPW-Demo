@@ -1,6 +1,7 @@
 from structs.context import *
 from utils.exec import exec_cmd
 from utils.ui import *
+from utils.fs import path_abs, exists
 from sys import stderr
 
 def game_version(ctx: Context):
@@ -30,4 +31,22 @@ def game_version(ctx: Context):
 
 def generate_game_version_file(ctx: Context):
   '''Сгенерировать код для получения версии игры в самой игре'''
-  pass
+  version, date, time = game_version(ctx)
+  if not version: version = '> v0.270.0.0'
+  if not date: date = '> 17.08.2026'
+  if not time: time = '> 15:11'
+
+  fname = path_abs(f'{ctx.src_dir}/game/util/version.cpp') 
+  print(to_gray(f'генерация файла версии игры "{fname}"...'))
+
+  with open(fname, 'w', newline='\n', encoding="utf-8") as f:
+    f.write (
+      '#include "version.hpp"\n'
+      '\n'
+      'const char* get_game_version() { return "' + version + '"; }\n'
+      'const char* get_game_creation_date() { return "' + date + '"; }\n'
+      'const char* get_game_creation_time() { return "' + time + '"; }\n'
+    )
+
+  if not exists(fname):
+    raise FileExistsError(f'Не удалось создать файл с версией игры "{fname}"')

@@ -7,19 +7,18 @@ from utils.ui import *
 from utils.fs import *
 
 def compile_legacy(tgt: Target, ctx: Context, host: Host):
-  print(to_gray('Сборка старой версии игры...'))
+  print('=== Сборка старой версии игры ===')
 
   executable = path_abs(ctx.bin_dir + tgt.name)
   thirdparty_dir = "thirdparty/"
-  src_dir = "src/"
+  src_dir = ctx.src_dir
   bits = host.bitness
 
   tgt.options.extend([
     'Wall', 'std=c++26', 'pipe',
 
-    #'s', 'Ofast', 'march=x86-64', 'mtune=generic'
-    #'s', 'O0', 'g0',
-    'O0', 'ggdb',
+    #'m64', 's', 'Ofast', 'march=x86-64', 'mtune=generic'
+    'm64', 'O0', 'ggdb',
   ])
   if tgt.use_openmp:
     tgt.options.append('fopenmp')
@@ -99,7 +98,7 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
 
   tgt.sources.extend(find(f'{src_dir}*.cpp'))
 
-  generate_game_ver_file(ctx)
+  generate_game_version_file(ctx)
   compile_multi(tgt, ctx, host)
 
   if exists(executable):
