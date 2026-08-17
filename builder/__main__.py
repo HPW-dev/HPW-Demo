@@ -1,6 +1,7 @@
 '''Глаыный скрипт сборки: py builder'''
 
 import sys
+from actions.compile.compile_legacy import compile_legacy
 from actions.prepare_build import *
 from actions.prepare_info import *
 from actions.accept_args import *
@@ -10,7 +11,6 @@ from structs.target import *
 from structs.host import *
 from utils.timestamp import utc_time
 from utils.ui import *
-from compile_legacy import compile_legacy
 
 
 if __name__ != "__main__":
