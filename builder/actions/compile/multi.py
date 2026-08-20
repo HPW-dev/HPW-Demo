@@ -39,6 +39,15 @@ def prepare_obj_cmd(tgt: Target, ctx: Context):
 
   return cmds
 
+def make_object_list(ctx: Context) -> str:
+  '''создать список объектников, который потом подаётся при линковке через @'''
+
+  result = f'{ctx.obj_dir}objects.txt'
+  with open(result, 'w', encoding='utf-8') as f:
+    for obj in fs.find(f'{ctx.obj_dir}*.o'):
+      f.write(f"{fs.path_linux(obj)}\n")
+  return f'@{fs.path_abs(result)}'
+
 def compile_multi(tgt: Target, ctx: Context, host: Host):
   '''Многопоточная компиляция без инкрементальной сборки'''
   start = time.perf_counter()
@@ -52,7 +61,7 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
   cmd.extend([f'-D{define}' for define in tgt.defines])
   cmd.extend([f'-{opt}' for opt in tgt.options])
   cmd.extend([f'-I{fs.path_abs(path)}' for path in tgt.include_dirs])
-  cmd.append(f'{ctx.obj_dir}*.o')
+  cmd.append(make_object_list(ctx))
   cmd.extend([f'-L{fs.path_abs(path)}' for path in tgt.lib_dirs])
   executable = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
   cmd.extend(['-o', executable])

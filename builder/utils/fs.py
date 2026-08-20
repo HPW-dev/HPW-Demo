@@ -46,6 +46,10 @@ def path_abs(path: str):
   '''конвертит пути файлов в относительные системные пути'''
   return str(Path(path))
 
+def path_linux(path: str):
+  '''конвертит пути файлов в пути линукса'''
+  return str(Path(path).as_posix())
+
 def exists(path: str):
   '''Проверяет что файл существует'''
   return Path(path).exists()
