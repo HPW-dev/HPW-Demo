@@ -16,11 +16,11 @@ from utils.ui import *
 from utils.exec import exec_cmd
 
 
-def accept_unicode():
-  if sys.platform == "win32":
-    exec_cmd('chcp 65001 > nul'.split())
-  sys.stdout.reconfigure(encoding='utf-8')
-  sys.stderr.reconfigure(encoding='utf-8')
+# accept unicode
+if sys.platform == "win32":
+  exec_cmd('chcp 65001 > nul'.split())
+sys.stdout.reconfigure(encoding='utf-8')
+sys.stderr.reconfigure(encoding='utf-8')
 
 if __name__ != "__main__":
   print(to_red('Запускать через "python builder"'), file=sys.stderr)
