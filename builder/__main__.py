@@ -6,6 +6,7 @@ from structs.target import Extention
 import signal
 import sys
 import os
+import subprocess
 from actions.compile.compile_legacy import compile_legacy
 from actions.prepare_build import *
 from actions.prepare_info import *
@@ -16,12 +17,11 @@ from structs.target import *
 from structs.host import *
 from utils.timestamp import utc_time
 from utils.ui import *
-from utils.exec import exec_cmd
 
 
 # accept unicode
 if sys.platform == "win32":
-  exec_cmd('chcp 65001 > nul'.split())
+  subprocess.run("chcp 65001", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 sys.stdout.reconfigure(encoding='utf-8')
 sys.stderr.reconfigure(encoding='utf-8')
 
