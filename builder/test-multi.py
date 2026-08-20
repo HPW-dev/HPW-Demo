@@ -27,8 +27,8 @@ compile_multi(tgt, ctx, host)
 exe_path = f'{ctx.tmp_dir}{tgt.name}'
 assert exists(exe_path), f"файл '{exe_path}' должен существовать"
 out, _, _ = exec_cmd([exe_path])
-assert(out == 'result: 2366537086')
 print(f"результат программы: '{to_green(out)}'")
+assert(out == 'result: 2366537086')
 
 print('='*79)
 print(to_green('> тест пройден'))
