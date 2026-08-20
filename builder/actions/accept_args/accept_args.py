@@ -98,7 +98,6 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
             "если не выполняется очистка (-c) и нет переменной среды (CXX)")
 
   ctx.compiler_path = args.cxx_path
-  print(f'new {args.cxx_path}')
   host.env['CXX'] = str(args.cxx_path)
   host.compiler_ver = compiler_version(host.env)
 
