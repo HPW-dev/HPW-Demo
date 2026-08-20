@@ -17,38 +17,61 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
   tgt.options.extend([
     'Wall', 'std=c++26', 'pipe',
 
-    #'m64', 's', 'Ofast', 'march=x86-64', 'mtune=generic'
-    'm64', 'O0', 'ggdb',
+    'm64', 's', 'Ofast', 'march=x86-64', 'mtune=generic', 'flto'
+    #'m64', 'O0', 'ggdb',
   ])
   if tgt.use_openmp:
     tgt.options.append('fopenmp')
+
+  if host.system == Sys_name.windows:
+    tgt.linked_libs.extend([
+      '-lyaml-cpp',
+      '-lglfw3dll',
+      '-lglew32',
+      '-lopengl32',
+      '-ldl',
+      '-lOpenAL32.dll',
+    ])
+  elif Sys_name.linux:
+    tgt.linked_libs.extend([
+      '-lyaml-cpp',
+      '-lGLFW',
+      '-lGLEW',
+      '-lGL',
+      '-lm',
+      '-lOpenAL',
+    ])
   tgt.linked_libs.extend([
-    '-lyaml-cpp',
-    '-lglfw3dll',
-    '-lglew32',
-    '-lopengl32',
-    '-lOpenAL32.dll',
     '-shared-libgcc',
   ])
-  tgt.lib_dirs.extend([
-    f'{thirdparty_dir}lib/yaml-cpp/{bits}',
-    f'{thirdparty_dir}lib/OpenAL-soft/{bits}',
-    f'{thirdparty_dir}lib/GLEW/{bits}',
-    f'{thirdparty_dir}lib/GLFW/{bits}',
-  ])
+
+  if host.system == Sys_name.windows:
+    tgt.lib_dirs.extend([
+      f'{thirdparty_dir}lib/yaml-cpp/{bits}',
+      f'{thirdparty_dir}lib/OpenAL-soft/{bits}',
+      f'{thirdparty_dir}lib/GLEW/{bits}',
+      f'{thirdparty_dir}lib/GLFW/{bits}',
+    ])
+  elif host.system == Sys_name.linux:
+    pass
+
+  tgt.defines.append('WINDOWS' if host.system == Sys_name.windows else 'LINUX')
   tgt.defines.extend([
     'HOST_GLFW3',
-    'WINDOWS',
-    #'NDEBUG', 'RELEASE',
-    'DEBUG',
+    'NDEBUG', 'RELEASE',
+    #'DEBUG',
   ])
+
   tgt.include_dirs.extend([
     '.',
     src_dir,
     f'{thirdparty_dir}include/',
-    f'{thirdparty_dir}include/_windows_only/GLFW/{bits}',
-    f'{thirdparty_dir}include/_windows_only/GLEW/',
   ])
+  if host.system == Sys_name.windows:
+    tgt.include_dirs.extend([
+      f'{thirdparty_dir}include/_windows_only/GLFW/{bits}',
+      f'{thirdparty_dir}include/_windows_only/GLEW/',  
+    ])
 
   tgt.sources.extend(find(f'{thirdparty_dir}include/zip/*.c'))
   tgt.sources.append(f'{thirdparty_dir}include/stb/stb_vorbis.c')
