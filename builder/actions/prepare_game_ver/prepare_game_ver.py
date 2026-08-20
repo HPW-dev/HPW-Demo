@@ -25,16 +25,16 @@ def game_version(ctx: Context):
     if time: time = time.strip()
     return version, date, time
   
-  except Exception as ex:
-    print(to_red(f'Ошибка при получении версии игры:\n* {ex}'), file=stderr)
+  except Exception:
+    print(to_red(f'Ошибка при получении версии игры'), file=stderr)
     return None, None, None
 
 def generate_game_version_file(ctx: Context):
   '''Сгенерировать код для получения версии игры в самой игре'''
   version, date, time = game_version(ctx)
-  if not version: version = '> v0.270.0.0'
-  if not date: date = '> 17.08.2026'
-  if not time: time = '> 15:11'
+  if version == None: version = '> v0.270.0.0'
+  if date == None: date = '> 17.08.2026'
+  if time == None: time = '> 15:11'
 
   fname = path_abs(f'{ctx.src_dir}/game/util/version.cpp') 
   print(to_gray(f'генерация файла версии игры "{fname}"...'))
