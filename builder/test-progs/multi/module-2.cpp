@@ -1,5 +1,5 @@
 #include "module-2.hpp"
 
-unsigned long func_2(unsigned long in) {
+u32 func_2(u32 in) {
   return in * 444;
 }

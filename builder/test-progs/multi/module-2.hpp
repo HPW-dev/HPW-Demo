@@ -1,3 +1,4 @@
 #pragma once
+#include "types.hpp"
 
-unsigned long func_2(unsigned long in);
+u32 func_2(u32 in);

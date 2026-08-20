@@ -1,5 +1,5 @@
 #include "module-1.hpp"
 
-unsigned long func_1(unsigned long in) {
+u32 func_1(u32 in) {
   return in * 30;
 }
