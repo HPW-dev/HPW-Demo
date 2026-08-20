@@ -3,14 +3,16 @@
 #include <chrono>
 #include <format>
 
+#include "log.hpp"
+#include "util/str-util.hpp"
+
+// не перемещать это ниже чем log.hpp и str-util.hpp
 #ifdef WINDOWS
 #define NOMINMAX
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #endif
 
-#include "log.hpp"
-#include "util/str-util.hpp"
 #include "util/platform.hpp"
 #include "util/error.hpp"
 
