@@ -9,8 +9,8 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   '''Применяем аргументы запуска'''
 
   parser = argparse.ArgumentParser(
-    usage='for build:\n  py builder --author "YOUR_NICK" --threads 4\n' \
-      'for clear:\n  py builder -c'
+    usage='for build:\n  python builder --author "YOUR_NICK" --threads 4\n' \
+      'for clear:\n  python builder -c'
   )
 
   parser.add_argument(
