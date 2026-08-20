@@ -1,12 +1,16 @@
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include "log.hpp"
-#include "util/str-util.hpp"
-#include <windows.h>
 #include <filesystem>
 #include <iostream>
 #include <chrono>
 #include <format>
+
+#ifdef WINDOWS
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#endif
+
+#include "log.hpp"
+#include "util/str-util.hpp"
 #include "util/platform.hpp"
 #include "util/error.hpp"
 
