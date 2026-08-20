@@ -35,10 +35,10 @@ def in_env(env, val, finded_color=Color.YELLOW, none_color=Color.RED, none_val='
 def checkbox(env, val):
   '''если параметр val найдётся в env:dict и будет True, то показать галочку'''
   if val in env and env[val] == True:
-    return '✅'
-  return '❌'
+    return to_green('✔')
+  return to_red('❌')
 
 def checkbox2(val):
   if val != None and val == True:
-    return '✅'
-  return '❌'
+    return to_green('✔')
+  return to_red('❌')
