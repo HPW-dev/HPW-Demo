@@ -51,7 +51,6 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   parser.add_argument(
     '-cxx', '--cxx_path', 
     type=str, default=ctx.compiler_path,
-    required=bool('CXX' not in host.env),
     help='Компилятор/Путь до него (по умолчанию: %(default)s)'
   )
   parser.add_argument(
@@ -92,6 +91,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_licenses = not bool(args.no_license)
   ctx.with_compilation = not bool(args.no_compilation)
   tgt.use_openmp = not bool(args.no_openmp)
+
+  if not args.clear and "CXX" not in host.env:
+      if args.cxx_path == ctx.compiler_path and not ctx.compiler_path:
+          parser.error("аргумент -cxx/--cxx_path обязателен, " \
+            "если не выполняется очистка (-c) и нет переменной среды (CXX)")
 
   ctx.compiler_path = args.cxx_path
   print(f'new {args.cxx_path}')
