@@ -35,11 +35,12 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
   elif Sys_name.linux:
     tgt.linked_libs.extend([
       '-lyaml-cpp',
-      '-lGLFW',
+      '-lglfw',
       '-lGLEW',
       '-lGL',
       '-lm',
-      '-lOpenAL',
+      '-lopenal',
+      '-fpie',
     ])
   tgt.linked_libs.extend([
     '-shared-libgcc',
