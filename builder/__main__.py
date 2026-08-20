@@ -1,5 +1,8 @@
 '''Глаыный скрипт сборки: py builder'''
 
+from structs.host import Bitness
+from structs.host import Sys_name
+from structs.target import Extention
 import signal
 import sys
 import os
@@ -30,6 +33,10 @@ signal.signal(signal.SIGINT, signal_handler)
 host = prepare_host_info()
 ctx = Context()
 tgt = Target()
+if host.system == Sys_name.windows:
+  tgt.ext = Extention.exe
+elif host.system == Sys_name.linux:
+  tgt.ext = Extention.elf64 if host.bitness == Bitness.x64 else Extention.elf32
 tgt.name = 'HPW' + tgt.ext
 tgt.creation_time = utc_time()
 
