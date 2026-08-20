@@ -23,7 +23,7 @@ import time
 time.sleep(2) ''')
 
 # проверка правильности команды
-out, err, slapsed = exec_cmd(['py', script, '1', '2', '3'])
+out, err, slapsed = exec_cmd(['python', script, '1', '2', '3'])
 assert(out == 'a=1 b=2 c=3\n')
 assert(err == '')
 print(f'STDOUT ... {out.rstrip()}')
@@ -32,7 +32,7 @@ print(f'ELAPSED .. {slapsed} s')
 
 # проверка таймаута
 try:
-  out, err, slapsed = exec_cmd(['py', script_delay, '1', '2', '3'], 0.5)
+  out, err, slapsed = exec_cmd(['python', script_delay, '1', '2', '3'], 0.5)
   assert False # тут прога должна взорваться и не вызвать assert
 except Exception as e:
   print(f'> успешный тест таймаута:\n  {e}')
