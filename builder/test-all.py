@@ -22,6 +22,7 @@ scripts_to_run = [
   "builder/test-single-2.py",
   "builder/test-multi.py",
   "builder/test-game-ver.py",
+  "builder/test-header-map.py",
   "builder/test-clear.py",
 ]
 
