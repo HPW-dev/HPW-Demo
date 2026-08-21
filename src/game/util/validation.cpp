@@ -2,8 +2,8 @@
 #include "validation.hpp"
 #include "game/core/common.hpp"
 #include "util/log.hpp"
+#include "util/platform.hpp"
 #include "util/str-util.hpp"
-#include "util/macro.hpp"
 #include "util/file/file-io.hpp"
 #include "hash_sha256/hash_sha256.h"
 
@@ -20,11 +20,15 @@ inline static Str calc_sum(cp<void> data, std::size_t sz) {
 }
 
 void init_validation_info() {
-  // EXE
+  Str path = hpw::cur_dir + "HPW";
   #ifdef WINDOWS
-    Str path = hpw::cur_dir + "HPW.exe";
-  #else
-    Str path = hpw::cur_dir + "HPW";
+     path += ".exe";
+  #else // Linux
+    #ifdef is_x32
+      path += ".elf32";
+    #else
+      path += ".elf64";
+    #endif
   #endif
   auto mem = mem_from_file(path);
   hpw::exe_sha512 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );

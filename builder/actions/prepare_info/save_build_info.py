@@ -3,6 +3,7 @@ from structs.context import *
 from structs.target import *
 from structs.host import *
 from utils.ui import *
+from utils.hash import *
 import json
 
 
@@ -10,10 +11,18 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
   '''сохраняет инфу о билде в .json'''
 
   ver, date, time = game_version(ctx)
+  executable = ctx.bin_dir + tgt.name
 
   info = {
     'author': ctx.author,
     'compilation start': tgt.creation_time,
+
+    'hash': {
+      'execitable SHA3-512': sha3_512(executable),
+      'execitable CRC32': crc32(executable),
+      'resources SHA3-512': sha3_512(ctx.assets_dst_path),
+      'resources CRC32': crc32(ctx.assets_dst_path),
+    },
 
     'game ver': {
       'version': ver,
