@@ -19,24 +19,33 @@ from utils.timestamp import utc_time
 from utils.ui import *
 
 
-# accept unicode
-if sys.platform == "win32":
-  subprocess.run("chcp 65001", shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-sys.stdout.reconfigure(encoding='utf-8')
-sys.stderr.reconfigure(encoding='utf-8')
+def init():
+  '''Проверки и колбэки на Ctrl+C'''
 
-if __name__ != "__main__":
-  print(to_red('Запускать через "python builder"'), file=sys.stderr)
-  sys.exit(1)
+  # accept unicode
+  if sys.platform == "win32":
+    subprocess.run("chcp 65001", shell=True,
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+  sys.stdout.reconfigure(encoding='utf-8')
+  sys.stderr.reconfigure(encoding='utf-8')
 
-# Для прерывания по Ctrl+C
-def signal_handler(sig, frame):
-  print(to_red("\n> Сборка прервана через SIGINT"), file=sys.stderr)
-  os._exit(1)
+  if __name__ != "__main__":
+    print(to_red('Запускать через "python builder"'), file=sys.stderr)
+    sys.exit(1)
 
-signal.signal(signal.SIGINT, signal_handler)
+  def signal_handler(sig, frame):
+    '''Для прерывания по Ctrl+C'''
+    try:
+      sig_name = signal.Signals(sig).name
+    except ValueError:
+      sig_name = f"SIG-{sig}"
+    print(to_red(f"\n> Сборка прервана сигналом {sig_name}"), file=sys.stderr)
+    os._exit(1)
+
+  signal.signal(signal.SIGINT, signal_handler)
 
 # подготовка
+init()
 host = prepare_host_info()
 ctx = Context()
 tgt = Target()
@@ -64,8 +73,8 @@ if ctx.with_print_build_info:
 if ctx.with_compilation:
   compile_legacy(tgt, ctx, host)
 
-# TODO - пакуем ассеты
-# TODO - обработка хэшей
+'''if ctx.with_assets:
+  prepare_assets(tgt, ctx, host)'''
 
 # сейвим инфу о сборке
 if ctx.with_build_info_file:
