@@ -28,15 +28,21 @@ def blake2b(path: str):
   except OSError:
     return None
 
-def crc32(path: str):
+def crc32(path: str, chunk_size=1024*64):
   """
   Хэш файла в CRC32
   Returns:
     None, если фйла нет
   """
   try:
-    with open(path, 'rb', buffering=0) as f:
-      crc = zlib.crc32(f.read())  
-      return f'{crc & 0xFFFFFFFF:08x}'.upper()
+    crc = 0
+    with open(path, 'rb') as f:
+      # читаем файл частями, чтобы не нагрузить
+      while True:
+        chunk = f.read(chunk_size)
+        if not chunk:
+          break
+        crc = zlib.crc32(chunk, crc)
+    return f"{crc & 0xFFFFFFFF:08X}"
   except OSError:
     return None

@@ -15,12 +15,13 @@ class Color(StrEnum):
   WHITE   = "\033[97m" # Белый текст (обычно серый)
   RST     = '\033[0m'  # Сброс цвета (возврат к стандартному)
 
-def to_yellow(txt): return None if txt == None else f'{Color.YELLOW}{txt}{Color.RST}'
-def to_green(txt):  return None if txt == None else f'{Color.GREEN}{txt}{Color.RST}'
-def to_gray(txt):   return None if txt == None else f'{Color.GRAY}{txt}{Color.RST}'
-def to_white(txt):  return None if txt == None else f'{Color.WHITE}{txt}{Color.RST}'
-def to_blue(txt):   return None if txt == None else f'{Color.BLUE}{txt}{Color.RST}'
-def to_red(txt):    return None if txt == None else f'{Color.RED}{txt}{Color.RST}'
+def to_yellow(txt):   return None if txt == None else f'{Color.YELLOW}{txt}{Color.RST}'
+def to_green(txt):    return None if txt == None else f'{Color.GREEN}{txt}{Color.RST}'
+def to_gray(txt):     return None if txt == None else f'{Color.GRAY}{txt}{Color.RST}'
+def to_magenta(txt):  return None if txt == None else f'{Color.MAGENTA}{txt}{Color.RST}'
+def to_white(txt):    return None if txt == None else f'{Color.WHITE}{txt}{Color.RST}'
+def to_blue(txt):     return None if txt == None else f'{Color.BLUE}{txt}{Color.RST}'
+def to_red(txt):      return None if txt == None else f'{Color.RED}{txt}{Color.RST}'
 
 def translate_none(val, msg: str = ""):
   if val == None:

@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''Глаыный скрипт сборки: py builder'''
 
 from structs.host import Bitness
@@ -10,6 +11,7 @@ import subprocess
 from actions.compile.compile_legacy import compile_legacy
 from actions.prepare_build import *
 from actions.prepare_info import *
+from actions.prepare_assets import *
 from actions.accept_args import *
 from actions.clean import *
 from structs.context import *
@@ -73,8 +75,8 @@ if ctx.with_print_build_info:
 if ctx.with_compilation:
   compile_legacy(tgt, ctx, host)
 
-'''if ctx.with_assets:
-  prepare_assets(tgt, ctx, host)'''
+if ctx.with_assets:
+  prepare_assets(tgt, ctx, host)
 
 # сейвим инфу о сборке
 if ctx.with_build_info_file:
