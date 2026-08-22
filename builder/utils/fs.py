@@ -63,5 +63,5 @@ def equal(src_path: str, dst_path: str) -> bool:
   return filecmp.cmp(Path(src_path), Path(dst_path), shallow=False)
 
 def file_dir(path: str):
-  '''получить папку, в которой находится файл'''
-  return path_abs(str(Path(path).parent) + '/')
+  '''получить папку, в которой находится файл. Слеш в конце папки не ставится'''
+  return path_abs(str(Path(path).parent))
