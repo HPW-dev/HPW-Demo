@@ -61,3 +61,7 @@ def copy(src_path: str, dst_path: str):
 def equal(src_path: str, dst_path: str) -> bool:
   '''проверить что два файла одинаковы по содержанию'''
   return filecmp.cmp(Path(src_path), Path(dst_path), shallow=False)
+
+def file_dir(path: str):
+  '''получить папку, в которой находится файл'''
+  return str(Path(path).parent)
