@@ -64,4 +64,4 @@ def equal(src_path: str, dst_path: str) -> bool:
 
 def file_dir(path: str):
   '''получить папку, в которой находится файл'''
-  return str(Path(path).parent)
+  return path_abs(str(Path(path).parent) + '/')

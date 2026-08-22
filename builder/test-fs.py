@@ -28,7 +28,7 @@ assert(not exists(root + 'delme/c'))
 assert(not exists(root + 'delme/d'))
 assert(exists(root + 'delme/subdir/c'))
 assert(exists(root + 'delme/subdir/d'))
-assert(file_dir(f'{root}delme/subdir/unk_file') == path_abs(f'{root}delme/subdir'))
+assert(file_dir(f'{root}delme/subdir/unk_file') == path_abs(f'{root}delme/subdir/'))
 assert(not exists(root + 'delme/subdir/z'))
 
 assert(not is_dir(root + 'delme/a'))
