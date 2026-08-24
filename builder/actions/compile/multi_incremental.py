@@ -66,6 +66,16 @@ def make_header_map(cxx_files: list[str]):
     map[cxx] = { 'headers': find_headers(cxx) }
   return map
 
+def make_db(path: str, header_map):
+  print(to_green(f'> Создание базы изменений в файлах {path}...'))
+  #TODO
+
+def check_diffs(db_path: str, header_map, ctx: Context) -> Rebuild_info:
+  '''Ищет изменения в файлах кода сравнивая предыдущую базу сборки'''
+  info = Rebuild_info()
+  #TODO
+  return info
+
 def check_for_rebuild(target_name: str, header_map, ctx: Context) -> Rebuild_info:
   '''
   Ищет изменения в файлах проекта и определяет что нужно пересобрать.
@@ -74,21 +84,35 @@ def check_for_rebuild(target_name: str, header_map, ctx: Context) -> Rebuild_inf
 
   :return: Инфа - кого пересобирать
   '''
-  info = Rebuild_info()
+  
   # ищем базу для пересборки
   db_path = f'{ctx.tmp_dir}target_name.json'
-  if not fs.exists(db_path):
-    print(f'> База для пересборки {to_yellow(target_name)} не найдена, создание {to_yellow(db_path)}...')
-  return info
+
+  # если нашли, то сравниваем различия
+  if fs.exists(db_path):
+    return check_diffs(db_path, header_map, ctx)
+    
+  # если не нашли, создаём новую базу и врубаем принудительную пересборку
+  else:
+    print(f'База для пересборки {to_yellow(target_name)} не найдена')
+    make_db(db_path, header_map)
+    info = Rebuild_info()
+    info.rebuild_needed = True
+    info.new_files = list(header_map.keys())
+
+    return info
 
 def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebuild_info:
-  ''' Собирает проект в многопотоке с учётом пересборки только изменений в файлах '''
+  ''' Компилирует в многопотоке только изменённые файлы кода '''
   rebuild = check_for_rebuild(tgt_src.name, make_header_map(tgt_src.sources), ctx)
 
-  if not rebuild.rebuild_needed:
-    print(to_green(f'> Пересборка {tgt_src.name} не требуется'))
-    return rebuild
+  if rebuild.rebuild_needed:
+    tgt = tgt_src
+    tgt.sources = rebuild.modified_files
+    tgt.sources.extend(rebuild.new_files)
+    compile_multi(tgt, ctx, host)
 
-  tgt = tgt_src
-  compile_multi(tgt, ctx, host)
+  else:
+    print(to_gray(f'Пересборка {tgt_src.name} не требуется'))
+
   return rebuild
