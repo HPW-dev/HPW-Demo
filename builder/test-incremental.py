@@ -20,8 +20,12 @@ ctx.with_licenses = False
 ctx.with_build_info_file = False
 prepare_build(ctx)
 
+
+# снести то, что уже собрано в прошлый раз
 test_dir = f'{ctx.tmp_dir}multi_incremental/'
 ctx.bin_dir = f'{test_dir}bin/'
+fs.rem_dir(test_dir)
+
 fs.make_dir(test_dir)
 fs.make_dir(ctx.bin_dir)
 fs.copy('builder/test-progs/single 2', test_dir)
