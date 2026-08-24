@@ -14,6 +14,7 @@ ctx = Context()
 ctx.threads = host.threads
 ctx.with_licenses = False
 ctx.with_build_info_file = False
+rem_dir(ctx.obj_dir)
 prepare_build(ctx)
 
 tgt = Target()
