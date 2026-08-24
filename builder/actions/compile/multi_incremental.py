@@ -1,4 +1,11 @@
+from structs.rebuild import Rebuild_info
+from structs.context import Context
+from structs.host import Host
+from structs.target import *
+from actions.compile.multi import compile_multi
+from utils.ui import *
 import utils.fs as fs
+import json
 import re
 
 def find_headers(cxx_file: str, visited=None, lines=200):
@@ -58,3 +65,30 @@ def make_header_map(cxx_files: list[str]):
   for cxx in cxx_files:
     map[cxx] = { 'headers': find_headers(cxx) }
   return map
+
+def check_for_rebuild(target_name: str, header_map, ctx: Context) -> Rebuild_info:
+  '''
+  Ищет изменения в файлах проекта и определяет что нужно пересобрать.
+  
+  (+ сохраняет промежуточный результат в файле)
+
+  :return: Инфа - кого пересобирать
+  '''
+  info = Rebuild_info()
+  # ищем базу для пересборки
+  db_path = f'{ctx.tmp_dir}target_name.json'
+  if not fs.exists(db_path):
+    print(f'> База для пересборки {to_yellow(target_name)} не найдена, создание {to_yellow(db_path)}...')
+  return info
+
+def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebuild_info:
+  ''' Собирает проект в многопотоке с учётом пересборки только изменений в файлах '''
+  rebuild = check_for_rebuild(tgt_src.name, make_header_map(tgt_src.sources), ctx)
+
+  if not rebuild.rebuild_needed:
+    print(to_green(f'> Пересборка {tgt_src.name} не требуется'))
+    return rebuild
+
+  tgt = tgt_src
+  compile_multi(tgt, ctx, host)
+  return rebuild
