@@ -2,8 +2,20 @@ from actions.prepare_info import compiler_version
 from structs.target import *
 from structs.context import *
 from structs.host import *
+from utils.ui import *
 import argparse
+import json
 
+
+def accept_preset(preset_name, tgt: Target, ctx: Context, host: Host):
+  with open('builder/actions/accept_args/presets.json', "r", encoding="utf-8") as f:
+    # достаём настройки с конфига пресетов
+    presets = json.load(f)
+    if preset_name == 'auto':
+       tgt.opt_preset = preset_name = 'stable-x32' if host.bitness == Bitness.x32 else 'stable-x64'
+
+    preset = presets[tgt.opt_preset]
+    # TODO
 
 def accept_args(tgt: Target, ctx: Context, host: Host):
   '''Применяем аргументы запуска'''
@@ -83,6 +95,25 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Очищает от файлов сборки и прерывает сборку'
   )
+  parser.add_argument(
+    '-pre', '--preset', 
+    type=str, default='auto',
+    help='Уровень оптимизации кода (по умолчанию: %(default)s): ' \
+      'auto - ставит либо stable-x64, либо x32; ' \
+      'stable-x64 - должно работать у всех; ' \
+      'stable-x32 - для старья; ' \
+      'atom-x32 - Intel Atom x32; ' \
+      'c2d-x32 - Core 2 Duo x32; ' \
+      'c2d-x64 - Core 2 Duo x64; ' \
+      'r1700 - Ryzen 1700 x64 (znver1); ' \
+      '2003 - Процы 2000-2003 года, x64, SSE2; ' \
+      '2010 - Процы 2008-2010 года, x64, SSE4.2; ' \
+      '2015 - Процы 2013-2015 года, x64, AVX2; ' \
+      '2020 - Процы 2017-2020+ года, x64, AVX-512; ' \
+      'fast-build - быстрая сборка (без дебага, x64); ' \
+      'debug-x32 - отладочный билд x32; ' \
+      'debug-x64 - отладочный билд x64.'
+  )
 
   args = parser.parse_args()
 
@@ -109,6 +140,9 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.author = args.author
   ctx.threads = max(1, args.threads)
   ctx.clear_all = bool(args.clear)
+
+  tgt.opt_preset = args.preset
+  accept_preset(tgt.opt_preset, tgt, ctx, host)
 
   return args
   

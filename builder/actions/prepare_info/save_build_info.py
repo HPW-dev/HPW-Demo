@@ -31,6 +31,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
     },
 
     'compiler': {
+      'optimization preset': tgt.opt_preset,
       'python ver': host.python_ver.rstrip(),
       'c++ ver': translate_none(host.compiler_ver).rstrip(),
       'options': ' '.join(tgt.options),
