@@ -20,4 +20,4 @@ assert(not exists(f'{ctx.build_dir}config'))
 assert(not exists(f'{ctx.src_dir}game/util/version.cpp'))
 
 print('='*50)
-print(to_green('> тест пройден'))
+print(to_green('тест пройден'))

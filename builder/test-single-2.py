@@ -30,4 +30,4 @@ assert(out == '97997')
 print(f'результат программы: {to_green(out)}')
 
 print('='*50)
-print(to_green('> тест пройден'))
+print(to_green('тест пройден'))

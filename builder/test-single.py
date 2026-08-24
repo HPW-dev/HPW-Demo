@@ -35,4 +35,4 @@ with open(result_file, 'r') as f:
 
 
 print('='*50)
-print(to_green('> тест пройден'))
+print(to_green('тест пройден'))

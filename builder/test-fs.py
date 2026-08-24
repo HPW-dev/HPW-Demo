@@ -95,4 +95,4 @@ assert(equal(src_2_txt, dst_txt))
 
 
 print('='*30)
-print(to_green('> тест пройден'))
+print(to_green('тест пройден'))

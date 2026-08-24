@@ -31,4 +31,4 @@ print(f"результат программы: '{to_green(out)}'")
 assert(out == 'result: 2366537086')
 
 print('='*79)
-print(to_green('> тест пройден'))
+print(to_green('тест пройден'))
