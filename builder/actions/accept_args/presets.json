@@ -1,9 +1,14 @@
 {
+  "base": {
+    "c++ opts": "Wall std=c++26 pipe"
+  },
   "stable-x64": {
-
+    "c++ opts": "m64 O2 flto s",
+    "defines": "DRELEASE DNDEBUG"
   },
   "stable-x32": {
-
+    "c++ opts": "m32 O2 flto s",
+    "defines": "DRELEASE DNDEBUG"
   },
   "atom-x32": {
 
@@ -18,24 +23,30 @@
 
   },
   "2003": {
-
+    "c++ opts": "m64 s marOfast march=x86-64 mtune=generic flto",
+    "defines": "DRELEASE DNDEBUG"
   },
   "2010": {
-
+    "c++ opts": "m64 s marOfast march=x86-64-v2 mtune=generic flto",
+    "defines": "DRELEASE DNDEBUG"
   },
   "2015": {
-
+    "c++ opts": "m64 s marOfast march=x86-64-v3 mtune=generic flto",
+    "defines": "DRELEASE DNDEBUG"
   },
   "2020": {
-
+    "c++ opts": "m64 s marOfast march=x86-64-v4 mtune=generic flto",
+    "defines": "DRELEASE DNDEBUG"
   },
   "fast-build": {
-
+    "c++ opts": "m64 O0 g0 s",
+    "defines": "DRELEASE"
   },
   "debug-x32": {
 
   },
   "debug-x64": {
-
+    "c++ opts": "m64 O0 g",
+    "defines": "DDEBUG"
   }
 }

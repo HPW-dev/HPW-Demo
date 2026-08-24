@@ -14,12 +14,6 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
   src_dir = ctx.src_dir
   bits = host.bitness
 
-  tgt.options.extend([
-    'Wall', 'std=c++26', 'pipe',
-
-    'm64', 's', 'Ofast', 'march=x86-64', 'mtune=generic', 'flto'
-    #'m64', 'O0', 'ggdb',
-  ])
   if tgt.use_openmp:
     tgt.options.append('fopenmp')
 
@@ -57,11 +51,7 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
     pass
 
   tgt.defines.append('WINDOWS' if host.system == Sys_name.windows else 'LINUX')
-  tgt.defines.extend([
-    'HOST_GLFW3',
-    'NDEBUG', 'RELEASE',
-    #'DEBUG',
-  ])
+  tgt.defines.append('HOST_GLFW3') # TODO остальные хосты
 
   tgt.include_dirs.extend([
     '.',
