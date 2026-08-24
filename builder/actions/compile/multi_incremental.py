@@ -4,6 +4,7 @@ from structs.host import Host
 from structs.target import *
 from actions.compile.multi import compile_multi
 from utils.ui import *
+from utils.hash import blake2b
 import utils.fs as fs
 import json
 import re
@@ -66,17 +67,42 @@ def make_header_map(cxx_files: list[str]):
     map[cxx] = { 'headers': find_headers(cxx) }
   return map
 
-def make_db(path: str, header_map):
-  print(to_green(f'> Создание базы изменений в файлах {path}...'))
-  #TODO
+def make_db(header_map: dict):
+  '''Создаёт более подробную структуру файлов проекта с их хэшами'''
+  db = header_map
 
-def check_diffs(db_path: str, header_map, ctx: Context) -> Rebuild_info:
+  for cxx_path, content in db.items():
+    content['c++ hash'] = blake2b(cxx_path)
+
+    new_headers = []
+    for header in content['headers']:
+      header_content = {
+        'path': header,
+        'hash': blake2b(header),
+      }
+      new_headers.append(header_content)
+    content['headers'] = new_headers
+
+  return db
+
+def check_diffs(db_path: str, header_map: dict, ctx: Context) -> Rebuild_info:
   '''Ищет изменения в файлах кода сравнивая предыдущую базу сборки'''
   info = Rebuild_info()
-  #TODO
+  local_db = make_db(header_map)
+
+  print(to_gray(f'> загрузка {db_path}...'))
+  loaded_db = {}
+  with open(db_path, "r", encoding="utf-8") as f:
+    loaded_db = json.load(f)
+
+  if info.rebuild_needed:
+    print(to_green(f'> Обновление базы изменений в файлах {db_path}...'))
+    with open(db_path, "w", encoding="utf-8") as f:
+      json.dump(local_db, f, indent=2)
+
   return info
 
-def check_for_rebuild(target_name: str, header_map, ctx: Context) -> Rebuild_info:
+def check_for_rebuild(target_name: str, header_map: dict, ctx: Context) -> Rebuild_info:
   '''
   Ищет изменения в файлах проекта и определяет что нужно пересобрать.
   
@@ -95,7 +121,12 @@ def check_for_rebuild(target_name: str, header_map, ctx: Context) -> Rebuild_inf
   # если не нашли, создаём новую базу и врубаем принудительную пересборку
   else:
     print(f'База для пересборки {to_yellow(target_name)} не найдена')
-    make_db(db_path, header_map)
+
+    print(to_green(f'> Создание базы изменений в файлах {db_path}...'))
+    db = make_db(header_map)
+    with open(db_path, "w", encoding="utf-8") as f:
+      json.dump(db, f, indent=2)
+
     info = Rebuild_info()
     info.rebuild_needed = True
     info.new_files = list(header_map.keys())

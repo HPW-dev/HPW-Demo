@@ -26,8 +26,8 @@ compile_single(tgt, ctx, host)
 
 assert(exists(tgt.name))
 out, _, _ = exec_cmd([tgt.name])
-assert(out == '97997')
 print(f'результат программы: {to_green(out)}')
+assert(out == '97997')
 
 print('='*50)
 print(to_green('тест пройден'))

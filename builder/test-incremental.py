@@ -25,6 +25,7 @@ test_dir = f'{ctx.tmp_dir}multi_incremental/'
 ctx.bin_dir = f'{test_dir}bin/'
 fs.rem_dir(test_dir)
 fs.rem_dir(ctx.obj_dir)
+fs.rem(f'{ctx.tmp_dir}target_name.json')
 
 fs.make_dir(test_dir)
 fs.make_dir(ctx.bin_dir)
@@ -36,13 +37,17 @@ tgt.linked_libs.append('-static')
 tgt.options.extend(['Wall', 'std=c++26', 'pipe', 'O0', 'g0'])
 
 print(to_gray('> сборка...'))
-compile_multi_incremental(tgt, ctx, host)
+result = compile_multi_incremental(tgt, ctx, host)
 
 print(to_gray('> проверка...'))
+assert(result.rebuild_needed)
+assert(result.new_files != [])
+assert(result.modified_files == [])
+assert(result.deleted_files == [])
 assert exists(exe_path), f"файл '{exe_path}' должен существовать"
 out, _, _ = exec_cmd([exe_path])
-#print(f"результат программы: '{to_green(out)}'")
-#assert(out == 'result: 2366537086')
+print(f'результат программы: {to_green(out)}')
+assert(out == '97997')
 
 print('='*79)
 print(to_green('тест пройден'))
