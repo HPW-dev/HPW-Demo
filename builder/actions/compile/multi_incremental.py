@@ -139,7 +139,8 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
 
   if rebuild.rebuild_needed:
     tgt = tgt_src
-    tgt.sources = rebuild.modified_files
+    tgt.sources.clear()
+    tgt.sources.extend(rebuild.modified_files)
     tgt.sources.extend(rebuild.new_files)
     compile_multi(tgt, ctx, host)
 
