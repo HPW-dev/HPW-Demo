@@ -57,7 +57,7 @@ def exists(path: str):
 def copy(src_path: str, dst_path: str):
   '''копирование файла. Разрешена подмена на другой'''
   if is_dir(src_path):
-    shutil.copytree(Path(src_path), Path(dst_path))
+    shutil.copytree(Path(src_path), Path(dst_path), dirs_exist_ok=True)
   else:
     shutil.copy(Path(src_path), Path(dst_path))
 
