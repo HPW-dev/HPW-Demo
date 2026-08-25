@@ -67,7 +67,7 @@ def make_header_map(cxx_files: list[str]):
     map[cxx] = { 'headers': find_headers(cxx) }
   return map
 
-def make_db(header_map: dict):
+def make_db(header_map: dict, tgt: Target, ctx: Context):
   '''Создаёт более подробную структуру файлов проекта с их хэшами'''
   db = header_map
 
@@ -80,6 +80,23 @@ def make_db(header_map: dict):
         'hash': blake2b(header),
       }
     content['headers'] = new_headers
+
+  db['opts'] = {
+    "opt_preset": tgt.opt_preset,
+    "options": tgt.options,
+    "name": tgt.name,
+    "defines": tgt.defines,
+    "include_dirs": tgt.include_dirs,
+    "lib_dirs": tgt.lib_dirs,
+    "linked_libs": tgt.linked_libs,
+    "use_openmp": tgt.use_openmp,
+    "author": ctx.author,
+    "bin_dir": ctx.bin_dir,
+    "obj_dir": ctx.obj_dir,
+    "src_dir": ctx.src_dir,
+    "tmp_dir": ctx.tmp_dir,
+    "compiler_path": ctx.compiler_path,
+  }
 
   return db
 
@@ -129,7 +146,37 @@ def check_diffs(db_path: str, header_map: dict, ctx: Context) -> Rebuild_info:
 
   return info
 
-def check_for_rebuild(target_name: str, header_map: dict, ctx: Context) -> Rebuild_info:
+def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
+  '''если параметры сборки поменялись, то надо всё пересобрать по новой'''
+  with open(db_path, "r", encoding="utf-8") as f:
+    db = json.load(f)
+    def opts_differ(db, opt, tag, msg):
+      if opt != db['opts'][tag]:
+        print(msg)
+        return True
+      else:
+        return False
+    # ищем хоть одно различие
+    if \
+      opts_differ(db, tgt.opt_preset, 'opt_preset', 'изменился пресет') or \
+      opts_differ(db, tgt.options, 'options', 'изменились опции компиляции') or \
+      opts_differ(db, tgt.name, 'name', 'изменилось имя проекта') or \
+      opts_differ(db, tgt.defines, 'defines', 'изменились дефайны компиля') or \
+      opts_differ(db, tgt.include_dirs, 'include_dirs', 'изменились папки включения') or \
+      opts_differ(db, tgt.lib_dirs, 'lib_dirs', 'изменились папки библиотек') or \
+      opts_differ(db, tgt.linked_libs, 'linked_libs', 'изменился список линкуемых библиотек') or \
+      opts_differ(db, tgt.use_openmp, 'use_openmp', 'изменилась опция OpenMP') or \
+      opts_differ(db, ctx.author, 'author', 'изменился автор сборки') or \
+      opts_differ(db, ctx.bin_dir, 'bin_dir', 'изменилась папка бинарника') or \
+      opts_differ(db, ctx.obj_dir, 'obj_dir', 'изменился путь к объектникам') or \
+      opts_differ(db, ctx.src_dir, 'src_dir', 'изменился путь к сурсам') or \
+      opts_differ(db, ctx.tmp_dir, 'tmp_dir', 'изменился путь tmp-папки') or \
+      opts_differ(db, ctx.compiler_path, 'compiler_path', 'изменился компилятор'):
+      return False
+    
+  return True
+
+def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_info:
   '''
   Ищет изменения в файлах проекта и определяет что нужно пересобрать.
   
@@ -138,16 +185,16 @@ def check_for_rebuild(target_name: str, header_map: dict, ctx: Context) -> Rebui
   :return: Инфа - кого пересобирать
   '''
   
-  db_path = f'{ctx.tmp_dir}{target_name}.json'
+  db_path = f'{ctx.tmp_dir}{tgt.name}.json'
 
-  if fs.exists(db_path):
+  if fs.exists(db_path) and equal_opts(db_path, tgt, ctx):
     return check_diffs(db_path, header_map, ctx)
     
   else:
-    print(f'База для пересборки {to_yellow(target_name)} не найдена')
+    print(f'База для пересборки {to_yellow(tgt.name)} не найдена')
 
     print(to_green(f'> Создание базы изменений в файлах {db_path}...'))
-    db = make_db(header_map)
+    db = make_db(header_map, tgt, ctx)
     with open(db_path, "w", encoding="utf-8") as f:
       json.dump(db, f, indent=2)
 
@@ -166,7 +213,7 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   else:
     header_map = make_header_map(abs_existing_sources)
     
-  rebuild = check_for_rebuild(tgt_src.name, header_map, ctx)
+  rebuild = check_for_rebuild(tgt_src, header_map, ctx)
 
   files_to_build = rebuild.modified_files + rebuild.new_files
   if rebuild.rebuild_needed and files_to_build:
