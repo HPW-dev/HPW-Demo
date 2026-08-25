@@ -10,39 +10,58 @@ import json
 import copy
 import re
 
-def find_headers(cxx_file: str, visited=None, lines=200):
+def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=200):
   '''
   Рекурсивно лазит по инклудам и добавляет в список всё что между кавычек "..."
-
+  
+  :include_dirs: список путей для поиска хедеров, например ['.', 'src', 'include']
   :lines: весь файл не читать, только первые строки
   '''
-
   if visited is None:
     visited = set()
+    
+  if include_dirs is None:
+    include_dirs = []
+
+  # Приводим к абсолютному пути для корректной фильтрации дубликатов
+  cxx_file_abs = fs.path_abs(cxx_file)
         
-  if cxx_file in visited or not fs.exists(cxx_file):
+  if cxx_file_abs in visited or not fs.exists(cxx_file_abs):
     return []
     
-  visited.add(cxx_file)
+  visited.add(cxx_file_abs)
   headers = []
   include_regex = re.compile(r'^\s*#\s*include\s*"([^"]+)"')
-  base_dir = fs.file_dir(cxx_file)
+  base_dir = fs.file_dir(cxx_file_abs)
     
   try:
-    with open(cxx_file, 'r', encoding='utf-8', errors='ignore') as f:
+    with open(cxx_file_abs, 'r', encoding='utf-8', errors='ignore') as f:
       for _ in range(lines):
         line = f.readline()
-        if not line: # EOF
+        if not line: 
           break
                 
         match = include_regex.match(line)
         if match:
           header_name = match.group(1)
-          header_path = fs.path_abs(f'{base_dir}/{header_name}')
-                    
-          if header_path not in visited:
+          header_path = None
+
+          # Сначала ищем локальную относительную папку чекаем...
+          local_path = fs.path_abs(f'{base_dir}/{header_name}')
+          if fs.exists(local_path):
+            header_path = local_path
+          else: # ...иначе ищем глобально
+            for d in include_dirs:
+              possible_path = fs.path_abs(f'{d}/{header_name}')
+              if fs.exists(possible_path):
+                header_path = possible_path
+                break
+
+          # Если файл физически найден и мы его ещё не парсили
+          if header_path and header_path not in visited:
             headers.append(header_path)
-            inner_headers = find_headers(header_path, visited)
+            # Передаем include_dirs дальше по рекурсии
+            inner_headers = find_headers(header_path, include_dirs, visited, lines)
             headers.extend(inner_headers)
 
   except IOError:
