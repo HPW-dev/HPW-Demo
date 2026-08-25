@@ -4,7 +4,7 @@ from utils.ui import *
 from utils.exec import *
 
 
-def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0):
+def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0, less_info=False):
   '''
   Запускает команды из списка [команд, аргументы, ...] в многопотоке
 
@@ -28,14 +28,18 @@ def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0):
         cmd_str = " ".join(cmd)
 
         try:
-          print(f"> запуск команды '{to_yellow(cmd_str)}'")
+          if not less_info:
+            print(f"> запуск команды '{to_yellow(cmd_str)}'")
+            
           # Если функция exec_cmd взорвалась, future.result() вызовет это исключение
           stdout, stderr, elapsed = future.result()
           if stdout:
             print(stdout.rstrip())
           if stderr:
             print(stderr.rstrip(), file=sys.stderr)
-          print(to_gray(f"...выполнена за {elapsed} сек"))
+
+          if not less_info:
+            print(to_gray(f"...выполнена за {elapsed} сек"))
           result.append((stdout, stderr, elapsed))
         
         except Exception as exc:

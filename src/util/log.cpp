@@ -8,9 +8,14 @@
 
 // не перемещать это ниже чем log.hpp и str-util.hpp
 #ifdef WINDOWS
-#define NOMINMAX
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+  #ifndef NOMINMAX
+    #define NOMINMAX
+  #endif
+  #ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
+  #endif
+  
+  #include <windows.h>
 #endif
 
 #include "util/platform.hpp"

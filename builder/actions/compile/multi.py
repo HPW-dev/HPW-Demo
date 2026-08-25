@@ -54,7 +54,7 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
 
   obj_cmds = prepare_obj_cmd(tgt, ctx)
   print('> компиляция объектных файлов...')
-  exec_multi(obj_cmds, ctx.threads, 600.0)
+  exec_multi(obj_cmds, ctx.threads, 600.0, ctx.less_info)
 
   print(f'> линковка \'{to_yellow(tgt.name)}\'')
   cmd = [ctx.compiler_path]

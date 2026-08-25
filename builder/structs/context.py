@@ -24,3 +24,4 @@ class Context:
   with_build_info_file  : bool = True # копировать инфу о сборке
   with_print_build_info : bool = True # показывать инфу о сборке в консоли
   clear_all             : bool = False # если True, то чистит всё и прерывает сборку
+  less_info             : bool = False # Выводить меньше логов сборки

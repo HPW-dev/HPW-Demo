@@ -123,11 +123,15 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
       'debug-x32 - отладочный билд x32; ' \
       'debug-x64 - отладочный билд x64.'
   )
-  
   parser.add_argument(
     '-ninc', '--no_incremental', 
     action='store_true', 
     help='Не использовать систему инкрементальной сборки'
+  )
+  parser.add_argument(
+    '-li', '--less_info', 
+    action='store_true', 
+    help='Выводить поменьше логов при сборке'
   )
 
   args = parser.parse_args()
@@ -156,6 +160,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_incremental = not args.no_incremental
   ctx.threads = max(1, args.threads)
   ctx.clear_all = bool(args.clear)
+  ctx.less_info = bool(args.less_info)
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)
