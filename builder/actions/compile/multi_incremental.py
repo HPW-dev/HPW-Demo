@@ -69,9 +69,10 @@ def make_header_map(cxx_files: list[str]):
 
 def make_db(header_map: dict, tgt: Target, ctx: Context):
   '''Создаёт более подробную структуру файлов проекта с их хэшами'''
-  db = header_map
+  db = {}
+  db['source'] = header_map
 
-  for cxx_path, content in db.items():
+  for cxx_path, content in db['source'].items():
     content['hash'] = blake2b(cxx_path)
 
     new_headers = {}
@@ -100,20 +101,20 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
 
   return db
 
-def check_diffs(db_path: str, header_map: dict, ctx: Context) -> Rebuild_info:
+def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Rebuild_info:
   '''Ищет изменения в файлах кода сравнивая предыдущую базу сборки'''
   info = Rebuild_info()
-  local_db = make_db(header_map)
+  local_db = make_db(header_map, tgt, ctx)
   
   print(to_gray(f'> загрузка {db_path}...'))
   with open(db_path, "r", encoding="utf-8") as f:
     loaded_db = json.load(f)
 
-  for cxx_path, local_content in local_db.items():
+  for cxx_path, local_content in local_db['source'].items():
     if cxx_path in loaded_db:
       loaded_content = loaded_db[cxx_path]
       
-      if loaded_content['hash'] != local_content['hash']:
+      if 'hash' not in loaded_content or loaded_content['hash'] != local_content['hash']:
         print(to_yellow(f'обнаружено изменение в файле "{cxx_path}"'))
         info.modified_files.append(cxx_path)
         info.rebuild_needed = True
@@ -131,8 +132,8 @@ def check_diffs(db_path: str, header_map: dict, ctx: Context) -> Rebuild_info:
       info.new_files.append(cxx_path)
       info.rebuild_needed = True
 
-  for old_cxx in list(loaded_db.keys()):
-    if old_cxx not in local_db or not fs.exists(old_cxx):
+  for old_cxx in list(loaded_db['source'].keys()):
+    if old_cxx not in loaded_db['source'] or not fs.exists(old_cxx):
       print(to_red(f'обнаружено удаление файла "{old_cxx}"'))
       info.deleted_files.append(old_cxx)
       info.rebuild_needed = True
@@ -188,7 +189,7 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   db_path = f'{ctx.tmp_dir}{tgt.name}.json'
 
   if fs.exists(db_path) and equal_opts(db_path, tgt, ctx):
-    return check_diffs(db_path, header_map, ctx)
+    return check_diffs(tgt, db_path, header_map, ctx)
     
   else:
     print(f'База для пересборки {to_yellow(tgt.name)} не найдена')
