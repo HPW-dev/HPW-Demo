@@ -10,32 +10,40 @@
     "c++ opts": "m32 O2 flto s",
     "defines": "DRELEASE DNDEBUG"
   },
+  "i686": {
+    "c++ opts": "m32 O2 flto s march=i686 mtune=generic msse mno-sse2 mno-avx",
+    "defines": "DRELEASE DNDEBUG"
+  },
   "atom-x32": {
-
+    "c++ opts": "m32 O2 flto s march=atom mtune=atom",
+    "defines": "DRELEASE DNDEBUG"
   },
   "c2d-x32": {
-
+    "c++ opts": "m32 Ofast flto s march=core2 mtune=core2",
+    "defines": "DRELEASE DNDEBUG"
   },
   "c2d-x64": {
-
+    "c++ opts": "m64 Ofast flto s march=core2 mtune=core2 msse3 mfpmath=sse ",
+    "defines": "DRELEASE DNDEBUG"
   },
   "r1700": {
-
+    "c++ opts": "m64 s Ofast march=znver1 mtune=znver1 flto fomit-frame-pointer funroll-loops",
+    "defines": "DRELEASE DNDEBUG"
   },
   "2003": {
-    "c++ opts": "m64 s marOfast march=x86-64 mtune=generic flto",
+    "c++ opts": "m64 s Ofast march=x86-64 mtune=generic flto",
     "defines": "DRELEASE DNDEBUG"
   },
   "2010": {
-    "c++ opts": "m64 s marOfast march=x86-64-v2 mtune=generic flto",
+    "c++ opts": "m64 s Ofast march=x86-64-v2 mtune=generic flto",
     "defines": "DRELEASE DNDEBUG"
   },
   "2015": {
-    "c++ opts": "m64 s marOfast march=x86-64-v3 mtune=generic flto",
+    "c++ opts": "m64 s Ofast march=x86-64-v3 mtune=generic flto",
     "defines": "DRELEASE DNDEBUG"
   },
   "2020": {
-    "c++ opts": "m64 s marOfast march=x86-64-v4 mtune=generic flto",
+    "c++ opts": "m64 s Ofast march=x86-64-v4 mtune=generic flto",
     "defines": "DRELEASE DNDEBUG"
   },
   "fast-build": {
@@ -43,7 +51,8 @@
     "defines": "DRELEASE"
   },
   "debug-x32": {
-
+    "c++ opts": "m32 O0 g",
+    "defines": "DDEBUG"
   },
   "debug-x64": {
     "c++ opts": "m64 O0 g",

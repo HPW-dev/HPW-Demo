@@ -110,16 +110,17 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
       'auto - ставит либо stable-x64, либо x32; ' \
       'stable-x64 - должно работать у многих; ' \
       'stable-x32 - для старья; ' \
-      #'atom-x32 - Intel Atom x32; ' \
-      #'c2d-x32 - Core 2 Duo x32; ' \
-      #'c2d-x64 - Core 2 Duo x64; ' \
-      #'r1700 - Ryzen 1700 x64 (znver1); ' \
+      'i686 - даже у меня такого нет; ' \
+      'atom-x32 - Intel Atom x32; ' \
+      'c2d-x32 - Core 2 Duo x32; ' \
+      'c2d-x64 - Core 2 Duo x64; ' \
+      'r1700 - Ryzen 1700 x64 (znver1); ' \
       '2003 - Процы 2000-2003 года, x64, SSE2; ' \
       '2010 - Процы 2008-2010 года, x64, SSE4.2; ' \
       '2015 - Процы 2013-2015 года, x64, AVX2; ' \
       '2020 - Процы 2017-2020+ года, x64, AVX-512; ' \
       'fast-build - быстрая сборка (без дебага, RELEASE, x64); ' \
-      #'debug-x32 - отладочный билд x32; ' \
+      'debug-x32 - отладочный билд x32; ' \
       'debug-x64 - отладочный билд x64.'
   )
 
