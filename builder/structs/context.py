@@ -17,6 +17,7 @@ class Context:
   compiler_path   : str = 'g++'
 
   #need_rebuild          : bool = True # принудительный пересбор
+  with_incremental      : bool = True # использовать инкрементальную сборку
   with_compilation      : bool = True # чтобы выключать сборку
   with_assets           : bool = True # паковать ресурсыассеты и копировать
   with_licenses         : bool = True # копировать лицухи

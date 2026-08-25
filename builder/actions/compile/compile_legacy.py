@@ -115,7 +115,12 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
 
   tgt.sources.extend(find(f'{src_dir}*.cpp'))
 
-  compile_multi_incremental(tgt, ctx, host)
+  if ctx.with_incremental:
+    print('используется инкрементальная многопоточная сборка')
+    compile_multi_incremental(tgt, ctx, host)
+  else:
+    print('используется многопоточная сборка')
+    compile_multi(tgt, ctx, host)
 
   if exists(executable):
     print(to_green(f'Файл для запуска игры "{executable}" успешно создан'))

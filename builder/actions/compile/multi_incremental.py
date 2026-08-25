@@ -111,8 +111,8 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
     loaded_db = json.load(f)
 
   for cxx_path, local_content in local_db['source'].items():
-    if cxx_path in loaded_db:
-      loaded_content = loaded_db[cxx_path]
+    if cxx_path in loaded_db['source']:
+      loaded_content = loaded_db['source'][cxx_path]
       
       if 'hash' not in loaded_content or loaded_content['hash'] != local_content['hash']:
         print(to_yellow(f'обнаружено изменение в файле "{cxx_path}"'))

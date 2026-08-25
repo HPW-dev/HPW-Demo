@@ -123,6 +123,12 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
       'debug-x32 - отладочный билд x32; ' \
       'debug-x64 - отладочный билд x64.'
   )
+  
+  parser.add_argument(
+    '-ninc', '--no_incremental', 
+    action='store_true', 
+    help='Не использовать систему инкрементальной сборки'
+  )
 
   args = parser.parse_args()
 
@@ -147,6 +153,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.bin_dir = args.bin_dir
   ctx.obj_dir = args.obj_dir
   ctx.author = args.author
+  ctx.with_incremental = not args.no_incremental
   ctx.threads = max(1, args.threads)
   ctx.clear_all = bool(args.clear)
 
