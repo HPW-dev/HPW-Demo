@@ -94,7 +94,7 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
 
   for cxx_path, content in db['source'].items():
     content['hash'] = blake2b(cxx_path)
-    content['obj'] = prepare_obj_name(cxx_path)
+    content['obj'] = fs.path_abs(f'{ctx.tmp_dir}{prepare_obj_name(cxx_path)}')
 
     new_headers = {}
     for header in content['headers']:
