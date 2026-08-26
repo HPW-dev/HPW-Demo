@@ -143,6 +143,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Запуск игры просле сборки'
   )
+  parser.add_argument(
+    '-na', '--no_assets', 
+    action='store_true', 
+    help='Не паковать ассеты'
+  )
 
   args = parser.parse_args()
 
@@ -168,11 +173,12 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.bin_dir = args.bin_dir
   ctx.obj_dir = args.obj_dir
   ctx.author = args.author
-  ctx.with_incremental = not args.no_incremental
+  ctx.with_incremental = not bool(args.no_incremental)
   ctx.forced_rebuild = bool(args.forced_rebuild)
   ctx.with_launch = bool(args.launch_game)
   ctx.clear_all = bool(args.clear)
   ctx.less_info = bool(args.less_info)
+  ctx.with_assets = not bool(args.no_assets)
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)
