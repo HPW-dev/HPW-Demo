@@ -85,7 +85,6 @@ if ctx.with_build_info_file:
   save_build_info(tgt, ctx, host)
 
 game_exe = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
-print(game_exe)
 if ctx.with_launch and fs.exists(game_exe):
   print(f'> запуск "{game_exe}"...')
   exec_cmd(game_exe)
