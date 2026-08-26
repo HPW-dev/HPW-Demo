@@ -123,6 +123,6 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
     compile_multi(tgt, ctx, host)
 
   if exists(executable):
-    print(to_green(f'Файл для запуска игры "{executable}" успешно создан'))
+    print(to_green(f'Файл для запуска игры "{executable}" готов'))
   else:
-    raise RuntimeError(f'Не удалось создать экзешник "{executable}"')
+    raise FileNotFoundError(f'Не удалось создать экзешник "{executable}"')

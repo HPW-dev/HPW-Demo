@@ -94,7 +94,7 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
 
   for cxx_path, content in db['source'].items():
     content['hash'] = blake2b(cxx_path)
-    content['obj'] = fs.path_abs(f'{ctx.tmp_dir}{prepare_obj_name(cxx_path)}')
+    content['obj'] = fs.path_abs(f'{ctx.obj_dir}{prepare_obj_name(cxx_path)}')
 
     new_headers = {}
     for header in content['headers']:
@@ -131,11 +131,15 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
   with open(db_path, "r", encoding="utf-8") as f:
     loaded_db = json.load(f)
 
+  # найти изменения в файлах
   for cxx_path, local_content in local_db['source'].items():
     if cxx_path in loaded_db['source']:
       loaded_content = loaded_db['source'][cxx_path]
+      obj_name = fs.path_abs(f'{ctx.obj_dir}{prepare_obj_name(cxx_path)}')
       
-      if 'hash' not in loaded_content or loaded_content['hash'] != local_content['hash']:
+      if 'hash' not in loaded_content or \
+      loaded_content['hash'] != local_content['hash'] or \
+      not fs.exists(obj_name):
         print(to_yellow(f'обнаружено изменение в файле "{cxx_path}"'))
         info.modified_files.append(cxx_path)
         info.rebuild_needed = True
@@ -153,6 +157,7 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
       info.new_files.append(cxx_path)
       info.rebuild_needed = True
 
+  # чекнуть что удаляем
   for old_cxx in list(loaded_db['source'].keys()):
     if old_cxx not in loaded_db['source'] or not fs.exists(old_cxx):
       print(to_red(f'обнаружено удаление файла "{old_cxx}"'))
@@ -160,6 +165,17 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
       info.rebuild_needed = True
   info.new_files = [path for path in info.new_files if fs.exists(path)]
   info.modified_files = [path for path in info.modified_files if fs.exists(path)]
+
+  # проверить на объектники-сироты:
+  local_objs = []
+  for _, local_content in local_db['source'].items():
+    local_objs.append(local_content['obj'])
+  current_objs = fs.find(f'{ctx.obj_dir}*.o')
+  for obj in current_objs:
+    if obj not in local_objs:
+      print(to_red(f'Обнанужен ненужный объектник "{obj}"'))
+      fs.rem(obj)
+      info.rebuild_needed = True
   
   if info.rebuild_needed:
     print(to_green(f'> Обновление базы изменений в файлах {db_path}...'))
@@ -209,9 +225,10 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   
   db_path = f'{ctx.tmp_dir}{tgt.name}.json'
 
+  # проверить что есть база и что опции не изменились
   if fs.exists(db_path) and equal_opts(db_path, tgt, ctx):
     return check_diffs(tgt, db_path, header_map, ctx)
-    
+  # делаем базу с нуля
   else:
     print(f'База для пересборки {to_yellow(tgt.name)} не найдена')
 
@@ -238,7 +255,7 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   rebuild = check_for_rebuild(tgt_src, header_map, ctx)
 
   files_to_build = rebuild.modified_files + rebuild.new_files
-  if rebuild.rebuild_needed and files_to_build:
+  if rebuild.rebuild_needed:
     tgt = copy.deepcopy(tgt_src)
     tgt.sources = files_to_build
     compile_multi(tgt, ctx, host)
