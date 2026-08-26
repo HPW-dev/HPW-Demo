@@ -1,4 +1,5 @@
 def prepare_obj_name(raw: str) -> str:
+  raw = raw.replace('.', '_')
   raw = raw.replace(' ', '-')
   raw = raw.replace('/', '_')
   raw = raw.replace('\\', '_')

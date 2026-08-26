@@ -1,10 +1,11 @@
+from actions.compile.multi import compile_multi
 from structs.rebuild import Rebuild_info
 from structs.context import Context
 from structs.host import Host
 from structs.target import *
-from actions.compile.multi import compile_multi
-from utils.ui import *
+from utils.misc import prepare_obj_name
 from utils.hash import blake2b
+from utils.ui import *
 import utils.fs as fs
 import json
 import copy
@@ -93,6 +94,7 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
 
   for cxx_path, content in db['source'].items():
     content['hash'] = blake2b(cxx_path)
+    content['obj'] = prepare_obj_name(cxx_path)
 
     new_headers = {}
     for header in content['headers']:
