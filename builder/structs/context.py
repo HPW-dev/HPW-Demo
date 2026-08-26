@@ -16,12 +16,12 @@ class Context:
   assets_src_dir  : str = 'data/'
   compiler_path   : str = 'g++'
 
-  #need_rebuild          : bool = True # принудительный пересбор
-  with_incremental      : bool = True # использовать инкрементальную сборку
-  with_compilation      : bool = True # чтобы выключать сборку
-  with_assets           : bool = True # паковать ресурсыассеты и копировать
-  with_licenses         : bool = True # копировать лицухи
-  with_build_info_file  : bool = True # копировать инфу о сборке
-  with_print_build_info : bool = True # показывать инфу о сборке в консоли
+  with_incremental      : bool = True  # использовать инкрементальную сборку
+  with_compilation      : bool = True  # чтобы выключать сборку
+  with_assets           : bool = True  # паковать ресурсыассеты и копировать
+  with_licenses         : bool = True  # копировать лицухи
+  with_build_info_file  : bool = True  # копировать инфу о сборке
+  with_print_build_info : bool = True  # показывать инфу о сборке в консоли
   clear_all             : bool = False # если True, то чистит всё и прерывает сборку
   less_info             : bool = False # Выводить меньше логов сборки
+  forced_rebuild        : bool = False # принудительный пересбор

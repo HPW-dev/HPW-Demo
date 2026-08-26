@@ -133,6 +133,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Выводить поменьше логов при сборке'
   )
+  parser.add_argument(
+    '-fr', '--forced_rebuild', 
+    action='store_true', 
+    help='Принудительная пересборка'
+  )
 
   args = parser.parse_args()
 
@@ -161,6 +166,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.threads = max(1, args.threads)
   ctx.clear_all = bool(args.clear)
   ctx.less_info = bool(args.less_info)
+  ctx.forced_rebuild = bool(args.forced_rebuild)
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)

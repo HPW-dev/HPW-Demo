@@ -228,8 +228,8 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   # проверить что есть база и что опции не изменились
   if fs.exists(db_path) and equal_opts(db_path, tgt, ctx):
     return check_diffs(tgt, db_path, header_map, ctx)
-  # делаем базу с нуля
-  else:
+ 
+  else: # делаем базу с нуля
     print(f'База для пересборки {to_yellow(tgt.name)} не найдена')
 
     print(to_green(f'> Создание базы изменений в файлах {db_path}...'))
@@ -255,7 +255,7 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   rebuild = check_for_rebuild(tgt_src, header_map, ctx)
 
   files_to_build = rebuild.modified_files + rebuild.new_files
-  if rebuild.rebuild_needed:
+  if rebuild.rebuild_needed or ctx.forced_rebuild:
     tgt = copy.deepcopy(tgt_src)
     tgt.sources = files_to_build
     compile_multi(tgt, ctx, host)
