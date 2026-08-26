@@ -1,23 +1,25 @@
 #!/usr/bin/env python
 '''Глаыный скрипт сборки: py builder'''
 
-from structs.host import Bitness
-from structs.host import Sys_name
 from structs.target import Extention
+from structs.host import Sys_name
+from structs.host import Bitness
+import utils.fs as fs
 import signal
 import sys
 import os
 import subprocess
 from actions.compile.compile_legacy import compile_legacy
+from actions.prepare_assets import *
 from actions.prepare_build import *
 from actions.prepare_info import *
-from actions.prepare_assets import *
 from actions.accept_args import *
-from actions.clean import *
 from structs.context import *
 from structs.target import *
+from actions.clean import *
 from structs.host import *
 from utils.timestamp import utc_time
+from utils.exec import exec_cmd
 from utils.ui import *
 
 
@@ -81,3 +83,9 @@ if ctx.with_assets:
 # сейвим инфу о сборке
 if ctx.with_build_info_file:
   save_build_info(tgt, ctx, host)
+
+game_exe = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
+print(game_exe)
+if ctx.with_launch and fs.exists(game_exe):
+  print(f'> запуск "{game_exe}"...')
+  exec_cmd(game_exe)

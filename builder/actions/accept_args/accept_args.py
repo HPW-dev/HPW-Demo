@@ -138,6 +138,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Принудительная пересборка'
   )
+  parser.add_argument(
+    '-l', '--launch_game', 
+    action='store_true', 
+    help='Запуск игры просле сборки'
+  )
 
   args = parser.parse_args()
 
@@ -156,17 +161,18 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   host.env['CXX'] = str(args.cxx_path)
   host.compiler_ver = compiler_version(host.env)
 
-  ctx.info_dir = args.info_dir
+  ctx.threads = max(1, args.threads)
   ctx.build_dir = args.build_dir
+  ctx.info_dir = args.info_dir
   ctx.tmp_dir = args.tmp_dir
   ctx.bin_dir = args.bin_dir
   ctx.obj_dir = args.obj_dir
   ctx.author = args.author
   ctx.with_incremental = not args.no_incremental
-  ctx.threads = max(1, args.threads)
+  ctx.forced_rebuild = bool(args.forced_rebuild)
+  ctx.with_launch = bool(args.launch_game)
   ctx.clear_all = bool(args.clear)
   ctx.less_info = bool(args.less_info)
-  ctx.forced_rebuild = bool(args.forced_rebuild)
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)
