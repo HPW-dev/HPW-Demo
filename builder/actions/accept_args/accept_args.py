@@ -148,6 +148,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true', 
     help='Не паковать ассеты'
   )
+  parser.add_argument(
+    '-tst', '--with_tests', 
+    action='store_true',
+    help='Включает тесты в игре'
+  )
 
   args = parser.parse_args()
 
@@ -179,6 +184,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.clear_all = bool(args.clear)
   ctx.less_info = bool(args.less_info)
   ctx.with_assets = not bool(args.no_assets)
+  ctx.with_tests = bool(args.with_tests)
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)

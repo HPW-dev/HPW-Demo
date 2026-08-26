@@ -52,6 +52,8 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
 
   tgt.defines.append('WINDOWS' if host.system == Sys_name.windows else 'LINUX')
   tgt.defines.append('HOST_GLFW3') # TODO остальные хосты
+  if ctx.with_tests:
+    tgt.defines.append('USE_TESTS')
 
   tgt.include_dirs.extend([
     '.',

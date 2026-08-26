@@ -30,8 +30,9 @@ def print_build_info(tgt: Target, ctx: Context, host: Host):
   print(f'* Версия игры ...... {game_ver}')
   print(f'* Дата комита ...... {date_time}')
   print(f'* Компиляция ....... {checkbox2(ctx.with_compilation)}')
-  print(f'* Паковать ассеты .. {checkbox2(ctx.with_assets)}')
   print(f'* OpenMP ........... {checkbox2(tgt.use_openmp)}')
+  print(f'* Тесты ............ {checkbox2(ctx.with_tests)}')
+  print(f'* Паковать ассеты .. {checkbox2(ctx.with_assets)}')
   print()
 
   print('=== Информация системы-сборщика ===')
