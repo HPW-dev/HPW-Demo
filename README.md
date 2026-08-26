@@ -2,7 +2,7 @@
 
 H.P.W - игра где вы управляете НЛО в форме бумеранга и летите в секретную базу рядом с городом Минском. На этой странице выложены исходники демо-версии игры.
 
-![demo](info/preview.gif)
+![demo](info/gameplay-v0.244.2.webp)
 
 ### [>> СКАЧАТЬ <<](https://github.com/HPW-dev/HPW-Demo/releases)
 - Сайт по игре [на Яндексе](https://hpw-game.website.yandexcloud.net)
