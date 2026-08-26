@@ -2,23 +2,12 @@ from actions.exec_multi import *
 from structs.context import *
 from structs.target import *
 from structs.host import *
+from utils.misc import prepare_obj_name
 from utils.exec import exec_cmd
 from utils.ui import *
 from utils import fs
 import time
 
-
-def prepare_obj_name(raw: str) -> str:
-  raw = raw.replace(' ', '-')
-  raw = raw.replace('/', '_')
-  raw = raw.replace('\\', '_')
-  raw = raw.replace('.cpp', '')
-  raw = raw.replace('.c', '')
-  raw = raw.replace('.cxx', '')
-  raw = raw.replace('.xx', '')
-  raw = raw.replace('.pp', '')
-  raw += '.o'
-  return raw
 
 def prepare_obj_cmd(tgt: Target, ctx: Context):
   '''генерит команду на компиляцию .o файла,
