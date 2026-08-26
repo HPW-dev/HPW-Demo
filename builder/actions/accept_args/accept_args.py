@@ -162,10 +162,10 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_compilation = not bool(args.no_compilation)
   tgt.use_openmp = not bool(args.no_openmp)
 
-  if not args.clear and "CXX" not in host.env:
-    if args.cxx_path == ctx.compiler_path and not ctx.compiler_path:
-      parser.error("аргумент -cxx/--cxx_path обязателен, " \
-        "если не выполняется очистка (-c) и нет переменной среды (CXX)")
+  if not args.clear and "CXX" not in host.env and \
+  args.cxx_path == ctx.compiler_path and not ctx.compiler_path:
+    parser.error("аргумент -cxx/--cxx_path обязателен, " \
+      "если не выполняется очистка (-c) и нет переменной среды (CXX)")
 
   ctx.compiler_path = args.cxx_path
   host.env['CXX'] = str(args.cxx_path)

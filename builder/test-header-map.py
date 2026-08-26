@@ -1,6 +1,6 @@
 from actions.compile.multi_incremental import make_header_map
 from utils.ui import *
-import utils.fs as fs
+from utils import fs
 
 
 print("=== Тест поиска зависимостей в .cpp/.hpp ===")

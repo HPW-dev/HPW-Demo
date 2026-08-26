@@ -50,7 +50,7 @@ def exec_multi(commands: list [list [str]], threads=4, timeout=60.0 * 5.0, less_
                     
     except Exception as ex:
       print(to_red("Работа пула потоков экстренно завершена"), file=sys.stderr)
-      raise ex
+      raise RuntimeError(ex)
 
     finally:
       # Гарантируем закрытие пула в любом случае

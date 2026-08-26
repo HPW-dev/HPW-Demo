@@ -26,7 +26,7 @@ def game_version(ctx: Context):
     return version, date, time
   
   except Exception:
-    print(to_red(f'Ошибка при получении версии игры'), file=stderr)
+    print(to_red('Ошибка при получении версии игры'), file=stderr)
     return '> v0.270.0.0', '> 17.08.2026', '> 15:11'
 
 def generate_game_version_file(ctx: Context):

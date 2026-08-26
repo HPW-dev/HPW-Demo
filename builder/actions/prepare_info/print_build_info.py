@@ -10,7 +10,7 @@ def prepare_game_ver(ctx: Context):
   date_time = translate_none(None)
   
   if comit_date and comit_time:
-    date_time = to_yellow(' @ '.join([comit_date, comit_time]))
+    date_time = to_yellow(f'{comit_date} @ {comit_time}')
 
   if game_ver:
     game_ver = to_green(game_ver)

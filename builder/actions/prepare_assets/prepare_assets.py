@@ -1,12 +1,11 @@
-from zlib import crc32
 from structs.context import *
 from structs.target import *
 from structs.host import *
+from utils.hash import crc32
 from utils.ui import *
 from utils.fs import *
-from utils.hash import crc32
-import pickle
 from sys import stderr
+import pickle
 
 
 type Diff_data = dict[str, tuple[float, int]]
@@ -37,12 +36,13 @@ def check_file_diffs(folder: str, cache_path: str) -> bool:
       time_info, file_checksum = diff_data[file_path_str]
       stat = p.stat()
       
-      # Сравниваем время модификации
-      if stat.st_mtime != time_info:
-        # Если время не совпало, проверяем реальную чексумму файла
-        if crc32(file_path_str) != file_checksum:
-          print(f'обнаружены изменения в файле "{file_path_str}"')
-          return True
+      # Сравниваем время модификации.
+      # Если время не совпало, проверяем реальную чексумму файла
+      if stat.st_mtime != time_info and \
+      crc32(file_path_str) != file_checksum:
+        print(f'обнаружены изменения в файле "{file_path_str}"')
+        return True
+      
     else:
       # Новый файл, которого не было в базе
       print(to_green(f'добавлен новый файл "{file_path_str}"'))

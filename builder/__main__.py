@@ -1,26 +1,26 @@
 #!/usr/bin/env python
 '''Глаыный скрипт сборки: py builder'''
 
-from structs.target import Extention
-from structs.host import Sys_name
-from structs.host import Bitness
-import utils.fs as fs
-import signal
-import sys
-import os
-import subprocess
 from actions.compile.compile_legacy import compile_legacy
 from actions.prepare_assets import *
 from actions.prepare_build import *
 from actions.prepare_info import *
 from actions.accept_args import *
 from structs.context import *
+from structs.target import Extention
 from structs.target import *
 from actions.clean import *
+from structs.host import Sys_name
+from structs.host import Bitness
 from structs.host import *
 from utils.timestamp import utc_time
 from utils.exec import exec_cmd
 from utils.ui import *
+from utils import fs
+import signal
+import sys
+import os
+import subprocess
 
 
 def init():
@@ -28,7 +28,7 @@ def init():
 
   # accept unicode
   if sys.platform == "win32":
-    subprocess.run("chcp 65001", shell=True,
+    subprocess.run("chcp 65001", shell=True, check=False,
       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
   sys.stdout.reconfigure(encoding='utf-8')
   sys.stderr.reconfigure(encoding='utf-8')

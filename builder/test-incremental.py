@@ -3,7 +3,6 @@ from actions.prepare_info import prepare_host_info
 from structs.context import Context
 from structs.target import Target
 from utils.exec import exec_cmd
-from actions.compile import compile_multi
 from actions.prepare_build import prepare_build
 from utils.ui import *
 from utils.fs import *

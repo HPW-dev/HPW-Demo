@@ -6,7 +6,7 @@ from structs.target import *
 from utils.misc import prepare_obj_name
 from utils.hash import blake2b
 from utils.ui import *
-import utils.fs as fs
+from utils import fs
 import json
 import copy
 import re
@@ -65,7 +65,7 @@ def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=200):
             inner_headers = find_headers(header_path, include_dirs, visited, lines)
             headers.extend(inner_headers)
 
-  except IOError:
+  except OSError:
     pass
         
   return headers
@@ -168,7 +168,7 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
 
   # проверить на объектники-сироты:
   local_objs = []
-  for _, local_content in local_db['source'].items():
+  for local_content in local_db['source'].values():
     local_objs.append(local_content['obj'])
   current_objs = fs.find(f'{ctx.obj_dir}*.o')
   for obj in current_objs:

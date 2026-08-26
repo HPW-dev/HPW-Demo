@@ -33,8 +33,7 @@ def make_object_list(ctx: Context) -> str:
 
   result = f'{ctx.obj_dir}objects.txt'
   with open(result, 'w', encoding='utf-8') as f:
-    for obj in fs.find(f'{ctx.obj_dir}*.o'):
-      f.write(f"{fs.path_linux(obj)}\n")
+    f.writelines(f"{fs.path_linux(obj)}\n" for obj in fs.find(f'{ctx.obj_dir}*.o'))
   return f'@{fs.path_abs(result)}'
 
 def compile_multi(tgt: Target, ctx: Context, host: Host):
