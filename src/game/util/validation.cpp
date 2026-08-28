@@ -1,9 +1,6 @@
-#include <sstream>
+#include "pch.hpp"
 #include "validation.hpp"
 #include "game/core/common.hpp"
-#include "util/log.hpp"
-#include "util/platform.hpp"
-#include "util/str-util.hpp"
 #include "util/file/file-io.hpp"
 #include "hash_sha256/hash_sha256.h"
 

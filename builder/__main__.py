@@ -52,6 +52,7 @@ def init():
 init()
 host = prepare_host_info()
 ctx = Context()
+ctx.pch_path = fs.path_abs('src/pch.hpp')
 tgt = Target()
 if host.system == Sys_name.windows:
   tgt.ext = Extention.exe

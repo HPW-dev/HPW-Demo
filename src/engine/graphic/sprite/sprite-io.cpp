@@ -1,18 +1,17 @@
 #include <omp.h>
 #include <cassert>
-#include <utility>
+#include "pch.hpp"
 #include "sprite-io.hpp"
 #include "engine/graphic/image/palette.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "sprite.hpp"
+
 //#define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 //#define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb/stb_image_write.h"
-#include "util/str-util.hpp"
+
 #include "util/file/file-io.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
 #include "engine/graphic/image/color-convert.hpp"
 
 /** делает контур картинки жирнее

@@ -1,6 +1,5 @@
-#include <cassert>
+#include "pch.hpp"
 #include "task-spawn.hpp"
-#include "util/macro.hpp"
 #include "game/entity/entity.hpp"
 
 Spwan_and_wait_for_death::Spwan_and_wait_for_death(

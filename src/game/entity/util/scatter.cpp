@@ -1,13 +1,9 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scatter.hpp"
 #include "game/entity/entity.hpp"
 #include "game/entity/util/phys.hpp"
-#include "game/util/camera.hpp"
 #include "game/core/entities.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/random.hpp"
-#include "util/hpw-util.hpp"
+#include "game/util/camera.hpp"
 
 void Scatter::accept(Entity& dst) const {
   return_if( !hpw::entity_mgr->get_player());

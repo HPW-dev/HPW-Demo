@@ -1,15 +1,10 @@
+#include "pch.hpp"
 #include <dr_libs/dr_flac.h>
-#include <filesystem>
-#include <string>
-#include <utility>
-#include <unordered_map>
 #include "audio-io.hpp"
 #include "audio.hpp"
-#include "util/str-util.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
 #include "util/file/file-io.hpp"
 #include "game/util/resource-helper.hpp"
+
 #define STB_VORBIS_HEADER_ONLY
 #include <stb/stb_vorbis.c>
 

@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "color.hpp"
-#include <algorithm>
 
 #ifdef ECOMEM
 #define NOUSE_TABLE

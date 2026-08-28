@@ -1,17 +1,14 @@
+#include "pch.hpp"
+
 extern "C" {
 #define STB_TRUETYPE_IMPLEMENTATION 
 #include <stb/stb_truetype.h>
 }
-#include <algorithm>
-#include <sstream>
-#include <memory>
+
 #include "unifont.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/str-util.hpp"
 #include "util/file/file-io.hpp"
 
 Unifont::Unifont(cr<Str> fname, int height, bool mono)

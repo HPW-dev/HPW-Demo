@@ -1,8 +1,4 @@
-#include <omp.h>
-#include <cassert>
-#include <cstdint>
-#include <algorithm>
-#include <cmath>
+#include "pch.hpp"
 #include "collider-qtree.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/phys.hpp"
@@ -10,7 +6,6 @@
 #include "game/entity/util/entity-util.hpp"
 #include "game/core/debug.hpp"
 #include "host/command.hpp"
-#include "util/math/rect.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/graphic-util.hpp"

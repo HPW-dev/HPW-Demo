@@ -1,6 +1,5 @@
+#include "pch.hpp"
 #include "level.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/timer.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/scene/scene-gameover.hpp"
 #include "game/entity/player/player.hpp"
@@ -8,9 +7,7 @@
 #include "game/core/scenes.hpp"
 #ifdef CLD_DEBUG
 #include "game/core/debug.hpp"
-#include "util/str-util.hpp"
 #include "util/unicode.hpp"
-#include "util/log.hpp"
 #endif
 
 struct Level::Impl {

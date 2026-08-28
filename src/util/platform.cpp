@@ -1,20 +1,10 @@
-#include <format>
-#include <cassert>
-#include <thread>
-#include <unordered_map>
-#include <algorithm>
-#include <numeric>
-#include <chrono>
-#include "platform.hpp"
-#include "util/vector-types.hpp"
-#include "util/log.hpp"
-#include "util/str-util.hpp"
+#include "pch.hpp"
 
 #ifdef WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+  #define WIN32_LEAN_AND_MEAN
+  #include <windows.h>
 #else // LINUX
-#include <unistd.h>
+  #include <unistd.h>
 #endif
 
 using std_seconds = std::chrono::duration<double, std::ratio<1, 1>>;

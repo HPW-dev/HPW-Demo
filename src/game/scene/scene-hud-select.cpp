@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-hud-select.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
@@ -16,8 +16,6 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
 #include "game/hud/hud-util.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 
 struct Scene_hud_select::Impl {
   Unique<Advanced_text_menu> _menu {}; // менюшка выбора

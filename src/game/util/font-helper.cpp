@@ -1,6 +1,5 @@
-#include <cassert>
+#include "pch.hpp"
 #include "font-helper.hpp"
-#include "util/log.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/resource-helper.hpp"
 #include "engine/graphic/font/unifont.hpp"

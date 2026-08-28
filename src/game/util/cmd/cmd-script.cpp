@@ -1,8 +1,5 @@
-#include <fstream>
+#include "pch.hpp"
 #include "cmd-script.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 #include "game/core/common.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/entities.hpp"

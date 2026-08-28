@@ -1,8 +1,5 @@
-#include <iostream>
+#include "pch.hpp"
 #include "game-app.hpp"
-#include "util/error.hpp"
-#include "util/platform.hpp"
-#include "util/log.hpp"
 
 #ifdef WINDOWS
 #include <clocale>

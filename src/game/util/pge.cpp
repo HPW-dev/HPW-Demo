@@ -1,17 +1,8 @@
-#include <cassert>
-#include <filesystem>
-#include <functional>
-#include <utility>
+#include "pch.hpp"
 #include "pge.hpp"
-#include "util/str-util.hpp"
-#include "util/path.hpp"
-#include "util/log.hpp"
-#include "util/macro.hpp"
-#include "util/error.hpp"
-#include "util/file/yaml.hpp"
-#include "util/platform.hpp"
 #include "game/core/canvas.hpp"
 #include "game/util/config.hpp"
+#include "util/file/yaml.hpp"
 
 // ----------- [!] ---------------
 // вверх не перемещать

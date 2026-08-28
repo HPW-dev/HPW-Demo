@@ -1,6 +1,4 @@
-#include <cassert>
-#include <cmath>
-#include <stdfloat>
+#include "pch.hpp"
 #include "hud-hex.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
@@ -16,8 +14,6 @@
 #include "game/core/fonts.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/difficulty.hpp"
-#include "util/math/mat.hpp"
-#include "util/str-util.hpp"
 
 struct Hud_hex::Impl {
   Hud& _master;

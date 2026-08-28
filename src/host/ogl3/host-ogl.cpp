@@ -1,11 +1,7 @@
-#include <vector>
-#include <algorithm>
+#include "pch.hpp"
 #include "host-ogl.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
-#include "util/str-util.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/palette.hpp"
 #include "game/core/graphic.hpp"

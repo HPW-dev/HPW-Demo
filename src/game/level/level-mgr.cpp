@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "level.hpp"
 #include "level-mgr.hpp"
 #include "game/core/fonts.hpp"
@@ -12,9 +12,6 @@
 #include "game/entity/player/player.hpp"
 #include "game/util/vec-helper.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "util/log.hpp"
-#include "util/safecall.hpp"
-#include "util/math/vec.hpp"
 
 Level_mgr::Level_mgr(cr<Makers> _makers)
 : m_makers(_makers) {

@@ -1,20 +1,15 @@
-#include <ranges>
-#include <cassert>
-#include <utility>
-#include <algorithm>
+#include "pch.hpp"
 #include "cmd.hpp"
 #include "cmd-entity.hpp"
 #include "cmd-common.hpp"
 #include "cmd-script.hpp"
 #include "cmd-player.hpp"
+
 #ifndef NO_LVL_CMDS
 #include "cmd-level.hpp"
 #endif
+
 #include "cmd-core.hpp"
-#include "util/log.hpp"
-#include "util/unicode.hpp"
-#include "util/str-util.hpp"
-#include "util/error.hpp"
 #include "game/core/messages.hpp"
 
 Cmd::Cmd() {

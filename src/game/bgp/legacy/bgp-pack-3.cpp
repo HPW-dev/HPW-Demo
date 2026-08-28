@@ -1,26 +1,15 @@
-#include <omp.h>
-#include <array>
-#include <cmath>
-#include <utility>
-#include <cassert>
-#include <functional>
-#include <algorithm>
+#include "pch.hpp"
 #include "bgp-pack-3.hpp"
-#include "game/core/fonts.hpp"
 #include "game/core/sprites.hpp"
-#include "engine/graphic/image/image.hpp"
+#include "game/core/fonts.hpp"
 #include "engine/graphic/effect/dither.hpp"
 #include "engine/graphic/effect/noise.hpp"
 #include "engine/graphic/effect/blur.hpp"
-#include "engine/graphic/util/blend.hpp"
-#include "engine/graphic/util/resize.hpp"
-#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/math/xorshift.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/random.hpp"
-#include "util/str-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/resize.hpp"
+#include "engine/graphic/util/blend.hpp"
 #include "util/rnd-table.hpp"
 
 void bgp_liquid(Image& dst, const int bg_state) {

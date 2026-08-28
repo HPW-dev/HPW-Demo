@@ -1,7 +1,5 @@
-#include <algorithm>
-#include <utility>
+#include "pch.hpp"
 #include "player.hpp"
-#include "util/error.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/sounds.hpp"
 #include "game/util/camera.hpp"

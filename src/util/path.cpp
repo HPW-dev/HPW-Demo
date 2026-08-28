@@ -1,10 +1,4 @@
-#include <cassert>
-#include <filesystem>
-#include <string>
-#include "str-util.hpp"
-#include "log.hpp"
-#include "unicode.hpp"
-#include "platform.hpp"
+#include "pch.hpp"
 
 #ifdef WINDOWS
 #define WIN32_LEAN_AND_MEAN

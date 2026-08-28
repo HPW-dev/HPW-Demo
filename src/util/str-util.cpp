@@ -1,10 +1,5 @@
-#include <algorithm>
-#include <utility>
-#include <string>
-#include <cstring>
+#include "pch.hpp"
 #include "unicode.hpp"
-#include "str-util.hpp"
-#include "util/error.hpp"
 
 void conv_sep(Str& str, char bad_separator, char good_separator) {
 #ifdef DEBUG // в дебаге этот вар быстрее работает

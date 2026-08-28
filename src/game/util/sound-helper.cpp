@@ -1,10 +1,5 @@
-#include <cassert>
-#include <filesystem>
-#include <ranges>
+#include "pch.hpp"
 #include "sound-helper.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
 #include "game/core/sounds.hpp"

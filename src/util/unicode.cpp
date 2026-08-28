@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "unicode.hpp"
-#include "util/error.hpp"
 
 utf32 utf8_to_32(cr<Str> utf8_str) {
   utf32 result;

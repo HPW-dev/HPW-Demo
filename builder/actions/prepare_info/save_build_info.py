@@ -39,6 +39,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
       'defines': ' '.join(tgt.defines),
       'linked libs': ' '.join(tgt.linked_libs),
       'openmp': tgt.use_openmp,
+      'PCH path': ctx.pch_path if bool(ctx.pch_path) else None,
     }
   }
 

@@ -1,13 +1,10 @@
-#include <omp.h>
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "collider-2d-tree.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/entity/util/phys.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
-#include "util/mem-types.hpp"
 
 using Collidables = Vector<Collidable*>;
 

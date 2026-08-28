@@ -1,10 +1,6 @@
-#include <ranges>
-#include <cassert>
+#include "pch.hpp"
 #include "cmd-player.hpp"
 #include "cmd-util.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
-#include "util/unicode.hpp"
 #include "game/core/entities.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/entity/player/player.hpp"

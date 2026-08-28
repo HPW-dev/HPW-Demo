@@ -1,6 +1,5 @@
+#include "pch.hpp"
 #include "list-item.hpp"
-#include "util/str-util.hpp"
-#include "util/log.hpp"
 #include "game/util/locale.hpp"
 
 Menu_list_item::Menu_list_item(cr<utf32> title, cr<Menu_list_item::Items> items,

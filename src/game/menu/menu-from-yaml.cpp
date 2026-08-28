@@ -1,11 +1,9 @@
-#include <cassert>
+#include "pch.hpp"
 #include "menu-from-yaml.hpp"
 #include "menu.hpp"
 #include "advanced-text-menu.hpp"
 #include "util/file/yaml.hpp"
 #include "util/unicode.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/scene/scene-locale.hpp"
 #include "game/util/locale.hpp"

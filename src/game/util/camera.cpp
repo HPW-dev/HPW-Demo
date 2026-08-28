@@ -1,8 +1,5 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "camera.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"

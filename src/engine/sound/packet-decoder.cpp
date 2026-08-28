@@ -1,10 +1,9 @@
+#include "pch.hpp"
+
 #include <dr_libs/dr_flac.h>
-#include <cassert>
-#include <cstring>
-#include <algorithm>
 #include "packet-decoder.hpp"
 #include "audio.hpp"
-#include "util/error.hpp"
+
 #define STB_VORBIS_HEADER_ONLY
 #include <stb/stb_vorbis.c>
 

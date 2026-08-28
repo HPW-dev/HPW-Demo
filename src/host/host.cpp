@@ -1,6 +1,4 @@
-#include <cassert>
-#include <format>
-#include <ctime>
+#include "pch.hpp"
 #include "host.hpp"
 #include "host-util.hpp"
 #include "host-resize.hpp"
@@ -18,10 +16,6 @@
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/screenshot.hpp"
-#include "util/log.hpp"
-#include "util/path.hpp"
-#include "util/str-util.hpp"
-#include "util/math/random.hpp"
 #include "util/file/yaml.hpp"
 #include "engine/graphic/image/color-table.hpp"
 

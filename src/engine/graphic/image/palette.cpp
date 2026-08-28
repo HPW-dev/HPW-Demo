@@ -1,11 +1,9 @@
-#include <array>
+#include "pch.hpp"
 #include "stb/stb_image.h"
 #include "palette.hpp"
 #include "color.hpp"
 #include "color-convert.hpp"
 #include "util/file/file.hpp"
-#include "util/error.hpp"
-#include "util/hpw-util.hpp"
 
 constexpr static const std::array<Rgb24, 256> pal8_default_table {
   Rgb24{0, 0, 0},

@@ -1,12 +1,8 @@
-#include <cassert>
-#include <algorithm>
-#include <cmath>
-#include <utility>
+#include "pch.hpp"
 #include "anim-io.hpp"
 #include "anim.hpp"
 #include "frame.hpp"
 #include "util/file/yaml.hpp"
-#include "util/str-util.hpp"
 #include "game/util/store.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/core/entities.hpp"
@@ -15,7 +11,6 @@
 #include "game/core/common.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
-#include "util/log.hpp"
 
 inline void save_hitbox(cp<Anim> anim, Yaml& root) {
   auto hitbox_source = anim->get_hitbox_source();

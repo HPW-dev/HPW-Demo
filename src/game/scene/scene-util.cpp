@@ -1,5 +1,4 @@
-#include <functional>
-#include <unordered_map>
+#include "pch.hpp"
 #include "scene-util.hpp"
 #include "scene-game.hpp"
 #include "scene-epge.hpp"

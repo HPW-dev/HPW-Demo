@@ -1,7 +1,4 @@
-#include <list>
-#include <cassert>
-#include <utility>
-#include <algorithm>
+#include "pch.hpp"
 #include "post-effects.hpp"
 #include "engine/graphic/image/image.hpp"
 

@@ -1,5 +1,4 @@
-#include <cassert>
-#include <utility>
+#include "pch.hpp"
 #include "scene-enter-text.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"

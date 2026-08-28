@@ -1,15 +1,9 @@
-#include <utility>
-#include <algorithm>
-#include <ctime>
+#include "pch.hpp"
 #include "scene-game.hpp"
 #include "scene-loading.hpp"
 #include "scene-mgr.hpp"
 #include "host/command.hpp"
 #include "engine/sound/sound-mgr.hpp"
-#include "util/str-util.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/random.hpp"
-#include "util/log.hpp"
 #include "game/core/core.hpp"
 #include "game/core/user.hpp"
 #include "game/core/common.hpp"

@@ -1,6 +1,4 @@
-#include <cassert>
-#include <cmath>
-#include <algorithm>
+#include "pch.hpp"
 #include "table-menu.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"

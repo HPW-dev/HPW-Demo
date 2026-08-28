@@ -1,5 +1,4 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "font.hpp"
 
 int Font_base::text_width(cr<utf32> text) const noexcept {

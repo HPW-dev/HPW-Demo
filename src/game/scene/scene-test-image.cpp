@@ -1,5 +1,4 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "scene-test-image.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/core/graphic.hpp"
@@ -8,7 +7,6 @@
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/path.hpp"
 
 struct Test_image_path {
   Str full_path {};

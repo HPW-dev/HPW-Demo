@@ -1,6 +1,6 @@
+#include "pch.hpp"
 #include "locale.hpp"
 #include "store.hpp"
-#include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
 #include "util/file/file.hpp"
 #include "game/core/locales.hpp"

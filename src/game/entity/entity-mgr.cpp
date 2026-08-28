@@ -1,5 +1,4 @@
-#include <cassert>
-#include <unordered_map>
+#include "pch.hpp"
 #include "entity-mgr.hpp"
 #include "entity-type.hpp"
 #include "particle-loader.hpp"
@@ -12,9 +11,6 @@
 #include "collider/collider-empty.hpp"
 #include "util/hitbox.hpp"
 #include "util/phys.hpp"
-#include "util/safecall.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
 #include "util/file/yaml.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/camera.hpp"

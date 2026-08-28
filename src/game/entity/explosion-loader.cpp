@@ -1,12 +1,6 @@
-#include <cassert>
-#include <utility>
+#include "pch.hpp"
 #include "explosion-loader.hpp"
-#include "util/math/vec.hpp"
 #include "util/file/yaml.hpp"
-#include "util/error.hpp"
-#include "util/hpw-util.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
 #include "engine/graphic/animation/anim.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/particle.hpp"

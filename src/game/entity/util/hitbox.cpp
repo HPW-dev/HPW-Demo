@@ -1,13 +1,10 @@
-#include <cmath>
-#include <algorithm>
+#include "pch.hpp"
 #include "hitbox.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/debug.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
 
 bool Hitbox::is_collided_with(const Vec this_pos, const Vec other_pos,
 cr<Hitbox> other) const {

@@ -1,14 +1,8 @@
-#include <algorithm>
-#include <unordered_map>
-#include <exception>
-#include <utility>
+#include "pch.hpp"
 #include "anim-mgr.hpp"
 #include "anim.hpp"
 #include "frame.hpp"
 #include "anim-io.hpp"
-#include "util/str-util.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
 #include "game/core/anims.hpp"
 
 struct Anim_mgr::Impl {

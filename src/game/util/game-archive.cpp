@@ -1,10 +1,8 @@
-#include <cassert>
+#include "pch.hpp"
 #include "game-archive.hpp"
 #include "game/core/common.hpp"
 #include "game/util/config.hpp"
 #include "util/file/yaml.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
 
 void init_archive() {
 #ifndef DISABLE_ARCHIVE

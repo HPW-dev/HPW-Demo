@@ -1,6 +1,4 @@
-#include <ranges>
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "cmd-entity.hpp"
 #include "cmd-util.hpp"
 #include "game/entity/collidable.hpp"
@@ -9,10 +7,7 @@
 #include "game/core/entities.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/vec-helper.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 #include "util/file/yaml.hpp"
-#include "util/math/random.hpp"
 
 namespace {
 Uid g_last_uid {}; // последний соспавненный объект

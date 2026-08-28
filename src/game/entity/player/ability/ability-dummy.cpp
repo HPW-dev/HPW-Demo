@@ -1,6 +1,5 @@
+#include "pch.hpp"
 #include "ability-dummy.hpp"
-#include <format>
-#include "util/log.hpp"
 
 Ability_dummy:: Ability_dummy() {
   log_info << "dummy c-tor";

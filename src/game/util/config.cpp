@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "config.hpp"
 #include "game/core/core.hpp"
 #include "game/core/huds.hpp"
@@ -18,11 +18,6 @@
 #include "game/util/locale.hpp"
 #include "util/file/yaml.hpp"
 #include "util/file/file-io.hpp"
-#include "util/path.hpp"
-#include "util/log.hpp"
-#include "util/str-util.hpp"
-#include "util/error.hpp"
-#include "util/safecall.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"
 

@@ -71,12 +71,12 @@ template <class str_t, typename ch_t>
 void remove_all(str_t& str, ch_t ch)
   { str.erase(std::remove(str.begin(), str.end(), ch), str.end()); }
 
-template <class str_t, typename ch_t>
-void replace_all(str_t& str, ch_t find_it, ch_t replace_to) {
-  std::transform( str.begin(), str.end(), str.begin(),
-    [find_it, replace_to](cr<ch_t> src) {
+template <class str_t>
+void replace_all(str_t& str, typename str_t::value_type find_it, typename str_t::value_type replace_to) {
+  std::transform(str.begin(), str.end(), str.begin(),
+    [find_it, replace_to](const typename str_t::value_type& src) {
       return src == find_it ? replace_to : src;
-    } );
+    });
 }
 
 // строку в число

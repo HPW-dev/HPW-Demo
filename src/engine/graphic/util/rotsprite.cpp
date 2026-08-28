@@ -1,13 +1,9 @@
-#include <cmath>
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "rotsprite.hpp"
 #include "graphic-util.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/rotation.hpp"
-#include "util/log.hpp"
-#include "util/math/vec-util.hpp"
 
 Sprite rotate_and_optimize(cr<Sprite> src, real degree, Vec& offset,
 const Vec rotation_offset, Color_get_pattern cgp, Color_compute ccf) {

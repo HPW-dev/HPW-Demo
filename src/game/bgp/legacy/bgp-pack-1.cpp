@@ -1,8 +1,4 @@
-#include <omp.h>
-#include <array>
-#include <cassert>
-#include <algorithm>
-#include <ctime>
+#include "pch.hpp"
 #include "bgp-pack-1.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
@@ -11,12 +7,9 @@
 #include "engine/graphic/util/resize.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/effect/light.hpp"
-#include "util/math/random.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/core/fonts.hpp"
+#include "util/math/random.hpp"
 
 // симуляция волн
 class Waves final {

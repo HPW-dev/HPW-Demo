@@ -21,6 +21,9 @@ def prepare_obj_cmd(tgt: Target, ctx: Context):
     cmd.extend([f'-D{define}' for define in tgt.defines])
     cmd.extend([f'-{opt}' for opt in tgt.options])
     cmd.extend([f'-I{fs.path_abs(path)}' for path in tgt.include_dirs])
+    if bool(tgt.pch_path):
+      cmd.append(f'-I{fs.file_dir(tgt.pch_path)}')
+      cmd.append(f'-I{ctx.obj_dir}')
     cmd.extend(['-c', cxx_src])
     obj_name = prepare_obj_name(cxx_src)
     cmd.extend(['-o', fs.path_abs(f'{ctx.obj_dir}{obj_name}')])
@@ -36,9 +39,31 @@ def make_object_list(ctx: Context) -> str:
     f.writelines(f"{fs.path_linux(obj)}\n" for obj in fs.find(f'{ctx.obj_dir}*.o'))
   return f'@{fs.path_abs(result)}'
 
+def compile_pch(tgt: Target, ctx: Context):
+  '''компилирует PCH файл в .gch'''
+  fs.make_dir(ctx.obj_dir)
+
+  cmd = [ctx.compiler_path]
+  cmd.extend([f'-D{define}' for define in tgt.defines])
+  cmd.extend([f'-{opt}' for opt in tgt.options])
+  cmd.extend([f'-I{fs.path_abs(path)}' for path in tgt.include_dirs])
+  cmd.extend(['-x', 'c++-header', tgt.pch_path])
+  gch_path = fs.path_abs(f'{ctx.obj_dir}pch.hpp.gch')
+  cmd.extend(['-o', gch_path])
+  exec_cmd(cmd)
+
+  if fs.exists(gch_path):
+    print(to_green(f'{gch_path} файл успешно создан'))
+  else:
+    raise FileNotFoundError(f'Файл "{gch_path}" не создан')
+
 def compile_multi(tgt: Target, ctx: Context, host: Host):
   '''Многопоточная компиляция без инкрементальной сборки'''
   start = time.perf_counter()
+
+  if bool(tgt.pch_path):
+    print(f'> компиляция PCH ("{to_yellow(tgt.pch_path)}")...')
+    compile_pch(tgt, ctx)
 
   obj_cmds = prepare_obj_cmd(tgt, ctx)
   print('> компиляция объектных файлов...')
@@ -49,6 +74,9 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
   cmd.extend([f'-D{define}' for define in tgt.defines])
   cmd.extend([f'-{opt}' for opt in tgt.options])
   cmd.extend([f'-I{fs.path_abs(path)}' for path in tgt.include_dirs])
+  if bool(tgt.pch_path):
+    cmd.append(f'-I{fs.file_dir(tgt.pch_path)}')
+    cmd.append(f'-I{ctx.obj_dir}')
   cmd.append(make_object_list(ctx))
   cmd.extend([f'-L{fs.path_abs(path)}' for path in tgt.lib_dirs])
   executable = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')

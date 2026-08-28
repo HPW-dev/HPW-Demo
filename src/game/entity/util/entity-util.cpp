@@ -1,5 +1,4 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "entity-util.hpp"
 #include "phys.hpp"
 #include "anim-ctx.hpp"
@@ -15,10 +14,6 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/particle.hpp"
 #include "game/entity/collider/collider-2d-tree.hpp"
-#include "util/error.hpp"
-#include "util/hpw-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/vec-util.hpp"
 #include "engine/graphic/animation/anim.hpp"
 #include "engine/graphic/animation/frame.hpp"
 #include "engine/graphic/image/image.hpp"

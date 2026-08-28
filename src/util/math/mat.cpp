@@ -1,5 +1,4 @@
-#include <cmath>
-#include "mat.hpp"
+#include "pch.hpp"
 
 real rad_to_deg(real rad) {
   constexpr auto CONST = 180 / PI;

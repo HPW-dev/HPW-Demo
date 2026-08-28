@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-palette-select.hpp"
 #include "scene-test-image.hpp"
 #include "scene-mgr.hpp"
@@ -22,9 +22,6 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/file/archive.hpp"
-#include "util/str-util.hpp"
-#include "util/path.hpp"
-#include "util/math/timer.hpp"
 #include "host/command.hpp"
 
 constx Vec cube_sz(13, 13); // размер квадратика для теста оттенков

@@ -1,17 +1,8 @@
 #include <omp.h>
-#include <algorithm>
-#include <unordered_map>
-#include <utility>
-#include <cmath>
-#include <cassert>
-#include <cstdint>
+#include "pch.hpp"
 #include "light.hpp"
-#include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/random.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
 

@@ -1,15 +1,9 @@
+#include "pch.hpp"
+
 #define YAML_CPP_API
 #include <yaml-cpp/yaml.h>
-#include <format>
-#include <codecvt>
-#include <cassert>
-#include <utility>
-#include <fstream>
-#include <filesystem>
+
 #include "yaml.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 #include "util/file/file.hpp"
 
 // Внутреннаяя реализация для Yaml

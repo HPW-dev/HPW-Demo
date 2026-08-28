@@ -1,12 +1,6 @@
-#include <ranges>
-#include <cassert>
-#include <filesystem>
+#include "pch.hpp"
 #include "resource-helper.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/path.hpp"
 #include "util/file/file-io.hpp"
-#include "util/str-util.hpp"
 #include "game/core/common.hpp"
 #include "game/util/resource-helper.hpp"
 

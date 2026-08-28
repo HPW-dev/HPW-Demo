@@ -1,10 +1,5 @@
-#include <cassert>
-#include <algorithm>
-#include <cmath>
-#include <limits>
+#include "pch.hpp"
 #include "gjk.h"
-#include "polygon.hpp"
-#include "util/vector-types.hpp"
 
 
 #ifdef CLD_DEBUG

@@ -1,13 +1,7 @@
-#include <omp.h>
-#include <unordered_map>
-#include <cmath>
-#include <utility>
-#include <algorithm>
-#include <cassert>
+#include "pch.hpp"
 #include "resize.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
-#include "util/log.hpp"
 
 void zoom_x2(Image& dst) {
   assert(dst);

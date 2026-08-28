@@ -1,18 +1,7 @@
+#include "pch.hpp"
 #include "random.hpp"
-
-#ifdef RND_LOG
-#include <iostream>
-#endif
-
-#include <cassert>
-#include <random>
 #include "rand-table-256.hpp"
 #include "game/core/debug.hpp"
-
-#ifdef STABLE_REPLAY
-  #include "util/error.hpp"
-  #include "util/hpw-util.hpp"
-#endif
 
 namespace {
   inline std::uint32_t seed {1};

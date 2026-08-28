@@ -1,12 +1,6 @@
-#include <cmath>
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "phys.hpp"
 #include "anim-ctx.hpp"
-#include "util/error.hpp"
-#include "util/math/random.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/vec-util.hpp"
 #include "game/core/core.hpp"
 #include "game/core/graphic.hpp"
 #include "game/entity/entity.hpp"

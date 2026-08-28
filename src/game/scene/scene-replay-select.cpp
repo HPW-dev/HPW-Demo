@@ -1,5 +1,4 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "scene-replay-select.hpp"
 #include "scene-mgr.hpp"
 #include "scene-loading.hpp"
@@ -14,10 +13,6 @@
 #include "game/menu/item/table-row-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "game/level/level-tutorial.hpp"
-#include "util/log.hpp"
-#include "util/path.hpp"
-#include "util/str-util.hpp"
-#include "util/error.hpp"
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};

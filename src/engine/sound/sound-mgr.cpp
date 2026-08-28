@@ -1,18 +1,8 @@
+#include "pch.hpp"
 #include <OpenAL-soft/AL/al.h>
 #include <OpenAL-soft/AL/alc.h>
-#include <atomic>
-#include <thread>
-#include <cstdint>
-#include <cstring>
-#include <cassert>
-#include <functional>
-#include <utility>
-#include <unordered_map>
 #include "sound-mgr.hpp"
 #include "packet-decoder.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 
 inline Str decode_oal_error(const ALenum error_enum) {
   switch (error_enum) {

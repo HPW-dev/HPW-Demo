@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "shop.hpp"
 #include "score-table.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
@@ -9,11 +9,6 @@
 #include "game/core/graphic.hpp"
 #include "game/util/blur-helper.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "util/math/random.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/timer.hpp"
-#include "util/log.hpp" // TODO del
-#include "util/str-util.hpp" // TODO del
 
 struct Shopping_item {
   hpw::Score_out price {}; // сколько стоит предмет

@@ -1,14 +1,5 @@
-#include <algorithm>
-#include <cassert>
-#include <sstream>
-#include <deque>
-#include <cmath>
-#include <utility>
-#include <functional>
+#include "pch.hpp"
 #include "dbg-plots.hpp"
-#include "util/str-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/average.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"

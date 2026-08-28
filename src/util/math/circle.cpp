@@ -1,8 +1,4 @@
-#include <utility>
-#include <cassert>
-#include "circle.hpp"
-
-#include "util/math/mat.hpp"
+#include "pch.hpp"
 
 #ifdef CLD_DEBUG
 #include "game/core/debug.hpp"

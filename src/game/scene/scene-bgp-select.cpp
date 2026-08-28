@@ -1,6 +1,4 @@
-#include <cassert>
-#include <algorithm>
-#include <cmath>
+#include "pch.hpp"
 #include "scene-bgp-select.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/bgps.hpp"
@@ -11,8 +9,6 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/bgp/bgp.hpp"
 #include "game/bgp/bgp-util.hpp"
-#include "util/hpw-util.hpp"
-#include "util/math/timer.hpp"
 #include "engine/graphic/image/image.hpp"
 
 struct Scene_bgp_select::Impl {

@@ -1,8 +1,4 @@
-#include <cassert>
-#include <string>
-#include <filesystem>
-#include <utility>
-#include <functional>
+#include "pch.hpp"
 #include "scene-game.hpp"
 #include "scene-pge.hpp"
 #include "scene-mgr.hpp"
@@ -21,12 +17,6 @@
 #include "game/menu/item/int-item.hpp"
 #include "game/menu/item/double-item.hpp"
 #include "game/menu/item/bool-item.hpp"
-#include "util/log.hpp"
-#include "util/path.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/str-util.hpp"
-#include "util/error.hpp"
-#include "util/hpw-util.hpp"
 
 struct Scene_pge::Impl {
   Unique<Advanced_text_menu> m_menu {};

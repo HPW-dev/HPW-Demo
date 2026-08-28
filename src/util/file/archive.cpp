@@ -1,10 +1,8 @@
+#include "pch.hpp"
 extern "C" {
 #include <zip/zip.h>
 }
 #include "archive.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
 #include "util/file/file-io.hpp"
 
 Archive::Archive(Str fname) {
@@ -40,8 +38,8 @@ Archive::Archive(File&& file_mem) {
 Archive::~Archive() { zip_close(zip); }
 
 File Archive::get_file(Str fname) const {
-  replace_all(fname, "\\", "/");
-  replace_all(fname, "//", "/");
+  replace_all(fname, '\\', '/');
+  replace_all(fname, '//', '/');
   delete_all(fname, "./");
   log_debug << "Archive.get_file:\"" + fname + "\"";
   _zip_check(zip_entry_open(zip, fname.c_str()),

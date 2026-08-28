@@ -1,11 +1,5 @@
-#include <cassert>
-#include <cstring>
-#include <utility>
-#include <algorithm>
+#include "pch.hpp"
 #include "image.hpp"
-#include "util/macro.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
 
 #define IMGTMPL Image_templ<PIX_FMT>
 template <class PIX_FMT> IMGTMPL::Image_templ(cr<IMGTMPL> img) noexcept { init(img); }

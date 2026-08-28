@@ -1,9 +1,6 @@
-#include <ranges>
-#include <cassert>
+#include "pch.hpp"
 #include "ability-util.hpp"
 #include "ability-dummy.hpp"
-#include "util/vector-types.hpp"
-#include "util/error.hpp"
 
 struct Id_and_name {
   Ability_id id {};

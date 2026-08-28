@@ -1,20 +1,9 @@
-#include <omp.h>
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "bgp-pack-4.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/resize.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/math/circle.hpp"
-#include "util/math/rect.hpp"
-#include "util/math/xorshift.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/str-util.hpp"
-#include "util/mem-types.hpp"
-#include "util/error.hpp"
-#include "util/hpw-util.hpp"
 #include "game/core/canvas.hpp"
 
 struct Config {

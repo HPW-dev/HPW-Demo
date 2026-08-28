@@ -1,4 +1,4 @@
-#include <utility>
+#include "pch.hpp"
 #include "scene-mgr.hpp"
 #include "scene-loading.hpp"
 #include "scene-difficulty.hpp"
@@ -14,7 +14,6 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/advanced-text-menu.hpp"
-#include "util/str-util.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "game/scene/scene-game.hpp"
 

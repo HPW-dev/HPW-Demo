@@ -1,5 +1,4 @@
-#include <utility>
-#include "hpw-util.hpp"
+#include "pch.hpp"
 
 Scope::Scope(Func&& ctor_fn, Func&& dtor_fn)
 : m_ctor_fn {std::move(ctor_fn)}

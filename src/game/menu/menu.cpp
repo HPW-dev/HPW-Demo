@@ -1,7 +1,6 @@
-#include <cassert>
+#include "pch.hpp"
 #include "menu.hpp"
 #include "item/item.hpp"
-#include "util/log.hpp"
 #include "game/core/common.hpp"
 #include "game/util/keybits.hpp"
 #include "game/scene/scene-mgr.hpp"

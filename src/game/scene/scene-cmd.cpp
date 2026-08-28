@@ -1,6 +1,4 @@
-#include <cassert>
-#include <utility>
-#include <functional>
+#include "pch.hpp"
 #include "scene-cmd.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"

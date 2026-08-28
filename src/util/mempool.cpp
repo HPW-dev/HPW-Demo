@@ -1,10 +1,7 @@
+#include "pch.hpp"
 #include "mempool.hpp"
 
 #ifndef ECOMEM
-  #include <atomic>
-  #include "util/log.hpp"
-  #include "util/str-util.hpp"
-
   inline std::atomic_uint mem_pool_cur_bytes_used {0};
   inline std::atomic_uint mem_pool_max_bytes_used {0};
 #endif

@@ -1,8 +1,4 @@
-#include <ranges>
-#include <fstream>
-#include <unordered_map>
-#include <cassert>
-#include <chrono>
+#include "pch.hpp"
 #include "cmd-core.hpp"
 #include "cmd-util.hpp"
 #include "cmd-common.hpp"
@@ -25,11 +21,6 @@
 #include "game/entity/collider/collider-experimental.hpp"
 #include "game/entity/collider/collider-experimental-2.hpp"
 #include "host/host-util.hpp"
-#include "util/hpw-util.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
-#include "util/math/random.hpp"
-#include "util/math/timer.hpp"
 
 // выполняет команду после задержки
 class Timed_cmd final: public Task {

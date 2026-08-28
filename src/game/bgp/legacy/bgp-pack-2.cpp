@@ -1,9 +1,4 @@
-#include <omp.h>
-#include <ranges>
-#include <array>
-#include <mutex>
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "bgp-pack-1.hpp"
 #include "bgp-pack-2.hpp"
 #include "engine/graphic/image/image.hpp"
@@ -17,8 +12,6 @@
 #include "game/core/graphic.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/blur-helper.hpp"
-#include "util/math/random.hpp"
-#include "util/math/xorshift.hpp"
 
 // делает случайные числа
 uint prng(uint& state) {

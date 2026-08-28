@@ -1,11 +1,8 @@
-#include <cassert>
+#include "pch.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "heat-distort.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/random.hpp"
-#include "util/math/mat.hpp"
 
 void Heat_distort::set_duration(real new_duration) {
   assert(new_duration >= 0);

@@ -1,5 +1,4 @@
-#include <ranges>
-#include <cassert>
+#include "pch.hpp"
 #include "scene-locale.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
@@ -10,7 +9,6 @@
 #include "game/menu/item/table-row-item.hpp"
 #include "util/file/yaml.hpp"
 #include "util/file/file.hpp"
-#include "util/log.hpp"
 
 struct Locale_info {
   Str path {};

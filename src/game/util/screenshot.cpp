@@ -1,16 +1,10 @@
-#include <ctime>
-#include <cassert>
-#include <sstream>
+#include "pch.hpp"
 #include "screenshot.hpp"
 #include "config.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/image/image-io.hpp"
 #include "game/core/common.hpp"
-#include "util/platform.hpp"
-#include "util/str-util.hpp"
-#include "util/path.hpp"
 #include "util/file/yaml.hpp"
-#include "util/math/random.hpp"
 
 void save_screenshot(cr<Image> image) {
   assert(image);

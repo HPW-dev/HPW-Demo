@@ -1,6 +1,5 @@
-#include <algorithm>
+#include "pch.hpp"
 #include "polygon-helper.hpp"
-#include "util/macro.hpp"
 #include "util/math/polygon.hpp"
 #include "util/math/circle.hpp"
 #include "util/math/vec-util.hpp"

@@ -1,6 +1,5 @@
-#include <cassert>
+#include "pch.hpp"
 #include "timer.hpp"
-#include "util/macro.hpp"
 #include "util/math/random.hpp"
 
 void Timer::set_timer(const Delta_time new_timer) {

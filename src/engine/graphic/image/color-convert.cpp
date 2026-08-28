@@ -1,8 +1,7 @@
+#include "pch.hpp"
 #include "color-convert.hpp"
 #include "color.hpp"
 #include "palette.hpp"
-#include <cmath>
-#include <algorithm>
 
 // Гамма-коррекция (линейный → sRGB)
 static inline real linear_to_srgb(real c) {

@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "host-glfw-callback.hpp"
 #include "host-glfw.hpp"
 #include "host-glfw-keymap.hpp"
@@ -6,7 +6,6 @@
 #include "game/core/graphic.hpp"
 #include "game/core/user.hpp"
 #include "game/core/tasks.hpp"
-#include "util/error.hpp"
 
 // отложенное нажатие кнопки
 class Lazy_press final: public Task {

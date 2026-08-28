@@ -1,17 +1,9 @@
-#include <cassert>
-#include <stdexcept>
-#include <utility>
+#include "pch.hpp"
 #include "frame.hpp"
-#include "util/error.hpp"
-#include "util/log.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/rotation.hpp"
 #include "engine/graphic/util/rotsprite.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/str-util.hpp"
 #include "game/util/store.hpp"
 #include "game/core/sprites.hpp"
 

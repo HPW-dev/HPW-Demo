@@ -1,9 +1,6 @@
-#include <omp.h>
-#include <cassert>
-#include <cmath>
+#include "pch.hpp"
 #include "noise.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "util/math/mat.hpp"
 
 /*
 constexpr real blerp(real c00, real c10, real c01, real c11, real tx, real ty) {

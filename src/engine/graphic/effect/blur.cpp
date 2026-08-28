@@ -1,11 +1,7 @@
-#include <omp.h>
-#include <cassert>
+#include "pch.hpp"
 #include "blur.hpp"
-#include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/mat.hpp"
+#include "engine/graphic/image/image.hpp"
 
 void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
   assert(dst);

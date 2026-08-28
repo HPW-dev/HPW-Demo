@@ -1,8 +1,5 @@
-#include <cmath>
-#include <cassert>
+#include "pch.hpp"
 #include "game/bgp/bgp.hpp"
-#include "util/hpw-util.hpp"
-#include "util/macro.hpp"
 #include "bgp-pack-1.hpp"
 #include "bgp-pack-2.hpp"
 #include "bgp-pack-3.hpp"

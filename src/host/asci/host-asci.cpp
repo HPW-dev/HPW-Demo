@@ -1,6 +1,4 @@
-#include <cassert>
-#include <chrono>
-#include <cstdlib>
+#include "pch.hpp"
 #include "host-asci.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
@@ -10,12 +8,6 @@
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
-#include "util/pparser.hpp"
-#include "util/math/mat.hpp"
-#include "util/math/random.hpp"
 #include "host/host-util.hpp"
 #include "engine/graphic/effect/image-to-asci.hpp"
 

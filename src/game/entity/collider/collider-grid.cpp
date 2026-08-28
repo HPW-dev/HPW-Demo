@@ -1,7 +1,4 @@
-#include <omp.h>
-#include <algorithm>
-#include <cassert>
-#include <cmath>
+#include "pch.hpp"
 #include "collider-grid.hpp"
 #include "game/core/fonts.hpp"
 #include "game/entity/collidable.hpp"

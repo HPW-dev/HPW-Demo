@@ -1,5 +1,4 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
@@ -37,9 +36,6 @@
 #include "engine/graphic/image/color-table.hpp"
 #include "engine/sound/sound-mgr.hpp"
 #include "util/file/yaml.hpp"
-#include "util/math/random.hpp"
-#include "util/hpw-util.hpp"
-#include "util/log.hpp"
 
 #ifdef DEBUG
 #include "game/scene/scene-cmd.hpp"

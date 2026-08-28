@@ -1,18 +1,10 @@
-#include <algorithm>
-#include <cstring>
-#include <utility>
-#include <unordered_map>
-#include <cmath>
+#include "pch.hpp"
 #include "util-templ.hpp"
 #include "graphic-util.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
-#include "util/math/random.hpp"
-#include "util/math/polygon.hpp"
-#include "util/math/mat.hpp"
-#include "util/log.hpp"
-#include "game/util/sync.hpp"
 #include "game/core/graphic.hpp"
+#include "game/util/sync.hpp"
 
 void insert_fast(Image& dst, cr<Image> src) {
   return_if(!dst);

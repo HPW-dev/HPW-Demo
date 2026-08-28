@@ -1,5 +1,4 @@
-#include <cassert>
-#include <array>
+#include "pch.hpp"
 #include "epge.hpp"
 #include "game/util/locale.hpp"
 #include "engine/graphic/image/image.hpp"

@@ -1,11 +1,7 @@
-#include <ranges>
-#include <utility>
+#include "pch.hpp"
 #include "cmd.hpp"
 #include "cmd-common.hpp"
 #include "cmd-util.hpp"
-#include "util/error.hpp"
-#include "util/str-util.hpp"
-#include "util/math/timer.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/tasks.hpp"
 #include "game/util/version.hpp"

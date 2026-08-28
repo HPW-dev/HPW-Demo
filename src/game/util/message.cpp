@@ -1,8 +1,5 @@
-#include <cassert>
-#include <algorithm>
-#include <utility>
+#include "pch.hpp"
 #include "message.hpp"
-#include "util/log.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/core.hpp"
 #include "game/util/sync.hpp"

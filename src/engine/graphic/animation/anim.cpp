@@ -1,12 +1,6 @@
-#include <cassert>
-#include <stdexcept>
-#include <sstream>
-#include <utility>
+#include "pch.hpp"
 #include "anim.hpp"
 #include "frame.hpp"
-#include "util/error.hpp"
-#include "util/math/mat.hpp"
-#include "util/mempool.hpp"
 #include "game/entity/util/hitbox.hpp"
 #include "game/util/polygon-helper.hpp"
 #include "game/core/entities.hpp"

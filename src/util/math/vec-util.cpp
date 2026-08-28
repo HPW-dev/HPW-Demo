@@ -1,9 +1,4 @@
-#include <algorithm>
-#include <cassert>
-#include "vec-util.hpp"
-#include "vec.hpp"
-#include "random.hpp"
-#include "util/str-util.hpp"
+#include "pch.hpp"
 
 real length(const Vec src) {
   return std::sqrt(pow2(src.x) + pow2(src.y));

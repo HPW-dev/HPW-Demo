@@ -1,16 +1,6 @@
-#include <cassert>
-#include <cstdlib>
-#include <sstream>
-#include <fstream>
-#include <iostream>
-#include <algorithm>
-#include <functional>
-#include <utility>
-#include <string>
-#include "util/str.hpp"
+#include "pch.hpp"
 #include "util/file/file.hpp"
 #include "util/file/file-io.hpp"
-#include "util/macro.hpp"
 #include "engine/graphic/image/color.hpp"
 #include "engine/graphic/image/color-convert.hpp"
 

@@ -1,4 +1,4 @@
-#include <iomanip>
+#include "pch.hpp"
 #include "protownd.hpp"
 #include "host/command.hpp"
 #include "game/core/canvas.hpp"
@@ -8,11 +8,6 @@
 #include "game/util/config.hpp"
 #include "game/util/keybits.hpp"
 #include "engine/graphic/image/image-io.hpp"
-#include "util/math/random.hpp"
-#include "util/str-util.hpp"
-#include "util/path.hpp"
-#include "util/log.hpp"
-#include "util/error.hpp"
 #include "util/file/yaml.hpp"
 
 Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {

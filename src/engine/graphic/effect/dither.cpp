@@ -1,12 +1,5 @@
-#include <omp.h>
-#include <array>
-#include <mutex>
-#include <cmath>
-#include <algorithm>
-#include <unordered_map>
+#include "pch.hpp"
 #include "dither.hpp"
-#include "util/log.hpp"
-#include "util/math/vec.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/graphic-util.hpp"

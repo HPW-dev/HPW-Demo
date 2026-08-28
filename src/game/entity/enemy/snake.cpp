@@ -1,10 +1,6 @@
-#include <cassert>
-#include <utility>
+#include "pch.hpp"
 #include "snake.hpp"
-#include "util/hpw-util.hpp"
 #include "util/file/yaml.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/animation/anim.hpp"
 #include "engine/graphic/effect/heat-distort.hpp"

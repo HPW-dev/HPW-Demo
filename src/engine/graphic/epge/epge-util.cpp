@@ -1,11 +1,8 @@
-#include <cassert>
+#include "pch.hpp"
 #include "epge-util.hpp"
 #include "game/core/epges.hpp"
 #include "game/core/locales.hpp"
 #include "util/file/yaml.hpp"
-#include "util/str-util.hpp"
-#include "util/log.hpp"
-#include "util/hpw-util.hpp"
 
 namespace epge {
 

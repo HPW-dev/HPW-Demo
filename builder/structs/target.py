@@ -22,6 +22,7 @@ class Target:
   lib_dirs      : list[str] = field(default_factory=list)
   ext           : Extention = Extention.exe
   name          : str = "test.exe"
+  pch_path      : str = '' # берётся из Context. Есзи задан, будет билд PCH
   opt_preset    : str = 'auto' # уровень оптимизаций
   linked_libs   : list[str] = field(default_factory=list)
   creation_time : str = "" # время старта сборки (UTC)

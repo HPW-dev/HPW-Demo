@@ -1,9 +1,5 @@
-#include <algorithm>
-#include <cassert>
+#include "pch.hpp"
 #include "phys.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/mat.hpp"
-#include "util/hpw-util.hpp"
 
 cr<decltype(Phys::m_pos)> Phys::get_pos() const { return m_pos; }
 cr<decltype(Phys::m_deg)> Phys::get_deg() const { return m_deg; }

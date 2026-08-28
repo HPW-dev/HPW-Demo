@@ -258,8 +258,8 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   if rebuild.rebuild_needed or ctx.forced_rebuild:
     tgt = copy.deepcopy(tgt_src)
     tgt.sources = files_to_build
+    tgt.pch_path = ctx.pch_path
     compile_multi(tgt, ctx, host)
-
   else:
     print(to_gray(f'Пересборка {tgt_src.name} не требуется'))
 

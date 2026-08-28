@@ -1,7 +1,5 @@
-#include <cassert>
-#include <utility>
+#include "pch.hpp"
 #include "entity.hpp"
-#include "util/error.hpp"
 #include "game/core/core.hpp"
 #include "game/entity/entity-mgr.hpp"
 #include "game/entity/util/entity-util.hpp"

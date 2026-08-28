@@ -1,9 +1,5 @@
-#include <omp.h>
-#include <cassert>
-#include <utility>
+#include "pch.hpp"
 #include "tilemap.hpp"
-#include "util/file/yaml.hpp"
-#include "util/math/vec.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/sprite/sprite-io.hpp"
@@ -12,7 +8,7 @@
 #include "game/core/sprites.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/resource-helper.hpp"
-#include "util/path.hpp"
+#include "util/file/yaml.hpp"
 
 struct Tile {
   Weak<Sprite> sprite {}; // текстура с банка

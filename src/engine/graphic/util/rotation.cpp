@@ -1,14 +1,9 @@
-#include <omp.h>
-#include <cassert>
-#include <cmath>
-#include <utility>
+#include "pch.hpp"
 #include "rotation.hpp"
 #include "graphic-util.hpp"
-#include "engine/graphic/image/image.hpp"
-#include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/util-templ.hpp"
-#include "util/math/mat.hpp"
-#include "util/log.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/image/image.hpp"
 
 Image mirror_h(cr<Image> src) {
   assert(src);

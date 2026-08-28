@@ -1,7 +1,5 @@
-#include <functional>
+#include "pch.hpp"
 #include "collider-optimizer.hpp"
-#include "util/str.hpp"
-#include "util/math/average.hpp"
 #include "game/core/core.hpp"
 #include "game/core/common.hpp"
 #include "game/core/graphic.hpp"

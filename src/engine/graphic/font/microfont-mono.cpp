@@ -1,12 +1,10 @@
-#include <cassert>
-#include <array>
+#include "pch.hpp"
 #include "microfont-mono.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/image/image-io.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "util/file/yaml.hpp"
-#include "util/error.hpp"
 #include "game/util/resource-helper.hpp"
 
 struct Glyph {

@@ -1,6 +1,6 @@
+#include "pch.hpp"
 #include "blur-helper.hpp"
 #include "engine/graphic/effect/blur.hpp"
-#include "util/macro.hpp"
 #include "game/core/graphic.hpp"
 
 void hpw_blur(Image& dst, cr<Image> src, const int window_sz) {

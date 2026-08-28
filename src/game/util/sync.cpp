@@ -1,10 +1,8 @@
-#include <cassert>
+#include "pch.hpp"
 #include "sync.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/core.hpp"
 #include "host/command.hpp"
-#include "util/log.hpp"
-#include "util/platform.hpp"
 
 static bool m_vsync {false};
 static bool m_disable_frame_limit {false};

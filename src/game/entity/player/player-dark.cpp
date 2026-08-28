@@ -1,14 +1,10 @@
-#include <cassert>
-#include <algorithm>
+#include "pch.hpp"
 #include "player-dark.hpp"
 #include "game/util/keybits.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
-#include "util/math/random.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/log.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/animation/frame.hpp"
 #include "engine/graphic/animation/direct.hpp"
