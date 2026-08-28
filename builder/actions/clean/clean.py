@@ -16,6 +16,7 @@ def clean(ctx: Context):
   '''Чистит от файлов сборки'''
   # собираем список кого удалить:
   delete_list = []
+  delete_list.extend(find('**/*.gch'))
   delete_list.extend(find(f'{ctx.bin_dir}*.exe'))
   delete_list.extend(find(f'{ctx.bin_dir}*.elf32'))
   delete_list.extend(find(f'{ctx.bin_dir}*.elf64'))
