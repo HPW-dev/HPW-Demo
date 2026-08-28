@@ -15,6 +15,7 @@ class Context:
   assets_dst_path : str = 'build/data.zip'
   assets_src_dir  : str = 'data/'
   compiler_path   : str = 'g++'
+  pch_path        : str = '' # Если задан, то будет использовать precompiled header
 
   with_incremental      : bool = True  # использовать инкрементальную сборку
   with_compilation      : bool = True  # чтобы выключать сборку
