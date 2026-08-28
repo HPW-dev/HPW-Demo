@@ -120,6 +120,13 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
     "compiler_path": ctx.compiler_path,
   }
 
+  # инфа о PCH
+  db['pch'] = {
+    'used': bool(ctx.pch_path)
+  }
+  if bool(ctx.pch_path):
+    db['pch']['hash'] = blake2b(ctx.pch_path)
+
   return db
 
 def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Rebuild_info:
@@ -214,6 +221,25 @@ def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
     
   return True
 
+def pch_modifed(db_path: str, ctx: Context):
+  ''':resut: True, если есть изменения в pch.hpp'''
+  if not bool(ctx.pch_path):
+    return False # значит не юзаем PCH
+  
+  with open(db_path, "r", encoding="utf-8") as f:
+    db = json.load(f)
+
+    pch_node = db['pch']
+    if not pch_node['used']:
+      return False
+    
+    # проверяем хэши
+    if pch_node['hash'] != blake2b(ctx.pch_path):
+      print(f'Обнаружены изменения в {ctx.pch_path}')
+      return True
+
+  return False
+
 def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_info:
   '''
   Ищет изменения в файлах проекта и определяет что нужно пересобрать.
@@ -226,9 +252,11 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   db_path = f'{ctx.tmp_dir}{tgt.name}.json'
 
   # проверить что есть база и что опции не изменились
-  if fs.exists(db_path) and equal_opts(db_path, tgt, ctx):
+  if fs.exists(db_path) \
+  and not pch_modifed(db_path, ctx) \
+  and equal_opts(db_path, tgt, ctx):
     return check_diffs(tgt, db_path, header_map, ctx)
- 
+  
   else: # делаем базу с нуля
     print(f'База для пересборки {to_yellow(tgt.name)} не найдена')
 
