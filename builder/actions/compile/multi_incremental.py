@@ -251,9 +251,11 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   
   db_path = f'{ctx.tmp_dir}{tgt.name}.json'
 
+  pch_is_modified = pch_modifed(db_path, ctx)
+
   # проверить что есть база и что опции не изменились
   if fs.exists(db_path) \
-  and not pch_modifed(db_path, ctx) \
+  and not pch_is_modified \
   and equal_opts(db_path, tgt, ctx):
     return check_diffs(tgt, db_path, header_map, ctx)
   
@@ -267,6 +269,7 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
 
     info = Rebuild_info()
     info.rebuild_needed = True
+    info.rebuild_pch = pch_is_modified
     info.new_files = list(header_map.keys())
 
     return info
@@ -286,7 +289,8 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   if rebuild.rebuild_needed or ctx.forced_rebuild:
     tgt = copy.deepcopy(tgt_src)
     tgt.sources = files_to_build
-    tgt.pch_path = ctx.pch_path
+    if rebuild.rebuild_pch:
+      tgt.pch_path = ctx.pch_path
     compile_multi(tgt, ctx, host)
   else:
     print(to_gray(f'Пересборка {tgt_src.name} не требуется'))
