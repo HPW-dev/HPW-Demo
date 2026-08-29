@@ -226,17 +226,20 @@ def pch_modifed(db_path: str, ctx: Context):
   if not bool(ctx.pch_path):
     return False # значит не юзаем PCH
   
-  with open(db_path, "r", encoding="utf-8") as f:
-    db = json.load(f)
+  try:
+    with open(db_path, "r", encoding="utf-8") as f:
+      db = json.load(f)
 
-    pch_node = db['pch']
-    if not pch_node['used']:
-      return False
-    
-    # проверяем хэши
-    if pch_node['hash'] != blake2b(ctx.pch_path):
-      print(f'Обнаружены изменения в {ctx.pch_path}')
-      return True
+      pch_node = db['pch']
+      if not pch_node['used']:
+        return False
+      
+      # проверяем хэши
+      if pch_node['hash'] != blake2b(ctx.pch_path):
+        print(f'Обнаружены изменения в {ctx.pch_path}')
+        return True
+  except FileNotFoundError: # если не нашли в базе, значит ещё не компилили PCH
+    return True
 
   return False
 
