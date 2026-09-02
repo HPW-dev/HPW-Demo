@@ -206,5 +206,5 @@ void save_anims(Yaml& dst) {
 } // save_anims
 
 Yaml get_anim_config() {
-  return Yaml(load_res("config/animation.yml")); 
+  return Yaml(load_res("configs/animation.yml")); 
 }

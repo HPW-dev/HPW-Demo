@@ -277,7 +277,7 @@ struct Entity_mgr::Impl {
   } // make
 
   inline Yaml load_entity_config() const {
-    return Yaml(load_res("config/entities.yml"));
+    return Yaml(load_res("configs/entities.yml"));
   }
 
   inline void add_scatter(cr<Scatter> scatter) {
