@@ -28,7 +28,7 @@ struct Scene_locale_select::Impl {
 
   inline void load_locale_info() {
     cauto files = get_all_res_names();
-    cauto locale_dir = Str("resources/locale/");
+    cauto locale_dir = Str("locales/");
     cauto filter = [locale_dir](cr<Str> fname) {
       bool dir_equ_path = fname.find(locale_dir) == 0;
       bool path_not_dir = fname.size() > locale_dir.size();
