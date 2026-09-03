@@ -13,13 +13,14 @@
 **/*.svg
 
 # Game:
-!data/**/*
+!resources/**/*
 **/test.hpw_replay
 **/*.hpw_replay
 **/lib
 build/bin/
 build/bin/*
 build/data.zip
+build/resources.zip
 build/editor
 build/*.txt
 build/plugin

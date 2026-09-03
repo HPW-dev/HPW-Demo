@@ -22,6 +22,7 @@ def clean(ctx: Context):
   delete_list.extend(find(f'{ctx.bin_dir}*.elf64'))
   delete_list.extend(find(f'{ctx.build_dir}**/log.*'))
   delete_list.extend(find(f'{ctx.build_dir}**/data.zip'))
+  delete_list.extend(find(f'{ctx.build_dir}**/resources.zip'))
   delete_list.append(ctx.info_dir)
   delete_list.append(f'{ctx.build_dir}config')
   delete_list.append(f'{ctx.build_dir}screenshots')

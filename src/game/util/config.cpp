@@ -229,7 +229,7 @@ void save_config() {
 
   auto path_node = config.make_node("path");
   path_node.set_str("screenshots", hpw::screenshots_path);
-  path_node.set_str("data", hpw::data_path);
+  path_node.set_str("resources", hpw::data_path);
   path_node.set_str("os_resources_dir", hpw::os_resources_dir);
   path_node.set_str("replays_dir", hpw::replays_path);
 
@@ -313,7 +313,7 @@ void load_config() {
 
   cauto path_node = config["path"];
   hpw::screenshots_path = path_node.get_str("screenshots", hpw::screenshots_path);
-  hpw::data_path = path_node.get_str("data", hpw::data_path);
+  hpw::data_path = path_node.get_str("resources", hpw::data_path);
   hpw::os_resources_dir = path_node.get_str("os_resources_dir", hpw::os_resources_dir);
   hpw::replays_path = path_node.get_str("replays_dir", hpw::replays_path);
 

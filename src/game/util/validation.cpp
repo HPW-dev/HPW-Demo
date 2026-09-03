@@ -36,5 +36,5 @@ void init_validation_info() {
   hpw::data_sha512 = calc_sum( scast<cp<void>>(mem.data()), mem.size() );
 
   log_info << "game executable SHA256: " + hpw::exe_sha512;
-  log_info << "game data.zip SHA256: " + hpw::data_sha512;
+  log_info << "game resources.zip SHA256: " + hpw::data_sha512;
 }

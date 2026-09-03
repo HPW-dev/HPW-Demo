@@ -12,8 +12,8 @@ class Context:
   build_dir       : str = 'build/'
   bin_dir         : str = 'build/bin/'
   info_dir        : str = 'build/build info/'
-  assets_dst_path : str = 'build/data.zip'
-  assets_src_dir  : str = 'data/'
+  assets_dst_path : str = 'build/resources.zip'
+  assets_src_dir  : str = 'resources/'
   compiler_path   : str = 'g++'
   pch_path        : str = '' # Если задан, то будет использовать precompiled header
 

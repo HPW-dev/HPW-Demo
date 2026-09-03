@@ -9,7 +9,7 @@ void init_archive() {
   assert(hpw::config);
 
   try {
-    auto data_path = hpw::cur_dir + (*hpw::config)["path"].get_str("data", hpw::data_path);
+    auto data_path = hpw::cur_dir + (*hpw::config)["path"].get_str("resources", hpw::data_path);
     init_unique(hpw::archive, data_path);
 
     log_info << "ресурсы будут грузиться из архива \"" + hpw::archive->get_path() + "\"";
