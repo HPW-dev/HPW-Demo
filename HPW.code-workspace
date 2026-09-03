@@ -2,12 +2,13 @@
 	"folders": [
 		{
 			"path": "."
-		},
-		{
-			"path": "src",
 		}
 	],
 	"settings": {
+		"C_Cpp.default.includePath": [
+			".",
+			"src"
+		],
 		"files.associations": {
 			"*.h": "cpp",
 			"*.hxx": "cpp",
