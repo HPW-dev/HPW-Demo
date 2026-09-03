@@ -185,7 +185,7 @@ void Scene_main_menu::next_bg() {
 }
 
 void Scene_main_menu::cache_logo_names() {
-  cauto config_file = load_res("resource/image/logo/list.yml");
+  cauto config_file = load_res("resources/image/logo/list.yml");
   cauto config_yml = Yaml(config_file);
   m_logo_names = config_yml.get_v_str("logos");
 }

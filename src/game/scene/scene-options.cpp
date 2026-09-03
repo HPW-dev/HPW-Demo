@@ -40,7 +40,7 @@ struct Scene_options::Impl {
   }
 
   inline void init_menu() {
-    cauto config_file = load_res("resource/menu/options.yml");
+    cauto config_file = load_res("resources/menu/options.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(config, Action_table {        
       {"graphic_opts", []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},

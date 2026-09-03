@@ -13,7 +13,7 @@ struct Scene_create_server::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("resource/menu/create server.yml");
+    cauto config_file = load_res("resources/menu/create server.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(
       config,

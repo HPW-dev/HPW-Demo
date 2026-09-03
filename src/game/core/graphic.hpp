@@ -46,8 +46,8 @@ inline Light_quality light_quality         {Light_quality::medium};      // ка
 inline Heat_distort_mode heat_distort_mode {Heat_distort_mode::autoopt}; // качество искажения воздуха
 
 // прочее:
-inline std::string_view TEST_IMAGES_DIR    {"resource/image/other/test images/"}; // путь до папки тестовых пикч
-inline std::string_view DEFAULT_TEST_IMAGE {"resource/image/other/test images/cube.png"};
+inline std::string_view TEST_IMAGES_DIR    {"resources/image/other/test images/"}; // путь до папки тестовых пикч
+inline std::string_view DEFAULT_TEST_IMAGE {"resources/image/other/test images/cube.png"};
 inline Str cur_test_image_path             {DEFAULT_TEST_IMAGE}; // путь до выбранной тестовой пикчи
 
 } // graphic ns

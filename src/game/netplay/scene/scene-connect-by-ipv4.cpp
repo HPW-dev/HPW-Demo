@@ -13,7 +13,7 @@ struct Scene_connect_by_ipv4::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("resource/menu/connect by ipv4.yml");
+    cauto config_file = load_res("resources/menu/connect by ipv4.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(
       config,

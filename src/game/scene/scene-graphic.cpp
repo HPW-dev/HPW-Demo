@@ -348,7 +348,7 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_epilepsy_item() {
     return new_shared<Menu_text_item>(get_locale_str("graphic_menu.epilepsy"), [] {
-      hpw::init_palette_from_archive("resource/image/palettes/zebura.png");
+      hpw::init_palette_from_archive("resources/image/palettes/zebura.png");
       hpw::set_resize_mode(Resize_mode::full);
       graphic::set_disable_frame_limit(true);
       #ifdef WINDOWS

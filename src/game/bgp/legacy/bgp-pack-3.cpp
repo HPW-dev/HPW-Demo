@@ -690,7 +690,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
       return *ret;
     };
     cauto num = random() % 5;
-    auto column_spr = load_and_check("resource/image/other/columns/" + n2s(num) + ".png");
+    auto column_spr = load_and_check("resources/image/other/columns/" + n2s(num) + ".png");
     // генерация градиента тени:
     static Image column_shadow;
     if (!column_shadow) {

@@ -19,7 +19,7 @@ void randomize_palette() {
 
   cauto sprites = get_all_res_names(false);
   cauto filter = [](cr<Str> src)
-    { return src.find("resource/image/palettes/") != Str::npos; };
+    { return src.find("resources/image/palettes/") != Str::npos; };
   Rnd_table<Str> palettes(sprites | std::views::filter(filter) | std::ranges::to<Strs>());
   cauto palette_name = palettes.rnd_stable();
   graphic::current_palette_file = palette_name;

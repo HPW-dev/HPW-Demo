@@ -30,7 +30,7 @@ struct Scene_tools::Impl {
 
   inline void init_menu() {
     _menu = menu_from_yaml(
-      Yaml(load_res("resource/menu/tools.yml")),
+      Yaml(load_res("resources/menu/tools.yml")),
       Action_table {        
         {"input_delay_test", []{ hpw::scene_mgr.add(new_shared<Scene_input_delay_test>()); }},
       }

@@ -30,7 +30,7 @@ void load_sounds() {
 
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](cr<Str> name) {
-    Str find_str = "resource/audio/";
+    Str find_str = "resources/audio/";
 
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория
@@ -48,7 +48,7 @@ void load_sounds() {
   // загрузка в хранилище
   for (auto &name: file_names) {
     auto sound = load_audio_from_memory(load_res(name));
-    delete_all(name, "resource/audio/");
+    delete_all(name, "resources/audio/");
     hpw::sound_mgr->move_audio(name, std::move(sound));
   }
 
