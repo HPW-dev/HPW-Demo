@@ -14,7 +14,7 @@ struct Scene_find_server::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("resources/menu/find server.yml");
+    cauto config_file = load_res("configs/ui/menu/find server.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(config, Action_table {
         /*{"goto_find_server_scene", Action_container( Action([]{
