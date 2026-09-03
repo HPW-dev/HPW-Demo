@@ -70,22 +70,21 @@ def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=200):
         
   return headers
 
-def make_header_map(cxx_files: list[str]):
+def make_header_map(cxx_files: list[str], include_dirs=None):
   """
-  Строит карту связей между С++ файлами
-  
-  :result: чё-то типа:
-  {
-    ('subdir/a.cxx', {'headers': ['subdir/a.hpp', 'subdir/b.hpp']})
-    ('root.c'      , {'headers': ['root.h', 'subdir/a.hpp', 'subdir/b.hpp']})
-  }
+  Строит карту связей между С++ файлами с учетом директорий поиска
   """
   if cxx_files == []:
     raise ValueError('Пустой список файлов')
-  map = {}
+  
+  if include_dirs is None:
+    include_dirs = []
+    
+  header_map = {}
   for cxx in cxx_files:
-    map[cxx] = { 'headers': find_headers(cxx) }
-  return map
+    # Передаем include_dirs в find_headers
+    header_map[cxx] = { 'headers': find_headers(cxx, include_dirs=include_dirs) }
+  return header_map
 
 def make_db(header_map: dict, tgt: Target, ctx: Context):
   '''Создаёт более подробную структуру файлов проекта с их хэшами'''
@@ -284,7 +283,7 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   if not abs_existing_sources:
     header_map = {}
   else:
-    header_map = make_header_map(abs_existing_sources)
+    header_map = make_header_map(abs_existing_sources, include_dirs=tgt_src.include_dirs)
     
   rebuild = check_for_rebuild(tgt_src, header_map, ctx)
 
