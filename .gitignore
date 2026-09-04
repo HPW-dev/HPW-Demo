@@ -25,6 +25,7 @@ build/editor
 build/*.txt
 build/plugin
 build/HPW
+build/configs/
 build/screenshots/
 build/build info/
 build/config/
