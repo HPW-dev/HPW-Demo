@@ -11,27 +11,37 @@ import json
 import copy
 import re
 
-def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=70):
-  '''
-  Рекурсивно лазит по инклудам и добавляет в список всё что между кавычек "..."
+def find_headers(cxx_file: str, include_dirs=None, cache=None, lines=70):
+  """
+  Рекурсивно ищет инклуды. 
   
-  :include_dirs: список путей для поиска хедеров, например ['.', 'src', 'include']
-  :lines: весь файл не читать, только первые строки
-  '''
-  if visited is None:
-    visited = set()
+  Параметры:
+  ---
+  lines:
+    столько первых строк файла проверять на инклуды
+  cache:
+    словарь { abs_path: set(прямых_инклудов) } для исключения повторного чтения с диска.
+  """
+  if cache is None:
+    cache = {}
     
   if include_dirs is None:
     include_dirs = []
 
-  # Приводим к абсолютному пути для корректной фильтрации дубликатов
   cxx_file_abs = fs.path_abs(cxx_file)
-        
-  if cxx_file_abs in visited or not fs.exists(cxx_file_abs):
-    return []
-    
-  visited.add(cxx_file_abs)
-  headers = []
+  
+  # если базы нету
+  if not fs.exists(cxx_file_abs):
+    return set()
+
+  # Если файл уже в кэше
+  if cxx_file_abs in cache:
+    return cache[cxx_file_abs]
+
+  # Чтобы не было рекурсии
+  cache[cxx_file_abs] = set()
+  
+  local_dependencies = set()
   include_regex = re.compile(r'^\s*#\s*include\s*"([^"]+)"')
   base_dir = fs.file_dir(cxx_file_abs)
     
@@ -41,49 +51,52 @@ def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=70):
         line = f.readline()
         if not line: 
           break
-                
+
+        # нашли инклуд
         match = include_regex.match(line)
         if match:
           header_name = match.group(1)
           header_path = None
 
-          # Сначала ищем локальную относительную папку чекаем...
+          # ищем локально
           local_path = fs.path_abs(f'{base_dir}/{header_name}')
           if fs.exists(local_path):
             header_path = local_path
-          else: # ...иначе ищем глобально
+          else: # ищем в include_dirs
             for d in include_dirs:
               possible_path = fs.path_abs(f'{d}/{header_name}')
               if fs.exists(possible_path):
                 header_path = possible_path
                 break
 
-          # Если файл физически найден и мы его ещё не парсили
-          if header_path and header_path not in visited:
-            headers.append(header_path)
-            # Передаем include_dirs дальше по рекурсии
-            inner_headers = find_headers(header_path, include_dirs, visited, lines)
-            headers.extend(inner_headers)
-
+          if header_path:
+            local_dependencies.add(header_path)
   except OSError:
     pass
-        
-  return headers
+
+  # Дерево глубоких зависимостей
+  full_dependencies = set(local_dependencies)
+  for dep in local_dependencies:
+    inner_deps = find_headers(dep, include_dirs, cache, lines)
+    full_dependencies.update(inner_deps)
+
+  cache[cxx_file_abs] = full_dependencies
+  return full_dependencies
 
 def make_header_map(cxx_files: list[str], include_dirs=None):
-  """
-  Строит карту связей между С++ файлами с учетом директорий поиска
-  """
-  if cxx_files == []:
+  if not cxx_files:
     raise ValueError('Пустой список файлов')
   
-  if include_dirs is None:
-    include_dirs = []
+  # Оптимизация, сразу конвертим в амсолютные пути
+  include_dirs = [fs.path_abs(d) for d in (include_dirs or [])]
     
   header_map = {}
+  cache = {} # Кэш для файлов проекта
+  
   for cxx in cxx_files:
-    # Передаем include_dirs в find_headers
-    header_map[cxx] = { 'headers': find_headers(cxx, include_dirs=include_dirs) }
+    dependencies = find_headers(cxx, include_dirs=include_dirs, cache=cache)
+    header_map[cxx] = { 'headers': list(dependencies) }
+    
   return header_map
 
 def make_db(header_map: dict, tgt: Target, ctx: Context):
