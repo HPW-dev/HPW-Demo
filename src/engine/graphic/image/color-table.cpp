@@ -4,7 +4,7 @@
 #include "util/file/file.hpp"
 
 void load_color_tables() {
-  const Str dir = "resources/color tables/";
+  const Str dir = "graphic/color tables/";
   table_inv          = load_res(dir + "table_inv.dat").data;
   table_inv_safe     = load_res(dir + "table_inv_safe.dat").data;
   table_inc_safe     = load_res(dir + "table_inc_safe.dat").data;

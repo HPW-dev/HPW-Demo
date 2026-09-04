@@ -1,66 +1,66 @@
 logos:
   # K.I.R.I.M.E:
-  - resources/image/logo/Kirime/1.png
-  - resources/image/logo/Kirime/2.png
-  - resources/image/logo/Kirime/3.png
-  - resources/image/logo/Kirime/4.png
-  - resources/image/logo/Kirime/5.png
+  - graphic/images/main logos/Kirime/1.png
+  - graphic/images/main logos/Kirime/2.png
+  - graphic/images/main logos/Kirime/3.png
+  - graphic/images/main logos/Kirime/4.png
+  - graphic/images/main logos/Kirime/5.png
 
   # Alles Sokolov:
-  - resources/image/logo/Alles/Alles logo.png
+  - graphic/images/main logos/Alles/Alles logo.png
   
   # August Pevko:
-  - resources/image/logo/Aug/russia24.png
+  - graphic/images/main logos/Aug/russia24.png
 
   # DSFF:
-  - resources/image/logo/dsff/1.png
+  - graphic/images/main logos/dsff/1.png
   
   # ASCII Art:
-  - resources/image/logo/ASCII/2.png
-  - resources/image/logo/ASCII/4.png
-  - resources/image/logo/ASCII/5.png
-  - resources/image/logo/ASCII/6.png
-  - resources/image/logo/ASCII/7.png
-  - resources/image/logo/ASCII/8.png
-  - resources/image/logo/ASCII/9.png
-  - resources/image/logo/ASCII/10.png
-  - resources/image/logo/ASCII/11.png
-  - resources/image/logo/ASCII/12.png
-  - resources/image/logo/ASCII/13.png
-  - resources/image/logo/ASCII/14.png
+  - graphic/images/main logos/ASCII/2.png
+  - graphic/images/main logos/ASCII/4.png
+  - graphic/images/main logos/ASCII/5.png
+  - graphic/images/main logos/ASCII/6.png
+  - graphic/images/main logos/ASCII/7.png
+  - graphic/images/main logos/ASCII/8.png
+  - graphic/images/main logos/ASCII/9.png
+  - graphic/images/main logos/ASCII/10.png
+  - graphic/images/main logos/ASCII/11.png
+  - graphic/images/main logos/ASCII/12.png
+  - graphic/images/main logos/ASCII/13.png
+  - graphic/images/main logos/ASCII/14.png
 
   # Other:
-  - resources/image/logo/other/1.png
-  - resources/image/logo/other/2.png
-  - resources/image/logo/other/3.png
-  - resources/image/logo/other/4.png
-  - resources/image/logo/other/5.png
-  - resources/image/logo/other/6.png
-  - resources/image/logo/other/8.png
-  - resources/image/logo/other/9.png
-  - resources/image/logo/other/10.png
-  - resources/image/logo/other/11.png
-  - resources/image/logo/other/12.png
+  - graphic/images/main logos/other/1.png
+  - graphic/images/main logos/other/2.png
+  - graphic/images/main logos/other/3.png
+  - graphic/images/main logos/other/4.png
+  - graphic/images/main logos/other/5.png
+  - graphic/images/main logos/other/6.png
+  - graphic/images/main logos/other/8.png
+  - graphic/images/main logos/other/9.png
+  - graphic/images/main logos/other/10.png
+  - graphic/images/main logos/other/11.png
+  - graphic/images/main logos/other/12.png
 
-  - resources/image/logo/other/20.png
-  - resources/image/logo/other/21.png
-  - resources/image/logo/other/22.png
-  - resources/image/logo/other/23.png
-  - resources/image/logo/other/24.png
-  - resources/image/logo/other/25.png
-  - resources/image/logo/other/26.png
-  - resources/image/logo/other/27.png
-  - resources/image/logo/other/28.png
-  - resources/image/logo/other/29.png
-  - resources/image/logo/other/30.png
-  - resources/image/logo/other/31.png  
+  - graphic/images/main logos/other/20.png
+  - graphic/images/main logos/other/21.png
+  - graphic/images/main logos/other/22.png
+  - graphic/images/main logos/other/23.png
+  - graphic/images/main logos/other/24.png
+  - graphic/images/main logos/other/25.png
+  - graphic/images/main logos/other/26.png
+  - graphic/images/main logos/other/27.png
+  - graphic/images/main logos/other/28.png
+  - graphic/images/main logos/other/29.png
+  - graphic/images/main logos/other/30.png
+  - graphic/images/main logos/other/31.png  
 
-  - resources/image/logo/other/hpw-hpw-1.png
-  - resources/image/logo/other/hpw-hpw-2.png
-  - resources/image/logo/other/xpw.png
+  - graphic/images/main logos/other/hpw-hpw-1.png
+  - graphic/images/main logos/other/hpw-hpw-2.png
+  - graphic/images/main logos/other/xpw.png
   
-  - resources/image/logo/other/hex logo 1.png
+  - graphic/images/main logos/other/hex logo 1.png
   
-  - resources/image/logo/japanese.png
-  - resources/image/logo/chinese.png
+  - graphic/images/main logos/japanese.png
+  - graphic/images/main logos/chinese.png
   

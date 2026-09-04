@@ -39,7 +39,7 @@ void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
 }
 
 Strs get_entity_names() {
-  const Yaml config(load_res("configs/entities.yml"));
+  const Yaml config(load_res("scripts/gameplay/entities.yml"));
   Strs ret;
   for (crauto tag: config.root_tags())
     ret.push_back(tag);

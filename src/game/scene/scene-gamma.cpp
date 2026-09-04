@@ -28,14 +28,14 @@ struct Scene_gamma::Impl {
 
   inline explicit Impl() {
     init_menu();
-    test_image = hpw::sprites["resources/image/other/gamma test.png"].get();
+    test_image = hpw::sprites["graphic/images/misc/gamma test.png"].get();
     assert(test_image);
     // тест надо проводить в масштабе 1:1 
     fullscreen_bak = graphic::fullscreen;
     hpw::set_fullscreen(false);
     // стандартная палитра для теста
     palette_bak = graphic::current_palette_file;
-    hpw::init_palette_from_archive("resources/image/palettes/default.png");
+    hpw::init_palette_from_archive("graphic/images/palettes/default.png");
   } // impl
 
   inline ~Impl() {

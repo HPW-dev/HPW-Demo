@@ -36,7 +36,7 @@ struct Scene_palette_select::Impl {
 
   inline Impl() {
     init_menu();
-    _test_image = hpw::sprites.find("resources/image/other/palette test.png");
+    _test_image = hpw::sprites.find("graphic/images/misc/palette test.png");
     assert(_test_image);
   }
 

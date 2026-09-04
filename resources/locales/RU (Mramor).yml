@@ -202,7 +202,7 @@ graphic_menu:
   description:
     palette_select: >
       Перекрасить каждый кадр игры в другие цвета.
-      Картинки с палитрами лежат в resources.zip/graphic/palettes/
+      Картинки с палитрами лежат в resources.zip/graphic/images/palettes/
     pge: >
       Наложить графический эффект на каждый кадр игры.
       Эффекты можно скачать из интернета или создать на C++.

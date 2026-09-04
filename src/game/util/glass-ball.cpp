@@ -85,7 +85,7 @@ class Glass_ball::Impl {
 
 public:
   inline Impl() {
-    _spr = hpw::sprites.find("resources/image/other/red glass ball.png");
+    _spr = hpw::sprites.find("graphic/images/misc/red glass ball.png");
     assert(_spr);
     _W = graphic::width - _spr->X();
     _H = graphic::height - _spr->Y();

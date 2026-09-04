@@ -53,7 +53,7 @@ void load_resources() {
   // загрузка всех спрайтов
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](cr<Str> name) {
-    Str find_str = "resources/image/";
+    Str find_str = "graphic/images/";
 
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория
@@ -64,7 +64,7 @@ void load_resources() {
   };
   Strs image_names;
   to_vector(image_names, names | std::views::filter(name_filter));
-  iferror(image_names.empty(), "image_names пуст, возможно нет ресурсов в папках");
+  iferror(image_names.empty(), "image_names is empty (bad path or empty dir)");
 
   // загрузка в хранилище
   for (auto &name: image_names) {

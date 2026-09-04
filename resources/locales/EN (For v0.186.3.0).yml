@@ -156,7 +156,7 @@ scene:
         move abruptly. It also turns off motion blur.
       palette_select: >
         Recolor each frame of the game in different colors.
-        Images with palettes are stored in resources.zip/graphic/palettes/
+        Images with palettes are stored in resources.zip/graphic/images/palettes/
       pge: >
         Apply a graphic effect to each frame of the game.
         Effects can be downloaded from the Internet or created in C++.

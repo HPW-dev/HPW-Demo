@@ -16,7 +16,7 @@ struct Scene_netplay_menu::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("configs/ui/menu/netplay menu.yml");
+    cauto config_file = load_res("scripts/ui/menu/netplay menu.yml");
     Yaml config(config_file);
     _menu = menu_from_yaml(config, Action_table {
       {"goto_find_server_scene",     []{ hpw::scene_mgr.add(new_shared<Scene_find_server>()); }},

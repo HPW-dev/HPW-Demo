@@ -3,8 +3,8 @@
 
 namespace graphic {
 
-inline constexpr std::string_view DEFAULT_PALETTE_FILES_DIR = "resources/image/palettes/";
-inline constexpr std::string_view DEFAULT_PALETTE_FILE = "resources/image/palettes/default.png";
+inline constexpr std::string_view DEFAULT_PALETTE_FILES_DIR = "graphic/images/palettes/";
+inline constexpr std::string_view DEFAULT_PALETTE_FILE = "graphic/images/palettes/default.png";
 // текущий файл палитры, если пустой, то дефолтная генерация
 inline Str current_palette_file {DEFAULT_PALETTE_FILE};
 

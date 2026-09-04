@@ -25,12 +25,12 @@ inline Str game_dir = "./../"; // корневая папка игры
 inline Str screenshots_path = game_dir + "screenshots/";
 inline Str replays_path = game_dir + "replays/";
 inline Str data_path = game_dir + "resources.zip";
-inline Str config_dir = game_dir + "configs/"; // папка с конфигами
+inline Str config_dir = game_dir + "configs/"; // папка с конфигами (настройки игрока, ники)
 inline Str config_path = config_dir + "config.yml"; // файл настроек
 inline Str nickname_path = config_dir + "nickname.dat"; // файл с никнеймом
 inline Str avatar_path = config_dir + "miniature.dat"; // файл с миниатюркой игрока
 inline Str log_file_path = game_dir + "log.txt";
-inline Str plugin_path = game_dir + "plugins/";
+inline Str plugin_path = game_dir + "plugin/"; // TODO снести
 inline Str os_resources_dir = game_dir + "../resources/"; // отсюда брать файлы, если их нет в resources.zip
 
 } // hpw ns

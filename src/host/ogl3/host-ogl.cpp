@@ -162,7 +162,7 @@ void Host_ogl::compile_program() {
 } // compile_program
 
 void Host_ogl::compie_vertex_shader() {
-  auto source_file = load_res("resources/shader/default.vert");
+  auto source_file = load_res("graphic/shaders/default.vert");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
   m_vert_shader = glCreateShader(GL_VERTEX_SHADER);
@@ -181,7 +181,7 @@ void Host_ogl::compie_vertex_shader() {
 } // compie_vertex_shader
 
 void Host_ogl::compie_fragment_shader() {
-  auto source_file = load_res("resources/shader/default.frag");
+  auto source_file = load_res("graphic/shaders/default.frag");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
   m_frag_shader = glCreateShader(GL_FRAGMENT_SHADER);

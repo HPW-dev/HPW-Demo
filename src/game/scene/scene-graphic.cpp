@@ -1,3 +1,5 @@
+#include "pch.hpp"
+// TODO снести файл
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
 #include "scene-pge.hpp"
@@ -32,7 +34,6 @@
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
 #include "engine/sound/sound-mgr.hpp"
-#include "util/error.hpp"
 
 void set_high_quality() {
   graphic::set_vsync(true);
@@ -348,7 +349,7 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_epilepsy_item() {
     return new_shared<Menu_text_item>(get_locale_str("graphic_menu.epilepsy"), [] {
-      hpw::init_palette_from_archive("resources/image/palettes/zebura.png");
+      hpw::init_palette_from_archive("graphic/images/palettes/zebura.png");
       hpw::set_resize_mode(Resize_mode::full);
       graphic::set_disable_frame_limit(true);
       #ifdef WINDOWS

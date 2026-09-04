@@ -19,7 +19,7 @@ Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
   // удалить всё что не содержит в названии logo
   auto bg_names = get_all_res_names(false);
   std::erase_if(bg_names, [](cr<Str> src) {
-    return src.find("resources/image/loading logo/") == Str::npos; });
+    return src.find("graphic/images/loading screens/") == Str::npos; });
   assert(!bg_names.empty());
 
   cauto bg_name = bg_names.at( rndu_fast(bg_names.size()-1) );

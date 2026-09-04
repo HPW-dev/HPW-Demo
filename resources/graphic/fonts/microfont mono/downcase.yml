@@ -1,4 +1,4 @@
-glyphs_file: "fonts/microfont mono/glyphs downcase.png"
+glyphs_file: "graphic/fonts/microfont mono/glyphs downcase.png"
 
 grid:
   w: 4

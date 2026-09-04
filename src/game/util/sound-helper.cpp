@@ -3,6 +3,7 @@
 #include "game/util/resource-helper.hpp"
 #include "game/core/common.hpp"
 #include "game/core/sounds.hpp"
+#include "game/core/canvas.hpp"
 #include "engine/sound/audio-io.hpp"
 
 // связывание звуков с банком
@@ -30,7 +31,7 @@ void load_sounds() {
 
   // фильтр пропускает только файлы в нужной папке и с нужным разрешением
   auto name_filter = [](cr<Str> name) {
-    Str find_str = "resources/audio/";
+    Str find_str = "audio/";
 
     return name.find(find_str) != str_npos &&
       !std::filesystem::path(name).extension().empty() && // не директория
@@ -44,19 +45,16 @@ void load_sounds() {
 
   Strs file_names;
   to_vector(file_names, names | std::views::filter(name_filter));
-  iferror (file_names.empty(), "file_names пуст, возможно нет ресурсов в папках");
+  iferror (file_names.empty(), "file_names is empty (bad path or empty dir)");
   // загрузка в хранилище
   for (auto &name: file_names) {
     auto sound = load_audio_from_memory(load_res(name));
-    delete_all(name, "resources/audio/");
+    delete_all(name, "audio/");
     hpw::sound_mgr->move_audio(name, std::move(sound));
   }
 
   init_store_sound();
 }
-
-#include "game/core/canvas.hpp"
-#include "game/core/sounds.hpp"
 
 Vec3 to_sound_vel(const Vec src) {
   assert(graphic::width);
@@ -81,4 +79,3 @@ Vec3 to_sound_pos(const Vec src) {
     0
   );
 }
-

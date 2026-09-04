@@ -457,11 +457,11 @@ void Host_glfw::init_icon() {
   try {
     // случайно выбрать ярлык окна
     sconst Strs icon_names {
-      "resources/image/icon/128x128/Alles.png",
-      "resources/image/icon/128x128/boo.png",
-      "resources/image/icon/128x128/pattern 1.png",
-      "resources/image/icon/128x128/pattern 2.png",
-      "resources/image/icon/128x128/pattern 3.png",
+      "graphic/images/icons/128x128/Alles.png",
+      "graphic/images/icons/128x128/boo.png",
+      "graphic/images/icons/128x128/pattern 1.png",
+      "graphic/images/icons/128x128/pattern 2.png",
+      "graphic/images/icons/128x128/pattern 3.png",
     };
     cauto icon_name = icon_names.at(rndu_fast(icon_names.size() - 1));
     cauto icon_file = load_res(icon_name);
