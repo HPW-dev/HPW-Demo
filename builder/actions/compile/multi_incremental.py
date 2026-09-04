@@ -11,7 +11,7 @@ import json
 import copy
 import re
 
-def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=200):
+def find_headers(cxx_file: str, include_dirs=None, visited=None, lines=70):
   '''
   Рекурсивно лазит по инклудам и добавляет в список всё что между кавычек "..."
   
