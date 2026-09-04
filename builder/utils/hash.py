@@ -28,6 +28,24 @@ def blake2b(path: str):
   except OSError:
     return None
 
+def blake2b_fast(path: str) -> str:
+  """
+  Быстро вычисляет короткий 64-битный хэш BLAKE2b для файла.
+  Returns:
+    None, если фйла нет
+  """
+  # digest_size=8 делает хэш коротким (16 hex-символов), снижая нагрузку на JSON
+  hasher = hashlib.blake2b(digest_size=8)
+    
+  try:
+    with open(path, 'rb') as f:
+      # Читаем оптимальными блоками по 64 КБ
+      while chunk := f.read(65536):
+        hasher.update(chunk)    
+    return hasher.hexdigest()
+  except OSError:
+    return None
+
 def crc32(path: str, chunk_size=1024*64):
   """
   Хэш файла в CRC32

@@ -4,7 +4,7 @@ from structs.context import Context
 from structs.host import Host
 from structs.target import *
 from utils.misc import prepare_obj_name
-from utils.hash import blake2b
+from utils.hash import blake2b_fast
 from utils.ui import *
 from utils import fs
 import json
@@ -92,13 +92,13 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
   db['source'] = header_map
 
   for cxx_path, content in db['source'].items():
-    content['hash'] = blake2b(cxx_path)
+    content['hash'] = blake2b_fast(cxx_path)
     content['obj'] = fs.path_abs(f'{ctx.obj_dir}{prepare_obj_name(cxx_path)}')
 
     new_headers = {}
     for header in content['headers']:
       new_headers[header] = {
-        'hash': blake2b(header),
+        'hash': blake2b_fast(header),
       }
     content['headers'] = new_headers
 
@@ -124,7 +124,7 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
     'used': bool(ctx.pch_path)
   }
   if bool(ctx.pch_path):
-    db['pch']['hash'] = blake2b(ctx.pch_path)
+    db['pch']['hash'] = blake2b_fast(ctx.pch_path)
 
   return db
 
@@ -186,7 +186,7 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
   if info.rebuild_needed:
     print(to_green(f'> Обновление базы изменений в файлах {db_path}...'))
     with open(db_path, "w", encoding="utf-8") as f:
-      json.dump(local_db, f, indent=2)
+      json.dump(local_db, f)
 
   return info
 
@@ -234,7 +234,7 @@ def pch_modifed(db_path: str, ctx: Context):
         return False
       
       # проверяем хэши
-      if pch_node['hash'] != blake2b(ctx.pch_path):
+      if pch_node['hash'] != blake2b_fast(ctx.pch_path):
         print(f'Обнаружены изменения в {ctx.pch_path}')
         return True
   except FileNotFoundError: # если не нашли в базе, значит ещё не компилили PCH
@@ -267,7 +267,7 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
     print(to_green(f'> Создание базы изменений в файлах {db_path}...'))
     db = make_db(header_map, tgt, ctx)
     with open(db_path, "w", encoding="utf-8") as f:
-      json.dump(db, f, indent=2)
+      json.dump(db, f)
 
     info = Rebuild_info()
     info.rebuild_needed = True
