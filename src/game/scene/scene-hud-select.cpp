@@ -68,7 +68,7 @@ struct Scene_hud_select::Impl {
 
   inline void draw_bg(Image& dst) const {
     // поискать фон с примером интерфейса
-    cauto bg = hpw::sprites.find("raphic/images/HUD/" + graphic::cur_hud + ".png");
+    cauto bg = hpw::sprites.find("graphic/images/HUD/" + graphic::cur_hud + ".png");
     if (bg) {
       insert_fast(dst, bg->image());
       return;
