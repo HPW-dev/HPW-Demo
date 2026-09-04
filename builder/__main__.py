@@ -88,4 +88,4 @@ if ctx.with_build_info_file:
 game_exe = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
 if ctx.with_launch and fs.exists(game_exe):
   print(f'> запуск "{game_exe}"...')
-  exec_cmd(game_exe, 60 * 60 * 4)
+  exec_cmd([game_exe], 60 * 60 * 4)
