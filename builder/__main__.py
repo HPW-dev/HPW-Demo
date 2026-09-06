@@ -14,7 +14,7 @@ from structs.host import Sys_name
 from structs.host import Bitness
 from structs.host import *
 from utils.timestamp import utc_time
-from utils.exec import exec_cmd
+from utils.exec import exec_cmd, exec_cmd_bg
 from utils.ui import *
 from utils import fs
 import signal
@@ -88,4 +88,4 @@ if ctx.with_build_info_file:
 game_exe = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
 if ctx.with_launch and fs.exists(game_exe):
   print(f'> запуск "{game_exe}"...')
-  exec_cmd([game_exe], 60 * 60 * 4)
+  exec_cmd_bg([game_exe])
