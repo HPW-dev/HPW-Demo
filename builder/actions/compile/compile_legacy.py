@@ -23,7 +23,6 @@ def compile_legacy(tgt: Target, ctx: Context, host: Host):
       '-lglfw3dll',
       '-lglew32',
       '-lopengl32',
-      '-ldl',
       '-lOpenAL32.dll',
     ])
   elif Sys_name.linux:

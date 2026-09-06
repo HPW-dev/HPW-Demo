@@ -34,11 +34,6 @@ GLFW:
   SPDX-License-Identifier: Zlib
   <https://github.com/glfw/glfw/blob/master/LICENSE.md>
 
-DyLib:
-  Copyright (c) 2022 Martin Olivier
-  SPDX-License-Identifier: MIT
-  <https://opensource.org/license/mit/>
-
 ImGui:
   Copyright (c) 2014-2025 Omar Cornut
   SPDX-License-Identifier: MIT

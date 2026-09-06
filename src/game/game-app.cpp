@@ -22,7 +22,6 @@
 #include "game/core/debug.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/common.hpp"
-#include "game/util/pge.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/game-archive.hpp"
@@ -65,7 +64,6 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
   /* к этому моменту кеймапер будет инициализирован и
   управление можно будет переназначить с конфига */
   load_config();
-  load_pge_from_config();
   load_sounds();
 
   init_unique(hpw::message_mgr);
@@ -104,7 +102,6 @@ Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
 } // c-tor
 
 Game_app::~Game_app() {
-  disable_pge();
   hpw::scene_mgr.clear();
 }
 
@@ -273,7 +270,4 @@ void Game_app::post_draw(Image& dst) const {
     epge->update(hpw::real_dt);
     epge->draw(dst);
   }
-
-  // .DLL/.SO effects:
-  apply_pge(graphic::frame_count);
 }

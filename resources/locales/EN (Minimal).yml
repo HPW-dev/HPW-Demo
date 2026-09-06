@@ -127,12 +127,6 @@ graphic_menu:
       load:
         title: LD PRST
         desc: ~
-  pge:
-    title: LD DLL/SO
-    disable: DISBL
-    selected: SEL
-    author: PLGN AUTH
-    description: ~
   gamma:
     title: GAM STNGS
     gamma_value: GAM LVL
@@ -166,7 +160,6 @@ graphic_menu:
     desc: ~
   description:
     palette_select: ~
-    pge: ~
     epilepsy: ~
     cpu_safe: ~
     motion_blur_quality_mul: ~

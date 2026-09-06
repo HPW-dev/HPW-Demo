@@ -1,7 +1,6 @@
 GLEW: v2.2.0
 KHR: (2021)
 GLFW: v3.4
-DyLib: v1.7.0
 ImGui: v1.92.2b
 OpenAL-soft: v1.24.3
 robin-hood-hashing: v3.11.5

@@ -2,7 +2,6 @@
 // TODO снести файл
 #include "scene-graphic.hpp"
 #include "scene-palette-select.hpp"
-#include "scene-pge.hpp"
 #include "scene-epge.hpp"
 #include "scene-mgr.hpp"
 #include "host/command.hpp"
@@ -18,7 +17,6 @@
 #include "game/core/scenes.hpp"
 #include "game/core/sounds.hpp"
 #include "game/core/epges.hpp"
-#include "game/util/pge.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
@@ -50,15 +48,6 @@ void set_high_quality() {
   graphic::enable_motion_interp = true;
   graphic::motion_blur_mode = Motion_blur_mode::enabled;
   graphic::blur_mode = Blur_mode::high;
-}
-
-Shared<Menu_text_item> get_shared_plugin_item() {
-  return new_shared<Menu_text_item>(
-    get_locale_str("graphic_menu.pge.title"),
-    []{ hpw::scene_mgr.add(new_shared<Scene_pge>()); },
-    []->utf32 { return {}; },
-    get_locale_str("graphic_menu.description.pge")
-  );
 }
 
 struct Scene_graphic::Impl {
@@ -352,11 +341,6 @@ struct Scene_graphic::Impl {
       hpw::init_palette_from_archive("graphic/images/palettes/zebura.png");
       hpw::set_resize_mode(Resize_mode::full);
       graphic::set_disable_frame_limit(true);
-      #ifdef WINDOWS
-        load_pge(hpw::cur_dir + hpw::plugin_path + "effect/epilepsy.dll");
-      #else
-        load_pge(hpw::cur_dir + hpw::plugin_path + "effect/libepilepsy.so");
-      #endif
     }, []->utf32 { return {}; },
     get_locale_str("graphic_menu.description.epilepsy") );
   }
@@ -370,7 +354,6 @@ struct Scene_graphic::Impl {
       graphic::set_disable_frame_limit(false);
       graphic::show_fps = false;
       graphic::epges.clear();
-      disable_pge();
       set_default();
       hpw::scene_mgr.back();
       save_config();
@@ -480,7 +463,6 @@ struct Scene_graphic::Impl {
         get_gamma_item(),
         get_palette_item(),
         get_epge_item(),
-        get_shared_plugin_item(),
         get_fullscreen_item(),
         get_resize_type_item(),
         get_vsync_item(),
