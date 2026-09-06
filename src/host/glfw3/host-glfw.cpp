@@ -5,6 +5,7 @@
 #include "host-glfw-callback.hpp"
 #include "host/host-util.hpp"
 #include "game/core/common.hpp"
+#include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/debug.hpp"
@@ -25,6 +26,7 @@ Host_glfw::Host_glfw(int argc, char *argv[])
   init_commands();
   init_glfw();
   init_window();
+  _draw_startup_screen();
   init_keymapper();
 } // Host_glfw c-tor
 
@@ -504,4 +506,36 @@ void Host_glfw::_set_fullscreen(bool enable) {
 void Host_glfw::process_fast_forward() {
   if (graphic::get_fast_forward())
     hpw::tick_time_accum = hpw::target_tick_time * graphic::FAST_FWD_UPD_SPDUP;
+}
+
+void Host_glfw::_draw_startup_screen() {
+  assert(graphic::canvas);
+
+  // рисуем надпись о загрузке:
+  constexpr uint SCALE = 2;
+  constexpr uint OFF_X = 30;
+  constexpr uint OFF_Y = 30;
+  constexpr uint LT_W = 38;
+  constexpr uint LT_H = 4;
+  scauto LOADING_TITLE =
+    "#     #    #   ##   #  ##    ##       " 
+    "#    # #  # #  # #     # #  #         " 
+    "#    # #  ###  # #  #  # #  # #       " 
+    "###   #   # #  ##   #  # #   ##  # # #";
+  graphic::canvas->fill({});
+  cfor (y, LT_H)
+  cfor (x, LT_W) {
+    cauto c = Pal8::from_real(LOADING_TITLE[y * LT_W + x] == ' ' ? 0.0 : 0.75);
+    cfor (sy, SCALE)
+    cfor (sx, SCALE) {
+      cauto _x = x * SCALE + sx;
+      cauto _y = y * SCALE + sy;
+      graphic::canvas->set(OFF_X + _x, OFF_Y + _y, c, {});
+    }
+  }
+
+  // их три, чтобы увидеть что-то при двойной буфферизации
+  draw_game_frame(), glfwSwapBuffers(m_window);
+  draw_game_frame(), glfwSwapBuffers(m_window);
+  draw_game_frame(), glfwSwapBuffers(m_window);
 }

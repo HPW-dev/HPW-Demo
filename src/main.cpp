@@ -62,7 +62,12 @@
 
 class Game_app: public Host_class {
   nocopy(Game_app);
-  
+
+public:
+  explicit Game_app(int argc, char *argv[]);
+  ~Game_app();
+
+private:
   void update(const Delta_time dt) override;
   void update_graphic_autoopt(const Delta_time dt);
   // полноэкранная рамка
@@ -73,10 +78,6 @@ class Game_app: public Host_class {
   void replay_load_keys();
   void post_draw(Image& dst) const;
   void startup_script();
-
-public:
-  explicit Game_app(int argc, char *argv[]);
-  ~Game_app();
 }; // Game_app
 
 void Game_app::startup_script() {
@@ -300,8 +301,8 @@ void Game_app::post_draw(Image& dst) const {
     draw_border(dst);
 
   hpw::task_mgr.draw(dst);
-  assert(hpw::message_mgr);
-  hpw::message_mgr->draw(dst);
+  if (hpw::message_mgr)
+    hpw::message_mgr->draw(dst);
 
   // EPGE effects:
   for (crauto epge: graphic::epges) {
