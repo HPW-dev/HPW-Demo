@@ -110,6 +110,7 @@
 		"files.exclude": {
 			"minigame": true,
 			"gmon.svg": true,
+			"**/*.gch": true,
 			"build/bin": true,
 			"build/build info": true,
 			"build/replays": true,
