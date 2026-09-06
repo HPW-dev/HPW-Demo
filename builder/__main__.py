@@ -1,7 +1,10 @@
 #!/usr/bin/env python
-'''Глаыный скрипт сборки: py builder'''
+'''
+Глаыный скрипт сборки:
+  python builder
+'''
 
-from actions.compile.compile_legacy import compile_legacy
+from actions.compile.compile_game import compile_game
 from actions.prepare_assets import *
 from actions.prepare_build import *
 from actions.prepare_info import *
@@ -14,7 +17,7 @@ from structs.host import Sys_name
 from structs.host import Bitness
 from structs.host import *
 from utils.timestamp import utc_time
-from utils.exec import exec_cmd, exec_cmd_bg
+from utils.exec import exec_cmd_bg
 from utils.ui import *
 from utils import fs
 import signal
@@ -76,7 +79,7 @@ if ctx.with_print_build_info:
   print_build_info(tgt, ctx, host)
 
 if ctx.with_compilation:
-  compile_legacy(tgt, ctx, host)
+  compile_game(tgt, ctx, host)
 
 if ctx.with_assets:
   prepare_assets(tgt, ctx, host)

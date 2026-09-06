@@ -1,5 +1,4 @@
 #include "pch.hpp"
-#include "game-app.hpp"
 #include "host/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-locale.hpp"
@@ -37,15 +36,54 @@
 #include "util/file/yaml.hpp"
 
 #ifdef DEBUG
-#include "game/scene/scene-cmd.hpp"
-#include "game/util/cmd/cmd-script.hpp"
+  #include "game/scene/scene-cmd.hpp"
+  #include "game/util/cmd/cmd-script.hpp"
 #endif
 
-void Game_app::startup_script() {
-#ifdef DEBUG
-  if (!hpw::start_script.empty())
-    hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
+#ifdef HOST_GLFW3
+  #include "host/glfw3/host-glfw.hpp"
+  using Host_class = Host_glfw;
 #endif
+#ifdef HOST_SDL2
+  #error "need impl for SDL2"
+  using Host_class = Host_sdl2;
+#endif
+#ifdef HOST_ASCI
+  #include "host/asci/host-asci.hpp"
+  using Host_class = Host_asci;
+#endif
+
+#ifdef WINDOWS
+  #include <clocale>
+  #include <cstdlib>
+  #define WIN32_LEAN_AND_MEAN
+  #include <windows.h>
+#endif
+
+class Game_app: public Host_class {
+  nocopy(Game_app);
+  
+  void update(const Delta_time dt) override;
+  void update_graphic_autoopt(const Delta_time dt);
+  // полноэкранная рамка
+  void draw_border(Image& dst) const;
+  void draw_game_frame() const override;
+  void check_errors();
+  void replay_save_keys();
+  void replay_load_keys();
+  void post_draw(Image& dst) const;
+  void startup_script();
+
+public:
+  explicit Game_app(int argc, char *argv[]);
+  ~Game_app();
+}; // Game_app
+
+void Game_app::startup_script() {
+  #ifdef DEBUG
+    if (!hpw::start_script.empty())
+      hpw::cmd.exec("script " + hpw::cur_dir + hpw::start_script);
+  #endif
 }
 
 Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
@@ -270,4 +308,40 @@ void Game_app::post_draw(Image& dst) const {
     epge->update(hpw::real_dt);
     epge->draw(dst);
   }
+}
+
+// выводит окно с ошибкой
+static inline void draw_error_window(cr<Str> msg) {
+#ifdef WINDOWS
+  std::setlocale(LC_ALL, "en_US.utf8");
+  std::wstring msg_wstr;
+  msg_wstr.resize(msg.size());
+  std::mbstowcs(msg_wstr.data(), msg.data(), msg.size());
+  MessageBoxW(NULL, msg_wstr.c_str(), L"Error", MB_ICONERROR | MB_OK);
+#endif
+}
+
+static inline void process_error(cr<Str> error) {
+  std::cerr << error << std::endl;
+  log_error << error;
+  draw_error_window(error);
+}
+
+int main(int argc, char *argv[]) {
+  try {
+    Game_app app(argc, argv);
+    app.run();
+    return EXIT_SUCCESS;
+  } catch(cr<hpw::Error> err) {
+    const Str err_str = err.what();
+    process_error(err_str);
+  } catch(cr<std::exception> err) {
+    const Str err_str = Str{"STD Error: "} + err.what();
+    process_error(err_str);
+  } catch(...) {
+    cauto err_str = "Unknown error";
+    process_error(err_str);
+  }
+
+  return EXIT_FAILURE;
 }

@@ -6,8 +6,8 @@ from structs.host import *
 from utils.ui import *
 from utils.fs import *
 
-def compile_legacy(tgt: Target, ctx: Context, host: Host):
-  print('=== Сборка старой версии игры ===')
+def compile_game(tgt: Target, ctx: Context, host: Host):
+  print('=== Сборка игры ===')
 
   executable = path_abs(ctx.bin_dir + tgt.name)
   thirdparty_dir = "thirdparty/"
