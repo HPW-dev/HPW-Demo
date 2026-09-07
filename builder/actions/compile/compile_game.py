@@ -116,6 +116,9 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
 
   tgt.sources.extend(find(f'{src_dir}*.cpp'))
 
+  if ctx.with_game_ver:
+    tgt.game_ver_file = 'builder/actions/compile/version.rc'
+
   if ctx.with_incremental:
     print('используется инкрементальная многопоточная сборка')
     compile_multi_incremental(tgt, ctx, host)

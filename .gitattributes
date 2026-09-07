@@ -58,6 +58,7 @@ _tmp_version_ text
 *.pyd binary
 
 # Images:
+*.ico binary
 *.png binary
 *.tiff binary
 *.jb2 binary

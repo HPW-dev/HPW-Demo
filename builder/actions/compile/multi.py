@@ -1,4 +1,5 @@
 from actions.exec_multi import *
+from actions.prepare_game_ver import game_version
 from structs.context import *
 from structs.target import *
 from structs.host import *
@@ -6,6 +7,7 @@ from utils.misc import prepare_obj_name
 from utils.exec import exec_cmd
 from utils.ui import *
 from utils import fs
+from sys import stderr
 import time
 
 
@@ -59,6 +61,38 @@ def compile_pch(tgt: Target, ctx: Context):
   else:
     raise FileNotFoundError(f'Файл "{gch_path}" не создан')
 
+def compile_game_ver(tgt: Target, ctx: Context):
+  '''Собирает из ресурс-файла инфу о версии приложения'''
+  try:
+    if not fs.exists(tgt.game_ver_file):
+      raise FileNotFoundError(f'файл "{tgt.game_ver_file}" не найден')
+
+    game_ver_copy = f'{ctx.tmp_dir}version.rc'
+    fs.copy(tgt.game_ver_file, game_ver_copy)
+
+    # меняем версию с ресурса на актуальную
+    v, _, _ = game_version(ctx)
+    if v:
+      v = v.replace('v', '')
+      comma_ver = v.replace('.', ',')
+      point_ver = v.replace(',', '.')
+      with open(game_ver_copy, mode='r', encoding='utf-8') as f:
+        content = f.read()
+      content = content.replace('1,0,0,0', comma_ver)
+      content = content.replace('1.0.0.0', point_ver)
+      with open(game_ver_copy, mode='w', encoding='utf-8') as f:  
+        f.write(content)
+
+    out_path = f'{ctx.obj_dir}game_ver.o'
+    fs.rem(out_path)
+    exec_cmd(['windres', '--input-format=rc', game_ver_copy, '-o', out_path])
+
+    if not fs.exists(out_path):
+      raise FileNotFoundError(f'файл "{out_path}" не сгенерирован')
+    
+  except Exception as ex:
+    print(to_red(f'ошибка при генерации файла версии:\n  {ex}'), file=stderr)
+
 def compile_multi(tgt: Target, ctx: Context, host: Host):
   '''Многопоточная компиляция без инкрементальной сборки'''
   start = time.perf_counter()
@@ -66,6 +100,10 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
   if bool(tgt.pch_path):
     print(f'> компиляция PCH ("{to_yellow(tgt.pch_path)}")...')
     compile_pch(tgt, ctx)
+
+  if bool(tgt.game_ver_file):
+    print(f'> компиляция инфы о версии игры...')
+    compile_game_ver(tgt, ctx);
 
   obj_cmds = prepare_obj_cmd(tgt, ctx)
   print('> компиляция объектных файлов...')

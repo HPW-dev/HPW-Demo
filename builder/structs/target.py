@@ -24,6 +24,7 @@ class Target:
   name          : str = "test.exe"
   pch_path      : str = '' # берётся из Context. Есзи задан, будет билд PCH
   opt_preset    : str = 'auto' # уровень оптимизаций
+  game_ver_file : str = '' # Если задан путь к .rc файлу, то будет вшиваться версия
   linked_libs   : list[str] = field(default_factory=list)
   creation_time : str = "" # время старта сборки (UTC)
   use_openmp    : bool = True

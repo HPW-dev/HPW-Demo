@@ -28,3 +28,4 @@ class Context:
   clear_all             : bool = False # если True, то чистит всё и прерывает сборку
   less_info             : bool = False # Выводить меньше логов сборки
   forced_rebuild        : bool = False # принудительный пересбор
+  with_game_ver         : bool = True  # добавить в .exe версию файла

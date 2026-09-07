@@ -91,4 +91,7 @@ if ctx.with_build_info_file:
 game_exe = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
 if ctx.with_launch and fs.exists(game_exe):
   print(f'> запуск "{game_exe}"...')
-  exec_cmd_bg([game_exe])
+  try:
+    exec_cmd_bg([game_exe])
+  except Exception as ex:
+    print(f'Не удалось запустить "{game_exe}":\n  {to_red(ex)}' )
