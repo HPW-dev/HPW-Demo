@@ -191,10 +191,17 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
     local_objs.append(local_content['obj'])
   current_objs = fs.find(f'{ctx.obj_dir}*.o')
   for obj in current_objs:
-    if obj not in local_objs:
+    if obj not in local_objs \
+    and fs.file_name(obj) != 'game_ver.o': # game_ver.o это .rc файл на винде
       print(to_red(f'Обнанужен ненужный объектник "{obj}"'))
       fs.rem(obj)
       info.rebuild_needed = True
+
+  # проверить что экзешник снесли:
+  executable = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
+  if not fs.exists(executable):
+    print(f'"{executable}" удалён. Пересборка...')
+    info.rebuild_needed = True
   
   if info.rebuild_needed:
     print(to_green(f'> Обновление базы изменений в файлах {db_path}...'))
