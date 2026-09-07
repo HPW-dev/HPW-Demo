@@ -40,9 +40,8 @@ def generate_game_version_file(ctx: Context):
     f.write (
       '#include "version.hpp"\n'
       '\n'
-      f'const char app_version[] __attribute__((section(".comment"))) = "FileVersion: {version.replace('v','')}";'
       '// @(#) - версия для Linux прог what и ident\n'
-      f'static const char rc_version[] = "@(#) H.P.W game {version} (c) 2020-2026 HPW-Dev";\n'
+      f'static const char rc_version[] __attribute__((used)) = "@(#) H.P.W game {version} (c) 2020-2026 HPW-Dev";\n'
       'const char* get_game_version() { return "' + version + '"; }\n'
       'const char* get_game_creation_date() { return "' + date + '"; }\n'
       'const char* get_game_creation_time() { return "' + time + '"; }\n'
