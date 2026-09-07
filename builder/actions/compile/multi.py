@@ -61,7 +61,7 @@ def compile_pch(tgt: Target, ctx: Context):
   else:
     raise FileNotFoundError(f'Файл "{gch_path}" не создан')
 
-def compile_game_ver(tgt: Target, ctx: Context):
+def compile_game_ver(tgt: Target, ctx: Context, host: Host):
   '''Собирает из ресурс-файла инфу о версии приложения'''
   try:
     if not fs.exists(tgt.game_ver_file):
@@ -74,6 +74,9 @@ def compile_game_ver(tgt: Target, ctx: Context):
     v, _, _ = game_version(ctx)
     if v:
       v = v.replace('v', '')
+      v = v.replace('>', '')
+      v = v.replace(' ', '')
+      v = v.replace('+', '')
       comma_ver = v.replace('.', ',')
       point_ver = v.replace(',', '.')
       with open(game_ver_copy, mode='r', encoding='utf-8') as f:
@@ -101,9 +104,9 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
     print(f'> компиляция PCH ("{to_yellow(tgt.pch_path)}")...')
     compile_pch(tgt, ctx)
 
-  if bool(tgt.game_ver_file):
+  if bool(tgt.game_ver_file) and host.system == Sys_name.windows:
     print(f'> компиляция инфы о версии игры...')
-    compile_game_ver(tgt, ctx);
+    compile_game_ver(tgt, ctx, host);
 
   obj_cmds = prepare_obj_cmd(tgt, ctx)
   print('> компиляция объектных файлов...')
