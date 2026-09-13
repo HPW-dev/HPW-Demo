@@ -1,5 +1,4 @@
-#include <cassert>
-#include <ctime>
+#include "pch.hpp"
 #include "scene-main-menu.hpp"
 #include "scene-game.hpp"
 #include "scene-options.hpp"
@@ -28,16 +27,12 @@
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/effect/blur.hpp"
-#include "util/hpw-util.hpp"
-#include "util/rnd-table.hpp"
 #include "util/file/yaml.hpp"
-#include "util/math/random.hpp"
-
 #ifdef USE_NETPLAY
-#include "game/netplay/scene/scene-netplay-menu.hpp"
+  #include "game/netplay/scene/scene-netplay-menu.hpp"
 #endif
-#ifdef USE_TOOLS
-#include "game/scene/scene-tools.hpp"
+#ifdef USE_TESTS
+  #include "game/scene/scene-tools.hpp"
 #endif
 
 Scene_main_menu::Scene_main_menu() {
@@ -135,9 +130,11 @@ void Scene_main_menu::init_menu() {
       new_shared<Menu_text_item>(get_locale_str("main_menu.start"),
         []{ hpw::scene_mgr.add(new_shared<Scene_difficulty>()); }),
         
-      #ifdef USE_TOOLS
+      #ifdef USE_TESTS
       // меню тестов и отладки
-      new_shared<Menu_text_item>(get_locale_str("tools.title"), []{ hpw::scene_mgr.add(new_shared<Scene_tools>()); }),
+      new_shared<Menu_text_item>(get_locale_str("tools.title"), []{
+        hpw::scene_mgr.add(new_shared<Scene_tools>());
+      }),
       #endif
 
       #ifdef USE_NETPLAY
