@@ -14,5 +14,6 @@ Miniz: v1.15
 asio: v1.36.0
 hash_sha256: (30 mar. 2023)
 GCC (Windows x32): v15.2.0, MinGW-W64 i686-ucrt-posix-dwarf, built by Brecht Sanders, r1
-GCC (Windows x64): v15.2.0 MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1
-UPX: v4.2.3
+GCC (Windows x64): v16.1.0, MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1
+Copyright (C) 2026 Free Software Foundation, Inc.
+UPX: v5.2.0
