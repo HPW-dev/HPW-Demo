@@ -49,8 +49,8 @@ do { \
   } \
 } while (false);
 #define ret_if return_if
-#define break_if(cond) if (cond) break;
-#define continue_if(cond) if (cond) continue;
+#define break_if(cond) { if (static_cast<bool>(cond)) break; }
+#define continue_if(cond) { if (static_cast<bool>(cond)) continue; }
 #define cont_if continue_if
 #define elif else if
 
