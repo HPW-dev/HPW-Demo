@@ -147,7 +147,7 @@ struct Level_tutorial::Impl {
       else
         pix &= pix2;
 
-      dst(x, y) = pix;
+      dst[x, y] = pix;
     }
     apply_brightness(dst, -140);
   }

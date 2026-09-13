@@ -10,11 +10,11 @@ void zoom_x2(Image& dst) {
 
   cfor(y, src.Y)
   cfor(x, src.X) {
-    cauto pix = src(x, y);
-    dst(x*2+0, y*2+0) = pix;
-    dst(x*2+1, y*2+0) = pix;
-    dst(x*2+0, y*2+1) = pix;
-    dst(x*2+1, y*2+1) = pix;
+    cauto pix = src[x, y];
+    dst[x*2+0, y*2+0] = pix;
+    dst[x*2+1, y*2+0] = pix;
+    dst[x*2+0, y*2+1] = pix;
+    dst[x*2+1, y*2+1] = pix;
   }
 }
 
@@ -31,8 +31,8 @@ void zoom_x8(Image& dst) {
 
   cfor(y, src.Y)
   cfor(x, src.X) {
-    cauto pix = src(x, y);
-    #define SET(_x, _y) dst(x * 8 + _x, y * 8 + _y) = pix;
+    cauto pix = src[x, y];
+    #define SET(_x, _y) dst[x * 8 + _x, y * 8 + _y] = pix;
     SET(0, 0) SET(1, 0) SET(2, 0) SET(3, 0) SET(4, 0) SET(5, 0) SET(6, 0) SET(7, 0)
     SET(0, 1) SET(1, 1) SET(2, 1) SET(3, 1) SET(4, 1) SET(5, 1) SET(6, 1) SET(7, 1)
     SET(0, 2) SET(1, 2) SET(2, 2) SET(3, 2) SET(4, 2) SET(5, 2) SET(6, 2) SET(7, 2)
@@ -52,8 +52,8 @@ void zoom_x3(Image& dst) {
 
   cfor(y, src.Y)
   cfor(x, src.X) {
-    cauto pix = src(x, y);
-    #define SET(_x, _y) dst(x * 3 + _x, y * 3 + _y) = pix;
+    cauto pix = src[x, y];
+    #define SET(_x, _y) dst[x * 3 + _x, y * 3 + _y] = pix;
     SET(0, 0) SET(1, 0) SET(2, 0)
     SET(0, 1) SET(1, 1) SET(2, 1)
     SET(0, 2) SET(1, 2) SET(2, 2)
@@ -68,8 +68,8 @@ void zoom_x4(Image& dst) {
 
   cfor(y, src.Y)
   cfor(x, src.X) {
-    cauto pix = src(x, y);
-    #define SET(_x, _y) dst(x * 4 + _x, y * 4 + _y) = pix;
+    cauto pix = src[x, y];
+    #define SET(_x, _y) dst[x * 4 + _x, y * 4 + _y] = pix;
     SET(0, 0) SET(1, 0) SET(2, 0) SET(3, 0)
     SET(0, 1) SET(1, 1) SET(2, 1) SET(3, 1)
     SET(0, 2) SET(1, 2) SET(2, 2) SET(3, 2)
@@ -152,7 +152,7 @@ Image pixel_upscale_x3(cr<Image> src) {
     cauto B {src.get(x + 0, y - 1, Image_get::COPY)};
     cauto C {src.get(x + 1, y - 1, Image_get::COPY)};
     cauto D {src.get(x - 1, y + 0, Image_get::COPY)};
-    cauto E {src(x, y)};
+    cauto E {src    [x,     y                     ]};
     cauto F {src.get(x + 1, y + 0, Image_get::COPY)};
     cauto G {src.get(x - 1, y + 1, Image_get::COPY)};
     cauto H {src.get(x + 0, y + 1, Image_get::COPY)};
@@ -235,7 +235,7 @@ Pack9 color_get_cross(cr<Image> src, int x, int y) {
   constexpr static const auto mode = Image_get::MIRROR;
   ret.data[0] = src.get(x + 0, y - 1, mode);
   ret.data[1] = src.get(x - 1, y + 0, mode);
-  ret.data[2] = src    (x + 0, y + 0      );
+  ret.data[2] = src    [x + 0, y + 0      ];
   ret.data[3] = src.get(x + 1, y + 0, mode);
   ret.data[4] = src.get(x + 0, y + 1, mode);
   return ret;
@@ -249,7 +249,7 @@ Pack9 color_get_box(cr<Image> src, int x, int y) {
   ret.data[1] = src.get(x + 0, y - 1, mode);
   ret.data[2] = src.get(x + 1, y - 1, mode);
   ret.data[3] = src.get(x - 1, y + 0, mode);
-  ret.data[4] = src    (x + 0, y + 0      );
+  ret.data[4] = src    [x + 0, y + 0      ];
   ret.data[5] = src.get(x + 1, y + 0, mode);
   ret.data[6] = src.get(x - 1, y + 1, mode);
   ret.data[7] = src.get(x + 0, y + 1, mode);
@@ -312,7 +312,7 @@ Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_
     const real dy = y * scale_y;
     const int gxi = std::floor(dx);
     const int gyi = std::floor(dy);
-    cauto c00 =     src(gxi,     gyi);
+    cauto c00 =     src[gxi,     gyi];
     cauto c10 = src.get(gxi + 1, gyi);
     cauto c01 = src.get(gxi,     gyi + 1);
     cauto c11 = src.get(gxi + 1, gyi + 1);
@@ -344,8 +344,8 @@ Image resize_neighbor(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_
   cfor (x, ret.X) {
     const int gxi = std::floor(x * scale_x);
     const int gyi = std::floor(y * scale_y);
-    cauto color = src(gxi, gyi);
-    ret(x, y) = color;
+    cauto color = src[gxi, gyi];
+    ret[x, y] = color;
   }
 
   return ret;

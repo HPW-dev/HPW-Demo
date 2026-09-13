@@ -34,7 +34,7 @@ void cache_light_spheres() {
       cauto dist = distance(center - 0.5f, Vec(x, y));
       cauto ratio = 1.0f - (dist / R);
       cauto light = std::pow(ratio * ratio, Light::GAMMA_CORR); // гамма-коррекция + формула освещения
-      sphere(x, y) = Pal8::from_real(light);
+      sphere[x, y] = Pal8::from_real(light);
     }
     Light::make_lines(sphere);
     #pragma omp critical (write_to_cached_spheres)
@@ -114,7 +114,7 @@ void Light::draw_light_sphere(Image& dst, const Vec pos, real tmp_radius) const 
       cauto dist = distance(center - 0.5f, Vec(x, y));
       cauto ratio = 1.0 - (dist / tmp_radius);
       cauto light = std::pow(ratio * ratio, GAMMA_CORR); // гамма-коррекция + формула освещения
-      sphere(x, y) = Pal8::from_real(light);
+      sphere[x, y] = Pal8::from_real(light);
     }
     make_lines(sphere);
 
@@ -190,7 +190,7 @@ void Light::make_lines(Image& dst) {
   cfor (y, dst.Y) {
     Pal8 for_sub = Pal8::from_real(rndr_fast(0, 0.17));
     cfor (x, dst.X) {
-      rauto dst_pix = dst(x, y);
+      rauto dst_pix = dst[x, y];
       dst_pix = blend_sub_safe(for_sub, dst_pix);
     }
   }

@@ -141,7 +141,7 @@ void bgp_bit_1(Image& dst, const int bg_state) {
     pix2 &= v;
     pix2 ^= tmp;
     pix &= pix2;
-    dst(x, y) = pix;
+    dst[x, y] = pix;
   }
 } // bgp_bit_1
 
@@ -153,7 +153,7 @@ void bgp_bit_2(Image& dst, const int bg_state) {
     pix |= v;
     pix >>= 4;
     pix <<= 4;
-    dst(x, y) = pix;
+    dst[x, y] = pix;
   }
 }
 
@@ -163,7 +163,7 @@ void bgp_bit_3(Image& dst, const int bg_state) {
   cfor (x, dst.X) {
     int pix = (x - v) & (y + v);
     pix += v;
-    dst(x, y) = pix;
+    dst[x, y] = pix;
   }
 }
 
@@ -277,7 +277,7 @@ void bgp_rotated_lines(Image& dst, const int bg_state) {
   #pragma omp parallel for simd collapse(2)
   cfor (y, dst.Y)
   cfor (x, dst.X) {
-    if (cauto pixel = mask_bak(x, y); pixel == Pal8::mask_visible)
+    if (cauto pixel = mask_bak[x, y]; pixel == Pal8::mask_visible)
       cfor (shadow, shadow_len)
         mask.set(x + shadow, y, Pal8::mask_visible, {});
   }
@@ -324,22 +324,22 @@ void bgp_labyrinth_1(Image& dst, const int bg_state) {
     // горизонтальная прямая
     block.fill(Pal8::black);
     cfor (x, block_sz)
-      block(x, block.Y / 2) = Pal8::white;
+      block[x, block.Y / 2]= Pal8::white;
     blocks.push_back(block);
     // вернтикальная прямая
     blocks.push_back( rotate_90(block) );
     // крест
     block.fill(Pal8::black);
     cfor (i, block_sz) {
-      block(i, block.Y / 2) = Pal8::white;
-      block(block.X / 2, i) = Pal8::white;
+      block[i, block.Y / 2] = Pal8::white;
+      block[block.X / 2, i] = Pal8::white;
     }
     blocks.push_back(block);
     // угол L
     block.fill(Pal8::black);
     cfor (i, block_sz / 2 + 1) {
-      block(i, block.Y / 2) = Pal8::white;
-      block(block.X / 2, i) = Pal8::white;
+      block[i, block.Y / 2] = Pal8::white;
+      block[block.X / 2, i] = Pal8::white;
     }
     blocks.push_back(block);
     // повороты углов
@@ -377,8 +377,8 @@ void bgp_labyrinth_2(Image& dst, const int bg_state) {
     // угол L
     block.fill(Pal8::black);
     cfor (i, block_sz / 2 + 1) {
-      block(i, block.Y / 2) = Pal8::white;
-      block(block.X / 2, i) = Pal8::white;
+      block[i, block.Y / 2] = Pal8::white;
+      block[block.X / 2, i] = Pal8::white;
     }
     blocks.push_back(block);
     // повороты углов
@@ -846,7 +846,7 @@ void bgp_red_circles_1(Image& dst, const int bg_state) {
     cauto pos2 = Vec(-200.0 + std::cos(SPEED) * 18.0, -100.0 + std::sin(SPEED) * 48.0);
     l += effect(pos, pos1);
     l *= effect(pos, pos2);
-    dst(x, y) = Pal8::from_real(l, true);
+    dst[x, y] = Pal8::from_real(l, true);
   }
 } // bgp_red_circles_1
 
@@ -871,7 +871,7 @@ void bgp_red_circles_2(Image& dst, const int bg_state) {
     cauto pos2 = Vec(-200.0 + std::cos(SPEED) * 18.0, -100.0 + std::sin(SPEED) * 48.0);
     l += effect(pos, pos1);
     l += effect(pos, pos2);
-    dst(x, y) = Pal8::from_real(l, true);
+    dst[x, y] = Pal8::from_real(l, true);
   }
 } // bgp_red_circles_2
 
@@ -1067,7 +1067,7 @@ void bgp_glsl_spheres(Image& dst, const int bg_state) {
   cfor (x, dst.X) {
     const Vec uv(scast<real>(x) / dst.X, scast<real>(y) / dst.Y);
     cauto luma = process(uv, bg_state);
-    dst(x, y) = Pal8::from_real(luma);
+    dst[x, y] = Pal8::from_real(luma);
   }
 } // bgp_glsl_spheres
 

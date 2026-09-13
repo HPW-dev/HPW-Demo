@@ -267,7 +267,7 @@ void bgp_dither_wave(Image& dst, const int bg_state) {
     real color = std::cos((x + state) * zoom + y * zoom);
     color *= std::tan((-x + state) * zoom + y * zoom);
     color *= 0.2f;
-    dst(x, y) = std::fmod(color * 255.f, 255.f);
+    dst[x, y] = std::fmod(color * 255.f, 255.f);
   }
 
   dither_bayer16x16_1bit(dst);
@@ -283,7 +283,7 @@ void bgp_dither_wave_2(Image& dst, const int bg_state) {
   cfor (x, dst.X) {
     const Pal8 color = std::fmod((y * x) + std::cos(state) * 100'000.0f, 40.f) > 20.f
       ? Pal8::from_real(x * mul_x) : Pal8{};
-    dst(x, y) = color;
+    dst[x, y] = color;
   }
 
   dither_bayer16x16_1bit(dst);
@@ -298,7 +298,7 @@ void bgp_fast_lines(Image& dst, const int bg_state) {
   cfor (x, dst.X) {
     const Pal8 color = std::fmod(y + std::cos(state) * 100'000.0f, 40.f) > 20.f
       ? Pal8::from_real(x * mul_x) : Pal8{};
-    dst(x, y) = blend_avr(color, dst(x, y));
+    dst[x, y] = blend_avr(color, dst[x, y]);
   }
 }
 
@@ -311,7 +311,7 @@ void bgp_fast_lines_red(Image& dst, const int bg_state) {
   cfor (x, dst.X) {
     const Pal8 color = std::fmod(y + x + std::cos(state) * 100'000.0f, 40.f) > 20.f
       ? Pal8::from_real(x * mul_x, true) : Pal8{};
-    dst(x, y) = color;
+    dst[x, y] = color;
   }
 }
 
@@ -336,7 +336,7 @@ void bgp_red_gradient(Image& dst, const int bg_state) {
     cauto alpha = y * alpha_mul;
     cauto color = blend_alpha(a, b, alpha * 255.f);
     cfor(x, dst.X)
-      dst(x, y) = color;
+      dst[x, y] = color;
   }
 
   fast_dither_bayer16x16_4bit(dst, true);
@@ -353,7 +353,7 @@ void bgp_red_gradient_2(Image& dst, const int bg_state) {
     cauto alpha = y * alpha_mul;
     cauto color = blend_alpha(a, b, alpha * 255.f);
     cfor(x, dst.X)
-      dst(x, y) = color;
+      dst[x, y] = color;
   }
 
   dither_bayer16x16_1bit(dst);
@@ -512,7 +512,7 @@ void bgp_circle_with_text(Image& dst, const int bg_state) {
     // когда полоска снизу, сверху убирается закрашивание
     const bool cond_2 = state % (dst.Y * 2) >= dst.Y;
     cfor(x, overlay_layer.X)
-      overlay_layer(x, y) = cond_1 ^ cond_2
+      overlay_layer[x, y] = cond_1 ^ cond_2
         ? Pal8::white : Pal8::black;
   }
   insert<&blend_and>(circle_layer, overlay_layer);
@@ -840,7 +840,7 @@ void bgp_deep_lines_red_2(Image& dst, const int bg_state) {
     cauto alpha = y * gradient_mul;
     cauto color = Pal8::from_real(alpha * 0.25f, true);
     cfor (x, dst.X) 
-      dst(x, y) = color;
+      dst[x, y] = color;
   }
 
   xorshift128_state seed;
@@ -1004,7 +1004,7 @@ void bgp_tile_corruption(Image& dst, const int bg_state) {
   cauto tile_id = (xorshift128(seed) + bg_state * 123 + 456) % tiles.size();
   cauto pix_x = (xorshift128(seed) + bg_state * 345 + 567) % tile_x;
   cauto pix_y = (xorshift128(seed) + bg_state * 234 + 564) % tile_y;
-  tiles[tile_id](pix_x, pix_y).val ^= 0xFFu;
+  tiles[tile_id].operator[](pix_x, pix_y).val ^= 0xFFu;
 
   // заполнение буффера тайлами
   cfor (y, tile_map_y)

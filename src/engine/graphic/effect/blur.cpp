@@ -25,7 +25,7 @@ void boxblur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
       luma = is_red ? luma * 0.2989f : luma;
       sum += luma * MUL;
     }
-    dst(x, y) = Pal8::from_real(sum);
+    dst[x, y] = Pal8::from_real(sum);
   }
 }
 
@@ -48,25 +48,25 @@ void boxblur_gray_fast(Image& dst, cr<Image> src, const int window_sz) {
     int sum {};
     for (int wy = -window_sz; wy < window_sz + 1; ++wy)
     for (int wx = -window_sz; wx < window_sz + 1; ++wx)
-      sum += src_gray(x + wx, y + wy).val;
-    dst(x, y) = sum / (KERNEL_LEN * KERNEL_LEN);
+      sum += src_gray[x + wx, y + wy].val;
+    dst[x, y] = sum / (KERNEL_LEN * KERNEL_LEN);
   }
 
   // добить края изображения растягиванием
   // vertical:
   for (int y = 0; y < window_sz; ++y)
   for (int x = 0; x < src_gray.X; ++x)
-    dst(x, y) = dst(x, window_sz);
+    dst[x, y] = dst[x, window_sz];
   for (int y = src_gray.Y - window_sz; y < src_gray.Y; ++y)
   for (int x = 0; x < src_gray.X; ++x)
-    dst(x, y) = dst(x, src_gray.Y - window_sz - 1);
+    dst[x, y] = dst[x, src_gray.Y - window_sz - 1];
   // horizontal:
   for (int y = 0; y < src_gray.Y; ++y)
   for (int x = 0; x < window_sz; ++x)
-    dst(x, y) = dst(window_sz, y);
+    dst[x, y] = dst[window_sz, y];
   for (int y = 0; y < src_gray.Y; ++y)
   for (int x = src_gray.X - window_sz; x < src_gray.X; ++x)
-    dst(x, y) = dst(src_gray.X - window_sz - 1, y);
+    dst[x, y] = dst[src_gray.X - window_sz - 1, y];
 }
 
 void boxblur_horizontal_gray_fast(Image& dst, cr<Image> src, const int window_sz) noexcept {
@@ -100,7 +100,7 @@ void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) noe
       cfor (wx, KERNEL_LEN)
         sum += (src_ptr + wx - window_sz)->val;
         
-      dst(x, y) = sum / KERNEL_LEN;
+      dst[x, y] = sum / KERNEL_LEN;
       ++src_ptr;
     }
   }
@@ -109,10 +109,10 @@ void boxblur_horizontal_fast(Image& dst, cr<Image> src, const int window_sz) noe
   // horizontal:
   for (int y = 0; y < src.Y; ++y)
   for (int x = 0; x < window_sz; ++x)
-    dst(x, y) = dst(window_sz, y);
+    dst[x, y] = dst[window_sz, y];
   for (int y = 0; y < src.Y; ++y)
   for (int x = src.X - window_sz; x < src.X; ++x)
-    dst(x, y) = dst(src.X - window_sz - 1, y);
+    dst[x, y] = dst[src.X - window_sz - 1, y];
 }
 
 void blur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
@@ -155,6 +155,6 @@ void blur_gray_accurate(Image& dst, cr<Image> src, const int window_sz) {
       luma = is_red ? luma / 3.f : luma;
       sum += luma * kernel[(wy + window_sz) * KERNEL_LEN + (wx + window_sz)];
     }
-    dst(x, y) = Pal8::from_real(sum);
+    dst[x, y] = Pal8::from_real(sum);
   }
 }

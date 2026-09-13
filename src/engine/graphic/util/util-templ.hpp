@@ -116,7 +116,7 @@ void draw_rect_filled(Image& dst, cr<Rect_base<T>> rect, const Pal8 col, const i
   return_if(RECT_SZ_X <= 0);
   return_if(RECT_SZ_Y <= 0);
 
-  auto* dst_ptr = &dst(rect_sx, rect_sy);
+  auto* dst_ptr = &dst[rect_sx, rect_sy];
   const std::size_t DST_PITCH = dst.X - RECT_SZ_X;
 
   cfor (y, RECT_SZ_Y) {

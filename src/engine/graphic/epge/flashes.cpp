@@ -37,7 +37,7 @@ struct Flashes::Impl {
 
     cfor (y, dst.Y)
     cfor (x, dst.X) {
-      cauto ratio = dst(x, y).to_real();
+      cauto ratio = dst[x, y].to_real();
       continue_if (ratio < _threshold);
       continue_if (_dist(_generator) > _chance);
       Light lgt;

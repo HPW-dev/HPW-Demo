@@ -22,10 +22,10 @@ inline static Sprite extract_contour(cr<Sprite> src) {
   // определить контуры
   for (int y = 1; y < ext_mask.Y - 1; ++y)
   for (int x = 1; x < ext_mask.X - 1; ++x) {
-    cauto mask_pix = ext_mask(x, y);
+    cauto mask_pix = ext_mask[x, y];
     cont_if (mask_pix == Pal8::mask_invisible);
 
-    #define set_white(x0, y0) if (ext_mask(x0, y0) == Pal8::mask_invisible) { \
+    #define set_white(x0, y0) if (ext_mask[x0, y0] == Pal8::mask_invisible) { \
       ret.image().fast_set(x0, y0, Pal8::white, {}); \
       ret.mask().fast_set(x0, y0, Pal8::mask_visible, {}); \
     }

@@ -29,7 +29,7 @@ struct Interlacer::Impl {
     cfor (y, dst.Y)
     cfor (x, dst.X)
       if ((x % mx) == ix && (y % my) == iy)
-        screen(x, y) = dst(x, y);
+        screen[x, y] = dst[x, y];
 
     // сдвинуть индексы вставки
     if (++ix >= mx) {

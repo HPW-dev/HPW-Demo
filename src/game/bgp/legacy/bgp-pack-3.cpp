@@ -27,7 +27,7 @@ void bgp_liquid(Image& dst, const int bg_state) {
     color += 1.f;
     color /= 2.f;
     color = color / (1.f + std::abs(color));
-    dst(x, y) = Pal8::from_real(color);
+    dst[x, y] = Pal8::from_real(color);
   }
 
   fast_dither_bayer16x16_4bit(dst);
@@ -49,7 +49,7 @@ void bgp_liquid_gray(Image& dst, const int bg_state) {
     color += 1.f;
     color /= 2.f;
     color = color / (1.f + std::abs(color));
-    dst(x, y) = Pal8::from_real(color);
+    dst[x, y] = Pal8::from_real(color);
   }
 
   Image blured(dst);
@@ -68,7 +68,7 @@ void bgp_liquid_gray(Image& dst, const int bg_state) {
       std::sin((y +     state) / 120.f);
     color *= 3.f;
     color = color / (1.f + std::abs(color));
-    alpha_mask(x, y) = Pal8::from_real(color);
+    alpha_mask[x, y] = Pal8::from_real(color);
   }
 
   accept_blend_mask_fast(dst, blured, alpha_mask);
@@ -288,7 +288,7 @@ void bgp_striped_spheres(Image& dst, const int bg_state) {
       color = ((x + SPEEd) % 160) > 80 ? Pal8::red : Pal8::black;
     else
       color = (std::abs(x - SPEEd) % 160) > 80 ? Pal8::red : Pal8::black;
-    rauto pix = dst(x, y);
+    rauto pix = dst[x, y];
     pix = blend_diff(color, pix);
   }
 }
@@ -567,7 +567,7 @@ public:
     cfor (x, _mx) {
       crauto cell = cget_cell_fast(x, y);
       if (cell.active)
-        dst(x, y) = cell.color;
+        dst[x, y] = cell.color;
     }
   }
 
@@ -700,7 +700,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
       cfor (x, column_shadow.X) {
         constexpr real POWER = 0.6;
         const real luma = (y / scast<real>(column_shadow.Y)) * POWER;
-        column_shadow(x, y) = Pal8::from_real(luma);
+        column_shadow[x, y] = Pal8::from_real(luma);
       }
     }
 
@@ -744,7 +744,7 @@ void bgp_nano_columns(Image& dst, const int bg_state) {
       constexpr real POWER = 0.4;
       real luma = (1.f - (y / scast<real>(global_shadow.Y))) * POWER;
       luma += randomf() * 0.1212f;
-      global_shadow(x, y) = Pal8::from_real(luma);
+      global_shadow[x, y] = Pal8::from_real(luma);
     }
     insert_fast<&blend_sub_safe>(prerender, global_shadow);
   };

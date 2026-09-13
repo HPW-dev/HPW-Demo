@@ -33,7 +33,7 @@ struct Glow::Impl {
     cfor (y, dst.Y)
     cfor (x, dst.X) {
       real total {};
-      bool is_red = dst(x, y).is_red();
+      bool is_red = dst[x, y].is_red();
 
       cfor (gx, _glowmap_sz)
       cfor (gy, _glowmap_sz) {
@@ -48,7 +48,7 @@ struct Glow::Impl {
         total += _lightness * light * src_pix.to_real();
       }
       
-      dst(x, y) = blend_max(Pal8::from_real(total / _glowmap_sum, is_red), dst(x, y));
+      dst[x, y] = blend_max(Pal8::from_real(total / _glowmap_sum, is_red), dst[x, y]);
     }
   }
 

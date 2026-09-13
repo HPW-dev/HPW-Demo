@@ -10,7 +10,7 @@ Image mirror_h(cr<Image> src) {
   Image ret(src.X, src.Y);
   cfor (y, ret.Y)
   cfor (x, ret.X)
-    ret.fast_set(x, y, src(x, ret.Y - y - 1), {});
+    ret.fast_set(x, y, src[x, ret.Y - y - 1], {});
   return ret;
 }
 
@@ -19,7 +19,7 @@ Image mirror_v(cr<Image> src) {
   Image ret(src.X, src.Y);
   cfor (y, ret.Y)
   cfor (x, ret.X)
-    ret.fast_set(x, y, src(ret.X - x - 1, y), {});
+    ret.fast_set(x, y, src[ret.X - x - 1, y], {});
   return ret;
 }
 
@@ -43,7 +43,7 @@ Image rotate_180(cr<Image> src) {
   Image dst{src.X, src.Y};
   cfor(y, dst.Y)
   cfor(x, dst.X)
-    dst(x, y) = src(dst.X - x - 1, dst.Y - y - 1);
+    dst[x, y] = src[dst.X - x - 1, dst.Y - y - 1];
   return dst;
 }
 
@@ -51,7 +51,7 @@ Image rotate_270(cr<Image> src) {
   Image dst{src.Y, src.X};
   cfor(y, dst.Y)
   cfor(x, dst.X)
-    dst(x, y) = src(dst.Y - y - 1, x);
+    dst[x, y] = src[dst.Y - y - 1, x];
   return dst;
 }
 
@@ -72,7 +72,7 @@ Image rotate_90(cr<Image> src, uint pass) {
   Image dst{src.Y, src.X};
   cfor(y, dst.Y)
   cfor(x, dst.X)
-    dst(x, y) = src(y, dst.X - x - 1);
+    dst[x, y] = src[y, dst.X - x - 1];
   return dst;
 }
 
@@ -115,7 +115,7 @@ const Vec offset, real degree) {
     int i_x = std::floor(rot_x);
     int i_y = std::floor(rot_y);
     if (src.index_bound(i_x, i_y, Image_get::NONE)) {
-      cauto pix = src(i_x, i_y);
+      cauto pix = src[i_x, i_y];
       dst.set(x, y, pix);
     }
   } // for y, x

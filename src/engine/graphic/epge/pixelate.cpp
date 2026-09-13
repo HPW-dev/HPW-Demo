@@ -38,10 +38,10 @@ struct Pixelate::Impl {
     #pragma omp parallel for simd collapse(2) if (dst.size > 64 * 64)
     for (int y = 0; y < dst.Y; y += 2)
     for (int x = 0; x < dst.X; x += 2) {
-      cauto color = dst(x, y);
-      dst(x+1, y+0) = color;
-      dst(x+0, y+1) = color;
-      dst(x+1, y+1) = color;
+      cauto color = dst[x, y];
+      dst[x+1, y+0] = color;
+      dst[x+0, y+1] = color;
+      dst[x+1, y+1] = color;
     }
   }
 
@@ -51,13 +51,13 @@ struct Pixelate::Impl {
     #pragma omp parallel for simd collapse(2) if (dst.size > 64 * 64)
     for (int y = 0; y < dst.Y; y += 2)
     for (int x = 0; x < dst.X; x += 2) {
-      cauto ab = blend_avr(dst(x+0, y+0), dst(x+1, y+0));
-      cauto cd = blend_avr(dst(x+0, y+1), dst(x+1, y+1));
+      cauto ab = blend_avr(dst[x+0, y+0], dst[x+1, y+0]);
+      cauto cd = blend_avr(dst[x+0, y+1], dst[x+1, y+1]);
       cauto color = blend_avr(ab, cd);
-      dst(x+0, y+0) = color;
-      dst(x+1, y+0) = color;
-      dst(x+0, y+1) = color;
-      dst(x+1, y+1) = color;
+      dst[x+0, y+0] = color;
+      dst[x+1, y+0] = color;
+      dst[x+0, y+1] = color;
+      dst[x+1, y+1] = color;
     }
   }
 
@@ -67,13 +67,13 @@ struct Pixelate::Impl {
     #pragma omp parallel for simd collapse(2) if (dst.size > 64 * 64)
     for (int y = 0; y < dst.Y; y += 2)
     for (int x = 0; x < dst.X; x += 2) {
-      cauto ab = blend_max(dst(x+0, y+0), dst(x+1, y+0));
-      cauto cd = blend_max(dst(x+0, y+1), dst(x+1, y+1));
+      cauto ab = blend_max(dst[x+0, y+0], dst[x+1, y+0]);
+      cauto cd = blend_max(dst[x+0, y+1], dst[x+1, y+1]);
       cauto color = blend_max(ab, cd);
-      dst(x+0, y+0) = color;
-      dst(x+1, y+0) = color;
-      dst(x+0, y+1) = color;
-      dst(x+1, y+1) = color;
+      dst[x+0, y+0] = color;
+      dst[x+1, y+0] = color;
+      dst[x+0, y+1] = color;
+      dst[x+1, y+1] = color;
     }
   }
 

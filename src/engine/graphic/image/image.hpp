@@ -41,12 +41,10 @@ public:
   void fill(const PIX_FMT col) noexcept;
 
   PIX_FMT& operator [](int i) noexcept;
-  // TODO в новом стандарте заменить на []
-  PIX_FMT& operator ()(int x, int y) noexcept;
+  PIX_FMT& operator [](int x, int y) noexcept;
 
   const PIX_FMT operator [](int i) const noexcept;
-  // TODO в новом стандарте заменить на []
-  const PIX_FMT operator ()(int x, int y) const noexcept;
+  const PIX_FMT operator [](int x, int y) const noexcept;
   cr<PIX_FMT> fast_get(int x, int y) const noexcept;
 
   [[gnu::const]] iterator begin() noexcept;

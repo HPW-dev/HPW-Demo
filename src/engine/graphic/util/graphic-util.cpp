@@ -112,12 +112,13 @@ Image fast_cut(cr<Image> src, int sx, int sy, int mx, int my) {
   #pragma omp parallel for simd collapse(2) if (dst.size >= 64 * 64)
   for (auto y = sy; y < ey; ++y)
   for (auto x = sx; x < ex; ++x)
-    dst.fast_set(x - sx, y - sy, src(x, y), {});
+    dst.fast_set(x - sx, y - sy, src[x, y], {});
 
   return dst;
 }
 
-void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int mx, const int my) noexcept {
+void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy,
+const int mx, const int my) noexcept {
   assert(src);
   assert(dst.size >= mx * my);
   assert(mx > 0);
@@ -128,7 +129,7 @@ void fast_cut_2(Image& dst, cr<Image> src, const int sx, const int sy, const int
   #pragma omp parallel for simd collapse(2) if (dst.size >= 64 * 64)
   for (auto y = sy; y < ey; ++y)
   for (auto x = sx; x < ex; ++x)
-    dst.fast_set(x - sx, y - sy, src(x, y), {});
+    dst.fast_set(x - sx, y - sy, src[x, y], {});
 }
 
 Image cut(cr<Image> src, cr<Recti> rect, Image_get mode) {
@@ -156,7 +157,7 @@ Sprite optimize_size(cr<Sprite> src, Vec& offset) {
   // по наличию непрозрачного пикселя в маске определяется область для вырезания
   cfor (y, mask.Y)
   cfor (x, mask.X) {
-    if (mask(x, y) != Pal8::mask_invisible) {
+    if (mask[x, y] != Pal8::mask_invisible) {
       if (x < sx)
         sx = x;
       if (x > ex)
@@ -191,7 +192,7 @@ void insert_x2(Image& dst, cr<Image> src, Vec pos) {
 
   cfor (y, src.Y)
   cfor (x, src.X) {
-    auto col{ src(x, y) };
+    auto col{ src[x, y] };
     insert_x2_buf.fast_set(x * 2 + 0, y * 2 + 0, col, {});
     insert_x2_buf.fast_set(x * 2 + 1, y * 2 + 0, col, {});
     insert_x2_buf.fast_set(x * 2 + 0, y * 2 + 1, col, {});
@@ -295,7 +296,7 @@ blend_pf bf, int optional) {
   cfor (y, src.Y)
   cfor (x, src.X) {
     Pal8 a = dst.get(x + pos.x, y + pos.y);
-    const Pal8 b = src(x, y);
+    const Pal8 b = src[x, y];
     auto ar = b.to_real();
     auto br = a.to_real();
     // ret = dst + (src - dst) * alpha
@@ -318,8 +319,8 @@ blend_pf bf, int optional) {
   cfor (y, src.Y())
   cfor (x, src.X()) {
     Pal8 a = dst.get(x + pos.x, y + pos.y);
-    continue_if (mask(x, y) == Pal8::mask_invisible);
-    const Pal8 b = image(x, y);
+    continue_if ((mask[x, y] == Pal8::mask_invisible));
+    const Pal8 b = image[x, y];
     auto ar = b.to_real();
     auto br = a.to_real();
     // ret = dst + (src - dst) * alpha
@@ -684,7 +685,7 @@ void draw_rect_filled(Image& dst, cr<Rect> rect, const Pal8 col, blend_pf bf, co
   return_if(RECT_SZ_X <= 0);
   return_if(RECT_SZ_Y <= 0);
 
-  auto* dst_ptr = &dst(rect_sx, rect_sy);
+  auto* dst_ptr = &dst[rect_sx, rect_sy];
   const std::size_t DST_PITCH = dst.X - RECT_SZ_X;
 
   cfor (y, RECT_SZ_Y) {

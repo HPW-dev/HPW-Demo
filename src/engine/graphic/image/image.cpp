@@ -95,7 +95,7 @@ template <class PIX_FMT>
 template <class PIX_FMT>
 [[gnu::const]] const PIX_FMT IMGTMPL::get(int x, int y, Image_get mode, const PIX_FMT default_val) const noexcept {
   if (*this && index_bound(x, y, mode))
-    return operator()(x, y);
+    return operator[](x, y);
   return default_val;
 }
 
@@ -109,7 +109,7 @@ template <class PIX_FMT>
 template <class PIX_FMT>
 [[gnu::const]] PIX_FMT& IMGTMPL::get(int x, int y, Image_get mode, PIX_FMT& out_of_bound_val) noexcept {
   if (*this && index_bound(x, y, mode))
-    return operator()(x, y);
+    return operator[](x, y);
   return out_of_bound_val;
 }
 
@@ -259,13 +259,13 @@ template <class PIX_FMT>
 PIX_FMT& IMGTMPL::operator [](int i) noexcept { return pix[i]; }
 
 template <class PIX_FMT>
-PIX_FMT& IMGTMPL::operator ()(int x, int y) noexcept { return pix[y * X + x]; }
+PIX_FMT& IMGTMPL::operator [](int x, int y) noexcept { return pix[y * X + x]; }
 
 template <class PIX_FMT>
 const PIX_FMT IMGTMPL::operator [](int i) const noexcept { return pix[i]; }
 
 template <class PIX_FMT>
-const PIX_FMT IMGTMPL::operator ()(int x, int y) const noexcept { return pix[y * X + x]; }
+const PIX_FMT IMGTMPL::operator [](int x, int y) const noexcept { return pix[y * X + x]; }
 
 template <class PIX_FMT>
 cr<PIX_FMT> IMGTMPL::fast_get(int x, int y) const noexcept { return pix[y * X + x]; }

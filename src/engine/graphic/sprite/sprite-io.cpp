@@ -20,15 +20,15 @@ inline void expand_contour(Image& image, cr<Image> mask) {
   #pragma omp parallel for simd schedule(static, 4) collapse(2)
   cfor (y, image.Y)
   cfor (x, image.X) {
-    if (mask(x, y) == Pal8::mask_visible) {
+    if (mask[x, y] == Pal8::mask_visible) {
       if (mask.get(x-1, y) == Pal8::mask_invisible)
-        image.set(x-1, y, image(x, y));
+        image.set(x-1, y, image[x, y]);
       if (mask.get(x+1, y) == Pal8::mask_invisible)
-        image.set(x+1, y, image(x, y));
+        image.set(x+1, y, image[x, y]);
       if (mask.get(x, y-1) == Pal8::mask_invisible)
-        image.set(x, y-1, image(x, y));
+        image.set(x, y-1, image[x, y]);
       if (mask.get(x, y+1) == Pal8::mask_invisible)
-        image.set(x, y+1, image(x, y));
+        image.set(x, y+1, image[x, y]);
     }
   } // for y, x
 } // expand_contour

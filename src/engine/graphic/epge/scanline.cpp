@@ -27,7 +27,7 @@ struct Scanline::Impl {
         cfor (y, dst.Y)
           if (y % 2)
             cfor (x, dst.X)
-              dst(x, y) = BLEND_F(SCANLINE_SHADOW, dst(x, y), {});
+              dst[x, y] = BLEND_F(SCANLINE_SHADOW, dst[x, y], {});
         break;
       }
 
@@ -36,7 +36,7 @@ struct Scanline::Impl {
         cfor (y, dst.Y)
         cfor (x, dst.X)
           if (x % 2)
-            dst(x, y) = BLEND_F(SCANLINE_SHADOW, dst(x, y), {});
+            dst[x, y] = BLEND_F(SCANLINE_SHADOW, dst[x, y], {});
         break;
       }
 
@@ -45,7 +45,7 @@ struct Scanline::Impl {
         cfor (y, dst.Y)
         cfor (x, dst.X)
           if ((x % 2) || (y % 2))
-            dst(x, y) = BLEND_F(SCANLINE_SHADOW, dst(x, y), {});
+            dst[x, y] = BLEND_F(SCANLINE_SHADOW, dst[x, y], {});
         break;
       }
     } // switch _type
