@@ -1,0 +1,3 @@
+# в конфиге написать start_script: ../../script/cmd/goto-dummy.txt
+scene Scene_dummy
+clear
