@@ -242,6 +242,9 @@ def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
 
 def pch_modifed(db_path: str, ctx: Context):
   ''':resut: True, если есть изменения в pch.hpp'''
+  if ctx.forced_rebuild:
+    return True
+
   if not bool(ctx.pch_path):
     return False # значит не юзаем PCH
   
@@ -278,7 +281,8 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   # проверить что есть база и что опции не изменились
   if fs.exists(db_path) \
   and not pch_is_modified \
-  and equal_opts(db_path, tgt, ctx):
+  and equal_opts(db_path, tgt, ctx) \
+  and not ctx.forced_rebuild:
     return check_diffs(tgt, db_path, header_map, ctx)
   
   else: # делаем базу с нуля
@@ -300,7 +304,7 @@ def compile_multi_incremental(tgt_src: Target, ctx: Context, host: Host) -> Rebu
   ''' Компилирует в многопотоке только изменённые файлы кода '''
   abs_existing_sources = [fs.path_abs(src) for src in tgt_src.sources if fs.exists(src)]
   
-  if not abs_existing_sources:
+  if not abs_existing_sources and not ctx.forced_rebuild:
     header_map = {}
   else:
     header_map = make_header_map(abs_existing_sources, include_dirs=tgt_src.include_dirs)
