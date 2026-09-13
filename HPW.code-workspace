@@ -5,6 +5,7 @@
 		}
 	],
 	"settings": {
+		"search.followSymlinks": false,
 		"C_Cpp.default.includePath": [
 			".",
 			"src"
@@ -117,7 +118,6 @@
 			"build/plugin": true,
 			"build/screenshots": true,
 			"pgo": true,
-			//"thirdparty": true,
 			".tmp/": true,
 			"src/CMakeFiles": true,
 			"**/__pycache__": true,
@@ -140,6 +140,7 @@
 			"**/*.lib": true,
 			"**/*.dblite": true,
 			"**/vgcore.*": true,
+			"**/.git": true
 		},
 		"C_Cpp.default.defines": [
 			"_DEBUG",
