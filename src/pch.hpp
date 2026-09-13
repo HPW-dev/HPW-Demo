@@ -29,6 +29,7 @@
 #include <thread>
 #include <format>
 #include <deque>
+#include <queue>
 #include <mutex>
 #include <cmath>
 #include <ctime>

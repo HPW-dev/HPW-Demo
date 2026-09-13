@@ -1,6 +1,4 @@
-#include <cassert>
-#include <ranges>
-#include <queue>
+#include "pch.hpp"
 #include "scene-mgr.hpp"
 #include "scene.hpp"
 #include "scene-util.hpp"
@@ -23,7 +21,11 @@ struct Scene_mgr::Impl {
   }
 
   inline void add(cr<Str> name) {
-    add(find_scene(name));
+    try {
+      add(find_scene(name));
+    } catch (...) {
+      error("error while going to scene \"" + name + "\"");
+    }
   }
 
   inline bool update(Delta_time dt) {
