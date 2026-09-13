@@ -34,6 +34,7 @@
 #include <cmath>
 #include <ctime>
 #include <array>
+#include <stack>
 #include <list>
 #include <map>
 
