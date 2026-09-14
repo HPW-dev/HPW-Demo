@@ -59,7 +59,6 @@ static void floodfill4(Image& dst, Vec pos, Pal8 filler, Pal8 bg_color) {
   } // while stack not empty
 }
 
-
 void fill(Image& dst, Vec pos, Pal8 filler) {
   assert(dst);
   floodfill4(dst, pos, filler, dst.get(pos.x, pos.y));
