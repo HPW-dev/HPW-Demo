@@ -68,5 +68,7 @@ void bgp_deep_circles_red(Image& dst, const int bg_state);
 void bgp_tile_corruption(Image& dst, const int bg_state);
 // рисует код эффекта
 void bgp_self_code(Image& dst, const int bg_state);
+// рисует код Scene_dummy
+void bgp_self_code_2(Image& dst, const int bg_state);
 // шум
 void bgp_noise(Image& dst, const int bg_state);

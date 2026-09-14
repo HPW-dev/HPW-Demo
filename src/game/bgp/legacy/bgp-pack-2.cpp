@@ -1037,3 +1037,10 @@ void bgp_self_code(Image& dst, const int bg_state) {
   assert(code_img);
   insert_fast(dst, code_img->image());
 }
+
+void bgp_self_code_2(Image& dst, const int bg_state) {
+  cauto code_img = hpw::sprites.find(
+    "graphic/images/misc/Scene_dummy.cpp.png");
+  assert(code_img);
+  insert_fast(dst, code_img->image());
+}

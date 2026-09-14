@@ -61,6 +61,7 @@ public:
 
 #if 1 // Пак 2:
   REG_BGP(bgp_self_code)
+  REG_BGP(bgp_self_code_2)
   REG_BGP(bgp_noise)
   REG_BGP(bgp_tile_corruption)
   REG_BGP(bgp_deep_circles)
