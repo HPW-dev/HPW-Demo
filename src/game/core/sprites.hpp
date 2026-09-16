@@ -8,12 +8,6 @@ namespace hpw {
 inline Store<Sprite> sprites {};
 
 // если true, грузить спрайты только по запросу по имени
-inline bool lazy_load_sprite {
-#ifdef DEBUG
-  true
-#else
-  false
-#endif
-};
+inline bool lazy_load_sprite = true;
 
 } // hpw ns
