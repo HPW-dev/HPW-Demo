@@ -10,6 +10,7 @@ g++ -Wall -std=c++26 -pipe -s -O2 -static tool\table-gen\main.cpp -o build\bin\t
 #include <utility>
 #include <vector>
 #include <array>
+#include <cmath>
 
 using byte = std::uint8_t;
 using bytes = std::vector<byte>;
@@ -292,6 +293,59 @@ constexpr static const std::array<Rgb24, PAL_SZ> pal8_default_table {
   Rgb24{255, 255, 255}
 }; // pal8_default_table
 
+static inline real linear_to_srgb(real c) {
+  return (c <= 0.0031308)
+    ? (12.92 * c)
+    : (1.055 * std::pow(c, 1.0 / 2.4) - 0.055);
+}
+
+static inline real srgb_to_linear(real c) {
+  return (c <= 0.04045)
+    ? (c / 12.92)
+    : (std::pow((c + 0.055) / 1.055, 2.4));
+}
+
+constexpr inline auto pow2(auto x) { return x*x; }
+
+Pal8 rgb24_to_pal8(Rgb24 src) {
+  // ищем самый близкий цвет по самому маленькому растоянию между цветами
+  const auto src_dist = std::sqrt(pow2(src.r) + pow2(src.g) + pow2(src.b));
+  real min_dist = 9'999'999;
+  Pal8 result {};
+  for (size_t i = 0; i < pal8_default_table.size(); ++i) {
+    const auto pal = pal8_default_table.at(i);
+    const auto pal_dist = std::sqrt(pow2(pal.r) + pow2(pal.g) + pow2(pal.b));
+    const auto dist = std::abs(pal_dist - src_dist);
+    if (dist < min_dist) {
+      min_dist = dist;
+      result = i;
+    }
+  }
+  return result;
+}
+
+Pal8 srgb_to_pal8(Srgb src) {
+  const Rgb24 rgb24 {
+    .r = static_cast<byte>(std::clamp<real>(srgb_to_linear(src.r) * 255.0, 0.0, 255.0)),
+    .g = static_cast<byte>(std::clamp<real>(srgb_to_linear(src.g) * 255.0, 0.0, 255.0)),
+    .b = static_cast<byte>(std::clamp<real>(srgb_to_linear(src.b) * 255.0, 0.0, 255.0)),
+  };
+  return rgb24_to_pal8(rgb24);
+}
+
+Srgb pal8_to_srgb(Pal8 src) {
+  const auto rgb24 = pal8_default_table.at(src);
+  return Srgb {
+    .r = linear_to_srgb(rgb24.r / 255.0),
+    .g = linear_to_srgb(rgb24.g / 255.0),
+    .b = linear_to_srgb(rgb24.b / 255.0),
+  };
+}
+
+Rgb24 pal8_to_rgb24(Pal8 src) {
+  return pal8_default_table.at(src);
+}
+
 void error_if(bool cond_for_error, const char* msg) {
   if (cond_for_error)
     throw std::runtime_error(msg);
@@ -317,13 +371,25 @@ bytes make_inv() {
 
 bytes make_dec_safe() {
   bytes table;
-  // TODO учёт красного
+  for (uint i = 0; i < PAL_SZ; ++i) {
+    auto rgb24 = pal8_to_rgb24(static_cast<Pal8>(i));
+    rgb24.r = std::clamp<int>(int(rgb24.r) - 1, 0, 255);
+    rgb24.g = std::clamp<int>(int(rgb24.g) - 1, 0, 255);
+    rgb24.b = std::clamp<int>(int(rgb24.b) - 1, 0, 255);
+    table.push_back(rgb24_to_pal8(rgb24));
+  }
   return table;
 }
 
 bytes make_inc_safe() {
   bytes table;
-  // TODO учёт красного
+  for (uint i = 0; i < PAL_SZ; ++i) {
+    auto rgb24 = pal8_to_rgb24(static_cast<Pal8>(i));
+    rgb24.r = std::clamp<int>(int(rgb24.r) + 1, 0, 255);
+    rgb24.g = std::clamp<int>(int(rgb24.g) + 1, 0, 255);
+    rgb24.b = std::clamp<int>(int(rgb24.b) + 1, 0, 255);
+    table.push_back(rgb24_to_pal8(rgb24));
+  }
   return table;
 }
 
@@ -345,7 +411,15 @@ bytes make_add() {
 
 bytes make_add_safe() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b) {
+          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
+    a_rgb.r = std::clamp<real>(a_rgb.r + b_rgb.r, 0.0, 1.0);
+    a_rgb.g = std::clamp<real>(a_rgb.g + b_rgb.g, 0.0, 1.0);
+    a_rgb.b = std::clamp<real>(a_rgb.b + b_rgb.b, 0.0, 1.0);
+    table.push_back(srgb_to_pal8(a_rgb));
+  }
   return table;
 }
 
@@ -359,7 +433,15 @@ bytes make_sub() {
 
 bytes make_sub_safe() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b) {
+          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
+    a_rgb.r = std::clamp<real>(a_rgb.r - b_rgb.r, 0.0, 1.0);
+    a_rgb.g = std::clamp<real>(a_rgb.g - b_rgb.g, 0.0, 1.0);
+    a_rgb.b = std::clamp<real>(a_rgb.b - b_rgb.b, 0.0, 1.0);
+    table.push_back(srgb_to_pal8(a_rgb));
+  }
   return table;
 }
 
@@ -373,7 +455,15 @@ bytes make_and() {
 
 bytes make_and_safe() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = a_rgb.r & b_rgb.r;
+    a_rgb.g = a_rgb.g & b_rgb.g;
+    a_rgb.b = a_rgb.b & b_rgb.b;
+    table.push_back(rgb24_to_pal8(a_rgb));
+  }
   return table;
 }
 
@@ -387,7 +477,15 @@ bytes make_or() {
 
 bytes make_or_safe() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = a_rgb.r | b_rgb.r;
+    a_rgb.g = a_rgb.g | b_rgb.g;
+    a_rgb.b = a_rgb.b | b_rgb.b;
+    table.push_back(rgb24_to_pal8(a_rgb));
+  }
   return table;
 }
 
@@ -401,7 +499,15 @@ bytes make_mul() {
 
 bytes make_mul_safe() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b) {
+          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
+    a_rgb.r = std::clamp<real>(a_rgb.r * b_rgb.r, 0.0, 1.0);
+    a_rgb.g = std::clamp<real>(a_rgb.g * b_rgb.g, 0.0, 1.0);
+    a_rgb.b = std::clamp<real>(a_rgb.b * b_rgb.b, 0.0, 1.0);
+    table.push_back(srgb_to_pal8(a_rgb));
+  }
   return table;
 }
 
@@ -415,7 +521,15 @@ bytes make_xor() {
 
 bytes make_xor_safe() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = a_rgb.r ^ b_rgb.r;
+    a_rgb.g = a_rgb.g ^ b_rgb.g;
+    a_rgb.b = a_rgb.b ^ b_rgb.b;
+    table.push_back(rgb24_to_pal8(a_rgb));
+  }
   return table;
 }
 
@@ -491,7 +605,6 @@ int main() {
   save(".tmp/table_inc_safe.dat", make_inc_safe());
   save(".tmp/table_inv_safe.dat", make_inv_safe());
   save(".tmp/table_add.dat", make_add());
-  /*
   save(".tmp/table_add_safe.dat", make_add_safe());
   save(".tmp/table_sub.dat", make_sub());
   save(".tmp/table_sub_safe.dat", make_sub_safe());
@@ -503,6 +616,7 @@ int main() {
   save(".tmp/table_mul_safe.dat", make_mul_safe());
   save(".tmp/table_xor.dat", make_xor());
   save(".tmp/table_xor_safe.dat", make_xor_safe());
+  /*
   save(".tmp/table_diff.dat", make_diff());
   save(".tmp/table_avr.dat", make_avr());
   save(".tmp/table_avr_max.dat", make_avr_max());
