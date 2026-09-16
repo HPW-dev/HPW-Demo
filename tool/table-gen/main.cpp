@@ -350,9 +350,9 @@ Pal8 rgb24_to_pal8(Rgb24 src) {
 
 Pal8 srgb_to_pal8(Srgb src) {
   const Rgb24 rgb24 {
-    .r = static_cast<byte>(std::clamp<real>(std::round(srgb_to_linear(src.r) * 255.0), 0.0, 255.0)),
-    .g = static_cast<byte>(std::clamp<real>(std::round(srgb_to_linear(src.g) * 255.0), 0.0, 255.0)),
-    .b = static_cast<byte>(std::clamp<real>(std::round(srgb_to_linear(src.b) * 255.0), 0.0, 255.0)),
+    .r = static_cast<byte>(std::clamp<real>(std::round(linear_to_srgb(src.r) * 255.0), 0.0, 255.0)),
+    .g = static_cast<byte>(std::clamp<real>(std::round(linear_to_srgb(src.g) * 255.0), 0.0, 255.0)),
+    .b = static_cast<byte>(std::clamp<real>(std::round(linear_to_srgb(src.b) * 255.0), 0.0, 255.0)),
   };
   return rgb24_to_pal8(rgb24);
 }
@@ -360,9 +360,9 @@ Pal8 srgb_to_pal8(Srgb src) {
 Srgb pal8_to_srgb(Pal8 src) {
   const auto rgb24 = pal8_default_table.at(src);
   return Srgb {
-    .r = linear_to_srgb(rgb24.r / 255.0),
-    .g = linear_to_srgb(rgb24.g / 255.0),
-    .b = linear_to_srgb(rgb24.b / 255.0),
+    .r = srgb_to_linear(rgb24.r / 255.0),
+    .g = srgb_to_linear(rgb24.g / 255.0),
+    .b = srgb_to_linear(rgb24.b / 255.0),
   };
 }
 
@@ -430,14 +430,14 @@ bytes make_add() {
 
 bytes make_add_safe() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    a_rgb.r = a_rgb.r + b_rgb.r;
-    a_rgb.g = a_rgb.g + b_rgb.g;
-    a_rgb.b = a_rgb.b + b_rgb.b;
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = std::clamp<int>(int(a_rgb.r) + b_rgb.r, 0, 255);
+    a_rgb.g = std::clamp<int>(int(a_rgb.g) + b_rgb.g, 0, 255);
+    a_rgb.b = std::clamp<int>(int(a_rgb.b) + b_rgb.b, 0, 255);
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
@@ -452,30 +452,30 @@ bytes make_sub() {
 
 bytes make_sub_safe() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    a_rgb.r = a_rgb.r - b_rgb.r;
-    a_rgb.g = a_rgb.g - b_rgb.g;
-    a_rgb.b = a_rgb.b - b_rgb.b;
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = std::clamp<int>(int(a_rgb.r) - b_rgb.r, 0, 255);
+    a_rgb.g = std::clamp<int>(int(a_rgb.g) - b_rgb.g, 0, 255);
+    a_rgb.b = std::clamp<int>(int(a_rgb.b) - b_rgb.b, 0, 255);
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
 
 bytes make_and() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
   for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a)
     table.push_back(byte(a & b));
   return table;
 }
 
 bytes make_and_safe() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
     a_rgb.r = a_rgb.r & b_rgb.r;
@@ -488,16 +488,16 @@ bytes make_and_safe() {
 
 bytes make_or() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
   for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a)
     table.push_back(byte(a | b));
   return table;
 }
 
 bytes make_or_safe() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
     a_rgb.r = a_rgb.r | b_rgb.r;
@@ -510,16 +510,16 @@ bytes make_or_safe() {
 
 bytes make_mul() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
   for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a)
     table.push_back(byte(a * b));
   return table;
 }
 
 bytes make_mul_safe() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
     a_rgb.r = a_rgb.r * b_rgb.r;
@@ -540,8 +540,8 @@ bytes make_xor() {
 
 bytes make_xor_safe() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
     a_rgb.r = a_rgb.r ^ b_rgb.r;
@@ -554,22 +554,22 @@ bytes make_xor_safe() {
 
 bytes make_diff() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    a_rgb.r = std::abs(a_rgb.r - b_rgb.r);
-    a_rgb.g = std::abs(a_rgb.g - b_rgb.g);
-    a_rgb.b = std::abs(a_rgb.b - b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = std::abs(int(a_rgb.r) - b_rgb.r);
+    a_rgb.g = std::abs(int(a_rgb.g) - b_rgb.g);
+    a_rgb.b = std::abs(int(a_rgb.b) - b_rgb.b);
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
 
 bytes make_avr() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
     a_rgb.r = (a_rgb.r + b_rgb.r) * 0.5;
@@ -582,8 +582,8 @@ bytes make_avr() {
 
 bytes make_avr_max() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
     a_rgb.r = std::max<real>((a_rgb.r + b_rgb.r) * 0.5, b_rgb.r);
@@ -597,8 +597,8 @@ bytes make_avr_max() {
 bytes make_blend158() {
   bytes table;
   constexpr real alpha = 158 / 255.0;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
     a_rgb.r = blend(a_rgb.r, b_rgb.r, alpha);
@@ -611,28 +611,28 @@ bytes make_blend158() {
 
 bytes make_max() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
     a_rgb.r = std::max(a_rgb.r, b_rgb.r);
     a_rgb.g = std::max(a_rgb.g, b_rgb.g);
     a_rgb.b = std::max(a_rgb.b, b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
 
 bytes make_min() {
   bytes table;
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
     a_rgb.r = std::min(a_rgb.r, b_rgb.r);
     a_rgb.g = std::min(a_rgb.g, b_rgb.g);
     a_rgb.b = std::min(a_rgb.b, b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
@@ -642,14 +642,14 @@ bytes make_overlay() {
   #define OVERLAY(A, B) (A < 0.5f) ? \
       (2 * A * B) : \
       (1.0 - 2 * (1.0 - A) * (1.0 - B))
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    a_rgb.r = OVERLAY(a_rgb.r, b_rgb.r);
-    a_rgb.g = OVERLAY(a_rgb.g, b_rgb.g);
-    a_rgb.b = OVERLAY(a_rgb.b, b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = OVERLAY(a_rgb.r/255.0, b_rgb.r/255.0) * 255.0;
+    a_rgb.g = OVERLAY(a_rgb.g/255.0, b_rgb.g/255.0) * 255.0;
+    a_rgb.b = OVERLAY(a_rgb.b/255.0, b_rgb.b/255.0) * 255.0;
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   #undef OVERLAY
   return table;
@@ -658,14 +658,14 @@ bytes make_overlay() {
 bytes make_softlight() {
   bytes table;
   #define SOFTLIGHT(A, B) (A + (2.0 * B * (A * (1.0 - A))))
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    a_rgb.r = SOFTLIGHT(a_rgb.r, b_rgb.r);
-    a_rgb.g = SOFTLIGHT(a_rgb.g, b_rgb.g);
-    a_rgb.b = SOFTLIGHT(a_rgb.b, b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = SOFTLIGHT(a_rgb.r/255.0, b_rgb.r/255.0) * 255.0;
+    a_rgb.g = SOFTLIGHT(a_rgb.g/255.0, b_rgb.g/255.0) * 255.0;
+    a_rgb.b = SOFTLIGHT(a_rgb.b/255.0, b_rgb.b/255.0) * 255.0;
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   #undef SOFTLIGHT
   return table;
@@ -674,15 +674,14 @@ bytes make_softlight() {
 bytes make_fade_out_max() {
   bytes table;
   for (uint o = 0; o < PAL_SZ; ++o)
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    const real option = o / 255.0;
-    a_rgb.r = std::max(a_rgb.r - option, b_rgb.r);
-    a_rgb.g = std::max(a_rgb.g - option, b_rgb.g);
-    a_rgb.b = std::max(a_rgb.b - option, b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    a_rgb.r = std::max<int>(int(a_rgb.r) - o, b_rgb.r);
+    a_rgb.g = std::max<int>(int(a_rgb.g) - o, b_rgb.g);
+    a_rgb.b = std::max<int>(int(a_rgb.b) - o, b_rgb.b);
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
@@ -690,15 +689,15 @@ bytes make_fade_out_max() {
 bytes make_fade_in_max() {
   bytes table;
   for (uint o = 0; o < PAL_SZ; ++o)
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
-          auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
-    const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
-    const real option = 1.0 - (o / 255.0);
-    a_rgb.r = std::max(a_rgb.r - option, b_rgb.r);
-    a_rgb.g = std::max(a_rgb.g - option, b_rgb.g);
-    a_rgb.b = std::max(a_rgb.b - option, b_rgb.b);
-    table.push_back(srgb_to_pal8(a_rgb));
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
+          auto a_rgb = pal8_to_rgb24(static_cast<Pal8>(a));
+    const auto b_rgb = pal8_to_rgb24(static_cast<Pal8>(b));
+    const real option = 255 - o;
+    a_rgb.r = std::max<int>(int(a_rgb.r) - option, b_rgb.r);
+    a_rgb.g = std::max<int>(int(a_rgb.g) - option, b_rgb.g);
+    a_rgb.b = std::max<int>(int(a_rgb.b) - option, b_rgb.b);
+    table.push_back(rgb24_to_pal8(a_rgb));
   }
   return table;
 }
@@ -706,8 +705,8 @@ bytes make_fade_in_max() {
 bytes make_blend_alpha() {
   bytes table;
   for (uint o = 0; o < PAL_SZ; ++o)
-  for (uint a = 0; a < PAL_SZ; ++a)
-  for (uint b = 0; b < PAL_SZ; ++b) {
+  for (uint b = 0; b < PAL_SZ; ++b)
+  for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
     const auto b_rgb = pal8_to_srgb(static_cast<Pal8>(b));
     const real option = o / 255.0;

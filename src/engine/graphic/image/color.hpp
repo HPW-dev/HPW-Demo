@@ -28,7 +28,7 @@ struct Pal8 final {
   constx value_t gray_end {gray_size - 1}; // WHITE2
   constx value_t gray {gray_end / 2};
   constx value_t red {white-1}; // red end
-  constx value_t red_start {gray_end};
+  constx value_t red_start {gray_end+1};
   constx value_t red_end {red};
   constx value_t red_black {red_start};
   constx value_t red_mid {red_start + red_size / 2};
