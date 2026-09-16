@@ -22,17 +22,18 @@ struct Rgb24 { byte r {}, g {}, b {}; };
 struct Srgb { real r {}, g {}, b {}; };
 struct Irgb { int r {}, g {}, b {}; };
 
+constexpr uint PAL_SZ = 256;
 constexpr Pal8 BLACK = 0;
 constexpr Pal8 WHITE = 255;
 constexpr uint REDS = 32;
-constexpr uint GRAYS = 256 - 1 - REDS;
+constexpr uint GRAYS = PAL_SZ - 1 - REDS;
 constexpr Pal8 GRAY_START = BLACK;
 constexpr Pal8 GRAY_END = GRAYS - 1;
 constexpr Pal8 RED = 254;
 constexpr Pal8 RED_START = GRAY_END + 1;
 constexpr Pal8 RED_END = RED;
 
-constexpr static const std::array<Rgb24, 256> pal8_default_table {
+constexpr static const std::array<Rgb24, PAL_SZ> pal8_default_table {
   Rgb24{0, 0, 0},
   Rgb24{1, 1, 1},
   Rgb24{2, 2, 2},
@@ -299,7 +300,7 @@ void error_if(bool cond_for_error, const char* msg) {
 void save(const char* name, const bytes& table) {
   error_if(!name, "file name is empty");
   error_if(table.empty(), "table data is empty");
-  error_if(table.size() < 256, "table size < 256");
+  error_if(table.size() < PAL_SZ, "table size < 256");
 
   auto file = std::ofstream(name, std::ios_base::binary);
   error_if(!file.is_open(), "file not opened");
@@ -309,33 +310,36 @@ void save(const char* name, const bytes& table) {
 
 bytes make_inv() {
   bytes table;
+  for (uint c = 0; c < PAL_SZ; ++c)
+    table.push_back(~byte(c));
+  return table;
+}
+
+bytes make_dec_safe() {
+  bytes table;
+  // TODO учёт красного
+  return table;
+}
+
+bytes make_inc_safe() {
+  bytes table;
+  // TODO учёт красного
+  return table;
+}
+
+bytes make_inv_safe() {
+  bytes table;
   for (int c = GRAYS - 1; c > -1; --c) table.push_back(c);
   for (int c = RED_END; c > RED_START-1; --c) table.push_back(c);
   table.push_back(BLACK);
   return table;
 }
 
-bytes make_dec_safe() {
-  bytes table;
-  // TODO
-  return table;
-}
-
-bytes make_inc_safe() {
-  bytes table;
-  // TODO
-  return table;
-}
-
-bytes make_inv_safe() {
-  bytes table;
-  // TODO
-  return table;
-}
-
 bytes make_add() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b)
+    table.push_back(byte(a + b));
   return table;
 }
 
@@ -347,7 +351,9 @@ bytes make_add_safe() {
 
 bytes make_sub() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b)
+    table.push_back(byte(a - b));
   return table;
 }
 
@@ -359,7 +365,9 @@ bytes make_sub_safe() {
 
 bytes make_and() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b)
+    table.push_back(byte(a & b));
   return table;
 }
 
@@ -371,7 +379,9 @@ bytes make_and_safe() {
 
 bytes make_or() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b)
+    table.push_back(byte(a | b));
   return table;
 }
 
@@ -383,7 +393,9 @@ bytes make_or_safe() {
 
 bytes make_mul() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b)
+    table.push_back(byte(a * b));
   return table;
 }
 
@@ -395,7 +407,9 @@ bytes make_mul_safe() {
 
 bytes make_xor() {
   bytes table;
-  // TODO
+  for (uint a = 0; a < PAL_SZ; ++a)
+  for (uint b = 0; b < PAL_SZ; ++b)
+    table.push_back(byte(a ^ b));
   return table;
 }
 
@@ -476,9 +490,8 @@ int main() {
   save(".tmp/table_dec_safe.dat", make_dec_safe());
   save(".tmp/table_inc_safe.dat", make_inc_safe());
   save(".tmp/table_inv_safe.dat", make_inv_safe());
-  /*
   save(".tmp/table_add.dat", make_add());
-  save(".tmp/table_add_safe.dat", make_add_safe());
+  /*save(".tmp/table_add_safe.dat", make_add_safe());
   save(".tmp/table_sub.dat", make_sub());
   save(".tmp/table_sub_safe.dat", make_sub_safe());
   save(".tmp/table_and.dat", make_and());
