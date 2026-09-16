@@ -25,6 +25,12 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
       '-lopengl32',
       '-lOpenAL32.dll',
     ])
+    # можно и консоль вырубить, если это не релиз:
+    if tgt.opt_preset != 'debug-x32' and \
+       tgt.opt_preset != 'debug-x64' and \
+       tgt.opt_preset != 'fast-build':
+      print(to_green('> Вырубаем консоль для H.P.W'))
+      tgt.linked_libs.append('-mwindows')
   elif Sys_name.linux:
     tgt.linked_libs.extend([
       '-lyaml-cpp',
