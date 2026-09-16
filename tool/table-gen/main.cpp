@@ -491,7 +491,8 @@ int main() {
   save(".tmp/table_inc_safe.dat", make_inc_safe());
   save(".tmp/table_inv_safe.dat", make_inv_safe());
   save(".tmp/table_add.dat", make_add());
-  /*save(".tmp/table_add_safe.dat", make_add_safe());
+  /*
+  save(".tmp/table_add_safe.dat", make_add_safe());
   save(".tmp/table_sub.dat", make_sub());
   save(".tmp/table_sub_safe.dat", make_sub_safe());
   save(".tmp/table_and.dat", make_and());

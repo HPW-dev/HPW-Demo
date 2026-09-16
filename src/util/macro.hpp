@@ -62,14 +62,13 @@ name& operator = (name&&) = delete; \
 name& operator = (cr<name>) = delete;
 
 // для обмана оптимизатора
+inline __attribute__((always_inline)) void do_not_optimize(auto&& value) {
 #if defined(__clang__)
-  [[clang::optnone]] void do_not_optimize(auto val) { (void)val; }
-#else // GCC:
-  #pragma GCC push_options
-  #pragma GCC optimize ("O0")
-  #define do_not_optimize(val) { (void)val; }
-  #pragma GCC pop_options
+  asm volatile("" : "+r,m"(value) : : "memory");
+#else
+  asm volatile("" : "+m,r"(value) : : "memory");
 #endif
+}
 
 // вспомогательный макрос для CONCAT
 #define _CONCAT(a, b) a##b
