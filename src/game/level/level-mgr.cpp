@@ -62,7 +62,7 @@ void Level_mgr::draw(Image& dst) const {
       dst.fill({}); // TODO для красивого эффекта это можно вырубить
   } else {
     dst.fill(Pal8::black);
-    graphic::font->draw(dst, get_screen_center(), U"NO LEVEL");
+    graphic::font->draw(dst, get_screen_center(), U"冥\n土");
   }
 }
 
