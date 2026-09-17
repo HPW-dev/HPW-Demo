@@ -325,7 +325,7 @@ static inline real blend(real a, real b, real alpha) {
 }
 
 Pal8 rgb24_to_pal8(Rgb24 src) {
-  int min_dist = 999'999'999;
+  real min_dist = 999'999'999;
   Pal8 result = 0;
   
   const int sr = static_cast<int>(src.r);
@@ -337,7 +337,10 @@ Pal8 rgb24_to_pal8(Rgb24 src) {
     const int dr = pal.r - sr;
     const int dg = pal.g - sg;
     const int db = pal.b - sb;
-    const int dist = (dr * dr) + (dg * dg) + (db * db);
+    const real dist =
+      dr * dr * 0.296952 +
+      dg * dg * 0.586612 +
+      db * db * 0.114436;
     
     if (dist < min_dist) {
       min_dist = dist;

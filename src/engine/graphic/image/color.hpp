@@ -85,12 +85,16 @@ struct Pal8 final {
 
 inline constexpr Pal8 Pal8::from_real(real src, bool is_red) noexcept {
   if (src >= 1.0)
-    return is_red ? red : white;
+    return is_red
+      ? red
+      : white;
   if (src <= 0.0)
-    return is_red ? red_start : black;
-  return is_red ?
-    get_red(src * red_size) :
-    Pal8(src * gray_size);
+    return is_red
+      ? red_start
+      : black;
+  return is_red
+    ? get_red(src * red_size)
+    : Pal8(src * gray_size);
 } // from_real
 
 inline constexpr Pal8 Pal8::get_red(int value) noexcept {
