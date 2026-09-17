@@ -1,7 +1,6 @@
 #ifndef ECOMEM
 
-#include <cassert>
-#include <cmath>
+#include "pch.hpp"
 #include "color-blend.hpp"
 #include "game/core/graphic.hpp"
 
@@ -27,5 +26,13 @@ inline Delta_time get_state(const Pal8 src, int optional, const Delta_time speed
 
 [[nodiscard, gnu::const]] Pal8 blend_rotate_x16_safe(const Pal8 in, const Pal8 bg, int optional) noexcept
   { return Pal8::from_real(std::fmod(get_state(in, optional, 16), 1.0), in.is_red()); }
+
+[[nodiscard, gnu::const]] Pal8 blend_alpha(const Pal8 in, const Pal8 bg, int optional) noexcept {
+  return
+    table_blend_alpha[uint(in.val) +
+      uint(bg.val)*256 +
+      scast<uint>(scast<byte>(std::clamp(optional, 0, 255)))*256*256
+    ];
+}
 
 #endif

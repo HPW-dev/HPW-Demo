@@ -11,6 +11,7 @@
 
 struct Scene_dummy::Impl {
   mutable Image test_pic;
+  int alpha = 128;
 
   inline explicit Impl() {
     test_pic.init(*graphic::canvas);
@@ -20,7 +21,9 @@ struct Scene_dummy::Impl {
     if (is_pressed_once(hpw::keycode::escape))
       hpw::scene_mgr.back();
     
-    // TODO
+    if (is_pressed(hpw::keycode::up)) ++alpha;
+    if (is_pressed(hpw::keycode::down)) --alpha;
+    if (is_pressed(hpw::keycode::left)) alpha = 128;
   }
 
   inline void draw(Image& dst) const {
@@ -45,6 +48,10 @@ struct Scene_dummy::Impl {
     draw_text(test_pic, gsz * 2, gsz * 44, 57);
 
     insert_fast(dst, test_pic);
+
+    draw_rect_filled<blend_alpha>(dst, Rect(20, 20, 400, 300), Pal8::black, alpha);
+    graphic::font->draw(dst, {30, 30}, U"Alpha : " + n2s<utf32>(alpha));
+    graphic::font->draw(dst, {35, 45}, U"AbCdEf\n123456\n--__-.\n|||\\");
   }
 
   inline void draw_grid(Image& dst, int grid_sz) const {

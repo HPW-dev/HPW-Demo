@@ -93,8 +93,8 @@ inline constexpr Pal8 Pal8::from_real(real src, bool is_red) noexcept {
       ? red_start
       : black;
   return is_red
-    ? get_red(src * red_size)
-    : Pal8(src * gray_size);
+    ? get_red(src * red_end)
+    : Pal8(src * gray_end);
 } // from_real
 
 inline constexpr Pal8 Pal8::get_red(int value) noexcept {
