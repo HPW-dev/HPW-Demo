@@ -24,6 +24,7 @@ def prepare_build(ctx: Context):
   print(to_gray('проврка файлов для сборки...'))
   make_if_not_exists(ctx.build_dir)
   make_if_not_exists(ctx.bin_dir)
+  make_if_not_exists(ctx.tmp_dir)
   make_if_not_exists(ctx.info_dir)
   check_dir(['src', 'thirdparty', 'resources', 'thirdparty'])
 
