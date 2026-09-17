@@ -599,7 +599,7 @@ bytes make_avr_max() {
 
 bytes make_blend_readable() {
   bytes table;
-  constexpr real alpha = 43 / 255.0;
+  constexpr real alpha = 1.0 - (43.0 / 255.0);
   for (uint b = 0; b < PAL_SZ; ++b)
   for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
