@@ -155,7 +155,7 @@ void Player_dark::blink_contour() const {
   // конгда энергии мало, контур тусклый
   if (energy <= m_level_for_blink) {
     cauto ratio = energy / scast<real>(energy_max);
-    anim_ctx.contour_bf = &blend_158;
+    anim_ctx.contour_bf = &blend_readable;
     // чем меньше энергии, тем реже мерцать
     status.disable_contour = rndr_fast() >= ratio;
   } else { // конгда энергии много, контур белый и мерцает рандомно

@@ -14,7 +14,7 @@ class Hitbox;
 class Anim_ctx final {
 public:
   blend_pf blend_f {&blend_past}; // режим наложения основной картинки
-  blend_pf contour_bf {&blend_158}; // режим наложения контура
+  blend_pf contour_bf {&blend_readable}; // режим наложения контура
   
   Anim_ctx() = default;
   ~Anim_ctx() = default;

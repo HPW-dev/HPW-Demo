@@ -236,7 +236,7 @@ int main(int argc, char *argv[]) {
     return desaturate_f(dst_rgb.r, dst_rgb.g, dst_rgb.b);
   });
 
-  gen_table_2d("table_blend158.dat", [](int x, int y) {
+  gen_table_2d("table_blend_readable.dat", [](int x, int y) {
     Pal8 a(x);
     Pal8 b(y);
     constexpr auto mul = 158.0 / 255.0;

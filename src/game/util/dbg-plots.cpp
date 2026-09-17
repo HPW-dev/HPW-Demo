@@ -155,7 +155,7 @@ void draw_fps_info(Image& dst) {
     h + border + 12
   };
   
-  draw_rect_filled<&blend_158>(dst, rect, Pal8::black);
+  draw_rect_filled<&blend_readable>(dst, rect, Pal8::black);
   draw_rect<&blend_diff>(dst, rect, Pal8::white);
   graphic::system_mono->draw(dst, {pos_x, pos_y}, str_u32);
 } // draw_debug_info

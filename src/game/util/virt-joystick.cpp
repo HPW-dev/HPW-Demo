@@ -10,7 +10,7 @@
 void draw_virtual_joystick(Image& dst) {
   const Vec pos (5, 300);
   const Vec text_offset (5, 5);
-  draw_rect_filled<&blend_158>(dst, Rect(pos.x, pos.y, 65, 55), Pal8::black);
+  draw_rect_filled<&blend_readable>(dst, Rect(pos.x, pos.y, 65, 55), Pal8::black);
 
   utf32 inputs;
   inputs += is_pressed(hpw::keycode::mode)  ? U"M" : U"_";

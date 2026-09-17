@@ -83,7 +83,7 @@ struct Scene_epge_list::Impl {
 
     Advanced_text_menu_config config;
     config.bf_border = &blend_avr_max;
-    config.bf_bg = &blend_158;
+    config.bf_bg = &blend_readable;
     init_unique(_menu, get_locale_str("epge.list_title"), menu_items,
       Rect{30, 10, 350, 300}, config);
   }

@@ -118,7 +118,7 @@ struct Scene_dummy::Impl {
     const Vec p1(w / 2 - 100, h / 2 - 25);
     const Vec p2(w / 2 + 100, h / 2 + 25);
 
-    draw_rect_filled<blend_158>(dst, {ox, oy, w, h}, Pal8::black);
+    draw_rect_filled<blend_readable>(dst, {ox, oy, w, h}, Pal8::black);
 
     Image buffer(w, h, Pal8::black);
     cfor (i, circles) {

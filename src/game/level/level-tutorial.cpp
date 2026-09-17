@@ -161,7 +161,7 @@ struct Level_tutorial::Impl {
     // затемнение фона текста
     cauto border = Vec(11, 11);
     cauto bg_shadow = Rect(pos - border, text_sz + border * 2);
-    draw_rect_filled<&blend_158>(dst, bg_shadow, Pal8::black);
+    draw_rect_filled<&blend_readable>(dst, bg_shadow, Pal8::black);
     // яркость текста сменяется
     cauto text_brightness = 150u + ((graphic::frame_count / 3u) % (255u - 150u));
     graphic::font->draw(dst, pos, bg_text, &blend_alpha, text_brightness);

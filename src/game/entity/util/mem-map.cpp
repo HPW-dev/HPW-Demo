@@ -14,8 +14,8 @@ void draw_entity_mem_map(Image& dst, const Vec pos) {
   // показать окошко
   cauto window = Rect(pos, Vec(300, 200));
   draw_rect<&blend_diff>(dst, window, Pal8::white);
-  draw_rect_filled<&blend_158>(dst, window, Pal8::red_black);
-  draw_rect_filled<&blend_158>(dst, window, Pal8::red_black);
+  draw_rect_filled<&blend_readable>(dst, window, Pal8::red_black);
+  draw_rect_filled<&blend_readable>(dst, window, Pal8::red_black);
 
   // цвета объектов в патблице
   constexpr Pal8 unknownd_entity_color = Pal8::white;

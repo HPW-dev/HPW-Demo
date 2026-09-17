@@ -54,7 +54,7 @@ struct Table_menu::Impl {
       auto row_sz = (row.sz > 0) ? row.sz : (dst.X - pos.x);
       const Rect rect(pos, Vec(row_sz, m_row_height));
       draw_rect(dst, rect, Pal8::gray);
-      graphic::font->draw(dst, pos + text_offset, row.name, &blend_158);
+      graphic::font->draw(dst, pos + text_offset, row.name, &blend_readable);
       pos.x += row_sz - 1;
     }
 
@@ -98,7 +98,7 @@ struct Table_menu::Impl {
           if (getter) {
             cauto text_color = selected
               ? &blend_past
-              : &blend_158;
+              : &blend_readable;
             graphic::font->draw(dst, pos + text_offset, getter(), text_color);
           }
         }

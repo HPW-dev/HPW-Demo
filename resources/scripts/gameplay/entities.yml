@@ -452,7 +452,7 @@ player.boo.dark:
     name: player.boo.dark
     fixed_deg: true
     default_deg: 0
-    contour_bf: blend_158
+    contour_bf: blend_readable
     window_star_len: 16
     percent_level_for_blink: 90
   shoot:

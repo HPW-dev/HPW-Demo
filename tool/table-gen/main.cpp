@@ -597,9 +597,9 @@ bytes make_avr_max() {
   return table;
 }
 
-bytes make_blend158() {
+bytes make_blend_readable() {
   bytes table;
-  constexpr real alpha = 158 / 255.0;
+  constexpr real alpha = 43 / 255.0;
   for (uint b = 0; b < PAL_SZ; ++b)
   for (uint a = 0; a < PAL_SZ; ++a) {
           auto a_rgb = pal8_to_srgb(static_cast<Pal8>(a));
@@ -741,7 +741,7 @@ int main() {
   save(".tmp/table_diff.dat", make_diff());
   save(".tmp/table_avr.dat", make_avr());
   save(".tmp/table_avr_max.dat", make_avr_max());
-  save(".tmp/table_blend158.dat", make_blend158());
+  save(".tmp/table_blend_readable.dat", make_blend_readable());
   save(".tmp/table_max.dat", make_max());
   save(".tmp/table_min.dat", make_min());
   save(".tmp/table_overlay.dat", make_overlay());

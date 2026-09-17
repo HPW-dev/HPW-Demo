@@ -24,7 +24,7 @@ void load_color_tables() {
   table_diff         = load_res(dir + "table_diff.dat").data;
   table_avr          = load_res(dir + "table_avr.dat").data;
   table_avr_max      = load_res(dir + "table_avr_max.dat").data;
-  table_blend158     = load_res(dir + "table_blend158.dat").data;
+  table_blend_readable = load_res(dir + "table_blend_readable.dat").data;
   table_max          = load_res(dir + "table_max.dat").data;
   table_min          = load_res(dir + "table_min.dat").data;
   table_overlay      = load_res(dir + "table_overlay.dat").data;
@@ -54,7 +54,7 @@ void check_color_tables() {
   assert( !table_diff.empty());
   assert( !table_avr.empty());
   assert( !table_avr_max.empty());
-  assert( !table_blend158.empty());
+  assert( !table_blend_readable.empty());
   assert( !table_max.empty());
   assert( !table_min.empty());
   assert( !table_overlay.empty());

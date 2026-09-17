@@ -518,7 +518,7 @@ blend_pf find_blend_f(cr<Str> name) {
     {"blend_max", &blend_max},
     {"blend_avr", &blend_avr},
     {"blend_avr_max", &blend_avr_max},
-    {"blend_158", &blend_158},
+    {"blend_readable", &blend_readable},
     {"blend_diff", &blend_diff},
     {"blend_xor", &blend_xor},
     {"blend_xor_safe", &blend_xor_safe},
