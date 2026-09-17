@@ -11,7 +11,7 @@ void load_fonts() {
   auto mem = load_res("graphic/fonts/unifont-13.0.06.ttf");
   init_unique<Unifont>(graphic::font, mem, 16, true);
   init_unique<Unifont>(graphic::font_shop, mem, 32, true);
-  init_unique<Unifont_mono>(graphic::system_mono, mem, 8, 16, true);
+  init_unique<Unifont_mono>(graphic::system_mono, mem, 11, 16, true);
   init_unique<Microfont_mono>(graphic::asci_3x5, "graphic/fonts/microfont mono/downcase.yml");
   init_unique<Microfont_mono>(graphic::asci_5x5, "graphic/fonts/microfont mono/upcase.yml");
 }

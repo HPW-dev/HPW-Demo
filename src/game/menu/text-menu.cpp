@@ -8,7 +8,12 @@ Text_menu::Text_menu(cr<Menu_items> _items, const Vec _draw_pos, cr<Text_menu_co
 : Menu(_items)
 , _config {config}
 , draw_pos(_draw_pos)
-{}
+{
+  _font = _config.font_mono
+    ? graphic::system_mono.get()
+    : graphic::font.get();
+  iferror(!_font, "empty font");
+}
 
 inline static utf32 _process_text(cr<Text_menu> tm) {
   utf32 text;
@@ -35,14 +40,13 @@ void Text_menu::draw(Image& dst) const {
     draw_rect(dst, bg_rect, _config.color_border, _config.border_bf, {});
   }
   
-  assert(graphic::font);
   cauto text = _process_text(*this);
-  graphic::font->draw(dst, draw_pos, text, _config.text_bf);
+  _font->draw(dst, draw_pos, text, _config.text_bf);
 }
 
 Recti Text_menu::rect() const {
   cauto text = _process_text(*this);
-  cauto font_sz = graphic::font->text_size(text);
+  cauto font_sz = _font->text_size(text);
   const Recti ret(
     draw_pos - _config.border_offset,
     font_sz + (_config.border_offset*2));

@@ -38,21 +38,23 @@ void Scene_debug::draw(Image& dst) const {
 }
 
 void Scene_debug::init_menu() {
+  Text_menu_config cfg;
+  cfg.font_mono = true;
   init_shared<Text_menu>( menu,
     Menu_items {
-      new_shared<Menu_bool_item>(U"отладочные тайминги",
+      new_shared<Menu_bool_item>(U"Задержки    ",
         [] { return graphic::show_fps; },
         [] (bool new_val) { graphic::show_fps = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"отладочные графики",
+      new_shared<Menu_bool_item>(U"Графики     ",
         [] { return graphic::draw_plots; },
         [] (bool new_val) { graphic::draw_plots = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"распределение памяти объектов",
+      new_shared<Menu_bool_item>(U"Память      ",
         [] { return hpw::show_entity_mem_map; },
         [] (bool new_val) { hpw::show_entity_mem_map = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"игнорить противников",
+      new_shared<Menu_bool_item>(U"Неуязвимость",
         [] {
           cauto player = hpw::entity_mgr->get_player();
           if (player)
@@ -67,46 +69,46 @@ void Scene_debug::init_menu() {
           }
         }
       ),
-      new_shared<Menu_bool_item>(U"пошаговый режим",
+      new_shared<Menu_bool_item>(U"Пошаговый   ",
         [] { return graphic::step_mode; },
         [] (bool new_val) {
           graphic::step_mode = new_val;
           hpw::scene_mgr.back();
         }
       ),
-      new_shared<Menu_bool_item>(U"хитбоксы объектов",
+      new_shared<Menu_bool_item>(U"Хитбоксы    ",
         [] { return graphic::draw_hitboxes; },
         [] (bool new_val) { graphic::draw_hitboxes = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"сетка системы коллизий",
+      new_shared<Menu_bool_item>(U"Сетка       ",
         [] { return graphic::show_grids; },
         [] (bool new_val) { graphic::show_grids = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"кнопки ввода",
+      new_shared<Menu_bool_item>(U"Ввод        ",
         [] { return graphic::show_virtual_joystick; },
         [] (bool new_val) { graphic::show_virtual_joystick = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"жизни объектов",
+      new_shared<Menu_bool_item>(U"Жизни       ",
         [] { return graphic::draw_entity_hp; },
         [] (bool new_val) { graphic::draw_entity_hp = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"координаты объектов",
+      new_shared<Menu_bool_item>(U"Корды       ",
         [] { return graphic::draw_entity_pos; },
         [] (bool new_val) { graphic::draw_entity_pos = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"рисовать объекты",
+      new_shared<Menu_bool_item>(U"Объекты     ",
         [] { return graphic::draw_entities; },
         [] (bool new_val) { graphic::draw_entities = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"рисовать фон уровня",
+      new_shared<Menu_bool_item>(U"Уровень     ",
         [] { return graphic::draw_level; },
         [] (bool new_val) { graphic::draw_level = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"искусственные лаги тика",
+      new_shared<Menu_bool_item>(U"Лаги тика   ",
         [] { return hpw::update_delay; },
         [] (bool new_val) { hpw::update_delay = new_val; }
       ),
-      new_shared<Menu_bool_item>(U"искусственные лаги рендера",
+      new_shared<Menu_bool_item>(U"Лаги рендера",
         [] { return hpw::render_delay; },
         [] (bool new_val) { hpw::render_delay = new_val; }
       ),
@@ -120,6 +122,7 @@ void Scene_debug::init_menu() {
         hpw::scene_mgr.back();
       }),
     },
-    Vec{20, 30} // menu draw pos
+    Vec{20, 30}, // menu draw pos
+    cfg
   ); // make menu
 } // init_menu

@@ -3,8 +3,11 @@
 #include "util/math/vec.hpp"
 #include "engine/graphic/image/color-blend.hpp"
 
+class Font_base;
+
 struct Text_menu_config {
   bool with_bg {}; // включает прямоуголник позади текста
+  bool font_mono {false};
   Pal8 color_bg {Pal8::black};
   Pal8 color_border {Pal8::white};
   blend_pf bg_bf {&blend_readable};
@@ -25,4 +28,5 @@ public:
 
 private:
   Vec draw_pos {};
+  Font_base* _font {};
 };
