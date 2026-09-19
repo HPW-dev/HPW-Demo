@@ -4,6 +4,8 @@
 
 namespace bgp {
 
+// ---------------------------- Код фонов --------------------------------------
+
 // просто заливка
 class Simple_color: public Bgp {
   Pal8 _color {};
@@ -15,6 +17,8 @@ public:
 
 // просто заливка
 class Empty: public Bgp { public: inline void draw(Image& _) const {} };
+
+// ----------------------- Регистрация фонов -----------------------------------
 
 BGP_REG_MAKER(Simple_color)
 BGP_REG_MAKER(Empty)

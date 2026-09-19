@@ -1,0 +1,3 @@
+# в конфиге написать start_script: ../../script/cmd/goto-bgpsel.txt
+scene BGP select
+clear
