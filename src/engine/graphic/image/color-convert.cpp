@@ -263,7 +263,6 @@ constexpr static const std::array<Rgb24, PAL_SZ> pal8_default_table {
   Rgb24{255, 255, 255}
 }; // pal8_default_table
 
-
 // Гамма-коррекция (линейный → sRGB)
 static inline real linear_to_srgb(real c) {
   return (c <= 0.0031308)
@@ -424,11 +423,33 @@ inline static Pal8::value_t desr_luma(int R, int G, int B) {
 inline static Pal8::value_t desr_average(int R, int G, int B)
   { return (R + G + B) / 3; }
 
+namespace color_cache {
+static std::unordered_map<uint32_t, Pal8> _cache;
+
+static inline std::optional<Pal8> get(int r, int g, int b) {
+  const uint32_t id = r + g * 255 + b * 255 * 255;
+  if (auto item = _cache.find(id); item != _cache.end())
+    return item->second;
+
+  return {};
+}
+
+static inline void add(Pal8 c, int r, int g, int b) {
+  const uint32_t id = r + g * 255 + b * 255 * 255;
+  _cache[id] = c;
+}
+} // color_cache ns
+
 // преобразование в палитру hpw
 template <Pal8::value_t (*kernel)(int R, int G, int B)>
 Pal8 rgb_to_pal8(int R, int G, int B) {
   #define HI_PREC
   #ifdef HI_PREC
+    // если цвет есть в кэше, то брать оттуда
+    if (auto ret = color_cache::get(R, G, B); ret)
+      return *ret;
+
+    // найти самый похожий цвет из палитры
     real min_dist = 999'999'999;
     Pal8 result = 0;
     for (size_t i = 0; i < pal8_default_table.size(); ++i) {
@@ -445,6 +466,9 @@ Pal8 rgb_to_pal8(int R, int G, int B) {
         result = static_cast<Pal8>(i);
       }
     }
+
+    // закэшировать
+    color_cache::add(result, R, G, B);
     return result;
   #else
     if (R == 255 && G == 255 && B == 255) { // pure white
@@ -452,7 +476,7 @@ Pal8 rgb_to_pal8(int R, int G, int B) {
     } elif (R >= 8 && G + B <= 237 * (R / 255.0)) { // red
       return Pal8::from_real((R - 8) / real(255 - 8), true);
     } else { // gray
-      return Pal8::from_real(desr_luma(R, G, B) / 255.0, false);
+      return Pal8::from_real(kernel(R, G, B) / 255.0, false);
     }
   #endif
 }
