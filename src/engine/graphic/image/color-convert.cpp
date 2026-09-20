@@ -427,7 +427,7 @@ namespace color_cache {
 static std::unordered_map<uint32_t, Pal8> _cache;
 
 static inline std::optional<Pal8> get(int r, int g, int b) {
-  const uint32_t id = r + g * 255 + b * 255 * 255;
+  const uint32_t id = r | (g << 8) | (b << 16);
   if (auto item = _cache.find(id); item != _cache.end())
     return item->second;
 
@@ -435,7 +435,7 @@ static inline std::optional<Pal8> get(int r, int g, int b) {
 }
 
 static inline void add(Pal8 c, int r, int g, int b) {
-  const uint32_t id = r + g * 255 + b * 255 * 255;
+  const uint32_t id = r | (g << 8) | (b << 16);
   _cache[id] = c;
 }
 } // color_cache ns
