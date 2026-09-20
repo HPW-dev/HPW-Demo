@@ -450,17 +450,25 @@ Pal8 rgb_to_pal8(int R, int G, int B) {
       return *ret;
 
     // найти самый похожий цвет из палитры
-    real min_dist = 999'999'999;
+    uint64_t min_dist = 999'999'999;
     Pal8 result = 0;
+
     for (size_t i = 0; i < pal8_default_table.size(); ++i) {
       const auto pal = pal8_default_table[i];
-      const int dr = pal.r - R;
-      const int dg = pal.g - G;
-      const int db = pal.b - B;
-      const real dist =
-        dr * dr * 0.296952 +
-        dg * dg * 0.586612 +
-        db * db * 0.114436;
+      const uint64_t dr = pal.r - R;
+      const uint64_t dg = pal.g - G;
+      const uint64_t db = pal.b - B;
+
+      constexpr uint64_t CR = static_cast<uint64_t>(0.296952 * 65536);
+      constexpr uint64_t CG = static_cast<uint64_t>(0.586612 * 65536);
+      constexpr uint64_t CB = static_cast<uint64_t>(0.114436 * 65536);
+      
+      const uint64_t dist =
+        dr * dr * CR +
+        dg * dg * CG +
+        db * db * CB;
+      static_assert(sizeof(dist) >= 8, "if dist sz < 4B, use real type");
+
       if (dist < min_dist) {
         min_dist = dist;
         result = static_cast<Pal8>(i);
