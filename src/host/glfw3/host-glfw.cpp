@@ -17,10 +17,7 @@
 // вверх этот хедер не таскать, иначе всё развалится
 #include "host-glfw-common.hpp"
 
-Host_glfw::Host_glfw(int argc, char *argv[])
-: Host_ogl (argc, argv)
-, m_wnd_x (480), m_wnd_y (40)
-{
+Host_glfw::Host_glfw(int argc, char *argv[]) : Host_ogl(argc, argv) {
   iferror(g_instance, "no use two GLFW hosts");
   g_instance.store(this);
   init_commands();
@@ -28,7 +25,7 @@ Host_glfw::Host_glfw(int argc, char *argv[])
   init_window();
   _draw_startup_screen();
   init_keymapper();
-} // Host_glfw c-tor
+}
 
 Host_glfw::~Host_glfw() {
   glfwDestroyWindow(m_window);
@@ -139,7 +136,7 @@ void Host_glfw::run() {
     game_set_fps_info(dt);
   }
 
-  m_is_ran = false;
+  _is_ran = false;
 } // run
 
 void Host_glfw::reshape(int w, int h) {
@@ -216,7 +213,7 @@ void Host_glfw::init_window() {
   ); 
   m_window = glfwCreateWindow(m_w, m_h, get_window_name().c_str(), nullptr, nullptr);
   iferror(!m_window, "bad init GLFW m_window");
-  glfwSetWindowPos(m_window, m_wnd_x, m_wnd_y);
+  glfwSetWindowPos(m_window, _wnd_off.x, _wnd_off.y);
   glfwMakeContextCurrent(m_window);
 
   // заливка окна при ините, чтобы показать что приложение живое
@@ -301,7 +298,7 @@ void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
   }
 }
 
-bool Host_glfw::is_ran() const { return m_is_ran && !glfwWindowShouldClose(m_window); }
+bool Host_glfw::is_ran() const { return _is_ran && !glfwWindowShouldClose(m_window); }
 
 void Host_glfw::game_frame(const Delta_time dt) {
   return_if (!graphic::enable_render);
@@ -343,7 +340,7 @@ void Host_glfw::game_update(const Delta_time dt) {
   return_if (dt <= 0 || dt >= 10);
   process_fast_forward();
 
-  while (hpw::tick_time_accum >= hpw::target_tick_time && m_is_ran) {
+  while (hpw::tick_time_accum >= hpw::target_tick_time && _is_ran) {
     hpw::tick_time_accum -= hpw::target_tick_time;
 
     glfwPollEvents();
@@ -496,7 +493,7 @@ void Host_glfw::_set_fullscreen(bool enable) {
     graphic::set_vsync( graphic::get_vsync() );
     hpw::set_gamma(graphic::gamma);
   } else { // переключение обратно в окно
-    glfwSetWindowMonitor(m_window, nullptr, m_wnd_x, m_wnd_y,
+    glfwSetWindowMonitor(m_window, nullptr, _wnd_off.x, _wnd_off.y,
       m_w, m_h, GLFW_DONT_CARE);
     reshape(m_w, m_h);
     graphic::set_vsync( graphic::get_vsync() );

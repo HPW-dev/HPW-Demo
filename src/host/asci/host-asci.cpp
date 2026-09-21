@@ -17,8 +17,8 @@
 
 struct Host_asci::Impl {
   Host_asci& m_master;
-  int m_argc {};
-  char** m_argv {};
+  int _argc {};
+  char** _argv {};
   Delta_time m_fps_timer {}; // для высчитывания фпс
   uint m_fps {};
   uint m_ups {};
@@ -37,8 +37,8 @@ struct Host_asci::Impl {
 
   inline Impl(Host_asci& master, int argc, char** argv)
   : m_master {master}
-  , m_argc {argc}
-  , m_argv {argv}
+  , _argc {argc}
+  , _argv {argv}
   {
     parse_args();
     init_commands();
@@ -86,7 +86,7 @@ struct Host_asci::Impl {
     game_init();
     auto last_loop_time = get_time();
   
-    while (m_master.m_is_ran) {
+    while (m_master._is_ran) {
       input_update();
       game_update(hpw::safe_dt);
       game_frame(hpw::safe_dt);
@@ -99,7 +99,7 @@ struct Host_asci::Impl {
       game_set_fps_info(dt);
     }
 
-    m_master.m_is_ran = false;
+    m_master._is_ran = false;
   }
 
   inline void init_core() {
@@ -404,7 +404,7 @@ struct Host_asci::Impl {
     });
     arg_parser.skip_empty = true;
     arg_parser.print_info();
-    arg_parser(m_argc, m_argv);
+    arg_parser(_argc, _argv);
   }
 }; // Impl
 

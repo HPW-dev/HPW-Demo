@@ -19,7 +19,6 @@ public:
   void set_gamma(const double gamma) override;
 
 protected:
-  int m_wnd_x {}, m_wnd_y {}; // позиция окна на рабочем столе
   GLFWwindow* m_window {};
   Delta_time m_fps_timer {}; // для высчитывания фпс
   uint m_fps {};

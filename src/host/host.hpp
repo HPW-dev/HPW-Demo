@@ -2,6 +2,7 @@
 #include <atomic>
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
+#include "util/math/vec.hpp"
 #include "util/math/num-types.hpp"
 #include "host-resize.hpp"
 #include "command.hpp"
@@ -12,12 +13,13 @@ class Host {
   void process_input();
 
 protected:
-  int m_argc {};
-  char** m_argv {};
-  std::atomic_bool m_is_ran {true};
+  int _argc {};
+  char** _argv {};
+  std::atomic_bool _is_ran {true};
+  Veci _wnd_off {440, 240}; // Стартовое смещение окна
 
   #ifdef WINDOWS
-  void* m_app_mutex {};
+  void* _app_mutex {};
   #endif
   
   virtual void _set_double_buffering(bool enable) = 0;
@@ -27,6 +29,7 @@ protected:
   // получить текущее время в секундах
   virtual Delta_time get_time() const = 0;
   virtual void draw_game_frame() const = 0;
+
   void init_app_mutex();
   void free_app_mutex();
 

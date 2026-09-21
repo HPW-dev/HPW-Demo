@@ -17,11 +17,8 @@
 #include "game/util/keybits.hpp"
 #include "game/util/screenshot.hpp"
 #include "util/file/yaml.hpp"
-#include "engine/graphic/image/color-table.hpp"
-
-#ifndef DISABLE_ARGS
 #include "util/pparser.hpp"
-#endif
+#include "engine/graphic/image/color-table.hpp"
 
 // если перенести это вверх, то всё взорвётся >_<
 #ifdef WINDOWS
@@ -50,9 +47,10 @@ struct Host::Impl final {
   explicit inline Impl(Host& master): _master {master} {}
 
   inline void parse_args(int argc, char** argv) {
-  #ifndef DISABLE_ARGS
     Pparser ret( Pparser::v_param_t {
       {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
+      {{"-ox", "--offset_x"}, "set window startup offset by x", [this](cr<Str> val){ _master._wnd_off.x = s2n<uint32_t>(val); }},
+      {{"-oy", "--offset_y"}, "set window startup offset by y", [this](cr<Str> val){ _master._wnd_off.y = s2n<uint32_t>(val); }},
       {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(false)); }},
       {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(true)); }},
       {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
@@ -71,18 +69,17 @@ struct Host::Impl final {
     } );
     ret.skip_empty = true;
     ret(argc, argv);
-  #endif
   }
 }; // Impl
 
 Host::Host(int argc, char** argv)
-: m_argc(argc)
-, m_argv(argv)
+: _argc(argc)
+, _argv(argv)
 , _impl (new_unique<Impl>(*this))
 {
   // парс аргументов:
-  hpw::argc = m_argc;
-  hpw::argv = m_argv;
+  hpw::argc = _argc;
+  hpw::argv = _argv;
   _impl->parse_args(hpw::argc, hpw::argv);
 
   init_app_mutex();
@@ -123,7 +120,7 @@ Host::~Host() {
 
 void Host::exit() {
   log_info << "вызов программного выхода из игры...";
-  m_is_ran = false;
+  _is_ran = false;
 }
  
 void Host::callbacks_init() {
@@ -138,10 +135,10 @@ void Host::callbacks_init() {
 
 void Host::init_app_mutex() {
 #ifdef WINDOWS
-  m_app_mutex = CreateMutex(NULL, TRUE, "HPW: Double window mutex");
+  _app_mutex = CreateMutex(NULL, TRUE, "HPW: Double window mutex");
   if (ERROR_ALREADY_EXISTS == GetLastError()) {
     hpw::multiple_apps = true;
-    CloseHandle(m_app_mutex);
+    CloseHandle(_app_mutex);
   }
 #else
   #pragma message("need impl for other_game_started() on Linux")
@@ -150,8 +147,8 @@ void Host::init_app_mutex() {
 
 void Host::free_app_mutex() {
 #ifdef WINDOWS
-  ReleaseMutex(m_app_mutex);
-  CloseHandle(m_app_mutex);
+  ReleaseMutex(_app_mutex);
+  CloseHandle(_app_mutex);
 #else
   #pragma message("need impl for free_app_mutex() on Linux")
 #endif
