@@ -54,8 +54,8 @@ stb:
   SPDX-License-Identifier: MIT
   <https://opensource.org/license/mit/>
 
-YAML-cpp:
-  Copyright (c) 2008-2015 Jesse Beder.
+json:
+  Copyright (c) 2013-2026 Niels Lohmann.
   SPDX-License-Identifier: MIT
   <https://opensource.org/license/mit/>
 
