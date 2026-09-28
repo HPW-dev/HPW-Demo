@@ -9,7 +9,7 @@ struct Kv_utf32 {
   Str key {};
   utf32 str {};
 };
-String_table_utf32 = Vector<Kv_utf32>;
+using String_table_utf32 = Vector<Kv_utf32>;
 
 // Создаёт JSON-тег с пустым содержимым, на выходе объект этого тега
 nlohmann::json& make_node(nlohmann::json& dst, cr<Str> tag_name);
