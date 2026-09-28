@@ -55,6 +55,7 @@
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/hpw-util.hpp"
+#include "util/json-util.hpp"
 #include "util/platform.hpp"
 #include "util/str-util.hpp"
 #include "util/safecall.hpp"

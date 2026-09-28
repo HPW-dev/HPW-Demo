@@ -16,20 +16,20 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
   return_if (!hitbox_source);
   return_if (!scast<bool>(*hitbox_source));
 
-  auto hitbox_node = root.make_node("hitbox");
+  auto hitbox_node = make_node(root, hitbox);
 
   // сохранить полигоны хитбокса
-  auto polygons_node = hitbox_node.make_node("polygons");
+  auto polygons_node = make_node(hitbox_node, "polygons");
   for (uint poly_idx = 0; crauto polygon: hitbox_source->polygons) {
     cont_if( !polygon);
 
-    auto cur_poly_node = polygons_node.make_node("poly_" + n2s(poly_idx));
+    auto cur_poly_node = make_node(polygons_node, "poly_" + n2s(poly_idx));
     if (polygon.offset.not_zero())
       cur_poly_node.set_v_real("offset", {polygon.offset.x, polygon.offset.y});
 
     // сохранить точки полигона
     if ( !polygon.points.empty()) {
-      auto points_node = cur_poly_node.make_node("points");
+      auto points_node = make_node(cur_poly_node, "points");
 
       for (uint point_idx = 0; crauto point: polygon.points) {
         points_node.set_v_real("P" + n2s(point_idx), {point.x, point.y});
@@ -41,7 +41,7 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
   } // for polygons
 } // save_hitbox
 
-inline void load_hitbox(Anim& anim, cr<Yaml> hitbox_node) {
+inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
   return_if( !hitbox_node.check());
   assert(hpw::entity_mgr);
   auto hitbox_source = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>();
