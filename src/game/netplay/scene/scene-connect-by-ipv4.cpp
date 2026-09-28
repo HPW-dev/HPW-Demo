@@ -1,19 +1,18 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-connect-by-ipv4.hpp"
-#include "game/menu/menu-from-yaml.hpp"
+#include "game/menu/menu-from-json.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
-#include "util/file/yaml.hpp"
 #include "engine/graphic/image/image.hpp"
 
 struct Scene_connect_by_ipv4::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("scripts/ui/menu/connect by ipv4.yml");
+    cauto config_file = load_res("scripts/ui/menu/connect by ipv4.json");
     Yaml config(config_file);
     _menu = menu_from_yaml(
       config,

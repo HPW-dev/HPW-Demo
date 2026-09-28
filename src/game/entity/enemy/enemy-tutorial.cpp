@@ -1,9 +1,5 @@
-#include <cassert>
+#include "pch.hpp"
 #include "enemy-tutorial.hpp"
-#include "util/hpw-util.hpp"
-#include "util/file/yaml.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
 #include "game/core/common.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/player/player.hpp"

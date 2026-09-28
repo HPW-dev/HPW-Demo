@@ -116,7 +116,7 @@ void error_callback(int error, Cstr description) {
 
   Str addition_desc;
   if (error == 65540)
-    addition_desc += ". Maybe need delete config/config.yml";
+    addition_desc += ". Maybe need delete config/config.json";
 
   error("GLFW error: " << error << ": " << description << addition_desc);
 }

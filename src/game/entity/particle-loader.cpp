@@ -1,14 +1,10 @@
+#include "pch.hpp"
 #include "particle-loader.hpp"
 #include "particle.hpp"
-#include "util/entity-util.hpp"
-#include "util/phys.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/util/info/anim-info.hpp"
-#include "util/math/vec.hpp"
-#include "util/file/yaml.hpp"
-#include "util/hpw-util.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
+#include "util/entity-util.hpp"
+#include "util/phys.hpp"
 
 struct Particle_loader::Impl {
   Anim_info m_anim_info {};

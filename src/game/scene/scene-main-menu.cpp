@@ -27,7 +27,7 @@
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/effect/blur.hpp"
-#include "util/file/yaml.hpp"
+
 #ifdef USE_NETPLAY
   #include "game/netplay/scene/scene-netplay-menu.hpp"
 #endif
@@ -182,7 +182,7 @@ void Scene_main_menu::next_bg() {
 }
 
 void Scene_main_menu::cache_logo_names() {
-  cauto config_file = load_res("graphic/images/main logos/list.yml");
+  cauto config_file = load_res("graphic/images/main logos/list.json");
   cauto config_yml = Yaml(config_file);
   m_logo_names = config_yml.get_v_str("logos");
 }

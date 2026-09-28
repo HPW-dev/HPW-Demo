@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include "cosmic-hunter.hpp"
-#include "util/file/yaml.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "game/core/entities.hpp"
 #include "game/core/common.hpp"

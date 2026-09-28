@@ -5,7 +5,6 @@
 #include "game/entity/entity.hpp"
 #include "game/entity/util/anim-ctx.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/file/yaml.hpp"
 
 void Anim_info::load(cr<Yaml> node) {
   if ( !node.check()) {

@@ -1,9 +1,8 @@
-#include <cassert>
+#include "pch.hpp"
 #include "collidable-info.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "util/file/yaml.hpp"
 
 void Collidable_info::load(cr<Yaml> node) {
   hp = node.get_int("hp");

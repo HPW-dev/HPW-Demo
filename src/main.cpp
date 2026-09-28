@@ -33,7 +33,6 @@
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/image/color-table.hpp"
 #include "engine/sound/sound-mgr.hpp"
-#include "util/file/yaml.hpp"
 
 #ifdef DEBUG
   #include "game/scene/scene-cmd.hpp"

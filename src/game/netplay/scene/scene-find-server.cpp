@@ -1,12 +1,11 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-find-server.hpp"
-#include "game/menu/menu-from-yaml.hpp"
+#include "game/menu/menu-from-json.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
-#include "util/file/yaml.hpp"
 //#include "util/net/tcp-mgr.hpp"
 #include "engine/graphic/image/image.hpp"
 
@@ -14,7 +13,7 @@ struct Scene_find_server::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("scripts/ui/menu/find server.yml");
+    cauto config_file = load_res("scripts/ui/menu/find server.json");
     Yaml config(config_file);
     _menu = menu_from_yaml(config, Action_table {
         /*{"goto_find_server_scene", Action_container( Action([]{

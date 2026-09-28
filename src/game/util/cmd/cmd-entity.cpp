@@ -7,7 +7,6 @@
 #include "game/core/entities.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/vec-helper.hpp"
-#include "util/file/yaml.hpp"
 
 namespace {
 Uid g_last_uid {}; // последний соспавненный объект
@@ -39,7 +38,7 @@ void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
 }
 
 Strs get_entity_names() {
-  const Yaml config(load_res("scripts/gameplay/entities.yml"));
+  const Yaml config(load_res("scripts/gameplay/entities.json"));
   Strs ret;
   for (crauto tag: config.root_tags())
     ret.push_back(tag);

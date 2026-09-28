@@ -1,5 +1,7 @@
 #include <omp.h>
 
+#include <thirdparty/include/nlohmann/json.hpp>
+
 #include <source_location>
 #include <unordered_map>
 #include <string_view>

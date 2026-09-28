@@ -4,7 +4,6 @@
 #include "engine/graphic/image/image-io.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
-#include "util/file/yaml.hpp"
 #include "game/util/resource-helper.hpp"
 
 struct Glyph {

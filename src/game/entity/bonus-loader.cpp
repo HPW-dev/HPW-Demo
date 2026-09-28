@@ -1,6 +1,6 @@
+#include "pch.hpp"
 #include "bonus-loader.hpp"
 #include "util/math/vec.hpp"
-#include "util/file/yaml.hpp"
 #include "util/error.hpp"
 
 struct Bonus_loader::Impl {

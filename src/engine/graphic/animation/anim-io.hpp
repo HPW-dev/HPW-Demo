@@ -1,6 +1,6 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "util/macro.hpp"
-#include "util/file/yaml.hpp"
 #include "util/mem-types.hpp"
 
 class Anim;

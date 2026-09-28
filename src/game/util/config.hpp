@@ -10,5 +10,5 @@ void load_config_graphic(const Yaml& config); // загрузить только
 void load_config_game(const Yaml& config); // загрузить только настройки игры
 
 namespace hpw {
-inline Shared<Yaml> config {}; // config.yml
+inline Shared<Yaml> config {}; // config.json
 }

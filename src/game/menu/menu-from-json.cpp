@@ -1,9 +1,7 @@
 #include "pch.hpp"
-#include "menu-from-yaml.hpp"
+#include "menu-from-json.hpp"
 #include "menu.hpp"
 #include "advanced-text-menu.hpp"
-#include "util/file/yaml.hpp"
-#include "util/unicode.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/scene/scene-locale.hpp"
 #include "game/util/locale.hpp"
@@ -61,7 +59,7 @@ inline static Shared<Menu_item> make_menu_item(cr<Yaml> item_node, cr<Action_tab
   return {};
 }
 
-Unique<Menu> menu_from_yaml(cr<Yaml> config, cr<Action_table> actions) {
+Unique<Menu> menu_from_json(cr<Yaml> config, cr<Action_table> actions) {
   assert(config.check());
 
   utf32 title = get_locale_str(config.get_str("title"));

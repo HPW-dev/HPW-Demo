@@ -16,7 +16,6 @@
 #include "game/util/sync.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
-#include "util/file/yaml.hpp"
 #include "util/file/file-io.hpp"
 #include "host/host-util.hpp"
 #include "host/command.hpp"

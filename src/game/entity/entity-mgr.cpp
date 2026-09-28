@@ -11,7 +11,6 @@
 #include "collider/collider-empty.hpp"
 #include "util/hitbox.hpp"
 #include "util/phys.hpp"
-#include "util/file/yaml.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/vec-helper.hpp"
@@ -277,7 +276,7 @@ struct Entity_mgr::Impl {
   } // make
 
   inline Yaml load_entity_config() const {
-    return Yaml(load_res("scripts/gameplay/entities.yml"));
+    return Yaml(load_res("scripts/gameplay/entities.json"));
   }
 
   inline void add_scatter(cr<Scatter> scatter) {

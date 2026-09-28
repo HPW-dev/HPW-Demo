@@ -8,7 +8,6 @@
 #include "game/util/config.hpp"
 #include "game/util/keybits.hpp"
 #include "engine/graphic/image/image-io.hpp"
-#include "util/file/yaml.hpp"
 
 Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {
   init_unique(graphic::canvas, graphic::width, graphic::height);

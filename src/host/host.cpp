@@ -16,8 +16,6 @@
 #include "game/util/version.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/screenshot.hpp"
-#include "util/file/yaml.hpp"
-#include "util/pparser.hpp"
 #include "engine/graphic/image/color-table.hpp"
 
 // если перенести это вверх, то всё взорвётся >_<

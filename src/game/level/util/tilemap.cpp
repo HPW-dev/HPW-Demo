@@ -8,7 +8,6 @@
 #include "game/core/sprites.hpp"
 #include "game/util/game-archive.hpp"
 #include "game/util/resource-helper.hpp"
-#include "util/file/yaml.hpp"
 
 struct Tile {
   Weak<Sprite> sprite {}; // текстура с банка
@@ -83,7 +82,7 @@ struct Tilemap::Impl {
   inline void load_from_archive(cr<Str> fname) {
     auto tiles_archived = load_res(fname);
     const Archive archive(std::move(tiles_archived));
-    cauto config_fname = "tilemap.yml";
+    cauto config_fname = "tilemap.json";
     const Yaml config(archive.get_file(config_fname));
     load(config, &archive);
   }

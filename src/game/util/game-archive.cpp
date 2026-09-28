@@ -2,7 +2,6 @@
 #include "game-archive.hpp"
 #include "game/core/common.hpp"
 #include "game/util/config.hpp"
-#include "util/file/yaml.hpp"
 
 void init_archive() {
 #ifndef DISABLE_ARCHIVE

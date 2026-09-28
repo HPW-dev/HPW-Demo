@@ -36,6 +36,7 @@ build/replays/
 # Code:
 build/cmd-test-helper.txt
 build/cmd-test.txt
+build/test.json
 build/test.yml
 src/game/util/version.cpp
 
@@ -77,6 +78,7 @@ pgo/
 **/*.gcda
 **/*.gcno
 test/yaml test/test.yml
+test/json test/test.json
 src/.sconsign.dblite
 
 # Videos:

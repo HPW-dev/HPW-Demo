@@ -2,7 +2,6 @@
 #include "epge-util.hpp"
 #include "game/core/epges.hpp"
 #include "game/core/locales.hpp"
-#include "util/file/yaml.hpp"
 
 namespace epge {
 

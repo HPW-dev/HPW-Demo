@@ -4,7 +4,6 @@
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/image/image-io.hpp"
 #include "game/core/common.hpp"
-#include "util/file/yaml.hpp"
 
 void save_screenshot(cr<Image> image) {
   assert(image);

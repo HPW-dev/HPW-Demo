@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include "snake.hpp"
-#include "util/file/yaml.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/animation/anim.hpp"
 #include "engine/graphic/effect/heat-distort.hpp"

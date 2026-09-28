@@ -1,19 +1,18 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-create-server.hpp"
-#include "game/menu/menu-from-yaml.hpp"
+#include "game/menu/menu-from-json.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
-#include "util/file/yaml.hpp"
 #include "engine/graphic/image/image.hpp"
 
 struct Scene_create_server::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("scripts/ui/menu/create server.yml");
+    cauto config_file = load_res("scripts/ui/menu/create server.json");
     Yaml config(config_file);
     _menu = menu_from_yaml(
       config,

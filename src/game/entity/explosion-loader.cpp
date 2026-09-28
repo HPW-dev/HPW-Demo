@@ -1,6 +1,5 @@
 #include "pch.hpp"
 #include "explosion-loader.hpp"
-#include "util/file/yaml.hpp"
 #include "engine/graphic/animation/anim.hpp"
 #include "game/core/entities.hpp"
 #include "game/entity/particle.hpp"

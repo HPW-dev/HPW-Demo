@@ -2,7 +2,6 @@
 #include "anim-io.hpp"
 #include "anim.hpp"
 #include "frame.hpp"
-#include "util/file/yaml.hpp"
 #include "game/util/store.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/core/entities.hpp"
@@ -206,5 +205,5 @@ void save_anims(Yaml& dst) {
 } // save_anims
 
 Yaml get_anim_config() {
-  return Yaml(load_res("scripts/gameplay/animation.yml")); 
+  return Yaml(load_res("scripts/gameplay/animation.json")); 
 }

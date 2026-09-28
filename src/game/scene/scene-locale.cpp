@@ -7,7 +7,6 @@
 #include "game/util/resource-helper.hpp"
 #include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
-#include "util/file/yaml.hpp"
 #include "util/file/file.hpp"
 
 struct Locale_info {

@@ -22,6 +22,7 @@
 # Scripts:
 *.bat text eol=crlf
 *.cmd text eol=crlf
+*.json text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
 *.toml text eol=lf

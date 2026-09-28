@@ -47,7 +47,6 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
 
   if host.system == Sys_name.windows:
     tgt.lib_dirs.extend([
-      f'{thirdparty_dir}lib/yaml-cpp/{bits}',
       f'{thirdparty_dir}lib/OpenAL-soft/{bits}',
       f'{thirdparty_dir}lib/GLEW/{bits}',
       f'{thirdparty_dir}lib/GLFW/{bits}',

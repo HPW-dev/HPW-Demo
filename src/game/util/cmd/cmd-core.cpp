@@ -420,7 +420,7 @@ void cmd_core_init(Cmd& cmd) {
     &end_stat_record, {} )
   MAKE_CMD (
     "config_reload",
-    "перезагружает config.yml",
+    "перезагружает config.json",
     &config_reload, {} )
   MAKE_CMD (
     "seed",

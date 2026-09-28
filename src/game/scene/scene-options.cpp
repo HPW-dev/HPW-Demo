@@ -1,18 +1,17 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-options.hpp"
 #include "scene-input.hpp"
 #include "scene-graphic.hpp"
 #include "scene-game-options.hpp"
 #include "scene-hud-select.hpp"
 #include "scene-bgp-select.hpp"
-#include "game/menu/menu-from-yaml.hpp"
+#include "game/menu/menu-from-json.hpp"
 #include "game/menu/item/item.hpp"
 #include "game/core/scenes.hpp"
 #include "game/menu/menu.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/keybits.hpp"
 #include "util/file/file.hpp"
-#include "util/file/yaml.hpp"
 #include "engine/graphic/image/image.hpp"
 
 struct Scene_options::Impl {
@@ -40,7 +39,7 @@ struct Scene_options::Impl {
   }
 
   inline void init_menu() {
-    cauto config_file = load_res("scripts/ui/menu/options.yml");
+    cauto config_file = load_res("scripts/ui/menu/options.json");
     Yaml config(config_file);
     _menu = menu_from_yaml(config, Action_table {        
       {"graphic_opts", []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},
