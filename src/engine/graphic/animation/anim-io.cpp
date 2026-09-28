@@ -149,21 +149,21 @@ void save_anims(nlohmann::json& dst) {
   // нода с анимациями
   auto anims = hpw::anim_mgr->get_anims();
   return_if (anims.empty());
-  auto animations_node = dst.make_node("animations");
+  auto animations_node = make_node(dst, "animations");
   for (crauto anim: anims) {
     cont_if(!anim);
     // нода с именем анимации
-    auto cur_anim_node = animations_node.make_node(anim->get_name());
+    auto cur_anim_node = make_node(animations_node, anim->get_name());
     save_hitbox(anim.get(), cur_anim_node);
 
     // нода с кадрами
     auto frames = anim->get_frames();
     cont_if(frames.empty());
-    auto frames_node = cur_anim_node.make_node("frames");
+    auto frames_node = make_node(cur_anim_node, "frames");
     for (crauto frame: frames) {
       cont_if(!frame);
       // нода по имени (uid) кадра
-      auto cur_frame_node = frames_node.make_node(frame->get_name());
+      auto cur_frame_node = make_node(frames_node, frame->get_name());
       // длительность кадра
       if (frame->duration > 0)
         cur_frame_node.set_real("duration", frame->duration);
