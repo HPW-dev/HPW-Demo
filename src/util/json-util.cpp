@@ -19,9 +19,9 @@ void save(cr<nlohmann::json> src, cr<Str> path, bool readable) {
   
   log_debug << "saving to JSON-file \"" << path << "\"...";
   if (readable)
-    file < dst.dump(2);
+    file << dst.dump(2);
   else
-    file < dst.dump();
+    file << dst.dump();
 }
 
 void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
