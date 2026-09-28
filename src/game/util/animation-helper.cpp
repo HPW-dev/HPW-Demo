@@ -5,8 +5,6 @@
 void load_animations() {
   init_unique(hpw::anim_mgr);
 
-  if (!hpw::lazy_load_anim) {
-    cauto anim_yml = get_anim_config();
-    read_anims(anim_yml);
-  }
+  if (!hpw::lazy_load_anim)
+    read_anims( get_anim_config() );
 }

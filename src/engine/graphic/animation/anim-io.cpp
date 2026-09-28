@@ -11,7 +11,7 @@
 #include "game/entity/util/hitbox.hpp"
 #include "engine/graphic/sprite/sprite.hpp"
 
-inline void save_hitbox(cp<Anim> anim, Yaml& root) {
+inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
   auto hitbox_source = anim->get_hitbox_source();
   return_if (!hitbox_source);
   return_if (!scast<bool>(*hitbox_source));

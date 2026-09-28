@@ -205,6 +205,13 @@ File load_res(cr<Str> name) {
   return file_load(os_path);
 }
 
+nlohmann::json json_from_res(const Str& name) {
+  cauto res = load_res(name);
+  nlohmann::json ret;
+  ret.parse(res.data());
+  return ret;
+}
+
 Strs get_all_res_names(const bool with_folders) {
   #ifndef DISABLE_ARCHIVE
   return_if (hpw::archive, hpw::archive->get_all_names(with_folders));
