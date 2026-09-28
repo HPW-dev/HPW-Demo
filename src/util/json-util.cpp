@@ -8,7 +8,7 @@ nlohmann::json& make_node(nlohmann::json& dst, cr<Str> tag_name) {
 
 Strs root_tags(cr<nlohmann::json> src) {
   Strs ret;
-  for (crauto [tag, _]: src)
+  for (crauto [tag, _]: src.items())
     ret.push_back(tag);
   return ret;
 }
