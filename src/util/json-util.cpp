@@ -52,13 +52,13 @@ void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
 inline static void _get_string_table_utf32(
 String_table_utf32& table, cr<Str> key, cr<nlohmann::json> value) {
   if (value.is_string()) {
-    table.emplace_back(
+    table.emplace_back(Kv_utf32{
       .key = str_tolower(key),
       .str = utf8_to_32(value.get<Str>())
-    );
+    });
   } elif (value.is_object()) {
-    for (скauto [k, v]: value.itemas())
-      _get_string_table_utf32(ret, key + "." + k, v);
+    for (crauto [k, v]: value.items())
+      _get_string_table_utf32(table, key + "." + k, v);
   } else {
     error("WTF?");
   }
