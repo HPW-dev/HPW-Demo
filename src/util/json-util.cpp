@@ -66,7 +66,7 @@ String_table_utf32& table, cr<Str> key, cr<nlohmann::json> value) {
 
 String_table_utf32 get_string_table_utf32(cr<nlohmann::json> src) {
   String_table_utf32 ret;
-  for (crauto [key, value]: src.itemas())
+  for (crauto [key, value]: src.items())
     _get_string_table_utf32(ret, key, value);
   return ret;
 }
