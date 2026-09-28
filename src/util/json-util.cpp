@@ -45,5 +45,5 @@ void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
     }
   }
 
-  dst = nlohmann::json(file);
+  dst = nlohmann::json::parse(file);
 }
