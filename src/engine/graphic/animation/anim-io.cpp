@@ -48,7 +48,7 @@ inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
 
   // загрузить полигоны хитбокса
   auto polygons_node = hitbox_node["polygons"];
-  for (crauto poly_name: polygons_node.root_tags()) {
+  for (crauto poly_name: root_tags(polygons_node)) {
     Polygon loaded_poly;
 
     auto poly_node = polygons_node[poly_name];
@@ -58,7 +58,7 @@ inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
 
     // загрузить точки полигона
     auto points_node = poly_node["points"];
-    for (crauto point_name: points_node.root_tags()) {
+    for (crauto point_name: root_tags(points_node)) {
       auto point_v = points_node.get_v_real(point_name, {0, 0});
       loaded_poly.points.emplace_back( Vec(
         point_v.at(0),
@@ -78,7 +78,7 @@ void read_anims(cr<Yaml> src) {
 
   // прочитать все анимации
   auto animations_node = src["animations"];
-  auto anim_names = animations_node.root_tags();
+  auto anim_names = root_tags(animations_node);
   std::sort(anim_names.begin(), anim_names.end());
 
   cfor (i, anim_names.size()) {
@@ -100,7 +100,7 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
   cauto frames_node = anim_node["frames"];
 
   // прочитать все кадры
-  for (crauto frame_name: frames_node.root_tags()) {
+  for (crauto frame_name: root_tags(frames_node)) {
     auto frame = new_shared<Frame>();
     // нода этого кадра
     auto cur_frame_node = frames_node[frame_name];

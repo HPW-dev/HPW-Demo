@@ -40,7 +40,7 @@ void spawn(Cmd_maker& ctx, Cmd& console, cr<Strs> args) {
 Strs get_entity_names() {
   cauto config = json_from_res("scripts/gameplay/entities.json");
   Strs ret;
-  for (crauto tag: config.root_tags())
+  for (crauto tag: root_tags(config))
     ret.push_back(tag);
   return ret;
 }
