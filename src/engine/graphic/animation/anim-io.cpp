@@ -73,7 +73,7 @@ inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
     anim.update_hitbox(hitbox_source);
 } // save_hitbox
 
-void read_anims(cr<Yaml> src) {
+void read_anims(cr<nlohmann::json> src) {
   log_debug << "read all anims...";
 
   // прочитать все анимации
@@ -141,7 +141,7 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
   return anim;
 } // read_anim
 
-void save_anims(Yaml& dst) {
+void save_anims(nlohmann::json& dst) {
   assert (hpw::anim_mgr);
   log_info << "save all anims...";
   dst.clear();
@@ -204,6 +204,6 @@ void save_anims(Yaml& dst) {
   dst.save(dst.get_path());
 } // save_anims
 
-Yaml get_anim_config() {
-  return Yaml(load_res("scripts/gameplay/animation.json")); 
+nlohmann::json get_anim_config() {
+  return json_from_res("scripts/gameplay/animation.json"); 
 }

@@ -24,7 +24,7 @@
 #include "engine/graphic/epge/epge-util.hpp"
 #endif
 
-static inline void load_log_config(cr<Yaml> config) {
+static inline void load_log_config(cr<nlohmann::json> config) {
   hpw::log_file_path = config.get_str("file_name", hpw::log_file_path);
   hpw::reopen_log_file(hpw::cur_dir + hpw::log_file_path);
 
@@ -37,7 +37,7 @@ static inline void load_log_config(cr<Yaml> config) {
   cfg.use_stream_error   = streams_node.get_bool("error",    cfg.use_stream_error);
 }
 
-static inline void save_log_config(Yaml& config) {
+static inline void save_log_config(nlohmann::json& config) {
   config.set_str("file_name", hpw::log_file_path);
   
   auto streams_node = config.make_node("streams");
@@ -56,26 +56,26 @@ int get_scancode(const hpw::keycode keycode) {
   return key_info->scancode;
 }
 
-static inline void load_test_image_path(cr<Yaml> config)
+static inline void load_test_image_path(cr<nlohmann::json> config)
   { graphic::cur_test_image_path = config.get_str("test_image_path", graphic::cur_test_image_path); }
 
-static inline void save_test_image_path(Yaml& config)
+static inline void save_test_image_path(nlohmann::json& config)
   { config.set_str("test_image_path", graphic::cur_test_image_path); }
   
-static inline void load_light_quality(cr<Yaml> config) {
+static inline void load_light_quality(cr<nlohmann::json> config) {
   graphic::light_quality = scast<Light_quality>(
     config.get_int("light_quality", scast<int>(graphic::light_quality)) );
 }
 
-static inline void save_light_quality(Yaml& config)
+static inline void save_light_quality(nlohmann::json& config)
   { config.set_int("light_quality", scast<int>(graphic::light_quality)); }
 
-static inline void load_heat_distort_mode(cr<Yaml> config) {
+static inline void load_heat_distort_mode(cr<nlohmann::json> config) {
   graphic::heat_distort_mode = scast<Heat_distort_mode>(
     config.get_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)) );
 }
 
-static inline void save_heat_distort_mode(Yaml& config)
+static inline void save_heat_distort_mode(nlohmann::json& config)
   { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
 
 static inline void save_nickname() {
@@ -114,13 +114,13 @@ static inline void load_nickname() {
   }
 }
 
-static inline void node_check(cr<Yaml> config) {
+static inline void node_check(cr<nlohmann::json> config) {
   if (!config.check())
     log_warning << "не удалось загрузить конфиг: \"" + config.get_path() +
       "\". Будут загружены значения по умолчанию";
 }
 
-static inline void save_game_config(Yaml& config) {
+static inline void save_game_config(nlohmann::json& config) {
   config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   config.set_bool("collider_autoopt", hpw::collider_autoopt);
   config.set_str ("locale", hpw::locale_path);
@@ -130,7 +130,7 @@ static inline void save_game_config(Yaml& config) {
   config.set_bool("autoswith_bgp", hpw::bgp_auto_swith);
 }
 
-void load_config_game(cr<Yaml> config) {
+void load_config_game(cr<nlohmann::json> config) {
   node_check(config);
   hpw::rnd_pal_after_death = config.get_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
   hpw::collider_autoopt = config.get_bool("collider_autoopt", hpw::collider_autoopt);
@@ -149,7 +149,7 @@ void load_config_game(cr<Yaml> config) {
   }
 }
 
-void load_config_input(cr<Yaml> config) {
+void load_config_input(cr<nlohmann::json> config) {
   node_check(config);
   if (hpw::rebind_key_by_scancode) {
     #define LOAD_KEY(name) hpw::rebind_key_by_scancode(hpw::keycode::name, config.get_int(#name, get_scancode(hpw::keycode::name)) );
@@ -169,7 +169,7 @@ void load_config_input(cr<Yaml> config) {
   }
 }
 
-void load_config_graphic(cr<Yaml> config) {
+void load_config_graphic(cr<nlohmann::json> config) {
   node_check(config);
   cauto canvas_size = config.get_v_int("canvas_size", {graphic::width, graphic::height});
   graphic::width  = canvas_size.at(0);
@@ -216,7 +216,7 @@ void load_config_graphic(cr<Yaml> config) {
 }
 
 void save_config() {
-  auto& config = *hpw::config;
+  auto& config = hpw::config;
 
   config.set_bool("first_start", hpw::first_start);
   config.set_bool("enable_replay", hpw::enable_replay);
@@ -292,13 +292,13 @@ void save_config() {
   #undef SAVE_KEY
 
   make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
-  config.save( hpw::config->get_path() );
+  save(config, hpw::cur_dir + hpw::config_path, true);
 }
 
 void load_config() {
   log_info << "чтение конфига...";
   make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
-  init_shared(hpw::config, hpw::cur_dir + hpw::config_path, true);
+  load(hpw::config, hpw::cur_dir + hpw::config_path, true);
   log_info << "файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"";
 
   crauto config = *hpw::config;

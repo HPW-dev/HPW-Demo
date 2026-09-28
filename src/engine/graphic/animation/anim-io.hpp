@@ -6,10 +6,10 @@
 class Anim;
 
 // загрузить все анимации из yml файла
-void read_anims(cr<Yaml> src);
+void read_anims(cr<nlohmann::json> src);
 // читает только одну анимацию из ноды конфига
-Shared<Anim> read_anim(cr<Yaml> anim_node);
+Shared<Anim> read_anim(cr<nlohmann::json> anim_node);
 // сохраняет все анимации в yml файл
-void save_anims(Yaml& dst);
+void save_anims(nlohmann::json& dst);
 // получить файл конфига с анимациями
-Yaml get_anim_config();
+nlohmann::json get_anim_config();
