@@ -47,3 +47,26 @@ void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
 
   dst = nlohmann::json::parse(file);
 }
+
+// рекурсивный обход для get_string_table_utf32
+inline static void _get_string_table_utf32(
+String_table_utf32& table, cr<Str> key, cr<nlohmann::json> value) {
+  if (value.is_string()) {
+    table.emplace_back(
+      .key = str_tolower(key),
+      .str = utf8_to_32(value.get<Str>())
+    );
+  } elif (value.is_object()) {
+    for (скauto [k, v]: value.itemas())
+      _get_string_table_utf32(ret, key + "." + k, v);
+  } else {
+    error("WTF?");
+  }
+}
+
+String_table_utf32 get_string_table_utf32(cr<nlohmann::json> src) {
+  String_table_utf32 ret;
+  for (скauto [key, value]: src.itemas())
+    _get_string_table_utf32(ret, key, value);
+  return ret;
+}

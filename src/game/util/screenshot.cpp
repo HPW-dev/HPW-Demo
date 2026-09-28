@@ -18,7 +18,7 @@ void save_screenshot(cr<Image> image) {
 #endif
 
   cauto screenshots_dir = hpw::cur_dir + 
-    (*hpw::config)["path"].get_str("screenshots", hpw::screenshots_path) + SEPARATOR;
+    hpw::config["path"].value<Str>("screenshots", hpw::screenshots_path) + SEPARATOR;
   std::ostringstream oss;
   oss << screenshots_dir;
   make_dir_if_not_exist(oss.str());

@@ -42,7 +42,7 @@ void load_locale(cr<Str> user_path) {
 
   File mem; 
   cauto path = (user_path.empty() && hpw::config)
-    ? (*hpw::config)["path"].get_str("locale", hpw::fallback_locale_path)
+    ? hpw::config["path"].value<Str>("locale", hpw::fallback_locale_path)
     : user_path;
 
   try {
@@ -58,10 +58,10 @@ void load_locale(cr<Str> user_path) {
   load_locales_to_store(yml);
 }
 
-void load_locales_to_store(Yaml file) {
+void load_locales_to_store(cr<nlohmann::json> cfg) {
   init_shared(hpw::store_locale);
 
-  auto key_and_utf32s = file.get_kvu32_table();
+  auto key_and_utf32s = get_string_table_utf32(cfg);
   for (rauto [str_name, val]: key_and_utf32s) {
     auto locale = new_shared<Locale>(val);
     hpw::store_locale->push(str_name, locale);

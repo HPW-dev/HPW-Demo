@@ -301,7 +301,7 @@ void load_config() {
   load(hpw::config, hpw::cur_dir + hpw::config_path, true);
   log_info << "файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"";
 
-  crauto config = *hpw::config;
+  crauto config = &hpw::config;
   hpw::first_start = config.get_bool("first_start", true);
   hpw::enable_replay = config.get_bool("enable_replay", hpw::enable_replay);
   hpw::need_tutorial = config.get_bool("need_tutorial", hpw::need_tutorial);
