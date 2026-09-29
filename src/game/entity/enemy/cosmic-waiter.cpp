@@ -20,9 +20,9 @@ struct Cosmic_waiter::Loader::Impl {
   real m_start_speed {};
   real m_accel {};
 
-  inline explicit Impl(cr<Yaml> config) {
-    m_start_speed = config.get_real("start_speed");
-    m_accel = config.get_real("accel");
+  inline explicit Impl(cr<nlohmann::json> config) {
+    m_start_speed = config["start_speed"].get<real>();
+    m_accel = config["accel"].get<real>();
     assert(m_start_speed > 0);
   } // c-tor
 
@@ -41,7 +41,7 @@ struct Cosmic_waiter::Loader::Impl {
 
 }; // Impl
 
-Cosmic_waiter::Loader::Loader(cr<Yaml> config)
+Cosmic_waiter::Loader::Loader(cr<nlohmann::json> config)
 : Proto_enemy::Loader(config)
 , impl{new_unique<Impl>(config)}
 {}

@@ -1,4 +1,5 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "neu.hpp"
 #include "util/mem-types.hpp"
 #include "util/str.hpp"
@@ -54,8 +55,8 @@ public:
   explicit Simple(cr<Simple_config> config);
   ~Simple();
 
-  void save(Yaml& dst) override;
-  void load(cr<Yaml> src) override;
+  void save(nlohmann::json& dst) override;
+  void load(cr<nlohmann::json> src) override;
   Base& operator =(cr<Base> other) override;
   void update() override;
 

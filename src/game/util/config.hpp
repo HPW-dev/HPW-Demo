@@ -9,5 +9,5 @@ void load_config_graphic(const nlohmann::json& config); // загрузить т
 void load_config_game(const nlohmann::json& config); // загрузить только настройки игры
 
 namespace hpw {
-inline nlohmann::json config {}; // config.json
+extern nlohmann::json config; // config.json
 }

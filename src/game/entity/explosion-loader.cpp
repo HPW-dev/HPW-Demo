@@ -21,18 +21,18 @@ struct Explosion_loader::Impl {
   Strs m_entity_names {};
   Heat_distort m_heat_distort {};
 
-  inline explicit Impl(cr<Yaml> config) {
+  inline explicit Impl(cr<nlohmann::json> config) {
     m_anim_info.load(config["animation"]);
 
-    m_power = config.get_real("power");
-    m_range = config.get_real("range");
-    m_particles_range = config.get_real("particles_range");
-    m_particle_count = config.get_int("particle_count");
+    m_power = config["power"].get<real>();
+    m_range = config["range"].get<real>();
+    m_particles_range = config["particles_range"].get<real>();
+    m_particle_count = config["particle_count"].get<int>();
     assert(m_particle_count > 0);
-    m_entity_names = config.get_v_str("names");
+    m_entity_names = config["names"].get<Strs>();
     assert(!m_entity_names.empty());
     assert(m_entity_names.size() < 10'000u);
-    if (auto heat_distort_node = config["heat_distort"]; heat_distort_node.check())
+    if (auto heat_distort_node = config["heat_distort"]; check(heat_distort_node))
       m_heat_distort = load_heat_distort(heat_distort_node);
   }
 
@@ -69,7 +69,7 @@ struct Explosion_loader::Impl {
   }
 }; // Impl
 
-Explosion_loader::Explosion_loader(cr<Yaml> config)
+Explosion_loader::Explosion_loader(cr<nlohmann::json> config)
 : impl {new_unique<Impl>(config)}
 {}
 

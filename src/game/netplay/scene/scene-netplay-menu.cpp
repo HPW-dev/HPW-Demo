@@ -15,9 +15,7 @@ struct Scene_netplay_menu::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("scripts/ui/menu/netplay menu.json");
-    Yaml config(config_file);
-    _menu = menu_from_yaml(config, Action_table {
+    _menu = menu_from_json(json_from_res("scripts/ui/menu/netplay menu.json"), Action_table {
       {"goto_find_server_scene",     []{ hpw::scene_mgr.add(new_shared<Scene_find_server>()); }},
       {"goto_connect_by_ipv4_scene", []{ hpw::scene_mgr.add(new_shared<Scene_connect_by_ipv4>()); }},
       {"goto_create_server_scene",   []{ hpw::scene_mgr.add(new_shared<Scene_create_server>()); }},

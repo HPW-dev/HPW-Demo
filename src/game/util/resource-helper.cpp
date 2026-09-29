@@ -207,9 +207,14 @@ File load_res(cr<Str> name) {
 
 nlohmann::json json_from_res(const Str& name) {
   cauto res = load_res(name);
-  nlohmann::json ret;
-  ret.parse(res.data());
-  return ret;
+  try {
+    cauto ret = nlohmann::json::parse(res.data);
+    return ret;
+  } catch (cr<nlohmann::json::parse_error> e) {
+    const Str msg = "error while parsing JSON data from resource \"" + name + "\":\n"
+      + "  " + e.what();
+    error(msg);
+  }
 }
 
 Strs get_all_res_names(const bool with_folders) {

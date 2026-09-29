@@ -22,3 +22,5 @@ String_table_utf32 get_string_table_utf32(cr<nlohmann::json> src);
 
 void save(cr<nlohmann::json> src, cr<Str> path, bool readable=false);
 void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist=false);
+
+bool check(cr<nlohmann::json> node);

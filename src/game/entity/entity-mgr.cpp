@@ -189,22 +189,22 @@ struct Entity_mgr::Impl {
   inline Mem_pool& get_entity_pool() { return m_entity_pool; }
 
   // по type определяет какой Entity_loader создать и передать ему параметры с конфига
-  inline Shared<Entity_loader> make_entity_loader(cr<Str> type, cr<Yaml> config) {
+  inline Shared<Entity_loader> make_entity_loader(cr<Str> type, cr<nlohmann::json> config) {
     // регистрация загрузчиков объектов
-    using Maker = std::function< Shared<Entity_loader> (cr<Yaml>) >;
+    using Maker = std::function< Shared<Entity_loader> (cr<nlohmann::json>) >;
     std::unordered_map<Str, Maker> table {
-      {"explosion", [](cr<Yaml> config){ return new_shared<Explosion_loader>(config); } },
-      {"bonus", [](cr<Yaml> config){ return new_shared<Bonus_loader>(config); } },
-      {"bullet", [](cr<Yaml> config){ return new_shared<Bullet_loader>(config); } },
-      {"particle", [](cr<Yaml> config){ return new_shared<Particle_loader>(config); } },
-      {"enemy.illaen", [](cr<Yaml> config){ return new_shared<Illaen::Loader>(config); } },
-      {"enemy.cosmic.hunter", [](cr<Yaml> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
-      {"enemy.cosmic.waiter", [](cr<Yaml> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
-      {"enemy.cosmic", [](cr<Yaml> config){ return new_shared<Cosmic::Loader>(config); } },
-      {"enemy.tutorial", [](cr<Yaml> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
-      {"snake.head", [](cr<Yaml> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
-      {"snake.tail", [](cr<Yaml> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
-      {"player.boo.dark", [](cr<Yaml> config){ return new_shared<Player_dark::Loader>(config); } },
+      {"explosion", [](cr<nlohmann::json> config){ return new_shared<Explosion_loader>(config); } },
+      {"bonus", [](cr<nlohmann::json> config){ return new_shared<Bonus_loader>(config); } },
+      {"bullet", [](cr<nlohmann::json> config){ return new_shared<Bullet_loader>(config); } },
+      {"particle", [](cr<nlohmann::json> config){ return new_shared<Particle_loader>(config); } },
+      {"enemy.illaen", [](cr<nlohmann::json> config){ return new_shared<Illaen::Loader>(config); } },
+      {"enemy.cosmic.hunter", [](cr<nlohmann::json> config){ return new_shared<Cosmic_hunter::Loader>(config); } },
+      {"enemy.cosmic.waiter", [](cr<nlohmann::json> config){ return new_shared<Cosmic_waiter::Loader>(config); } },
+      {"enemy.cosmic", [](cr<nlohmann::json> config){ return new_shared<Cosmic::Loader>(config); } },
+      {"enemy.tutorial", [](cr<nlohmann::json> config){ return new_shared<Enemy_tutorial::Loader>(config); } },
+      {"snake.head", [](cr<nlohmann::json> config){ return new_shared<Enemy_snake_head::Loader>(config); } },
+      {"snake.tail", [](cr<nlohmann::json> config){ return new_shared<Enemy_snake_tail::Loader>(config); } },
+      {"player.boo.dark", [](cr<nlohmann::json> config){ return new_shared<Player_dark::Loader>(config); } },
     };
 
     try {
@@ -222,9 +222,9 @@ struct Entity_mgr::Impl {
     #ifndef ECOMEM // при экономии памяти объекты подгружаются в момент вызова
       // загрузить все объекты из конфига
       auto config = load_entity_config();
-      for (crauto entity_name: config.root_tags()) {
+      for (crauto entity_name: root_tags(config)) {
         auto entity_node = config[entity_name];
-        auto type = entity_node.get_str("type", "error type");
+        auto type = entity_node.value("type", Str("error type"));
         m_entity_loaders[entity_name] = make_entity_loader(type, entity_node);
       }
     #endif
@@ -234,7 +234,7 @@ struct Entity_mgr::Impl {
     // попытаться загрузить отсутствующий объект
     auto config = load_entity_config();
     auto entity_node = config[name];
-    auto type = entity_node.get_str("type", "error type");
+    auto type = entity_node.value<Str>("type", "error type");
     m_entity_loaders[name] = make_entity_loader(type, entity_node);
     Entity_loader* loader;
       
@@ -275,8 +275,8 @@ struct Entity_mgr::Impl {
     return {};
   } // make
 
-  inline Yaml load_entity_config() const {
-    return Yaml(load_res("scripts/gameplay/entities.json"));
+  inline nlohmann::json load_entity_config() const {
+    return json_from_res("scripts/gameplay/entities.json");
   }
 
   inline void add_scatter(cr<Scatter> scatter) {

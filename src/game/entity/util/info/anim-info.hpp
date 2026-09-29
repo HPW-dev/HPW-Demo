@@ -1,10 +1,10 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "engine/graphic/animation/anim.hpp"
 #include "engine/graphic/image/color-blend.hpp"
 #include "util/math/num-types.hpp"
 #include "util/vector-types.hpp"
 
-class Yaml;
 class Entity;
 
 // Инфа о анимации для загрузчика entity
@@ -22,6 +22,6 @@ struct Anim_info {
   bool ignore_scatter {};
   bool disable_motion {};
 
-  void load(cr<Yaml> node);
+  void load(cr<nlohmann::json> node);
   void accept(Entity& dst);
 };

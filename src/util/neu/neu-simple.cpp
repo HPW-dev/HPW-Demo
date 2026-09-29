@@ -14,11 +14,11 @@ struct Simple::Impl {
     init();
   }
 
-  inline void save(Yaml& dst) {
+  inline void save(nlohmann::json& dst) {
     // TODO
   }
 
-  inline void load(cr<Yaml> src) {
+  inline void load(cr<nlohmann::json> src) {
     // TODO
   }
 
@@ -77,8 +77,8 @@ struct Simple::Impl {
 
 Simple::Simple(cr<Simple_config> config): _impl{new_unique<Impl>(*this, config)} {}
 Simple::~Simple() {}
-void Simple::save(Yaml& dst) { _impl->save(dst); }
-void Simple::load(cr<Yaml> src) { _impl->load(src); }
+void Simple::save(nlohmann::json& dst) { _impl->save(dst); }
+void Simple::load(cr<nlohmann::json> src) { _impl->load(src); }
 Base& Simple::operator =(cr<Base> other) { return _impl->operator =(other); }
 void Simple::update() { _impl->update(); }
 

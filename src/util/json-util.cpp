@@ -45,7 +45,13 @@ void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
     }
   }
 
-  dst = nlohmann::json::parse(file);
+  try {
+    dst = nlohmann::json::parse(file);
+  } catch (cr<nlohmann::json::parse_error> e) {
+    const Str msg = "error while parsing JSON data from \"" + path + "\":\n"
+      + "  " + e.what();
+    error(msg);
+  }
 }
 
 // рекурсивный обход для get_string_table_utf32
@@ -69,4 +75,8 @@ String_table_utf32 get_string_table_utf32(cr<nlohmann::json> src) {
   for (crauto [key, value]: src.items())
     _get_string_table_utf32(ret, key, value);
   return ret;
+}
+
+bool check(cr<nlohmann::json> node) {
+  return node && !node.empty();
 }

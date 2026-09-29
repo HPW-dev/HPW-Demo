@@ -6,34 +6,34 @@
 #include "game/entity/util/anim-ctx.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 
-void Anim_info::load(cr<Yaml> node) {
-  if ( !node.check()) {
+void Anim_info::load(cr<nlohmann::json> node) {
+  if (!node || node.empty()) {
     log_debug << "пустая нода с анимацией, выход из функции";
     return;
   }
   
-  auto anim_name = node.get_str("name");
+  auto anim_name = node["name"].get<Str>();
   try {
     anim = hpw::anim_mgr->find_anim(anim_name).get();
   } catch (...) {
     log_debug << "нет анимации с именем\"" << anim_name << "\"";
   }
 
-  fixed_deg           = node.get_bool  ("fixed_deg");
-  default_deg         = node.get_real  ("default_deg");
-  return_back         = node.get_bool  ("return_back");
-  rand_cur_frame      = node.get_bool  ("rand_cur_frame");
-  speed_scale_minmax  = node.get_v_real("anim_speed_scale");
-  layer_up            = node.get_bool  ("layer_up", false);
-  ignore_scatter      = node.get_bool  ("ignore_scatter");
-  disable_motion      = node.get_bool  ("disable_motion");
+  fixed_deg           = node["fixed_deg"].get<bool>();
+  default_deg         = node["default_deg"].get<real>();
+  return_back         = node["return_back"].get<bool>();
+  rand_cur_frame      = node["rand_cur_frame"].get<bool>();
+  speed_scale_minmax  = node["anim_speed_scale"].get<Vector<real>>();
+  layer_up            = node.value<bool>("layer_up", false);
+  ignore_scatter      = node["ignore_scatter"].get<bool>();
+  disable_motion      = node["disable_motion"].get<bool>();
   
   // читать пиксель блендинг
-  if (auto blend_f_name = node.get_str("blend_f"); !blend_f_name.empty())
+  if (auto blend_f_name = node["blend_f"].get<Str>(); !blend_f_name.empty())
     bf = find_blend_f(blend_f_name);
 
   // заюзать контур, если есть
-  if (auto contour_bf_name = node.get_str("contour_bf");
+  if (auto contour_bf_name = node["contour_bf"].get<Str>();
   !contour_bf_name.empty() && !anim_name.empty()) {
     light_mask_anim = make_light_mask(anim_name, anim_name + ".light_mask").get();
     contour_bf = find_blend_f(contour_bf_name);

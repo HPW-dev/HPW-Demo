@@ -28,33 +28,33 @@ struct Player_dark::Loader::Impl {
   real m_percent_level_for_blink {};
   real m_window_star_len {};
 
-  inline explicit Impl(cr<Yaml> config) {
+  inline explicit Impl(cr<nlohmann::json> config) {
     m_collidable_info.load(config);
 
     cauto anim_node = config["animation"];
     m_anim_info.load(anim_node);
-    assert(anim_node.check());
-    m_percent_level_for_blink = anim_node.get_real("percent_level_for_blink");
-    m_window_star_len         = anim_node.get_real("window_star_len");
+    assert(check(anim_node));
+    m_percent_level_for_blink = anim_node["percent_level_for_blink"].get<real>();
+    m_window_star_len         = anim_node["window_star_len"].get<real>();
 
-    m_force       = config.get_real("force");
-    m_focus_force = config.get_real("focus_force");
-    m_max_speed   = config.get_real("max_speed");
-    m_focus_speed = config.get_real("focus_speed");
-    m_fuel        = config.get_int ("fuel");
-    m_energy_max  = config.get_int ("energy_max");
-    m_boost_up    = config.get_real("boost_up");
-    m_boost_down  = config.get_real("boost_down");
+    m_force       = config["force"].get<real>();
+    m_focus_force = config["focus_force"].get<real>();
+    m_max_speed   = config["max_speed"].get<real>();
+    m_focus_speed = config["focus_speed"].get<real>();
+    m_fuel        = config["fuel"].get<int>();
+    m_energy_max  = config["energy_max"].get<int>();
+    m_boost_up    = config["boost_up"].get<real>();
+    m_boost_down  = config["boost_down"].get<real>();
 
     cauto shoot_node = config["shoot"];
-    assert( shoot_node.check() );
-    m_shoot_timer = shoot_node.get_real("shoot_timer");
-    m_shoot_price = shoot_node.get_int("shoot_price");
-    m_energy_regen = shoot_node.get_int("energy_regen");
-    m_default_shoot_count = shoot_node.get_int("default_shoot_count");
-    m_deg_spread_shoot = shoot_node.get_real("deg_spread_shoot");
-    m_deg_focused_shoot = shoot_node.get_real("deg_focused_shoot");
-    m_shoot_speed = shoot_node.get_real("shoot_speed");
+    assert( check(shoot_node) );
+    m_shoot_timer = shoot_node["shoot_timer"].get<real>();
+    m_shoot_price = shoot_node["shoot_price"].get<int>();
+    m_energy_regen = shoot_node["energy_regen"].get<int>();
+    m_default_shoot_count = shoot_node["default_shoot_count"].get<int>();
+    m_deg_spread_shoot = shoot_node["deg_spread_shoot"].get<real>();
+    m_deg_focused_shoot = shoot_node["deg_focused_shoot"].get<real>();
+    m_shoot_speed = shoot_node["shoot_speed"].get<real>();
 
     // проверка параметров
     assert(m_window_star_len > 0);
@@ -103,7 +103,7 @@ struct Player_dark::Loader::Impl {
   } // op ()
 }; // Impl
 
-Player_dark::Loader::Loader(cr<Yaml> config)
+Player_dark::Loader::Loader(cr<nlohmann::json> config)
   : impl{new_unique<Impl>(config)} {}
 
 Player_dark::Loader::~Loader() {}

@@ -124,25 +124,25 @@ void Cosmic::make_particles(const Delta_time dt) {
 struct Cosmic::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(cr<Yaml> config) {
-    cauto animations = config.get_v_str("animations");
+  inline explicit Impl(cr<nlohmann::json> cfg) {
+    cauto animations = cfg["animations"].get<Strs>();
     m_info.state_1 = hpw::anim_mgr->find_anim(animations.at(0)).get();
     m_info.state_2 = hpw::anim_mgr->find_anim(animations.at(1)).get();
     m_info.contour = make_light_mask(m_info.state_1->get_name(),
       m_info.state_1->get_name() + ".light_mask").get();
-    m_info.eyes_open_timeout = Timer( config.get_real("eyes_open_timeout") );
-    m_info.fade_in_timer = Timer( config.get_real("fade_in_time") );
-    m_info.shoot_timer = Timer( config.get_real("shoot_timer") );
-    m_info.particle_timer = Timer( config.get_real("particle_timer") );
-    m_info.magnet_range = config.get_real("magnet_range");
-    m_info.magnet_power = pps( config.get_real("magnet_power") );
-    m_info.bullet_spawn_range = config.get_real("bullet_spawn_range");
-    m_info.bullet_speed = pps( config.get_real("bullet_speed") );
-    m_info.bullet_accel = pps( config.get_real("bullet_accel") );
-    m_info.bullet_predict_speed = pps( config.get_real("bullet_predict_speed") );
-    m_info.bullet = config.get_str("bullet");
-    m_info.heat_distort = load_heat_distort(config["heat_distort"]);
-    m_info.bullet_count = config.get_int("bullet_count");
+    m_info.eyes_open_timeout = Timer( cfg["eyes_open_timeout"].get<real>() );
+    m_info.fade_in_timer = Timer( cfg["fade_in_time"].get<real>() );
+    m_info.shoot_timer = Timer( cfg["shoot_timer"].get<real>() );
+    m_info.particle_timer = Timer( cfg["particle_timer"].get<real>() );
+    m_info.magnet_range = cfg["magnet_range"].get<real>();
+    m_info.magnet_power = pps( cfg["magnet_power"].get<real>() );
+    m_info.bullet_spawn_range = cfg["bullet_spawn_range"].get<real>();
+    m_info.bullet_speed = pps( cfg["bullet_speed"].get<real>() );
+    m_info.bullet_accel = pps( cfg["bullet_accel"].get<real>() );
+    m_info.bullet_predict_speed = pps( cfg["bullet_predict_speed"].get<real>() );
+    m_info.bullet = cfg["bullet"].get<Str>();
+    m_info.heat_distort = load_heat_distort(cfg["heat_distort"]);
+    m_info.bullet_count = cfg["bullet_count"].get<int>();
 
     assert(m_info.state_1);
     assert(m_info.state_2);
@@ -175,9 +175,9 @@ struct Cosmic::Loader::Impl {
 
 }; // Impl
 
-Cosmic::Loader::Loader(cr<Yaml> config)
-: Proto_enemy::Loader(config)
-, impl{new_unique<Impl>(config)}
+Cosmic::Loader::Loader(cr<nlohmann::json> cfg)
+: Proto_enemy::Loader(cfg)
+, impl{new_unique<Impl>(cfg)}
 {}
 
 Entity* Cosmic::Loader::operator()(Entity* master, const Vec pos, Entity* parent) {

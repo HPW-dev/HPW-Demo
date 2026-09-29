@@ -55,14 +55,14 @@ void Enemy_snake_tail::update(const Delta_time dt) {
 struct Enemy_snake_head::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(cr<Yaml> config) {
-    m_info.speed = pps( config.get_real("speed") );
+  inline explicit Impl(cr<nlohmann::json> config) {
+    m_info.speed = pps( config["speed"].get<real>() );
 
     cauto tail_node = config["tail"];
-    m_info.tail_name = tail_node.get_str("name");
-    m_info.tail_count = tail_node.get_int("count");
-    m_info.kill_delay = tail_node.get_real("kill_delay", 0);
-    m_info.enable_scatter_if_head_death = tail_node.get_bool("enable_scatter_if_head_death", false);
+    m_info.tail_name = tail_node["name"].get<Str>();
+    m_info.tail_count = tail_node["count"].get<int>();
+    m_info.kill_delay = tail_node.value<real>("kill_delay", 0);
+    m_info.enable_scatter_if_head_death = tail_node.value<bool>("enable_scatter_if_head_death", false);
 
     assert( !m_info.tail_name.empty());
     assert(m_info.tail_count > 0 && m_info.tail_count < 100'000);
@@ -82,8 +82,8 @@ struct Enemy_snake_head::Loader::Impl {
 struct Enemy_snake_tail::Loader::Impl {
   Info m_info {};
 
-  inline explicit Impl(cr<Yaml> config) {;
-    m_info.start_motion_radius = config.get_real("start_motion_radius");
+  inline explicit Impl(cr<nlohmann::json> config) {;
+    m_info.start_motion_radius = config["start_motion_radius"].get<real>();
     assert(m_info.start_motion_radius >= 0 && m_info.start_motion_radius <= 100'000);
   }
 
@@ -138,7 +138,7 @@ Entity* Enemy_snake_tail::Loader::operator()
   return ret;
 }
 
-Enemy_snake_head::Loader::Loader(cr<Yaml> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
-Enemy_snake_tail::Loader::Loader(cr<Yaml> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
+Enemy_snake_head::Loader::Loader(cr<nlohmann::json> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
+Enemy_snake_tail::Loader::Loader(cr<nlohmann::json> config): Proto_enemy::Loader(config), impl{new_unique<Impl>(config)} {}
 Enemy_snake_head::Loader::~Loader() {}
 Enemy_snake_tail::Loader::~Loader() {}

@@ -1,11 +1,10 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include <unordered_map>
 #include <functional>
 #include "util/str.hpp"
 #include "util/mem-types.hpp"
 #include "util/macro.hpp"
-
-class Yaml;
 
 namespace epge {
 
@@ -23,8 +22,8 @@ inline void add_epge() {
   epge::get_makers()[name] = []{ return new_unique<T>(); };
 }
 
-void save_epges(Yaml& config); // сохранить настройки epge
-void load_epges(cr<Yaml> config); // загрузить настройки epge
+void save_epges(nlohmann::json& config); // сохранить настройки epge
+void load_epges(cr<nlohmann::json> config); // загрузить настройки epge
 Strs avaliable_epges(); // узнать какие эффекты есть на выбор
 Unique<epge::Base> make_epge(cr<Str> name); // получить эффект по его имени
 bool remove_epge(cp<epge::Base> address); // удалить конкретный эффект. True, если получилось

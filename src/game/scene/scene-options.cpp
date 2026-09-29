@@ -39,9 +39,7 @@ struct Scene_options::Impl {
   }
 
   inline void init_menu() {
-    cauto config_file = load_res("scripts/ui/menu/options.json");
-    Yaml config(config_file);
-    _menu = menu_from_yaml(config, Action_table {        
+    _menu = menu_from_json(json_from_res("scripts/ui/menu/options.json"), Action_table {        
       {"graphic_opts", []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},
       {"hud_opts",     []{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }},
       {"input_opts",   []{ hpw::scene_mgr.add(new_shared<Scene_input>()); }},

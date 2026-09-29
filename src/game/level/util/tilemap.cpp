@@ -32,20 +32,20 @@ struct Tilemap::Impl {
     }
   }
 
-  inline void load(cr<Yaml> config, std::optional<cp<Archive>> archive = {}) {
+  inline void load(cr<nlohmann::json> config, cr<Str> config_path, std::optional<cp<Archive>> archive = {}) {
     auto tilemap_node = config["tilemap"];
 
-    m_source_config = tilemap_node.get_path();
-    m_original_w = tilemap_node.get_int("original_w");
-    m_original_h = tilemap_node.get_int("original_h");
-    m_tile_w = tilemap_node.get_int("tile_w");
-    m_tile_h = tilemap_node.get_int("tile_h");
+    m_source_config = config_path;
+    m_original_w = tilemap_node["original_w"].get<int>();
+    m_original_h = tilemap_node["original_h"].get<int>();
+    m_tile_w = tilemap_node["tile_w"].get<int>();;
+    m_tile_h = tilemap_node["tile_h"].get<int>();;
 
     auto tiles_node = tilemap_node["tiles"];
-    for (crauto tile_name: tiles_node.root_tags()) {
+    for (crauto tile_name: root_tags(tiles_node)) {
       auto cur_tile_node = tiles_node[tile_name];
-      auto fname = cur_tile_node.get_str("file");
-      auto offset_v = cur_tile_node.get_v_int("offset");
+      auto fname = cur_tile_node["file"].get<Str>();
+      auto offset_v = cur_tile_node["offset"].get<Vector<int>>();
       Vec offset(offset_v.at(0), offset_v.at(1));
 
       Shared<Sprite> sprite;
@@ -62,7 +62,7 @@ struct Tilemap::Impl {
         sprite = hpw::sprites.move(sprite_fname, std::move(sprite));
       } else {
         // спрайты должны лежать там же, где и конфиг:
-        auto config_fname = config.get_path();
+        auto config_fname = config_path;
         conv_sep(config_fname);
         auto sprite_dir = get_filedir(config_fname) + "/";
         sprite_fname = sprite_dir + fname;
@@ -83,14 +83,20 @@ struct Tilemap::Impl {
     auto tiles_archived = load_res(fname);
     const Archive archive(std::move(tiles_archived));
     cauto config_fname = "tilemap.json";
-    const Yaml config(archive.get_file(config_fname));
-    load(config, &archive);
+    cauto config_file = archive.get_file(config_fname);
+    
+    try {
+      cauto config = nlohmann::json::parse(config_file.data);
+      load(config, config_fname, &archive);
+    } catch (cr<nlohmann::json::parse_error> e) {
+      const Str msg = Str("error while parsing JSON data from \"") + config_fname + "\":\n"
+        + "  " + e.what();
+      error(msg);
+    }
   }
 
   inline void load_from_resources(cr<Str> fname) {
-    auto file_data = load_res(fname);
-    Yaml config(file_data);
-    load(config);
+    load(json_from_res(fname), fname);
   }
 
   inline void draw(const Vec pos, Image& dst, blend_pf bf=&blend_past, int optional=0) const {

@@ -19,7 +19,6 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
 
   if host.system == Sys_name.windows:
     tgt.linked_libs.extend([
-      '-lyaml-cpp',
       '-lglfw3dll',
       '-lglew32',
       '-lopengl32',
@@ -33,7 +32,6 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
       tgt.linked_libs.append('-mwindows')
   elif Sys_name.linux:
     tgt.linked_libs.extend([
-      '-lyaml-cpp',
       '-lglfw',
       '-lGLEW',
       '-lGL',

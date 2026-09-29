@@ -12,10 +12,10 @@ namespace epge {
 
 } // epge ns
 
-void save_epges(Yaml& config) {
+void save_epges(nlohmann::json& config) {
   cauto total_epges = graphic::epges.size();
   return_if(total_epges <= 0);
-  config.set_int("epge_count", total_epges);
+  config["epge_count"] = total_epges;
 
   // сохранить все EPGE
   for (int epge_idx {}; crauto epge: graphic::epges) {
@@ -25,19 +25,19 @@ void save_epges(Yaml& config) {
     cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
     auto epge_node = make_node(config, epge_node_name);
 
-    epge_node.set_str("name", epge->name());
+    epge_node["name"] = epge->name();
 
     // сохранить все настройки EPGE:
     cauto epge_params = epge->params();
     cauto params_sz = epge_params.size();
     if (params_sz > 0) {
-      epge_node.set_int("param_count", params_sz);
+      epge_node["param_count"] = params_sz;
 
       for (int param_idx {}; crauto param: epge_params) {
         cauto param_node_name = "PARAM_" + n2s(param_idx);
         auto param_node = make_node(epge_node, param_node_name);
-        param_node.set_str("title_id", param->title_id());
-        param_node.set_str("value", param->get_value());
+        param_node["title_id"] = param->title_id();
+        param_node["value"] = param->get_value();
         ++param_idx;
       }
     }
@@ -46,9 +46,9 @@ void save_epges(Yaml& config) {
   }
 }
 
-void load_epges(cr<Yaml> config) {
+void load_epges(cr<nlohmann::json> config) {
   graphic::epges.clear();
-  cauto total_epges = config.get_int("epge_count");
+  cauto total_epges = config["epge_count"].get<int>();
   ret_if(total_epges <= 0);
   assert(total_epges < 999'999);
   Scope guard(
@@ -60,9 +60,9 @@ void load_epges(cr<Yaml> config) {
   cfor (epge_idx, total_epges) {
     cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
     cauto epge_node = config[epge_node_name];
-    cont_if(!epge_node.check());
+    cont_if(!epge_node);
 
-    cauto epge_name = epge_node.get_str("name");
+    cauto epge_name = epge_node["name"].get<Str>();
     cont_if(epge_name.empty());
 
     auto epge_ptr = make_epge(epge_name);
@@ -70,7 +70,7 @@ void load_epges(cr<Yaml> config) {
     auto& epge = graphic::epges.emplace_back(std::move(epge_ptr));
 
     // загрузить все настройки EPGE:
-    cauto total_params = epge_node.get_int("param_count");
+    cauto total_params = epge_node["param_count"].get<int>();
     cont_if(total_params <= 0);
     assert(total_params < 999'999);
 
@@ -78,13 +78,13 @@ void load_epges(cr<Yaml> config) {
     cfor (param_idx, total_params) {
       const Str param_node_name = "PARAM_" + n2s(param_idx);
       auto param_node = epge_node[param_node_name];
-      cont_if(!param_node.check());
+      cont_if(!param_node);
 
       auto& param = epge_params.at(param_idx);
       assert(param);
       cauto param_title = param->title_id();
-      if (param_title == param_node.get_str("title_id")) {
-        param->set_value(param_node.get_str("value"));
+      if (param_title == param_node["title_id"].get<Str>()) {
+        param->set_value(param_node["value"].get<Str>());
       } else {
         log_warning << "Несовпадение параметра \"" << param_title << "\" эффекта \"" <<
           epge_name << "\". Параметр проигнорирован";

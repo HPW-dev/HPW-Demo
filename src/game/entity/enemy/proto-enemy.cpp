@@ -15,7 +15,7 @@ struct Proto_enemy::Loader::Impl {
   Anim_info m_anim_info {};
   Collidable_info m_collidable_info {};
 
-  inline explicit Impl(cr<Yaml> config) {
+  inline explicit Impl(cr<nlohmann::json> config) {
     m_collidable_info.load(config);
     m_anim_info.load(config["animation"]);
   }
@@ -35,6 +35,6 @@ struct Proto_enemy::Loader::Impl {
 
 }; // Impl
 
-Proto_enemy::Loader::Loader(cr<Yaml> config): impl{new_unique<Impl>(config)} {}
+Proto_enemy::Loader::Loader(cr<nlohmann::json> config): impl{new_unique<Impl>(config)} {}
 Proto_enemy::Loader::~Loader() {}
 Entity* Proto_enemy::Loader::operator()(Entity* master, const Vec pos, Entity* parent) { return impl->operator()(master, pos, parent); }

@@ -16,7 +16,7 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
   return_if (!hitbox_source);
   return_if (!scast<bool>(*hitbox_source));
 
-  auto hitbox_node = make_node(root, hitbox);
+  auto hitbox_node = make_node(root, "hitbox");
 
   // сохранить полигоны хитбокса
   auto polygons_node = make_node(hitbox_node, "polygons");
@@ -25,14 +25,14 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
 
     auto cur_poly_node = make_node(polygons_node, "poly_" + n2s(poly_idx));
     if (polygon.offset.not_zero())
-      cur_poly_node.set_v_real("offset", {polygon.offset.x, polygon.offset.y});
+      cur_poly_node["offset"] = Vector<real>{polygon.offset.x, polygon.offset.y};
 
     // сохранить точки полигона
     if ( !polygon.points.empty()) {
       auto points_node = make_node(cur_poly_node, "points");
 
       for (uint point_idx = 0; crauto point: polygon.points) {
-        points_node.set_v_real("P" + n2s(point_idx), {point.x, point.y});
+        points_node["P" + n2s(point_idx)] = Vector<real>{point.x, point.y};
         ++point_idx;
       } // fpr points
     }
@@ -42,7 +42,7 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
 } // save_hitbox
 
 inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
-  return_if( !hitbox_node.check());
+  return_if( !hitbox_node);
   assert(hpw::entity_mgr);
   auto hitbox_source = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>();
 
@@ -52,14 +52,14 @@ inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
     Polygon loaded_poly;
 
     auto poly_node = polygons_node[poly_name];
-    auto poly_offset_v = poly_node.get_v_real("offset", {0, 0});
+    auto poly_offset_v = poly_node.value<Vector<real>>("offset", Vector<real>{0, 0});
     loaded_poly.offset.x = poly_offset_v.at(0);
     loaded_poly.offset.y = poly_offset_v.at(1);
 
     // загрузить точки полигона
     auto points_node = poly_node["points"];
     for (crauto point_name: root_tags(points_node)) {
-      auto point_v = points_node.get_v_real(point_name, {0, 0});
+      auto point_v = points_node.value<Vector<real>>(point_name, Vector<real>{0, 0});
       loaded_poly.points.emplace_back( Vec(
         point_v.at(0),
         point_v.at(1)
@@ -89,7 +89,7 @@ void read_anims(cr<nlohmann::json> src) {
   } // root tags
 } // read_anims
 
-Shared<Anim> read_anim(cr<Yaml> anim_node) {
+Shared<Anim> read_anim(cr<nlohmann::json> anim_node) {
   // анимация будет сохранена в Anim_mgr
   auto anim = new_shared<Anim>();
 
@@ -105,30 +105,30 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
     // нода этого кадра
     auto cur_frame_node = frames_node[frame_name];
     // прочитать длительность кадра
-    frame->duration = cur_frame_node.get_real("duration");
+    frame->duration = cur_frame_node["duration"].get<real>();
     // прочитать число разворотов
-    frame->source_ctx.max_directions = cur_frame_node.get_int("directions");
+    frame->source_ctx.max_directions = cur_frame_node["directions"].get<int>();
     // прочитать коррекцию артефактов
-    auto ccf_name = cur_frame_node.get_str("ccf");
+    auto ccf_name = cur_frame_node["ccf"].get<Str>();
     if (!ccf_name.empty())
       frame->source_ctx.ccf = convert_to_ccf(ccf_name);
-    auto cgp_name = cur_frame_node.get_str("cgp");
+    auto cgp_name = cur_frame_node["cgp"].get<Str>();
     if (!cgp_name.empty())
       frame->source_ctx.cgp = convert_to_cgp(cgp_name);
-    auto rotate_offset_v = cur_frame_node.get_v_real("rotate offset");
+    auto rotate_offset_v = cur_frame_node["rotate offset"].get<Vector<real>>();
     if (!rotate_offset_v.empty()) {
       frame->source_ctx.rotate_offset.x = rotate_offset_v.at(0);
       frame->source_ctx.rotate_offset.y = rotate_offset_v.at(1);
     }
     // прочитать источник кадра
-    auto sprite_path = cur_frame_node.get_str("sprite path");
+    auto sprite_path = cur_frame_node["sprite path"].get<Str>();
     if (!sprite_path.empty()) {
       auto finded_sprite = hpw::sprites.find(sprite_path);
       if (finded_sprite)
         frame->source_ctx.direct_0.sprite = finded_sprite;
     }
     // смещение отрисовки относительно центра спрайта
-    auto sprite_offset_v = cur_frame_node.get_v_real("sprite offset");
+    auto sprite_offset_v = cur_frame_node["sprite offset"].get<Vector<real>>();
     if (!sprite_offset_v.empty()) {
       frame->source_ctx.direct_0.offset.x = sprite_offset_v.at(0);
       frame->source_ctx.direct_0.offset.y = sprite_offset_v.at(1);
@@ -141,7 +141,7 @@ Shared<Anim> read_anim(cr<Yaml> anim_node) {
   return anim;
 } // read_anim
 
-void save_anims(nlohmann::json& dst) {
+void save_anims(nlohmann::json& dst, cr<Str> save_path) {
   assert (hpw::anim_mgr);
   log_info << "save all anims...";
   dst.clear();
@@ -166,42 +166,42 @@ void save_anims(nlohmann::json& dst) {
       auto cur_frame_node = make_node(frames_node, frame->get_name());
       // длительность кадра
       if (frame->duration > 0)
-        cur_frame_node.set_real("duration", frame->duration);
+        cur_frame_node["duration"] = frame->duration;
       // сколько разворотов
       if (frame->source_ctx.max_directions > 0)
-        cur_frame_node.set_int("directions", frame->source_ctx.max_directions);
+        cur_frame_node["directions"] = frame->source_ctx.max_directions;
       // режимы устранения артефактов
       if (frame->source_ctx.ccf != Color_compute{})
-        cur_frame_node.set_str("ccf", convert(frame->source_ctx.ccf));
+        cur_frame_node["ccf"] = convert(frame->source_ctx.ccf);
       if (frame->source_ctx.cgp != Color_get_pattern{})
-        cur_frame_node.set_str("cgp", convert(frame->source_ctx.cgp));
+        cur_frame_node["cgp"] = convert(frame->source_ctx.cgp);
       // для точной подгонки артефактов при повороте
       if (frame->source_ctx.rotate_offset.not_zero()) {
-        cur_frame_node.set_v_real("rotate offset", Vector<real>{
+        cur_frame_node["rotate offset"] = Vector<real>{
           frame->source_ctx.rotate_offset.x,
           frame->source_ctx.rotate_offset.y
-        });
+        };
       } // if rotate_offset
 
       if (auto sprite = frame->source_ctx.direct_0.sprite; !sprite.expired()) {
         // путь к файлу с кадром
         if (auto sprite_lock = sprite.lock(); !sprite_lock->get_path().empty()) {
           cauto sprite_path = sprite_lock->get_path();
-          cur_frame_node.set_str("sprite path", sprite_path);
+          cur_frame_node["sprite path"] = sprite_path;
         }
         // смещение отрисовки относительно центра спрайта
         if (frame->source_ctx.direct_0.offset.not_zero()) {
-          cur_frame_node.set_v_real("sprite offset", Vector<real>{
+          cur_frame_node["sprite offset"] = Vector<real>{
             frame->source_ctx.direct_0.offset.x,
             frame->source_ctx.direct_0.offset.y
-          });
+          };
         }
         // TODO hitbox save
       } // if frame->source_ctx.direct_0.sprite
     } // for frames
   } // for anims
 
-  dst.save(dst.get_path());
+  save(dst, save_path);
 } // save_anims
 
 nlohmann::json get_anim_config() {

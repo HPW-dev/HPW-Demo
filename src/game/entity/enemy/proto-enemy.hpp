@@ -1,10 +1,9 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "game/entity/collidable.hpp"
 #include "game/entity/entity-loader.hpp"
 #include "util/math/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
-
-class Yaml;
 
 // общая база для изичного построения врагов
 class Proto_enemy: public Collidable {
@@ -21,7 +20,7 @@ public:
 
   public:
     Loader() = default;
-    explicit Loader(cr<Yaml> config);
+    explicit Loader(cr<nlohmann::json> config);
     Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
     ~Loader();
   };

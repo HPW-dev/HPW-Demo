@@ -54,8 +54,14 @@ void load_locale(cr<Str> user_path) {
   }
 
   hpw::locale_path = path;
-  auto yml = Yaml(mem);
-  load_locales_to_store(yml);
+  try {
+    auto cfg = nlohmann::json::parse(mem.data);
+    load_locales_to_store(cfg);
+  } catch (cr<nlohmann::json::parse_error> e) {
+    const Str msg = "error while parsing JSON data from \"" + path + "\":\n"
+      + "  " + e.what();
+    error(msg);
+  }
 }
 
 void load_locales_to_store(cr<nlohmann::json> cfg) {

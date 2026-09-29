@@ -12,10 +12,8 @@ struct Scene_create_server::Impl {
   Unique<Menu> _menu {};
 
   inline Impl() {
-    cauto config_file = load_res("scripts/ui/menu/create server.json");
-    Yaml config(config_file);
-    _menu = menu_from_yaml(
-      config,
+    _menu = menu_from_json(
+      json_from_res("scripts/ui/menu/create server.json"),
       Action_table {
         /*{"goto_find_server_scene", Action_container( Action([]{
           hpw::scene_mgr.add(new_shared<Scene_create_server>());

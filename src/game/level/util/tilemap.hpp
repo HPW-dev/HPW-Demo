@@ -6,8 +6,6 @@
 #include "engine/graphic/image/color-blend.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
-class Yaml;
-
 // Рисует на экране тайловый фон
 class Tilemap final {
   struct Impl;

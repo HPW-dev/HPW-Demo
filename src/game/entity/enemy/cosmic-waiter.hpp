@@ -1,4 +1,5 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "game/entity/enemy/proto-enemy.hpp"
 
 // Простой противник стреляющий на упреждение в игрока
@@ -19,7 +20,7 @@ public:
 
   public:
     Loader() = default;
-    explicit Loader(cr<Yaml> config);
+    explicit Loader(cr<nlohmann::json> config);
     Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
     ~Loader();
   };

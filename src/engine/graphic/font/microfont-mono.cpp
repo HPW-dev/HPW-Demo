@@ -18,17 +18,16 @@ struct Microfont_mono::Impl {
   inline Impl(Microfont_mono& master, cr<Str> path)
   : _master {master} {
     // загрузить настройки шрифта
-    cauto config_file = load_res(path);
-    cauto config = Yaml(config_file);
-    assert(config.check());
+    cauto config = json_from_res(path);
+    assert(config);
 
     // установить параметры из конфига
     cauto glyph_node = config["glyph"];
-    assert(glyph_node.check());
-    cauto w = glyph_node.get_int("w");
-    cauto h = glyph_node.get_int("h");
-    cauto space_w = glyph_node.get_int("space_w");
-    cauto space_h = glyph_node.get_int("space_h");
+    assert(glyph_node);
+    cauto w = glyph_node["w"].get<int>();
+    cauto h = glyph_node["h"].get<int>();
+    cauto space_w = glyph_node["space_w"].get<int>();
+    cauto space_h = glyph_node["space_h"].get<int>();
     _master.set_w(w);
     _master.set_h(h);
     _master.set_space(Veci(space_w, space_h));
@@ -38,7 +37,7 @@ struct Microfont_mono::Impl {
     assert(_master.space().y > -1 && _master.space().y < 100);
 
     // файл глифов
-    cauto glyphs_image_path = config.get_str("glyphs_file");
+    cauto glyphs_image_path = config["glyphs_file"].get<Str>();
     assert(!glyphs_image_path.empty());
     cauto glyphs_file = load_res(glyphs_image_path);
     Image glyphs_image;
@@ -46,10 +45,10 @@ struct Microfont_mono::Impl {
 
     // нарезать глифы
     cauto grid_node = config["grid"];
-    assert(grid_node.check());
-    cauto grid_x = grid_node.get_int("w");
-    cauto grid_y = grid_node.get_int("h");
-    cauto grid_space = grid_node.get_int("space");
+    assert(grid_node);
+    cauto grid_x = grid_node["w"].get<int>();
+    cauto grid_y = grid_node["h"].get<int>();
+    cauto grid_space = grid_node["space"].get<int>();
     assert(grid_x > 0 && grid_x < 1000);
     assert(grid_y > 0 && grid_y < 1000);
     assert(grid_space > -1 && grid_space < 100);

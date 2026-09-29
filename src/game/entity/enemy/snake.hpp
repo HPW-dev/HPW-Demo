@@ -1,4 +1,5 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "game/entity/enemy/proto-enemy.hpp"
 #include "util/math/timer.hpp"
 
@@ -46,7 +47,7 @@ class Enemy_snake_head::Loader final: public Proto_enemy::Loader {
   Unique<Impl> impl {};
 public:
   Loader() = default;
-  explicit Loader(cr<Yaml> config);
+  explicit Loader(cr<nlohmann::json> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Loader();
 };
@@ -57,7 +58,7 @@ class Enemy_snake_tail::Loader final: public Proto_enemy::Loader {
   Unique<Impl> impl {};
 public:
   Loader() = default;
-  explicit Loader(cr<Yaml> config);
+  explicit Loader(cr<nlohmann::json> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Loader();
 };

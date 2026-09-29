@@ -1,8 +1,7 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "util/mem-types.hpp"
 #include "entity-loader.hpp"
-
-class Yaml;
 
 // Загрузчик простых взрывов
 class Explosion_loader final: public Entity_loader {
@@ -10,7 +9,7 @@ class Explosion_loader final: public Entity_loader {
   Unique<Impl> impl {};
 
 public:
-  explicit Explosion_loader(cr<Yaml> config);
+  explicit Explosion_loader(cr<nlohmann::json> config);
   ~Explosion_loader();
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
 };

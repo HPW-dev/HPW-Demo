@@ -9,7 +9,7 @@ struct Bullet_loader::Impl {
   Collidable_info m_collidable_info {};
   Anim_info m_anim_info {};
 
-  inline explicit Impl(cr<Yaml> config) {
+  inline explicit Impl(cr<nlohmann::json> config) {
     m_collidable_info.load(config);
     m_anim_info.load(config["animation"]);
   } // c-tor
@@ -26,6 +26,6 @@ struct Bullet_loader::Impl {
    
 }; // Impl
 
-Bullet_loader::Bullet_loader(cr<Yaml> config): impl {new_unique<Impl>(config)} {}
+Bullet_loader::Bullet_loader(cr<nlohmann::json> config): impl {new_unique<Impl>(config)} {}
 Bullet_loader::~Bullet_loader() {}
 Entity* Bullet_loader::operator()(Entity* master, const Vec pos, Entity* parent) { return impl->operator()(master, pos, parent); }

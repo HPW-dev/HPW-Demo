@@ -182,9 +182,8 @@ void Scene_main_menu::next_bg() {
 }
 
 void Scene_main_menu::cache_logo_names() {
-  cauto config_file = load_res("graphic/images/main logos/list.json");
-  cauto config_yml = Yaml(config_file);
-  m_logo_names = config_yml.get_v_str("logos");
+  cauto cfg = json_from_res("graphic/images/main logos/list.json");
+  m_logo_names = cfg["logos"].get<Strs>();
 }
 
 void Scene_main_menu::draw_text(Image& dst) const noexcept {

@@ -1,10 +1,10 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "player.hpp"
 #include "game/entity/entity-loader.hpp"
 #include "util/mem-types.hpp"
 #include "util/math/timer.hpp"
 
-class Yaml;
 class Anim;
 
 // Стартовый самолёт игрока
@@ -57,7 +57,7 @@ class Player_dark::Loader final: public Entity_loader {
   Unique<Impl> impl {};
 
 public:
-  explicit Loader(cr<Yaml> config);
+  explicit Loader(cr<nlohmann::json> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Loader();
 };

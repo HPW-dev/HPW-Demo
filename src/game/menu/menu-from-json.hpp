@@ -8,4 +8,4 @@
 class Menu;
 
 // создаёт текстовую менюшки из json-конфига
-Unique<Menu> menu_from_json(cr<Yaml> config, cr<Action_table> actions);
+Unique<Menu> menu_from_json(cr<nlohmann::json> config, cr<Action_table> actions);

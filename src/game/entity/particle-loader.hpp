@@ -1,8 +1,7 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "util/mem-types.hpp"
 #include "entity-loader.hpp"
-
-class Yaml;
 
 // Загрузчик для частиц
 class Particle_loader final: public Entity_loader {
@@ -10,7 +9,7 @@ class Particle_loader final: public Entity_loader {
   Unique<Impl> impl {};
 
 public:
-  explicit Particle_loader(cr<Yaml> config);
+  explicit Particle_loader(cr<nlohmann::json> config);
   Entity* operator()(Entity* master, const Vec pos, Entity* parent={}) override;
   ~Particle_loader();
 };

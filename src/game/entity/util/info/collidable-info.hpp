@@ -1,8 +1,8 @@
 #pragma once
+#include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "game/entity/entity-type.hpp"
 #include "util/str.hpp"
 
-class Yaml;
 class Collidable;
 
 // Инфа о хп и дамаге для загрузчика entity
@@ -16,6 +16,6 @@ struct Collidable_info {
   bool ignore_master {};
   bool ignore_player {};
 
-  void load(cr<Yaml> node);
+  void load(cr<nlohmann::json> node);
   void accept(Collidable& dst);
 };

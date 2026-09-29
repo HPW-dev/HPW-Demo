@@ -5,7 +5,7 @@
 
 void init_archive() {
 #ifndef DISABLE_ARCHIVE
-  assert(hpw::config);
+  assert(check(hpw::config));
 
   try {
     auto data_path = hpw::cur_dir + hpw::config["path"].value<Str>("resources", hpw::data_path);

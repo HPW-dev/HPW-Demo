@@ -14,13 +14,13 @@ struct Particle_loader::Impl {
   real m_lifetime {}; // частица умрёт через время
   real m_force {};
 
-  inline explicit Impl(cr<Yaml> config) {
+  inline explicit Impl(cr<nlohmann::json> config) {
     m_anim_info.load(config["animation"]);
-    m_rand_deg          = config.get_bool("rand_deg");
-    m_kill_by_end_anim  = config.get_bool("kill_by_end_anim", true);
-    m_kill_by_end_frame = config.get_bool("kill_by_end_frame");
-    m_lifetime          = config.get_real("lifetime");
-    m_force             = config.get_real("force");
+    m_rand_deg          = config.value<bool>("rand_deg", false);
+    m_kill_by_end_anim  = config.value<bool>("kill_by_end_anim", true);
+    m_kill_by_end_frame = config.value<bool>("kill_by_end_frame", false);
+    m_lifetime          = config.value<bool>("lifetime", false);
+    m_force             = config.value<bool>("force", false);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {
@@ -42,6 +42,6 @@ struct Particle_loader::Impl {
   } // op ()
 }; // Impl
 
-Particle_loader::Particle_loader(cr<Yaml> config): impl{new_unique<Impl>(config)} {}
+Particle_loader::Particle_loader(cr<nlohmann::json> config): impl{new_unique<Impl>(config)} {}
 Particle_loader::~Particle_loader() {}
 Entity* Particle_loader::operator()(Entity* master, const Vec pos, Entity* parent) { return impl->operator()(master, pos, parent); }

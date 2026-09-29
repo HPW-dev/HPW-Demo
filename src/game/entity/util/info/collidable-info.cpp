@@ -4,15 +4,15 @@
 #include "game/entity/collidable.hpp"
 #include "game/entity/util/entity-util.hpp"
 
-void Collidable_info::load(cr<Yaml> node) {
-  hp = node.get_int("hp");
-  dmg = node.get_int("dmg");
-  explosion_name = node.get_str("explosion");
-  ignore_enemy = node.get_bool("ignore_enemy");
-  ignore_bullet = node.get_bool("ignore_bullet");
-  ignore_self_type = node.get_bool("ignore_self_type");
-  ignore_master = node.get_bool("ignore_master", true);
-  ignore_player = node.get_bool("ignore_player");
+void Collidable_info::load(cr<nlohmann::json> node) {
+  hp = node["hp"].get<int>();
+  dmg = node["dmg"].get<int>();
+  explosion_name = node["explosion"].get<Str>();
+  ignore_enemy = node["ignore_enemy"].get<bool>();
+  ignore_bullet = node["ignore_bullet"].get<bool>();
+  ignore_self_type = node["ignore_self_type"].get<bool>();
+  ignore_master = node.value<bool>("ignore_master", true);
+  ignore_player = node["ignore_player"].get<bool>();
 }
 
 void Collidable_info::accept(Collidable& dst) {

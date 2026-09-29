@@ -38,15 +38,14 @@ struct Scene_locale_select::Impl {
     for (crauto path: files | std::views::filter(filter)) {
       try {
         // загрузить инфу об авторе и название локализации
-        cauto locale_yml_file = load_res(path);
-        cauto locale_yml = Yaml(locale_yml_file);
-        cauto info_node = locale_yml["info"];
+        cauto cfg = json_from_res(path);
+        cauto info_node = cfg["info"];
 
         // засейвить в промежуточное представление
         Locale_info info;
         info.path = path;
-        info.name = utf8_to_32(info_node.get_str("name"));
-        info.author = utf8_to_32(info_node.get_str("author"));
+        info.name = utf8_to_32(info_node["name"].get<Str>());
+        info.author = utf8_to_32(info_node["author"].get<Str>());
         _locale_infos.emplace_back(std::move(info));
       } catch (...) {
         log_info << "проблемы при загрузке локализации в \"" + path + "\"";

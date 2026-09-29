@@ -24,6 +24,10 @@
 #include "engine/graphic/epge/epge-util.hpp"
 #endif
 
+namespace hpw {
+nlohmann::json config {};
+}
+
 static inline void load_log_config(cr<nlohmann::json> config) {
   hpw::log_file_path = config.value<Str>("file_name", hpw::log_file_path);
   hpw::reopen_log_file(hpw::cur_dir + hpw::log_file_path);
@@ -38,14 +42,14 @@ static inline void load_log_config(cr<nlohmann::json> config) {
 }
 
 static inline void save_log_config(nlohmann::json& config) {
-  config.set_str("file_name", hpw::log_file_path);
+  config["file_name"] = hpw::log_file_path;
   
   auto streams_node = make_node(config, "streams");
-  streams_node.set_bool("terminal", hpw::logger.config.use_terminal);
-  streams_node.set_bool("info", hpw::logger.config.use_stream_info);
-  streams_node.set_bool("warning", hpw::logger.config.use_stream_warning);
-  streams_node.set_bool("debug", hpw::logger.config.use_stream_debug);
-  streams_node.set_bool("error", hpw::logger.config.use_stream_error);
+  streams_node["terminal"] = hpw::logger.config.use_terminal;
+  streams_node["info"] = hpw::logger.config.use_stream_info;
+  streams_node["warning"] = hpw::logger.config.use_stream_warning;
+  streams_node["debug"] = hpw::logger.config.use_stream_debug;
+  streams_node["error"] = hpw::logger.config.use_stream_error;
 }
 
 int get_scancode(const hpw::keycode keycode) {
@@ -60,23 +64,23 @@ static inline void load_test_image_path(cr<nlohmann::json> config)
   { graphic::cur_test_image_path = config.value<Str>("test_image_path", graphic::cur_test_image_path); }
 
 static inline void save_test_image_path(nlohmann::json& config)
-  { config.set_str("test_image_path", graphic::cur_test_image_path); }
+  { config["test_image_path"] = graphic::cur_test_image_path; }
   
 static inline void load_light_quality(cr<nlohmann::json> config) {
   graphic::light_quality = scast<Light_quality>(
-    config.get_int("light_quality", scast<int>(graphic::light_quality)) );
+    config["light_quality"].get<int>());
 }
 
 static inline void save_light_quality(nlohmann::json& config)
-  { config.set_int("light_quality", scast<int>(graphic::light_quality)); }
+  { config["light_quality"] = scast<int>(graphic::light_quality); }
 
 static inline void load_heat_distort_mode(cr<nlohmann::json> config) {
   graphic::heat_distort_mode = scast<Heat_distort_mode>(
-    config.get_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)) );
+    config["heat_distort_mode"].get<int>());
 }
 
 static inline void save_heat_distort_mode(nlohmann::json& config)
-  { config.set_int("heat_distort_mode", scast<int>(graphic::heat_distort_mode)); }
+  { config["heat_distort_mode"] = scast<int>(graphic::heat_distort_mode); }
 
 static inline void save_nickname() {
   static_assert(std::is_same_v<utf32, decltype(hpw::player_name)>);
@@ -115,19 +119,19 @@ static inline void load_nickname() {
 }
 
 static inline void node_check(cr<nlohmann::json> config) {
-  if (!config.check())
-    log_warning << "не удалось загрузить конфиг: \"" + config.get_path() +
-      "\". Будут загружены значения по умолчанию";
+  if (!config || config.empty())
+    log_warning << "не удалось загрузить конфиг. " <<
+      "Будут загружены значения по умолчанию";
 }
 
 static inline void save_game_config(nlohmann::json& config) {
-  config.set_bool("rnd_pal_after_death", hpw::rnd_pal_after_death);
-  config.set_bool("collider_autoopt", hpw::collider_autoopt);
-  config.set_str ("locale", hpw::locale_path);
-  config.set_str ("hud", graphic::cur_hud);
-  config.set_int ("priority", scast<int>(hpw::process_priority));
-  config.set_str ("menu_bgp", hpw::bgp_for_menu);
-  config.set_bool("autoswith_bgp", hpw::bgp_auto_swith);
+  config["rnd_pal_after_death"] = hpw::rnd_pal_after_death;
+  config["collider_autoopt"] = hpw::collider_autoopt;
+  config["locale"] = hpw::locale_path;
+  config["hud"] = graphic::cur_hud;
+  config["priority"] = scast<int>(hpw::process_priority);
+  config["menu_bgp"] = hpw::bgp_for_menu;
+  config["autoswith_bgp"] = hpw::bgp_auto_swith;
 }
 
 void load_config_game(cr<nlohmann::json> config) {
@@ -135,7 +139,7 @@ void load_config_game(cr<nlohmann::json> config) {
   hpw::rnd_pal_after_death = config.value<bool>("rnd_pal_after_death", hpw::rnd_pal_after_death);
   hpw::collider_autoopt = config.value<bool>("collider_autoopt", hpw::collider_autoopt);
   graphic::cur_hud = config.value<Str>("hud", graphic::cur_hud);
-  hpw::process_priority = scast<Priority>( config.get_int("priority", scast<int>(hpw::process_priority)) );
+  hpw::process_priority = scast<Priority>( config.value<int>("priority", scast<int>(hpw::process_priority)) );
   if (hpw::process_priority != Priority::normal)
     set_priority(hpw::process_priority);
   hpw::bgp_for_menu = config.value<Str>("menu_bgp", hpw::bgp_for_menu);
@@ -152,7 +156,7 @@ void load_config_game(cr<nlohmann::json> config) {
 void load_config_input(cr<nlohmann::json> config) {
   node_check(config);
   if (hpw::rebind_key_by_scancode) {
-    #define LOAD_KEY(name) hpw::rebind_key_by_scancode(hpw::keycode::name, config.get_int(#name, get_scancode(hpw::keycode::name)) );
+    #define LOAD_KEY(name) hpw::rebind_key_by_scancode(hpw::keycode::name, config.value<int>(#name, get_scancode(hpw::keycode::name)) );
     LOAD_KEY(enable)
     LOAD_KEY(escape)
     LOAD_KEY(bomb)
@@ -171,7 +175,7 @@ void load_config_input(cr<nlohmann::json> config) {
 
 void load_config_graphic(cr<nlohmann::json> config) {
   node_check(config);
-  cauto canvas_size = config.get_v_int("canvas_size", {graphic::width, graphic::height});
+  cauto canvas_size = config.value("canvas_size", Vector<int>{graphic::width, graphic::height});
   graphic::width  = canvas_size.at(0);
   graphic::height = canvas_size.at(1);
   graphic::enable_motion_interp = config.value<bool>("enable_motion_interp", graphic::enable_motion_interp);
@@ -179,22 +183,22 @@ void load_config_graphic(cr<nlohmann::json> config) {
   graphic::draw_border = config.value<bool>("draw_border", graphic::draw_border);
   graphic::show_mouse_cursour = config.value<bool>("show_mouse_cursour", graphic::show_mouse_cursour);
   graphic::resize_mode = scast<decltype(graphic::resize_mode)> (
-    config.get_int("resize_mode", scast<int>(graphic::default_resize_mode)) );
+    config.value<int>("resize_mode", scast<int>(graphic::default_resize_mode)) );
   graphic::light_quality = scast<decltype(graphic::light_quality)>(
-    config.get_int("light_quality", scast<int>(graphic::light_quality)) );
+    config.value<int>("light_quality", scast<int>(graphic::light_quality)) );
   graphic::motion_blur_mode = scast<Motion_blur_mode>(
-    config.get_int("motion_blur_mode", scast<int>(graphic::motion_blur_mode)) );
+    config.value<int>("motion_blur_mode", scast<int>(graphic::motion_blur_mode)) );
   graphic::blur_mode = scast<Blur_mode>(
-    config.get_int("blur_mode", scast<int>(graphic::blur_mode)) );
-  graphic::motion_blur_quality_mul = config.get_real("motion_blur_quality_mul", graphic::motion_blur_quality_mul);
+    config.value<int>("blur_mode", scast<int>(graphic::blur_mode)) );
+  graphic::motion_blur_quality_mul = config.value<real>("motion_blur_quality_mul", graphic::motion_blur_quality_mul);
   graphic::blink_particles = config.value<bool>("blink_particles", graphic::blink_particles);
   graphic::max_motion_blur_quality_reduct =
-    config.get_real("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
+    config.value<real>("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic::start_focused = config.value<bool>("start_focused", graphic::start_focused);
   safecall(hpw::init_palette_from_archive, config.value<Str>("palette", graphic::current_palette_file));
-  graphic::frame_skip = config.get_int("frame_skip", graphic::frame_skip);
+  graphic::frame_skip = config.value<uint>("frame_skip", graphic::frame_skip);
   graphic::auto_frame_skip = config.value<bool>("auto_frame_skip", graphic::auto_frame_skip);
-  safecall(hpw::set_gamma, config.get_real("gamma", graphic::gamma));
+  safecall(hpw::set_gamma, config.value<double>("gamma", graphic::gamma));
   graphic::show_fps = config.value<bool>("show_fps", graphic::show_fps);
   load_light_quality(config);
   load_heat_distort_mode(config);
@@ -205,9 +209,9 @@ void load_config_graphic(cr<nlohmann::json> config) {
   graphic::set_vsync( sync_node.value<bool>("vsync", graphic::get_vsync()) );
   graphic::wait_frame_bak = graphic::wait_frame = sync_node.value<bool>("wait_frame", graphic::wait_frame);
   graphic::set_disable_frame_limit( sync_node.value<bool>("disable_frame_limit", graphic::get_disable_frame_limit()) );
-  graphic::set_target_fps( sync_node.get_int("target_fps", graphic::get_target_vsync_fps()) );
+  graphic::set_target_fps( sync_node.value<int>("target_fps", graphic::get_target_vsync_fps()) );
   graphic::cpu_safe = sync_node.value<bool>("cpu_safe", graphic::cpu_safe);
-  graphic::autoopt_timeout_max = sync_node.get_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
+  graphic::autoopt_timeout_max = sync_node.value<Delta_time>("autoopt_timeout_max", graphic::autoopt_timeout_max);
 
   #ifndef NO_EPGE
   cauto epge_node = config["epge"];
@@ -218,43 +222,43 @@ void load_config_graphic(cr<nlohmann::json> config) {
 void save_config() {
   auto& config = hpw::config;
 
-  config.set_bool("first_start", hpw::first_start);
-  config.set_bool("enable_replay", hpw::enable_replay);
-  config.set_bool("need_tutorial", hpw::need_tutorial);
+  config["first_start"] = hpw::first_start;
+  config["enable_replay"] = hpw::enable_replay;
+  config["need_tutorial"] = hpw::need_tutorial;
 
   auto game_node = make_node(config, "game");
   save_game_config(game_node);
   save_nickname();
 
   auto path_node = make_node(config, "path");
-  path_node.set_str("screenshots", hpw::screenshots_path);
-  path_node.set_str("resources", hpw::data_path);
-  path_node.set_str("os_resources_dir", hpw::os_resources_dir);
-  path_node.set_str("replays_dir", hpw::replays_path);
+  path_node["screenshots"] = hpw::screenshots_path;
+  path_node["resources"] = hpw::data_path;
+  path_node["os_resources_dir"] = hpw::os_resources_dir;
+  path_node["replays_dir"] = hpw::replays_path;
 
   auto debug = make_node(config, "debug");
-  debug.set_bool("empty_level_first", hpw::empty_level_first);
-  debug.set_str ("start_script", hpw::start_script);
+  debug["empty_level_first"] = hpw::empty_level_first;
+  debug["start_script"] = hpw::start_script;
 
   auto graphic_node = make_node(config, "graphic");
-  graphic_node.set_v_int("canvas_size",        {graphic::width, graphic::height} );
-  graphic_node.set_int  ("light_quality",       scast<int>(graphic::light_quality) );
-  graphic_node.set_bool ("enable_motion_interp",graphic::enable_motion_interp);
-  graphic_node.set_bool ("fullscren",           graphic::fullscreen);
-  graphic_node.set_bool ("draw_border",         graphic::draw_border);
-  graphic_node.set_bool ("show_mouse_cursour",  graphic::show_mouse_cursour);
-  graphic_node.set_int  ("resize_mode",         scast<int>(graphic::resize_mode) );
-  graphic_node.set_int  ("motion_blur_mode",    scast<int>(graphic::motion_blur_mode) );
-  graphic_node.set_int  ("blur_mode",           scast<int>(graphic::blur_mode) );
-  graphic_node.set_real ("motion_blur_quality_mul", graphic::motion_blur_quality_mul);
-  graphic_node.set_bool ("blink_particles",     graphic::blink_particles);
-  graphic_node.set_real ("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
-  graphic_node.set_bool ("start_focused",       graphic::start_focused);
-  graphic_node.set_str  ("palette",             graphic::current_palette_file);
-  graphic_node.set_int  ("frame_skip",          graphic::frame_skip);
-  graphic_node.set_bool ("auto_frame_skip",     graphic::auto_frame_skip);
-  graphic_node.set_real ("gamma",               graphic::gamma);
-  graphic_node.set_bool ("show_fps",            graphic::show_fps);
+  graphic_node["canvas_size"] = Vector<int>{graphic::width, graphic::height};
+  graphic_node["light_quality"] = scast<int>(graphic::light_quality);
+  graphic_node["enable_motion_interp"] = graphic::enable_motion_interp;
+  graphic_node["fullscren"] = graphic::fullscreen;
+  graphic_node["draw_border"] = graphic::draw_border;
+  graphic_node["show_mouse_cursour"] = graphic::show_mouse_cursour;
+  graphic_node["resize_mode"] = scast<int>(graphic::resize_mode) ;
+  graphic_node["motion_blur_mode"] = scast<int>(graphic::motion_blur_mode) ;
+  graphic_node["blur_mode"] = scast<int>(graphic::blur_mode) ;
+  graphic_node["motion_blur_quality_mul"] = graphic::motion_blur_quality_mul;
+  graphic_node["blink_particles"] = graphic::blink_particles;
+  graphic_node["max_motion_blur_quality_reduct"] = graphic::max_motion_blur_quality_reduct;
+  graphic_node["start_focused"] = graphic::start_focused;
+  graphic_node["palette"] = graphic::current_palette_file;
+  graphic_node["frame_skip"] = graphic::frame_skip;
+  graphic_node["auto_frame_skip"] = graphic::auto_frame_skip;
+  graphic_node["gamma"] = graphic::gamma;
+  graphic_node["show_fps"] = graphic::show_fps;
   save_light_quality(graphic_node);
   save_heat_distort_mode(graphic_node);
   save_test_image_path(graphic_node);
@@ -268,12 +272,12 @@ void save_config() {
   save_log_config(log_node);
 
   auto sync_node = make_node(graphic_node, "sync");
-  sync_node.set_bool("vsync",               graphic::get_vsync());
-  sync_node.set_bool("wait_frame",          graphic::wait_frame);
-  sync_node.set_int ("target_fps",          graphic::get_target_fps());
-  sync_node.set_bool("cpu_safe",            graphic::cpu_safe);
-  sync_node.set_real("autoopt_timeout_max", graphic::autoopt_timeout_max);
-  sync_node.set_bool("disable_frame_limit", graphic::get_disable_frame_limit());
+  sync_node["vsync"] = graphic::get_vsync();
+  sync_node["wait_frame"] = graphic::wait_frame;
+  sync_node["target_fps"] = graphic::get_target_fps();
+  sync_node["cpu_safe"] = graphic::cpu_safe;
+  sync_node["autoopt_timeout_max"] = graphic::autoopt_timeout_max;
+  sync_node["disable_frame_limit"] = graphic::get_disable_frame_limit();
 
   auto input_node = make_node(config, "input");
   #define SAVE_KEY(name) input_node[#name] = get_scancode(hpw::keycode::name);
