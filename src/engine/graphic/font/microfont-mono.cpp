@@ -19,11 +19,11 @@ struct Microfont_mono::Impl {
   : _master {master} {
     // загрузить настройки шрифта
     cauto config = json_from_res(path);
-    assert(config);
+    assert(!config.empty());
 
     // установить параметры из конфига
     cauto glyph_node = config["glyph"];
-    assert(glyph_node);
+    assert(!glyph_node.empty());
     cauto w = glyph_node["w"].get<int>();
     cauto h = glyph_node["h"].get<int>();
     cauto space_w = glyph_node["space_w"].get<int>();
@@ -45,7 +45,7 @@ struct Microfont_mono::Impl {
 
     // нарезать глифы
     cauto grid_node = config["grid"];
-    assert(grid_node);
+    assert(!grid_node.empty());
     cauto grid_x = grid_node["w"].get<int>();
     cauto grid_y = grid_node["h"].get<int>();
     cauto grid_space = grid_node["space"].get<int>();

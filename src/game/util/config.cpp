@@ -32,7 +32,7 @@ static inline void load_log_config(cr<nlohmann::json> config) {
   hpw::log_file_path = config.value<Str>("file_name", hpw::log_file_path);
   hpw::reopen_log_file(hpw::cur_dir + hpw::log_file_path);
 
-  auto streams_node = config["streams"];
+  auto streams_node = node_or_empty(config, "streams");
   rauto cfg = hpw::logger.config;
   cfg.use_terminal       = streams_node.value<bool>("terminal", cfg.use_terminal);
   cfg.use_stream_info    = streams_node.value<bool>("info",     cfg.use_stream_info);
@@ -68,7 +68,8 @@ static inline void save_test_image_path(nlohmann::json& config)
   
 static inline void load_light_quality(cr<nlohmann::json> config) {
   graphic::light_quality = scast<Light_quality>(
-    config["light_quality"].get<int>());
+    config.value("light_quality", scast<int>(graphic::light_quality))
+  );
 }
 
 static inline void save_light_quality(nlohmann::json& config)
@@ -76,7 +77,8 @@ static inline void save_light_quality(nlohmann::json& config)
 
 static inline void load_heat_distort_mode(cr<nlohmann::json> config) {
   graphic::heat_distort_mode = scast<Heat_distort_mode>(
-    config["heat_distort_mode"].get<int>());
+    config.value("heat_distort_mode", scast<int>(graphic::heat_distort_mode))
+  );
 }
 
 static inline void save_heat_distort_mode(nlohmann::json& config)
@@ -119,7 +121,7 @@ static inline void load_nickname() {
 }
 
 static inline void node_check(cr<nlohmann::json> config) {
-  if (!config || config.empty())
+  if (config.empty())
     log_warning << "не удалось загрузить конфиг. " <<
       "Будут загружены значения по умолчанию";
 }
@@ -204,7 +206,7 @@ void load_config_graphic(cr<nlohmann::json> config) {
   load_heat_distort_mode(config);
   load_test_image_path(config);
 
-  cauto sync_node = config["sync"];
+  cauto sync_node = node_or_empty(config, "sync");
   node_check(sync_node);
   graphic::set_vsync( sync_node.value<bool>("vsync", graphic::get_vsync()) );
   graphic::wait_frame_bak = graphic::wait_frame = sync_node.value<bool>("wait_frame", graphic::wait_frame);
@@ -214,7 +216,7 @@ void load_config_graphic(cr<nlohmann::json> config) {
   graphic::autoopt_timeout_max = sync_node.value<Delta_time>("autoopt_timeout_max", graphic::autoopt_timeout_max);
 
   #ifndef NO_EPGE
-  cauto epge_node = config["epge"];
+  cauto epge_node = node_or_empty(config, "epge");
   load_epges(epge_node);
   #endif
 }
@@ -302,19 +304,19 @@ void save_config() {
 void load_config() {
   log_info << "чтение конфига...";
   make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
-  load(hpw::config, hpw::cur_dir + hpw::config_path, true);
   log_info << "файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"";
+  load(hpw::config, hpw::cur_dir + hpw::config_path, true);
 
   crauto config = hpw::config;
   hpw::first_start = config.value<bool>("first_start", true);
   hpw::enable_replay = config.value<bool>("enable_replay", hpw::enable_replay);
   hpw::need_tutorial = config.value<bool>("need_tutorial", hpw::need_tutorial);
   
-  cauto debug = config["debug"];
+  cauto debug = node_or_empty(config, "debug");
   hpw::empty_level_first = debug.value<bool>("empty_level_first", hpw::empty_level_first);
   hpw::start_script = debug.value<Str>("start_script", hpw::start_script);
 
-  cauto path_node = config["path"];
+  cauto path_node = node_or_empty(config, "path");
   hpw::screenshots_path = path_node.value<Str>("screenshots", hpw::screenshots_path);
   hpw::data_path = path_node.value<Str>("resources", hpw::data_path);
   hpw::os_resources_dir = path_node.value<Str>("os_resources_dir", hpw::os_resources_dir);
@@ -324,16 +326,16 @@ void load_config() {
   make_dir_if_not_exist(hpw::cur_dir + path_node.value<Str>("screenshots", "screenshots"));
   make_dir_if_not_exist(hpw::cur_dir + hpw::replays_path);
 
-  cauto graphic_node = config["graphic"];
+  cauto graphic_node = node_or_empty(config, "graphic");
   load_config_graphic(graphic_node);
 
-  cauto log_node = config["log"];
+  cauto log_node = node_or_empty(config, "log");
   load_log_config(log_node);
 
-  cauto game_node = config["game"];
+  cauto game_node = node_or_empty(config, "game");
   load_config_game(game_node);
   load_nickname();
 
-  cauto input_node = config["input"];
+  cauto input_node = node_or_empty(config, "input");
   load_config_input(input_node);
 }

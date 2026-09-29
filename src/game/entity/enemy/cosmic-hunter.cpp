@@ -106,7 +106,7 @@ struct Cosmic_hunter::Loader::Impl {
     _info.bullet_name = config["bullet_name"].get<Str>();
 
     cauto anim_node = config["animation"];
-    assert(check(anim_node));
+    assert(!anim_node.empty());
     cauto external_part_name = anim_node["foreground_name"].get<Str>();
     cauto external_anim = hpw::anim_mgr->find_anim(external_part_name).get();
     _info.external_part.set_anim(external_anim);

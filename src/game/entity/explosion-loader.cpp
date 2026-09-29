@@ -32,7 +32,7 @@ struct Explosion_loader::Impl {
     m_entity_names = config["names"].get<Strs>();
     assert(!m_entity_names.empty());
     assert(m_entity_names.size() < 10'000u);
-    if (auto heat_distort_node = config["heat_distort"]; check(heat_distort_node))
+    if (auto heat_distort_node = config["heat_distort"]; !heat_distort_node.empty())
       m_heat_distort = load_heat_distort(heat_distort_node);
   }
 

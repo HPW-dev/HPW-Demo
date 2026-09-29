@@ -7,7 +7,7 @@
 
 void save_screenshot(cr<Image> image) {
   assert(image);
-  assert(check(hpw::config));
+  assert(!hpw::config.empty());
 
   auto t = std::time(nullptr);
 #ifdef LINUX

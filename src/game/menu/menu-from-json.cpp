@@ -9,7 +9,7 @@
 
 inline static Shared<Menu_item> make_text_item(cr<nlohmann::json> item_node, cr<Action_table> actions) {
   // добавочное имя к адресу локализации
-  cauto locale_prefix = item_node["locale_prefix"].get<Str>();
+  cauto locale_prefix = item_node.value("locale_prefix", Str{});
 
   // если title/desc не задан, брать по умолчанию из префикса
   cauto title = get_locale_str(item_node.value<Str>("title", locale_prefix + ".title"));
@@ -22,7 +22,7 @@ inline static Shared<Menu_item> make_text_item(cr<nlohmann::json> item_node, cr<
 
   // колбэк при выборе пункта
   Action action;
-  cauto action_name = item_node["action"].get<Str>();
+  cauto action_name = item_node.value("action", Str{});
 
   try {
     action = actions.at(action_name);
@@ -31,7 +31,7 @@ inline static Shared<Menu_item> make_text_item(cr<nlohmann::json> item_node, cr<
   }
 
   #ifndef RELEASE
-  cauto getter_name = item_node["getter"].get<Str>();
+  cauto getter_name = item_node.value("getter", Str{});
   iferror(!getter_name.empty(), "этот функционал был удалён 04.05.2025");
   #endif
 
@@ -49,7 +49,7 @@ inline static Shared<Menu_item> make_exit_item(cr<nlohmann::json> item_node, cr<
   { return new_shared<Menu_text_item>(get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); }); }
 
 inline static Shared<Menu_item> make_menu_item(cr<nlohmann::json> item_node, cr<Action_table> actions) {
-  assert(item_node);
+  assert(!item_node.empty());
   cauto type = item_node.value<Str>("type", "text_item");
   ret_if(type == "text_item", make_text_item(item_node, actions));
   ret_if(type == "locale_select", make_locale_select_item(item_node, actions));
@@ -60,15 +60,15 @@ inline static Shared<Menu_item> make_menu_item(cr<nlohmann::json> item_node, cr<
 }
 
 Unique<Menu> menu_from_json(cr<nlohmann::json> config, cr<Action_table> actions) {
-  assert(config);
+  assert(!config.empty());
 
-  utf32 title = get_locale_str(config["title"].get<Str>());
+  utf32 title = get_locale_str(config.value("title", Str{}));
   Rect rect {};
   Advanced_text_menu_config atm_config {};
 
   Menu_items items {};
   cauto items_node = config["items"];
-  assert(items_node);
+  assert(!items_node.empty());
   for (crauto item_node: items_node) {
     auto item = make_menu_item(item_node, actions);
     assert(item);

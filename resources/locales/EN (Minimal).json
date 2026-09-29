@@ -1,0 +1,320 @@
+﻿{
+  "info": {
+    "author": "HPW-Dev",
+    "name": "English (Minimalism)",
+    "for_game_version": "0.221.0.0",
+    "revision": 1
+  },
+  "common": {
+    "author": "AUTH",
+    "auto": "AUTO",
+    "loading": "LD",
+    "gameover": "GAM OVR",
+    "score": "SCR",
+    "continue": "CONT",
+    "reset": "RST",
+    "back": "BCK",
+    "exit": "EXT",
+    "remove": "REM",
+    "on": "Y",
+    "off": "N",
+    "money_symbol": "$",
+    "unknown": "UNK",
+    "game_version": "VER",
+    "error": "ERR MSG",
+    "empty": "EMPT",
+    "warning": "WARN",
+    "high": "HI",
+    "low": "LO"
+  },
+  "difficulty_select": {
+    "title": "GM STNGS",
+    "start": "STRT",
+    "start_tutorial": "TUTOR",
+    "write_replay": "REP REC",
+    "difficulty": {
+      "title": "DIF",
+      "easy": "ESY",
+      "normal": "NOR",
+      "hardcore": "HRD"
+    }
+  },
+  "gameover": {
+    "title": "GAM OVR",
+    "try_again": "TRY AGN",
+    "save_replay_question": "SAV REP"
+  },
+  "replay": {
+    "play": "PLY",
+    "name": "REP",
+    "watch": "WTCH REP",
+    "no_replay": "NO REPS",
+    "table": {
+      "player": "PLR",
+      "date": "DAT",
+      "difficulty": "DIF",
+      "levels": "LVL",
+      "score": "SCR"
+    }
+  },
+  "main_menu": {
+    "start": "STRT",
+    "info": "INF",
+    "next_bg": "BG",
+    "rnd_pal": "PAL"
+  },
+  "pause": {
+    "name": "PAUS",
+    "screenshot": "SCRN",
+    "main_menu": "BCK",
+    "game_exit": "EXT"
+  },
+  "options": {
+    "name": "OPTS",
+    "input": "INP",
+    "graphic": "GRPH"
+  },
+  "language_menu": {
+    "name": "LNG SEL",
+    "lang": "LANG",
+    "author": "AUTH",
+    "ver": "VER"
+  },
+  "palette_select": {
+    "title": "PAL",
+    "cur_file": "PAL"
+  },
+  "graphic_menu": {
+    "title": "GRPH STNGS",
+    "cpu_safe": "LO CPU",
+    "motion_blur_quality_mul": "MOT QUAL",
+    "blink_particles": "PRT BLK",
+    "disable_frame_limit": "NO LIM",
+    "vsync": "VSNC",
+    "frame_limit": "FPS LIM",
+    "wait_frame": "WAIT FRM",
+    "fullscreen": "FULSCRN",
+    "show_mouse_cursour": "MOUS CUR",
+    "draw_border": "BRDR",
+    "double_buffering": "DBUF",
+    "test_image_list": {
+      "title": "TST IMG"
+    },
+    "blur_mode": {
+      "title": "IMG BLR",
+      "high_desc": null,
+      "low_desc": null,
+      "autoopt_desc": null
+    },
+    "motion_blur_mode": {
+      "title": "MOT BLR",
+      "autoopt_desc": null,
+      "enabled_desc": null,
+      "disabled_desc": null
+    },
+    "resize_type": {
+      "name": "RESZ",
+      "one_to_one": "1:1",
+      "x_only": "W",
+      "y_only": "H",
+      "full": "FUL"
+    },
+    "goto_detailed": "DTL STNGS",
+    "pressets": {
+      "name": "QUAL",
+      "default": "ADAP",
+      "low_pc": "LO PC",
+      "high_quality": "HI GRPH",
+      "high_quality_plus_stream": "HI GHPH + STRM"
+    },
+    "frame_skip": "FRMSKIP",
+    "auto_frame_skip": "AUTO FRMSKIP",
+    "epge": {
+      "list_title": "EFC LIST",
+      "title": "GRPH EFCS",
+      "desc": null,
+      "add_new": "ADD",
+      "move": {
+        "up": "MOV UP",
+        "down": "MOV DWN",
+        "desc": null
+      },
+      "preset": {
+        "save": {
+          "title": "SAV PRST",
+          "desc": null
+        },
+        "load": {
+          "title": "LD PRST",
+          "desc": null
+        }
+      }
+    },
+    "gamma": {
+      "title": "GAM STNGS",
+      "gamma_value": "GAM LVL",
+      "description": {
+        "gamma_value": null
+      }
+    },
+    "epilepsy": "EPLPS",
+    "enable_motion_interp": {
+      "title": "MOT INTRP",
+      "desc": null
+    },
+    "light_quality": {
+      "title": "BLK QUAL",
+      "disabled": {
+        "title": "NO",
+        "desc": null
+      },
+      "low": {
+        "title": "LO",
+        "desc": null
+      },
+      "medium": {
+        "title": "MID",
+        "desc": null
+      },
+      "high": {
+        "title": "HI",
+        "desc": null
+      }
+    },
+    "heat_distort_mode": {
+      "title": "HEAT DIST",
+      "autoopts_desc": "AUTO",
+      "disabled_desc": "NO",
+      "enabled_desc": "YES"
+    },
+    "show_fps": {
+      "title": "FPS",
+      "desc": null
+    },
+    "description": {
+      "palette_select": null,
+      "epilepsy": null,
+      "cpu_safe": null,
+      "motion_blur_quality_mul": null,
+      "blink_particles": null,
+      "disable_frame_limit": null,
+      "vsync": null,
+      "frame_limit": null,
+      "wait_frame": null,
+      "fullscreen": "Растzгивает окно игры на весь экран",
+      "show_mouse_cursour": null,
+      "draw_border": null,
+      "double_buffering": null,
+      "resize_type": {
+        "y_only": null,
+        "x_only": null,
+        "full": null,
+        "one_to_one": null
+      },
+      "pressets": {
+        "default": null,
+        "low_pc": null,
+        "high_quality": null,
+        "high_quality_plus_stream": null
+      },
+      "frame_skip": null,
+      "auto_frame_skip": null
+    }
+  },
+  "input": {
+    "up": "U",
+    "down": "D",
+    "left": "L",
+    "right": "R",
+    "enable": "ENA",
+    "escape": "EXT",
+    "fulscrn": "FULSCRN",
+    "screenshot": "SCRN",
+    "focus": "SLW",
+    "shoot": "ATK",
+    "mode": "MOD",
+    "bomb": "BMB",
+    "exit_and_save": "SAV & EXT"
+  },
+  "tutorial": {
+    "text": {
+      "move_keys": "MOT BTNS",
+      "wave_warning": "GRAZE",
+      "move_up": "UP-FST DWN-SLW",
+      "end": "CONGRAT",
+      "shoot_key": "ATK BTN",
+      "energy_info": "NO ATK 4 EN RGN",
+      "focus_key": "PRESS 4 SLW MOT"
+    }
+  },
+  "sound_settings": {
+    "title": "SND STNGS",
+    "master_gain": {
+      "title": "GAIN"
+    },
+    "music_gain": {
+      "title": "MUS GAIN"
+    },
+    "ui_gain": {
+      "title": "UI GAIN",
+      "desc": null
+    },
+    "sfx_gain": {
+      "title": "SFX GAIN",
+      "desc": null
+    },
+    "count_buffers": {
+      "title": "SND BUFS",
+      "desc": null
+    },
+    "size_buffers": {
+      "title": "BUF SZ",
+      "desc": null
+    },
+    "count_sounds": {
+      "title": "MX SNDS",
+      "desc": null
+    },
+    "device_init_error": "SND DEV INI ERR"
+  },
+  "game_opts": {
+    "title": "GAM STNGS",
+    "rnd_pal": {
+      "title": "RND PAL",
+      "title_after_death": "RND PAL WHL GAM OVR",
+      "desc": null
+    },
+    "collider_autoopt": {
+      "title": "AUTO COL SYS SEL",
+      "desc": null
+    }
+  },
+  "locale_select": {
+    "translation": "TRNSLTN"
+  },
+  "hud_select": {
+    "title": "UI",
+    "default": "RST UI",
+    "no_image": "NO UI IMG"
+  },
+  "nickname": {
+    "title": "PLR NAM",
+    "enter_name": "ENTR NAM",
+    "press_key": "PRES",
+    "for_exit": "4 SAV & EXT",
+    "copy_paste": "4 CPY TXT PRES Ctrl+V OR RGHT MOUS BTN"
+  },
+  "UI": {
+    "hp": "HP",
+    "en": "EN",
+    "hud_type": {
+      "name": "UI TYP",
+      "none": "N",
+      "line_u": "U",
+      "line_d": "D"
+    }
+  },
+  "secret": {
+    "score": "&e0"
+  }
+}

@@ -48,7 +48,7 @@ void save_epges(nlohmann::json& config) {
 
 void load_epges(cr<nlohmann::json> config) {
   graphic::epges.clear();
-  cauto total_epges = config["epge_count"].get<int>();
+  cauto total_epges = config.value("epge_count", int{0});
   ret_if(total_epges <= 0);
   assert(total_epges < 999'999);
   Scope guard(
@@ -59,10 +59,10 @@ void load_epges(cr<nlohmann::json> config) {
   // загрузить все EPGE
   cfor (epge_idx, total_epges) {
     cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
-    cauto epge_node = config[epge_node_name];
-    cont_if(!epge_node);
+    cauto epge_node = node_or_empty(config, epge_node_name);
+    cont_if(epge_node.empty());
 
-    cauto epge_name = epge_node["name"].get<Str>();
+    cauto epge_name = epge_node.value("name", Str{});
     cont_if(epge_name.empty());
 
     auto epge_ptr = make_epge(epge_name);
@@ -70,21 +70,21 @@ void load_epges(cr<nlohmann::json> config) {
     auto& epge = graphic::epges.emplace_back(std::move(epge_ptr));
 
     // загрузить все настройки EPGE:
-    cauto total_params = epge_node["param_count"].get<int>();
+    cauto total_params = epge_node.value("param_count", int{0});
     cont_if(total_params <= 0);
     assert(total_params < 999'999);
 
     auto epge_params = epge->params();
     cfor (param_idx, total_params) {
       const Str param_node_name = "PARAM_" + n2s(param_idx);
-      auto param_node = epge_node[param_node_name];
-      cont_if(!param_node);
+      auto param_node = node_or_empty(epge_node, param_node_name);
+      cont_if(param_node.empty());
 
       auto& param = epge_params.at(param_idx);
       assert(param);
       cauto param_title = param->title_id();
-      if (param_title == param_node["title_id"].get<Str>()) {
-        param->set_value(param_node["value"].get<Str>());
+      if (param_title == param_node.value("title_id", Str{})) {
+        param->set_value(param_node.value("value", Str{}));
       } else {
         log_warning << "Несовпадение параметра \"" << param_title << "\" эффекта \"" <<
           epge_name << "\". Параметр проигнорирован";

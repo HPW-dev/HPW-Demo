@@ -38,6 +38,7 @@ void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
       std::ofstream ofile(path);
       iferror(!ofile.is_open(),
         "error while creating empty JSON-file \"" << path << "\"");
+      ofile << "{}\n";
       ofile.close();
       file.open(path);
     } else {
@@ -57,6 +58,8 @@ void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
 // рекурсивный обход для get_string_table_utf32
 inline static void _get_string_table_utf32(
 String_table_utf32& table, cr<Str> key, cr<nlohmann::json> value) {
+  ret_if (key == "info"); // иногрим версию
+
   if (value.is_string()) {
     table.emplace_back(Kv_utf32{
       .key = str_tolower(key),
@@ -77,6 +80,11 @@ String_table_utf32 get_string_table_utf32(cr<nlohmann::json> src) {
   return ret;
 }
 
-bool check(cr<nlohmann::json> node) {
-  return node && !node.empty();
+bool check(cr<nlohmann::json> node) { return !node.empty(); }
+
+nlohmann::json node_or_empty(cr<nlohmann::json> node, cr<Str> tag) {
+  if (node.contains(tag))
+    return node[tag];
+  
+  return nlohmann::json::object();
 }

@@ -33,7 +33,7 @@ struct Player_dark::Loader::Impl {
 
     cauto anim_node = config["animation"];
     m_anim_info.load(anim_node);
-    assert(check(anim_node));
+    assert(!anim_node.empty());
     m_percent_level_for_blink = anim_node["percent_level_for_blink"].get<real>();
     m_window_star_len         = anim_node["window_star_len"].get<real>();
 
@@ -47,7 +47,7 @@ struct Player_dark::Loader::Impl {
     m_boost_down  = config["boost_down"].get<real>();
 
     cauto shoot_node = config["shoot"];
-    assert( check(shoot_node) );
+    assert( !shoot_node.empty() );
     m_shoot_timer = shoot_node["shoot_timer"].get<real>();
     m_shoot_price = shoot_node["shoot_price"].get<int>();
     m_energy_regen = shoot_node["energy_regen"].get<int>();
