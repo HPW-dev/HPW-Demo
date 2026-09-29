@@ -51,6 +51,7 @@ struct Host::Impl final {
       {{"-oy", "--offset_y"}, "set window startup offset by y", [this](cr<Str> val){ _master._wnd_off.y = s2n<uint32_t>(val); }},
       {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(false)); }},
       {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(true)); }},
+      {{"-dw", "--debug_warnings"}, "enable debug log stream", [this](cr<Str> _){ hpw::logger.config.use_stream_debug = true; }},
       {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
         ret.print_info();
         std::exit(EXIT_SUCCESS);
@@ -73,7 +74,7 @@ struct Host::Impl final {
 Host::Host(int argc, char** argv)
 : _argc(argc)
 , _argv(argv)
-, _impl (new_unique<Impl>(*this))
+, _impl(new_unique<Impl>(*this))
 {
   // парс аргументов:
   hpw::argc = _argc;

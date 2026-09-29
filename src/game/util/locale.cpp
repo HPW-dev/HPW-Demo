@@ -41,9 +41,11 @@ void load_locale(cr<Str> user_path) {
   log_info << "загрузка локализации...";
 
   File mem; 
-  cauto path = (user_path.empty() && !hpw::config.empty())
-    ? hpw::config["path"].value<Str>("locale", hpw::fallback_locale_path)
-    : user_path;
+  Str path = hpw::fallback_locale_path;
+  if (user_path.empty() && !hpw::config.empty() && hpw::config.contains("path"))
+    path = hpw::config["path"].value<Str>("locale", hpw::fallback_locale_path);
+  else
+    path = user_path;
 
   try {
     mem = load_res(path);

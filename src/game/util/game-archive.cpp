@@ -7,8 +7,9 @@ void init_archive() {
 #ifndef DISABLE_ARCHIVE
   
   try {
-    iferror(hpw::config.empty(), "hpw::condif is empty");
-    auto data_path = hpw::cur_dir + hpw::config["path"].value<Str>("resources", hpw::data_path);
+    Str data_path = hpw::data_path;
+    if (!hpw::config.empty())
+      hpw::cur_dir + hpw::config["path"].value<Str>("resources", hpw::data_path);
     init_unique(hpw::archive, data_path);
 
     log_info << "ресурсы будут грузиться из архива \"" + hpw::archive->get_path() + "\"";
