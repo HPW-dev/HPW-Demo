@@ -82,8 +82,6 @@ String_table_utf32 get_string_table_utf32(cr<nlohmann::json> src) {
   return ret;
 }
 
-bool check(cr<nlohmann::json> node) { return !node.empty(); }
-
 nlohmann::json node_or_empty(cr<nlohmann::json> node, cr<Str> tag) {
   if (node.contains(tag))
     return node[tag];
