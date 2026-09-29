@@ -2,8 +2,10 @@
 #include "json-util.hpp"
 
 nlohmann::json& make_node(nlohmann::json& dst, cr<Str> tag_name) {
-   dst[tag_name] = nlohmann::json::object();
-   return dst[tag_name];
+  /* emplace возвращает <итератор, bool>.
+  Итератор указывает на элемент созданный или уже существовавший */
+  auto [it, inserted] = dst.emplace(tag_name, nlohmann::json::object());
+  return it.value();
 }
 
 Strs root_tags(cr<nlohmann::json> src) {
@@ -17,7 +19,7 @@ void save(cr<nlohmann::json> src, cr<Str> path, bool readable) {
   std::ofstream file(path);
   iferror (!file.is_open(), "error while saving JSON-file \"" + path + "\"");
   
-  log_debug << "saving to JSON-file \"" << path << "\"...";
+  log_info << "saving to JSON-file \"" << path << "\"...";
   if (readable)
     file << src.dump(2);
   else
