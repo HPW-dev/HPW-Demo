@@ -1,5 +1,3 @@
-#include <omp.h>
-#include <cassert>
 #include "pch.hpp"
 #include "sprite-io.hpp"
 #include "engine/graphic/image/palette.hpp"
