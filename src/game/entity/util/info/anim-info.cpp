@@ -7,33 +7,33 @@
 #include "engine/graphic/util/graphic-util.hpp"
 
 void Anim_info::load(cr<nlohmann::json> node) {
-  if (!node || node.empty()) {
+  if (node.empty()) {
     log_debug << "пустая нода с анимацией, выход из функции";
     return;
   }
   
-  auto anim_name = node["name"].get<Str>();
+  auto anim_name = node.value("name", Str{});
   try {
     anim = hpw::anim_mgr->find_anim(anim_name).get();
   } catch (...) {
     log_debug << "нет анимации с именем\"" << anim_name << "\"";
   }
 
-  fixed_deg           = node["fixed_deg"].get<bool>();
-  default_deg         = node["default_deg"].get<real>();
-  return_back         = node["return_back"].get<bool>();
-  rand_cur_frame      = node["rand_cur_frame"].get<bool>();
-  speed_scale_minmax  = node["anim_speed_scale"].get<Vector<real>>();
-  layer_up            = node.value<bool>("layer_up", false);
-  ignore_scatter      = node["ignore_scatter"].get<bool>();
-  disable_motion      = node["disable_motion"].get<bool>();
+  fixed_deg           = node.value("fixed_deg", false);
+  default_deg         = node.value("default_deg", real{0});
+  return_back         = node.value("return_back", false);
+  rand_cur_frame      = node.value("rand_cur_frame", false);
+  speed_scale_minmax  = node.value("anim_speed_scale", Vector<real>{});
+  layer_up            = node.value("layer_up", false);
+  ignore_scatter      = node.value("ignore_scatter", false);
+  disable_motion      = node.value("disable_motion", false);
   
   // читать пиксель блендинг
-  if (auto blend_f_name = node["blend_f"].get<Str>(); !blend_f_name.empty())
+  if (auto blend_f_name = node.value("blend_f", Str{}); !blend_f_name.empty())
     bf = find_blend_f(blend_f_name);
 
   // заюзать контур, если есть
-  if (auto contour_bf_name = node["contour_bf"].get<Str>();
+  if (auto contour_bf_name = node.value("contour_bf", Str{});
   !contour_bf_name.empty() && !anim_name.empty()) {
     light_mask_anim = make_light_mask(anim_name, anim_name + ".light_mask").get();
     contour_bf = find_blend_f(contour_bf_name);

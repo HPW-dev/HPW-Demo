@@ -24,16 +24,16 @@ struct Explosion_loader::Impl {
   inline explicit Impl(cr<nlohmann::json> config) {
     m_anim_info.load(config["animation"]);
 
-    m_power = config["power"].get<real>();
-    m_range = config["range"].get<real>();
-    m_particles_range = config["particles_range"].get<real>();
-    m_particle_count = config["particle_count"].get<int>();
+    m_power = config.value("power", real{0});
+    m_range = config.value("range", real{0});
+    m_particles_range = config.value("particles_range", real{0});
+    m_particle_count = config.value("particle_count", int{0});
     assert(m_particle_count > 0);
-    m_entity_names = config["names"].get<Strs>();
+    m_entity_names = config.value("names", Strs{});
     assert(!m_entity_names.empty());
     assert(m_entity_names.size() < 10'000u);
-    if (auto heat_distort_node = config["heat_distort"]; !heat_distort_node.empty())
-      m_heat_distort = load_heat_distort(heat_distort_node);
+    if (config.contains("heat_distort"))
+      m_heat_distort = load_heat_distort(config["heat_distort"]);
   }
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {  

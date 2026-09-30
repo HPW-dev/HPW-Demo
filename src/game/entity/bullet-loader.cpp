@@ -11,7 +11,9 @@ struct Bullet_loader::Impl {
 
   inline explicit Impl(cr<nlohmann::json> config) {
     m_collidable_info.load(config);
-    m_anim_info.load(config["animation"]);
+    
+    if (config.contains("animation"))
+      m_anim_info.load(config["animation"]);
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {

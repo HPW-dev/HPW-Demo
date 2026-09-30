@@ -95,9 +95,14 @@ struct Anim_mgr::Impl {
 
   // грузит одну анимацию из конфига
   inline Shared<Anim> load_from_config(cr<Str> name) const {
-    cauto anim_yml = get_anim_config();
-    cauto animations_node = anim_yml["animations"];
-    return read_anim(animations_node[name]);
+    cauto cfg = get_anim_config();
+    if (cfg.contains("animations")) {
+      cauto animations_node = cfg["animations"];
+      if (animations_node.contains(name))
+        return read_anim(animations_node[name]);
+    }
+    
+    return read_anim({});
   }
 }; // impl
 

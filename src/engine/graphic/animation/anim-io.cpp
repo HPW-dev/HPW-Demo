@@ -42,7 +42,7 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
 } // save_hitbox
 
 inline void load_hitbox(Anim& anim, cr<nlohmann::json> hitbox_node) {
-  return_if( !hitbox_node);
+  return_if(hitbox_node.empty());
   assert(hpw::entity_mgr);
   auto hitbox_source = hpw::entity_mgr->get_hitbox_pool().new_object<Hitbox>();
 
@@ -94,49 +94,52 @@ Shared<Anim> read_anim(cr<nlohmann::json> anim_node) {
   auto anim = new_shared<Anim>();
 
   // загрузка хитбокса
-  load_hitbox(*anim, anim_node["hitbox"]);
+  if (anim_node.contains("hitbox"))
+    load_hitbox(*anim, anim_node["hitbox"]);
 
   // нода с кадрами
-  cauto frames_node = anim_node["frames"];
+  if (anim_node.contains("frames")) {
+    cauto frames_node = anim_node["frames"];
 
-  // прочитать все кадры
-  for (crauto frame_name: root_tags(frames_node)) {
-    auto frame = new_shared<Frame>();
-    // нода этого кадра
-    auto cur_frame_node = frames_node[frame_name];
-    // прочитать длительность кадра
-    frame->duration = cur_frame_node["duration"].get<real>();
-    // прочитать число разворотов
-    frame->source_ctx.max_directions = cur_frame_node["directions"].get<int>();
-    // прочитать коррекцию артефактов
-    auto ccf_name = cur_frame_node["ccf"].get<Str>();
-    if (!ccf_name.empty())
-      frame->source_ctx.ccf = convert_to_ccf(ccf_name);
-    auto cgp_name = cur_frame_node["cgp"].get<Str>();
-    if (!cgp_name.empty())
-      frame->source_ctx.cgp = convert_to_cgp(cgp_name);
-    auto rotate_offset_v = cur_frame_node["rotate offset"].get<Vector<real>>();
-    if (!rotate_offset_v.empty()) {
-      frame->source_ctx.rotate_offset.x = rotate_offset_v.at(0);
-      frame->source_ctx.rotate_offset.y = rotate_offset_v.at(1);
-    }
-    // прочитать источник кадра
-    auto sprite_path = cur_frame_node["sprite path"].get<Str>();
-    if (!sprite_path.empty()) {
-      auto finded_sprite = hpw::sprites.find(sprite_path);
-      if (finded_sprite)
-        frame->source_ctx.direct_0.sprite = finded_sprite;
-    }
-    // смещение отрисовки относительно центра спрайта
-    auto sprite_offset_v = cur_frame_node["sprite offset"].get<Vector<real>>();
-    if (!sprite_offset_v.empty()) {
-      frame->source_ctx.direct_0.offset.x = sprite_offset_v.at(0);
-      frame->source_ctx.direct_0.offset.y = sprite_offset_v.at(1);
-    }
+    // прочитать все кадры
+    for (crauto frame_name: root_tags(frames_node)) {
+      auto frame = new_shared<Frame>();
+      // нода этого кадра
+      auto cur_frame_node = frames_node[frame_name];
+      // прочитать длительность кадра
+      frame->duration = cur_frame_node.value("duration", real{0});
+      // прочитать число разворотов
+      frame->source_ctx.max_directions = cur_frame_node.value("directions", int{0});
+      // прочитать коррекцию артефактов
+      auto ccf_name = cur_frame_node.value("ccf", Str{});
+      if (!ccf_name.empty())
+        frame->source_ctx.ccf = convert_to_ccf(ccf_name);
+      auto cgp_name = cur_frame_node.value("cgp", Str{});
+      if (!cgp_name.empty())
+        frame->source_ctx.cgp = convert_to_cgp(cgp_name);
+      auto rotate_offset_v = cur_frame_node.value("rotate offset", Vector<real>{});
+      if (!rotate_offset_v.empty()) {
+        frame->source_ctx.rotate_offset.x = rotate_offset_v.at(0);
+        frame->source_ctx.rotate_offset.y = rotate_offset_v.at(1);
+      }
+      // прочитать источник кадра
+      auto sprite_path = cur_frame_node.value("sprite path", Str{});
+      if (!sprite_path.empty()) {
+        auto finded_sprite = hpw::sprites.find(sprite_path);
+        if (finded_sprite)
+          frame->source_ctx.direct_0.sprite = finded_sprite;
+      }
+      // смещение отрисовки относительно центра спрайта
+      auto sprite_offset_v = cur_frame_node.value("sprite offset", Vector<real>{});
+      if (!sprite_offset_v.empty()) {
+        frame->source_ctx.direct_0.offset.x = sprite_offset_v.at(0);
+        frame->source_ctx.direct_0.offset.y = sprite_offset_v.at(1);
+      }
 
-    frame->reinit_directions_by_source();
-    anim->add_frame(frame);
-  } // for frames_node tags
+      frame->reinit_directions_by_source();
+      anim->add_frame(frame);
+    } // for frames_node tags
+  } // if frames in json
 
   return anim;
 } // read_anim

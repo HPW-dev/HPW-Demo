@@ -98,19 +98,20 @@ struct Cosmic_hunter::Loader::Impl {
   Info _info {};
 
   inline explicit Impl(cr<nlohmann::json> config) {
-    _info.shoot_timer = Timer( config["shoot_timer"].get<real>() );
-    _info.speed = pps( config["speed"].get<real>() );
-    _info.rotate_speed = pps( config["rotate_speed"].get<real>() );
-    _info.bullet_speed = pps( config["bullet_speed"].get<real>() );
-    _info.shoot_deg = config["shoot_deg"].get<real>();
-    _info.bullet_name = config["bullet_name"].get<Str>();
+    _info.shoot_timer = Timer( config.value("shoot_timer", real{0}) );
+    _info.speed = pps( config.value("speed", real{0}) );
+    _info.rotate_speed = pps( config.value("rotate_speed", real{0}) );
+    _info.bullet_speed = pps( config.value("bullet_speed", real{0}) );
+    _info.shoot_deg = config.value("shoot_deg", real{0});
+    _info.bullet_name = config.value("bullet_name", Str{});
 
+    assert(config.contains("animation"));
     cauto anim_node = config["animation"];
     assert(!anim_node.empty());
-    cauto external_part_name = anim_node["foreground_name"].get<Str>();
+    cauto external_part_name = anim_node.value("foreground_name", Str{});
     cauto external_anim = hpw::anim_mgr->find_anim(external_part_name).get();
     _info.external_part.set_anim(external_anim);
-    _info.initial_rot_spd = pps(anim_node.value<real>("initial_rot_spd", 8.0));
+    _info.initial_rot_spd = pps(anim_node.value("initial_rot_spd", real{8.0}));
     
     assert(_info.bullet_speed > 0);
     assert(_info.rotate_speed > 0);

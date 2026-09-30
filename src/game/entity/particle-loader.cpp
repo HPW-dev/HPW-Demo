@@ -15,12 +15,14 @@ struct Particle_loader::Impl {
   real m_force {};
 
   inline explicit Impl(cr<nlohmann::json> config) {
-    m_anim_info.load(config["animation"]);
-    m_rand_deg          = config.value<bool>("rand_deg", false);
-    m_kill_by_end_anim  = config.value<bool>("kill_by_end_anim", true);
-    m_kill_by_end_frame = config.value<bool>("kill_by_end_frame", false);
-    m_lifetime          = config.value<bool>("lifetime", false);
-    m_force             = config.value<bool>("force", false);
+    if (config.contains("animation"))
+      m_anim_info.load(config["animation"]);
+      
+    m_rand_deg          = config.value("rand_deg", false);
+    m_kill_by_end_anim  = config.value("kill_by_end_anim", true);
+    m_kill_by_end_frame = config.value("kill_by_end_frame", false);
+    m_lifetime          = config.value("lifetime", real{0});
+    m_force             = config.value("force", real{0});
   } // c-tor
 
   inline Entity* operator()(Entity* master, const Vec pos, Entity* parent) {

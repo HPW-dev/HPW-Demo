@@ -19,7 +19,7 @@ void save(cr<nlohmann::json> src, cr<Str> path, bool readable) {
   std::ofstream file(path);
   iferror (!file.is_open(), "error while saving JSON-file \"" + path + "\"");
   
-  log_info << "saving to JSON-file \"" << path << "\"...";
+  log_debug << "saving to JSON-file \"" << path << "\"...";
   if (readable)
     file << src.dump(2);
   else

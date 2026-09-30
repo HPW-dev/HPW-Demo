@@ -31,30 +31,32 @@ struct Player_dark::Loader::Impl {
   inline explicit Impl(cr<nlohmann::json> config) {
     m_collidable_info.load(config);
 
+    assert(config.contains("animation"));
     cauto anim_node = config["animation"];
     m_anim_info.load(anim_node);
     assert(!anim_node.empty());
-    m_percent_level_for_blink = anim_node["percent_level_for_blink"].get<real>();
-    m_window_star_len         = anim_node["window_star_len"].get<real>();
+    m_percent_level_for_blink = anim_node.value("percent_level_for_blink", real{0});
+    m_window_star_len         = anim_node.value("window_star_len", real{0});
 
-    m_force       = config["force"].get<real>();
-    m_focus_force = config["focus_force"].get<real>();
-    m_max_speed   = config["max_speed"].get<real>();
-    m_focus_speed = config["focus_speed"].get<real>();
-    m_fuel        = config["fuel"].get<int>();
-    m_energy_max  = config["energy_max"].get<int>();
-    m_boost_up    = config["boost_up"].get<real>();
-    m_boost_down  = config["boost_down"].get<real>();
+    m_force       = config.value("force", real{0});
+    m_focus_force = config.value("focus_force", real{0});
+    m_max_speed   = config.value("max_speed", real{0});
+    m_focus_speed = config.value("focus_speed", real{0});
+    m_fuel        = config.value("fuel", int{0});
+    m_energy_max  = config.value("energy_max", int{0});
+    m_boost_up    = config.value("boost_up", real{0});
+    m_boost_down  = config.value("boost_down", real{0});
 
+    assert(config.contains("shoot"));
     cauto shoot_node = config["shoot"];
     assert( !shoot_node.empty() );
-    m_shoot_timer = shoot_node["shoot_timer"].get<real>();
-    m_shoot_price = shoot_node["shoot_price"].get<int>();
-    m_energy_regen = shoot_node["energy_regen"].get<int>();
-    m_default_shoot_count = shoot_node["default_shoot_count"].get<int>();
-    m_deg_spread_shoot = shoot_node["deg_spread_shoot"].get<real>();
-    m_deg_focused_shoot = shoot_node["deg_focused_shoot"].get<real>();
-    m_shoot_speed = shoot_node["shoot_speed"].get<real>();
+    m_shoot_timer = shoot_node.value("shoot_timer", real{0});
+    m_shoot_price = shoot_node.value("shoot_price", int{0});
+    m_energy_regen = shoot_node.value("energy_regen", int{0});
+    m_default_shoot_count = shoot_node.value("default_shoot_count", int{0});
+    m_deg_spread_shoot = shoot_node.value("deg_spread_shoot", real{0});
+    m_deg_focused_shoot = shoot_node.value("deg_focused_shoot", real{0});
+    m_shoot_speed = shoot_node.value("shoot_speed", real{0});
 
     // проверка параметров
     assert(m_window_star_len > 0);
