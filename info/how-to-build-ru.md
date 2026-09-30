@@ -13,15 +13,15 @@
 Переходите в разде [Сборка игры из исходников](#Сборка-игры-из-исходников)
 
 # Как собрать для Linux:
-Потребуется GCC, **Clang и musl не поддерживаются**. Static-версия и контейнеры в .appimage ещё не готовы. Минимальный поддерживаемый стандарт для сборки **C++23**. Потребуется **[Python](https://www.python.org/)**.
+Потребуется GCC, **Clang и musl не поддерживаются**. Static-версия и контейнеры в .appimage ещё не готовы. Минимальный поддерживаемый стандарт для сборки **C++26**. Потребуется **[Python](https://www.python.org/)**.
 
 При сборке в Линуксе, **зависимости докачайте самостоятельно** через ваш пакетный менеджер (ищите devel или dev пакеты, например glew-devel). 
-**Требуемые пакеты:** GCC/Clang, GLEW, GLFW3, OpenAL-soft, YAML-cpp. Если у вас **Wayland**, то нужно качать **glfw-wayland**.
+**Требуемые пакеты:** GCC/Clang, GLEW, GLFW3, OpenAL-soft. Если у вас **Wayland**, то нужно качать **glfw-wayland**.
 
 # Сборка игры из исходников
 _Команды для скачивания и сборки игры:_
 ```
-git clone --depth=2 https://github.com/HPW-dev/HPW-Demo
+git clone --depth=4 https://github.com/HPW-dev/HPW-Demo
 cd HPW-Demo
 python builder
 ```
