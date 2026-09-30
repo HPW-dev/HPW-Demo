@@ -10,7 +10,7 @@ void init_archive() {
     Str data_path = hpw::data_path;
     if (!hpw::config.empty())
       hpw::cur_dir + hpw::config["path"].value<Str>("resources", hpw::data_path);
-    init_unique(hpw::archive, data_path);
+    init_unique(hpw::archive, hpw::cur_dir + data_path);
 
     log_info << "ресурсы будут грузиться из архива \"" + hpw::archive->get_path() + "\"";
     return;
