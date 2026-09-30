@@ -323,7 +323,7 @@ void load_config() {
   hpw::replays_path = path_node.value<Str>("replays_dir", hpw::replays_path);
 
   // сделать папки, если их нет
-  make_dir_if_not_exist(hpw::cur_dir + path_node.value<Str>("screenshots", "screenshots"));
+  make_dir_if_not_exist(hpw::cur_dir + path_node.value<Str>("screenshots", hpw::screenshots_path));
   make_dir_if_not_exist(hpw::cur_dir + hpw::replays_path);
 
   cauto graphic_node = node_or_empty(config, "graphic");
