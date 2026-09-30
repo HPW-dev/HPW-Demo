@@ -16,20 +16,20 @@ inline void save_hitbox(cp<Anim> anim, nlohmann::json& root) {
   return_if (!hitbox_source);
   return_if (!scast<bool>(*hitbox_source));
 
-  auto hitbox_node = make_node(root, "hitbox");
+  rauto hitbox_node = make_node(root, "hitbox");
 
   // сохранить полигоны хитбокса
-  auto polygons_node = make_node(hitbox_node, "polygons");
+  rauto polygons_node = make_node(hitbox_node, "polygons");
   for (uint poly_idx = 0; crauto polygon: hitbox_source->polygons) {
     cont_if( !polygon);
 
-    auto cur_poly_node = make_node(polygons_node, "poly_" + n2s(poly_idx));
+    rauto cur_poly_node = make_node(polygons_node, "poly_" + n2s(poly_idx));
     if (polygon.offset.not_zero())
       cur_poly_node["offset"] = Vector<real>{polygon.offset.x, polygon.offset.y};
 
     // сохранить точки полигона
     if ( !polygon.points.empty()) {
-      auto points_node = make_node(cur_poly_node, "points");
+      rauto points_node = make_node(cur_poly_node, "points");
 
       for (uint point_idx = 0; crauto point: polygon.points) {
         points_node["P" + n2s(point_idx)] = Vector<real>{point.x, point.y};
@@ -149,21 +149,21 @@ void save_anims(nlohmann::json& dst, cr<Str> save_path) {
   // нода с анимациями
   auto anims = hpw::anim_mgr->get_anims();
   return_if (anims.empty());
-  auto animations_node = make_node(dst, "animations");
+  rauto animations_node = make_node(dst, "animations");
   for (crauto anim: anims) {
     cont_if(!anim);
     // нода с именем анимации
-    auto cur_anim_node = make_node(animations_node, anim->get_name());
+    rauto cur_anim_node = make_node(animations_node, anim->get_name());
     save_hitbox(anim.get(), cur_anim_node);
 
     // нода с кадрами
     auto frames = anim->get_frames();
     cont_if(frames.empty());
-    auto frames_node = make_node(cur_anim_node, "frames");
+    rauto frames_node = make_node(cur_anim_node, "frames");
     for (crauto frame: frames) {
       cont_if(!frame);
       // нода по имени (uid) кадра
-      auto cur_frame_node = make_node(frames_node, frame->get_name());
+      rauto cur_frame_node = make_node(frames_node, frame->get_name());
       // длительность кадра
       if (frame->duration > 0)
         cur_frame_node["duration"] = frame->duration;

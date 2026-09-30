@@ -23,7 +23,7 @@ void save_epges(nlohmann::json& config) {
     cont_if(epge_name.empty());
     
     cauto epge_node_name = Str("EPGE_") + n2s(epge_idx);
-    auto epge_node = make_node(config, epge_node_name);
+    rauto epge_node = make_node(config, epge_node_name);
 
     epge_node["name"] = epge->name();
 
@@ -35,7 +35,7 @@ void save_epges(nlohmann::json& config) {
 
       for (int param_idx {}; crauto param: epge_params) {
         cauto param_node_name = "PARAM_" + n2s(param_idx);
-        auto param_node = make_node(epge_node, param_node_name);
+        rauto param_node = make_node(epge_node, param_node_name);
         param_node["title_id"] = param->title_id();
         param_node["value"] = param->get_value();
         ++param_idx;

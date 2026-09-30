@@ -44,7 +44,7 @@ static inline void load_log_config(cr<nlohmann::json> config) {
 static inline void save_log_config(nlohmann::json& config) {
   config["file_name"] = hpw::log_file_path;
   
-  auto streams_node = make_node(config, "streams");
+  rauto streams_node = make_node(config, "streams");
   streams_node["terminal"] = hpw::logger.config.use_terminal;
   streams_node["info"] = hpw::logger.config.use_stream_info;
   streams_node["warning"] = hpw::logger.config.use_stream_warning;
@@ -228,21 +228,21 @@ void save_config() {
   config["enable_replay"] = hpw::enable_replay;
   config["need_tutorial"] = hpw::need_tutorial;
 
-  auto game_node = make_node(config, "game");
+  rauto game_node = make_node(config, "game");
   save_game_config(game_node);
   save_nickname();
 
-  auto path_node = make_node(config, "path");
+  rauto path_node = make_node(config, "path");
   path_node["screenshots"] = hpw::screenshots_path;
   path_node["resources"] = hpw::data_path;
   path_node["os_resources_dir"] = hpw::os_resources_dir;
   path_node["replays_dir"] = hpw::replays_path;
 
-  auto debug = make_node(config, "debug");
+  rauto debug = make_node(config, "debug");
   debug["empty_level_first"] = hpw::empty_level_first;
   debug["start_script"] = hpw::start_script;
 
-  auto graphic_node = make_node(config, "graphic");
+  rauto graphic_node = make_node(config, "graphic");
   graphic_node["canvas_size"] = Vector<int>{graphic::width, graphic::height};
   graphic_node["light_quality"] = scast<int>(graphic::light_quality);
   graphic_node["enable_motion_interp"] = graphic::enable_motion_interp;
@@ -266,14 +266,14 @@ void save_config() {
   save_test_image_path(graphic_node);
 
   #ifndef NO_EPGE
-  auto epge_node = make_node(graphic_node, "epge");
+  rauto epge_node = make_node(graphic_node, "epge");
   save_epges(epge_node);
   #endif
 
-  auto log_node = make_node(config, "log");
+  rauto log_node = make_node(config, "log");
   save_log_config(log_node);
 
-  auto sync_node = make_node(graphic_node, "sync");
+  rauto sync_node = make_node(graphic_node, "sync");
   sync_node["vsync"] = graphic::get_vsync();
   sync_node["wait_frame"] = graphic::wait_frame;
   sync_node["target_fps"] = graphic::get_target_fps();
@@ -281,7 +281,7 @@ void save_config() {
   sync_node["autoopt_timeout_max"] = graphic::autoopt_timeout_max;
   sync_node["disable_frame_limit"] = graphic::get_disable_frame_limit();
 
-  auto input_node = make_node(config, "input");
+  rauto input_node = make_node(config, "input");
   #define SAVE_KEY(name) input_node[#name] = get_scancode(hpw::keycode::name);
   SAVE_KEY(enable)
   SAVE_KEY(escape)
