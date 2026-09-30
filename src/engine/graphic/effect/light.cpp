@@ -1,4 +1,3 @@
-#include <omp.h>
 #include "pch.hpp"
 #include "light.hpp"
 #include "engine/graphic/util/graphic-util.hpp"

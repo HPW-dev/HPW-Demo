@@ -1,4 +1,3 @@
-#include <filesystem>
 #include "pch.hpp"
 #include "image-io.hpp"
 #include "palette.hpp"
