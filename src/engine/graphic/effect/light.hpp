@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "engine/graphic/image/color-blend.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 enum class Light_quality {

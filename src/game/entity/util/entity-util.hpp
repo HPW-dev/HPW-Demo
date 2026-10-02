@@ -4,10 +4,10 @@
 #include "engine/sound/audio.hpp"
 #include "util/str.hpp"
 #include "util/macro.hpp"
-#include "util/math/num-types.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/rect.hpp"
-#include "util/math/vec.hpp"
+#include "util/num-types.hpp"
+#include "util/vec.hpp"
+#include "util/rect.hpp"
+#include "util/vec.hpp"
 
 class Entity;
 class Particle;

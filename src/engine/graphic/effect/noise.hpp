@@ -1,6 +1,6 @@
 #pragma once
-#include "util/math/num-types.hpp"
-#include "util/math/vec.hpp"
+#include "util/num-types.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 /** Создаёт шум похожий на шум Перлена

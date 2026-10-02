@@ -1,6 +1,6 @@
 #pragma once
 #include "protownd.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 // базовый класс для игрового хоста
 class Host_ogl: public Protownd {

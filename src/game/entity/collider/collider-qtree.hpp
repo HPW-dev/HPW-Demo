@@ -5,7 +5,7 @@
 #include "robin-hood-hashing/robin_hood.h"
 #include "util/mempool.hpp"
 #include "util/platform.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "collider.hpp"
 
 class Collidable;

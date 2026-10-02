@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 #include "util/mem-types.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 // применяет список эффектов к картинке

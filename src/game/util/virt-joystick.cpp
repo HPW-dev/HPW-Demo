@@ -3,8 +3,8 @@
 #include "game/util/keybits.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/rect.hpp"
+#include "util/vec.hpp"
+#include "util/rect.hpp"
 #include "util/unicode.hpp"
 
 void draw_virtual_joystick(Image& dst) {

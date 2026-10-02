@@ -1,6 +1,6 @@
 #pragma once
 #include "util/macro.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 class Entity;
 

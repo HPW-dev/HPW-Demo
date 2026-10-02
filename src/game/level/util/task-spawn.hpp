@@ -2,7 +2,7 @@
 #include <utility>
 #include <functional>
 #include "util/vector-types.hpp"
-#include "util/math/timer.hpp"
+#include "util/timer.hpp"
 
 class Entity;
 

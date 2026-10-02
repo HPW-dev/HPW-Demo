@@ -1,5 +1,5 @@
 #include "entity-cbs.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 #define MAKE_CB_IMPL(FNAME, TYPE, VAR) \
   void Entity_cbs::FNAME(cr<TYPE> callback) { \

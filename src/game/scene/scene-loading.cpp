@@ -11,7 +11,7 @@
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/effect/dither.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 
 Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
 : scene_maker {_scene_maker} {

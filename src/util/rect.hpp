@@ -1,5 +1,5 @@
 #pragma once
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 // Базовый класс под прямоугольники
 template <typename T>

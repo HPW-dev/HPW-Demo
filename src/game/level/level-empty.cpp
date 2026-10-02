@@ -10,9 +10,9 @@
 #include "util/hpw-util.hpp"
 
 //#include "game/core/sounds.hpp"
-//#include "util/math/vec-util.hpp"
-//#include "util/math/timer.hpp"
-//#include "util/math/random.hpp"
+//#include "util/vec-util.hpp"
+//#include "util/timer.hpp"
+//#include "util/random.hpp"
 //#include "util/error.hpp"
 //#include "game/core/fonts.hpp"
 

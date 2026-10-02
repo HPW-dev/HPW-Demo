@@ -1,7 +1,7 @@
 #pragma once
 #include "game/entity/entity-type.hpp"
 #include "util/macro.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 // ресолвер коллизий (база)

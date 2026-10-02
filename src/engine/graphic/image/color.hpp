@@ -1,6 +1,6 @@
 #pragma once
 #include <cmath>
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/macro.hpp"
 #include "color-rgb.hpp"
 

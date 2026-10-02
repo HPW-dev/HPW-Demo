@@ -8,9 +8,9 @@
 #include "game/entity/entity-type.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/util/phys.hpp"
-#include "util/math/num-types.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/random.hpp"
+#include "util/num-types.hpp"
+#include "util/vec-util.hpp"
+#include "util/random.hpp"
 
 uint chunk_id {0}; // для визуального разграничения
 

@@ -6,7 +6,7 @@
 #include "macro.hpp"
 #include "platform.hpp"
 #include "str.hpp"
-#include "math/num-types.hpp"
+#include "num-types.hpp"
 
 inline constexpr Cstr s2yn(const bool cond) { return cond ? "yes" : "no"; }
 inline constexpr Cstr yn2s(bool comp) { return comp ? "YES" : "NO"; }

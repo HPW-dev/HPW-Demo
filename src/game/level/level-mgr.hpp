@@ -4,7 +4,7 @@
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 #include "util/str.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 class Level;

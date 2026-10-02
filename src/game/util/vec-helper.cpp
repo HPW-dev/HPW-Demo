@@ -1,9 +1,9 @@
 #include <cassert>
 #include "vec-helper.hpp"
 #include "game/core/canvas.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/rect.hpp"
-#include "util/math/random.hpp"
+#include "util/vec.hpp"
+#include "util/rect.hpp"
+#include "util/random.hpp"
 
 Vec get_screen_center() { return Vec(graphic::width / 2.0, graphic::height / 2.0); }
 

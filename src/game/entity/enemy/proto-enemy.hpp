@@ -2,7 +2,7 @@
 #include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "game/entity/collidable.hpp"
 #include "game/entity/entity-loader.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 // общая база для изичного построения врагов

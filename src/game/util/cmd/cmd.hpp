@@ -1,7 +1,7 @@
 #pragma once
 #include <utility>
 #include "util/mem-types.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "util/macro.hpp"
 #include "util/str.hpp"
 #include "util/vector-types.hpp"

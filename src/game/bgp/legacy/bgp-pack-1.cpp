@@ -9,7 +9,7 @@
 #include "engine/graphic/effect/light.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/core/fonts.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 
 // симуляция волн
 class Waves final {

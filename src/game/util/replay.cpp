@@ -64,7 +64,7 @@ Str get_random_replay_name() {
 #include "game/core/tasks.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "util/file/file.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "util/vector-types.hpp"
 #include "util/hpw-util.hpp"
 #include "util/error.hpp"

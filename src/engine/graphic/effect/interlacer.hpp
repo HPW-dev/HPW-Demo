@@ -1,5 +1,5 @@
 #pragma once
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/mem-types.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 

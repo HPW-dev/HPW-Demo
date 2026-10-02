@@ -1,5 +1,5 @@
 #include "logo.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 
 cr<Strs> get_all_logos() {
   sconst Strs table_logo {

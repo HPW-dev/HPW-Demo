@@ -2,7 +2,7 @@
 #include <typeinfo>
 #include "util/vector-types.hpp"
 #include "util/mempool.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 using Entity_type = std::size_t;
 

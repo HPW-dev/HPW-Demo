@@ -1,7 +1,7 @@
 #include "entity-debug.hpp"
 #include "entity.hpp"
 #include "collidable.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/canvas.hpp"

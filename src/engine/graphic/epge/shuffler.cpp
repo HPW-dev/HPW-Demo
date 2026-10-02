@@ -6,7 +6,7 @@
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/rotation.hpp"
-#include "util/math/limit.hpp"
+#include "util/limit.hpp"
 
 namespace epge {
   

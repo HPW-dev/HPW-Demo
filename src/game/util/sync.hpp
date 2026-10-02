@@ -1,6 +1,6 @@
 #pragma once
 #include "util/macro.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 namespace graphic {
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "epge-util.hpp"
 #include "epge-params.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/unicode.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 

@@ -2,7 +2,7 @@
 #include "menu.hpp"
 #include "util/unicode.hpp"
 #include "util/str.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 // Более красивое текстовое меню с описанием
 class Table_menu: public Menu {

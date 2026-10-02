@@ -2,8 +2,8 @@
 #include <atomic>
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/num-types.hpp"
+#include "util/vec.hpp"
+#include "util/num-types.hpp"
 #include "host-resize.hpp"
 #include "command.hpp"
 

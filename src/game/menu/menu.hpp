@@ -3,8 +3,8 @@
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
 #include "util/mem-types.hpp"
-#include "util/math/num-types.hpp"
-#include "util/math/rect.hpp"
+#include "util/num-types.hpp"
+#include "util/rect.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 class Menu_item;

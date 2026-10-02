@@ -1,7 +1,7 @@
 #pragma once
 #include <numbers>
 #include <limits>
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 inline constexpr real PI = std::numbers::pi;
 inline constexpr auto real_inf = std::numeric_limits<real>::infinity();

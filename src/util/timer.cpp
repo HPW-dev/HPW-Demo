@@ -1,6 +1,6 @@
 #include "pch.hpp"
 #include "timer.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 
 void Timer::set_timer(const Delta_time new_timer) {
   assert(new_timer >= 0);

@@ -2,7 +2,7 @@
 // @file глобальные колбэки
 #include <functional>
 #include "util/str.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 enum class Resize_mode;
 

@@ -2,7 +2,7 @@
 #include <cmath>
 #include "mat.hpp"
 #include "util/macro.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "util/str.hpp"
 
 Vec rotate_rad(const Vec center, const Vec src, real radian);

@@ -4,7 +4,7 @@
 #include "util/str.hpp"
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 Str get_name(Ability_id id);
 Ability_id get_id(cr<Str> name);

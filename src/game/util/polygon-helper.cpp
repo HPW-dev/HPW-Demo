@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include "polygon-helper.hpp"
-#include "util/math/polygon.hpp"
-#include "util/math/circle.hpp"
-#include "util/math/vec-util.hpp"
+#include "util/polygon.hpp"
+#include "util/circle.hpp"
+#include "util/vec-util.hpp"
 
 Circle cover_polygons(cr<Vector<Polygon>> polygons) {
   return_if (polygons.empty(), {});

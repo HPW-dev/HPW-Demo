@@ -1,7 +1,7 @@
 #pragma once
 #include "util/action.hpp"
 #include "util/unicode.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 // база для элементов меню
 class Menu_item {

@@ -1,6 +1,6 @@
 #pragma once
 #include <functional>
-#include "math/num-types.hpp"
+#include "num-types.hpp"
 
 // вызывает функцию при деструкторе и конструкторе (для областей видимости)
 class Scope final {

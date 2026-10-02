@@ -1,7 +1,7 @@
 #pragma once
 #include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "game/entity/enemy/proto-enemy.hpp"
-#include "util/math/timer.hpp"
+#include "util/timer.hpp"
 #include "util/str.hpp"
 #include "game/entity/util/hitbox.hpp"
 

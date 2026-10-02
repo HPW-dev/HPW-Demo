@@ -2,7 +2,7 @@
 #include <cstddef>
 #include "game/util/resource.hpp"
 #include "util/file/file.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 // данные аудио файла
 struct Audio: public Resource {

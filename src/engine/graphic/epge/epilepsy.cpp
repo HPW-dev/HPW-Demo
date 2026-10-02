@@ -1,7 +1,7 @@
 #include <omp.h>
 #include <cassert>
 #include "epilepsy.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "game/util/locale.hpp"
 

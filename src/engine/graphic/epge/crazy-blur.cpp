@@ -4,7 +4,7 @@
 #include "engine/graphic/util/resize.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "game/util/locale.hpp"
 
 namespace epge {

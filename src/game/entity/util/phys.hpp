@@ -1,5 +1,5 @@
 #pragma once
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 // Physical context
 class Phys final {

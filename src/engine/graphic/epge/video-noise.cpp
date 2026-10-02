@@ -3,7 +3,7 @@
 #include "video-noise.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/image/color-blend.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "game/util/locale.hpp"
 
 namespace epge {

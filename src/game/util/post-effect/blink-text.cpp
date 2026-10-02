@@ -1,7 +1,7 @@
 #include <cassert>
 #include "blink-text.hpp"
-#include "util/math/timer.hpp"
-#include "util/math/rect.hpp"
+#include "util/timer.hpp"
+#include "util/rect.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"

@@ -1,7 +1,7 @@
 #include "entity-loader.hpp"
 #include "entity.hpp"
 #include "util/entity-util.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 void Entity_loader::prepare(Entity& dst, Entity* master, const Vec pos) {
   dst.set_master(master);

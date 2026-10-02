@@ -1,6 +1,6 @@
 #pragma once
 #include <functional>
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 using Cond_checker = std::function<bool ()>;
 

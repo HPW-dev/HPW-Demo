@@ -1,6 +1,6 @@
 #include "level-tutorial.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/random.hpp"
+#include "util/vec.hpp"
+#include "util/random.hpp"
 #include "util/unicode.hpp"
 #include "util/hpw-util.hpp"
 #include "game/entity/player/player.hpp"

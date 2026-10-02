@@ -11,7 +11,7 @@
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/font/font-util.hpp"
-#include "util/math/timer.hpp"
+#include "util/timer.hpp"
 
 struct Scene_msgbox_enter::Impl {
   constx int WND_X = 375;

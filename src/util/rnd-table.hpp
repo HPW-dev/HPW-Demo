@@ -1,7 +1,7 @@
 #pragma once
 #include <utility>
 #include <cassert>
-#include "math/random.hpp"
+#include "random.hpp"
 #include "vector-types.hpp"
 
 // класс для случайных значений из списка

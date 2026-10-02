@@ -8,9 +8,9 @@
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/image/color-blend.hpp"
 //#include "engine/graphic/util/graphic-util.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/vec-util.hpp"
-#include "util/math/rect.hpp"
+#include "util/vec.hpp"
+#include "util/vec-util.hpp"
+#include "util/rect.hpp"
 #include "util/error.hpp"
 
 extern Rect get_insertion_bound(cr<Image> dst, const Vec pos, cr<Image> src) noexcept;

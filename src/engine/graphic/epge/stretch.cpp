@@ -3,7 +3,7 @@
 #include <cmath>
 #include "epge.hpp"
 #include "game/util/locale.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "engine/graphic/image/image.hpp"
 
 EPGE_CLASS_BEGIN(stretch)

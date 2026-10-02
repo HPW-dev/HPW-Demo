@@ -3,8 +3,8 @@
 #include <functional>
 #include "scene.hpp"
 #include "util/mem-types.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/timer.hpp"
+#include "util/vec.hpp"
+#include "util/timer.hpp"
 #include "util/str.hpp"
 #include "util/unicode.hpp"
 #include "game/core/bgps.hpp"

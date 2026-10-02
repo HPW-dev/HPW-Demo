@@ -1,7 +1,7 @@
 
 #pragma once
 #include "menu.hpp"
-#include "util/math/rect.hpp"
+#include "util/rect.hpp"
 #include "util/unicode.hpp"
 #include "engine/graphic/image/color.hpp"
 #include "engine/graphic/image/color-blend.hpp"

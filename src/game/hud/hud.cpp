@@ -1,7 +1,7 @@
 #include "hud.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "game/util/sync.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/difficulty.hpp"

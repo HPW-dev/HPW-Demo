@@ -72,8 +72,7 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.append(f'{thirdparty_dir}include/stb/stb_vorbis.c')
 
   tgt.sources.extend(find(f'{src_dir}util/file/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}util/math/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}util/math/*.c'))
+  tgt.sources.extend(find(f'{src_dir}util/*.c'))
   tgt.sources.extend(find(f'{src_dir}util/*.cpp'))
 
   tgt.sources.extend(find(f'{src_dir}host/windows/*.cpp'))

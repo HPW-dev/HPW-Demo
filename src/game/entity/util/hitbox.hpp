@@ -1,7 +1,7 @@
 #pragma once
-#include "util/math/circle.hpp"
-#include "util/math/polygon.hpp"
-#include "util/math/vec.hpp"
+#include "util/circle.hpp"
+#include "util/polygon.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 using Polygons = Vector<Polygon>;

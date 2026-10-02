@@ -1,7 +1,7 @@
 #pragma once
 #include "util/str.hpp"
 #include "util/macro.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 namespace hpw {
 inline Str bgp_for_menu {};                   // если ничего не задано, будет выбран случайно

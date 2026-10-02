@@ -1,6 +1,6 @@
 #include "level-util.hpp"
 #include <cassert>
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 
 // меняет blink_flag так, чтобы он мигал в зависимости от времени time
 Bg_blink::Bg_blink(bool& blink_flag, const Delta_time time)

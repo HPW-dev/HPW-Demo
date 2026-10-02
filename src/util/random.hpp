@@ -7,8 +7,8 @@
 
 #include <cstdint>
 #include "util/macro.hpp"
-#include "util/math/limit.hpp"
-#include "util/math/num-types.hpp"
+#include "util/limit.hpp"
+#include "util/num-types.hpp"
 
 // аргумент для дебажного вывода места вызова рандома
 #ifdef RND_LOG

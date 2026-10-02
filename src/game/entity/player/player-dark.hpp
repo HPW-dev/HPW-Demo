@@ -3,7 +3,7 @@
 #include "player.hpp"
 #include "game/entity/entity-loader.hpp"
 #include "util/mem-types.hpp"
-#include "util/math/timer.hpp"
+#include "util/timer.hpp"
 
 class Anim;
 

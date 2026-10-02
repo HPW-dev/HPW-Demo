@@ -2,7 +2,7 @@
 #include <utility>
 #include <deque>
 #include "util/action.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/mem-types.hpp"
 #include "util/unicode.hpp"
 #include "engine/graphic/image/color-blend.hpp"

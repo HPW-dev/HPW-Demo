@@ -2,9 +2,9 @@
 // @file функции для рисования на картинке
 #include <cassert>
 #include "util/error.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/rect.hpp"
-#include "util/math/num-types.hpp"
+#include "util/vec.hpp"
+#include "util/rect.hpp"
+#include "util/num-types.hpp"
 #include "engine/graphic/image/color-blend.hpp"
 #include "engine/graphic/image/mode-get.hpp"
 #include "engine/graphic/image/image-fwd.hpp"

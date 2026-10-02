@@ -1,6 +1,6 @@
 #pragma once
 #include "collider.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 class Collider_experimental_2 final: public Collider {

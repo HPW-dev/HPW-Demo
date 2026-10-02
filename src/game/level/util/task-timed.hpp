@@ -1,7 +1,7 @@
 #pragma once
 #include <cassert>
 #include "level-tasks.hpp"
-#include "util/math/timer.hpp"
+#include "util/timer.hpp"
 
 // задача с таймаутом
 struct Timed_task {

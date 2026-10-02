@@ -14,7 +14,7 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 
 struct Scene_gameover::Impl {
   Unique<Menu> menu {};

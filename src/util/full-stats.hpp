@@ -1,7 +1,7 @@
 #pragma once
 #include <algorithm>
 #include "util/vector-types.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/str-util.hpp"
 #include "util/macro.hpp"
 

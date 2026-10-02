@@ -11,8 +11,8 @@
 #include "game/util/vec-helper.hpp"
 #include "game/util/sound-helper.hpp"
 #include "util/hpw-util.hpp"
-#include "util/math/timer.hpp"
-#include "util/math/random.hpp"
+#include "util/timer.hpp"
+#include "util/random.hpp"
 #include "util/rnd-table.hpp"
 
 class Glass_ball::Impl {

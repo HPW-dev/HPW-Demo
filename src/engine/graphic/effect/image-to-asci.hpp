@@ -1,7 +1,7 @@
 #pragma once
 #include "util/str.hpp"
 #include "util/macro.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 enum class Img_to_asci_mode {

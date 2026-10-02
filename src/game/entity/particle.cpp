@@ -2,7 +2,7 @@
 #include "particle.hpp"
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 Particle::Particle()
 : Entity(GET_SELF_TYPE)

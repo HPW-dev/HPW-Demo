@@ -1,5 +1,5 @@
 #pragma once
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 // Мигает флагом в зависимости от времени
 class Bg_blink final {

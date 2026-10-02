@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 namespace hpw {
 

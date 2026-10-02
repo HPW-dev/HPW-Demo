@@ -2,7 +2,7 @@
 #include "util/macro.hpp"
 #include "util/mem-types.hpp"
 #include "util/mempool.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/vector-types.hpp"
 #include "util/str.hpp"
 

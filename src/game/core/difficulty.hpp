@@ -1,5 +1,5 @@
 #pragma once
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 enum class Difficulty: byte {
   easy,

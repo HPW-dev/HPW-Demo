@@ -1,6 +1,6 @@
 #include <cassert>
 #include "task-util.hpp"
-#include "util/math/timer.hpp"
+#include "util/timer.hpp"
 
 struct Task_timed::Impl {
   Task_timed& _master;

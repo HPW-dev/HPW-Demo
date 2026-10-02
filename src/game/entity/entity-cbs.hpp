@@ -2,8 +2,8 @@
 #include <functional>
 #include "util/macro.hpp"
 #include "util/vector-types.hpp"
-#include "util/math/vec.hpp"
-#include "util/math/num-types.hpp"
+#include "util/vec.hpp"
+#include "util/num-types.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 class Entity;

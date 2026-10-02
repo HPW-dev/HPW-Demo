@@ -1,6 +1,6 @@
 #pragma once
 #include "item.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 // пункт меню с числовыми (double) опциями
 class Menu_double_item final: public Menu_item {

@@ -1,7 +1,7 @@
 #pragma once
 #include "util/macro.hpp"
-#include "util/math/num-types.hpp"
-#include "util/math/vec.hpp"
+#include "util/num-types.hpp"
+#include "util/vec.hpp"
 #include "util/unicode.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 

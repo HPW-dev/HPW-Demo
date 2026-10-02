@@ -2,7 +2,7 @@
 #include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "engine/graphic/animation/anim.hpp"
 #include "engine/graphic/image/color-blend.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/vector-types.hpp"
 
 class Entity;

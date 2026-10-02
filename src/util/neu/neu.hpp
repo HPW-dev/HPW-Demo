@@ -2,7 +2,7 @@
 #include <functional>
 #include <thirdparty/include/nlohmann/json_fwd.hpp>
 #include "util/vector-types.hpp"
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 #include "util/macro.hpp"
 
 namespace neu {

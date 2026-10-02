@@ -1,6 +1,6 @@
 #pragma once
-#include "util/math/vec.hpp"
-#include "util/math/rect.hpp"
+#include "util/vec.hpp"
+#include "util/rect.hpp"
 
 [[nodiscard]] Vec get_screen_center();
 [[nodiscard]] Vec get_rand_pos_safe(const real sx, const real sy, const real ex, const real ey);

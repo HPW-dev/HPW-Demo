@@ -1,5 +1,5 @@
 #pragma once
-#include "util/math/num-types.hpp"
+#include "util/num-types.hpp"
 
 namespace hpw {
 inline int target_ups = 240; // updates per sec.

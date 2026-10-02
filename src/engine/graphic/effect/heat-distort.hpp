@@ -1,6 +1,6 @@
 #pragma once
 #include <cstdint>
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
 
 // отображает эффект искажения воздуха

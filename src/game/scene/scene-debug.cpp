@@ -17,7 +17,7 @@
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
 #include "util/file/archive.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "host/host-util.hpp"
 
 Scene_debug::Scene_debug() {

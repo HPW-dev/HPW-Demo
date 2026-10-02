@@ -1,6 +1,6 @@
 #pragma once
 #include "util/mem-types.hpp"
-#include "util/math/vec.hpp"
+#include "util/vec.hpp"
 
 // камера игры
 class Camera final {

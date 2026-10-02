@@ -20,7 +20,7 @@
 #include "game/entity/player/player.hpp"
 #include "game/entity/util/entity-util.hpp"
 #include "util/hpw-util.hpp"
-#include "util/math/random.hpp"
+#include "util/random.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
