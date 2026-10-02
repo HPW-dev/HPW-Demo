@@ -53,7 +53,7 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
     pass
 
   tgt.defines.append('WINDOWS' if host.system == Sys_name.windows else 'LINUX')
-  tgt.defines.append('HOST_GLFW3') # TODO остальные хосты
+  tgt.defines.append('PORT_GLFW3') # TODO остальные хосты
   if ctx.with_tests:
     tgt.defines.append('USE_TESTS')
 
@@ -75,10 +75,10 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}util/*.c'))
   tgt.sources.extend(find(f'{src_dir}util/*.cpp'))
 
-  tgt.sources.extend(find(f'{src_dir}host/windows/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}host/glfw3/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}host/ogl3/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}host/*.cpp'))
+  tgt.sources.extend(find(f'{src_dir}port/windows/*.cpp'))
+  tgt.sources.extend(find(f'{src_dir}port/glfw3/*.cpp'))
+  tgt.sources.extend(find(f'{src_dir}port/ogl3/*.cpp'))
+  tgt.sources.extend(find(f'{src_dir}port/*.cpp'))
 
   # версию надо генерить перед game/util/*, иначе find не найдёт нужное
   generate_game_version_file(ctx)

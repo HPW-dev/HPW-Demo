@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "host-asci.hpp"
+#include "port-asci.hpp"
 #include "game/core/core.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/graphic.hpp"
@@ -8,15 +8,15 @@
 #include "game/util/keybits.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
-#include "host/host-util.hpp"
+#include "port/port-util.hpp"
 #include "engine/graphic/effect/image-to-asci.hpp"
 
 // -------------- если переместить этот хедевр вверх - всё взорвётся! ------------
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-struct Host_asci::Impl {
-  Host_asci& m_master;
+struct Port_asci::Impl {
+  Port_asci& m_master;
   int _argc {};
   char** _argv {};
   Delta_time m_fps_timer {}; // для высчитывания фпс
@@ -35,7 +35,7 @@ struct Host_asci::Impl {
   uint m_target_fps {15};
   uint m_frameskip {3};
 
-  inline Impl(Host_asci& master, int argc, char** argv)
+  inline Impl(Port_asci& master, int argc, char** argv)
   : m_master {master}
   , _argc {argc}
   , _argv {argv}
@@ -408,15 +408,15 @@ struct Host_asci::Impl {
   }
 }; // Impl
 
-Host_asci::Host_asci(int argc, char** argv)
+Port_asci::Port_asci(int argc, char** argv)
 : Host(argc, argv)
 , impl {new_unique<Impl>(*this, argc, argv)}
 {}
 
-Host_asci::~Host_asci() {}
-Delta_time Host_asci::get_time() const { return impl->get_time(); }
+Port_asci::~Port_asci() {}
+Delta_time Port_asci::get_time() const { return impl->get_time(); }
 
-void Host_asci::run() {
+void Port_asci::run() {
   Host::run();
   impl->run();
 }

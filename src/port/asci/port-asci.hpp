@@ -1,16 +1,16 @@
 #pragma once
-#include "host/host.hpp"
+#include "port/port.hpp"
 #include "util/mem-types.hpp"
 
 // рендерер в ASCI-графике
-class Host_asci: public Host {
+class Port_asci: public Host {
 private:
   struct Impl;
   Unique<Impl> impl {};
 
 public:
-  explicit Host_asci(int argc, char** argv);
-  ~Host_asci();
+  explicit Port_asci(int argc, char** argv);
+  ~Port_asci();
   void run() override;
 
 protected:

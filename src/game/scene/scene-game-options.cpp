@@ -17,7 +17,7 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "util/error.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 
 struct Scene_game_options::Impl {
   Unique<Advanced_text_menu> m_menu {};

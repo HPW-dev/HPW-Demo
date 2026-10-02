@@ -18,7 +18,7 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/double-item.hpp"
 #include "util/error.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 
 struct Scene_gamma::Impl {
   Unique<Advanced_text_menu> m_menu {};

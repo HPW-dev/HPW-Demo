@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-locale.hpp"
 #include "game/scene/scene-mgr.hpp"
@@ -39,17 +39,17 @@
   #include "game/util/cmd/cmd-script.hpp"
 #endif
 
-#ifdef HOST_GLFW3
-  #include "host/glfw3/host-glfw.hpp"
-  using Host_class = Host_glfw;
+#ifdef PORT_GLFW3
+  #include "port/glfw3/port-glfw.hpp"
+  using Port_class = Port_glfw;
 #endif
-#ifdef HOST_SDL2
+#ifdef PORT_SDL2
   #error "need impl for SDL2"
-  using Host_class = Host_sdl2;
+  using Port_class = Port_sdl2;
 #endif
-#ifdef HOST_ASCI
-  #include "host/asci/host-asci.hpp"
-  using Host_class = Host_asci;
+#ifdef PORT_ASCI
+  #include "port/asci/port-asci.hpp"
+  using Port_class = Port_asci;
 #endif
 
 #ifdef WINDOWS
@@ -59,7 +59,7 @@
   #include <windows.h>
 #endif
 
-class Game_app: public Host_class {
+class Game_app: public Port_class {
   nocopy(Game_app);
 
 public:
@@ -86,7 +86,7 @@ void Game_app::startup_script() {
   #endif
 }
 
-Game_app::Game_app(int argc, char *argv[]): Host_class(argc, argv) {
+Game_app::Game_app(int argc, char *argv[]): Port_class(argc, argv) {
   #ifdef RELEASE
     init_validation_info();
   #endif
@@ -149,7 +149,7 @@ void Game_app::update(const Delta_time dt) {
   assert(dt == hpw::target_tick_time);
   update_graphic_autoopt(dt);
 
-  Host_class::update(dt);
+  Port_class::update(dt);
 
   if (hpw::replay_read_mode)
     replay_load_keys();
@@ -195,7 +195,7 @@ void Game_app::draw_game_frame() const {
   graphic::soft_draw_time = get_time() - st;
   graphic::check_autoopt();
 
-  Host_class::draw_game_frame(); // hardware draw
+  Port_class::draw_game_frame(); // hardware draw
 }
 
 void Game_app::draw_border(Image& dst) const

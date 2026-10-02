@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef HOST_GLFW3
+#ifdef PORT_GLFW3
 #include <GL/glew.h>
 #else
 using GLfloat = float;

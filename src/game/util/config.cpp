@@ -17,8 +17,8 @@
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"
 #include "util/file/file-io.hpp"
-#include "host/host-util.hpp"
-#include "host/command.hpp"
+#include "port/port-util.hpp"
+#include "port/command.hpp"
 
 #ifndef NO_EPGE
 #include "engine/graphic/epge/epge-util.hpp"

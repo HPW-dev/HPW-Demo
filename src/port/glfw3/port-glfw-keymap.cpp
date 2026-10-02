@@ -3,8 +3,8 @@
 #endif
 #include <GLFW/glfw3.h>
 
-#include "host-glfw-keymap.hpp"
-#include "host/windows/windows-keycodes.hpp"
+#include "port-glfw-keymap.hpp"
+#include "port/windows/windows-keycodes.hpp"
 #include "game/util/keybits.hpp"
 #include "util/str.hpp"
 

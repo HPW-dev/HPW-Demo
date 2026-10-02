@@ -1,7 +1,7 @@
 #include "pch.hpp"
-#include "host-glfw-callback.hpp"
-#include "host-glfw.hpp"
-#include "host-glfw-keymap.hpp"
+#include "port-glfw-callback.hpp"
+#include "port-glfw.hpp"
+#include "port-glfw-keymap.hpp"
 #include "game/core/common.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/user.hpp"
@@ -29,7 +29,7 @@ public:
 }; // Lazy_press
 
 // вверх этот хедер не таскать, иначе всё развалится
-#include "host-glfw-common.hpp"
+#include "port-glfw-common.hpp"
 
 static void hotkey_process(GLFWwindow* window, int key, int scancode, int action, int mods) {
   // альтернативная кнопка скриншота

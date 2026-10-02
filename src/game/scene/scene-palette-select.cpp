@@ -22,7 +22,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-game.hpp"
 #include "util/file/archive.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 
 constx Vec cube_sz(13, 13); // размер квадратика для теста оттенков
 

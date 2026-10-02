@@ -1,9 +1,9 @@
 #include "pch.hpp"
 #include "stb/stb_image.h"
-#include "host-glfw.hpp"
-#include "host-glfw-keymap.hpp"
-#include "host-glfw-callback.hpp"
-#include "host/host-util.hpp"
+#include "port-glfw.hpp"
+#include "port-glfw-keymap.hpp"
+#include "port-glfw-callback.hpp"
+#include "port/port-util.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/core.hpp"
@@ -15,9 +15,9 @@
 #include "game/util/resource-helper.hpp"
 
 // вверх этот хедер не таскать, иначе всё развалится
-#include "host-glfw-common.hpp"
+#include "port-glfw-common.hpp"
 
-Host_glfw::Host_glfw(int argc, char *argv[]) : Host_ogl(argc, argv) {
+Port_glfw::Port_glfw(int argc, char *argv[]) : Host_ogl(argc, argv) {
   iferror(g_instance, "no use two GLFW hosts");
   g_instance.store(this);
   init_commands();
@@ -27,26 +27,26 @@ Host_glfw::Host_glfw(int argc, char *argv[]) : Host_ogl(argc, argv) {
   init_keymapper();
 }
 
-Host_glfw::~Host_glfw() {
+Port_glfw::~Port_glfw() {
   glfwDestroyWindow(m_window);
   glfwTerminate();
   g_instance = {};
 }
 
-void Host_glfw::init_keymapper() {
+void Port_glfw::init_keymapper() {
   log_info << "инициализация кей-маппера...";
   init_shared(m_key_mapper);
   m_key_mapper->reset();
   hpw::keys_info = m_key_mapper->get_info();
 }
 
-void Host_glfw::init_glfw() {
+void Port_glfw::init_glfw() {
   log_info << "инициализация GLFW...";
   glfwSetErrorCallback(error_callback);
   iferror(!glfwInit(), "!glfwInit");
 }
 
-void Host_glfw::init_commands() {
+void Port_glfw::init_commands() {
   hpw::rebind_key = [](hpw::keycode hpw_key){
     g_rebind_key_mode = true;
     g_key_for_rebind = hpw_key;
@@ -110,7 +110,7 @@ void Host_glfw::init_commands() {
   };
 }
 
-void Host_glfw::init() {
+void Port_glfw::init() {
   set_target_ups(hpw::target_ups);
   graphic::set_target_fps(graphic::get_target_fps());
   hpw::safe_dt = graphic::get_target_frame_time();
@@ -118,7 +118,7 @@ void Host_glfw::init() {
   hpw::keys_info = m_key_mapper->get_info();
 }
 
-void Host_glfw::run() {
+void Port_glfw::run() {
   Host_ogl::run();
   init();
   auto last_loop_time = get_time();
@@ -139,7 +139,7 @@ void Host_glfw::run() {
   _is_ran = false;
 } // run
 
-void Host_glfw::reshape(int w, int h) {
+void Port_glfw::reshape(int w, int h) {
   return_if (w == 0 || h == 0);
   if (w < 0 || h < 0) {
     log_error << "Warning: при растягивании окна были неверно заданы параметры: w = " << w << ", h = " << h;
@@ -152,31 +152,31 @@ void Host_glfw::reshape(int w, int h) {
   Host_ogl::reshape(w, h);
 }
 
-void Host_glfw::set_window_pos(int x, int y) {
+void Port_glfw::set_window_pos(int x, int y) {
   glfwSetWindowPos(m_window, x, y);
   Host_ogl::set_window_pos(x, y);
 }
 
-void Host_glfw::game_set_dt(const Delta_time gameloop_time) {
+void Port_glfw::game_set_dt(const Delta_time gameloop_time) {
   hpw::real_dt = gameloop_time;
   // ограничение чтобы игра фризила, а не обновлялась рывками
   hpw::safe_dt = std::clamp(gameloop_time, 0.000001, 1.0 / (60 * 0.9));
   graphic::effect_state = std::fmod(graphic::effect_state + hpw::real_dt, 1.0);
 }
 
-void Host_glfw::_set_double_buffering(bool enable) {
-  log_debug << "Host_glfw._set_double_buffering: " << yn2s(enable);
+void Port_glfw::_set_double_buffering(bool enable) {
+  log_debug << "Port_glfw._set_double_buffering: " << yn2s(enable);
   graphic::double_buffering = enable;
   init_window();
 }
 
-void Host_glfw::set_gamma(const double gamma) {
+void Port_glfw::set_gamma(const double gamma) {
   graphic::gamma = std::clamp<double>(gamma, 0.025, 3);
   auto monitor = glfwGetPrimaryMonitor();
   glfwSetGamma(monitor, graphic::gamma);
 }
 
-void Host_glfw::init_window() {
+void Port_glfw::init_window() {
   log_info << "создание окна игры...";
   if (m_window) // на случай реинита
     glfwDestroyWindow(m_window);
@@ -271,7 +271,7 @@ void Host_glfw::init_window() {
   init_icon();
 } // init_window
 
-Delta_time Host_glfw::get_time() const {
+Delta_time Port_glfw::get_time() const {
   return glfwGetTime();
   /*static cauto _st = std::chrono::steady_clock::now();
   cauto _ed = std::chrono::steady_clock::now();
@@ -279,14 +279,14 @@ Delta_time Host_glfw::get_time() const {
   return std::chrono::duration_cast<Seconds>(_ed - _st).count();*/
 }
 
-Str Host_glfw::get_window_name() const {
+Str Port_glfw::get_window_name() const {
   if (hpw::default_tile.empty())
     return rnd_window_name();
 
   return hpw::default_tile;
 }
 
-void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
+void Port_glfw::game_set_fps_info(const Delta_time gameloop_time) {
   m_fps_timer += gameloop_time;
   if (m_fps_timer > 1) {
     graphic::cur_fps = safe_div(m_fps, m_fps_timer);
@@ -298,9 +298,9 @@ void Host_glfw::game_set_fps_info(const Delta_time gameloop_time) {
   }
 }
 
-bool Host_glfw::is_ran() const { return _is_ran && !glfwWindowShouldClose(m_window); }
+bool Port_glfw::is_ran() const { return _is_ran && !glfwWindowShouldClose(m_window); }
 
-void Host_glfw::game_frame(const Delta_time dt) {
+void Port_glfw::game_frame(const Delta_time dt) {
   return_if (!graphic::enable_render);
   return_if (dt <= 0 || dt >= 10);
 
@@ -335,7 +335,7 @@ void Host_glfw::game_frame(const Delta_time dt) {
   }
 } // game_frame
 
-void Host_glfw::game_update(const Delta_time dt) {
+void Port_glfw::game_update(const Delta_time dt) {
   set_update_time(dt);
   return_if (dt <= 0 || dt >= 10);
   process_fast_forward();
@@ -361,7 +361,7 @@ void Host_glfw::game_update(const Delta_time dt) {
   } // while update time
 } // game_update
 
-void Host_glfw::apply_render_delay() {
+void Port_glfw::apply_render_delay() {
   #ifdef DEBUG
   if (hpw::render_delay) {
     graphic::render_lag = true;
@@ -375,7 +375,7 @@ void Host_glfw::apply_render_delay() {
   #endif
 }
 
-void Host_glfw::apply_update_delay() {
+void Port_glfw::apply_update_delay() {
   #ifdef DEBUG
   if (hpw::update_delay) {
     #ifdef WINDOWS
@@ -387,12 +387,12 @@ void Host_glfw::apply_update_delay() {
   #endif
 }
 
-void Host_glfw::calc_upf() {
+void Port_glfw::calc_upf() {
   hpw::cur_upf = m_upf;
   m_upf = 0;
 }
 
-void Host_glfw::set_update_time(const Delta_time dt) {
+void Port_glfw::set_update_time(const Delta_time dt) {
   if (
     // ждать конца кадра
     (graphic::wait_frame && graphic::enable_render) &&
@@ -413,13 +413,13 @@ void Host_glfw::set_update_time(const Delta_time dt) {
   }
 } // set_update_time
 
-void Host_glfw::_set_mouse_cursour_mode(bool enable) {
+void Port_glfw::_set_mouse_cursour_mode(bool enable) {
   graphic::show_mouse_cursour = enable;
   glfwSetInputMode(m_window, GLFW_CURSOR,
     enable ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_HIDDEN);
 }
 
-void Host_glfw::check_frame_skip() {
+void Port_glfw::check_frame_skip() {
   graphic::skip_cur_frame = false;
 
   // скип через фаст форвард
@@ -440,7 +440,7 @@ void Host_glfw::check_frame_skip() {
   }
 } // check_frame_skip
 
-void Host_glfw::frame_wait() {
+void Port_glfw::frame_wait() {
   // ожидание для v-sync
   auto delay = graphic::get_target_frame_time() - m_frame_time - hpw::tick_time_accum;
   /*constx Delta_time delay_timeout = 1.0 / 10.0;
@@ -449,7 +449,7 @@ void Host_glfw::frame_wait() {
   delay_sec(delay);
 }
 
-void Host_glfw::init_icon() {
+void Port_glfw::init_icon() {
   GLFWimage icon;
   icon.pixels = nullptr;
 
@@ -480,7 +480,7 @@ void Host_glfw::init_icon() {
   stbi_image_free(icon.pixels);
 } // init_icon
 
-void Host_glfw::_set_fullscreen(bool enable) {
+void Port_glfw::_set_fullscreen(bool enable) {
   log_debug << "fullscreen mode: " << yn2s(enable);
   graphic::fullscreen = enable;
   
@@ -500,12 +500,12 @@ void Host_glfw::_set_fullscreen(bool enable) {
   }
 }
 
-void Host_glfw::process_fast_forward() {
+void Port_glfw::process_fast_forward() {
   if (graphic::get_fast_forward())
     hpw::tick_time_accum = hpw::target_tick_time * graphic::FAST_FWD_UPD_SPDUP;
 }
 
-void Host_glfw::_draw_startup_screen() {
+void Port_glfw::_draw_startup_screen() {
   assert(graphic::canvas);
 
   // рисуем надпись о загрузке:

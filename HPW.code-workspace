@@ -154,7 +154,7 @@
 			"USE_NETPLAY",
 			"_OPENMP",
 			"STABLE_REPLAY",
-			"HOST_GLFW3"
+			"PORT_GLFW3"
 		]
 	}
 }

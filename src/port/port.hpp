@@ -4,7 +4,7 @@
 #include "util/mem-types.hpp"
 #include "util/vec.hpp"
 #include "util/num-types.hpp"
-#include "host-resize.hpp"
+#include "port-resize.hpp"
 #include "command.hpp"
 
 // базовый класс для игрового хоста

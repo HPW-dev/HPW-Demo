@@ -1,6 +1,6 @@
 #include "scene-input.hpp"
 #include "scene-mgr.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/keybits.hpp"
 #include "game/util/locale.hpp"

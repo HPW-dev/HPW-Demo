@@ -5,7 +5,7 @@
 #include "game/core/messages.hpp"
 #include "game/core/tasks.hpp"
 #include "game/util/version.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 
 void Cmd_exit::exec(cr<Strs> cmd_and_args) {
   iferror(!hpw::soft_exit, "hpw::soft_exit не инициализирован");

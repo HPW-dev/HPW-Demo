@@ -1,5 +1,5 @@
 #pragma once
-#include "host/ogl3/host-ogl.hpp"
+#include "port/ogl3/port-ogl.hpp"
 #include "util/mem-types.hpp"
 #include "game/util/keybits.hpp"
 
@@ -7,12 +7,12 @@ struct GLFWwindow;
 class Key_mapper;
 
 // рендерер от GLFW
-class Host_glfw: public Host_ogl {
+class Port_glfw: public Host_ogl {
 public:
   Shared<Key_mapper> m_key_mapper {};
   
-  explicit Host_glfw(int argc, char *argv[]);
-  ~Host_glfw();
+  explicit Port_glfw(int argc, char *argv[]);
+  ~Port_glfw();
   void reshape(int w, int h) override;
   void set_window_pos(int x, int y) override;
   void run() override;
@@ -56,4 +56,4 @@ protected:
 
 private:
   void _draw_startup_screen();
-}; // Host_glfw
+}; // Port_glfw

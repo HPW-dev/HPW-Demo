@@ -2,7 +2,7 @@
 #include "sync.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/core.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 
 static bool m_vsync {false};
 static bool m_disable_frame_limit {false};

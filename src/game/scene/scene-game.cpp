@@ -2,7 +2,7 @@
 #include "scene-game.hpp"
 #include "scene-loading.hpp"
 #include "scene-mgr.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 #include "engine/sound/sound-mgr.hpp"
 #include "game/core/core.hpp"
 #include "game/core/user.hpp"

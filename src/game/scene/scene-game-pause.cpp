@@ -13,7 +13,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-options.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 
 Scene_game_pause::Scene_game_pause() {
   init_menu();

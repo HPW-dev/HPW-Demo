@@ -6,7 +6,7 @@
 #include "bonus-loader.hpp"
 #include "bullet-loader.hpp"
 #include "entity.hpp"
-#include "host/command.hpp"
+#include "port/command.hpp"
 #include "player/player-dark.hpp"
 #include "collider/collider-empty.hpp"
 #include "util/hitbox.hpp"
