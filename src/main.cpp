@@ -333,6 +333,8 @@ int main(int argc, char *argv[]) {
   } catch(cr<hpw::Error> err) {
     const Str err_str = err.what();
     process_error(err_str);
+  } catch(cr<std::bad_alloc> ba) {
+    process_error("Need more RAM");
   } catch(cr<std::exception> err) {
     const Str err_str = Str{"STD Error: "} + err.what();
     process_error(err_str);

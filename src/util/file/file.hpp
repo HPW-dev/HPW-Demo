@@ -12,4 +12,5 @@ struct File: public Resource {
   File() = default;
   inline File(cr<Bytes> _data, cr<Str> _path): Resource(_path), data {_data} {}
   inline File(Bytes&& _data, cr<Str> _path): Resource(_path), data {std::move(_data)} {}
+  inline operator bool() const { return !data.empty(); }
 };
