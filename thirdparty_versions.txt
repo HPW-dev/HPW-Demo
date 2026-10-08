@@ -13,6 +13,7 @@ json: v3.12.0
 Miniz: v1.15
 asio: v1.36.0
 hash_sha256: (30 mar. 2023)
+QR Code generator library (C++): v1.8.0
 GCC (Windows x32): v15.2.0, MinGW-W64 i686-ucrt-posix-dwarf, built by Brecht Sanders, r1
 GCC (Windows x64): v16.1.0, MinGW-W64 x86_64-ucrt-posix-seh, built by Brecht Sanders, r1
 UPX: v5.2.0

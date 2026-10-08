@@ -98,3 +98,8 @@ UPX:
   Copyright (C) 1999-2006 Igor Pavlov
   SPDX-License-Identifier: GPL-2.0-only
   <https://www.gnu.org/licenses/old-licenses/gpl-2.0.html>
+
+QR Code generator library (C++):
+  Copyright (c) 2026 Project Nayuki <https://www.nayuki.io/page/qr-code-generator-library>
+  SPDX-License-Identifier: MIT
+  <https://opensource.org/license/mit/>
