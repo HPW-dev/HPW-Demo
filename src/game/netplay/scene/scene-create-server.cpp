@@ -2,6 +2,7 @@
 #include "scene-create-server.hpp"
 #include "game/menu/menu-from-json.hpp"
 #include "game/menu/item/item.hpp"
+#include "game/menu/menu.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/keybits.hpp"

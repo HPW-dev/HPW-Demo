@@ -151,7 +151,7 @@
 			"COLLIDER_DEBUG",
 			"DETAILED_LOG",
 			"USE_TESTS",
-			"USE_NETPLAY",
+			"USE_LAN",
 			"_OPENMP",
 			"STABLE_REPLAY",
 			"PORT_GLFW3"

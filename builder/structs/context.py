@@ -29,3 +29,4 @@ class Context:
   less_info             : bool = False # Выводить меньше логов сборки
   forced_rebuild        : bool = False # принудительный пересбор
   with_game_ver         : bool = True  # добавить в .exe версию файла
+  with_lan              : bool = True  # сетевая игра

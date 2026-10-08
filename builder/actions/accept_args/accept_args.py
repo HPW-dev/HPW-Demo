@@ -153,6 +153,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true',
     help='Включает тесты в игре'
   )
+  parser.add_argument(
+    '--no_lan', 
+    action='store_true',
+    help='без сетевой игры'
+  )
 
   args = parser.parse_args()
 
@@ -185,6 +190,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.less_info = bool(args.less_info)
   ctx.with_assets = not bool(args.no_assets)
   ctx.with_tests = bool(args.with_tests)
+  ctx.with_lan = not bool(args.no_lan)
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)

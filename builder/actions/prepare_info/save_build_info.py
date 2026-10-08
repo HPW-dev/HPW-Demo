@@ -17,6 +17,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
     'author': ctx.author,
     'compilation start': tgt.creation_time,
     'tests': ctx.with_tests,
+    'lan': ctx.with_lan,
 
     'hash': {
       'execitable SHA3-512': sha3_512(executable),

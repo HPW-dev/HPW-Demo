@@ -28,7 +28,7 @@
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/effect/blur.hpp"
 
-#ifdef USE_NETPLAY
+#ifdef USE_LAN
   #include "game/netplay/scene/scene-netplay-menu.hpp"
 #endif
 #ifdef USE_TESTS
@@ -137,7 +137,7 @@ void Scene_main_menu::init_menu() {
       }),
       #endif
 
-      #ifdef USE_NETPLAY
+      #ifdef USE_LAN
       // LAN
       new_shared<Menu_text_item>(get_locale_str("netplay.title"),
         []{ hpw::scene_mgr.add(new_shared<Scene_netplay_menu>()); }),

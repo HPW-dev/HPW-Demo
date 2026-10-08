@@ -57,6 +57,11 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   if ctx.with_tests:
     tgt.defines.append('USE_TESTS')
 
+  netplay_sources = []
+  if ctx.with_lan:
+    tgt.defines.extend(['USE_LAN', 'ASIO_STANDALONE'])
+    netplay_sources.extend(find(f'{src_dir}game/netplay/scene/*.cpp'))
+
   tgt.include_dirs.extend([
     '.',
     src_dir,
@@ -115,6 +120,8 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}engine/graphic/util/*.cpp'))
 
   tgt.sources.extend(find(f'{src_dir}engine/sound/*.cpp'))
+
+  tgt.sources += netplay_sources
 
   tgt.sources.extend(find(f'{src_dir}*.cpp'))
 

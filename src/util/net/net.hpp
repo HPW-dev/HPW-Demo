@@ -1,6 +1,6 @@
 #pragma once
-#ifndef USE_NETPLAY
-#pragma error "add define for USE_NETPLAY (-DUSE_NETPLAY)"
+#ifndef USE_LAN
+#pragma error "add define for USE_LAN (-USE_LAN)"
 #endif
 #include <cassert>
 #include "util/bytes.hpp"

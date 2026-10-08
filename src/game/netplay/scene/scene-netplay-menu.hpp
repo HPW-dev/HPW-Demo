@@ -1,6 +1,6 @@
 #pragma once
-#ifndef USE_NETPLAY
-#pragma error "add define for USE_NETPLAY (-DUSE_NETPLAY)"
+#ifndef USE_LAN
+#pragma error "add define for USE_LAN (-DUSE_LAN)"
 #endif
 #include "util/mem-types.hpp"
 #include "game/scene/scene.hpp"
