@@ -1,0 +1,8 @@
+﻿{
+  "title": "tools.title",
+  "items": [
+    { "locale_prefix": "input_delay_test", "action": "input_delay_test" },
+    { "locale_prefix": "qr_generator_test", "action": "qr_generator_test" },
+    { "type": "back_item" }
+  ]
+}

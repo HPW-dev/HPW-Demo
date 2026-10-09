@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "scene-tools.hpp"
+#include "Scene_qr_generator_test.hpp"
 #include "scene-input-delay-test.hpp"
 #include "game/core/scenes.hpp"
 #include "game/menu/menu.hpp"
@@ -29,9 +30,10 @@ struct Scene_tools::Impl {
 
   inline void init_menu() {
     _menu = menu_from_json(
-      json_from_res("scripts/ui/menu/tools.json"),
+      json_from_res("scripts/ui/menu/tests.json"),
       Action_table {        
         {"input_delay_test", []{ hpw::scene_mgr.add(new_shared<Scene_input_delay_test>()); }},
+        {"qr_generator_test", []{ hpw::scene_mgr.add(new_shared<Scene_qr_generator_test>()); }},
       }
     );
   }

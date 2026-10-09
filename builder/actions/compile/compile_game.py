@@ -74,7 +74,9 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
     ])
 
   tgt.sources.extend(find(f'{thirdparty_dir}include/zip/*.c'))
+  
   tgt.sources.append(f'{thirdparty_dir}include/stb/stb_vorbis.c')
+  tgt.sources.append(f'{thirdparty_dir}include/Nayuki/QR-Code-generator/qrcodegen.cpp')
 
   tgt.sources.extend(find(f'{src_dir}util/file/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}util/*.c'))
