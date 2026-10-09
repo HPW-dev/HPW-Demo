@@ -106,9 +106,9 @@ Game_app::Game_app(int argc, char *argv[]): Port_class(argc, argv) {
 
   // управление сценами
   log_info << "настройка игровых сцен...";
-  #ifndef DEBUG
+#ifndef DEBUG
   hpw::empty_level_first = false;
-  #endif
+#endif
   if (hpw::empty_level_first) {
     log_info << "start debug level...";
     hpw::scene_mgr.add( new_shared<Scene_game>() );
@@ -133,6 +133,10 @@ Game_app::Game_app(int argc, char *argv[]): Port_class(argc, argv) {
     hpw::set_resize_mode(graphic::default_resize_mode);
   }
   hpw::first_start = false;
+
+  /* снести LOADING, а то фон меню где первый кадр не
+  перерисовывается будет его отображать */
+  graphic::canvas->fill(Pal8::black);
 
   log_info << "загрузка завершена";
 } // c-tor
