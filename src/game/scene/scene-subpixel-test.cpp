@@ -107,6 +107,9 @@ struct Scene_subpixel_test::Impl {
         case Scale::x2: downscale_x2(_down_buffer, _buffer); break;
         case Scale::x3: downscale_x3(_down_buffer, _buffer); break;
         case Scale::x4: downscale_x4(_down_buffer, _buffer); break;
+        default:
+        case Scale::none:
+          break; // for checker
       }
       insert(dst, _down_buffer);
     } else {
