@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "Scene_subpixel_test.hpp"
+#include "scene-subpixel-test.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"

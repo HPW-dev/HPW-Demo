@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "Scene_qr_generator_test.hpp"
+#include "scene-qr-generator-test.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
