@@ -37,6 +37,12 @@ void zoom_x4(Sprite& dst);
 void zoom_x8(Image& dst);
 // увеличивает спрайт в 8 раз
 void zoom_x8(Sprite& dst);
+// уменьшает в 2 раза
+void downscale_x2(Image& dst, cr<Image> src);
+// уменьшает в 3 раза
+void downscale_x3(Image& dst, cr<Image> src);
+// уменьшает в 4 раза
+void downscale_x4(Image& dst, cr<Image> src);
 // увеличивает спрайт в 3 раза (не ближайшим соседом)
 Sprite pixel_upscale_x3(cr<Sprite> src);
 // увеличивает картинку в 3 раза (не ближайшим соседом)

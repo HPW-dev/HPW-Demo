@@ -350,3 +350,49 @@ Image resize_neighbor(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_
 
   return ret;
 }
+
+void downscale_x2(Image& dst, cr<Image> src) {
+  assert(src);
+  dst.init(src.X/2, src.Y/2);
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    cauto p00 = src[x*2 + 0, y*2 + 0];
+    cauto p01 = src[x*2 + 0, y*2 + 1];
+    cauto a = blend_avr(p00, p01);
+    cauto p10 = src[x*2 + 1, y*2 + 0];
+    cauto p11 = src[x*2 + 1, y*2 + 1];
+    cauto b = blend_avr(p10, p11);
+    cauto c = blend_avr(a, b);
+    dst[x, y] = c;
+  }
+}
+
+void downscale_x3(Image& dst, cr<Image> src) {
+  assert(src);
+  dst.init(src.X/3, src.Y/3);
+  cfor (y, dst.Y)
+  cfor (x, dst.X) {
+    cauto p00 = src[x*3 + 0, y*3 + 0];
+    cauto p01 = src[x*3 + 0, y*3 + 1];
+    cauto p02 = src[x*3 + 0, y*3 + 2];
+    cauto a = blend_avr(p00, blend_avr(p01, p02));
+
+    cauto p10 = src[x*3 + 1, y*3 + 0];
+    cauto p11 = src[x*3 + 1, y*3 + 1];
+    cauto p12 = src[x*3 + 1, y*3 + 2];
+    cauto b = blend_avr(p10, blend_avr(p11, p12));
+
+    cauto p20 = src[x*3 + 2, y*3 + 0];
+    cauto p21 = src[x*3 + 2, y*3 + 1];
+    cauto p22 = src[x*3 + 2, y*3 + 2];
+    cauto c = blend_avr(p20, blend_avr(p21, p22));
+
+    cauto d = blend_avr(a, blend_avr(b, c));
+    dst[x, y] = c;
+  }
+}
+
+void downscale_x4(Image& dst, cr<Image> src) {
+  downscale_x2(dst, src);
+  downscale_x2(dst, Image(dst));
+}

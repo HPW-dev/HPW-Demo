@@ -5,7 +5,9 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/resize.hpp"
 
 struct Scene_subpixel_test::Impl {
   enum class Scale { none, x2, x3, x4, SZ };
@@ -15,14 +17,14 @@ struct Scene_subpixel_test::Impl {
   Vec _star_pos {};
   real _star_deg {};
   real _state {};
-  real _speed {5};
+  real _speed {0.3};
+  mutable Image _buffer {};
+  mutable Image _down_buffer {};
 
   inline Impl() {
     // показать управление:
     hpw::message_mgr->move(Message { .text=
       U"Управление:\n"
-      U"  " + hpw::keys_info.find(hpw::keycode::left)->name + U"/"
-        + hpw::keys_info.find(hpw::keycode::right)->name + U" - След./Пред. тест\n"
       U"  " + hpw::keys_info.find(hpw::keycode::mode)->name + U" - Изменить масштабирование\n"
       U"  " + hpw::keys_info.find(hpw::keycode::up)->name + U"/"
         + hpw::keys_info.find(hpw::keycode::down)->name + U" - Увел./Умень. скорость движения\n"
@@ -31,8 +33,6 @@ struct Scene_subpixel_test::Impl {
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape)) hpw::scene_mgr.back();
-    if (is_pressed_once(hpw::keycode::left)) prev_test();
-    if (is_pressed_once(hpw::keycode::right)) next_test();
     if (is_pressed_once(hpw::keycode::mode)) next_scale();
     if (is_pressed_once(hpw::keycode::up)) speed_up();
     if (is_pressed_once(hpw::keycode::down)) speed_down();
@@ -42,13 +42,6 @@ struct Scene_subpixel_test::Impl {
       std::cos(_state) * 10 * _speed,
       std::sin(_state) * 10 * _speed);
     _star_deg += dt * 2 * _speed;
-  }
-
-  inline void prev_test() {
-    // TODO
-  }
-  inline void next_test() {
-    // TODO
   }
   
   inline void speed_up() {
@@ -92,8 +85,34 @@ struct Scene_subpixel_test::Impl {
   }
 
   inline void draw(Image& dst) const {
-    dst.fill({});
-    draw_5way_star(dst, _star_pos, _star_scale, _star_deg);
+    real s;
+    switch (_scale) {
+      default:
+      case Scale::none: s = 1.0; break;
+      case Scale::x2: s = 2.0; break;
+      case Scale::x3: s = 3.0; break;
+      case Scale::x4: s = 4.0; break;
+    }
+
+    if (_scale != Scale::none) {
+      // увеличенный рисунок
+      _buffer.init(dst.X * s, dst.Y * s, Pal8::black);
+      // повторить несколько раз звезду, чтобы сделать контур толще
+      cfor (sy, s)
+      cfor (sx, s)
+        draw_5way_star(_buffer, _star_pos * s + Vec(sx, sy),
+          _star_scale * s, _star_deg);
+      // сглаживание
+      switch (_scale) {
+        case Scale::x2: downscale_x2(_down_buffer, _buffer); break;
+        case Scale::x3: downscale_x3(_down_buffer, _buffer); break;
+        case Scale::x4: downscale_x4(_down_buffer, _buffer); break;
+      }
+      insert(dst, _down_buffer);
+    } else {
+      dst.fill({});
+      draw_5way_star(dst, _star_pos, _star_scale, _star_deg);
+    }
   }
 }; // Impl
 
