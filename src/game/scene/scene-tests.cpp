@@ -1,5 +1,5 @@
 #include "pch.hpp"
-#include "scene-tools.hpp"
+#include "scene-tests.hpp"
 #include "Scene_qr_generator_test.hpp"
 #include "scene-input-delay-test.hpp"
 #include "game/core/scenes.hpp"
@@ -10,7 +10,7 @@
 #include "game/util/resource-helper.hpp"
 #include "util/file/file.hpp"
 
-struct Scene_tools::Impl {
+struct Scene_tests::Impl {
   Unique<Menu> _menu {};
 
   inline explicit Impl() { init_menu(); }
@@ -39,4 +39,4 @@ struct Scene_tools::Impl {
   }
 }; // Impl
 
-MAKE_SCENE_CLASS_IMPL(Scene_tools)
+MAKE_SCENE_CLASS_IMPL(Scene_tests)

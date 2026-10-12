@@ -32,7 +32,7 @@
   #include "game/netplay/scene/scene-netplay-menu.hpp"
 #endif
 #ifdef USE_TESTS
-  #include "game/scene/scene-tools.hpp"
+  #include "game/scene/scene-tests.hpp"
 #endif
 
 Scene_main_menu::Scene_main_menu() {
@@ -132,8 +132,8 @@ void Scene_main_menu::init_menu() {
         
       #ifdef USE_TESTS
       // меню тестов и отладки
-      new_shared<Menu_text_item>(get_locale_str("tools.title"), []{
-        hpw::scene_mgr.add(new_shared<Scene_tools>());
+      new_shared<Menu_text_item>(get_locale_str("tests.title"), []{
+        hpw::scene_mgr.add(new_shared<Scene_tests>());
       }),
       #endif
 

@@ -3,6 +3,8 @@
   "items": [
     { "locale_prefix": "input_delay_test", "action": "input_delay_test" },
     { "locale_prefix": "qr_generator_test", "action": "qr_generator_test" },
+    { "locale_prefix": "subpixel_test", "action": "subpixel_test" },
+    { "locale_prefix": "interpolation_test", "action": "interpolation_test" },
     { "type": "back_item" }
   ]
 }
