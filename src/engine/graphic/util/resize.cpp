@@ -318,13 +318,11 @@ Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_
     cauto c11 = src.get(gxi + 1, gyi + 1);
     cauto tx = dx - gxi;
     cauto ty = dy - gyi;
-    // TODO учёт красного
-    cauto l = blerp(
-      c00.to_real(),
-      c10.to_real(),
-      c01.to_real(),
-      c11.to_real(), tx, ty);
-    ret.fast_set(x, y, Pal8::from_real(l), {});
+    // blerp
+    cauto a = blend_alpha(c00, c10, tx * 255);
+    cauto b = blend_alpha(c01, c11, tx * 255);
+    cauto c = blend_alpha(a, b, ty * 255);
+    ret.fast_set(x, y, c, {});
   }
 
   return ret;
@@ -357,11 +355,11 @@ void downscale_x2(Image& dst, cr<Image> src) {
   cfor (y, dst.Y)
   cfor (x, dst.X) {
     cauto p00 = src[x*2 + 0, y*2 + 0];
-    cauto p01 = src[x*2 + 0, y*2 + 1];
-    cauto a = blend_avr(p00, p01);
     cauto p10 = src[x*2 + 1, y*2 + 0];
+    cauto a = blend_avr(p00, p10);
+    cauto p01 = src[x*2 + 0, y*2 + 1];
     cauto p11 = src[x*2 + 1, y*2 + 1];
-    cauto b = blend_avr(p10, p11);
+    cauto b = blend_avr(p01, p11);
     cauto c = blend_avr(a, b);
     dst[x, y] = c;
   }
@@ -388,7 +386,7 @@ void downscale_x3(Image& dst, cr<Image> src) {
     cauto c = blend_avr(p20, blend_avr(p21, p22));
 
     cauto d = blend_avr(a, blend_avr(b, c));
-    dst[x, y] = c;
+    dst[x, y] = d;
   }
 }
 
