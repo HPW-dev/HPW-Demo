@@ -15,8 +15,8 @@ struct Scene_interpolation_test::Impl {
   real _scale {0.5};
   using Resizer = Image (*)(cr<Image>, const uint, const uint);
   Resizer _resizer {};
-  uint _resizer_id {0};
-  bool _zoom_out = true;
+  uint _resizer_id {1};
+  bool _zoom_out = false;
 
   inline Impl() {
     load_img();
@@ -57,8 +57,9 @@ struct Scene_interpolation_test::Impl {
       utf32 msg {};
     };
     sconst Vector<Item> table {
-      Item {.resizer=resize_neighbor, .msg=U"Ресайзер: ближайший сосед"},
-      Item {.resizer=resize_bilinear, .msg=U"Ресайзер: билинейный"},
+      Item {.resizer=&resize_neighbor, .msg=U"Ресайзер: ближайший сосед"},
+      Item {.resizer=&resize_bilinear, .msg=U"Ресайзер: билинейный"},
+      Item {.resizer=&resize_area, .msg=U"Ресайзер: область"},
     };
     _resizer_id = (_resizer_id + offset) % table.size();
     _resizer = table[_resizer_id].resizer;

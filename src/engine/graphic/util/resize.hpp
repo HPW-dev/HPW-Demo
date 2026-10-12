@@ -76,6 +76,9 @@ Str convert(Color_get_pattern cgp);
 Color_compute convert_to_ccf(cr<Str> name);
 // Str -> Color_get_pattern
 Color_get_pattern convert_to_cgp(cr<Str> name);
-// билинейная интерполяция
+// ближайший сосед
 [[nodiscard]] Image resize_neighbor(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y);
+// билинейная интерполяция
 [[nodiscard]] Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y);
+// интерполяция "область" (ЧБ при уменьшении)
+[[nodiscard]] Image resize_area(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y);

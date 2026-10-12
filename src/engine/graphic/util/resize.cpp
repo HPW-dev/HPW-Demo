@@ -328,6 +328,73 @@ Image resize_bilinear(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_
   return ret;
 }
 
+Image resize_area(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
+  // (c) Gemini
+  assert(src);
+  return_if(NEW_SIZE_X == scast<uint>(src.X) && NEW_SIZE_Y == scast<uint>(src.Y), src);
+  return_if(NEW_SIZE_X == 0 || NEW_SIZE_Y == 0, {});
+
+  // при увеличении, area не подходит
+  if (NEW_SIZE_X > scast<uint>(src.X) || NEW_SIZE_Y > scast<uint>(src.Y))
+    return resize_bilinear(src, NEW_SIZE_X, NEW_SIZE_Y);
+
+  Image ret(NEW_SIZE_X, NEW_SIZE_Y);
+
+  // Коэффициенты масштабирования (сколько старых пикселей помещается в один новый)
+  const real scale_x = scast<real>(src.X) / NEW_SIZE_X;
+  const real scale_y = scast<real>(src.Y) / NEW_SIZE_Y;
+
+  cfor (y, ret.Y)
+  cfor (x, ret.X) {
+    // Границы целевого пикселя (x, y) в координатах исходного изображения
+    const real src_x_start = x * scale_x;
+    const real src_x_end   = (x + 1) * scale_x;
+    const real src_y_start = y * scale_y;
+    const real src_y_end   = (y + 1) * scale_y;
+
+    // Индексы исходных пикселей, которые мы задеваем
+    const int x_first = std::floor(src_x_start);
+    const int x_last  = std::min(scast<int>(std::ceil(src_x_end)), src.X) - 1;
+    const int y_first = std::floor(src_y_start);
+    const int y_last  = std::min(scast<int>(std::ceil(src_y_end)), src.Y) - 1;
+
+    // Аккумуляторы для каналов цвета (предполагаем floats/doubles для точности)
+    real sum = 0;
+    real total_weight = 0;
+
+    // Проходим по всем исходным пикселям, попавшим в зону покрытия
+    for (int sy = y_first; sy <= y_last; ++sy) {
+      // Вычисляем высоту пересечения пикселя sy с целевой зоной
+      const real y_weight = std::min(scast<real>(sy + 1),
+        src_y_end) - std::max(scast<real>(sy), src_y_start);
+      cont_if (y_weight <= 0);
+
+      for (int sx = x_first; sx <= x_last; ++sx) {
+        // Вычисляем ширину пересечения пикселя sx с целевой зоной
+        const real x_weight = std::min(scast<real>(sx + 1),
+          src_x_end) - std::max(scast<real>(sx), src_x_start);
+        cont_if (x_weight <= 0);
+
+        const real weight = x_weight * y_weight;
+        cauto color = src[sx, sy]; // Предполагается, что у вас есть оператор [x, y]
+
+        // Умножаем каналы цвета на их вес (площадь покрытия)
+        sum += color.to_real() * weight;
+        total_weight += weight;
+      }
+    }
+
+    // Финальный цвет — это взвешенное среднее
+    Pal8 final_color {};
+    if (total_weight > 0)
+      final_color = Pal8::from_real(sum / total_weight);
+
+    ret.fast_set(x, y, final_color, {});
+  }
+
+  return ret;
+}
+
 Image resize_neighbor(cr<Image> src, const uint NEW_SIZE_X, const uint NEW_SIZE_Y) {
   assert(src);
   return_if(NEW_SIZE_X == scast<uint>(src.X) && NEW_SIZE_Y == scast<uint>(src.Y), src);
