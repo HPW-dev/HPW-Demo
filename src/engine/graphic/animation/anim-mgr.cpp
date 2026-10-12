@@ -18,13 +18,16 @@ struct Anim_mgr::Impl {
   }
 
   inline cr<Shared<Anim>> find_anim(cr<Str> name) {
+    static Shared<Anim> null_anim {}; // заглушка для анализатора
+    if (name.empty())
+      return null_anim;
+
     try {
       return table.at(str_tolower(name));
     } catch (...) {
       if (hpw::lazy_load_anim) {
         log_debug << "анимация \"" + name + "\" не загружена.\nзагрузка \"" + name + "\"";
         add_anim(name, load_from_config(name));
-
         try {
           return table.at(str_tolower(name));
         } catch (...) {
@@ -35,8 +38,7 @@ struct Anim_mgr::Impl {
       }
     }
 
-    static Shared<Anim> null_anim {}; // заглушка для анализатора
-    return null_anim;
+    return null_anim; // заглушка для анализатора
   } // find_anim
 
   inline cp<Direct> get_direct(cr<Str> str,
