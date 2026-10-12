@@ -3,9 +3,7 @@
 #include "game/core/messages.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
-#include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/resize.hpp"
 
