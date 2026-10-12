@@ -92,7 +92,9 @@ void Host_ogl::draw_game_frame() const {
 
   glBindVertexArray(m_vao); // растягивание текстуры
   glUseProgram(m_shader_prog); // применение шейдера
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4); // отрисовка текстуры на полигонах
+
+  // текстура экрана игры рисуется на большой треугольник, который больше окна
+  glDrawArrays(GL_TRIANGLES, 0, 3); 
 
   glUseProgram(0);
   glBindVertexArray(0); // unbind m_vao
@@ -116,37 +118,23 @@ void Host_ogl::ogl_post_init() {
 }
 
 void Host_ogl::init_screen_poly() {
-  // квадрат из треугольников
-  Vector<GLfloat> vertices{
-    -1,  1, 0, 0,
-    -1, -1, 0, 1,
-     1,  1, 1, 0,
-     1, -1, 1, 1
-  };
-  glGenBuffers(1, &m_vbo);
-  glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * vertices.size(),
-    vertices.data(), GL_STATIC_DRAW);
-
-  // Vertex layout
+  // VBO не юзать, сделать пустой VAO
   glGenVertexArrays(1, &m_vao);
   glBindVertexArray(m_vao);
-  glEnableVertexAttribArray(0);
-  glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(GLfloat) * 4, {});
 
-  glBindVertexArray(0); // unbind m_vao
-  glBindBuffer(GL_ARRAY_BUFFER, 0); // unbind m_vbo
-} // init_screen_poly
+  glBindVertexArray(0); 
+}
 
 void Host_ogl::compile_program() {
   m_shader_prog = glCreateProgram();
   glAttachShader(m_shader_prog, m_vert_shader);
   glAttachShader(m_shader_prog, m_frag_shader);
-  glBindAttribLocation(m_shader_prog, 0, "pos");
+
   glLinkProgram(m_shader_prog);
   glUseProgram(m_shader_prog);
   glUniform1i(glGetUniformLocation(m_shader_prog, "main_tex"), 0);
   glUniform1i(glGetUniformLocation(m_shader_prog, "pal_tex"), 1);
+
   // check
   GLint result;
   int info_len;
