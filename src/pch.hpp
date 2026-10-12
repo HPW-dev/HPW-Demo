@@ -1,6 +1,9 @@
 #include <omp.h>
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #include <thirdparty/include/nlohmann/json.hpp>
+#pragma GCC diagnostic pop
 
 #include <source_location>
 #include <unordered_map>
