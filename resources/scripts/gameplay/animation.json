@@ -2674,7 +2674,7 @@
         "Frame_UID_279": {
           "directions": 64,
           "ccf": "average",
-          "sprite path": "graphic/images/gameplay/enemies/hunter/hunter.png",
+          "sprite path": "graphic/images/gameplay/enemies/hunter/rotor.png",
           "sprite offset": [
             -22,
             -22
