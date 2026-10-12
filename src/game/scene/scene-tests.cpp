@@ -4,12 +4,13 @@
 #include "scene-input-delay-test.hpp"
 #include "scene-subpixel-test.hpp"
 #include "scene-interpolation-test.hpp"
-#include "game/core/scenes.hpp"
-#include "game/menu/menu.hpp"
+#include "scene-random-test.hpp"
 #include "game/menu/menu-from-json.hpp"
+#include "game/menu/menu.hpp"
+#include "game/core/scenes.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/locale.hpp"
 #include "game/input/keys.hpp"
-#include "game/util/resource-helper.hpp"
 #include "util/file/file.hpp"
 
 struct Scene_tests::Impl {
@@ -38,6 +39,7 @@ struct Scene_tests::Impl {
         {"qr_generator_test", []{ hpw::scene_mgr.add(new_shared<Scene_qr_generator_test>()); }},
         {"subpixel_test", []{ hpw::scene_mgr.add(new_shared<Scene_subpixel_test>()); }},
         {"interpolation_test", []{ hpw::scene_mgr.add(new_shared<Scene_interpolation_test>()); }},
+        {"random_test", []{ hpw::scene_mgr.add(new_shared<Scene_random_test>()); }},
       }
     );
   }
