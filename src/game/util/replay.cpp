@@ -49,7 +49,7 @@ Str get_random_replay_name() {
 #include <unordered_set>
 #include "replay.hpp"
 #include "game/util/version.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/locale.hpp"
 #include "game/hud/hud-util.hpp"

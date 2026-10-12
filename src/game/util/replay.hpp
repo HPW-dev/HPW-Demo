@@ -5,7 +5,7 @@
 #include "util/mem-types.hpp"
 #include "util/num-types.hpp"
 #include "util/vector-types.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/core/difficulty.hpp"
 
 using Key_packet = Vector<hpw::keycode>;

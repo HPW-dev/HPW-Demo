@@ -4,7 +4,7 @@
 #include "replay-check.hpp"
 #include "game/core/core.hpp"
 #include "game/core/entities.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/entity/entity-type.hpp"
 #include "game/entity/player/player.hpp"
 #include "game/entity/util/phys.hpp"

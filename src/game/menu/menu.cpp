@@ -2,7 +2,7 @@
 #include "menu.hpp"
 #include "item/item.hpp"
 #include "game/core/common.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "engine/graphic/font/font.hpp"
 

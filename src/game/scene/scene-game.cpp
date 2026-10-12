@@ -22,7 +22,7 @@
 #include "game/util/sync.hpp"
 #include "game/util/replay-check.hpp"
 #include "game/util/virt-joystick.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/animation-helper.hpp"
 #include "game/util/score-table.hpp"

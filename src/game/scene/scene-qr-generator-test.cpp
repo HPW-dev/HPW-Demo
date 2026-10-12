@@ -3,7 +3,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "engine/graphic/util/qr-gen.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 

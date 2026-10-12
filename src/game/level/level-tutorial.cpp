@@ -18,7 +18,7 @@
 #include "game/level/util/task-timed.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/camera.hpp"
 #include "game/util/vec-helper.hpp"
 #include "game/bgp/legacy/bgp-pack-1.hpp"

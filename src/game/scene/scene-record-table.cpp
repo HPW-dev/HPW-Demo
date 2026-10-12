@@ -3,7 +3,7 @@
 #include "scene-mgr.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"

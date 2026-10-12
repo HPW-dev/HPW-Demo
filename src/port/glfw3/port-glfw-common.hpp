@@ -1,6 +1,6 @@
 #pragma once
 #include <atomic>
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 
 extern "C" {
   #include "port/ogl3/ogl.hpp"

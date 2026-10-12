@@ -10,7 +10,7 @@
 #include "game/core/scenes.hpp"
 #include "game/menu/menu.hpp"
 #include "game/util/resource-helper.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "util/file/file.hpp"
 #include "engine/graphic/image/image.hpp"
 

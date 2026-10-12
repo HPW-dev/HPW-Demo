@@ -2,7 +2,7 @@
 #include "scene-mgr.hpp"
 #include "port/command.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/config.hpp"

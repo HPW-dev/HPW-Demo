@@ -1,6 +1,6 @@
 #include "virt-joystick.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "util/vec.hpp"

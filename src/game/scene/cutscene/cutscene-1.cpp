@@ -1,5 +1,5 @@
 #include "cutscene-1.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/core/scenes.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "game/scene/scene-mgr.hpp"

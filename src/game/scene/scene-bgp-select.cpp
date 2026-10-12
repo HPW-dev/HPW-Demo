@@ -3,7 +3,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/bgps.hpp"
 #include "game/util/resource-helper.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"

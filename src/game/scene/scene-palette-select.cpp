@@ -11,7 +11,7 @@
 #include "game/core/sprites.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/palette.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/palette-helper.hpp"

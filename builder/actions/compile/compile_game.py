@@ -93,6 +93,7 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}game/util/post-effect/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/util/cmd/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/util/*.cpp'))
+  tgt.sources.extend(find(f'{src_dir}game/input/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/bgp/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/bgp/legacy/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/core/*.cpp'))

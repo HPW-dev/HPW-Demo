@@ -4,7 +4,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/vec-helper.hpp"
 #include "util/timer.hpp"
 #include "util/average.hpp"

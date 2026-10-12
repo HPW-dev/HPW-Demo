@@ -8,7 +8,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/epges.hpp"
 #include "game/core/graphic.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/config.hpp"
 #include "game/util/palette-helper.hpp"

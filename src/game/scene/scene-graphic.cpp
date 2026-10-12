@@ -20,7 +20,7 @@
 #include "game/util/locale.hpp"
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/scene/scene-gamma.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/advanced-text-menu.hpp"

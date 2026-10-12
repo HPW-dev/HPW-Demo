@@ -10,11 +10,11 @@
 #include "game/core/debug.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/core.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/config.hpp"
 #include "game/util/logo.hpp"
 #include "game/util/version.hpp"
-#include "game/util/keybits.hpp"
 #include "game/util/screenshot.hpp"
 #include "engine/graphic/image/color-table.hpp"
 

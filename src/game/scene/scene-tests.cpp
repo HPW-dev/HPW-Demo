@@ -7,7 +7,7 @@
 #include "game/menu/menu.hpp"
 #include "game/menu/menu-from-json.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/resource-helper.hpp"
 #include "util/file/file.hpp"
 

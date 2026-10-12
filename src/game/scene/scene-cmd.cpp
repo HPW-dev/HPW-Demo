@@ -10,7 +10,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/messages.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/cmd/cmd.hpp"
 
 struct Scene_cmd::Impl {

@@ -6,7 +6,7 @@
 #include "game/core/debug.hpp"
 #include "game/core/scenes.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"

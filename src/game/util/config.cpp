@@ -14,7 +14,7 @@
 #include "game/core/bgps.hpp"
 #include "game/bgp/bgp.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "util/file/file-io.hpp"
 #include "port/port-util.hpp"

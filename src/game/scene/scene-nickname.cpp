@@ -6,7 +6,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
 #include "game/util/sync.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/vec-helper.hpp"
 #include "engine/graphic/image/image.hpp"

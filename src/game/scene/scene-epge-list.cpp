@@ -4,7 +4,7 @@
 #include "scene-test-image.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/epges.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/glass-ball.hpp"
 #include "game/util/palette-helper.hpp"

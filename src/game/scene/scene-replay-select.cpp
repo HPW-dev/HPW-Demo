@@ -6,7 +6,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/replays.hpp"
 #include "game/util/replay.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/util/difficulty-helper.hpp"
 #include "game/menu/table-menu.hpp"

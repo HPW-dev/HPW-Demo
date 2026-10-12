@@ -5,7 +5,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/core/debug.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/sync.hpp"
 #include "game/util/game-archive.hpp"
 #include "port/port-util.hpp"

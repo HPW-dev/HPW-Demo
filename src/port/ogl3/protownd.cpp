@@ -6,7 +6,7 @@
 #include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/util/config.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "engine/graphic/image/image-io.hpp"
 
 Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {

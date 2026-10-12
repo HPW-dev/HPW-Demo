@@ -11,7 +11,7 @@
 #include "game/core/sounds.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/graphic.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/version.hpp"
 #include "game/util/blur-helper.hpp"
 #include "game/util/resource-helper.hpp"

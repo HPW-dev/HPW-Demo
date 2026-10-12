@@ -5,7 +5,7 @@
 
 #include "port-glfw-keymap.hpp"
 #include "port/windows/windows-keycodes.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "util/str.hpp"
 
 Key_mapper::Key_mapper() {

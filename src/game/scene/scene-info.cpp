@@ -1,6 +1,6 @@
 #include "scene-info.hpp"
 #include "game/core/fonts.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/core/scenes.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "engine/graphic/image/image.hpp"

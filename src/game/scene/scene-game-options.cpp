@@ -10,7 +10,7 @@
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"

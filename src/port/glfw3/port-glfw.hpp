@@ -1,7 +1,7 @@
 #pragma once
 #include "port/ogl3/port-ogl.hpp"
 #include "util/mem-types.hpp"
-#include "game/util/keybits.hpp"
+#include "game/input/keys.hpp"
 
 struct GLFWwindow;
 class Key_mapper;
