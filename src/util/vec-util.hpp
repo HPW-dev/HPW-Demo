@@ -10,6 +10,7 @@ Vec rotate_deg(const Vec center, const Vec src, real degree);
 real length(const Vec src);
 Vec normalize_stable(const Vec src);
 Vec normalize_graphic(const Vec src);
+[[nodiscard]] Vec round(const Vec src) noexcept;
 [[nodiscard]] Vec floor(const Vec src) noexcept;
 [[nodiscard]] Vec ceil(const Vec src) noexcept;
 [[nodiscard]] Vec abs(const Vec src) noexcept;

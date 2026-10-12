@@ -309,11 +309,8 @@ template<blend_pf bf>
 void draw_line(Image& dst, Vec _p1, const Vec _p2, Pal8 color) {
   return_if( !dst);
 
-  struct Veci { int x {}, y {}; };
-  auto floored_p1 = floor(_p1);
-  Veci p1 {.x = scast<int>(floored_p1.x), .y = scast<int>(floored_p1.y)};
-  auto floored_p2 = floor(_p2);
-  Veci p2 {.x = scast<int>(floored_p2.x), .y = scast<int>(floored_p2.y)};
+  Veci p1(round(_p1));
+  Veci p2(round(_p2));
   
   // выход, если линия за пределами видимости
   return_if(p1.x < 0 && p2.x < 0);

@@ -19,6 +19,7 @@ Vec normalize_graphic(const Vec src) {
   return src / len;
 }
 
+Vec round(const Vec src) noexcept { return Vec(std::round(src.x), std::round(src.y)); }
 Vec floor(const Vec src) noexcept { return Vec(std::floor(src.x), std::floor(src.y)); }
 Vec ceil(const Vec src) noexcept { return Vec(std::ceil(src.x), std::ceil(src.y)); }
 Vec abs(const Vec src) noexcept { return Vec(std::abs(src.x), std::abs(src.y)); }
