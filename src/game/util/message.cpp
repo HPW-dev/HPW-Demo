@@ -15,7 +15,7 @@ struct Message_mgr::Impl {
     test_message(msg);
 
     // в консоль тоже показать сообщение
-    log_info << "[MSG] " << utf32_to_8(msg.text +
+    log_debug << "[MSG] " << utf32_to_8(msg.text +
       U" " + (msg.text_gen ? msg.text_gen() : U""));
 
     // показывать только определённое число сообщений на экране и не показывать старые
