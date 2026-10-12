@@ -1,0 +1,21 @@
+#include "pch.hpp"
+#include "scene-interpolation-test.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/fonts.hpp"
+#include "game/input/keys.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+
+struct Scene_interpolation_test::Impl {
+  inline void update(const Delta_time dt) {
+    if (is_pressed_once(hpw::keycode::escape))
+      hpw::scene_mgr.back();
+  }
+
+  inline void draw(Image& dst) const {
+    dst.fill({});
+    // TODO
+  }
+}; // Impl
+
+MAKE_SCENE_CLASS_IMPL(Scene_interpolation_test)

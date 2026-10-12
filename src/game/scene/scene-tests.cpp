@@ -2,7 +2,8 @@
 #include "scene-tests.hpp"
 #include "Scene-qr-generator-test.hpp"
 #include "scene-input-delay-test.hpp"
-#include "Scene-subpixel-test.hpp"
+#include "scene-subpixel-test.hpp"
+#include "scene-interpolation-test.hpp"
 #include "game/core/scenes.hpp"
 #include "game/menu/menu.hpp"
 #include "game/menu/menu-from-json.hpp"
@@ -36,6 +37,7 @@ struct Scene_tests::Impl {
         {"input_delay_test", []{ hpw::scene_mgr.add(new_shared<Scene_input_delay_test>()); }},
         {"qr_generator_test", []{ hpw::scene_mgr.add(new_shared<Scene_qr_generator_test>()); }},
         {"subpixel_test", []{ hpw::scene_mgr.add(new_shared<Scene_subpixel_test>()); }},
+        {"interpolation_test", []{ hpw::scene_mgr.add(new_shared<Scene_interpolation_test>()); }},
       }
     );
   }
