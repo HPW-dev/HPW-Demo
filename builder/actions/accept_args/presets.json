@@ -50,6 +50,10 @@
     "c++ opts": "m64 O0 g0 s",
     "defines": "RELEASE"
   },
+  "fast-build-x32": {
+    "c++ opts": "m32 O0 g0 s",
+    "defines": "RELEASE"
+  },
   "debug-x32": {
     "c++ opts": "m32 O0 g",
     "defines": "DEBUG"

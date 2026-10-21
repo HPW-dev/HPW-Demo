@@ -120,6 +120,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
       '2015 - Процы 2013-2015 года, x64, AVX2; ' \
       '2020 - Процы 2017-2020+ года, x64, AVX-512; ' \
       'fast-build - быстрая сборка (без дебага, RELEASE, x64); ' \
+      'fast-build-x32 - x32 версия опции fast-build; ' \
       'debug-x32 - отладочный билд x32; ' \
       'debug-x64 - отладочный билд x64.'
   )
