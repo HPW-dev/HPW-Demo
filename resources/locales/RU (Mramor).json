@@ -323,8 +323,9 @@
     "title": "информациz о сборке",
     "desc": "версиz игры, автор билда и прочаz инфа",
     "game_ver": "версиz игры",
-    "creation_date_time": "дата создания сборки",
-    "build_preset": "пресет"
+    "creation_date_time": "дата обновления кода",
+    "build_preset": "пресет",
+    "for_system": "для системы"
   },
   "locale_select": {
     "translation": "перевод"
