@@ -1,4 +1,5 @@
 #include "pch.hpp"
+
 #include "port/command.hpp"
 #include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-locale.hpp"
@@ -30,6 +31,8 @@
 #include "game/util/font-helper.hpp"
 #include "game/util/sound-helper.hpp"
 #include "game/util/validation.hpp"
+#include "game/util/version.hpp"
+#include "game/util/palette-helper.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/image/color-table.hpp"
 #include "engine/sound/sound-mgr.hpp"
@@ -86,13 +89,16 @@ void Game_app::startup_script() {
   #endif
 }
 
-Game_app::Game_app(int argc, char *argv[]): Port_class(argc, argv) {
-  #ifdef RELEASE
-    init_validation_info();
+Game_app::Game_app(int argc, char *argv[])
+: Port_class(argc, argv) {
+  #ifdef RELEASE=
+      init_validation_info();
   #endif
+
   #ifndef ECOMEM
     check_color_tables();
   #endif
+
   load_resources();
   load_locale();
   load_fonts();
@@ -131,11 +137,15 @@ Game_app::Game_app(int argc, char *argv[]): Port_class(argc, argv) {
     set_high_quality();
     #endif
     hpw::set_resize_mode(graphic::default_resize_mode);
+
+    // на моём ноуте эта палитра больше всего подходит:
+    if (Str(get_game_build_preset()) == "atom-x32")
+      set_palette("graphic/images/palettes/TV+BW (OkLab, Gradient).png");
   }
   hpw::first_start = false;
 
   /* снести LOADING, а то фон меню где первый кадр не
-  перерисовывается будет его отображать */
+  перерисовывается, будет отображать эту надпись */
   graphic::canvas->fill(Pal8::black);
 
   log_info << "загрузка завершена";

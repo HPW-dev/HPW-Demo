@@ -1,7 +1,13 @@
 #pragma once
 #include "util/mem-types.hpp"
+#include "util/str.hpp"
 
 class Menu_list_item;
 
-void randomize_palette(); // ставит случайную палитру
-Shared<Menu_list_item> get_palette_list(); // пункт меню для выбора палитр
+// ставит случайную палитру
+void randomize_palette();
+
+// пункт меню для выбора палитр
+Shared<Menu_list_item> get_palette_list();
+
+void set_palette(cr<Str> path);

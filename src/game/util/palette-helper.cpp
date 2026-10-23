@@ -15,15 +15,12 @@
 #include "util/rnd-table.hpp"
 
 void randomize_palette() {
-  assert(hpw::init_palette_from_archive);
-
   cauto sprites = get_all_res_names(false);
   cauto filter = [](cr<Str> src)
     { return src.find("graphic/images/palettes/") != Str::npos; };
   Rnd_table<Str> palettes(sprites | std::views::filter(filter) | std::ranges::to<Strs>());
   cauto palette_name = palettes.rnd_stable();
-  graphic::current_palette_file = palette_name;
-  hpw::init_palette_from_archive(palette_name);
+  set_palette(palette_name);
 }
 
 struct Palette_file_name {
@@ -81,13 +78,18 @@ Shared<Menu_list_item> get_palette_list() {
     items.push_back( Menu_list_item::Item {
       .name = utf8_to_32(palette_file.short_name),
       .desc = {},
-      .action = [path = palette_file.full_path] {
-        assert(hpw::init_palette_from_archive);
-        graphic::current_palette_file = path;
-        hpw::init_palette_from_archive(graphic::current_palette_file);
-      }
+      .action = [path = palette_file.full_path] { set_palette(path); }
     } );
   }
 
-  return new_shared<Menu_list_item>(get_locale_str("palette_select.cur_file"), items, &get_default_item_id);
+  return new_shared<Menu_list_item>(get_locale_str("palette_select.cur_file"),
+    items, &get_default_item_id);
+}
+
+void set_palette(cr<Str> path) {
+  assert(!path.empty());
+  graphic::current_palette_file = path;
+
+  assert(hpw::init_palette_from_archive);
+  hpw::init_palette_from_archive(graphic::current_palette_file);
 }
