@@ -51,6 +51,7 @@ run.py
 **/*.bak
 **/vgcore.*
 **/ignore me
+**/*.sublime-workspace
 
 # Temp:
 .tmp/*
