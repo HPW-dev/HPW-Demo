@@ -88,7 +88,7 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}port/*.cpp'))
 
   # версию надо генерить перед game/util/*, иначе find не найдёт нужное
-  generate_game_version_file(ctx)
+  generate_game_version_file(ctx, tgt)
 
   tgt.sources.extend(find(f'{src_dir}game/util/post-effect/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/util/cmd/*.cpp'))

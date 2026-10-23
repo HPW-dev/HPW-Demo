@@ -1,4 +1,5 @@
 from structs.context import *
+from structs.target import *
 from utils.exec import exec_cmd
 from utils.ui import *
 from utils.fs import path_abs, exists
@@ -29,9 +30,11 @@ def game_version(ctx: Context):
     print(to_red('Ошибка при получении версии игры'), file=stderr)
     return '> v0.273.1.0', '> 21.10.2026', '> 23:52'
 
-def generate_game_version_file(ctx: Context):
+def generate_game_version_file(ctx: Context, tgt: Target=None):
   '''Сгенерировать код для получения версии игры в самой игре'''
   version, date, time = game_version(ctx)
+  author = '???' if ctx.author == '' else ctx.author
+  preset = '???' if not tgt else tgt.opt_preset
 
   fname = path_abs(f'{ctx.src_dir}/game/util/version.cpp') 
   print(to_gray(f'генерация файла версии игры "{fname}"...'))
@@ -45,6 +48,8 @@ def generate_game_version_file(ctx: Context):
       'const char* get_game_version() { return "' + version + '"; }\n'
       'const char* get_game_creation_date() { return "' + date + '"; }\n'
       'const char* get_game_creation_time() { return "' + time + '"; }\n'
+      'const char* get_game_build_author() { return "' + author + '"; }\n'
+      'const char* get_game_build_preset() { return "' + preset + '"; }\n'
     )
 
   if not exists(fname):
