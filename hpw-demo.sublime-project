@@ -4,5 +4,12 @@
 		{
 			"path": "."
 		}
-	]
+	],
+	"settings":
+    {
+        "rulers": [80],
+        "font_face": "Fira Code Light",
+        "tab_size": 2,
+        "translate_tabs_to_spaces": true
+    }
 }
