@@ -57,6 +57,7 @@ struct File_reader::Impl {
 
     try {
       cauto path = std::filesystem::path(fname);
+      log_debug << "opening file " << path << "...";
       _file.open(path, std::ios_base::binary);
 
       if (!operator bool())
@@ -66,6 +67,7 @@ struct File_reader::Impl {
       _file.seekg(0, std::ios::end);
       _sz = _file.tellg();
       _file.seekg(0, std::ios::beg);
+      log_debug << "file size: " << _sz << " bytes";
     } catch (...) {
       error("error while opening file \"" + fname + "\"");
     }
@@ -74,9 +76,7 @@ struct File_reader::Impl {
   }
 
   inline void close() { _file.close(); }
-
   inline std::size_t size() const { return _sz; }
-
   inline operator bool() const { return _file && _file.is_open(); }
 
   inline void read(byte* dst, const std::size_t sz) {

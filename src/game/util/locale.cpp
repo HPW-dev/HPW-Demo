@@ -48,6 +48,7 @@ void load_locale(cr<Str> user_path) {
     path = user_path;
   if (path.empty())
     path = hpw::fallback_locale_path;
+  log_info << "файл для загрузки: \"" << path << "\"";
 
   try {
     mem = load_res(path);
@@ -59,17 +60,23 @@ void load_locale(cr<Str> user_path) {
 
   hpw::locale_path = path;
   try {
+    log_debug << "parsing locale...";
     auto cfg = nlohmann::json::parse(mem.data);
     load_locales_to_store(cfg);
   } catch (cr<nlohmann::json::parse_error> e) {
     const Str msg = "error while parsing JSON data from \"" + path + "\":\n"
       + "  " + e.what();
     error(msg);
+  } catch (...) {
+    error("unknown error while parsing locale-JSON (" + path + ")");
   }
+
+  log_debug << "перевод загружен";
 }
 
 void load_locales_to_store(cr<nlohmann::json> cfg) {
   init_shared(hpw::store_locale);
+  log_debug << "JSON -> store_locale";
 
   auto key_and_utf32s = get_string_table_utf32(cfg);
   for (rauto [str_name, val]: key_and_utf32s) {
