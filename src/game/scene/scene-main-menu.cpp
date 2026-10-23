@@ -153,7 +153,7 @@ void Scene_main_menu::init_menu() {
         next_bg();
       }),
       
-      get_palette_list(), // сменить палитру
+      palette_list_item(), // сменить палитру
 
       // инфа о разрабах TODO
       /*new_shared<Menu_text_item>(get_locale_str("main_menu.info"), []{

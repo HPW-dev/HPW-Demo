@@ -91,7 +91,9 @@ void Game_app::startup_script() {
 
 Game_app::Game_app(int argc, char *argv[])
 : Port_class(argc, argv) {
-  #ifdef RELEASE=
+  #ifdef RELEASE
+    if (Str(get_game_build_preset()) != "fast-build-x32"
+    &&  Str(get_game_build_preset()) != "fast-build-x64")
       init_validation_info();
   #endif
 

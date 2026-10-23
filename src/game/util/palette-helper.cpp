@@ -1,6 +1,6 @@
-#include <cassert>
-#include <ranges>
+#include "pch.hpp"
 #include "palette-helper.hpp"
+
 #include "engine/graphic/image/palette.hpp"
 #include "engine/graphic/image/color.hpp"
 #include "engine/graphic/image/color-convert.hpp"
@@ -9,10 +9,8 @@
 #include "game/util/resource-helper.hpp"
 #include "game/util/locale.hpp"
 #include "port/command.hpp"
-#include "util/file/file.hpp"
-#include "util/str.hpp"
-#include "util/path.hpp"
 #include "util/rnd-table.hpp"
+#include "util/file/file.hpp"
 
 void randomize_palette() {
   cauto sprites = get_all_res_names(false);
@@ -70,7 +68,7 @@ inline static std::size_t get_default_item_id() {
   return 0;
 }
 
-Shared<Menu_list_item> get_palette_list() {
+Shared<Menu_list_item> palette_list_item() {
   cauto palette_files = get_palette_file_names();
   Menu_list_item::Items items;
   // каждый элемент списка применяет свою палитру:

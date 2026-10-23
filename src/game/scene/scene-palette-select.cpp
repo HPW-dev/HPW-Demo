@@ -74,7 +74,7 @@ struct Scene_palette_select::Impl {
 
     init_unique<Text_menu>( _menu,
       Menu_items {
-        get_palette_list(),
+        palette_list_item(),
         get_test_image_list(),
         new_shared<Menu_bool_item>(get_locale_str("palette_select.show_gb"),
           [this]{ return _show_gb; }, [this](bool val){ _show_gb = val; } ),

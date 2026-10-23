@@ -43,7 +43,7 @@ void Scene_game_pause::init_menu() {
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
       new_shared<Menu_text_item>(get_locale_str("pause.screenshot"),
         []{ hpw::make_screenshot(); }),
-      get_palette_list(),
+      palette_list_item(),
       new_shared<Menu_text_item>(get_locale_str("pause.main_menu"), []{
         hpw::scene_mgr.back(3); // cur->пауза->игровой процесс->окно загрузки
         // в реплее в выбор сложности не заходим (TODO может поменяться)

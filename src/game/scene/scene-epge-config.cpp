@@ -87,7 +87,7 @@ struct Scene_epge_config::Impl {
       menu_items.emplace_back(get_move_down_item());
     }
     menu_items.emplace_back(get_test_image_list());
-    menu_items.emplace_back(get_palette_list());
+    menu_items.emplace_back(palette_list_item());
     // exit item
     menu_items.push_back( new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ exit_from_scene(); } ) );
 
