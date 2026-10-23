@@ -25,6 +25,10 @@
       "action": "game_opts"
     },
     {
+      "locale_prefix": "version_info",
+      "action": "version_info"
+    },
+    {
       "type": "back_item"
     }
   ]
