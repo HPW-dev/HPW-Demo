@@ -1,18 +1,20 @@
 #include "pch.hpp"
 #include "scene-options.hpp"
-#include "scene-input.hpp"
-#include "scene-graphic.hpp"
+
 #include "scene-game-options.hpp"
-#include "scene-hud-select.hpp"
+#include "scene-version-info.hpp"
 #include "scene-bgp-select.hpp"
+#include "scene-hud-select.hpp"
+#include "scene-graphic.hpp"
+#include "scene-input.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/menu/menu-from-json.hpp"
 #include "game/menu/item/item.hpp"
-#include "game/core/scenes.hpp"
 #include "game/menu/menu.hpp"
-#include "game/util/resource-helper.hpp"
+#include "game/core/scenes.hpp"
 #include "game/input/keys.hpp"
 #include "util/file/file.hpp"
-#include "engine/graphic/image/image.hpp"
 
 struct Scene_options::Impl {
   Unique<Menu> _menu {};
@@ -40,11 +42,12 @@ struct Scene_options::Impl {
 
   inline void init_menu() {
     _menu = menu_from_json(json_from_res("scripts/ui/menu/options.json"), Action_table {        
-      {"graphic_opts", []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},
-      {"hud_opts",     []{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }},
-      {"input_opts",   []{ hpw::scene_mgr.add(new_shared<Scene_input>()); }},
-      {"game_opts",    []{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }},
-      {"bgp_select",   []{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }},
+      {"graphic_opts",  []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},
+      {"hud_opts",      []{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }},
+      {"input_opts",    []{ hpw::scene_mgr.add(new_shared<Scene_input>()); }},
+      {"game_opts",     []{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }},
+      {"bgp_select",    []{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }},
+      {"version_info",  []{ hpw::scene_mgr.add(new_shared<Scene_version_info>()); }},
     } );
   }
 }; // Impl 

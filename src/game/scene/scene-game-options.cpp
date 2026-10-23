@@ -1,4 +1,4 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-game-options.hpp"
 #include "scene-nickname.hpp"
 #include "scene-mgr.hpp"
@@ -16,7 +16,6 @@
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/list-item.hpp"
-#include "util/error.hpp"
 #include "port/command.hpp"
 
 struct Scene_game_options::Impl {
