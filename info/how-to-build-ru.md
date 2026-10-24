@@ -21,9 +21,11 @@
 # Сборка игры из исходников
 _Команды для скачивания и сборки игры:_
 ```
-git clone --depth=4 https://github.com/HPW-dev/HPW-Demo
+git clone https://github.com/HPW-dev/HPW-Demo
 cd HPW-Demo
-python builder
+python builder --no_lan
 ```
 
 Для дополнительных настроек: ```python builder -h```
+
+Чтобы собрать под x32 Windows с x64 хоста, юзать это: ```python builder -pre stable-x32 --no_lan -cxx "_путь_до_x32_gcc_" --windres "_путь_до_x32_windres_"```
