@@ -11,6 +11,8 @@
 **/*.exe
 **/*.out
 **/*.svg
+thirdparty/lib x32
+thirdparty/lib x64
 
 # Game:
 !resources/**/*

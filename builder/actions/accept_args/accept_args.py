@@ -20,6 +20,13 @@ def accept_preset(preset_name, tgt: Target, ctx: Context, host: Host):
     if preset_name == 'auto':
        tgt.opt_preset = preset_name = 'stable-x32' if host.bitness == Bitness.x32 else 'stable-x64'
 
+    # принудительно ставим x32 режим, чтобы библиотеки брались из x32 папок:
+    if preset_name == 'stable-x32' \
+    or preset_name == 'i686' \
+    or preset_name == 'c2d-x32' \
+    or preset_name == 'atom-x32':
+      host.bitness = Bitness.x32
+
     # проверх базового конфига грузим выбранный
     preset = presets[tgt.opt_preset]
     tgt.options.extend(str(preset['c++ opts']).split())
@@ -72,6 +79,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     '-cxx', '--cxx_path', 
     type=str, default=ctx.compiler_path,
     help='Компилятор/Путь до него (по умолчанию: %(default)s)'
+  )
+  parser.add_argument(
+    '--windres', 
+    type=str, default=ctx.windres_path,
+    help='Компилятор ресурсных файлов для Винды/Путь до него (по умолчанию: %(default)s)'
   )
   parser.add_argument(
     '-np', '--no_print', 

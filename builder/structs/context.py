@@ -15,6 +15,7 @@ class Context:
   assets_dst_path : str = 'build/resources.zip'
   assets_src_dir  : str = 'resources/'
   compiler_path   : str = 'g++'
+  windres_path    : str = 'windres' # компилятор ресурсных файлов для винды
   pch_path        : str = '' # Если задан, то будет использовать precompiled header
 
   with_incremental      : bool = True  # использовать инкрементальную сборку

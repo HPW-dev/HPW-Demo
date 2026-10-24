@@ -88,7 +88,7 @@ def compile_game_ver(tgt: Target, ctx: Context, host: Host):
 
     out_path = f'{ctx.obj_dir}game_ver.o'
     fs.rem(out_path)
-    exec_cmd(['windres', '--input-format=rc', game_ver_copy, '-o', out_path])
+    exec_cmd([ctx.windres_path, '--input-format=rc', game_ver_copy, '-o', out_path])
 
     if not fs.exists(out_path):
       raise FileNotFoundError(f'файл "{out_path}" не сгенерирован')
