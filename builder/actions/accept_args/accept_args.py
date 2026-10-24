@@ -195,7 +195,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.tmp_dir = args.tmp_dir
   ctx.bin_dir = args.bin_dir
   ctx.obj_dir = args.obj_dir
-  ctx.windres = args.windres
+  ctx.windres_path = args.windres
   ctx.author = args.author
   ctx.with_incremental = not bool(args.no_incremental)
   ctx.forced_rebuild = bool(args.forced_rebuild)
