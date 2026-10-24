@@ -88,7 +88,6 @@ def compile_game_ver(tgt: Target, ctx: Context, host: Host):
 
     out_path = f'{ctx.obj_dir}game_ver.o'
     fs.rem(out_path)
-    print(f'ctx.windres_path: {ctx.windres_path}')
     exec_cmd([ctx.windres_path, '--input-format=rc', game_ver_copy, '-o', out_path])
 
     if not fs.exists(out_path):
