@@ -152,11 +152,6 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     help='Принудительная пересборка'
   )
   parser.add_argument(
-    '-l', '--launch_game', 
-    action='store_true', 
-    help='Запуск игры просле сборки'
-  )
-  parser.add_argument(
     '-na', '--no_assets', 
     action='store_true', 
     help='Не паковать ассеты'
@@ -199,7 +194,6 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.author = args.author
   ctx.with_incremental = not bool(args.no_incremental)
   ctx.forced_rebuild = bool(args.forced_rebuild)
-  ctx.with_launch = bool(args.launch_game)
   ctx.clear_all = bool(args.clear)
   ctx.less_info = bool(args.less_info)
   ctx.with_assets = not bool(args.no_assets)

@@ -87,11 +87,3 @@ if ctx.with_assets:
 # сейвим инфу о сборке
 if ctx.with_build_info_file:
   save_build_info(tgt, ctx, host)
-
-game_exe = fs.path_abs(f'{ctx.bin_dir}{tgt.name}')
-if ctx.with_launch and fs.exists(game_exe):
-  print(f'> запуск "{game_exe}"...')
-  try:
-    exec_cmd_bg([game_exe])
-  except Exception as ex:
-    print(f'Не удалось запустить "{game_exe}":\n  {to_red(ex)}' )
