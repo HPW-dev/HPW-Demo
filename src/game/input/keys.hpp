@@ -72,3 +72,5 @@ bool is_pressed(hpw::keycode code);
 bool is_pressed_once(hpw::keycode code);
 // узнать что любая из кнопок нажата
 [[nodiscard]] bool is_any_key_pressed();
+// Узнать название кнопки. Если не выйдет, вернёт "??"
+utf32 get_key_name(hpw::keycode key);

@@ -42,3 +42,10 @@ bool is_any_key_pressed() {
   }
   return false;
 }
+
+utf32 get_key_name(hpw::keycode key) {
+  cauto kinfo = hpw::keys_info.find(key);
+  if (kinfo)
+    return kinfo->name;
+  return U"??";
+}

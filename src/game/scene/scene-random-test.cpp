@@ -16,11 +16,9 @@ struct Scene_random_test::Impl {
 
   inline void print_inputs() {
     hpw::message_mgr->move(Message{ .text=
-      U"Управление:\n"
-      /*U"  " + hpw::keys_info.find(hpw::keycode::left)->name + U"/"
-        + hpw::keys_info.find(hpw::keycode::right)->name + U" - Алгоритм ресайза\n"
-      U"  " + hpw::keys_info.find(hpw::keycode::up)->name + U"/"
-        + hpw::keys_info.find(hpw::keycode::down)->name + U" - Увел./Умень. скорость зума\n"*/,
+      U"Управление:\n  "
+        + get_key_name(hpw::keycode::up) + U"/"
+        + get_key_name(hpw::keycode::down) + U" - Сменить генератор рандома.\n",
       .bf = &blend_diff
     });
   }
