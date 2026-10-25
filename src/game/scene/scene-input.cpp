@@ -38,12 +38,7 @@ cr<Str> locale_name, hpw::keycode keycode) {
   dst.emplace_back( new_shared<Menu_text_item>(
     get_locale_str(locale_name),
     [=] { hpw::rebind_key(hpw_key); },
-    [=] { // обновити название клавиши
-      auto x = hpw::keys_info.find(hpw_key);
-      if (x)
-        return x->name;
-      return utf32(U"error");
-    }
+    [=] { return get_key_name(hpw_key); }
   ));
 } // add_menu_item
 

@@ -196,7 +196,7 @@ struct Level_tutorial::Impl {
       cauto scope_l = pressed ? U'{' : U' '; \
       cauto scope_r = pressed ? U'}' : U' '; \
       bg_text += U'\n' + get_locale_str("input."#key_name) + U" - "; \
-      bg_text += scope_l + hpw::keys_info.find(hpw::keycode::key_name)->name + scope_r; \
+      bg_text += scope_l + get_key_name(hpw::keycode::key_name) + scope_r; \
     }
     KEY_TEXT(left)
     KEY_TEXT(right)
@@ -212,7 +212,7 @@ struct Level_tutorial::Impl {
     cauto scope_l = pressed ? U'<' : U' ';
     cauto scope_r = pressed ? U'>' : U' ';
     bg_text += utf32(U": ") +
-      scope_l + hpw::keys_info.find(hpw::keycode::shoot)->name + scope_r;
+      scope_l + get_key_name(hpw::keycode::shoot) + scope_r;
   }
 
   // выйти с уровня
@@ -529,7 +529,7 @@ struct Level_tutorial::Impl {
     cauto pressed = is_pressed(key);
     cauto scope_l = pressed ? U'[' : U' ';
     cauto scope_r = pressed ? U']' : U' ';
-    bg_text += utf32(U": ") + scope_l + hpw::keys_info.find(key)->name + scope_r;
+    bg_text += utf32(U": ") + scope_l + get_key_name(key) + scope_r;
     return pressed;
   }
 

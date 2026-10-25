@@ -43,10 +43,10 @@ struct Scene_input_delay_test::Impl {
 
   inline explicit Impl() {
      _info_text += get_locale_str("input_delay_test.info_1");
-     _info_text += U" <" + hpw::keys_info.find(hpw::keycode::shoot)->name + U"> ";
+     _info_text += U" <" + get_key_name(hpw::keycode::shoot) + U"> ";
      _info_text += get_locale_str("input_delay_test.info_2") + U". ";
      _info_text += get_locale_str("input_delay_test.info_3");
-     _info_text += U" <" + hpw::keys_info.find(hpw::keycode::bomb)->name + U">\n";
+     _info_text += U" <" + get_key_name(hpw::keycode::bomb) + U">\n";
 
     _reset_point();
   }

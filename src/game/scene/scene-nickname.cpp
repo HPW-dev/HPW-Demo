@@ -82,7 +82,7 @@ struct Scene_nickname::Impl {
       txt += U"<";
     txt += U"\n";
     txt += get_locale_str("nickname.press_key") + U" <";
-    txt += hpw::keys_info.find(hpw::keycode::enable)->name + U"> ";
+    txt += get_key_name(hpw::keycode::enable) + U"> ";
     txt += get_locale_str("nickname.for_exit");
     txt += U"\n" + get_locale_str("nickname.copy_paste");
     auto txt_rect = get_screen_rect();

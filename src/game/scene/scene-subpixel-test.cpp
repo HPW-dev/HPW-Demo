@@ -23,17 +23,17 @@ struct Scene_subpixel_test::Impl {
     // показать управление:
     hpw::message_mgr->move(Message { .text=
       U"Управление:\n"
-      U"  " + hpw::keys_info.find(hpw::keycode::mode)->name + U" - Изменить масштабирование\n"
-      U"  " + hpw::keys_info.find(hpw::keycode::up)->name + U"/"
-        + hpw::keys_info.find(hpw::keycode::down)->name + U" - Увел./Умень. скорость движения\n"
+      U"  " + get_key_name(hpw::keycode::mode) + U" - Изменить масштабирование\n"
+      U"  " + get_key_name(hpw::keycode::up)   + U"/"
+            + get_key_name(hpw::keycode::down) + U" - Увел./Умень. скорость движения\n"
     });
   }
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape)) hpw::scene_mgr.back();
-    if (is_pressed_once(hpw::keycode::mode)) next_scale();
-    if (is_pressed_once(hpw::keycode::up)) speed_up();
-    if (is_pressed_once(hpw::keycode::down)) speed_down();
+    if (is_pressed_once(hpw::keycode::mode))   next_scale();
+    if (is_pressed_once(hpw::keycode::up))     speed_up();
+    if (is_pressed_once(hpw::keycode::down))   speed_down();
 
     _state += dt;
     _star_pos = _star_center + Vec(

@@ -38,8 +38,7 @@ struct Scene_version_info::Impl {
       + utf8_to_32(get_game_build_preset()) + U"\n";
 
     _msg += utf32(60, U'-') + U"\n";
-    _msg += get_locale_str("common.exit") + U" : "
-      + hpw::keys_info.find(hpw::keycode::escape)->name;
+    _msg += get_locale_str("common.exit") + U" : " + get_key_name(hpw::keycode::escape);
   }
 
   inline void update(const Delta_time dt) {
