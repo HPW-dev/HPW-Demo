@@ -83,41 +83,57 @@ void Host_ogl::init_palette_loader() {
 void Host_ogl::draw_game_frame() const {
   return_if (!graphic::enable_render);
 
-  /* TODO пока не будут картинки по краям экрана, надо заливать чёрным,
-  чтобы на линуксе не была эпилепсия */
   glClear(GL_COLOR_BUFFER_BIT);
 
+  // Вычисляем индекс следующего буфера для работы CPU
+  int next_pbo_index = (m_pbo_index + 1) % 2;
+
   glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, m_screen_tex); // текстура для graphic::canvas
-  // перенос пикселей в текстуру
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RED,
-    GL_UNSIGNED_BYTE, m_pixels);
+  glBindTexture(GL_TEXTURE_2D, m_screen_tex);
 
+  // ШАГ 1: Асинхронно отправляем данные ТЕКУЩЕГО PBO в текстуру экрана
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[m_pbo_index]);
+  
+  // nullptr в конце означает: брать данные со смещением 0 внутри привязанного PBO.
+  // Это триггерит сверхбыстрый DMA-трансфер в видеопамять.
+  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+
+  // ШАГ 2: Загружаем данные для СЛЕДУЮЩЕГО кадра в другой PBO с помощью CPU
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[next_pbo_index]);
+  
+  // Флаг GL_MAP_INVALIDATE_BUFFER_BIT сбрасывает старую память буфера.
+  // Драйвер мгновенно выдает CPU новый кусок памяти, не дожидаясь рендеринга старого кадра на GPU.
+  void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_pbo_sz, 
+                                      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+  if (mapped_ptr) {
+    std::memcpy(mapped_ptr, m_pixels, m_pbo_sz);
+    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+  }
+
+  // Обязательно отвязываем PBO перед вызовом отрисовки
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+  // Стандартная отрисовка палитры и полигона
   glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_1D, m_pal_tex); // текстура палитры
+  glBindTexture(GL_TEXTURE_1D, m_pal_tex);
 
-  glBindVertexArray(m_vao); // растягивание текстуры
-  glUseProgram(m_shader_prog); // применение шейдера
+  glBindVertexArray(m_vao);
+  glUseProgram(m_shader_prog);
 
-  // текстура экрана игры рисуется на большой треугольник, который больше окна
   glDrawArrays(GL_TRIANGLES, 0, 3); 
 
   glUseProgram(0);
-  glBindVertexArray(0); // unbind m_vao
-  glBindTexture(GL_TEXTURE_1D, 0); // unbind m_pal_tex
-  glBindTexture(GL_TEXTURE_2D, 0); // unbind m_screen_tex
+  glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_1D, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
 
-#ifdef WINDOWS
-  /* Stuttering fix
-  Это проблема моей видюхи ATI Radeon HD 5500.
-  На Windows 7/10 нет способа лучше чем этот: */
-  if (graphic::get_vsync())
-    glFinish();
-#endif
-
-  if ( !graphic::double_buffering)
+  if (!graphic::double_buffering) {
     glFlush();
-}
+  }
+
+  // Ротация буферов. const_cast нужен, так как метод draw_game_frame() объявлен как const.
+  const_cast<Host_ogl*>(this)->m_pbo_index = next_pbo_index;
+} // draw_game_frame
 
 // вызывается в конце инита наследника
 void Host_ogl::ogl_post_init() {
@@ -198,11 +214,25 @@ void Host_ogl::screen_tex_init() {
   glGenTextures(1, &m_screen_tex);
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_screen_tex);
+  
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, m_w, m_h, 0, GL_RED, GL_UNSIGNED_BYTE, {});
-  glBindTexture(GL_TEXTURE_2D, 0);  // unbind m_screen_tex
-}
+  
+  // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выделяем честный 8-битный 1-канальный формат под индекс палитры
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, m_w, m_h, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  // ИНИЦИАЛИЗАЦИЯ ДВОЙНОГО PBO
+  m_pbo_sz = m_w * m_h; // 1 байт на пиксель для индексированного режима
+  glGenBuffers(2, m_pbos);
+  
+  for (int i = 0; i < 2; ++i) {
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[i]);
+    // Режим GL_STREAM_DRAW сообщает драйверу схему "Запись CPU -> Чтение GPU"
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, m_pbo_sz, nullptr, GL_STREAM_DRAW);
+  }
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+} // screen_tex_init
 
 void Host_ogl::pal_tex_init() {
   glGenTextures(1, &m_pal_tex);

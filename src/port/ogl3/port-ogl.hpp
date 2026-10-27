@@ -15,7 +15,9 @@ protected:
 
 private:
   uint m_screen_tex = 0; // OpenGL текстура экрана
-  uint m_vao = 0;
+  uint m_vao = 0;GLuint m_pbos[2] = {0, 0};
+  int m_pbo_index = 0;
+  size_t m_pbo_sz = 0;
   uint m_shader_prog = 0, m_vert_shader = 0, m_frag_shader = 0;
   uint m_pal_tex = 0;
   cp<void> m_pixels {}; // данные для копирования в текстуру
