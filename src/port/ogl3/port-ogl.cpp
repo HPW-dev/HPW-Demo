@@ -53,6 +53,11 @@ void Host_ogl::ogl_init() {
   glDisable(GL_BLEND);
   glDisable(GL_MULTISAMPLE); // отключение сглаживания
   glShadeModel(GL_FLAT); // не гладкая заливка
+  glDisable(GL_CULL_FACE); // без отсечения обратных граней полигона
+  glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
+  glDisable(GL_DITHER); // Дизер цвета не юзать
+  glDisable(GL_FOG); // Туман не нужен
+  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
 
   glClearColor(0,0,0,0);
   pal_tex_init();

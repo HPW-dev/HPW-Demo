@@ -194,10 +194,10 @@ void Port_glfw::init_window() {
   glfwWindowHint(GLFW_SAMPLES, 0);
   glfwWindowHint(GLFW_SRGB_CAPABLE, 0);
   // выбор версии OGL
-  glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API); // Не GLES
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // всё что ниже OGL3.3 лагает на встройке
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // старые функции вырубить
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
   if (graphic::start_focused) {
     glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
