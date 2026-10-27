@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "random.hpp"
 #include "rand-table-256.hpp"
+#include "xorshift.hpp"
 
 namespace {
   inline Seed main_seed {};
@@ -208,12 +209,26 @@ public:
   }
 };
 
+class Rnd_gen_xorshift128 final: public Rnd_gen_base {
+  xorshift128_state _state {};
+public:
+  inline explicit Rnd_gen_xorshift128(Seed seed) {
+    _state.a ^= seed.old_seed;
+    _state.b ^= seed.old_seed;
+    _state.c ^= seed.old_seed;
+    _state.d ^= seed.old_seed;
+  }
+
+  inline result_type next() { return xorshift128(_state); }
+};
+
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
   {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},
   {"RPNG", []{ return new_unique<Rnd_gen_rpng>(main_seed); }},
   {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
   {"parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
+  {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
 };
 
 Strs rnd_gens() {
