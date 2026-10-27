@@ -164,13 +164,12 @@ class Rnd_gen_table final: public Rnd_gen_base {
   uint8_t _idx;
 public:
   inline explicit Rnd_gen_table(Seed seed) { _idx = seed.old_seed % 256; }
-  inline result_type next() { 
-    return
-      (rand_table_256[_idx++] << 24) |
-      (rand_table_256[_idx++] << 16) |
-      (rand_table_256[_idx++] << 8) |
-       rand_table_256[_idx++]
-    ;
+  inline result_type next() {
+    cauto part1 = rand_table_256[_idx++];
+    cauto part2 = rand_table_256[_idx++];
+    cauto part3 = rand_table_256[_idx++];
+    cauto part4 = rand_table_256[_idx++];
+    return part1 | (part2 << 8) | (part3 << 16) | (part3 << 24);
   }
 };
 
@@ -179,11 +178,11 @@ class Rnd_gen_rpng final: public Rnd_gen_base {
 public:
   inline explicit Rnd_gen_rpng(Seed seed) { _state = seed.old_seed; }
   inline result_type next() {
-    return 
-      (RPNG(_state) << 18) | 
-      (RPNG(_state) << 2) | 
-       RPNG(_state) & 0b11; 
-    }
+    cauto part1 = RPNG(_state);
+    cauto part2 = RPNG(_state);
+    cauto part3 = RPNG(_state);
+    return part1 | (part2 << 15) | (part3 << 30);
+  }
 };
 
 class Rnd_gen_mt19937 final: public Rnd_gen_base {
@@ -203,8 +202,8 @@ public:
   inline explicit Rnd_gen_parkmiller(Seed seed) { _state = seed.old_seed; }
   inline result_type next() {
     return
-      (lcg_parkmiller(_state) << 16) ^
-       lcg_parkmiller(_state); 
+      ((lcg_parkmiller(_state) & 1) << 31) |
+        lcg_parkmiller(_state); 
   }
 };
 
