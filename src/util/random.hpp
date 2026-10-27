@@ -5,19 +5,23 @@
 #include "util/limit.hpp"
 #include "util/str.hpp"
 
+struct Seed {
+  u32_t old_seed {97997}; // TODO сделать другой большой сид
+};
+
 // База для фабрики генераторов рандома
 class Rnd_gen_base {
 public:
   using result_type = u32_t;
   virtual ~Rnd_gen_base() = default;
   virtual result_type next() = 0;
-  virtual Str name() const = 0;
 };
 
 // фабрика генераторов рандома
 [[nodiscard]] Unique<Rnd_gen_base> make_rnd_gen(cr<Str> name);
+[[nodiscard]] Strs rnd_gens(); // список всех доступных генераторов рандома
 
-void set_rnd_seed(u32_t new_seed);
+void set_rnd_seed(Seed seed);
 u32_t get_rnd_seed();
 
 // random byte

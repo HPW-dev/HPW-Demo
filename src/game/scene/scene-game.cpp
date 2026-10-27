@@ -238,7 +238,7 @@ void Scene_game::replay_init() {
   clear_entity_uid();
   hpw::clear_score();
   // random
-  set_rnd_seed( time({}) );
+  set_rnd_seed({.old_seed = scast<u32_t>(time({}))});
   log_debug << "назначен новый сид рандома: " << get_rnd_seed();
 
   Str rep_path;

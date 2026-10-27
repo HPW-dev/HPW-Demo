@@ -3,6 +3,7 @@
 #include "rand-table-256.hpp"
 
 namespace {
+  inline Seed main_seed {};
   inline std::uint32_t seed {1};
   inline std::uint32_t rndr_fast_rpng {1};
   inline std::uint32_t rnd_fast_lcg_state {1};
@@ -55,14 +56,17 @@ inline void init_generators() {
   }
 }
 
-void set_rnd_seed(std::uint32_t new_seed) {
+void set_rnd_seed(Seed s) {
   #pragma omp critical(rnd_seed_section)
   {
-    if (new_seed == 0)
-      new_seed = 97'997u;
-    seed = new_seed;
+    seed = s.old_seed;
+    if (seed == 0) {
+      log_warning << "Seed 0 is bad, using seed 97997...";
+      main_seed.old_seed = seed = 97'997u;
+    }
+    main_seed = s;
     srand(seed);
-    rndr_fast_rpng = new_seed;
+    rndr_fast_rpng = seed;
     rnd_fast_lcg_state = seed;
     rndu_fast_lcg_state = seed;
     rndb_lcg_state = seed;
@@ -70,7 +74,7 @@ void set_rnd_seed(std::uint32_t new_seed) {
     rndr_gen.seed(seed);
     rndr_graphic_gen.seed(seed);
     rndu_gen.seed(seed);
-    table_idx = std::uint8_t(seed);
+    table_idx = seed % 256;
   } // omp critical
 
   init_generators();
@@ -154,14 +158,34 @@ real rndr_graphic(real rmin, real rmax) {
   return dist(rndr_graphic_gen);
 }
 
-using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
-sconst std::unordered_map<Str, Rnd_gen_maker> table {
-  // TODO
+class Rnd_gen_table: public Rnd_gen_base {
+public:
+  inline explicit Rnd_gen_table(Seed seed) {
+    // TODO
+  }
+
+  inline result_type next() {
+    return {}; // TODO
+  }
 };
+
+using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
+sconst std::unordered_map<Str, Rnd_gen_maker> _table {
+  {"A", []{ return new_unique<Rnd_gen_table>(main_seed); }},
+  {"B", []{ return new_unique<Rnd_gen_table>(main_seed); }},
+  {"C", []{ return new_unique<Rnd_gen_table>(main_seed); }},
+};
+
+Strs rnd_gens() {
+  Strs ret;
+  for (crauto [name, _]: _table)
+    ret.push_back(name);
+  return ret;
+}
 
 Unique<Rnd_gen_base> make_rnd_gen(cr<Str> name) {
   try {
-    return table.at(name)();
+    return _table.at(name)();
   } catch (...) {
     error("error while making random generator (" << name << ")");
   }

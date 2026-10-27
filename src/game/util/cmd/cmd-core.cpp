@@ -64,7 +64,7 @@ void timed(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 void set_seed(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде seed не задан параметр");
   crauto seed = s2n<std::uint32_t>(args[1]);
-  set_rnd_seed(seed);
+  set_rnd_seed({.old_seed=seed});
   console.print("новый сид рандома = " + n2s(seed));
 }
 

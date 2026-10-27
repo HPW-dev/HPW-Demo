@@ -94,7 +94,7 @@ Host::Host(int argc, char** argv)
     seed = _impl->custom_seed.value();
   else
     seed = time({});
-  set_rnd_seed(seed);
+  set_rnd_seed({.old_seed=seed});
   log_debug << std::format("Сид рандома: {}\n", seed);
 
   log_info << '\n' << get_random_logo();
