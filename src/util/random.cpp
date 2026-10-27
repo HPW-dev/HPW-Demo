@@ -169,14 +169,19 @@ public:
     cauto part2 = rand_table_256[_idx++];
     cauto part3 = rand_table_256[_idx++];
     cauto part4 = rand_table_256[_idx++];
-    return part1 | (part2 << 8) | (part3 << 16) | (part3 << 24);
+    return part1 | (part2 << 8) | (part3 << 16) | (part4 << 24);
   }
 };
 
 class Rnd_gen_rpng final: public Rnd_gen_base {
   u32_t _state;
 public:
-  inline explicit Rnd_gen_rpng(Seed seed) { _state = seed.old_seed; }
+  inline explicit Rnd_gen_rpng(Seed seed) {
+    _state = seed.old_seed;
+    if (_state == 0)
+      _state = 97997;
+  }
+
   inline result_type next() {
     cauto part1 = RPNG(_state);
     cauto part2 = RPNG(_state);
@@ -187,13 +192,9 @@ public:
 
 class Rnd_gen_mt19937 final: public Rnd_gen_base {
   std::mt19937 _gen;
-  std::uniform_int_distribution<u32_t> _dist {
-    Rnd_gen_base::min(),
-    Rnd_gen_base::max()
-  };
 public:
   inline explicit Rnd_gen_mt19937(Seed seed) { _gen.seed(seed.old_seed); }
-  inline result_type next() { return _dist(_gen); }
+  inline result_type next() { return _gen(); }
 };
 
 class Rnd_gen_parkmiller final: public Rnd_gen_base {
@@ -201,9 +202,9 @@ class Rnd_gen_parkmiller final: public Rnd_gen_base {
 public:
   inline explicit Rnd_gen_parkmiller(Seed seed) { _state = seed.old_seed; }
   inline result_type next() {
-    return
-      ((lcg_parkmiller(_state) & 1) << 31) |
-        lcg_parkmiller(_state); 
+    cauto part1 = (lcg_parkmiller(_state) & 1u) << 31;
+    cauto part2 =  lcg_parkmiller(_state);
+    return part1 | part2;
   }
 };
 
