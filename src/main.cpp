@@ -162,7 +162,6 @@ void Game_app::update(const Delta_time dt) {
   hpw::tick_start_time_prev = hpw::tick_start_time;
   hpw::tick_start_time = get_time();
 
-  ALLOW_STABLE_RAND
   assert(dt == hpw::target_tick_time);
   update_graphic_autoopt(dt);
 

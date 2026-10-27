@@ -1,43 +1,40 @@
 #pragma once
-
-//#define RND_LOG
-#ifdef RND_LOG
-#include <source_location>
-#endif
-
-#include <cstdint>
+#include "util/mem-types.hpp"
+#include "util/num-types.hpp"
 #include "util/macro.hpp"
 #include "util/limit.hpp"
-#include "util/num-types.hpp"
+#include "util/str.hpp"
 
-// аргумент для дебажного вывода места вызова рандома
-#ifdef RND_LOG
-#define RND_SRC_LOC_ARG , const std::source_location location
-#define RND_SRC_LOC_ARG_2 const std::source_location location
-#define RND_SRC_LOC_ARG_DEF RND_SRC_LOC_ARG = std::source_location::current()
-#define RND_SRC_LOC_ARG_2_DEF RND_SRC_LOC_ARG_2 = std::source_location::current()
-#else
-#define RND_SRC_LOC_ARG
-#define RND_SRC_LOC_ARG_2
-#define RND_SRC_LOC_ARG_DEF
-#define RND_SRC_LOC_ARG_2_DEF
-#endif
+// База для фабрики генераторов рандома
+class Rnd_gen_base {
+public:
+  using result_type = u32_t;
+  virtual ~Rnd_gen_base() = default;
+  virtual result_type next() = 0;
+  virtual Str name() const = 0;
+};
 
-void set_rnd_seed(std::uint32_t new_seed RND_SRC_LOC_ARG_DEF);
-std::uint32_t get_rnd_seed();
+// фабрика генераторов рандома
+[[nodiscard]] Unique<Rnd_gen_base> make_rnd_gen(cr<Str> name);
+
+void set_rnd_seed(u32_t new_seed);
+u32_t get_rnd_seed();
+
 // random byte
-std::uint8_t rndb(RND_SRC_LOC_ARG_2_DEF);
-std::uint8_t rndb_fast();
+byte rndb();
+byte rndb_fast();
+
 // random i32
-int32_t rnd(int32_t rmin=num_min<int32_t>(), int32_t rmax=num_max<int32_t>() RND_SRC_LOC_ARG_DEF);
-int32_t rnd_fast(int32_t rmin, int32_t rmax);
-int32_t rnd_fast();
+i32_t rnd(i32_t rmin=num_min<i32_t>(), i32_t rmax=num_max<i32_t>());
+i32_t rnd_fast(i32_t rmin, i32_t rmax);
+i32_t rnd_fast();
+
 // random u32
-std::uint32_t rndu(std::uint32_t rmax=num_max<std::uint32_t>() RND_SRC_LOC_ARG_DEF);
-std::uint32_t rndu_fast(std::uint32_t rmax);
-std::uint32_t rndu_fast();
+u32_t rndu(u32_t rmax=num_max<u32_t>());
+u32_t rndu_fast(u32_t rmax);
+u32_t rndu_fast();
+
 // random real
-real rndr(real rmin=0, real rmax=1 RND_SRC_LOC_ARG_DEF);
-real rndr_fast(real rmin, real rmax);
-real rndr_fast();
+real rndr(real rmin=0, real rmax=1);
+real rndr_fast(real rmin=0, real rmax=1);
 real rndr_graphic(real rmin=0, real rmax=1);

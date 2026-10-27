@@ -17,10 +17,6 @@ inline Shared<Image> hitbox_layer {}; // для рендера хитбоксо�
 inline bool update_delay {false}; // искусственная задержка игры
 inline bool render_delay {false}; // искусственная задержка отрисовки
 inline bool show_entity_mem_map {false};
-/** когда включён, можно юзать стабильные рандомы
-@details нужен чтобы выявить места, где нельзя вызывать такие рандомы */
-inline bool allow_random_stable {false};
-inline bool allow_random_stable_bak {false};
 inline Str start_script {}; // выполнить этот скрипт при старте игры
 inline bool empty_level_first {}; // запустить при старте игры пустой уровень
 } // hpw ns
@@ -37,17 +33,3 @@ inline bool draw_level         {true}; // рисовать фон уровня
 inline bool show_virtual_joystick      {}; // показать что за кнопки нажимаются
 inline bool draw_entity_hp     {}; // показать жизни у объекта
 }
-
-#ifdef STABLE_REPLAY
-  #define ALLOW_STABLE_RAND Scope replay_stable_scope ( \
-    [] { \
-      hpw::allow_random_stable_bak = hpw::allow_random_stable; \
-      hpw::allow_random_stable = true; \
-    }, \
-    [] { \
-      hpw::allow_random_stable = hpw::allow_random_stable_bak; \
-    } \
-  );
-#else
-  #define ALLOW_STABLE_RAND
-#endif

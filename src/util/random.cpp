@@ -1,7 +1,6 @@
 #include "pch.hpp"
 #include "random.hpp"
 #include "rand-table-256.hpp"
-#include "game/core/debug.hpp"
 
 namespace {
   inline std::uint32_t seed {1};
@@ -14,14 +13,6 @@ namespace {
   inline auto rndr_gen {std::minstd_rand()};
   inline auto rndr_graphic_gen {std::minstd_rand()};
   inline std::uint8_t table_idx {0};
-}
-
-// узнаёт, можно ли вызывать эту функцию при hpw::allow_random_stable
-inline void check_safe_random() {
-  #ifdef STABLE_REPLAY
-  if ( !hpw::allow_random_stable)
-    error("рандом вызывается не там где надо");
-  #endif
 }
 
 inline cr<std::uint8_t> table_rndb() {
@@ -52,7 +43,6 @@ inline std::uint32_t lcg_parkmiller(std::uint32_t& state) {
 
 // прогрев генераторов
 inline void init_generators() {
-  ALLOW_STABLE_RAND
   cfor (_, 10u) {
     do_not_optimize(rndb());
     do_not_optimize(rnd());
@@ -65,7 +55,7 @@ inline void init_generators() {
   }
 }
 
-void set_rnd_seed(std::uint32_t new_seed RND_SRC_LOC_ARG) {
+void set_rnd_seed(std::uint32_t new_seed) {
   #pragma omp critical(rnd_seed_section)
   {
     if (new_seed == 0)
@@ -81,81 +71,49 @@ void set_rnd_seed(std::uint32_t new_seed RND_SRC_LOC_ARG) {
     rndr_graphic_gen.seed(seed);
     rndu_gen.seed(seed);
     table_idx = std::uint8_t(seed);
-
-    #ifdef RND_LOG
-    std::cout << "new random seed = " << new_seed;
-    std::cout << "\n  in " << location.file_name() << ":" << location.line() << std::endl;
-    #endif
   } // omp critical
 
   init_generators();
 }
 
-std::uint8_t rndb(RND_SRC_LOC_ARG_2) {
-  check_safe_random();
+std::uint8_t rndb() {
   std::uint8_t ret;
   #pragma omp critical(rndb_section)
   {
     ret = lcg_parkmiller(rndb_lcg_state);
-
-    #ifdef RND_LOG
-    std::cout << "rndb return value = " << +ret;
-    std::cout << "\n  in " << location.file_name() << ":" << location.line() << std::endl;
-    #endif
   }
   return ret;
 }
 
-int32_t rnd(int32_t rmin, int32_t rmax RND_SRC_LOC_ARG) {
-  check_safe_random();
-  if (rmin >= rmax)
-    return rmin;
+int32_t rnd(int32_t rmin, int32_t rmax) {
+  ret_if (rmin >= rmax, rmin);
   std::uniform_int_distribution<int32_t> dist(rmin, rmax);
   int32_t ret;
   #pragma omp critical(rnd_section)
   {
     ret = dist(rnd_gen);
-
-    #ifdef RND_LOG
-    std::cout << "rnd return value = " << ret;
-    std::cout << "\n  in " << location.file_name() << ":" << location.line() << std::endl;
-    #endif
   }
   return ret;
 }
 
-std::uint32_t rndu(std::uint32_t rmax RND_SRC_LOC_ARG) {
-  check_safe_random();
-  if (rmax == 0)
-    return 0;
+std::uint32_t rndu(std::uint32_t rmax) {
+  return_if (rmax == 0, 0);
   std::uniform_int_distribution<std::uint32_t> dist(0, rmax);
   std::uint32_t ret;
   #pragma omp critical(rndu_section)
   { 
     ret = dist(rndu_gen);
-    
-    #ifdef RND_LOG
-    std::cout << "rndu return value = " << ret;
-    std::cout << "\n  in " << location.file_name() << ":" << location.line() << std::endl;
-    #endif
   }
   return ret;
 }
 
-real rndr(real rmin, real rmax RND_SRC_LOC_ARG) {
-  check_safe_random();
-  if (rmin >= rmax)
-    return rmin;
+real rndr(real rmin, real rmax) {
+  return_if (rmin >= rmax, rmin);
   std::uniform_real_distribution<real> dist(rmin, rmax);
   real ret;
   #pragma omp critical(rndr_section)
   {
     ret = dist(rndr_gen);
-
-    #ifdef RND_LOG
-    std::cout << "rndr return value = " << ret;
-    std::cout << "\n  in " << location.file_name() << ":" << location.line() << std::endl;
-    #endif
   }
   return ret;
 }
@@ -163,31 +121,50 @@ real rndr(real rmin, real rmax RND_SRC_LOC_ARG) {
 std::uint32_t get_rnd_seed() {
   std::uint32_t ret;
   #pragma omp critical(rnd_seed_section)
-  { ret = seed; }
+  {
+    ret = seed;
+  }
   return ret;
 }
 
 std::uint8_t rndb_fast() { return table_rndb(); }
 int32_t rnd_fast() { return lcg_parkmiller(rnd_fast_lcg_state); }
 std::uint32_t rndu_fast() { return lcg_parkmiller(rndu_fast_lcg_state); }
-real rndr_fast() { return RPNG(rndr_fast_rpng) * real(1.0 / 32767.0); }
 
 int32_t rnd_fast(int32_t rmin, int32_t rmax) {
   cauto div = rmax - rmin + 1;
   assert(div);
   return rmin + (rnd_fast() % div);
 }
+
 std::uint32_t rndu_fast(std::uint32_t rmax) {
   ++rmax;
   assert(rmax);
   return rndu_fast() % rmax;
 }
+
 real rndr_fast(real rmin, real rmax) {
-  return rmin + rndr_fast() * (rmax - rmin);
+  cauto rd = RPNG(rndr_fast_rpng) * real(1.0 / 32767.0);
+  return rmin + rd * (rmax - rmin);
 }
 
 real rndr_graphic(real rmin, real rmax) {
   return_if (rmin >= rmax, rmin);
   std::uniform_real_distribution<real> dist(rmin, rmax);
   return dist(rndr_graphic_gen);
+}
+
+using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
+sconst std::unordered_map<Str, Rnd_gen_maker> table {
+  // TODO
+};
+
+Unique<Rnd_gen_base> make_rnd_gen(cr<Str> name) {
+  try {
+    return table.at(name)();
+  } catch (...) {
+    error("error while making random generator (" << name << ")");
+  }
+
+  return {}; // заглушка для анализатора
 }
