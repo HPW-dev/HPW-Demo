@@ -108,14 +108,16 @@ void Host_ogl::draw_game_frame() const {
   glBindTexture(GL_TEXTURE_2D, 0); // unbind m_screen_tex
 
 #ifdef WINDOWS
-  // stuttering fix
+  /* Stuttering fix
+  Это проблема моей видюхи ATI Radeon HD 5500.
+  На Windows 7/10 нет способа лучше чем этот: */
   if (graphic::get_vsync())
     glFinish();
 #endif
 
   if ( !graphic::double_buffering)
     glFlush();
-} // ogl_draw
+}
 
 // вызывается в конце инита наследника
 void Host_ogl::ogl_post_init() {
@@ -198,7 +200,7 @@ void Host_ogl::screen_tex_init() {
   glBindTexture(GL_TEXTURE_2D, m_screen_tex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_w, m_h, 0, GL_RGB, GL_FLOAT, {});
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, m_w, m_h, 0, GL_RED, GL_UNSIGNED_BYTE, {});
   glBindTexture(GL_TEXTURE_2D, 0);  // unbind m_screen_tex
 } // scree_tex_init
 
