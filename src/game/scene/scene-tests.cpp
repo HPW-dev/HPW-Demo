@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "scene-tests.hpp"
+#include "scene-empty.hpp"
 #include "Scene-qr-generator-test.hpp"
 #include "scene-input-delay-test.hpp"
 #include "scene-subpixel-test.hpp"
@@ -35,6 +36,7 @@ struct Scene_tests::Impl {
     _menu = menu_from_json(
       json_from_res("scripts/ui/menu/tests.json"),
       Action_table {        
+        {"scene_empty", []{ hpw::scene_mgr.add(new_shared<Scene_empty>()); }},
         {"input_delay_test", []{ hpw::scene_mgr.add(new_shared<Scene_input_delay_test>()); }},
         {"qr_generator_test", []{ hpw::scene_mgr.add(new_shared<Scene_qr_generator_test>()); }},
         {"subpixel_test", []{ hpw::scene_mgr.add(new_shared<Scene_subpixel_test>()); }},

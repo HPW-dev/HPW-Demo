@@ -9,7 +9,15 @@
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/resize.hpp"
 
+class Random_test {
+public:
+  virtual ~Random_test() = default;
+  virtual void update() = 0;
+};
+
 struct Scene_random_test::Impl {
+  Vector<Unique<Random_test>> _tests {};
+
   inline Impl() {
     print_inputs();
   }

@@ -1,6 +1,7 @@
 ﻿{
   "title": "tests.title",
   "items": [
+    { "locale_prefix": "scene_empty", "action": "scene_empty" },
     { "locale_prefix": "input_delay_test", "action": "input_delay_test" },
     { "locale_prefix": "qr_generator_test", "action": "qr_generator_test" },
     { "locale_prefix": "subpixel_test", "action": "subpixel_test" },
