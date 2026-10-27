@@ -222,13 +222,74 @@ public:
   inline result_type next() { return xorshift128(_state); }
 };
 
+// рандом из эмулятора A26
+class Rnd_gen_a26 final : public Rnd_gen_base {
+  uint16_t _state;
+
+  inline uint8_t step_tia() {
+    uint16_t bit = ((_state >> 4) ^ (_state >> 8)) & 1;
+    _state = (_state << 1) | bit;
+    return static_cast<uint8_t>(_state & 0xFF);
+  }
+
+public:
+  inline explicit Rnd_gen_a26(Seed seed) { 
+    _state = (seed.old_seed == 0)
+      ? 0x1FF
+      : (seed.old_seed & 0x1FF); 
+  }
+
+  inline result_type next() override {
+    cauto part1 = step_tia();
+    cauto part2 = step_tia();
+    cauto part3 = step_tia();
+    cauto part4 = step_tia();
+    return part1 | (part2 << 8) | (part3 << 16) | (part4 << 24);
+  }
+};
+
+class Rnd_gen_fnv1a final : public Rnd_gen_base {
+  u32_t _counter;
+  // Классические константы для 32-битного FNV-1a
+  static constexpr u32_t FNV_prime = 16777619u;
+  static constexpr u32_t FNV_offset_basis = 2166136261u;
+
+  inline u32_t hash_u32(u32_t value) {
+    u32_t hash = FNV_offset_basis;
+
+    hash ^= (value & 0xFF);
+    hash *= FNV_prime;
+
+    hash ^= ((value >> 8) & 0xFF);
+    hash *= FNV_prime;
+
+    hash ^= ((value >> 16) & 0xFF);
+    hash *= FNV_prime;
+
+    hash ^= ((value >> 24) & 0xFF);
+    hash *= FNV_prime;
+
+    return hash;
+  }
+
+public:
+  inline explicit Rnd_gen_fnv1a(Seed seed) { _counter = seed.old_seed; }
+
+  inline result_type next() override {
+    u32_t current = _counter++;
+    return hash_u32(current);
+  }
+};
+
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
+  {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
+  {"Parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
+  {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
+  {"FNV1-a", []{ return new_unique<Rnd_gen_fnv1a>(main_seed); }},
   {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},
   {"RPNG", []{ return new_unique<Rnd_gen_rpng>(main_seed); }},
-  {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
-  {"parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
-  {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
+  {"a26", []{ return new_unique<Rnd_gen_a26>(main_seed); }},
 };
 
 Strs rnd_gens() {
