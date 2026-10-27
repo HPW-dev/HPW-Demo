@@ -85,24 +85,22 @@ void Host_ogl::draw_game_frame() const {
 
   glClear(GL_COLOR_BUFFER_BIT);
 
-  // Вычисляем индекс следующего буфера для работы CPU
-  int next_pbo_index = (m_pbo_index + 1) % 2;
-
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_screen_tex);
 
-  // ШАГ 1: Асинхронно отправляем данные ТЕКУЩЕГО PBO в текстуру экрана
+  const int next_pbo_index = (m_pbo_index + 1) % 2;
+
+  // Пока готовим текущий PBO, отправляем на видяху предыдущий
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[m_pbo_index]);
-  
-  // nullptr в конце означает: брать данные со смещением 0 внутри привязанного PBO.
-  // Это триггерит сверхбыстрый DMA-трансфер в видеопамять.
+  /* nullptr в конце означает: брать данные со смещением 0 внутри привязанного PBO.
+  Это триггерит сверхбыстрый DMA-трансфер в видеопамять. */
   glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
-  // ШАГ 2: Загружаем данные для СЛЕДУЮЩЕГО кадра в другой PBO с помощью CPU
+  // Грузим текущий кадр в PBO
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[next_pbo_index]);
-  
-  // Флаг GL_MAP_INVALIDATE_BUFFER_BIT сбрасывает старую память буфера.
-  // Драйвер мгновенно выдает CPU новый кусок памяти, не дожидаясь рендеринга старого кадра на GPU.
+  /* Флаг GL_MAP_INVALIDATE_BUFFER_BIT сбрасывает старую память буфера.
+  Драйвер мгновенно выдает CPU новый кусок памяти,
+  не дожидаясь рендеринга старого кадра на GPU. */
   void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_pbo_sz, 
                                       GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
   if (mapped_ptr) {
@@ -110,16 +108,17 @@ void Host_ogl::draw_game_frame() const {
     glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
   }
 
-  // Обязательно отвязываем PBO перед вызовом отрисовки
+  // отвязываем PBO перед вызовом отрисовки
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-  // Стандартная отрисовка палитры и полигона
+  // Отрисовка полигона и палитры
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_1D, m_pal_tex);
 
   glBindVertexArray(m_vao);
   glUseProgram(m_shader_prog);
 
+  // Треугольник на весь экран, в котором текстура игры
   glDrawArrays(GL_TRIANGLES, 0, 3); 
 
   glUseProgram(0);
@@ -127,13 +126,12 @@ void Host_ogl::draw_game_frame() const {
   glBindTexture(GL_TEXTURE_1D, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  if (!graphic::double_buffering) {
+  if (!graphic::double_buffering)
     glFlush();
-  }
 
-  // Ротация буферов. const_cast нужен, так как метод draw_game_frame() объявлен как const.
-  const_cast<Host_ogl*>(this)->m_pbo_index = next_pbo_index;
-} // draw_game_frame
+  // Ротация буферов
+  m_pbo_index = next_pbo_index;
+}
 
 // вызывается в конце инита наследника
 void Host_ogl::ogl_post_init() {
@@ -218,21 +216,22 @@ void Host_ogl::screen_tex_init() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   
-  // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выделяем честный 8-битный 1-канальный формат под индекс палитры
   glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, m_w, m_h, 0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  // ИНИЦИАЛИЗАЦИЯ ДВОЙНОГО PBO
-  m_pbo_sz = m_w * m_h; // 1 байт на пиксель для индексированного режима
+  // Двойной PBO
+  static_assert(sizeof(Pal8) == 1, "m_pbo_sz ожидает что пиксели весят 1 байт");
+  m_pbo_sz = m_w * m_h;
   glGenBuffers(2, m_pbos);
   
-  for (int i = 0; i < 2; ++i) {
+  cfor (i, 2) {
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[i]);
     // Режим GL_STREAM_DRAW сообщает драйверу схему "Запись CPU -> Чтение GPU"
     glBufferData(GL_PIXEL_UNPACK_BUFFER, m_pbo_sz, nullptr, GL_STREAM_DRAW);
   }
+  
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-} // screen_tex_init
+}
 
 void Host_ogl::pal_tex_init() {
   glGenTextures(1, &m_pal_tex);
