@@ -4,6 +4,7 @@
 #include "game/core/sprites.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
@@ -53,28 +54,55 @@ public:
     insert(dst, _map2, {offx + SZ + spacex, offy});
     insert(dst, _map3, {offx + (SZ + spacex) * 2, offy});
     insert(dst, _map4, {offx + (SZ + spacex) * 3, offy});
+
+    graphic::font->draw(dst, {17, dst.Y - 24},
+      U"[ Квадраты со случайными цветами ]");
   }
 };
 
 // Рисует график распределения самых частых цифр
 class Distribution final: public Rnd_test_base {
-  sconst uint WIDTH = 300;
+  sconst int offx = 17;
+  sconst int offy = offx;
+  sconst uint WIDTH = 512 - offx * 2;
+  sconst uint HEIGHT = 150;
   Vector<uint> _dist_map;
-  std::uniform_int_distribution<uint> _dist{0, WIDTH};
+  std::uniform_int_distribution<uint> _dist{0, WIDTH-1};
+  uint _maximum; // поможет подгонать по высоте
 
 public:
   explicit Distribution(): _dist_map(WIDTH) {}
 
   void update(Rnd_gen_base* rnd_gen, uint samples) override {
-    std::fill(_dist_map.begin(), _dist_map.end(), 0);
-
     assert(rnd_gen);
-    /*for ()
-    _dist(rnd_gen) */
+    assert(!_dist_map.empty());
+
+    std::fill(_dist_map.begin(), _dist_map.end(), 0);
+    _maximum = 0;
+
+    cfor (_, samples) {
+      cauto idx = _dist(*rnd_gen);
+      auto& count = _dist_map.at(idx);
+      ++count;
+      _maximum = std::max(count, _maximum);
+    }
   }
 
   void draw(Image& dst) const override {
+    const Recti rect(offx, offy, WIDTH, HEIGHT);
+    draw_rect(dst, rect, Pal8::white);
 
+    ret_if(_maximum == 0);
+    cauto HMUL = 1.0 / scast<double>(_maximum);
+
+    cfor (x, _dist_map.size()) {
+      cauto height = _dist_map[x] * HMUL * HEIGHT;
+      cfor(y, height)
+        dst.set(offx + x, offy + HEIGHT - 1 - y, Pal8::white, {});
+    }
+
+    graphic::font->draw(dst, {17, dst.Y - 24},
+      U"[ Распределение чисел ]");
   }
 };
 
@@ -82,10 +110,12 @@ struct Scene_random_test::Impl {
   Vector<Unique<Rnd_test_base>> _tests {};
   Rnd_test_base* _cur_test {};
   size_t _test_idx {0};
+
   Unique<Rnd_gen_base> _rnd_gen {};
   size_t _rnd_gen_idx {0};
+
   uint _samples;
-  size_t _samples_idx {0};
+  size_t _samples_idx {2};
 
   inline Impl() {
     _tests.emplace_back(new_unique<Distribution>());
