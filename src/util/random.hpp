@@ -10,11 +10,15 @@ struct Seed {
 };
 
 // База для фабрики генераторов рандома
-class Rnd_gen_base {
-public:
+struct Rnd_gen_base {
   using result_type = u32_t;
+  static constexpr result_type min() { return 0; }
+  static constexpr result_type max() { return num_max<result_type>(); }
+
   virtual ~Rnd_gen_base() = default;
   virtual result_type next() = 0;
+
+  inline result_type operator()() { return this->next(); }
 };
 
 // фабрика генераторов рандома

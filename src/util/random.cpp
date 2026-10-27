@@ -4,39 +4,39 @@
 
 namespace {
   inline Seed main_seed {};
-  inline std::uint32_t seed {1};
-  inline std::uint32_t rndr_fast_rpng {1};
-  inline std::uint32_t rnd_fast_lcg_state {1};
-  inline std::uint32_t rndu_fast_lcg_state {1};
-  inline std::uint32_t rndb_lcg_state {1};
+  inline u32_t seed {1};
+  inline u32_t rndr_fast_rpng {1};
+  inline u32_t rnd_fast_lcg_state {1};
+  inline u32_t rndu_fast_lcg_state {1};
+  inline u32_t rndb_lcg_state {1};
   inline auto rnd_gen {std::minstd_rand()};
   inline auto rndu_gen {std::minstd_rand()};
   inline auto rndr_gen {std::minstd_rand()};
   inline auto rndr_graphic_gen {std::minstd_rand()};
-  inline std::uint8_t table_idx {0};
+  inline byte table_idx {0};
 }
 
-inline cr<std::uint8_t> table_rndb() {
+inline cr<byte> table_rndb() {
   return rand_table_256[table_idx++];
 }
 
-inline uint RPNG(std::uint32_t& state) {
+inline uint RPNG(u32_t& state) {
   state = 8'253'729u * state + 2'396'403u;
   state %= 32'767u;
   return state;
 }
 
-inline std::uint32_t lcg_parkmiller(std::uint32_t& state) {
+inline u32_t lcg_parkmiller(u32_t& state) {
   // Precomputed parameters for Schrage's method
-  constexpr std::uint32_t M = 0x7fffffff;
-  constexpr std::uint32_t A = 48271;
-  constexpr std::uint32_t Q = M / A;    // 44488
-  constexpr std::uint32_t R = M % A;    //  3399
-  std::uint32_t div = state / Q;	// max: M / Q = A = 48,271
-  std::uint32_t rem = state % Q;	// max: Q - 1     = 44,487
-  int32_t s = rem * A;	// max: 44,487 * 48,271 = 2,147,431,977 = 0x7fff3629
-  int32_t t = div * R;	// max: 48,271 *  3,399 =   164,073,129
-  int32_t result = s - t;
+  constexpr u32_t M = 0x7fffffff;
+  constexpr u32_t A = 48271;
+  constexpr u32_t Q = M / A;    // 44488
+  constexpr u32_t R = M % A;    //  3399
+  u32_t div = state / Q;	// max: M / Q = A = 48,271
+  u32_t rem = state % Q;	// max: Q - 1     = 44,487
+  i32_t s = rem * A;	// max: 44,487 * 48,271 = 2,147,431,977 = 0x7fff3629
+  i32_t t = div * R;	// max: 48,271 *  3,399 =   164,073,129
+  i32_t result = s - t;
   if (result < 0)
     result += M;
   return state = result;
@@ -80,8 +80,8 @@ void set_rnd_seed(Seed s) {
   init_generators();
 }
 
-std::uint8_t rndb() {
-  std::uint8_t ret;
+byte rndb() {
+  byte ret;
   #pragma omp critical(rndb_section)
   {
     ret = lcg_parkmiller(rndb_lcg_state);
@@ -89,10 +89,10 @@ std::uint8_t rndb() {
   return ret;
 }
 
-int32_t rnd(int32_t rmin, int32_t rmax) {
+i32_t rnd(i32_t rmin, i32_t rmax) {
   ret_if (rmin >= rmax, rmin);
-  std::uniform_int_distribution<int32_t> dist(rmin, rmax);
-  int32_t ret;
+  std::uniform_int_distribution<i32_t> dist(rmin, rmax);
+  i32_t ret;
   #pragma omp critical(rnd_section)
   {
     ret = dist(rnd_gen);
@@ -100,10 +100,10 @@ int32_t rnd(int32_t rmin, int32_t rmax) {
   return ret;
 }
 
-std::uint32_t rndu(std::uint32_t rmax) {
+u32_t rndu(u32_t rmax) {
   return_if (rmax == 0, 0);
-  std::uniform_int_distribution<std::uint32_t> dist(0, rmax);
-  std::uint32_t ret;
+  std::uniform_int_distribution<u32_t> dist(0, rmax);
+  u32_t ret;
   #pragma omp critical(rndu_section)
   { 
     ret = dist(rndu_gen);
@@ -122,8 +122,8 @@ real rndr(real rmin, real rmax) {
   return ret;
 }
 
-std::uint32_t get_rnd_seed() {
-  std::uint32_t ret;
+u32_t get_rnd_seed() {
+  u32_t ret;
   #pragma omp critical(rnd_seed_section)
   {
     ret = seed;
@@ -131,17 +131,17 @@ std::uint32_t get_rnd_seed() {
   return ret;
 }
 
-std::uint8_t rndb_fast() { return table_rndb(); }
-int32_t rnd_fast() { return lcg_parkmiller(rnd_fast_lcg_state); }
-std::uint32_t rndu_fast() { return lcg_parkmiller(rndu_fast_lcg_state); }
+byte rndb_fast() { return table_rndb(); }
+i32_t rnd_fast() { return lcg_parkmiller(rnd_fast_lcg_state); }
+u32_t rndu_fast() { return lcg_parkmiller(rndu_fast_lcg_state); }
 
-int32_t rnd_fast(int32_t rmin, int32_t rmax) {
+i32_t rnd_fast(i32_t rmin, i32_t rmax) {
   cauto div = rmax - rmin + 1;
   assert(div);
   return rmin + (rnd_fast() % div);
 }
 
-std::uint32_t rndu_fast(std::uint32_t rmax) {
+u32_t rndu_fast(u32_t rmax) {
   ++rmax;
   assert(rmax);
   return rndu_fast() % rmax;
@@ -158,22 +158,50 @@ real rndr_graphic(real rmin, real rmax) {
   return dist(rndr_graphic_gen);
 }
 
-class Rnd_gen_table: public Rnd_gen_base {
-public:
-  inline explicit Rnd_gen_table(Seed seed) {
-    // TODO
-  }
+// ------------------[ STL-френдли рандомы ]------------------------------------
 
-  inline result_type next() {
-    return {}; // TODO
+class Rnd_gen_table final: public Rnd_gen_base {
+  uint8_t _idx;
+public:
+  inline explicit Rnd_gen_table(Seed seed) { _idx = seed.old_seed % 256; }
+  inline result_type next() { 
+    return
+      (rand_table_256[_idx++] << 24) |
+      (rand_table_256[_idx++] << 16) |
+      (rand_table_256[_idx++] << 8) |
+       rand_table_256[_idx++]
+    ;
   }
+};
+
+class Rnd_gen_rpng final: public Rnd_gen_base {
+  u32_t _state;
+public:
+  inline explicit Rnd_gen_rpng(Seed seed) { _state = seed.old_seed; }
+  inline result_type next() {
+    return 
+      (RPNG(_state) << 18) | 
+      (RPNG(_state) << 2) | 
+       RPNG(_state) & 0b11; 
+    }
+};
+
+class Rnd_gen_mt19937 final: public Rnd_gen_base {
+  std::mt19937 _gen;
+  std::uniform_int_distribution<u32_t> _dist {
+    Rnd_gen_base::min(),
+    Rnd_gen_base::max()
+  };
+public:
+  inline explicit Rnd_gen_mt19937(Seed seed) { _gen.seed(seed.old_seed); }
+  inline result_type next() { return _dist(_gen); }
 };
 
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
-  {"A", []{ return new_unique<Rnd_gen_table>(main_seed); }},
-  {"B", []{ return new_unique<Rnd_gen_table>(main_seed); }},
-  {"C", []{ return new_unique<Rnd_gen_table>(main_seed); }},
+  {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},
+  {"RPNG", []{ return new_unique<Rnd_gen_rpng>(main_seed); }},
+  {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
 };
 
 Strs rnd_gens() {
