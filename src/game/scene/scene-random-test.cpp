@@ -12,12 +12,12 @@
 class Rnd_test_base {
 public:
   virtual ~Rnd_test_base() = default;
-  virtual void update(Rnd_gen_base* rnd_gen) = 0;
+  virtual void update(Rnd_gen_base* rnd_gen, uint samples) = 0;
   virtual void draw(Image& dst) const = 0;
 };
 
 // просто квадраты с шумом
-class Noise_squares: public Rnd_test_base {
+class Noise_squares final: public Rnd_test_base {
   Image _map1, _map2, _map3, _map4;
   std::bernoulli_distribution _dist{0.5};
   std::uniform_int_distribution<u32_t> _dist2{0, 255};
@@ -36,7 +36,7 @@ public:
   , _map4(SZ, SZ)
   {}
 
-  inline void update(Rnd_gen_base* rnd_gen) override {
+  inline void update(Rnd_gen_base* rnd_gen, uint _) override {
     assert(rnd_gen);
     for (rauto c: _map1)
       c = _dist(*rnd_gen) ? Pal8::white : Pal8::black;
@@ -56,18 +56,45 @@ public:
   }
 };
 
+// Рисует график распределения самых частых цифр
+class Distribution final: public Rnd_test_base {
+  sconst uint WIDTH = 300;
+  Vector<uint> _dist_map;
+  std::uniform_int_distribution<uint> _dist{0, WIDTH};
+
+public:
+  explicit Distribution(): _dist_map(WIDTH) {}
+
+  void update(Rnd_gen_base* rnd_gen, uint samples) override {
+    std::fill(_dist_map.begin(), _dist_map.end(), 0);
+
+    assert(rnd_gen);
+    /*for ()
+    _dist(rnd_gen) */
+  }
+
+  void draw(Image& dst) const override {
+
+  }
+};
+
 struct Scene_random_test::Impl {
   Vector<Unique<Rnd_test_base>> _tests {};
   Rnd_test_base* _cur_test {};
   size_t _test_idx {0};
   Unique<Rnd_gen_base> _rnd_gen {};
   size_t _rnd_gen_idx {0};
+  uint _samples;
+  size_t _samples_idx {0};
 
   inline Impl() {
-    print_inputs();
+    _tests.emplace_back(new_unique<Distribution>());
     _tests.emplace_back(new_unique<Noise_squares>());
+    set_samples(0);
     set_test(0);
     set_gen(0);
+
+    print_inputs();
   }
 
   inline void print_inputs() {
@@ -76,21 +103,30 @@ struct Scene_random_test::Impl {
         + get_key_name(hpw::keycode::up) + U"/"
         + get_key_name(hpw::keycode::down) + U" - Сменить генератор рандома.\n  "
         + get_key_name(hpw::keycode::left) + U"/"
-        + get_key_name(hpw::keycode::right) + U" - Следующий тест.\n  ",
+        + get_key_name(hpw::keycode::right) + U" - Следующий тест.\n  "
+        + get_key_name(hpw::keycode::focus) + U" + "
+        + get_key_name(hpw::keycode::up) + U"/"
+        + get_key_name(hpw::keycode::down) + U" - Изменить размер выборки.\n  ",
       .bf = &blend_diff
     });
   }
 
   inline void update(const Delta_time dt) {
     if (is_pressed_once(hpw::keycode::escape)) hpw::scene_mgr.back();
-    if (is_pressed_once(hpw::keycode::up))     set_gen(-1);
-    if (is_pressed_once(hpw::keycode::down))   set_gen(+1);
-    if (is_pressed_once(hpw::keycode::left))   set_test(-1);
-    if (is_pressed_once(hpw::keycode::right))  set_test(+1);
+    if (is_pressed_once(hpw::keycode::left))  set_test(-1);
+    if (is_pressed_once(hpw::keycode::right)) set_test(+1);
+
+    if (is_pressed(hpw::keycode::focus)) {
+      if (is_pressed_once(hpw::keycode::up))   set_samples(+1);
+      if (is_pressed_once(hpw::keycode::down)) set_samples(-1);
+    } else {
+      if (is_pressed_once(hpw::keycode::up))   set_gen(-1);
+      if (is_pressed_once(hpw::keycode::down)) set_gen(+1); 
+    }
 
     assert(_cur_test);
     assert(_rnd_gen);
-    _cur_test->update(_rnd_gen.get());
+    _cur_test->update(_rnd_gen.get(), _samples);
   }
 
   inline void draw(Image& dst) const {
@@ -124,6 +160,26 @@ struct Scene_random_test::Impl {
 
     hpw::message_mgr->move(Message{
       .text=U"Тест №: " + n2s<utf32>(_test_idx), .bf=&blend_diff });
+  }
+
+  inline void set_samples(int idx_offset) {
+    sconst Vector<uint> table {
+      100,
+      1000,
+      4096,
+      10'000,
+      50'000,
+      200'000,
+      1'000'000,
+    };
+    int idx = _samples_idx + idx_offset;
+    if (idx < 0)
+      idx += table.size();
+    _samples_idx = idx % table.size();
+    _samples = table.at(_samples_idx);
+
+    hpw::message_mgr->move(Message{
+      .text=U"Выборка: " + n2s<utf32>(_samples), .bf=&blend_diff });
   }
 }; // Impl
 
