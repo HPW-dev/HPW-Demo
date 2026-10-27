@@ -17,7 +17,7 @@
 // вверх этот хедер не таскать, иначе всё развалится
 #include "port-glfw-common.hpp"
 
-Port_glfw::Port_glfw(int argc, char *argv[]) : Host_ogl(argc, argv) {
+Port_glfw::Port_glfw(int argc, char *argv[]) : Port_ogl(argc, argv) {
   iferror(g_instance, "no use two GLFW hosts");
   g_instance.store(this);
   init_commands();
@@ -119,7 +119,7 @@ void Port_glfw::init() {
 }
 
 void Port_glfw::run() {
-  Host_ogl::run();
+  Port_ogl::run();
   init();
   auto last_loop_time = get_time();
   
@@ -149,12 +149,12 @@ void Port_glfw::reshape(int w, int h) {
   if (!graphic::fullscreen)
     glfwSetWindowSize(m_window, w, h);
 
-  Host_ogl::reshape(w, h);
+  Port_ogl::reshape(w, h);
 }
 
 void Port_glfw::set_window_pos(int x, int y) {
   glfwSetWindowPos(m_window, x, y);
-  Host_ogl::set_window_pos(x, y);
+  Port_ogl::set_window_pos(x, y);
 }
 
 void Port_glfw::game_set_dt(const Delta_time gameloop_time) {

@@ -19,7 +19,7 @@
 #include "ogl.hpp"
 // --------- [!] ---------
 
-Host_ogl::Host_ogl(int argc, char *argv[])
+Port_ogl::Port_ogl(int argc, char *argv[])
 : Protownd(argc, argv) {
   m_pixels = scast<decltype(m_pixels)>(graphic::canvas->data());
   #ifndef DISABLE_CONFIG
@@ -30,7 +30,7 @@ Host_ogl::Host_ogl(int argc, char *argv[])
   #endif
 }
 
-void Host_ogl::ogl_resize(int w, int h) {
+void Port_ogl::ogl_resize(int w, int h) {
   return_if (w <= 0 || h <= 0);
   m_window_ctx.resize_by_mode(w, h, m_w, m_h);
 
@@ -43,7 +43,7 @@ void Host_ogl::ogl_resize(int w, int h) {
   glLoadIdentity();
 } // ogl_resize
 
-void Host_ogl::ogl_init() {
+void Port_ogl::ogl_init() {
   // отключаю ненужное для оптимизации
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
@@ -73,14 +73,14 @@ void Host_ogl::ogl_init() {
   ogl_resize(m_w, m_h);
 } // ogl_init
 
-void Host_ogl::init_palette_loader() {
+void Port_ogl::init_palette_loader() {
   hpw::init_palette_from_archive = [this](cr<Str> fname) {
     graphic::current_palette_file = fname.empty() ? Str{graphic::DEFAULT_PALETTE_FILE} : fname;
     pal_tex_init();
   };
 }
 
-void Host_ogl::draw_game_frame() const {
+void Port_ogl::draw_game_frame() const {
   return_if (!graphic::enable_render);
 
   glClear(GL_COLOR_BUFFER_BIT);
@@ -88,28 +88,52 @@ void Host_ogl::draw_game_frame() const {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, m_screen_tex);
 
-  const int next_pbo_index = (m_pbo_index + 1) % 2;
+  if (m_use_double_pbo) {
+    const int next_pbo_index = (m_pbo_index + 1) % 2;
 
-  // Пока готовим текущий PBO, отправляем на видяху предыдущий
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[m_pbo_index]);
-  /* nullptr в конце означает: брать данные со смещением 0 внутри привязанного PBO.
-  Это триггерит сверхбыстрый DMA-трансфер в видеопамять. */
-  glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RED, GL_UNSIGNED_BYTE, nullptr);
+    // Пока готовим текущий PBO, отправляем на видяху предыдущий
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[m_pbo_index]);
+    /* nullptr в конце означает: брать данные со смещением 0 внутри
+    привязанного PBO. Это триггерит сверхбыстрый DMA-трансфер в видеопамять. */
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RED,
+      GL_UNSIGNED_BYTE, nullptr);
 
-  // Грузим текущий кадр в PBO
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[next_pbo_index]);
-  /* Флаг GL_MAP_INVALIDATE_BUFFER_BIT сбрасывает старую память буфера.
-  Драйвер мгновенно выдает CPU новый кусок памяти,
-  не дожидаясь рендеринга старого кадра на GPU. */
-  void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_pbo_sz, 
-                                      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
-  if (mapped_ptr) {
-    std::memcpy(mapped_ptr, m_pixels, m_pbo_sz);
-    glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    // Грузим текущий кадр в PBO
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[next_pbo_index]);
+    /* Флаг GL_MAP_INVALIDATE_BUFFER_BIT сбрасывает старую память буфера.
+    Драйвер мгновенно выдает CPU новый кусок памяти,
+    не дожидаясь рендеринга старого кадра на GPU. */
+    void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_pbo_sz, 
+      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    if (mapped_ptr) {
+      std::memcpy(mapped_ptr, m_pixels, m_pbo_sz);
+      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    }
+
+    // отвязываем PBO перед вызовом отрисовки
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    // Ротация буферов
+    m_pbo_index = next_pbo_index;
+  } else { // Режим без двойного PBO
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, m_pbos[0]);
+    
+    // Загружаем текущие пиксели прямо сейчас
+    void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, m_pbo_sz, 
+      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    if (mapped_ptr) {
+      std::memcpy(mapped_ptr, m_pixels, m_pbo_sz);
+      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    }
+    
+    // Сразу же принудительно отправляем их в текстуру и ждем
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, m_w, m_h, GL_RED,
+      GL_UNSIGNED_BYTE, nullptr);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   }
-
-  // отвязываем PBO перед вызовом отрисовки
-  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
   // Отрисовка полигона и палитры
   glActiveTexture(GL_TEXTURE1);
@@ -128,18 +152,15 @@ void Host_ogl::draw_game_frame() const {
 
   if (!graphic::double_buffering)
     glFlush();
-
-  // Ротация буферов
-  m_pbo_index = next_pbo_index;
 }
 
 // вызывается в конце инита наследника
-void Host_ogl::ogl_post_init() {
+void Port_ogl::ogl_post_init() {
   ogl_init();
   reshape(m_window_ctx.w, m_window_ctx.h);
 }
 
-void Host_ogl::init_screen_poly() {
+void Port_ogl::init_screen_poly() {
   // VBO не юзать, сделать пустой VAO
   glGenVertexArrays(1, &m_vao);
   glBindVertexArray(m_vao);
@@ -147,7 +168,7 @@ void Host_ogl::init_screen_poly() {
   glBindVertexArray(0); 
 }
 
-void Host_ogl::compile_program() {
+void Port_ogl::compile_program() {
   m_shader_prog = glCreateProgram();
   glAttachShader(m_shader_prog, m_vert_shader);
   glAttachShader(m_shader_prog, m_frag_shader);
@@ -169,7 +190,7 @@ void Host_ogl::compile_program() {
   }
 } // compile_program
 
-void Host_ogl::compie_vertex_shader() {
+void Port_ogl::compie_vertex_shader() {
   auto source_file = load_res("graphic/shaders/default.vert");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
@@ -188,7 +209,7 @@ void Host_ogl::compie_vertex_shader() {
   }
 } // compie_vertex_shader
 
-void Host_ogl::compie_fragment_shader() {
+void Port_ogl::compie_fragment_shader() {
   auto source_file = load_res("graphic/shaders/default.frag");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
@@ -207,7 +228,7 @@ void Host_ogl::compie_fragment_shader() {
   }
 } // compie_fragment_shader
 
-void Host_ogl::screen_tex_init() {
+void Port_ogl::screen_tex_init() {
   check_max_gltex_sz();
   glGenTextures(1, &m_screen_tex);
   glActiveTexture(GL_TEXTURE0);
@@ -229,11 +250,11 @@ void Host_ogl::screen_tex_init() {
     // Режим GL_STREAM_DRAW сообщает драйверу схему "Запись CPU -> Чтение GPU"
     glBufferData(GL_PIXEL_UNPACK_BUFFER, m_pbo_sz, nullptr, GL_STREAM_DRAW);
   }
-  
+
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
 
-void Host_ogl::pal_tex_init() {
+void Port_ogl::pal_tex_init() {
   glGenTextures(1, &m_pal_tex);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_1D, m_pal_tex);
@@ -260,7 +281,7 @@ void Host_ogl::pal_tex_init() {
   glBindTexture(GL_TEXTURE_1D, 0); // unbind m_pal_tex
 } // pal_tex_init
 
-void Host_ogl::check_max_gltex_sz() {
+void Port_ogl::check_max_gltex_sz() {
   auto max_canvas_sz = std::max(graphic::width, graphic::height);
   GLint avaliable_max_sz = -1;
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &avaliable_max_sz);

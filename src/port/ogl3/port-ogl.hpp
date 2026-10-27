@@ -3,10 +3,10 @@
 #include "util/num-types.hpp"
 
 // базовый класс для игрового хоста
-class Host_ogl: public Protownd {
+class Port_ogl: public Protownd {
 public:
-  explicit Host_ogl(int argc, char *argv[]);
-  ~Host_ogl() = default;
+  explicit Port_ogl(int argc, char *argv[]);
+  ~Port_ogl() = default;
 
 protected:
   void ogl_post_init(); // вызывается в конце инита наследника
@@ -17,6 +17,7 @@ private:
   uint m_screen_tex = 0; // OpenGL текстура экрана
   uint m_vao = 0;
   GLuint m_pbos[2] = {0, 0};
+  bool m_use_double_pbo {true};
   mutable int m_pbo_index = 0;
   size_t m_pbo_sz = 0;
   uint m_shader_prog = 0, m_vert_shader = 0, m_frag_shader = 0;
@@ -34,4 +35,4 @@ private:
   void pal_tex_init();
   void screen_tex_init();
   void init_palette_loader();
-}; // Host_ogl
+}; // Port_ogl

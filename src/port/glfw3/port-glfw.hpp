@@ -7,7 +7,7 @@ struct GLFWwindow;
 class Key_mapper;
 
 // рендерер от GLFW
-class Port_glfw: public Host_ogl {
+class Port_glfw: public Port_ogl {
 public:
   Shared<Key_mapper> m_key_mapper {};
   

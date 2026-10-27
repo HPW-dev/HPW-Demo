@@ -219,6 +219,8 @@ void load_config_graphic(cr<nlohmann::json> config) {
   cauto epge_node = node_or_empty(config, "epge");
   load_epges(epge_node);
   #endif
+
+  // TODO учитывать Port_ogl::m_use_double_pbo, он может добавить кадр задержки
 }
 
 void save_config() {
