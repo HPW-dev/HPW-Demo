@@ -25,6 +25,9 @@ class Noise_squares: public Rnd_test_base {
 
 public:
   sconst uint SZ = 96;
+  sconst uint offx = 17;
+  sconst uint offy = offx;
+  sconst uint spacex = 30;
 
   inline explicit Noise_squares()
   : _map1(SZ, SZ)
@@ -46,10 +49,10 @@ public:
   }
 
   inline void draw(Image& dst) const override {
-    insert(dst, _map1, {15, 15});
-    insert(dst, _map2, {15 + SZ + 15, 15});
-    insert(dst, _map3, {15 + (SZ + 15) * 2, 15});
-    insert(dst, _map4, {15 + (SZ + 15) * 3, 15});
+    insert(dst, _map1, {offx, offy});
+    insert(dst, _map2, {offx + SZ + spacex, offy});
+    insert(dst, _map3, {offx + (SZ + spacex) * 2, offy});
+    insert(dst, _map4, {offx + (SZ + spacex) * 3, offy});
   }
 };
 
