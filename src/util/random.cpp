@@ -197,11 +197,23 @@ public:
   inline result_type next() { return _dist(_gen); }
 };
 
+class Rnd_gen_parkmiller final: public Rnd_gen_base {
+  u32_t _state;
+public:
+  inline explicit Rnd_gen_parkmiller(Seed seed) { _state = seed.old_seed; }
+  inline result_type next() {
+    return
+      (lcg_parkmiller(_state) << 16) ^
+       lcg_parkmiller(_state); 
+  }
+};
+
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
   {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},
   {"RPNG", []{ return new_unique<Rnd_gen_rpng>(main_seed); }},
   {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
+  {"parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
 };
 
 Strs rnd_gens() {
