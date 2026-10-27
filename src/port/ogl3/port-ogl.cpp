@@ -57,6 +57,7 @@ void Host_ogl::ogl_init() {
   glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
   glDisable(GL_DITHER); // Дизер цвета не юзать
   glDisable(GL_FOG); // Туман не нужен
+  glDisable(GL_STENCIL_TEST); // трафарет чекать - лишнее
   glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
 
   glClearColor(0,0,0,0);
