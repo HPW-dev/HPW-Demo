@@ -38,7 +38,7 @@ class Scene_main_menu final: public Scene {
   void update_bg_order(const Delta_time dt);
   
 public:
-  constx Str NAME = "main menu";
+  staticx Cstr NAME = "Scene_main_menu";
 
   Scene_main_menu();
   ~Scene_main_menu();

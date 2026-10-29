@@ -5,7 +5,7 @@
 // окно смены фонов меню
 class Scene_bgp_select final: public Scene {
 public:
-  constx Str NAME = "BGP select";
+  staticx Cstr NAME = "BGP select";
 
   Scene_bgp_select();
   ~Scene_bgp_select();

@@ -5,7 +5,7 @@
 // инфо о разрабах и т.п.
 class Scene_info final: public Scene {
 public:
-  constx Str NAME = "info";
+  staticx Cstr NAME = "info";
 
   Scene_info();
   void update(const Delta_time dt) override;

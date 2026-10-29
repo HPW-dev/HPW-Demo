@@ -11,7 +11,7 @@ class Scene_game_pause final: public Scene {
   void init_menu();
 
 public:
-  constx Str NAME = "game pause";
+  staticx Cstr NAME = "game pause";
 
   Scene_game_pause();
   void update(const Delta_time dt) override;

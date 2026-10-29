@@ -7,7 +7,7 @@ class Scene_replay_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "replay select";
+  staticx Cstr NAME = "replay select";
 
   Scene_replay_select();
   ~Scene_replay_select();

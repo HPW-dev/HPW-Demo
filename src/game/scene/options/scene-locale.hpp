@@ -9,7 +9,8 @@ class Scene_locale_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "locale select";
+  constexpr static const char* NAME = "Scene_locale_select";
+
   Scene_locale_select();
   ~Scene_locale_select();
   void update(const Delta_time dt) override;

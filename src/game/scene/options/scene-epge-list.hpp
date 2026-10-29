@@ -8,7 +8,7 @@ class Scene_epge_list final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "EPGE list";
+  staticx Cstr NAME = "EPGE list";
 
   Scene_epge_list();
   ~Scene_epge_list();

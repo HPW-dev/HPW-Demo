@@ -7,7 +7,7 @@ class Scene_palette_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "palette select";
+  staticx Cstr NAME = "palette select";
 
   Scene_palette_select();
   ~Scene_palette_select();

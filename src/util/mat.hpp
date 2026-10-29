@@ -3,7 +3,11 @@
 #include <limits>
 #include "util/num-types.hpp"
 
+#ifdef PI
+#undef PI
+#endif
 inline constexpr real PI = std::numbers::pi;
+
 inline constexpr auto real_inf = std::numeric_limits<real>::infinity();
 
 // радианы в градусы

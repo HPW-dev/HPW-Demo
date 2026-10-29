@@ -11,7 +11,7 @@ class Scene_graphic final: public Scene {
   Unique<Impl> _impl {};
 
 public:
-  constx Str NAME = "graphic";
+  staticx Cstr NAME = "graphic";
 
   Scene_graphic();
   ~Scene_graphic();

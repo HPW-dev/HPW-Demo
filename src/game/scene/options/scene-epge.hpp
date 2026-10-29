@@ -8,7 +8,7 @@ class Scene_epge final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "EPGE";
+  staticx Cstr NAME = "EPGE";
 
   Scene_epge();
   ~Scene_epge();

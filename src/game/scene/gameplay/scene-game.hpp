@@ -6,11 +6,12 @@
 // сцена игрового процесса
 class Scene_game final: public Scene {
 public:
+  staticx Cstr NAME = "Scene_game";
+
   explicit Scene_game(const bool start_tutorial=false);
   ~Scene_game();
   void update(const Delta_time dt) override;
   void draw(Image& dst) const override;
-  constx Str NAME = "game";
   inline Str name() const override { return NAME; }
 
 private:

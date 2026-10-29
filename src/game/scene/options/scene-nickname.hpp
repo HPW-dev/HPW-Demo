@@ -9,7 +9,7 @@ class Scene_nickname final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "nickname";
+  staticx Cstr NAME = "Scene_nickname";
 
   Scene_nickname();
   ~Scene_nickname();

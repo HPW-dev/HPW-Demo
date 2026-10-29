@@ -8,7 +8,7 @@ class Scene_hud_select final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "HUD select";
+  staticx Cstr NAME = "HUD select";
 
   Scene_hud_select();
   ~Scene_hud_select();

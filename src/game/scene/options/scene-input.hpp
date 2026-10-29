@@ -11,7 +11,7 @@ class Scene_input final: public Scene {
   void init_menu();
 
 public:
-  constx Str NAME = "input";
+  staticx Cstr NAME = "input";
 
   Scene_input();
   void update(const Delta_time dt) override;

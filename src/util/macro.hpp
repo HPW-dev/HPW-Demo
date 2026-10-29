@@ -6,6 +6,7 @@
 #define cpauto const auto*
 #define rauto auto&
 #define sconst static const
+#define staticx constexpr static
 #define constx constexpr static const
 #define cautox constexpr static const auto
 

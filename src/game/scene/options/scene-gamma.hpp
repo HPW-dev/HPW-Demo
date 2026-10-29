@@ -8,7 +8,7 @@ class Scene_gamma final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "gamma";
+  staticx Cstr NAME = "gamma";
 
   Scene_gamma();
   ~Scene_gamma();

@@ -8,7 +8,7 @@ class Scene_gameover final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "game over";
+  staticx Cstr NAME = "game over";
 
   Scene_gameover();
   ~Scene_gameover();

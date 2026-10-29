@@ -8,7 +8,7 @@ class Scene_options final: public Scene {
   Unique<Impl> _impl {};
 
 public:
-  constx Str NAME = "options";
+  staticx Cstr NAME = "options";
 
   Scene_options();
   ~Scene_options();

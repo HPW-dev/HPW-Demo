@@ -11,7 +11,7 @@ class Scene_difficulty final: public Scene {
   void init_menu();
 
 public:
-  constx Str NAME = "difficulty";
+  staticx Cstr NAME = "difficulty";
 
   Scene_difficulty();
   void update(const Delta_time dt) override;

@@ -1,12 +1,8 @@
 #include "pch.hpp"
 
 #include "port/command.hpp"
-#include "game/scene/options/scene-nickname.hpp"
 #include "game/scene/options/scene-graphic.hpp"
-#include "game/scene/options/scene-locale.hpp"
-#include "game/scene/gameplay/scene-game.hpp"
 #include "game/scene/common/scene-cmd.hpp"
-#include "game/scene/scene-main-menu.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/messages.hpp"
@@ -121,16 +117,9 @@ Game_app::Game_app(int argc, char *argv[])
 #endif
   if (hpw::empty_level_first) {
     log_info << "start debug level...";
-    hpw::scene_mgr.add( new_shared<Scene_game>() );
+    hpw::scene_mgr.add("Scene_game");
   } else {
-    hpw::scene_mgr.add( new_shared<Scene_main_menu>() );
-    // спросить о языке при первом запуске
-    if (hpw::first_start) {
-      // набрать никнейм
-      hpw::scene_mgr.add(new_shared<Scene_nickname>());
-      // выбрать язык
-      hpw::scene_mgr.add( new_shared<Scene_locale_select>() );
-    }
+    hpw::scene_mgr.add("Scene_epiwarn"); // отсюда в глав. меню попадаем
   }
 
   startup_script();

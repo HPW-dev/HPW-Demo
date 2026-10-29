@@ -13,7 +13,7 @@ class Scene_enter_text final: public Scene {
 
 public:
   using Text_processor = std::function<void (cr<utf32>)>; // для обработки введёного текста
-  constx Str NAME = "enter text";
+  staticx Cstr NAME = "enter text";
 
   explicit Scene_enter_text(cr<utf32> title, cr<utf32> desc, cr<utf32> edit_title,
     cr<utf32> stast_text, cr<Text_processor> proc);

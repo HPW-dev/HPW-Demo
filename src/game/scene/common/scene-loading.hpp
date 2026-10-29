@@ -17,7 +17,7 @@ class Scene_loading final: public Scene {
   const Sprite* bg {}; // фон
 
 public:
-  constx Str NAME = "loading";
+  staticx Cstr NAME = "loading";
 
   Scene_loading(std::function<void ()>&& _scene_maker);
   void update(const Delta_time dt) override;

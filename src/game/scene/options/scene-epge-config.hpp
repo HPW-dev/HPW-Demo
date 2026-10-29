@@ -10,7 +10,7 @@ class Scene_epge_config final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "EPGE config";
+  staticx Cstr NAME = "EPGE config";
 
   explicit Scene_epge_config(epge::Base* epge);
   ~Scene_epge_config();

@@ -11,7 +11,7 @@ class Scene_record_table final: public Scene {
   void init_menu();
 
 public:
-  constx Str NAME = "record table";
+  staticx Cstr NAME = "record table";
 
   Scene_record_table();
   void update(const Delta_time dt) override;

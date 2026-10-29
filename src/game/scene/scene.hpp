@@ -8,7 +8,7 @@
 // базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {
 public:
-  cautox NAME = "base scene";
+  staticx Cstr NAME = "base scene";
 
   Scene() = default;
   virtual ~Scene() = default;

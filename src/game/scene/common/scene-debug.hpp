@@ -10,7 +10,7 @@ class Scene_debug final: public Scene {
   void init_menu();
 
 public:
-  constx Str NAME = "debug";
+  staticx Cstr NAME = "debug";
 
   Scene_debug();
   void update(const Delta_time dt) override;

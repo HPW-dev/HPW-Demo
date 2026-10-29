@@ -7,7 +7,7 @@ class Scene_cmd final: public Scene {
   Unique<Impl> impl {};
 
 public:
-  constx Str NAME = "CMD";
+  staticx Cstr NAME = "CMD";
 
   Scene_cmd();
   ~Scene_cmd();
