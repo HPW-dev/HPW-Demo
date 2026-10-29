@@ -46,7 +46,7 @@ void Key_mapper::reset() {
   bind(hpw::keycode::left,         glfwGetKeyScancode(GLFW_KEY_LEFT));
   bind(hpw::keycode::right,        glfwGetKeyScancode(GLFW_KEY_RIGHT));
   bind(hpw::keycode::focus,        glfwGetKeyScancode(GLFW_KEY_LEFT_ALT));
-  bind(hpw::keycode::shoot,        glfwGetKeyScancode(GLFW_KEY_S));
+  bind(hpw::keycode::shoot,        glfwGetKeyScancode(GLFW_KEY_Z));
   bind(hpw::keycode::bomb,         glfwGetKeyScancode(GLFW_KEY_X));
   bind(hpw::keycode::mode,         glfwGetKeyScancode(GLFW_KEY_A));
   bind(hpw::keycode::enable,       glfwGetKeyScancode(GLFW_KEY_ENTER));
