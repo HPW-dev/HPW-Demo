@@ -35,10 +35,31 @@ def prepare_obj_cmd(tgt: Target, ctx: Context):
 def make_object_list(ctx: Context) -> str:
   '''создать список объектников, который потом подаётся при линковке через @'''
 
-  result = f'{ctx.obj_dir}objects.txt'
-  with open(result, 'w', encoding='utf-8') as f:
-    f.writelines(f"{fs.path_linux(obj)}\n" for obj in fs.find(f'{ctx.obj_dir}*.o'))
-  return f'@{fs.path_abs(result)}'
+  result_path = f'{ctx.obj_dir}objects.txt'
+  # сортированный список всех файлов для сборки
+  current_objs = sorted(fs.path_linux(obj) for obj in fs.find(f'{ctx.obj_dir}*.o'))
+  # итоговый текст для файла objects.txt
+  new_content = "".join(f"{obj}\n" for obj in current_objs)
+
+  # чекаем изменился ли файл
+  needs_update = True
+  if fs.exists(result_path):
+    try:
+      with open(result_path, 'r', encoding='utf-8') as f:
+        old_content = f.read()
+      if old_content == new_content:
+        needs_update = False # Содержимое совпадает, ничего не перезаписывать
+    except OSError:
+      pass # Если файл поврежден или заблокирован, всё равно перезапишем
+
+  if needs_update:
+    print(to_green(f'> перезапись objects.txt...'))
+    with open(result_path, 'w', encoding='utf-8') as f:
+      f.write(new_content)
+  else:
+    print(to_gray(f'objects.txt не изменился'))
+
+  return f'@{fs.path_abs(result_path)}'
 
 def compile_pch(tgt: Target, ctx: Context):
   '''
