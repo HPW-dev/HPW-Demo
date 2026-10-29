@@ -2,9 +2,9 @@
 #include "color.hpp"
 #include "color-table.hpp"
 
-void Pal8::add(int x)     noexcept { val = table_add_safe[std::clamp(x, 0, 255)*256 + val]; }
-void Pal8::sub(int x)     noexcept { val = table_sub_safe[std::clamp(x, 0, 255)*256 + val]; }
-void Pal8::mul(int x)     noexcept { val = table_mul_safe[std::clamp(x, 0, 255)*256 + val]; }
+void Pal8::add(int x)     noexcept { val = table_add_safe[Pal8::from_real(x/255.0).val * 256 + val]; }
+void Pal8::sub(int x)     noexcept { val = table_sub_safe[Pal8::from_real(x/255.0).val * 256 + val]; }
+void Pal8::mul(int x)     noexcept { val = table_mul_safe[Pal8::from_real(x/255.0).val * 256 + val]; }
 void Pal8::inc()          noexcept { val = table_inc_safe[val]; }
 void Pal8::dec()          noexcept { val = table_dec_safe[val]; }
 void Pal8::apply_invert() noexcept { val = table_inv_safe[val]; }
