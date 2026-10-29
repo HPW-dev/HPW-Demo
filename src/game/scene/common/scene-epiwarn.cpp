@@ -30,8 +30,8 @@ struct Scene_epiwarn::Impl {
 
   Impl()
   : _warn_scr{find_image_safe("graphic/images/misc/epilepsy-warning.png")}
-  , _delay(6)
   , _text_delay(8.5)
+  , _delay(6)
   {
     // пока рамку вырубить
     _border_bkp = graphic::draw_border;
