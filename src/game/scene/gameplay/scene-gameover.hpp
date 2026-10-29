@@ -1,6 +1,6 @@
 #pragma once
-#include "util/mem-types.hpp"
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
+
 
 // окно геймовера
 class Scene_gameover final: public Scene {

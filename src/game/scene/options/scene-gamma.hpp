@@ -1,6 +1,6 @@
 #pragma once
-#include "util/mem-types.hpp"
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
+
 
 // настройки гаммы
 class Scene_gamma final: public Scene {

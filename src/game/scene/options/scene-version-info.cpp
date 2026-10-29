@@ -9,6 +9,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 
+
 struct Scene_version_info::Impl {
   utf32 _msg {};
 

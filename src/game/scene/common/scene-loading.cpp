@@ -1,25 +1,28 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-loading.hpp"
-#include "game/core/fonts.hpp"
-#include "game/core/scenes.hpp"
-#include "game/core/sprites.hpp"
+
 #include "game/scene/scene-mgr.hpp"
-#include "game/util/locale.hpp"
-#include "game/util/resource-helper.hpp"
-#include "engine/graphic/image/image.hpp"
-#include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/effect/dither.hpp"
-#include "util/random.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/locale.hpp"
+#include "game/core/sprites.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/fonts.hpp"
+
 
 Scene_loading::Scene_loading(std::function<void ()>&& _scene_maker)
-: scene_maker {_scene_maker} {
+: scene_maker {_scene_maker}
+{
   // найти в ресурсах загруженные картинки с фонами
   // удалить всё что не содержит в названии logo
   auto bg_names = get_all_res_names(false);
   std::erase_if(bg_names, [](cr<Str> src) {
-    return src.find("graphic/images/loading screens/") == Str::npos; });
+    return src.find("graphic/images/loading screens/") == Str::npos;
+  });
   assert(!bg_names.empty());
 
   cauto bg_name = bg_names.at( rndu_fast(bg_names.size()-1) );

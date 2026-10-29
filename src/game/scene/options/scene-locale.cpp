@@ -1,13 +1,15 @@
 #include "pch.hpp"
 #include "scene-locale.hpp"
+
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
-#include "game/util/locale.hpp"
-#include "game/input/keys.hpp"
 #include "game/util/resource-helper.hpp"
-#include "game/menu/table-menu.hpp"
+#include "game/util/locale.hpp"
 #include "game/menu/item/table-row-item.hpp"
+#include "game/menu/table-menu.hpp"
+#include "game/input/keys.hpp"
 #include "util/file/file.hpp"
+
 
 struct Locale_info {
   Str path {};

@@ -1,18 +1,20 @@
 #include "pch.hpp"
 #include "scene-tests.hpp"
-#include "scene-empty.hpp"
-#include "Scene-qr-generator-test.hpp"
-#include "scene-input-delay-test.hpp"
-#include "scene-subpixel-test.hpp"
-#include "scene-interpolation-test.hpp"
-#include "scene-random-test.hpp"
+
+#include "game/scene/common/scene-empty.hpp"
+#include "game/scene/tests/scene-interpolation-test.hpp"
+#include "game/scene/tests/Scene-qr-generator-test.hpp"
+#include "game/scene/tests/scene-input-delay-test.hpp"
+#include "game/scene/tests/scene-subpixel-test.hpp"
+#include "game/scene/tests/scene-random-test.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/locale.hpp"
 #include "game/menu/menu-from-json.hpp"
 #include "game/menu/menu.hpp"
 #include "game/core/scenes.hpp"
-#include "game/util/resource-helper.hpp"
-#include "game/util/locale.hpp"
 #include "game/input/keys.hpp"
 #include "util/file/file.hpp"
+
 
 struct Scene_tests::Impl {
   Unique<Menu> _menu {};

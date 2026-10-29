@@ -1,5 +1,6 @@
 #include "pch.hpp"
 #include "scene-random-test.hpp"
+
 #include "game/core/messages.hpp"
 #include "game/core/sprites.hpp"
 #include "game/core/scenes.hpp"
@@ -9,6 +10,7 @@
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/resize.hpp"
+
 
 class Rnd_test_base {
 public:

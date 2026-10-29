@@ -1,11 +1,12 @@
 #include "pch.hpp"
 #include "scene-game-options.hpp"
+
 #include "scene-nickname.hpp"
-#include "scene-mgr.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
-#include "engine/graphic/util/util-templ.hpp"
-#include "engine/graphic/util/graphic-util.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
@@ -17,6 +18,7 @@
 #include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "port/command.hpp"
+
 
 struct Scene_game_options::Impl {
   Unique<Advanced_text_menu> m_menu {};

@@ -1,11 +1,13 @@
 #include "pch.hpp"
-// TODO снести файл
 #include "scene-graphic.hpp"
+// TODO снести файл, юзать генератор из JSON
+
 #include "scene-palette-select.hpp"
 #include "scene-epge.hpp"
-#include "scene-mgr.hpp"
-#include "port/command.hpp"
 #include "port/port-util.hpp"
+#include "port/command.hpp"
+#include "game/scene/options/scene-gamma.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "game/core/common.hpp"
 #include "game/core/debug.hpp"
 #include "game/core/core.hpp"
@@ -21,17 +23,17 @@
 #include "game/util/config.hpp"
 #include "game/util/sync.hpp"
 #include "game/input/keys.hpp"
-#include "game/scene/scene-gamma.hpp"
-#include "game/menu/text-menu.hpp"
 #include "game/menu/advanced-text-menu.hpp"
-#include "game/menu/item/bool-item.hpp"
-#include "game/menu/item/int-item.hpp"
+#include "game/menu/text-menu.hpp"
 #include "game/menu/item/double-item.hpp"
+#include "game/menu/item/bool-item.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
+#include "game/menu/item/int-item.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
 #include "engine/sound/sound-mgr.hpp"
+
 
 void set_high_quality() {
   graphic::set_vsync(true);

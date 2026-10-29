@@ -1,6 +1,6 @@
 #pragma once
-#include "util/mem-types.hpp"
 #include "game/scene/scene.hpp"
+
 
 // меню настроек игры
 class Scene_options final: public Scene {

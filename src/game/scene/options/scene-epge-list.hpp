@@ -1,6 +1,6 @@
 #pragma once
-#include "util/mem-types.hpp"
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
+
 
 // список для выбора встроенных эффектов
 class Scene_epge_list final: public Scene {

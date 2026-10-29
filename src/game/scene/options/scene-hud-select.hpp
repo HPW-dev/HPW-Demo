@@ -1,6 +1,6 @@
 #pragma once
-#include "util/mem-types.hpp"
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
+
 
 // меню выбора HUD
 class Scene_hud_select final: public Scene {

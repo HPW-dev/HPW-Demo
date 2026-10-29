@@ -1,17 +1,19 @@
 #include "pch.hpp"
 #include "scene-cmd.hpp"
-#include "engine/graphic/image/image.hpp"
-#include "engine/graphic/util/util-templ.hpp"
+
 #include "engine/graphic/util/graphic-util.hpp"
-#include "game/core/user.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/image/image.hpp"
+#include "game/core/messages.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
-#include "game/core/messages.hpp"
-#include "game/util/sync.hpp"
+#include "game/core/fonts.hpp"
+#include "game/core/user.hpp"
 #include "game/input/keys.hpp"
 #include "game/util/cmd/cmd.hpp"
+#include "game/util/sync.hpp"
+
 
 struct Scene_cmd::Impl {
   // сколько апдейтов надо зажимать удаление текста, чтобы он начал удаляться

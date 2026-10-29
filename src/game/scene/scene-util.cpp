@@ -1,17 +1,19 @@
 #include "pch.hpp"
-#include "scene-palette-select.hpp"
-#include "scene-hud-select.hpp"
-#include "scene-bgp-select.hpp"
-#include "scene-main-menu.hpp"
-#include "scene-game-pause.hpp"
-#include "scene-gameover.hpp"
-#include "scene-graphic.hpp"
-#include "scene-dummy.hpp"
-#include "scene-debug.hpp"
-#include "scene-game.hpp"
-#include "scene-epge.hpp"
 #include "scene-util.hpp"
-#include "scene-cmd.hpp"
+
+#include "game/scene/options/scene-palette-select.hpp"
+#include "game/scene/options/scene-hud-select.hpp"
+#include "game/scene/options/scene-bgp-select.hpp"
+#include "game/scene/options/scene-graphic.hpp"
+#include "game/scene/options/scene-epge.hpp"
+#include "game/scene/gameplay/scene-game-pause.hpp"
+#include "game/scene/gameplay/scene-gameover.hpp"
+#include "game/scene/gameplay/scene-game.hpp"
+#include "game/scene/common/scene-dummy.hpp"
+#include "game/scene/common/scene-debug.hpp"
+#include "game/scene/common/scene-cmd.hpp"
+#include "scene-main-menu.hpp"
+
 
 using Maker = std::function<Shared<Scene> ()>;
 

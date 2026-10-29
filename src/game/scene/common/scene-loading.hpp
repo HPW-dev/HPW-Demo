@@ -1,7 +1,10 @@
 #pragma once
+
 #include <functional>
-#include "scene.hpp"
+
+#include "game/scene/scene.hpp"
 #include "util/vector-types.hpp"
+
 
 class Sprite;
 

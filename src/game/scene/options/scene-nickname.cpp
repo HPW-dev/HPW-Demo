@@ -1,16 +1,17 @@
-#include <ranges>
-#include <cassert>
+#include "pch.hpp"
 #include "scene-nickname.hpp"
-#include "game/core/user.hpp"
-#include "game/core/fonts.hpp"
+
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
+#include "game/core/fonts.hpp"
+#include "game/core/user.hpp"
+#include "game/util/vec-helper.hpp"
+#include "game/util/locale.hpp"
 #include "game/util/sync.hpp"
 #include "game/input/keys.hpp"
-#include "game/util/locale.hpp"
-#include "game/util/vec-helper.hpp"
-#include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font-util.hpp"
+#include "engine/graphic/image/image.hpp"
+
 
 struct Scene_nickname::Impl {
   cautox TEXT_DELETE_TIMEOUT = 120u;

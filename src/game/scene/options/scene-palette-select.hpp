@@ -1,6 +1,5 @@
 #pragma once
-#include "util/mem-types.hpp"
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
 
 // окно смены палитры
 class Scene_palette_select final: public Scene {

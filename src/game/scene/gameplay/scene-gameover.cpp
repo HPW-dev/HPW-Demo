@@ -1,20 +1,22 @@
-#include "scene-mgr.hpp"
-#include "scene-loading.hpp"
+#include "pch.hpp"
 #include "scene-gameover.hpp"
+
+#include "engine/graphic/image/image.hpp"
+#include "game/scene/common/scene-loading.hpp"
+#include "game/scene/gameplay/scene-game.hpp"
+#include "game/scene/scene-mgr.hpp"
+#include "game/core/replays.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/replays.hpp"
 #include "game/core/sounds.hpp"
+#include "game/util/palette-helper.hpp"
 #include "game/util/replay.hpp"
 #include "game/util/locale.hpp"
-#include "game/util/palette-helper.hpp"
-#include "game/scene/scene-game.hpp"
+#include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
-#include "game/menu/advanced-text-menu.hpp"
-#include "engine/graphic/image/image.hpp"
-#include "util/random.hpp"
+
 
 struct Scene_gameover::Impl {
   Unique<Menu> menu {};

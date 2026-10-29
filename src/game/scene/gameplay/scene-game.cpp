@@ -1,9 +1,11 @@
 #include "pch.hpp"
 #include "scene-game.hpp"
-#include "scene-loading.hpp"
-#include "scene-mgr.hpp"
-#include "port/command.hpp"
+
+#include "scene-game-pause.hpp"
 #include "engine/sound/sound-mgr.hpp"
+#include "game/scene/common/scene-loading.hpp"
+#include "game/scene/scene-mgr.hpp"
+#include "port/command.hpp"
 #include "game/core/core.hpp"
 #include "game/core/user.hpp"
 #include "game/core/common.hpp"
@@ -29,7 +31,6 @@
 #include "game/util/post-effect/game-post-effects.hpp"
 #include "game/util/post-effect/post-effects.hpp"
 #include "game/util/cmd/cmd.hpp"
-#include "game/scene/scene-game-pause.hpp"
 #include "game/level/level-space.hpp"
 #include "game/level/level-tutorial.hpp"
 #include "game/entity/player/player-dark.hpp"
@@ -41,17 +42,18 @@
 #include "engine/graphic/util/graphic-util.hpp"
 
 #ifdef DEBUG
-#include "game/scene/scene-debug.hpp"
-#include "game/util/dbg-plots.hpp"
+#include "game/scene/common/scene-debug.hpp"
 #include "game/level/level-empty.hpp"
+#include "game/util/dbg-plots.hpp"
 //#include "game/level/level-collision-test.hpp"
 //#include "game/level/level-debug-1.hpp"
 //#include "game/level/level-debug-2.hpp"
 //#include "game/level/level-debug-3.hpp"
 //#include "game/level/level-debug-bullets.hpp"
 #else
-#include "game/scene/scene-graphic.hpp"
+#include "game/scene/options/scene-graphic.hpp"
 #endif
+
 
 void Scene_game::init_levels() {
   // запустить только один уровень при отладке

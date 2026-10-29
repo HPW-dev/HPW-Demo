@@ -1,5 +1,6 @@
 #pragma once
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
+
 
 // инфо о разрабах и т.п.
 class Scene_info final: public Scene {

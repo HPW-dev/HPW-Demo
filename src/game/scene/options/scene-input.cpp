@@ -1,14 +1,16 @@
 #include "scene-input.hpp"
-#include "scene-mgr.hpp"
-#include "port/command.hpp"
-#include "game/core/fonts.hpp"
-#include "game/input/keys.hpp"
-#include "game/util/locale.hpp"
-#include "game/core/scenes.hpp"
-#include "game/util/config.hpp"
-#include "game/menu/text-menu.hpp"
-#include "game/menu/item/text-item.hpp"
+
 #include "engine/graphic/image/image.hpp"
+#include "game/menu/item/text-item.hpp"
+#include "game/menu/text-menu.hpp"
+#include "game/scene/scene-mgr.hpp"
+#include "game/util/locale.hpp"
+#include "game/util/config.hpp"
+#include "game/core/scenes.hpp"
+#include "game/input/keys.hpp"
+#include "game/core/fonts.hpp"
+#include "port/command.hpp"
+
 
 Scene_input::Scene_input() {
   init_menu();

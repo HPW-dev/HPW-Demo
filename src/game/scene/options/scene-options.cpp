@@ -1,8 +1,8 @@
 #include "pch.hpp"
 #include "scene-options.hpp"
 
-#include "scene-game-options.hpp"
 #include "scene-version-info.hpp"
+#include "scene-game-options.hpp"
 #include "scene-bgp-select.hpp"
 #include "scene-hud-select.hpp"
 #include "scene-graphic.hpp"
@@ -15,6 +15,7 @@
 #include "game/core/scenes.hpp"
 #include "game/input/keys.hpp"
 #include "util/file/file.hpp"
+
 
 struct Scene_options::Impl {
   Unique<Menu> _menu {};

@@ -1,8 +1,10 @@
 #pragma once
+
 #include <functional>
-#include "util/mem-types.hpp"
+
+#include "game/scene/scene.hpp"
 #include "util/unicode.hpp"
-#include "scene.hpp"
+
 
 // ввод текстовых строк
 class Scene_enter_text final: public Scene {

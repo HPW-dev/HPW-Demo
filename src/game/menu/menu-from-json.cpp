@@ -1,13 +1,15 @@
 #include "pch.hpp"
 #include "menu-from-json.hpp"
-#include "menu.hpp"
-#include "advanced-text-menu.hpp"
+
+#include "game/scene/options/scene-locale.hpp"
 #include "game/menu/item/text-item.hpp"
-#include "game/scene/scene-locale.hpp"
 #include "game/util/locale.hpp"
 #include "game/core/scenes.hpp"
+#include "advanced-text-menu.hpp"
+#include "menu.hpp"
 
-inline static Shared<Menu_item> make_text_item(cr<nlohmann::json> item_node, cr<Action_table> actions) {
+inline static Shared<Menu_item> make_text_item(
+cr<nlohmann::json> item_node, cr<Action_table> actions) {
   // добавочное имя к адресу локализации
   cauto locale_prefix = item_node.value("locale_prefix", Str{});
 
@@ -15,7 +17,8 @@ inline static Shared<Menu_item> make_text_item(cr<nlohmann::json> item_node, cr<
   cauto title = get_locale_str(item_node.value<Str>("title", locale_prefix + ".title"));
   utf32 desc {};
   if (!locale_prefix.empty()) {
-    cauto tmp_desc = get_locale_str_with_check(item_node.value<Str>("desc", locale_prefix + ".desc"));
+    cauto tmp_desc = get_locale_str_with_check(item_node.value<Str>("desc",
+      locale_prefix + ".desc"));
     if (tmp_desc)
       desc = tmp_desc.value();
   }
@@ -27,7 +30,8 @@ inline static Shared<Menu_item> make_text_item(cr<nlohmann::json> item_node, cr<
   try {
     action = actions.at(action_name);
   } catch (...) {
-    log_error << "не удалось привязать действие \"" << action_name << "\" для кнопки \"" << utf32_to_8(title) << "\"";
+    log_error << "не удалось привязать действие \"" << action_name
+      << "\" для кнопки \"" << utf32_to_8(title) << "\"";
   }
 
   #ifndef RELEASE

@@ -1,6 +1,6 @@
 #pragma once
-#include "scene.hpp"
-#include "util/mem-types.hpp"
+#include "game/scene/scene.hpp"
+
 
 class Menu;
 

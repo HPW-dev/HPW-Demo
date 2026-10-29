@@ -1,7 +1,7 @@
 #pragma once
-#include "util/mem-types.hpp"
+#include "game/scene/scene.hpp"
 #include "util/unicode.hpp"
-#include "scene.hpp"
+
 
 // окно смены языка
 class Scene_locale_select final: public Scene {

@@ -1,11 +1,13 @@
 #include "pch.hpp"
 #include "cutscene-0.hpp"
+
+#include "game/scene/scene-mgr.hpp"
 #include "game/input/keys.hpp"
 #include "game/core/scenes.hpp"
-#include "engine/graphic/image/image.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
-#include "game/scene/scene-mgr.hpp"
+#include "engine/graphic/image/image.hpp"
+
 
 // рисует космос в рамочке
 struct Space {

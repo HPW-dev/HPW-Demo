@@ -1,24 +1,26 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-gamma.hpp"
-#include "scene-mgr.hpp"
+
+#include "game/scene/scene-mgr.hpp"
+#include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
-#include "engine/graphic/util/util-templ.hpp"
-#include "engine/graphic/util/graphic-util.hpp"
 #include "game/core/palette.hpp"
 #include "game/core/graphic.hpp"
-#include "game/core/common.hpp"
 #include "game/core/sprites.hpp"
+#include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
-#include "game/core/fonts.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "game/menu/advanced-text-menu.hpp"
-#include "game/menu/item/text-item.hpp"
 #include "game/menu/item/double-item.hpp"
-#include "util/error.hpp"
+#include "game/menu/item/text-item.hpp"
 #include "port/command.hpp"
+#include "util/error.hpp"
+
 
 struct Scene_gamma::Impl {
   Unique<Advanced_text_menu> m_menu {};

@@ -1,11 +1,13 @@
 #include "pch.hpp"
 #include "scene-subpixel-test.hpp"
+
 #include "game/core/messages.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/resize.hpp"
+
 
 struct Scene_subpixel_test::Impl {
   enum class Scale { none, x2, x3, x4, SZ };

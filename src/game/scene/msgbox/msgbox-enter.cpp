@@ -1,17 +1,18 @@
-#include <cassert>
+#include "pch.hpp"
 #include "msgbox-enter.hpp"
-#include "game/core/scenes.hpp"
-#include "game/core/fonts.hpp"
-#include "game/core/replays.hpp"
-#include "game/core/graphic.hpp"
-#include "game/core/canvas.hpp"
-#include "game/scene/scene-mgr.hpp"
-#include "game/input/keys.hpp"
-#include "game/util/blur-helper.hpp"
+
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/font/font-util.hpp"
-#include "util/timer.hpp"
+#include "game/util/blur-helper.hpp"
+#include "game/scene/scene-mgr.hpp"
+#include "game/core/replays.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/fonts.hpp"
+#include "game/input/keys.hpp"
+
 
 struct Scene_msgbox_enter::Impl {
   constx int WND_X = 375;

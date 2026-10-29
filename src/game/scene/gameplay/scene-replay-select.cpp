@@ -1,18 +1,20 @@
 #include "pch.hpp"
 #include "scene-replay-select.hpp"
-#include "scene-mgr.hpp"
-#include "scene-loading.hpp"
+
+#include "scene-game.hpp"
+#include "game/scene/common/scene-loading.hpp"
+#include "game/scene/scene-mgr.hpp"
+#include "game/core/replays.hpp"
 #include "game/core/common.hpp"
 #include "game/core/scenes.hpp"
-#include "game/core/replays.hpp"
-#include "game/util/replay.hpp"
-#include "game/input/keys.hpp"
-#include "game/util/locale.hpp"
-#include "game/util/difficulty-helper.hpp"
-#include "game/menu/table-menu.hpp"
 #include "game/menu/item/table-row-item.hpp"
-#include "game/scene/scene-game.hpp"
+#include "game/menu/table-menu.hpp"
+#include "game/util/difficulty-helper.hpp"
+#include "game/util/replay.hpp"
+#include "game/util/locale.hpp"
 #include "game/level/level-tutorial.hpp"
+#include "game/input/keys.hpp"
+
 
 struct Scene_replay_select::Impl {
   Unique<Menu> menu {};

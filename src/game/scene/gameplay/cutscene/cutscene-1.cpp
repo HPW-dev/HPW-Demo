@@ -1,13 +1,14 @@
+#include "pch.hpp"
 #include "cutscene-1.hpp"
-#include "game/input/keys.hpp"
-#include "game/core/scenes.hpp"
+
 #include "engine/graphic/image/image.hpp"
 #include "game/scene/scene-mgr.hpp"
+#include "game/input/keys.hpp"
+#include "game/core/scenes.hpp"
 #include "game/core/fonts.hpp"
 
+
 struct Cutscene_1::Impl {
-
-
   inline Impl() {
 
   }

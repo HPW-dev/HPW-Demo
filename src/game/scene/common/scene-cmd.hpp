@@ -1,6 +1,5 @@
 #pragma once
-#include "util/mem-types.hpp"
-#include "scene.hpp"
+#include "game/scene/scene.hpp"
 
 // окно ввода команд
 class Scene_cmd final: public Scene {

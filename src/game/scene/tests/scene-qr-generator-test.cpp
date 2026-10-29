@@ -1,11 +1,13 @@
 #include "pch.hpp"
 #include "scene-qr-generator-test.hpp"
+
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
-#include "engine/graphic/util/qr-gen.hpp"
 #include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/qr-gen.hpp"
+
 
 struct Scene_qr_generator_test::Impl {
   inline void update(const Delta_time dt) {

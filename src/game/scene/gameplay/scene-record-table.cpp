@@ -1,14 +1,16 @@
 #include "pch.hpp"
 #include "scene-record-table.hpp"
-#include "scene-mgr.hpp"
-#include "game/core/fonts.hpp"
+
+#include "game/scene/scene-mgr.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
 #include "game/util/score-table.hpp"
 #include "game/util/locale.hpp"
-#include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
-#include "engine/graphic/image/image.hpp"
+#include "game/menu/text-menu.hpp"
+
 
 Scene_record_table::Scene_record_table()
 { init_menu(); }

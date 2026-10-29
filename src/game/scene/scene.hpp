@@ -1,9 +1,9 @@
 #pragma once
-#include "util/num-types.hpp"
-#include "util/str.hpp"
-#include "util/macro.hpp"
-#include "util/mem-types.hpp"
 #include "engine/graphic/image/image-fwd.hpp"
+#include "util/mem-types.hpp"
+#include "util/num-types.hpp"
+#include "util/macro.hpp"
+#include "util/str.hpp"
 
 // базовый класс для сцен (менюшки, катсцены, игра)
 class Scene {

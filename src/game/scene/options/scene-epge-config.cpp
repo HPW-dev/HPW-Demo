@@ -1,5 +1,6 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-epge-config.hpp"
+
 #include "scene-test-image.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
@@ -14,6 +15,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/menu-util.hpp"
+
 
 class Epge_menu_item final: public Menu_item {
   Shared<epge::Param> _epge_param {};

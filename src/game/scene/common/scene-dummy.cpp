@@ -1,13 +1,15 @@
 #include "pch.hpp"
 #include "scene-dummy.hpp"
+
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
 #include "engine/graphic/util/resize.hpp"
 #include "engine/graphic/util/fill.hpp"
-#include "game/input/keys.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
+#include "game/input/keys.hpp"
+
 
 struct Scene_dummy::Impl {
   mutable Image test_pic;

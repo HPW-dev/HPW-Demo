@@ -1,13 +1,14 @@
-#include <ctime>
+#include "pch.hpp"
 #include "scene-debug.hpp"
-#include "scene-mgr.hpp"
+
+#include "game/scene/scene-mgr.hpp"
 #include "game/core/entities.hpp"
-#include "game/core/core.hpp"
-#include "game/core/debug.hpp"
 #include "game/core/scenes.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/core.hpp"
+#include "game/util/locale.hpp"
 #include "game/util/sync.hpp"
 #include "game/input/keys.hpp"
-#include "game/util/locale.hpp"
 #include "game/menu/text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/bool-item.hpp"
@@ -17,8 +18,8 @@
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
 #include "util/file/archive.hpp"
-#include "util/random.hpp"
 #include "port/port-util.hpp"
+
 
 Scene_debug::Scene_debug() {
   init_menu();

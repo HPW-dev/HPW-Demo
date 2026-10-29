@@ -1,7 +1,7 @@
 #pragma once
-#include "util/mem-types.hpp"
+#include "game/scene/scene.hpp"
 #include "util/unicode.hpp"
-#include "scene.hpp"
+
 
 // окно ввода никнейма
 class Scene_nickname final: public Scene {

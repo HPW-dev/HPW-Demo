@@ -1,8 +1,8 @@
 #pragma once
-#include "util/action.hpp"
-#include "util/mem-types.hpp"
-#include "util/unicode.hpp"
 #include "game/scene/scene.hpp"
+#include "util/unicode.hpp"
+#include "util/action.hpp"
+
 
 /* Окно с текстом. Для выхода нажать Enable/Enter.
 Безопаснее создавать окно об ошибках через таск */

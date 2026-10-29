@@ -1,8 +1,10 @@
 #include "pch.hpp"
-#include "scene-mgr.hpp"
-#include "scene-loading.hpp"
 #include "scene-difficulty.hpp"
+
+#include "game/scene/common/scene-loading.hpp"
+#include "game/scene/scene-mgr.hpp"
 #include "scene-replay-select.hpp"
+#include "scene-game.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/common.hpp"
@@ -10,12 +12,12 @@
 #include "game/core/difficulty.hpp"
 #include "game/util/locale.hpp"
 #include "game/input/keys.hpp"
+#include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/item/bool-item.hpp"
-#include "game/menu/advanced-text-menu.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "game/scene/scene-game.hpp"
+
 
 Scene_difficulty::Scene_difficulty() {
   hpw::difficulty = Difficulty::normal;

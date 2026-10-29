@@ -1,8 +1,10 @@
 #include "pch.hpp"
 #include "scene-empty.hpp"
+
 #include "game/core/scenes.hpp"
-#include "game/input/keys.hpp"
 #include "game/core/canvas.hpp"
+#include "game/input/keys.hpp"
+
 
 struct Scene_empty::Impl {
   mutable bool _screen_cleared {false};

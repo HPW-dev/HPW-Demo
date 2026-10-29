@@ -1,5 +1,6 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-epge-list.hpp"
+
 #include "scene-epge-config.hpp"
 #include "scene-test-image.hpp"
 #include "game/core/scenes.hpp"
@@ -13,6 +14,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/menu-util.hpp"
 #include "engine/graphic/epge/epge-util.hpp"
+
 
 struct Scene_epge_list::Impl {
   Unique<Advanced_text_menu> _menu {};

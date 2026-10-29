@@ -1,20 +1,18 @@
-#include <cassert>
+#include "pch.hpp"
 #include "scene-input-delay-test.hpp"
+
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
+#include "game/util/vec-helper.hpp"
 #include "game/util/locale.hpp"
 #include "game/input/keys.hpp"
-#include "game/util/vec-helper.hpp"
-#include "util/timer.hpp"
-#include "util/average.hpp"
-#include "util/random.hpp"
-#include "util/platform.hpp"
-#include "util/min-max.hpp"
 #include "util/full-stats.hpp"
-#include "engine/graphic/font/font-util.hpp"
-#include "engine/graphic/util/util-templ.hpp"
+#include "util/min-max.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/font/font-util.hpp"
+
 
 struct Scene_input_delay_test::Impl {
   utf32 _info_text {};

@@ -1,13 +1,13 @@
 #include "pch.hpp"
 
 #include "port/command.hpp"
+#include "game/scene/options/scene-nickname.hpp"
+#include "game/scene/options/scene-graphic.hpp"
+#include "game/scene/options/scene-locale.hpp"
+#include "game/scene/gameplay/scene-game.hpp"
+#include "game/scene/common/scene-cmd.hpp"
 #include "game/scene/scene-main-menu.hpp"
-#include "game/scene/scene-locale.hpp"
 #include "game/scene/scene-mgr.hpp"
-#include "game/scene/scene-game.hpp"
-#include "game/scene/scene-graphic.hpp"
-#include "game/scene/scene-nickname.hpp"
-#include "game/scene/scene-cmd.hpp"
 #include "game/scene/msgbox/msgbox-enter.hpp"
 #include "game/core/messages.hpp"
 #include "game/core/scenes.hpp"
@@ -61,6 +61,7 @@
   #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
 #endif
+
 
 class Game_app: public Port_class {
   nocopy(Game_app);

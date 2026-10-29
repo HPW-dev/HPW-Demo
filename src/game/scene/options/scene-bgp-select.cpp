@@ -1,15 +1,17 @@
 #include "pch.hpp"
 #include "scene-bgp-select.hpp"
-#include "game/core/scenes.hpp"
-#include "game/core/bgps.hpp"
-#include "game/util/resource-helper.hpp"
-#include "game/input/keys.hpp"
-#include "game/util/locale.hpp"
+
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/text-item.hpp"
-#include "game/bgp/bgp.hpp"
-#include "game/bgp/bgp-util.hpp"
 #include "engine/graphic/image/image.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/locale.hpp"
+#include "game/bgp/bgp-util.hpp"
+#include "game/bgp/bgp.hpp"
+#include "game/input/keys.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/bgps.hpp"
+
 
 struct Scene_bgp_select::Impl {
   Unique<Advanced_text_menu> _menu {};
