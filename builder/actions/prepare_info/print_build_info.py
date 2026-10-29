@@ -45,7 +45,7 @@ def print_build_info(tgt: Target, ctx: Context, host: Host):
   print('=== Информация о компиляторе ===')
   print(f'* Пресет опций ...... {to_yellow(tgt.opt_preset)}')
   print(f'* Временные файлы ... {to_yellow(ctx.tmp_dir)}')
-  print(f'* Использовать PCH .. {checkbox2(bool(ctx.pch_path))}')
+  print(f'* Использовать PCH .. {checkbox2((ctx.pch_path != ''))}')
   print(f'* Потоки сборки ..... {to_yellow(ctx.threads)}')
   print(f'* Версия питона ..... {to_yellow(host.python_ver.rstrip())}')
   print(f'* Компилятор ........ {to_yellow(ctx.compiler_path)}')

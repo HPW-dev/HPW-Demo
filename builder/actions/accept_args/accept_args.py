@@ -166,6 +166,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true',
     help='без сетевой игры'
   )
+  parser.add_argument(
+    '--no_pch', 
+    action='store_true',
+    help='без PCH'
+  )
 
   args = parser.parse_args()
 
@@ -199,6 +204,9 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_assets = not bool(args.no_assets)
   ctx.with_tests = bool(args.with_tests)
   ctx.with_lan = not bool(args.no_lan)
+  if bool(args.no_pch):
+    ctx.pch_path = ''
+    tgt.pch_path = ''
 
   tgt.opt_preset = args.preset
   accept_preset(tgt.opt_preset, tgt, ctx, host)

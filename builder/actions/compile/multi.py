@@ -23,7 +23,7 @@ def prepare_obj_cmd(tgt: Target, ctx: Context):
     cmd.extend([f'-D{define}' for define in tgt.defines])
     cmd.extend([f'-{opt}' for opt in tgt.options])
     cmd.extend([f'-I{fs.path_abs(path)}' for path in tgt.include_dirs])
-    if bool(tgt.pch_path):
+    if tgt.pch_path != '':
       cmd.append(f'-I{fs.file_dir(tgt.pch_path)}')
     cmd.extend(['-c', cxx_src])
     obj_name = prepare_obj_name(cxx_src)
@@ -100,7 +100,7 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
   '''Многопоточная компиляция без инкрементальной сборки'''
   start = time.perf_counter()
 
-  if bool(tgt.pch_path):
+  if tgt.pch_path != '':
     print(f'> компиляция PCH ("{to_yellow(tgt.pch_path)}")...')
     compile_pch(tgt, ctx)
 
@@ -117,7 +117,7 @@ def compile_multi(tgt: Target, ctx: Context, host: Host):
   cmd.extend([f'-D{define}' for define in tgt.defines])
   cmd.extend([f'-{opt}' for opt in tgt.options])
   cmd.extend([f'-I{fs.path_abs(path)}' for path in tgt.include_dirs])
-  if bool(tgt.pch_path):
+  if tgt.pch_path != '':
     cmd.append(f'-I{fs.file_dir(tgt.pch_path)}')
   cmd.append(make_object_list(ctx))
   cmd.extend([f'-L{fs.path_abs(path)}' for path in tgt.lib_dirs])

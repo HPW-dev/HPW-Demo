@@ -134,9 +134,9 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
 
   # инфа о PCH
   db['pch'] = {
-    'used': bool(ctx.pch_path)
+    'used': (ctx.pch_path != '')
   }
-  if bool(ctx.pch_path):
+  if (ctx.pch_path != ''):
     db['pch']['hash'] = blake2b_fast(ctx.pch_path)
 
   return db
@@ -178,7 +178,7 @@ def check_diffs(tgt: Target, db_path: str, header_map: dict, ctx: Context) -> Re
 
   # чекнуть что удаляем
   for old_cxx in list(loaded_db['source'].keys()):
-    if old_cxx not in loaded_db['source'] or not fs.exists(old_cxx):
+    if old_cxx not in local_db['source'] or not fs.exists(old_cxx):
       print(to_red(f'обнаружено удаление файла "{old_cxx}"'))
       info.deleted_files.append(old_cxx)
       info.rebuild_needed = True
@@ -242,11 +242,11 @@ def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
 
 def pch_modifed(db_path: str, ctx: Context):
   ''':resut: True, если есть изменения в pch.hpp'''
+  if ctx.pch_path == '':
+    return False # значит не юзаем PCH
+  
   if ctx.forced_rebuild:
     return True
-
-  if not bool(ctx.pch_path):
-    return False # значит не юзаем PCH
   
   try:
     with open(db_path, "r", encoding="utf-8") as f:
