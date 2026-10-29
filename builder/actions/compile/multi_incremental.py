@@ -134,7 +134,8 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
 
   # инфа о PCH
   db['pch'] = {
-    'used': (ctx.pch_path != '')
+    'used': (ctx.pch_path != ''),
+    'path': ctx.pch_path,
   }
   if (ctx.pch_path != ''):
     db['pch']['hash'] = blake2b_fast(ctx.pch_path)
@@ -214,28 +215,29 @@ def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
   '''если параметры сборки поменялись, то надо всё пересобрать по новой'''
   with open(db_path, "r", encoding="utf-8") as f:
     db = json.load(f)
-    def opts_differ(db, opt, tag, msg):
-      if opt != db['opts'][tag]:
+    def opts_differ(node, opt, tag, msg):
+      if opt != node[tag]:
         print(msg)
         return True
       else:
         return False
     # ищем хоть одно различие
     if \
-      opts_differ(db, tgt.opt_preset, 'opt_preset', 'изменился пресет') or \
-      opts_differ(db, tgt.options, 'options', 'изменились опции компиляции') or \
-      opts_differ(db, tgt.name, 'name', 'изменилось имя проекта') or \
-      opts_differ(db, tgt.defines, 'defines', 'изменились дефайны компиля') or \
-      opts_differ(db, tgt.include_dirs, 'include_dirs', 'изменились папки включения') or \
-      opts_differ(db, tgt.lib_dirs, 'lib_dirs', 'изменились папки библиотек') or \
-      opts_differ(db, tgt.linked_libs, 'linked_libs', 'изменился список линкуемых библиотек') or \
-      opts_differ(db, tgt.use_openmp, 'use_openmp', 'изменилась опция OpenMP') or \
-      opts_differ(db, ctx.author, 'author', 'изменился автор сборки') or \
-      opts_differ(db, ctx.bin_dir, 'bin_dir', 'изменилась папка бинарника') or \
-      opts_differ(db, ctx.obj_dir, 'obj_dir', 'изменился путь к объектникам') or \
-      opts_differ(db, ctx.src_dir, 'src_dir', 'изменился путь к сурсам') or \
-      opts_differ(db, ctx.tmp_dir, 'tmp_dir', 'изменился путь tmp-папки') or \
-      opts_differ(db, ctx.compiler_path, 'compiler_path', 'изменился компилятор'):
+      opts_differ(db['opts'], tgt.opt_preset, 'opt_preset', 'изменился пресет') or \
+      opts_differ(db['opts'], tgt.options, 'options', 'изменились опции компиляции') or \
+      opts_differ(db['opts'], tgt.name, 'name', 'изменилось имя проекта') or \
+      opts_differ(db['opts'], tgt.defines, 'defines', 'изменились дефайны компиля') or \
+      opts_differ(db['opts'], tgt.include_dirs, 'include_dirs', 'изменились папки включения') or \
+      opts_differ(db['opts'], tgt.lib_dirs, 'lib_dirs', 'изменились папки библиотек') or \
+      opts_differ(db['opts'], tgt.linked_libs, 'linked_libs', 'изменился список линкуемых библиотек') or \
+      opts_differ(db['opts'], tgt.use_openmp, 'use_openmp', 'изменилась опция OpenMP') or \
+      opts_differ(db['opts'], ctx.author, 'author', 'изменился автор сборки') or \
+      opts_differ(db['opts'], ctx.bin_dir, 'bin_dir', 'изменилась папка бинарника') or \
+      opts_differ(db['opts'], ctx.obj_dir, 'obj_dir', 'изменился путь к объектникам') or \
+      opts_differ(db['opts'], ctx.src_dir, 'src_dir', 'изменился путь к сурсам') or \
+      opts_differ(db['opts'], ctx.tmp_dir, 'tmp_dir', 'изменился путь tmp-папки') or \
+      opts_differ(db['pch'] , ctx.pch_path, 'path', 'изменился путь PCH') or \
+      opts_differ(db['opts'], ctx.compiler_path, 'compiler_path', 'изменился компилятор'):
       return False
     
   return True
