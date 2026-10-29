@@ -38,10 +38,8 @@ struct Scene_epiwarn::Impl {
     graphic::draw_border = false;
 
     // при первом запуске не пропускать табличку, мало ли
-    if (!hpw::first_start) {
+    if (!hpw::first_start)
       next_scene();
-      return;
-    }
 
     // В отладке пропускаем этот экран
     cauto builde_preset = Str(get_game_build_preset());
@@ -53,7 +51,6 @@ struct Scene_epiwarn::Impl {
     ||  builde_preset == "debug-x64"
     ) {
       next_scene();
-      return;
     }
   }
 
@@ -84,6 +81,8 @@ struct Scene_epiwarn::Impl {
   }
 
   void next_scene() {
+    return_if (_skip_me);
+
     _skip_me = true;
     graphic::draw_border = _border_bkp;
     hpw::scene_mgr.add("Scene_main_menu");
