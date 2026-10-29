@@ -1,6 +1,8 @@
 #pragma once
+
 #include <mutex>
 #include <functional>
+
 #include "scene.hpp"
 #include "util/mem-types.hpp"
 #include "util/vec.hpp"

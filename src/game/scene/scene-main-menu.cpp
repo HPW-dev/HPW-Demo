@@ -1,39 +1,42 @@
 #include "pch.hpp"
 #include "scene-main-menu.hpp"
-#include "scene-game.hpp"
-#include "scene-options.hpp"
-#include "scene-loading.hpp"
-#include "scene-difficulty.hpp"
-#include "scene-locale.hpp"
-#include "game/core/fonts.hpp"
+
+#include "game/scene/gameplay/scene-difficulty.hpp"
+#include "game/scene/gameplay/scene-game.hpp"
+#include "game/scene/options/scene-options.hpp"
+#include "game/scene/options/scene-locale.hpp"
+#include "game/scene/common/scene-loading.hpp"
+#include "game/core/sprites.hpp"
+#include "game/core/graphic.hpp"
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/sounds.hpp"
-#include "game/core/sprites.hpp"
-#include "game/core/graphic.hpp"
+#include "game/core/fonts.hpp"
 #include "game/input/keys.hpp"
-#include "game/util/version.hpp"
-#include "game/util/blur-helper.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/palette-helper.hpp"
-#include "game/util/locale.hpp"
 #include "game/util/palette-helper.hpp"
-#include "game/menu/text-menu.hpp"
+#include "game/util/blur-helper.hpp"
+#include "game/util/version.hpp"
+#include "game/util/locale.hpp"
 #include "game/menu/item/text-item.hpp"
 #include "game/menu/item/list-item.hpp"
-#include "game/bgp/bgp.hpp"
+#include "game/menu/text-menu.hpp"
 #include "game/bgp/bgp-util.hpp"
-#include "engine/graphic/util/resize.hpp"
-#include "engine/graphic/util/util-templ.hpp"
+#include "game/bgp/bgp.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/util/util-templ.hpp"
+#include "engine/graphic/util/resize.hpp"
 #include "engine/graphic/effect/blur.hpp"
 
 #ifdef USE_LAN
   #include "game/netplay/scene/scene-netplay-menu.hpp"
 #endif
+
 #ifdef USE_TESTS
   #include "game/scene/scene-tests.hpp"
 #endif
+
 
 Scene_main_menu::Scene_main_menu() {
   init_menu();

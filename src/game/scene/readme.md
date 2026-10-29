@@ -2,7 +2,7 @@
 Это отдельные экраны с геймплеем, настройками и тестами. Рулятся они через Sceme_mgr.
 
 ## Как сделать цену-тест
-* добавить название сцены в список кнопок меню resources\scripts\ui\menu\tests.json
-* в src\game\scene\scene-tests.cpp заинклудить хедер сцены и привязать её создание к названию в Actions
-* в добавить название кнопки для сцены "resources\locales\RU (Mramor).json"
-* Создать в src/game/scene/ файлы класса сцены (cpp/hpp)
+* добавить название сцены в список кнопок меню resources/scripts/ui/menu/tests.json
+* в src/game/scene/tests/scene-tests.cpp заинклудить хедер сцены и привязать её создание к названию в Actions
+* в добавить название кнопки для сцены "resources/locales/RU (Mramor).json"
+* Создать в src/game/scene/tests/ файлы класса сцены (cpp/hpp)
