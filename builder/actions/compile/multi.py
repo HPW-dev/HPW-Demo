@@ -73,10 +73,8 @@ def compile_game_ver(tgt: Target, ctx: Context, host: Host):
     # меняем версию с ресурса на актуальную
     v, _, _ = game_version(ctx)
     if v:
-      v = v.replace('v', '')
-      v = v.replace('>', '')
-      v = v.replace(' ', '')
-      v = v.replace('+', '')
+      for char in ['v', '>', ' ', '+']:
+        v = v.replace(char, '')
       comma_ver = v.replace('.', ',')
       point_ver = v.replace(',', '.')
       with open(game_ver_copy, mode='r', encoding='utf-8') as f:

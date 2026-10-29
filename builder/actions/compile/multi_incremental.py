@@ -47,14 +47,10 @@ def find_headers(cxx_file: str, include_dirs=None, cache=None, lines=70):
     
   try:
     with open(cxx_file_abs, 'r', encoding='utf-8', errors='ignore') as f:
-      for _ in range(lines):
-        line = f.readline()
-        if not line: 
-          break
-
-        # нашли инклуд
+      head = [f.readline() for _ in range(lines)]
+      for line in head:
         match = include_regex.match(line)
-        if match:
+        if match: # нашли инклуд
           header_name = match.group(1)
           header_path = None
 
