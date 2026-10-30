@@ -3,6 +3,7 @@
 ```cpp
 #include "pch.hpp"
 #include "epge.hpp"
+#include "game/util/locale.hpp" // это нужное
 
 EPGE_CLASS_BEGIN(__название_класса_эффекта__)
   // переменные для эффекта

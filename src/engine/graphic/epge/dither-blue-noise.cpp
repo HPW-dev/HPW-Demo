@@ -1,6 +1,8 @@
 #include "pch.hpp"
 #include "epge.hpp"
+#include "game/util/locale.hpp"
 #include "engine/graphic/effect/dither.hpp"
+
 
 EPGE_CLASS_BEGIN(dither_blue_noise)
   int _mode = 1;
