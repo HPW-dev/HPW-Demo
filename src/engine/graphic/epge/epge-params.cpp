@@ -82,7 +82,7 @@ inline static bool s2bool(cr<Str> str) {
   return false;
 }
 
-inline static Str bool2s(const bool val) { return val ? "enabled" : "disabled"; }
+inline static Str bool2s(const bool val) { return val ? "yes" : "no"; }
 
 Param_bool::Param_bool(cr<Str> title_id, cr<utf32> title, cr<utf32> desc, bool& value)
 : Param {title_id, title, desc}

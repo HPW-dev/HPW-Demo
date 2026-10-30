@@ -196,31 +196,41 @@ void dither_bayer16x16_1bit(Image& dst, const real power) {
   }
 } // dither_bayer16x16_1bit
 
-void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode, bool use_gamma_corr) {
+void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode,
+bool use_gamma_corr, bool use_jitter) {
+  assert(dst);
+
   staticx byte blue_noise_512x512[] = {
     #embed "blue_noise_512x512.bin"
   };
   constexpr size_t bin_size = sizeof(blue_noise_512x512);
   static_assert (bin_size == 512*512, "size of blue_noise_512x512.bin != 512*512");
 
+  int jitter_x = 0;
+  int jitter_y = 0;
+  if (use_jitter) {
+    jitter_x = rndu_fast();
+    jitter_y = rndu_fast();
+  }
+
   if (mode == Dither_blue_noise_mode::fast) {
     #pragma omp parallel for simd collapse(2)
     cfor (y, dst.Y)
     cfor (x, dst.X) {
-      cauto threshold = blue_noise_512x512[((y % 512) * 512) + (x % 512)];
+      cauto threshold = blue_noise_512x512[(((jitter_y + y) % 512) * 512) + ((jitter_x + x) % 512)];
       dst[x, y] = (dst[x, y].val > threshold) ? Pal8::white : Pal8::black;
     }
   } else { // accurate mode
     #pragma omp parallel for simd collapse(2)
     cfor (y, dst.Y)
     cfor (x, dst.X) {
-      cauto threshold = blue_noise_512x512[((y % 512) * 512) + (x % 512)];
-        auto& pix = dst[x, y];
-        const int ci = 255 * (use_gamma_corr ? srgb_to_linear(pix.to_real()) : pix.to_real());
-        if (pix.is_red())
-          pix = (ci > threshold) ? Pal8::red : Pal8::red_black;
-        else
-          pix = (ci > threshold) ? Pal8::white : Pal8::black;
+      cauto threshold = blue_noise_512x512[(((jitter_y + y) % 512) * 512) + ((jitter_x + x) % 512)];
+      auto& pix = dst[x, y];
+      const int ci = 255 * (use_gamma_corr ? srgb_to_linear(pix.to_real()) : pix.to_real());
+      if (pix.is_red())
+        pix = (ci > threshold) ? Pal8::red : Pal8::red_black;
+      else
+        pix = (ci > threshold) ? Pal8::white : Pal8::black;
     }
   }
 }
