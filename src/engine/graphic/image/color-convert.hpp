@@ -7,6 +7,8 @@ struct Pal8;
 struct Rgb24;
 struct Rgbr;
 
+real linear_to_srgb(real c);
+real srgb_to_linear(real c);
 HSL to_hsl(cr<Rgbr> src);
 Rgb24 to_rgb24(const Pal8 x);
 Pal8 desaturate_luma(int R, int G, int B);

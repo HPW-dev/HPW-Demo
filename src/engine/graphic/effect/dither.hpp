@@ -28,4 +28,4 @@ void dither_bayer16x16_1bit(Image& dst, const real power=1);
 
 enum class Dither_blue_noise_mode { fast, accurate };
 // дизеринг через синий шум
-void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode);
+void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode, bool use_gamma_corr);

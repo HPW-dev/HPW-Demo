@@ -1,8 +1,9 @@
 #include "pch.hpp"
 #include "dither.hpp"
+#include "engine/graphic/image/color-convert.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "engine/graphic/sprite/sprite.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
+#include "engine/graphic/sprite/sprite.hpp"
 #include "game/util/sync.hpp"
 
 inline constexpr Vec bayer_16x16_sz {16, 16};
@@ -195,7 +196,7 @@ void dither_bayer16x16_1bit(Image& dst, const real power) {
   }
 } // dither_bayer16x16_1bit
 
-void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode) {
+void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode, bool use_gamma_corr) {
   staticx byte blue_noise_512x512[] = {
     #embed "blue_noise_512x512.bin"
   };
@@ -203,17 +204,19 @@ void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode) {
   static_assert (bin_size == 512*512, "size of blue_noise_512x512.bin != 512*512");
 
   if (mode == Dither_blue_noise_mode::fast) {
+    #pragma omp parallel for simd collapse(2)
     cfor (y, dst.Y)
     cfor (x, dst.X) {
       cauto threshold = blue_noise_512x512[((y % 512) * 512) + (x % 512)];
       dst[x, y] = (dst[x, y].val > threshold) ? Pal8::white : Pal8::black;
     }
   } else { // accurate mode
+    #pragma omp parallel for simd collapse(2)
     cfor (y, dst.Y)
     cfor (x, dst.X) {
       cauto threshold = blue_noise_512x512[((y % 512) * 512) + (x % 512)];
         auto& pix = dst[x, y];
-        const int ci = pix.to_real() * 255;
+        const int ci = 255 * (use_gamma_corr ? srgb_to_linear(pix.to_real()) : pix.to_real());
         if (pix.is_red())
           pix = (ci > threshold) ? Pal8::red : Pal8::red_black;
         else

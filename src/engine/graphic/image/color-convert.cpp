@@ -264,13 +264,13 @@ constexpr static const std::array<Rgb24, PAL_SZ> pal8_default_table {
 }; // pal8_default_table
 
 // Гамма-коррекция (линейный → sRGB)
-static inline real linear_to_srgb(real c) {
+real linear_to_srgb(real c) {
   return (c <= 0.0031308)
     ? (12.92 * c)
     : (1.055 * std::pow(c, 1.0 / 2.4) - 0.055);
 }
 
-static inline real srgb_to_linear(real c) {
+real srgb_to_linear(real c) {
   return (c <= 0.04045)
     ? (c / 12.92)
     : (std::pow((c + 0.055) / 1.055, 2.4));
