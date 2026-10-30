@@ -25,3 +25,7 @@ void dither_blend(Image& dst, cr<Sprite> src, const Vec pos, real alpha,
 void fast_dither_bayer16x16_4bit(Image& dst, bool rotate_pattern=false);
 
 void dither_bayer16x16_1bit(Image& dst, const real power=1);
+
+enum class Dither_blue_noise_mode { fast, accurate };
+// дизеринг через синий шум
+void dither_blue_noise(Image& dst, Dither_blue_noise_mode mode);
