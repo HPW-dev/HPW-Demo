@@ -11,7 +11,9 @@ struct Seed {
 
 // База для фабрики генераторов рандома
 struct Rnd_gen_base {
+  // должен быть равен самому большому типу выдаваемому генераторами
   using result_type = u32_t;
+  
   static constexpr result_type min() { return 0; }
   static constexpr result_type max() { return num_max<result_type>(); }
 

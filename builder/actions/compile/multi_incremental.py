@@ -132,9 +132,16 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
   db['pch'] = {
     'used': (ctx.pch_path != ''),
     'path': ctx.pch_path,
+    'headers': {}
   }
   if (ctx.pch_path != ''):
     db['pch']['hash'] = blake2b_fast(ctx.pch_path)
+    # Ищем все вложенные инклуды внутри pch.hpp
+    pch_deps = find_headers(ctx.pch_path, include_dirs=tgt.include_dirs)
+    for header in pch_deps:
+      db['pch']['headers'][header] = {
+        'hash': blake2b_fast(header)
+      }
 
   return db
 
@@ -238,7 +245,7 @@ def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
     
   return True
 
-def pch_modifed(db_path: str, ctx: Context):
+def pch_modifed(db_path: str, ctx: Context, tgt: Target):
   ''':resut: True, если есть изменения в pch.hpp'''
   if ctx.pch_path == '':
     return False # значит не юзаем PCH
@@ -252,12 +259,25 @@ def pch_modifed(db_path: str, ctx: Context):
 
       pch_node = db['pch']
       if not pch_node['used']:
-        return False
-      
-      # проверяем хэши
-      if pch_node['hash'] != blake2b_fast(ctx.pch_path):
-        print(f'Обнаружены изменения в {ctx.pch_path}')
         return True
+
+      if pch_node['hash'] != blake2b_fast(ctx.pch_path):
+        print(to_yellow(f'Обнаружены изменения в файле PCH: {ctx.pch_path}'))
+        return True
+
+      # Проверка изменений во вложенных инклудах PCH.
+      # Чекаем, не изменились ли старые файлы зависимостей
+      for old_header, old_content in pch_node.get('headers', {}).items():
+        if not fs.exists(old_header) or blake2b_fast(old_header) != old_content['hash']:
+          print(to_yellow(f'Обнаружены изменения в зависимостях PCH (изменился или удален: {old_header})'))
+          return True
+          
+      # Чекаем, не добавились ли новые инклуды в PCH
+      current_pch_deps = find_headers(ctx.pch_path, include_dirs=tgt.include_dirs)
+      if len(current_pch_deps) != len(pch_node.get('headers', {})):
+        print(to_yellow(f'Изменилась структура инклудов в PCH'))
+        return True
+
   except FileNotFoundError: # если не нашли в базе, значит ещё не компилили PCH
     return True
 
@@ -274,7 +294,7 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
   
   db_path = f'{ctx.tmp_dir}{tgt.name}.json'
 
-  pch_is_modified = pch_modifed(db_path, ctx)
+  pch_is_modified = pch_modifed(db_path, ctx, tgt)
 
   # проверить что есть база и что опции не изменились
   if fs.exists(db_path) \
@@ -284,6 +304,9 @@ def check_for_rebuild(tgt: Target, header_map: dict, ctx: Context) -> Rebuild_in
     return check_diffs(tgt, db_path, header_map, ctx)
   
   else: # делаем базу с нуля
+    if pch_is_modified:
+      print(to_green(f'PCH или его зависимости изменены'))
+
     print(f'База для пересборки {to_yellow(tgt.name)} не найдена')
 
     print(to_green(f'> Создание базы изменений в файлах {db_path}...'))
