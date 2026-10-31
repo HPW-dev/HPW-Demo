@@ -9,13 +9,13 @@ static u64_t splitmix64_seed {97997};
 
 // Помогает заполнять стейты рандомам
 static u64_t next_splitmix64() {
-    u64_t z = (splitmix64_seed += 0x9e3779b97f4a7c15ULL);
-    z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
-    z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
-    return z ^ (z >> 31);
+  u64_t z = (splitmix64_seed += 0x9e3779b97f4a7c15ULL);
+  z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+  z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+  return z ^ (z >> 31);
 }
 
-class Rnd_gen_well19937 final : public Rnd_gen_base {
+class Rnd_gen_well19937 final: public Rnd_gen_base {
   // Константы алгоритма WELL19937
   staticx size_t W = 32;
   staticx size_t R = 624;
@@ -30,33 +30,33 @@ public:
   explicit Rnd_gen_well19937(cr<Seed> seed = {}) {
     splitmix64_seed = seed.old_seed;
     for (size_t i = 0; i < R; i += 2) {
-        cauto x = next_splitmix64();
-        state_[i]     = scast<u32_t>(x);      
-        state_[i + 1] = scast<u32_t>(x >> 32);
+      cauto x = next_splitmix64();
+      state_[i]     = scast<u32_t>(x);      
+      state_[i + 1] = scast<u32_t>(x >> 32);
     }
   }
 
   result_type operator()() override {
     // Оптимальный расчет индексов со сдвигами по модулю R (624)
-      size_t index_m1 = (index_ + M1 >= R) ? (index_ + M1 - R) : (index_ + M1);
-      size_t index_m2 = (index_ + M2 >= R) ? (index_ + M2 - R) : (index_ + M2);
-      size_t index_m3 = (index_ + M3 >= R) ? (index_ + M3 - R) : (index_ + M3);
+    size_t index_m1 = (index_ + M1 >= R) ? (index_ + M1 - R) : (index_ + M1);
+    size_t index_m2 = (index_ + M2 >= R) ? (index_ + M2 - R) : (index_ + M2);
+    size_t index_m3 = (index_ + M3 >= R) ? (index_ + M3 - R) : (index_ + M3);
 
-      size_t index_prev = (index_ == 0) ? (R - 1) : (index_ - 1);
+    size_t index_prev = (index_ == 0) ? (R - 1) : (index_ - 1);
 
-      const u32_t z0 = state_[index_prev];
-      const u32_t z1 = state_[index_] ^ (state_[index_m1] ^ (state_[index_m1] >> 8));
-      const u32_t z2 = (state_[index_m2] ^ (state_[index_m2] << 19)) ^ (state_[index_m3] ^ (state_[index_m3] << 14));
+    const u32_t z0 = state_[index_prev];
+    const u32_t z1 = state_[index_] ^ (state_[index_m1] ^ (state_[index_m1] >> 8));
+    const u32_t z2 = (state_[index_m2] ^ (state_[index_m2] << 19)) ^ (state_[index_m3] ^ (state_[index_m3] << 14));
       
-      const u32_t z3 = z1 ^ z2;
-      const u32_t z4 = (z0 ^ (z0 << 11)) ^ (z1 ^ (z1 << 7)) ^ (z2 ^ (z2 << 13));
-      state_[index_] = z3;
-      state_[index_prev] = z4;
-      // Смещение индекса по кольцевому буферу
-      index_ = index_prev;
-      return state_[index_];
+    const u32_t z3 = z1 ^ z2;
+    const u32_t z4 = (z0 ^ (z0 << 11)) ^ (z1 ^ (z1 << 7)) ^ (z2 ^ (z2 << 13));
+    state_[index_] = z3;
+    state_[index_prev] = z4;
+    // Смещение индекса по кольцевому буферу
+    index_ = index_prev;
+    return state_[index_];
   }
-};
+}; // Rnd_gen_well19937
 
 namespace {
   inline Seed main_seed {};
