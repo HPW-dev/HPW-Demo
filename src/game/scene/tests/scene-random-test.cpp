@@ -285,6 +285,97 @@ public:
   }
 };
 
+// Вычисление числа Пи методом Монте-Карло
+class Motne_pi final: public Rnd_test_base {
+public:
+  staticx uint offx = 15;
+  staticx uint offy = offx;
+  staticx uint areax = 256;
+  staticx uint areay = areax;
+  staticx uint radius = areax;
+
+  explicit Motne_pi()
+  : _area(areax, areay)
+  {
+    reset_area();
+
+    _err_graph = new_unique<Plotter>(
+      U"Отклонение от эталона", 
+      [this]->Plotter::Value { return calc_error(); },
+      160, 64, 1000, Vec(280, 80)
+    );
+  }
+
+  void update(Stl_rnd& rnd_gen, uint samples) override {
+    // чекаем на свич генератора
+    auto gen_ptr = rnd_gen.gen.get();
+    if (_prev_gen != gen_ptr) {
+      _prev_gen = gen_ptr;
+      reset_area();
+    }
+
+    _area.fill(Pal8::black);
+    draw_circle(_area, {0,0}, radius, Pal8::red);
+
+    cfor (_, samples) {
+      cauto x = _dist(rnd_gen);
+      cauto y = _dist(rnd_gen);
+      set_point(x, y);
+    }
+
+    _err_graph->update();
+  }
+
+  void draw(Image& dst) const override {
+    return_if (_in_circle == 0);
+
+    draw_area(dst, {offx, offy});
+
+    cauto pi = calc_pi();
+    graphic::font->draw(dst, {280, 17},
+      U"Пи = " + n2s<utf32>(pi, 7) + U"\n" +
+      U"В круге/Всего: " + n2s<utf32>(_in_circle) + U"/" + n2s<utf32>(_total) + U"\n"
+      U"Отклонение: " + n2s<utf32>(calc_error(), 7) + U"\n"
+    );
+    graphic::font->draw(dst, {17, 290}, U"Генератор: " + g_gen_name);
+
+    _err_graph->draw(dst);
+
+    graphic::font->draw(dst, {17, dst.Y - 24},
+      U"[ Вычисление π методом Монте-Карло ]");
+  }
+
+private:
+  std::uniform_real_distribution<double> _dist{0.0, scast<double>(radius)};
+  Rnd_gen_base* _prev_gen {};
+  mutable Image _area;
+  size_t _in_circle {}; // столько точек попало в круг
+  size_t _total {}; // всего точек поставлено
+  Unique<Plotter> _err_graph {};
+
+  void draw_area(Image& dst, const Veci offset) const {
+    insert(dst, _area, offset);
+    draw_rect(dst, Recti(offset.x, offset.y, areax, areay), Pal8::white);
+  }
+
+  void reset_area() {
+    _in_circle = 0;
+    _total = 0;
+  }
+
+  void set_point(double x, double y) {
+    cauto is_in = ((x*x + y*y) <= (radius*radius));
+    cauto ux = std::min(scast<uint>(x), areax - 1);
+    cauto uy = std::min(scast<uint>(y), areay - 1);
+    _area[ux, uy] = is_in ? Pal8::red : Pal8::white;
+    _in_circle += is_in ? 1 : 0;
+    ++_total;
+  }
+
+  double calc_pi() const { return 4 * (scast<double>(_in_circle) / _total); }
+  double calc_error() const { return std::abs(std::numbers::pi_v<double> - calc_pi()); }
+}; // Motne_pi
+
 // Рисует график распределения самых частых цифр
 class Distribution final: public Rnd_test_base {
   sconst int offx = 17;
@@ -342,9 +433,10 @@ struct Scene_random_test::Impl {
   size_t _samples_idx {2};
 
   inline Impl() {
-    _tests.emplace_back(new_unique<Poker>());
-    _tests.emplace_back(new_unique<Distribution>());
+    _tests.emplace_back(new_unique<Motne_pi>());
     _tests.emplace_back(new_unique<Noise_squares>());
+    _tests.emplace_back(new_unique<Distribution>());
+    _tests.emplace_back(new_unique<Poker>());
     set_samples(0);
     set_test(0);
     set_gen(0);
