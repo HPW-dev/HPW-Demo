@@ -421,6 +421,81 @@ public:
   }
 };
 
+class Walkers final: public Rnd_test_base {
+public:
+  explicit Walkers()
+  : _path(graphic::width, graphic::height)
+  , _walkers(3)
+  {
+    reset();
+  }
+
+  void update(Stl_rnd& rnd_gen, uint samples) override {
+    // чекаем на свич генератора
+    auto gen_ptr = rnd_gen.gen.get();
+    if (_prev_gen != gen_ptr) {
+      _prev_gen = gen_ptr;
+      reset();
+    }
+
+    cfor (_, samples) {
+      ++_steps;
+      walk(rnd_gen);
+    
+      for (cauto w: _walkers)
+        _path.set<&blend_diff>(w.x, w.y, Pal8::white, {});
+    }
+  }
+
+  void draw(Image& dst) const override {
+    insert_fast(dst, _path);
+    draw_text(dst);
+
+    graphic::font->draw(dst, {17, dst.Y + 40},
+      U"[ Случайно ползущие червячки ]");
+  }
+
+private:
+  staticx real SPEED = 0.1;
+  std::uniform_real_distribution<real> _dist{-SPEED, SPEED};
+  Rnd_gen_base* _prev_gen {};
+  Image _path;
+  Vector<Vec> _walkers;
+  size_t _steps;
+
+  void reset() {
+    _path.fill(Pal8::black);
+
+    for (auto& w: _walkers) {
+      w.x = _path.X / 2.0;
+      w.y = _path.Y / 2.0;
+    }
+
+    _steps = 0;
+  }
+
+  void walk(Stl_rnd& rnd_gen) {
+    for (auto& w: _walkers) {
+      w.x += _dist(rnd_gen);
+      w.y += _dist(rnd_gen);
+    }
+  }
+
+  void draw_text(Image& dst) const {
+    cauto gen_name =
+      U"Генератор: " + g_gen_name + U"\n"
+      U"Итераций: " + n2s<utf32>(_steps) + U"\n"
+    ;
+    cauto gen_name_sz = graphic::font->text_size(gen_name);
+    cauto gen_name_pos = center_point(Veci(dst.X, dst.Y + 50), gen_name_sz);
+    cauto pad = 3;
+    Recti gen_rect(gen_name_pos.x-pad, gen_name_pos.y-pad,
+      gen_name_sz.x+2*pad, gen_name_sz.y+2*pad);
+    draw_rect_filled<&blend_readable>(dst, gen_rect, Pal8::black);
+    graphic::font->draw(dst, gen_name_pos, gen_name);
+  }
+};
+
 struct Scene_random_test::Impl {
   Vector<Unique<Rnd_test_base>> _tests {};
   Rnd_test_base* _cur_test {};
@@ -433,6 +508,7 @@ struct Scene_random_test::Impl {
   size_t _samples_idx {2};
 
   inline Impl() {
+    _tests.emplace_back(new_unique<Walkers>());
     _tests.emplace_back(new_unique<Motne_pi>());
     _tests.emplace_back(new_unique<Noise_squares>());
     _tests.emplace_back(new_unique<Distribution>());
