@@ -109,10 +109,9 @@ public:
       U"Two pair ......... " + n2s<utf32>(_stats.two_pair / rounds_real, P)        + U"/" + n2s<utf32>(chance_two_pair, P) + U"\n"
       U"One pair ......... " + n2s<utf32>(_stats.one_pair / rounds_real, P)        + U"/" + n2s<utf32>(chance_one_pair, P) + U"\n"
       U"High card ........ " + n2s<utf32>(_stats.high_card / rounds_real, P)       + U"/" + n2s<utf32>(chance_high_card, P) + U"\n"
-      U"\n"
-      U"Раундов: " + n2s<utf32>(_rounds) + U"\n"
-      U"Отклонение: " + n2s<utf32>(total_error, P) + U"\n"
-      U"Генератор: " + g_gen_name + U"\n"
+      U"Раздач     : " + n2s<utf32>(_rounds) + U"\n"
+      U"Отклонение : " + n2s<utf32>(total_error, P) + U"\n"
+      U"Генератор  : " + g_gen_name + U"\n"
     ;
     graphic::system_mono->draw(dst, {10, 10}, stats_text);
 

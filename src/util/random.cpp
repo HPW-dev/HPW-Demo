@@ -263,6 +263,13 @@ public:
   }
 };
 
+class Rnd_gen_minstd final: public Rnd_gen_base {
+  std::independent_bits_engine<std::minstd_rand, 32, Rnd_gen_base::result_type> _gen;
+public:
+  explicit Rnd_gen_minstd(cr<Seed> seed) { _gen.seed(seed.old_seed); }
+  result_type operator()() override { return _gen(); }
+};
+
 class Rnd_gen_parkmiller final: public Rnd_gen_base {
   u32_t _state;
 public:
@@ -415,9 +422,10 @@ sconst std::unordered_map<Str, Rnd_gen_maker> _table {
   {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
   {"xoshiro256+", []{ return new_unique<Rnd_gen_xoshiro256plus>(main_seed); }},
   {"Parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
-  {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
   {"WELL19937", []{ return new_unique<Rnd_gen_well19937>(main_seed); }},
+  {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
   {"WELL512", []{ return new_unique<Rnd_gen_well512>(main_seed); }},
+  {"minstd", []{ return new_unique<Rnd_gen_minstd>(main_seed); }},
   {"FNV1-a", []{ return new_unique<Rnd_gen_fnv1a>(main_seed); }},
   {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},
   {"RPNG", []{ return new_unique<Rnd_gen_rpng>(main_seed); }},
