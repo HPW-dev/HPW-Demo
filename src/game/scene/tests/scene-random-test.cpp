@@ -188,7 +188,7 @@ struct Scene_random_test::Impl {
     _cur_test = _tests.at(_test_idx).get();
 
     hpw::message_mgr->move(Message{
-      .text=U"Тест №: " + n2s<utf32>(_test_idx), .bf=&blend_diff });
+      .text=U"Тест №: " + n2s<utf32>(_test_idx+1), .bf=&blend_diff });
   }
 
   inline void set_samples(int idx_offset) {

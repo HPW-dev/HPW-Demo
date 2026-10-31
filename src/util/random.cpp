@@ -17,6 +17,17 @@ namespace {
   inline byte table_idx {0};
 }
 
+// нужен для next_splitmix64
+static u64_t splitmix64_seed {97997};
+
+// Помогает заполнять стейты рандомам
+static u64_t next_splitmix64() {
+    u64_t z = (splitmix64_seed += 0x9e3779b97f4a7c15ULL);
+    z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
+    z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
+    return z ^ (z >> 31);
+}
+
 inline cr<byte> table_rndb() {
   return rand_table_256[table_idx++];
 }
@@ -76,6 +87,7 @@ void set_rnd_seed(Seed s) {
     rndr_graphic_gen.seed(seed);
     rndu_gen.seed(seed);
     table_idx = seed % 256;
+    splitmix64_seed = seed ^ (seed * 123);
   } // omp critical
 
   init_generators();
@@ -215,10 +227,11 @@ class Rnd_gen_xorshift128 final: public Rnd_gen_base {
   xorshift128_state _state {};
 public:
   explicit Rnd_gen_xorshift128(Seed seed) {
-    _state.a ^= seed.old_seed;
-    _state.b ^= seed.old_seed;
-    _state.c ^= seed.old_seed;
-    _state.d ^= seed.old_seed;
+    splitmix64_seed = seed.old_seed;
+    _state.a ^= next_splitmix64();
+    _state.b ^= next_splitmix64();
+    _state.c ^= next_splitmix64();
+    _state.d ^= next_splitmix64();
   }
   result_type operator()() override { return xorshift128(_state); }
 };
@@ -248,6 +261,7 @@ public:
   }
 };
 
+// Рандом на основе хэшера FNV-1a
 class Rnd_gen_fnv1a final : public Rnd_gen_base {
   u32_t _counter;
   // Классические константы для 32-битного FNV-1a
@@ -277,11 +291,45 @@ public:
   result_type operator()() override { return hash_u32(_counter++); }
 };
 
+class Rnd_gen_well512 final : public Rnd_gen_base {
+  staticx size_t WELL512_STATE_SIZE = 16;
+  u32_t state[WELL512_STATE_SIZE];
+  u32_t index {};
+public:
+  explicit Rnd_gen_well512(Seed seed) {
+    splitmix64_seed = seed.old_seed;
+    cfor (i, WELL512_STATE_SIZE)
+      state[i] = next_splitmix64();
+  }
+  result_type operator()() override {
+    u32_t idx = this->index;
+    
+    u32_t a = this->state[idx];
+    u32_t c = this->state[(idx + 13) & 15];
+    u32_t b = a ^ (a << 16) ^ c ^ (c << 15);
+    
+    c = this->state[(idx + 9) & 15];
+    c ^= (c >> 11);
+    
+    a = this->state[idx] = b ^ c;
+    u32_t d = a ^ ((a << 5) & 0xDA442E16U);
+    
+    idx = (idx + 15) & 15;
+    a = this->state[idx];
+    
+    this->state[idx] = a ^ b ^ d ^ (a << 2) ^ (b << 18) ^ (c << 28);
+    this->index = idx;
+    
+    return this->state[idx];
+  }
+};
+
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
   {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
   {"Parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
   {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
+  {"WELL512", []{ return new_unique<Rnd_gen_well512>(main_seed); }},
   {"FNV1-a", []{ return new_unique<Rnd_gen_fnv1a>(main_seed); }},
   {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},
   {"RPNG", []{ return new_unique<Rnd_gen_rpng>(main_seed); }},
