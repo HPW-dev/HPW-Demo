@@ -121,7 +121,8 @@ public:
       U"One pair ......... " + n2s<utf32>(stat_one_pair, P)        + U"/" + n2s<utf32>(chance_one_pair, P) + U"\n"
       U"High card ........ " + n2s<utf32>(stat_high_card, P)       + U"/" + n2s<utf32>(chance_high_card, P) + U"\n"
       U"\n"
-      U"Отклонение от эталона: " + n2s<utf32>(total_error, P) + U"\n"
+      U"Раундов: " + n2s<utf32>(_rounds) + U"\n"
+      U"Отклонение: " + n2s<utf32>(total_error, P) + U"\n"
       U"Генератор: " + g_gen_name + U"\n"
     ;
     graphic::system_mono->draw(dst, {4, 15}, stats_text);
