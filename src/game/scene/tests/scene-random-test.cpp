@@ -6,6 +6,7 @@
 #include "game/core/scenes.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/fonts.hpp"
+#include "game/util/plotter.hpp"
 #include "game/input/keys.hpp"
 #include "engine/graphic/util/graphic-util.hpp"
 #include "engine/graphic/util/util-templ.hpp"
@@ -63,7 +64,13 @@ public:
       card.suit = s;
       _cards.emplace_back(card);
     }
-  };
+
+    _err_graph = new_unique<Plotter>(
+      U"Уровень ошибки", 
+      [this]{ return calculate_error(); },
+      450, 64, 1000, Vec(10, 270)
+    );
+  }
 
   void update(Stl_rnd& rnd_gen, uint samples) override {
     // чекаем на свич генератора
@@ -79,6 +86,8 @@ public:
       ++_rounds;
       calculate_stats();
     }
+
+    _err_graph->update();
   }
 
   void draw(Image& dst) const override {
@@ -88,44 +97,26 @@ public:
     utf32 stats_text;
     const double rounds_real = _rounds;
     const uint P = 7;
-    cauto stat_royal_flush = _stats.royal_flush / rounds_real;
-    cauto stat_straight_flush = _stats.straight_flush / rounds_real;
-    cauto stat_four_of_a_kind = _stats.four_of_a_kind / rounds_real;
-    cauto stat_full_house = _stats.full_house / rounds_real;
-    cauto stat_flush = _stats.flush / rounds_real;
-    cauto stat_straight = _stats.straight / rounds_real;
-    cauto stat_three_of_a_kind = _stats.three_of_a_kind / rounds_real;
-    cauto stat_two_pair = _stats.two_pair / rounds_real;
-    cauto stat_one_pair = _stats.one_pair / rounds_real;
-    cauto stat_high_card = _stats.high_card / rounds_real;
-    cauto total_error =
-      std::abs(chance_royal_flush - stat_royal_flush) +
-      std::abs(chance_straight_flush - stat_straight_flush) +
-      std::abs(chance_four_of_a_kind - stat_four_of_a_kind) +
-      std::abs(chance_full_house - stat_full_house) +
-      std::abs(chance_flush - stat_flush) +
-      std::abs(chance_straight - stat_straight) +
-      std::abs(chance_three_of_a_kind - stat_three_of_a_kind) +
-      std::abs(chance_two_pair - stat_two_pair) +
-      std::abs(chance_one_pair - stat_one_pair) +
-      std::abs(chance_high_card - stat_high_card);
+    cauto total_error = calculate_error();
     stats_text = U"Статистика по комбинациям:\n"
-      U"Royal flush ...... " + n2s<utf32>(stat_royal_flush, P)     + U"/" + n2s<utf32>(chance_royal_flush, P) + U"\n"
-      U"Straight flush ... " + n2s<utf32>(stat_straight_flush, P)  + U"/" + n2s<utf32>(chance_straight_flush, P) + U"\n"
-      U"Four of a kind ... " + n2s<utf32>(stat_four_of_a_kind, P)  + U"/" + n2s<utf32>(chance_four_of_a_kind, P) + U"\n"
-      U"Full house ....... " + n2s<utf32>(stat_full_house, P)      + U"/" + n2s<utf32>(chance_full_house, P) + U"\n"
-      U"Flush ............ " + n2s<utf32>(stat_flush, P)           + U"/" + n2s<utf32>(chance_flush, P) + U"\n"
-      U"Straight ......... " + n2s<utf32>(stat_straight, P)        + U"/" + n2s<utf32>(chance_straight, P) + U"\n"
-      U"Three of a kind .. " + n2s<utf32>(stat_three_of_a_kind, P) + U"/" + n2s<utf32>(chance_three_of_a_kind, P) + U"\n"
-      U"Two pair ......... " + n2s<utf32>(stat_two_pair, P)        + U"/" + n2s<utf32>(chance_two_pair, P) + U"\n"
-      U"One pair ......... " + n2s<utf32>(stat_one_pair, P)        + U"/" + n2s<utf32>(chance_one_pair, P) + U"\n"
-      U"High card ........ " + n2s<utf32>(stat_high_card, P)       + U"/" + n2s<utf32>(chance_high_card, P) + U"\n"
+      U"Royal flush ...... " + n2s<utf32>(_stats.royal_flush / rounds_real, P)     + U"/" + n2s<utf32>(chance_royal_flush, P) + U"\n"
+      U"Straight flush ... " + n2s<utf32>(_stats.straight_flush / rounds_real, P)  + U"/" + n2s<utf32>(chance_straight_flush, P) + U"\n"
+      U"Four of a kind ... " + n2s<utf32>(_stats.four_of_a_kind / rounds_real, P)  + U"/" + n2s<utf32>(chance_four_of_a_kind, P) + U"\n"
+      U"Full house ....... " + n2s<utf32>(_stats.full_house / rounds_real, P)      + U"/" + n2s<utf32>(chance_full_house, P) + U"\n"
+      U"Flush ............ " + n2s<utf32>(_stats.flush / rounds_real, P)           + U"/" + n2s<utf32>(chance_flush, P) + U"\n"
+      U"Straight ......... " + n2s<utf32>(_stats.straight / rounds_real, P)        + U"/" + n2s<utf32>(chance_straight, P) + U"\n"
+      U"Three of a kind .. " + n2s<utf32>(_stats.three_of_a_kind / rounds_real, P) + U"/" + n2s<utf32>(chance_three_of_a_kind, P) + U"\n"
+      U"Two pair ......... " + n2s<utf32>(_stats.two_pair / rounds_real, P)        + U"/" + n2s<utf32>(chance_two_pair, P) + U"\n"
+      U"One pair ......... " + n2s<utf32>(_stats.one_pair / rounds_real, P)        + U"/" + n2s<utf32>(chance_one_pair, P) + U"\n"
+      U"High card ........ " + n2s<utf32>(_stats.high_card / rounds_real, P)       + U"/" + n2s<utf32>(chance_high_card, P) + U"\n"
       U"\n"
       U"Раундов: " + n2s<utf32>(_rounds) + U"\n"
       U"Отклонение: " + n2s<utf32>(total_error, P) + U"\n"
       U"Генератор: " + g_gen_name + U"\n"
     ;
     graphic::system_mono->draw(dst, {10, 10}, stats_text);
+
+    _err_graph->draw(dst);
 
     graphic::font->draw(dst, {17, dst.Y - 24}, U"[ Вероятность выпадения карт в Покере ]");
   };
@@ -135,6 +126,7 @@ private:
   Stats _stats;
   size_t _rounds {};
   Rnd_gen_base* _prev_gen {}; // если поменяли генератор, сбрасываем статистику
+  Unique<Plotter> _err_graph {};
 
   void calculate_stats() {
     // Берем первые 5 карт из перемешанной колоды
@@ -223,6 +215,31 @@ private:
     else {
       _stats.high_card++;
     }
+  }
+
+  double calculate_error() const {
+    const double rounds_real = _rounds;
+    cauto stat_royal_flush = _stats.royal_flush / rounds_real;
+    cauto stat_straight_flush = _stats.straight_flush / rounds_real;
+    cauto stat_four_of_a_kind = _stats.four_of_a_kind / rounds_real;
+    cauto stat_full_house = _stats.full_house / rounds_real;
+    cauto stat_flush = _stats.flush / rounds_real;
+    cauto stat_straight = _stats.straight / rounds_real;
+    cauto stat_three_of_a_kind = _stats.three_of_a_kind / rounds_real;
+    cauto stat_two_pair = _stats.two_pair / rounds_real;
+    cauto stat_one_pair = _stats.one_pair / rounds_real;
+    cauto stat_high_card = _stats.high_card / rounds_real;
+    return
+      std::abs(chance_royal_flush - stat_royal_flush) +
+      std::abs(chance_straight_flush - stat_straight_flush) +
+      std::abs(chance_four_of_a_kind - stat_four_of_a_kind) +
+      std::abs(chance_full_house - stat_full_house) +
+      std::abs(chance_flush - stat_flush) +
+      std::abs(chance_straight - stat_straight) +
+      std::abs(chance_three_of_a_kind - stat_three_of_a_kind) +
+      std::abs(chance_two_pair - stat_two_pair) +
+      std::abs(chance_one_pair - stat_one_pair) +
+      std::abs(chance_high_card - stat_high_card);
   }
 }; // Poker
 
