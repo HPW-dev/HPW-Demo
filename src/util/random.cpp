@@ -324,11 +324,62 @@ public:
   }
 };
 
+class Rnd_gen_well19937 final : public Rnd_gen_base {
+  staticx size_t STATE_SIZE = 624;
+  staticx size_t BIT_MASK   = 623; // Для быстрого взятия остатка по модулю 624 через &. 
+    
+  // Специфичные для WELL19937a смещения
+  staticx size_t M1 = 70;
+  staticx size_t M2 = 139;
+  staticx size_t M3 = 234;
+
+  // Внутреннее состояние (стейт)
+  std::array<u32_t, STATE_SIZE> _state;
+  size_t _index {0};
+
+  // Вспомогательные макросы/функции трансформации матриц WELL
+  static inline u32_t MAT0POS(i8_t t, u32_t v) { return v ^ (v >> t); }
+  static inline u32_t MAT0NEG(i8_t t, u32_t v) { return v ^ (v << (-t)); }
+
+public:
+  explicit Rnd_gen_well19937(Seed seed) {
+    splitmix64_seed = seed.old_seed;
+    cfor (i, STATE_SIZE)
+      _state[i] = next_splitmix64();
+  }
+
+  result_type operator()() override {
+    const u32_t index_m1 = (_index + STATE_SIZE - 1) & BIT_MASK;
+    //const u32_t index_m2 = (_index + STATE_SIZE - 2) & BIT_MASK;
+    
+    const u32_t v0       = _state[_index];
+    const u32_t vM1      = _state[(_index + M1) & BIT_MASK];
+    const u32_t vM2      = _state[(_index + M2) & BIT_MASK];
+    const u32_t vM3      = _state[(_index + M3) & BIT_MASK];
+    
+    //const u32_t vMD      = _state[index_m1];
+    //const u32_t vMDP     = _state[index_m2];
+
+  // Математическое ядро WELL19937a
+    // Для 19937 часть бит маскируется (в данном случае 0)
+    //const u32_t z0 = (vMD & 0xFFFFFFFFU) ^ (vMDP & 0x00000000U);
+    const u32_t z1 = MAT0NEG(-25, v0) ^ MAT0POS(27, vM1);
+    const u32_t z2 = MAT0POS(9, vM2) ^ MAT0POS(1, vM3);
+    
+    _state[_index]   = z1 ^ z2;
+    _state[index_m1] = MAT0NEG(-9, v0) ^ MAT0NEG(-21, vM1) ^ MAT0POS(21, z1) ^ MAT0POS(12, z2);
+    
+    _index = index_m1;
+    return _state[_index];
+  }
+};
+
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
   {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
   {"Parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
   {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
+  {"WELL19937", []{ return new_unique<Rnd_gen_well19937>(main_seed); }},
   {"WELL512", []{ return new_unique<Rnd_gen_well512>(main_seed); }},
   {"FNV1-a", []{ return new_unique<Rnd_gen_fnv1a>(main_seed); }},
   {"table", []{ return new_unique<Rnd_gen_table>(main_seed); }},

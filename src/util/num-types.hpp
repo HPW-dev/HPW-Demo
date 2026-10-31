@@ -6,6 +6,7 @@ using real = float;
 using Delta_time = double;
 using uint = unsigned;
 using byte = std::uint8_t;
+using i8_t = std::int8_t;
 using u32_t = std::uint32_t;
 using i32_t = std::int32_t;
 using u16_t = std::uint16_t;
