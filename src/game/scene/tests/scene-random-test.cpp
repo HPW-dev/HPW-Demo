@@ -15,7 +15,7 @@
 class Rnd_test_base {
 public:
   virtual ~Rnd_test_base() = default;
-  virtual void update(Rnd_gen_base* rnd_gen, uint samples) = 0;
+  virtual void update(Stl_rnd& rnd_gen, uint samples) = 0;
   virtual void draw(Image& dst) const = 0;
 };
 
@@ -39,16 +39,15 @@ public:
   , _map4(SZ, SZ)
   {}
 
-  inline void update(Rnd_gen_base* rnd_gen, uint _) override {
-    assert(rnd_gen);
+  inline void update(Stl_rnd& rnd_gen, uint _) override {
     for (rauto c: _map1)
-      c = _dist(*rnd_gen) ? Pal8::white : Pal8::black;
+      c = _dist(rnd_gen) ? Pal8::white : Pal8::black;
     for (rauto c: _map2)
-      c = _dist2(*rnd_gen);
+      c = _dist2(rnd_gen);
     for (rauto c: _map3)
-      c = Pal8::from_real(_distf(*rnd_gen));
+      c = Pal8::from_real(_distf(rnd_gen));
     for (rauto c: _map4)
-      c = Pal8::from_real(_distf(*rnd_gen), true);
+      c = Pal8::from_real(_distf(rnd_gen), true);
   }
 
   inline void draw(Image& dst) const override {
@@ -75,15 +74,14 @@ class Distribution final: public Rnd_test_base {
 public:
   explicit Distribution(): _dist_map(WIDTH) {}
 
-  void update(Rnd_gen_base* rnd_gen, uint samples) override {
-    assert(rnd_gen);
+  void update(Stl_rnd& rnd_gen, uint samples) override {
     assert(!_dist_map.empty());
 
     std::fill(_dist_map.begin(), _dist_map.end(), 0);
     _maximum = 0;
 
     cfor (_, samples) {
-      cauto idx = _dist(*rnd_gen);
+      cauto idx = _dist(rnd_gen);
       auto& count = _dist_map.at(idx);
       ++count;
       _maximum = std::max(count, _maximum);
@@ -113,7 +111,7 @@ struct Scene_random_test::Impl {
   Rnd_test_base* _cur_test {};
   size_t _test_idx {0};
 
-  Unique<Rnd_gen_base> _rnd_gen {};
+  Stl_rnd _rnd_gen {};
   size_t _rnd_gen_idx {0};
 
   uint _samples;
@@ -157,8 +155,7 @@ struct Scene_random_test::Impl {
     }
 
     assert(_cur_test);
-    assert(_rnd_gen);
-    _cur_test->update(_rnd_gen.get(), _samples);
+    _cur_test->update(_rnd_gen, _samples);
   }
 
   inline void draw(Image& dst) const {
@@ -176,7 +173,7 @@ struct Scene_random_test::Impl {
       idx += gens.size();
     _rnd_gen_idx = idx % gens.size();
     cauto name = gens.at(_rnd_gen_idx);
-    _rnd_gen = make_rnd_gen(name);
+    _rnd_gen = std::move(make_rnd_gen(name));
 
     hpw::message_mgr->move(Message{
       .text=U"Генератор: " + utf8_to_32(name), .bf=&blend_diff });

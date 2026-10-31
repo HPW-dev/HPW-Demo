@@ -13,18 +13,25 @@ struct Seed {
 struct Rnd_gen_base {
   // должен быть равен самому большому типу выдаваемому генераторами
   using result_type = u32_t;
-  
-  static constexpr result_type min() { return 0; }
-  static constexpr result_type max() { return num_max<result_type>(); }
 
   virtual ~Rnd_gen_base() = default;
-  virtual result_type next() = 0;
+  staticx result_type min() { return 0; }
+  staticx result_type max() { return num_max<result_type>(); }
+  virtual result_type operator()() = 0;
+};
 
-  inline result_type operator()() { return this->next(); }
+// Обёртка для STL-friendly генераторов
+struct Stl_rnd {
+  using result_type = Rnd_gen_base::result_type;
+  Unique<Rnd_gen_base> gen {}; // задаётся в make_rnd_gen
+
+  staticx result_type min() { return Rnd_gen_base::min(); }
+  staticx result_type max() { return Rnd_gen_base::max(); }
+  inline result_type operator()() { return (*gen)(); }
 };
 
 // фабрика генераторов рандома
-[[nodiscard]] Unique<Rnd_gen_base> make_rnd_gen(cr<Str> name);
+[[nodiscard]] Stl_rnd make_rnd_gen(cr<Str> name);
 [[nodiscard]] Strs rnd_gens(); // список всех доступных генераторов рандома
 
 void set_rnd_seed(Seed seed);

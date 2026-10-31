@@ -164,62 +164,63 @@ real rndr_graphic(real rmin, real rmax) {
 class Rnd_gen_table final: public Rnd_gen_base {
   uint8_t _idx;
 public:
-  inline explicit Rnd_gen_table(Seed seed) { _idx = seed.old_seed % 256; }
-  inline result_type next() {
-    cauto part1 = rand_table_256[_idx++];
-    cauto part2 = rand_table_256[_idx++];
-    cauto part3 = rand_table_256[_idx++];
-    cauto part4 = rand_table_256[_idx++];
-    return part1 | (part2 << 8) | (part3 << 16) | (part4 << 24);
+  explicit Rnd_gen_table(Seed seed) { _idx = seed.old_seed % 256; }
+  result_type operator()() override {
+    cauto a = rand_table_256[_idx++];
+    cauto b = rand_table_256[_idx++];
+    cauto c = rand_table_256[_idx++];
+    cauto d = rand_table_256[_idx++];
+    return (a << 24) | (b << 16) | (c << 8) | d;
   }
 };
 
 class Rnd_gen_rpng final: public Rnd_gen_base {
   u32_t _state;
 public:
-  inline explicit Rnd_gen_rpng(Seed seed) {
+  explicit Rnd_gen_rpng(Seed seed) {
     _state = seed.old_seed;
     if (_state == 0)
       _state = 97997;
   }
-
-  inline result_type next() {
-    cauto part1 = RPNG(_state);
-    cauto part2 = RPNG(_state);
-    cauto part3 = RPNG(_state);
-    return part1 | (part2 << 15) | (part3 << 30);
+  result_type operator()() override { 
+    cauto a = RPNG(_state);
+    cauto b = RPNG(_state);
+    cauto c = RPNG(_state);
+    return (a << 17) | (b << 2) | (c & 3);
   }
 };
 
 class Rnd_gen_mt19937 final: public Rnd_gen_base {
   std::mt19937 _gen;
 public:
-  inline explicit Rnd_gen_mt19937(Seed seed) { _gen.seed(seed.old_seed); }
-  inline result_type next() { return _gen(); }
+  explicit Rnd_gen_mt19937(Seed seed) { _gen.seed(seed.old_seed); }
+  result_type operator()() override {
+    static_assert (_gen.max() == Rnd_gen_base::max(), "mt19937.max() != Rnd_gen_base::max()");
+    return _gen();
+  }
 };
 
 class Rnd_gen_parkmiller final: public Rnd_gen_base {
   u32_t _state;
 public:
-  inline explicit Rnd_gen_parkmiller(Seed seed) { _state = seed.old_seed; }
-  inline result_type next() {
-    cauto part1 = (lcg_parkmiller(_state) & 1u) << 31;
-    cauto part2 =  lcg_parkmiller(_state);
-    return part1 | part2;
+  explicit Rnd_gen_parkmiller(Seed seed) { _state = seed.old_seed; }
+  result_type operator()() override {
+    cauto a = lcg_parkmiller(_state);
+    cauto b = lcg_parkmiller(_state);
+    return (a << 1) | (b & 1);
   }
 };
 
 class Rnd_gen_xorshift128 final: public Rnd_gen_base {
   xorshift128_state _state {};
 public:
-  inline explicit Rnd_gen_xorshift128(Seed seed) {
+  explicit Rnd_gen_xorshift128(Seed seed) {
     _state.a ^= seed.old_seed;
     _state.b ^= seed.old_seed;
     _state.c ^= seed.old_seed;
     _state.d ^= seed.old_seed;
   }
-
-  inline result_type next() { return xorshift128(_state); }
+  result_type operator()() override { return xorshift128(_state); }
 };
 
 // рандом из эмулятора A26
@@ -238,13 +239,12 @@ public:
       ? 0x1FF
       : (seed.old_seed & 0x1FF); 
   }
-
-  inline result_type next() override {
-    cauto part1 = step_tia();
-    cauto part2 = step_tia();
-    cauto part3 = step_tia();
-    cauto part4 = step_tia();
-    return part1 | (part2 << 8) | (part3 << 16) | (part4 << 24);
+  result_type operator()() override {
+    cauto a = step_tia();
+    cauto b = step_tia();
+    cauto c = step_tia();
+    cauto d = step_tia();
+    return (a << 24) | (b << 16) | (c << 8) | d;
   }
 };
 
@@ -273,12 +273,8 @@ class Rnd_gen_fnv1a final : public Rnd_gen_base {
   }
 
 public:
-  inline explicit Rnd_gen_fnv1a(Seed seed) { _counter = seed.old_seed; }
-
-  inline result_type next() override {
-    u32_t current = _counter++;
-    return hash_u32(current);
-  }
+  explicit Rnd_gen_fnv1a(Seed seed) { _counter = seed.old_seed; }
+  result_type operator()() override { return hash_u32(_counter++); }
 };
 
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
@@ -299,9 +295,9 @@ Strs rnd_gens() {
   return ret;
 }
 
-Unique<Rnd_gen_base> make_rnd_gen(cr<Str> name) {
+Stl_rnd make_rnd_gen(cr<Str> name) {
   try {
-    return _table.at(name)();
+    return Stl_rnd{.gen = std::move(_table.at(name)())};
   } catch (...) {
     error("error while making random generator (" << name << ")");
   }
