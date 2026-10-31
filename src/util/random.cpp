@@ -16,52 +16,45 @@ static u64_t next_splitmix64() {
 }
 
 class Rnd_gen_well19937 final : public Rnd_gen_base {
-  staticx size_t STATE_SIZE = 624;
-  staticx size_t BIT_MASK   = 623; // Для быстрого взятия остатка по модулю 624 через &. 
-    
-  // Специфичные для WELL19937a смещения
+  // Константы алгоритма WELL19937
+  staticx size_t W = 32;
+  staticx size_t R = 624;
   staticx size_t M1 = 70;
-  staticx size_t M2 = 139;
-  staticx size_t M3 = 234;
+  staticx size_t M2 = 179;
+  staticx size_t M3 = 449;
 
-  // Внутреннее состояние (стейт)
-  std::array<u32_t, STATE_SIZE> _state;
-  size_t _index {0};
-
-  // Вспомогательные макросы/функции трансформации матриц WELL
-  static inline u32_t MAT0POS(i8_t t, u32_t v) { return v ^ (v >> t); }
-  static inline u32_t MAT0NEG(i8_t t, u32_t v) { return v ^ (v << (-t)); }
+  std::array<uint32_t, R> state_;
+  size_t index_ = 0;
 
 public:
   explicit Rnd_gen_well19937(cr<Seed> seed = {}) {
     splitmix64_seed = seed.old_seed;
-    cfor (i, STATE_SIZE)
-      _state[i] = next_splitmix64();
+    for (size_t i = 0; i < R; i += 2) {
+        cauto x = next_splitmix64();
+        state_[i]     = scast<u32_t>(x);      
+        state_[i + 1] = scast<u32_t>(x >> 32);
+    }
   }
 
   result_type operator()() override {
-    const u32_t index_m1 = (_index + STATE_SIZE - 1) & BIT_MASK;
-    //const u32_t index_m2 = (_index + STATE_SIZE - 2) & BIT_MASK;
-    
-    const u32_t v0       = _state[_index];
-    const u32_t vM1      = _state[(_index + M1) & BIT_MASK];
-    const u32_t vM2      = _state[(_index + M2) & BIT_MASK];
-    const u32_t vM3      = _state[(_index + M3) & BIT_MASK];
-    
-    //const u32_t vMD      = _state[index_m1];
-    //const u32_t vMDP     = _state[index_m2];
+    // Оптимальный расчет индексов со сдвигами по модулю R (624)
+      size_t index_m1 = (index_ + M1 >= R) ? (index_ + M1 - R) : (index_ + M1);
+      size_t index_m2 = (index_ + M2 >= R) ? (index_ + M2 - R) : (index_ + M2);
+      size_t index_m3 = (index_ + M3 >= R) ? (index_ + M3 - R) : (index_ + M3);
 
-  // Математическое ядро WELL19937a
-    // Для 19937 часть бит маскируется (в данном случае 0)
-    //const u32_t z0 = (vMD & 0xFFFFFFFFU) ^ (vMDP & 0x00000000U);
-    const u32_t z1 = MAT0NEG(-25, v0) ^ MAT0POS(27, vM1);
-    const u32_t z2 = MAT0POS(9, vM2) ^ MAT0POS(1, vM3);
-    
-    _state[_index]   = z1 ^ z2;
-    _state[index_m1] = MAT0NEG(-9, v0) ^ MAT0NEG(-21, vM1) ^ MAT0POS(21, z1) ^ MAT0POS(12, z2);
-    
-    _index = index_m1;
-    return _state[_index];
+      size_t index_prev = (index_ == 0) ? (R - 1) : (index_ - 1);
+
+      const u32_t z0 = state_[index_prev];
+      const u32_t z1 = state_[index_] ^ (state_[index_m1] ^ (state_[index_m1] >> 8));
+      const u32_t z2 = (state_[index_m2] ^ (state_[index_m2] << 19)) ^ (state_[index_m3] ^ (state_[index_m3] << 14));
+      
+      const u32_t z3 = z1 ^ z2;
+      const u32_t z4 = (z0 ^ (z0 << 11)) ^ (z1 ^ (z1 << 7)) ^ (z2 ^ (z2 << 13));
+      state_[index_] = z3;
+      state_[index_prev] = z4;
+      // Смещение индекса по кольцевому буферу
+      index_ = index_prev;
+      return state_[index_];
   }
 };
 
