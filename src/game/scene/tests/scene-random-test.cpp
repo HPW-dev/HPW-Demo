@@ -12,12 +12,218 @@
 #include "engine/graphic/util/resize.hpp"
 
 
+static utf32 g_gen_name {};
+
 class Rnd_test_base {
 public:
   virtual ~Rnd_test_base() = default;
   virtual void update(Stl_rnd& rnd_gen, uint samples) = 0;
   virtual void draw(Image& dst) const = 0;
 };
+
+// вероятности как в покере
+class Poker: public Rnd_test_base {
+public:
+  struct Card {
+    int rang;
+    int suit; // масть
+  };
+  
+  struct Stats {
+    size_t royal_flush {};
+    size_t straight_flush {};
+    size_t four_of_a_kind {}; // каре
+    size_t full_house {};
+    size_t flush {};
+    size_t straight {};
+    size_t three_of_a_kind {};
+    size_t two_pair {};
+    size_t one_pair {};
+    size_t high_card {};
+  };
+
+  // вероятности выпадения разных комбинаций
+  staticx double chance_royal_flush      = 0.00000153907716933;
+  staticx double chance_straight_flush   = 0.00001385169452396;
+  staticx double chance_four_of_a_kind   = 0.00024009603841537;
+  staticx double chance_full_house       = 0.00144057623049220;
+  staticx double chance_flush            = 0.00196540154523348;
+  staticx double chance_straight         = 0.00392464678178964;
+  staticx double chance_three_of_a_kind  = 0.02112845138055222;
+  staticx double chance_two_pair         = 0.04753901560624250;
+  staticx double chance_one_pair         = 0.42256902761104442;
+  staticx double chance_high_card        = 0.50117739403453687;
+
+public:
+  Poker() {
+    cfor (s, 4)
+    cfor (r, 13) {
+      Card card;
+      card.rang = r;
+      card.suit = s;
+      _cards.emplace_back(card);
+    }
+  };
+
+  void update(Stl_rnd& rnd_gen, uint samples) override {
+    // чекаем на свич генератора
+    auto gen_ptr = rnd_gen.gen.get();
+    if (_prev_gen != gen_ptr) {
+      _prev_gen = gen_ptr;
+      _rounds = 0;
+      _stats = {};
+    }
+
+    cfor (_, samples) {
+      std::shuffle(_cards.begin(), _cards.end(), rnd_gen);
+      ++_rounds;
+      calculate_stats();
+    }
+  }
+
+  void draw(Image& dst) const override {
+    ret_if (_rounds == 0);
+    ret_if (!_prev_gen);
+
+    utf32 stats_text;
+    const double rounds_real = _rounds;
+    const uint P = 7;
+    cauto stat_royal_flush = _stats.royal_flush / rounds_real;
+    cauto stat_straight_flush = _stats.straight_flush / rounds_real;
+    cauto stat_four_of_a_kind = _stats.four_of_a_kind / rounds_real;
+    cauto stat_full_house = _stats.full_house / rounds_real;
+    cauto stat_flush = _stats.flush / rounds_real;
+    cauto stat_straight = _stats.straight / rounds_real;
+    cauto stat_three_of_a_kind = _stats.three_of_a_kind / rounds_real;
+    cauto stat_two_pair = _stats.two_pair / rounds_real;
+    cauto stat_one_pair = _stats.one_pair / rounds_real;
+    cauto stat_high_card = _stats.high_card / rounds_real;
+    cauto total_error =
+      std::abs(chance_royal_flush - stat_royal_flush) +
+      std::abs(chance_straight_flush - stat_straight_flush) +
+      std::abs(chance_four_of_a_kind - stat_four_of_a_kind) +
+      std::abs(chance_full_house - stat_full_house) +
+      std::abs(chance_flush - stat_flush) +
+      std::abs(chance_straight - stat_straight) +
+      std::abs(chance_three_of_a_kind - stat_three_of_a_kind) +
+      std::abs(chance_two_pair - stat_two_pair) +
+      std::abs(chance_one_pair - stat_one_pair) +
+      std::abs(chance_high_card - stat_high_card);
+    stats_text = U"Статистика по комбинациям:\n"
+      U"Royal flush ...... " + n2s<utf32>(stat_royal_flush, P)     + U"/" + n2s<utf32>(chance_royal_flush, P) + U"\n"
+      U"Straight flush ... " + n2s<utf32>(stat_straight_flush, P)  + U"/" + n2s<utf32>(chance_straight_flush, P) + U"\n"
+      U"Four of a kind ... " + n2s<utf32>(stat_four_of_a_kind, P)  + U"/" + n2s<utf32>(chance_four_of_a_kind, P) + U"\n"
+      U"Full house ....... " + n2s<utf32>(stat_full_house, P)      + U"/" + n2s<utf32>(chance_full_house, P) + U"\n"
+      U"Flush ............ " + n2s<utf32>(stat_flush, P)           + U"/" + n2s<utf32>(chance_flush, P) + U"\n"
+      U"Straight ......... " + n2s<utf32>(stat_straight, P)        + U"/" + n2s<utf32>(chance_straight, P) + U"\n"
+      U"Three of a kind .. " + n2s<utf32>(stat_three_of_a_kind, P) + U"/" + n2s<utf32>(chance_three_of_a_kind, P) + U"\n"
+      U"Two pair ......... " + n2s<utf32>(stat_two_pair, P)        + U"/" + n2s<utf32>(chance_two_pair, P) + U"\n"
+      U"One pair ......... " + n2s<utf32>(stat_one_pair, P)        + U"/" + n2s<utf32>(chance_one_pair, P) + U"\n"
+      U"High card ........ " + n2s<utf32>(stat_high_card, P)       + U"/" + n2s<utf32>(chance_high_card, P) + U"\n"
+      U"\n"
+      U"Отклонение от эталона: " + n2s<utf32>(total_error, P) + U"\n"
+      U"Генератор: " + g_gen_name + U"\n"
+    ;
+    graphic::system_mono->draw(dst, {4, 15}, stats_text);
+
+    graphic::font->draw(dst, {17, dst.Y - 24}, U"[ Вероятность выпадения карт в Покере ]");
+  };
+
+private:
+  Vector<Card> _cards;
+  Stats _stats;
+  size_t _rounds {};
+  Rnd_gen_base* _prev_gen {}; // если поменяли генератор, сбрасываем статистику
+
+  void calculate_stats() {
+    // Берем первые 5 карт из перемешанной колоды
+    std::array<Card, 5> hand;
+    for (size_t i = 0; i < 5; ++i) {
+      hand[i] = _cards[i];
+    }
+
+    // Сортируем карты по возрастанию ранга (от 0 до 12)
+    std::sort(hand.begin(), hand.end(), [](const Card& a, const Card& b) {
+      return a.rang < b.rang;
+    });
+
+    // 1. Проверка на Флеш (все карты одной масти)
+    const bool is_flush = (hand[0].suit == hand[1].suit &&
+                           hand[0].suit == hand[2].suit &&
+                           hand[0].suit == hand[3].suit &&
+                           hand[0].suit == hand[4].suit);
+
+    // 2. Проверка на Стрит (последовательные ранги)
+    // Обычный стрит: каждый следующий ранг строго на 1 больше предыдущего
+    const bool is_regular_straight = (hand[1].rang == hand[0].rang + 1 &&
+                                      hand[2].rang == hand[0].rang + 2 &&
+                                      hand[3].rang == hand[0].rang + 3 &&
+                                      hand[4].rang == hand[0].rang + 4);
+
+    // Стрит от Туза (Колесо / Колесообразный стрит): ранги 0, 1, 2, 3 и 12 (Туз)
+    const bool is_ace_low_straight = (hand[0].rang == 0 && 
+                                      hand[1].rang == 1 && 
+                                      hand[2].rang == 2 && 
+                                      hand[3].rang == 3 && 
+                                      hand[4].rang == 12);
+
+    const bool is_straight = is_regular_straight || is_ace_low_straight;
+
+    // 3. Подсчет одинаковых рангов (для пар, троек, каре и фулл-хаусов)
+    // Так как рука отсортирована, одинаковые ранги идут строго друг за другом
+    int pairs_count = 0;
+    int trips_count = 0;
+    int quads_count = 0;
+
+    // Считаем вхождения каждого номинала прямо по сортированной руке
+    for (size_t i = 0; i < 5; ) {
+      size_t j = i + 1;
+      while (j < 5 && hand[j].rang == hand[i].rang) {
+        ++j;
+      }
+      size_t count = j - i;
+      if (count == 4) quads_count++;
+      elif (count == 3) trips_count++;
+      elif (count == 2) pairs_count++;
+      i = j;
+    }
+
+    // 4. Определение комбинации по иерархии (от старшей к младшей)
+    if (is_flush && is_straight) {
+      // Роял-флеш — это обычный стрит-флеш, который заканчивается Тузом (ранг 12).
+      // Важно: стрит-флеш А-2-3-4-5 заканчивается на Туза, но Роял-флешем не является.
+      if (hand[4].rang == 12 && !is_ace_low_straight) {
+        _stats.royal_flush++;
+      } else {
+        _stats.straight_flush++;
+      }
+    } 
+    elif (quads_count == 1) {
+      _stats.four_of_a_kind++;
+    } 
+    elif (trips_count == 1 && pairs_count == 1) {
+      _stats.full_house++;
+    } 
+    elif (is_flush) {
+      _stats.flush++;
+    } 
+    elif (is_straight) {
+      _stats.straight++;
+    } 
+    elif (trips_count == 1) {
+      _stats.three_of_a_kind++;
+    } 
+    elif (pairs_count == 2) {
+      _stats.two_pair++;
+    } 
+    elif (pairs_count == 1) {
+      _stats.one_pair++;
+    } 
+    else {
+      _stats.high_card++;
+    }
+  }
+}; // Poker
 
 // просто квадраты с шумом
 class Noise_squares final: public Rnd_test_base {
@@ -118,6 +324,7 @@ struct Scene_random_test::Impl {
   size_t _samples_idx {2};
 
   inline Impl() {
+    _tests.emplace_back(new_unique<Poker>());
     _tests.emplace_back(new_unique<Distribution>());
     _tests.emplace_back(new_unique<Noise_squares>());
     set_samples(0);
@@ -173,10 +380,11 @@ struct Scene_random_test::Impl {
       idx += gens.size();
     _rnd_gen_idx = idx % gens.size();
     cauto name = gens.at(_rnd_gen_idx);
+    g_gen_name = utf8_to_32(name);
     _rnd_gen = std::move(make_rnd_gen(name));
 
     hpw::message_mgr->move(Message{
-      .text=U"Генератор: " + utf8_to_32(name), .bf=&blend_diff });
+      .text=U"Генератор: " + g_gen_name, .bf=&blend_diff });
   }
 
   inline void set_test(int idx_offset) {
