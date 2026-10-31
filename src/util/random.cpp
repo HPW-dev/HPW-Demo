@@ -3,19 +3,6 @@
 #include "rand-table-256.hpp"
 #include "xorshift.hpp"
 
-namespace {
-  inline Seed main_seed {};
-  inline u32_t seed {1};
-  inline u32_t rndr_fast_rpng {1};
-  inline u32_t rnd_fast_lcg_state {1};
-  inline u32_t rndu_fast_lcg_state {1};
-  inline u32_t rndb_lcg_state {1};
-  inline auto rnd_gen {std::minstd_rand()};
-  inline auto rndu_gen {std::minstd_rand()};
-  inline auto rndr_gen {std::minstd_rand()};
-  inline auto rndr_graphic_gen {std::minstd_rand()};
-  inline byte table_idx {0};
-}
 
 // нужен для next_splitmix64
 static u64_t splitmix64_seed {97997};
@@ -26,6 +13,74 @@ static u64_t next_splitmix64() {
     z = (z ^ (z >> 30)) * 0xbf58476d1ce4e5b9ULL;
     z = (z ^ (z >> 27)) * 0x94d049bb133111ebULL;
     return z ^ (z >> 31);
+}
+
+class Rnd_gen_well19937 final : public Rnd_gen_base {
+  staticx size_t STATE_SIZE = 624;
+  staticx size_t BIT_MASK   = 623; // Для быстрого взятия остатка по модулю 624 через &. 
+    
+  // Специфичные для WELL19937a смещения
+  staticx size_t M1 = 70;
+  staticx size_t M2 = 139;
+  staticx size_t M3 = 234;
+
+  // Внутреннее состояние (стейт)
+  std::array<u32_t, STATE_SIZE> _state;
+  size_t _index {0};
+
+  // Вспомогательные макросы/функции трансформации матриц WELL
+  static inline u32_t MAT0POS(i8_t t, u32_t v) { return v ^ (v >> t); }
+  static inline u32_t MAT0NEG(i8_t t, u32_t v) { return v ^ (v << (-t)); }
+
+public:
+  explicit Rnd_gen_well19937(cr<Seed> seed = {}) {
+    splitmix64_seed = seed.old_seed;
+    cfor (i, STATE_SIZE)
+      _state[i] = next_splitmix64();
+  }
+
+  result_type operator()() override {
+    const u32_t index_m1 = (_index + STATE_SIZE - 1) & BIT_MASK;
+    //const u32_t index_m2 = (_index + STATE_SIZE - 2) & BIT_MASK;
+    
+    const u32_t v0       = _state[_index];
+    const u32_t vM1      = _state[(_index + M1) & BIT_MASK];
+    const u32_t vM2      = _state[(_index + M2) & BIT_MASK];
+    const u32_t vM3      = _state[(_index + M3) & BIT_MASK];
+    
+    //const u32_t vMD      = _state[index_m1];
+    //const u32_t vMDP     = _state[index_m2];
+
+  // Математическое ядро WELL19937a
+    // Для 19937 часть бит маскируется (в данном случае 0)
+    //const u32_t z0 = (vMD & 0xFFFFFFFFU) ^ (vMDP & 0x00000000U);
+    const u32_t z1 = MAT0NEG(-25, v0) ^ MAT0POS(27, vM1);
+    const u32_t z2 = MAT0POS(9, vM2) ^ MAT0POS(1, vM3);
+    
+    _state[_index]   = z1 ^ z2;
+    _state[index_m1] = MAT0NEG(-9, v0) ^ MAT0NEG(-21, vM1) ^ MAT0POS(21, z1) ^ MAT0POS(12, z2);
+    
+    _index = index_m1;
+    return _state[_index];
+  }
+};
+
+namespace {
+  inline Seed main_seed {};
+  inline u32_t seed {1};
+  inline u32_t rndr_fast_rpng {1};
+  inline u32_t rnd_fast_lcg_state {1};
+  inline u32_t rndu_fast_lcg_state {1};
+  inline u32_t rndb_lcg_state {1};
+  inline byte table_idx {0};
+  inline std::minstd_rand rndr_graphic_gen {97997};
+
+#ifdef DEBUG
+  using Main_generator = std::minstd_rand;
+#else
+  using Main_generator = Rnd_gen_well19937;
+#endif
+  inline Main_generator main_generator {};
 }
 
 inline cr<byte> table_rndb() {
@@ -82,10 +137,8 @@ void set_rnd_seed(Seed s) {
     rnd_fast_lcg_state = seed;
     rndu_fast_lcg_state = seed;
     rndb_lcg_state = seed;
-    rnd_gen.seed(seed);
-    rndr_gen.seed(seed);
+    main_generator = decltype(main_generator)(main_seed);
     rndr_graphic_gen.seed(seed);
-    rndu_gen.seed(seed);
     table_idx = seed % 256;
     splitmix64_seed = seed ^ (seed * 123);
   } // omp critical
@@ -97,40 +150,45 @@ byte rndb() {
   byte ret;
   #pragma omp critical(rndb_section)
   {
+  #ifdef DEBUG
     ret = lcg_parkmiller(rndb_lcg_state);
+  #else
+    std::uniform_int_distribution<uint> dist(0, 255);
+    ret = dist(main_generator);
+  #endif
   }
   return ret;
 }
 
 i32_t rnd(i32_t rmin, i32_t rmax) {
   ret_if (rmin >= rmax, rmin);
-  std::uniform_int_distribution<i32_t> dist(rmin, rmax);
   i32_t ret;
   #pragma omp critical(rnd_section)
   {
-    ret = dist(rnd_gen);
+    std::uniform_int_distribution<i32_t> dist(rmin, rmax);
+    ret = dist(main_generator);
   }
   return ret;
 }
 
 u32_t rndu(u32_t rmax) {
   return_if (rmax == 0, 0);
-  std::uniform_int_distribution<u32_t> dist(0, rmax);
   u32_t ret;
   #pragma omp critical(rndu_section)
   { 
-    ret = dist(rndu_gen);
+    std::uniform_int_distribution<u32_t> dist(0, rmax);
+    ret = dist(main_generator);
   }
   return ret;
 }
 
 real rndr(real rmin, real rmax) {
   return_if (rmin >= rmax, rmin);
-  std::uniform_real_distribution<real> dist(rmin, rmax);
   real ret;
   #pragma omp critical(rndr_section)
   {
-    ret = dist(rndr_gen);
+    std::uniform_real_distribution<real> dist(rmin, rmax);
+    ret = dist(main_generator);
   }
   return ret;
 }
@@ -176,7 +234,7 @@ real rndr_graphic(real rmin, real rmax) {
 class Rnd_gen_table final: public Rnd_gen_base {
   uint8_t _idx;
 public:
-  explicit Rnd_gen_table(Seed seed) { _idx = seed.old_seed % 256; }
+  explicit Rnd_gen_table(cr<Seed> seed) { _idx = seed.old_seed % 256; }
   result_type operator()() override {
     cauto a = rand_table_256[_idx++];
     cauto b = rand_table_256[_idx++];
@@ -189,7 +247,7 @@ public:
 class Rnd_gen_rpng final: public Rnd_gen_base {
   u32_t _state;
 public:
-  explicit Rnd_gen_rpng(Seed seed) {
+  explicit Rnd_gen_rpng(cr<Seed> seed) {
     _state = seed.old_seed;
     if (_state == 0)
       _state = 97997;
@@ -205,7 +263,7 @@ public:
 class Rnd_gen_mt19937 final: public Rnd_gen_base {
   std::mt19937 _gen;
 public:
-  explicit Rnd_gen_mt19937(Seed seed) { _gen.seed(seed.old_seed); }
+  explicit Rnd_gen_mt19937(cr<Seed> seed) { _gen.seed(seed.old_seed); }
   result_type operator()() override {
     static_assert (_gen.max() == Rnd_gen_base::max(), "mt19937.max() != Rnd_gen_base::max()");
     return _gen();
@@ -215,7 +273,7 @@ public:
 class Rnd_gen_parkmiller final: public Rnd_gen_base {
   u32_t _state;
 public:
-  explicit Rnd_gen_parkmiller(Seed seed) { _state = seed.old_seed; }
+  explicit Rnd_gen_parkmiller(cr<Seed> seed) { _state = seed.old_seed; }
   result_type operator()() override {
     cauto a = lcg_parkmiller(_state);
     cauto b = lcg_parkmiller(_state);
@@ -226,7 +284,7 @@ public:
 class Rnd_gen_xorshift128 final: public Rnd_gen_base {
   xorshift128_state _state {};
 public:
-  explicit Rnd_gen_xorshift128(Seed seed) {
+  explicit Rnd_gen_xorshift128(cr<Seed> seed) {
     splitmix64_seed = seed.old_seed;
     _state.a ^= next_splitmix64();
     _state.b ^= next_splitmix64();
@@ -245,7 +303,7 @@ class Rnd_gen_xoshiro256plus final: public Rnd_gen_base {
   }
 
 public:
-  explicit Rnd_gen_xoshiro256plus(Seed seed) {
+  explicit Rnd_gen_xoshiro256plus(cr<Seed> seed) {
     splitmix64_seed = seed.old_seed;
     cfor(i, STATE_SZ)
       s_xoshiro256[i] = next_splitmix64();
@@ -282,7 +340,7 @@ class Rnd_gen_a26 final : public Rnd_gen_base {
   }
 
 public:
-  inline explicit Rnd_gen_a26(Seed seed) { 
+  inline explicit Rnd_gen_a26(cr<Seed> seed) { 
     _state = (seed.old_seed == 0)
       ? 0x1FF
       : (seed.old_seed & 0x1FF); 
@@ -322,7 +380,7 @@ class Rnd_gen_fnv1a final : public Rnd_gen_base {
   }
 
 public:
-  explicit Rnd_gen_fnv1a(Seed seed) { _counter = seed.old_seed; }
+  explicit Rnd_gen_fnv1a(cr<Seed> seed) { _counter = seed.old_seed; }
   result_type operator()() override { return hash_u32(_counter++); }
 };
 
@@ -331,7 +389,7 @@ class Rnd_gen_well512 final : public Rnd_gen_base {
   u32_t state[WELL512_STATE_SIZE];
   u32_t index {};
 public:
-  explicit Rnd_gen_well512(Seed seed) {
+  explicit Rnd_gen_well512(cr<Seed> seed) {
     splitmix64_seed = seed.old_seed;
     cfor (i, WELL512_STATE_SIZE)
       state[i] = next_splitmix64();
@@ -356,56 +414,6 @@ public:
     this->index = idx;
     
     return this->state[idx];
-  }
-};
-
-class Rnd_gen_well19937 final : public Rnd_gen_base {
-  staticx size_t STATE_SIZE = 624;
-  staticx size_t BIT_MASK   = 623; // Для быстрого взятия остатка по модулю 624 через &. 
-    
-  // Специфичные для WELL19937a смещения
-  staticx size_t M1 = 70;
-  staticx size_t M2 = 139;
-  staticx size_t M3 = 234;
-
-  // Внутреннее состояние (стейт)
-  std::array<u32_t, STATE_SIZE> _state;
-  size_t _index {0};
-
-  // Вспомогательные макросы/функции трансформации матриц WELL
-  static inline u32_t MAT0POS(i8_t t, u32_t v) { return v ^ (v >> t); }
-  static inline u32_t MAT0NEG(i8_t t, u32_t v) { return v ^ (v << (-t)); }
-
-public:
-  explicit Rnd_gen_well19937(Seed seed) {
-    splitmix64_seed = seed.old_seed;
-    cfor (i, STATE_SIZE)
-      _state[i] = next_splitmix64();
-  }
-
-  result_type operator()() override {
-    const u32_t index_m1 = (_index + STATE_SIZE - 1) & BIT_MASK;
-    //const u32_t index_m2 = (_index + STATE_SIZE - 2) & BIT_MASK;
-    
-    const u32_t v0       = _state[_index];
-    const u32_t vM1      = _state[(_index + M1) & BIT_MASK];
-    const u32_t vM2      = _state[(_index + M2) & BIT_MASK];
-    const u32_t vM3      = _state[(_index + M3) & BIT_MASK];
-    
-    //const u32_t vMD      = _state[index_m1];
-    //const u32_t vMDP     = _state[index_m2];
-
-  // Математическое ядро WELL19937a
-    // Для 19937 часть бит маскируется (в данном случае 0)
-    //const u32_t z0 = (vMD & 0xFFFFFFFFU) ^ (vMDP & 0x00000000U);
-    const u32_t z1 = MAT0NEG(-25, v0) ^ MAT0POS(27, vM1);
-    const u32_t z2 = MAT0POS(9, vM2) ^ MAT0POS(1, vM3);
-    
-    _state[_index]   = z1 ^ z2;
-    _state[index_m1] = MAT0NEG(-9, v0) ^ MAT0NEG(-21, vM1) ^ MAT0POS(21, z1) ^ MAT0POS(12, z2);
-    
-    _index = index_m1;
-    return _state[_index];
   }
 };
 
