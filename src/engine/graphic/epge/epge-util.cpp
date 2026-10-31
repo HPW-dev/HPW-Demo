@@ -14,7 +14,6 @@ namespace epge {
 
 void save_epges(nlohmann::json& config) {
   cauto total_epges = graphic::epges.size();
-  return_if(total_epges <= 0);
   config["epge_count"] = total_epges;
 
   // сохранить все EPGE
