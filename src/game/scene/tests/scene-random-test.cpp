@@ -125,7 +125,7 @@ public:
       U"Отклонение: " + n2s<utf32>(total_error, P) + U"\n"
       U"Генератор: " + g_gen_name + U"\n"
     ;
-    graphic::system_mono->draw(dst, {4, 15}, stats_text);
+    graphic::system_mono->draw(dst, {10, 10}, stats_text);
 
     graphic::font->draw(dst, {17, dst.Y - 24}, U"[ Вероятность выпадения карт в Покере ]");
   };
