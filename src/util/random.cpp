@@ -236,6 +236,41 @@ public:
   result_type operator()() override { return xorshift128(_state); }
 };
 
+class Rnd_gen_xoshiro256plus final: public Rnd_gen_base {
+  staticx size_t STATE_SZ = 4;
+  u64_t s_xoshiro256[STATE_SZ];
+
+  static inline u64_t rotl(const u64_t x, int k) {
+    return (x << k) | (x >> (64 - k));
+  }
+
+public:
+  explicit Rnd_gen_xoshiro256plus(Seed seed) {
+    splitmix64_seed = seed.old_seed;
+    cfor(i, STATE_SZ)
+      s_xoshiro256[i] = next_splitmix64();
+  }
+
+  result_type operator()() override {
+    // Выходное преобразование "+" для 64-битной версии
+    const u64_t result_u64 = s_xoshiro256[0] + s_xoshiro256[3];
+
+    // Продвижение состояния xoshiro256
+    const u64_t t = s_xoshiro256[1] << 17;
+
+    s_xoshiro256[2] ^= s_xoshiro256[0];
+    s_xoshiro256[3] ^= s_xoshiro256[1];
+    s_xoshiro256[1] ^= s_xoshiro256[2];
+    s_xoshiro256[0] ^= s_xoshiro256[3];
+
+    s_xoshiro256[2] ^= t;
+    s_xoshiro256[3] = rotl(s_xoshiro256[3], 45);
+
+    // Возвращаем u32_t (сдвигаем, так как младшие биты у версии "+" имеют линейные зависимости)
+    return scast<u32_t>(result_u64 >> 32);
+  }
+};
+
 // рандом из эмулятора A26
 class Rnd_gen_a26 final : public Rnd_gen_base {
   uint16_t _state;
@@ -377,6 +412,7 @@ public:
 using Rnd_gen_maker = std::function<Unique<Rnd_gen_base> ()>;
 sconst std::unordered_map<Str, Rnd_gen_maker> _table {
   {"xorshift128", []{ return new_unique<Rnd_gen_xorshift128>(main_seed); }},
+  {"xoshiro256+", []{ return new_unique<Rnd_gen_xoshiro256plus>(main_seed); }},
   {"Parkmiller", []{ return new_unique<Rnd_gen_parkmiller>(main_seed); }},
   {"mt19937", []{ return new_unique<Rnd_gen_mt19937>(main_seed); }},
   {"WELL19937", []{ return new_unique<Rnd_gen_well19937>(main_seed); }},
