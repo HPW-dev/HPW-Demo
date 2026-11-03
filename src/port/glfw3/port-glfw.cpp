@@ -216,19 +216,23 @@ void Port_glfw::init_window() {
   glfwSetWindowPos(m_window, _wnd_off.x, _wnd_off.y);
   glfwMakeContextCurrent(m_window);
 
-  // заливка окна при ините, чтобы показать что приложение живое
-  glClearColor(0, 0, 0, 0);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glFinish();
-  glfwSwapBuffers(m_window);
+  log_debug << "GLAD2 init...";
+  int version = gladLoadGL(glfwGetProcAddress);
+  iferror(version == 0, "GLAD2 init error");
+  log_debug << "GLAD2 version: " << version;
 
   // подгрузка расширений OGL
   cauto ogl_ver_cstr = glGetString(GL_VERSION);
   iferror( !ogl_ver_cstr, "не удалось получить версию OpenGL\n");
   const Str ogl_ver( cptr2ptr<Cstr>(ogl_ver_cstr) );
   log_debug << "OpenGL version: " << ogl_ver;
-  log_debug << "GLEW init";
-  iferror(glewInit() != GLEW_OK, "GLEW init error");
+
+  // заливка окна при ините, чтобы показать что приложение живое
+  glClearColor(0, 0, 0, 0);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glFinish();
+  glfwSwapBuffers(m_window);
+
   ogl_post_init();
   glfwSetWindowSizeCallback(m_window, reshape_callback);
   assert(hpw::set_resize_mode);
@@ -241,7 +245,7 @@ void Port_glfw::init_window() {
   assert(monitor);
   auto monitor_mode = glfwGetVideoMode(monitor);
   assert(monitor_mode);
-  
+
   // подстрока по частоте монитора
   auto monitor_framerate = monitor_mode->refreshRate;
   if (monitor_framerate > 0)

@@ -35,30 +35,25 @@ void Port_ogl::ogl_resize(int w, int h) {
   m_window_ctx.resize_by_mode(w, h, m_w, m_h);
 
   // настройка 2D координат и проекций OpenGL:
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrtho(0, m_window_ctx.w, m_window_ctx.h, 0, 0, 1);
   glViewport(m_window_ctx.sx, m_window_ctx.sy, m_window_ctx.w, m_window_ctx.h);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
 } // ogl_resize
 
 void Port_ogl::ogl_init() {
   // отключаю ненужное для оптимизации
   glDisable(GL_DEPTH_TEST);
   glDepthMask(GL_FALSE);
-  glDisable(GL_LIGHT0);
-  glDisable(GL_LIGHTING);
-  glDisable(GL_COLOR_MATERIAL);
+  //glDisable(GL_LIGHT0);
+  //glDisable(GL_LIGHTING);
+  //glDisable(GL_COLOR_MATERIAL);
   glDisable(GL_BLEND);
   glDisable(GL_MULTISAMPLE); // отключение сглаживания
-  glShadeModel(GL_FLAT); // не гладкая заливка
+  //glShadeModel(GL_FLAT); // не гладкая заливка
   glDisable(GL_CULL_FACE); // без отсечения обратных граней полигона
-  glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
+  //glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
   glDisable(GL_DITHER); // Дизер цвета не юзать
-  glDisable(GL_FOG); // Туман не нужен
+  //glDisable(GL_FOG); // Туман не нужен
   glDisable(GL_STENCIL_TEST); // трафарет чекать - лишнее
-  glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
 
   glClearColor(0,0,0,0);
   pal_tex_init();

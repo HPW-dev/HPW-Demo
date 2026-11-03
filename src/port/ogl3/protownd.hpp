@@ -1,9 +1,9 @@
 #pragma once
-#include <GL/glew.h>
-#include "util/macro.hpp"
 #include "util/vector-types.hpp"
-#include "port/port.hpp"
+#include "util/macro.hpp"
 #include "port/port-resize.hpp"
+#include "port/port-util.hpp"
+#include "port/port.hpp"
 
 // окно без рендерера
 class Protownd: public Host {

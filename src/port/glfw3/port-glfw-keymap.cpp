@@ -1,12 +1,8 @@
-#ifdef WINDOWS
-  #define GLFW_DLL
-#endif
-#include <GLFW/glfw3.h>
-
+#include "pch.hpp"
+#include "port-glfw-common.hpp"
 #include "port-glfw-keymap.hpp"
 #include "port/windows/windows-keycodes.hpp"
 #include "game/input/keys.hpp"
-#include "util/str.hpp"
 
 Key_mapper::Key_mapper() {
   reset();

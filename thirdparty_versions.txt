@@ -1,4 +1,4 @@
-GLEW: v2.2.0
+GLAD: v2.0.8
 KHR: (2021)
 GLFW: v3.4
 ImGui: v1.92.2b

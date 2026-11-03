@@ -15,14 +15,10 @@ FLIR color palette arrays:
   SPDX-License-Identifier: MIT
   <https://github.com/MickTheMechanic/FLIR-style-thermal-color-palettes?tab=MIT-1-ov-file>
 
-GLEW:
-  Copyright (c) 2002-2007, Milan Ikits <milan ikits[]ieee org>
-  Copyright (c) 2002-2007, Marcelo E. Magallon <mmagallo[]debian org>
-  Copyright (c) 2002, Lev Povalahev
-  Copyright (c) 1999-2007 Brian Paul All Rights Reserved.
-  Copyright (c) 2007 The Khronos Group Inc.
-  SPDX-License-Identifier: MIT
-  <https://github.com/nigels-com/glew/LICENSE.txt>
+GLAD:
+  Copyright (c) 2013-2022 David Herberth.
+  SPDX-License-Identifier: (WTFPL OR CC0-1.0) AND Apache-2.0
+  <https://github.com/Dav1dde/glad/blob/glad2/LICENSE>
   
 KHR:
   Copyright (c) 2008-2018 The Khronos Group Inc.

@@ -34,7 +34,7 @@
 #include "engine/sound/sound-mgr.hpp"
 
 #ifdef DEBUG
-  #include "game/scene/scene-cmd.hpp"
+  #include "game/scene/common/scene-cmd.hpp"
   #include "game/util/cmd/cmd-script.hpp"
 #endif
 

@@ -1,7 +1,7 @@
 #pragma once
 
 #ifdef PORT_GLFW3
-#include <GL/glew.h>
+#include <glad/gl.h>
 #else
 using GLfloat = float;
 #endif

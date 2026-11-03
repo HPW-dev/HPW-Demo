@@ -20,7 +20,6 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   if host.system == Sys_name.windows:
     tgt.linked_libs.extend([
       '-lglfw3dll',
-      '-lglew32',
       '-lopengl32',
       '-lOpenAL32.dll',
     ])
@@ -33,7 +32,6 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   elif Sys_name.linux:
     tgt.linked_libs.extend([
       '-lglfw',
-      '-lGLEW',
       '-lGL',
       '-lm',
       '-lopenal',
@@ -46,7 +44,6 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   if host.system == Sys_name.windows:
     tgt.lib_dirs.extend([
       f'{thirdparty_dir}lib/OpenAL-soft/{bits}',
-      f'{thirdparty_dir}lib/GLEW/{bits}',
       f'{thirdparty_dir}lib/GLFW/{bits}',
     ])
   elif host.system == Sys_name.linux:
@@ -66,13 +63,14 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
     '.',
     src_dir,
     f'{thirdparty_dir}include/',
+    f'{thirdparty_dir}include/glad2/include/',
   ])
   if host.system == Sys_name.windows:
     tgt.include_dirs.extend([
       f'{thirdparty_dir}include/_windows_only/GLFW/{bits}',
-      f'{thirdparty_dir}include/_windows_only/GLEW/',  
     ])
 
+  tgt.sources.append(f'{thirdparty_dir}include/glad2/src/gl.c')
   tgt.sources.extend(find(f'{thirdparty_dir}include/zip/*.c'))
   
   tgt.sources.append(f'{thirdparty_dir}include/stb/stb_vorbis.c')
@@ -112,11 +110,13 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}game/scene/options/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/common/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/msgbox/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/scene/tests/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/level/util/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/level/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/*.cpp'))
+
+  if ctx.with_tests:
+    tgt.sources.extend(find(f'{src_dir}game/scene/tests/*.cpp'))
   
   tgt.sources.extend(find(f'{src_dir}engine/graphic/epge/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}engine/graphic/animation/*.cpp'))

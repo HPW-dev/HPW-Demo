@@ -2,6 +2,7 @@
 #include <atomic>
 #include "game/input/keys.hpp"
 
+#include <glad/gl.h>
 extern "C" {
   #include "port/ogl3/ogl.hpp"
   #ifdef WINDOWS
