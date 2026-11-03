@@ -57,9 +57,11 @@ void Scene_debug::init_menu() {
       ),
       new_shared<Menu_bool_item>(U"Неуязвимость",
         [] {
+          ret_if (!hpw::entity_mgr, false);
+
           cauto player = hpw::entity_mgr->get_player();
-          if (player)
-            return player->status.ignore_enemy;
+          ret_if (player, player->status.ignore_enemy);
+          
           return false;
         },
         [] (bool new_val) {
