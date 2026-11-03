@@ -130,7 +130,11 @@ void set_rnd_seed(Seed s) {
     rnd_fast_lcg_state = seed;
     rndu_fast_lcg_state = seed;
     rndb_lcg_state = seed;
-    main_generator = decltype(main_generator)(main_seed);
+    #ifdef DEBUG
+      main_generator = decltype(main_generator)(seed);
+    #else
+      main_generator = decltype(main_generator)(main_seed);
+    #endif
     rndr_graphic_gen.seed(seed);
     table_idx = seed % 256;
     splitmix64_seed = seed ^ (seed * 123);
