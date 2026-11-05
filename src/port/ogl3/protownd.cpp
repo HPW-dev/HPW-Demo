@@ -9,7 +9,9 @@
 #include "game/input/keys.hpp"
 #include "engine/graphic/image/image-io.hpp"
 
-Protownd::Protownd(int argc, char *argv[]): Host(argc, argv) {
+Protownd::Protownd(int argc, char *argv[])
+: Port(argc, argv)
+{
   init_unique(graphic::canvas, graphic::width, graphic::height);
   iferror(graphic::canvas->size == 0 || graphic::canvas->size >= 1024*720,
     "canvas bad size: " + n2s(graphic::canvas->size));

@@ -17,8 +17,10 @@
 // вверх этот хедер не таскать, иначе всё развалится
 #include "port-glfw-common.hpp"
 
-Port_glfw::Port_glfw(int argc, char *argv[]) : Port_ogl(argc, argv) {
-  iferror(g_instance, "no use two GLFW hosts");
+Port_glfw::Port_glfw(int argc, char *argv[])
+: Port_ogl(argc, argv)
+{
+  iferror(g_instance, "no use two GLFW ports");
   g_instance.store(this);
   init_commands();
   init_glfw();

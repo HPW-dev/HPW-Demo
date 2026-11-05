@@ -128,8 +128,8 @@ struct Port_asci::Impl {
 
   inline void init_commands() {
     hpw::set_vsync = [](bool){ detailed_log("настройка VSync в ASCI режиме ни на что не влияет\n"); };
-    hpw::rebind_key = [](hpw::keycode) { error("rebind_key not implemented for ASCI-host"); };
-    hpw::reset_keymap = []{ { error("reset_keymap not implemented for ASCI-host"); }; };
+    hpw::rebind_key = [](hpw::keycode) { error("rebind_key not implemented for ASCI-port"); };
+    hpw::reset_keymap = []{ { error("reset_keymap not implemented for ASCI-port"); }; };
     hpw::set_gamma = [](const double) { detailed_log("изменение гаммы ни на что не влияет в ASCI-режиме\n") };
     hpw::get_time = [this]{ return this->get_time(); };
     hpw::set_fullscreen = [](bool) { detailed_log("настройка fullscreen в ASCI режиме ни на что не влияет\n"); };
@@ -139,7 +139,7 @@ struct Port_asci::Impl {
     
     hpw::rebind_key_by_scancode = [this](hpw::keycode hpw_key, int scancode) {
       // TODO
-      detailed_log("Warning: rebind_key_by_scancode not implemented for ASCI-host\n");
+      detailed_log("Warning: rebind_key_by_scancode not implemented for ASCI-port\n");
     };
   }
 
@@ -409,7 +409,7 @@ struct Port_asci::Impl {
 }; // Impl
 
 Port_asci::Port_asci(int argc, char** argv)
-: Host(argc, argv)
+: Port(argc, argv)
 , impl {new_unique<Impl>(*this, argc, argv)}
 {}
 
@@ -417,6 +417,6 @@ Port_asci::~Port_asci() {}
 Delta_time Port_asci::get_time() const { return impl->get_time(); }
 
 void Port_asci::run() {
-  Host::run();
+  Port::run();
   impl->run();
 }

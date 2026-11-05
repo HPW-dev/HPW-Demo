@@ -8,7 +8,7 @@
 #include "command.hpp"
 
 // базовый класс для игрового хоста
-class Host {
+class Port {
   void callbacks_init(); // задать колбэки для общих команд
   void process_input();
 
@@ -34,8 +34,8 @@ protected:
   void free_app_mutex();
 
 public:
-  explicit Host(int argc, char** argv);
-  virtual ~Host();
+  explicit Port(int argc, char** argv);
+  virtual ~Port();
   inline virtual void run() {}
   virtual void update(const Delta_time dt);
   virtual void exit();
@@ -43,4 +43,4 @@ public:
 private:
   struct Impl;
   Unique<Impl> _impl {};
-}; // Host
+}; // Port

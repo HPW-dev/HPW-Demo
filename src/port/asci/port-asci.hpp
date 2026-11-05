@@ -3,7 +3,7 @@
 #include "util/mem-types.hpp"
 
 // рендерер в ASCI-графике
-class Port_asci: public Host {
+class Port_asci: public Port {
 private:
   struct Impl;
   Unique<Impl> impl {};

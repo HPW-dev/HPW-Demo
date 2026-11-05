@@ -37,12 +37,12 @@ public:
   }
 };
 
-struct Host::Impl final {
+struct Port::Impl final {
   nocopy(Impl);
-  Host& _master;
+  Port& _master;
   std::optional<uint32_t> custom_seed {};
 
-  explicit inline Impl(Host& master): _master {master} {}
+  explicit inline Impl(Port& master): _master {master} {}
 
   inline void parse_args(int argc, char** argv) {
     Pparser ret( Pparser::v_param_t {
@@ -71,7 +71,7 @@ struct Host::Impl final {
   }
 }; // Impl
 
-Host::Host(int argc, char** argv)
+Port::Port(int argc, char** argv)
 : _argc(argc)
 , _argv(argv)
 , _impl(new_unique<Impl>(*this))
@@ -109,7 +109,7 @@ Host::Host(int argc, char** argv)
   log_debug << "Директория запуска игры: \"" + hpw::cur_dir + "\"";
 } // c-tor
 
-Host::~Host() {
+Port::~Port() {
   #ifndef DISABLE_CONFIG
     save_config();
   #endif
@@ -117,12 +117,12 @@ Host::~Host() {
   log_info << "Корректное завершение H.P.W";
 }
 
-void Host::exit() {
+void Port::exit() {
   log_info << "вызов программного выхода из игры...";
   _is_ran = false;
 }
  
-void Host::callbacks_init() {
+void Port::callbacks_init() {
   hpw::soft_exit = [this] { this->exit(); };
   hpw::make_screenshot = [this] {
     if (graphic::canvas)
@@ -132,7 +132,7 @@ void Host::callbacks_init() {
   };
 }
 
-void Host::init_app_mutex() {
+void Port::init_app_mutex() {
 #ifdef WINDOWS
   _app_mutex = CreateMutex(NULL, TRUE, "HPW: Double window mutex");
   if (ERROR_ALREADY_EXISTS == GetLastError()) {
@@ -144,7 +144,7 @@ void Host::init_app_mutex() {
 #endif
 }
 
-void Host::free_app_mutex() {
+void Port::free_app_mutex() {
 #ifdef WINDOWS
   ReleaseMutex(_app_mutex);
   CloseHandle(_app_mutex);
@@ -153,13 +153,13 @@ void Host::free_app_mutex() {
 #endif
 }
 
-void Host::update(const Delta_time dt) {
+void Port::update(const Delta_time dt) {
   hpw::task_mgr.update(dt);
   ++hpw::global_ticks;
   process_input();
 }
 
-void Host::process_input() {
+void Port::process_input() {
   // обработка специальных кнопок
   if (is_pressed_once(hpw::keycode::fulscrn)) {
     assert(hpw::set_fullscreen);

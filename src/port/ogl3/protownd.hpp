@@ -6,7 +6,7 @@
 #include "port/port.hpp"
 
 // окно без рендерера
-class Protownd: public Host {
+class Protownd: public Port {
   nocopy(Protownd);
 
 protected:
