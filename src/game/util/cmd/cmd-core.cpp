@@ -1,6 +1,7 @@
 #include "pch.hpp"
 #include "cmd-core.hpp"
 
+#ifndef NO_GAMEPLAY
 #include "game/entity/collider/collider-experimental-2.hpp"
 #include "game/entity/collider/collider-experimental.hpp"
 #include "game/entity/collider/collider-2d-tree.hpp"
@@ -9,8 +10,10 @@
 #include "game/entity/collider/collider-empty.hpp"
 #include "game/entity/collider/collider-grid.hpp"
 #include "game/entity/util/entity-util.hpp"
-#include "game/scene/scene-util.hpp"
 #include "game/core/entities.hpp"
+#endif
+
+#include "game/scene/scene-util.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/canvas.hpp"
 #include "game/core/scenes.hpp"
@@ -138,8 +141,8 @@ public:
   {
     iferror(fname.empty(), "пустое имя файла");
     iferror(m_timeout <= 0, "неправильный параметр таймаута");
-    iferror(m_sample_delay <= 0,
-      "неправильный параметр задержки между сохранениями");
+    iferror(m_sample_delay <= 0, "неправильный параметр задержки между сохранениями");
+
     m_stats = {
       Stat {.title="'Software draw time Ms.'", .getter=[]{
         return n2s(graphic::soft_draw_time * 1'000.f, 5); }},
@@ -153,6 +156,8 @@ public:
         return n2s(graphic::cur_fps, 2); }},
       Stat {.title="'tickrate'", .getter=[]{
         return n2s(hpw::cur_ups, 2); }},
+
+    #ifndef NO_GAMEPLAY
       Stat {.title="'Lives'", .getter=[]{
         crauto entities = hpw::entity_mgr->get_entities();
         uint lives {};
@@ -161,7 +166,9 @@ public:
         return n2s(lives);
       }},
       Stat {.title="'Entities capacity'", .getter=[]{
-        return n2s(hpw::entity_mgr->get_entities().capacity()); }},
+        return n2s(hpw::entity_mgr->get_entities().capacity());
+      }},
+    #endif
     };
   } // c-tor
 
@@ -254,6 +261,7 @@ void clear_tasks(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   console.print("все задачи удалены");
 }
 
+#ifndef NO_GAMEPLAY
 void set_direction(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "в команде direct мало аргументов");
   cauto uid_a = s2n<Uid>(args[1]);
@@ -345,6 +353,7 @@ Strs set_collider_matches(Cmd_maker& command, Cmd& console, cr<Strs> args) {
     ret.push_back(cmd_name + ' ' + collider_name);
   return ret;
 }
+#endif
 
 void call_abort(Cmd_maker&, Cmd&, cr<Strs>) { std::abort(); }
 
@@ -440,6 +449,7 @@ void cmd_core_init(Cmd& cmd) {
     "clear_tasks",
     "убирает все задачи",
     &clear_tasks, {} )
+#ifndef NO_GAMEPLAY
   MAKE_CMD (
     "direct",
     "direct <uid> <uid> - поворачивает один объект в сторону другого",
@@ -460,6 +470,7 @@ void cmd_core_init(Cmd& cmd) {
     "collider",
     "collider <name> set collision resolver",
     &set_collider, &set_collider_matches )
+#endif // NO_GAMEPLAY
   MAKE_CMD (
     "abort",
     "fast exit (unsafe)",

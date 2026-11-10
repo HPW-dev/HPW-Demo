@@ -4,7 +4,6 @@
 #include "scene-version-info.hpp"
 #include "scene-game-options.hpp"
 #include "scene-bgp-select.hpp"
-#include "scene-hud-select.hpp"
 #include "scene-graphic.hpp"
 #include "scene-input.hpp"
 #include "engine/graphic/image/image.hpp"
@@ -15,6 +14,10 @@
 #include "game/core/scenes.hpp"
 #include "game/input/keys.hpp"
 #include "util/file/file.hpp"
+
+#ifndef NO_GAMEPLAY
+#include "scene-hud-select.hpp"
+#endif
 
 
 struct Scene_options::Impl {
@@ -44,7 +47,9 @@ struct Scene_options::Impl {
   inline void init_menu() {
     _menu = menu_from_json(json_from_res("scripts/ui/menu/options.json"), Action_table {        
       {"graphic_opts",  []{ hpw::scene_mgr.add(new_shared<Scene_graphic>()); }},
+    #ifndef NO_GAMEPLAY
       {"hud_opts",      []{ hpw::scene_mgr.add(new_shared<Scene_hud_select>()); }},
+    #endif
       {"input_opts",    []{ hpw::scene_mgr.add(new_shared<Scene_input>()); }},
       {"game_opts",     []{ hpw::scene_mgr.add(new_shared<Scene_game_options>()); }},
       {"bgp_select",    []{ hpw::scene_mgr.add(new_shared<Scene_bgp_select>()); }},

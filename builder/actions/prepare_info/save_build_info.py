@@ -16,6 +16,7 @@ def save_build_info(tgt: Target, ctx: Context, host: Host):
   info = {
     'author': ctx.author,
     'compilation start': tgt.creation_time,
+    'gameplay': ctx.with_gameplay,
     'tests': ctx.with_tests,
     'lan': ctx.with_lan,
 

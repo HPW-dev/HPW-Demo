@@ -31,6 +31,7 @@ def print_build_info(tgt: Target, ctx: Context, host: Host):
   print(f'* Дата комита ...... {date_time}')
   print(f'* Компиляция ....... {checkbox2(ctx.with_compilation)}')
   print(f'* OpenMP ........... {checkbox2(tgt.use_openmp)}')
+  print(f'* Геймплей ......... {checkbox2(ctx.with_gameplay)}')
   print(f'* Тесты ............ {checkbox2(ctx.with_tests)}')
   print(f'* LAN .............. {checkbox2(ctx.with_lan)}')
   print(f'* Паковать ассеты .. {checkbox2(ctx.with_assets)}')

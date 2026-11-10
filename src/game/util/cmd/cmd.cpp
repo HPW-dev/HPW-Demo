@@ -1,16 +1,16 @@
 #include "pch.hpp"
 #include "cmd.hpp"
-#include "cmd-entity.hpp"
+
+#include "game/core/messages.hpp"
 #include "cmd-common.hpp"
 #include "cmd-script.hpp"
-#include "cmd-player.hpp"
+#include "cmd-core.hpp"
 
-#ifndef NO_LVL_CMDS
+#ifndef NO_GAMEPLAY
+#include "cmd-entity.hpp"
+#include "cmd-player.hpp"
 #include "cmd-level.hpp"
 #endif
-
-#include "cmd-core.hpp"
-#include "game/core/messages.hpp"
 
 Cmd::Cmd() {
   //cmd-common.hpp
@@ -29,32 +29,16 @@ Cmd::Cmd() {
   move(new_unique<Cmd_script_instant>());
 
   //cmd-level.hpp
-  #ifndef NO_LVL_CMDS
+  #ifndef NO_GAMEPLAY
   move(new_unique<Cmd_levels>(this));
   move(new_unique<Cmd_level>(this));
   move(new_unique<Cmd_restart>(this));
+  cmd_entity_init(*this); // cmd-entity.hpp
+  cmd_player_init(*this); // cmd-player.hpp
   #endif
 
   cmd_core_init(*this); // cmd-core.hpp
-  cmd_entity_init(*this); // cmd-entity.hpp
   cmd_common_init(*this); // cmd-common.hpp
-  cmd_player_init(*this); // cmd-player.hpp
-
-  //cmd-entity.hpp
-  //move(new_unique<Cmd_entities>());
-  //move(new_unique<Cmd_spawn>());
-  //move(new_unique<Cmd_kill>());
-  //move(new_unique<Cmd_flag>());
-  //move(new_unique<Cmd_hp>());
-  //move(new_unique<Cmd_copy>());
-
-  //cmd-phys.hpp
-  //move(new_unique<Cmd_pos>());
-  //move(new_unique<Cmd_deg>());
-  //move(new_unique<Cmd_speed>());
-  //move(new_unique<Cmd_force>());
-  //move(new_unique<Cmd_direct>());
-  //move(new_unique<Cmd_direct_to>());
 
   sort_commands();
 } // Cmd c-tor

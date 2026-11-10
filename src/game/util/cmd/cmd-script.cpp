@@ -76,7 +76,9 @@ public:
     Str line;
     while (std::getline(m_file, line)) {
       hpw::cmd.exec(line);
-      hpw::entity_mgr->update(hpw::target_tick_time);
+      #ifndef NO_GAMEPLAY
+        hpw::entity_mgr->update(hpw::target_tick_time);
+      #endif
     }
       
     kill();

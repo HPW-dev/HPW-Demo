@@ -48,12 +48,14 @@ struct Scene_game_options::Impl {
         [](bool val) { hpw::rnd_pal_after_death = val; },
         get_locale_str("game_opts.rnd_pal.desc")
       ),
+    #ifndef NO_GAMEPLAY
       new_shared<Menu_bool_item>(
         get_locale_str("game_opts.collider_autoopt.title"),
         []{ return hpw::collider_autoopt; },
         [](bool val) { hpw::collider_autoopt = val; },
         get_locale_str("game_opts.collider_autoopt.desc")
       ),
+    #endif
       priority_menu_item(),
       new_shared<Menu_text_item>(
         get_locale_str("common.exit"),

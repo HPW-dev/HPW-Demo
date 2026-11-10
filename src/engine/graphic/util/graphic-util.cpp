@@ -1,10 +1,12 @@
 #include "pch.hpp"
-#include "util-templ.hpp"
 #include "graphic-util.hpp"
-#include "engine/graphic/image/image.hpp"
+
 #include "engine/graphic/sprite/sprite.hpp"
+#include "engine/graphic/image/image.hpp"
 #include "game/core/graphic.hpp"
 #include "game/util/sync.hpp"
+#include "util-templ.hpp"
+
 
 void insert_fast(Image& dst, cr<Image> src) {
   return_if(!dst);

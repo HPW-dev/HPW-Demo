@@ -1,8 +1,6 @@
 #include "pch.hpp"
 #include "scene-main-menu.hpp"
 
-#include "game/scene/gameplay/scene-difficulty.hpp"
-#include "game/scene/gameplay/scene-game.hpp"
 #include "game/scene/options/scene-options.hpp"
 #include "game/scene/options/scene-locale.hpp"
 #include "game/scene/common/scene-loading.hpp"
@@ -28,6 +26,11 @@
 #include "game/input/keys.hpp"
 #include "game/bgp/bgp-util.hpp"
 #include "game/bgp/bgp.hpp"
+
+#ifndef NO_GAMEPLAY
+#include "game/scene/gameplay/scene-difficulty.hpp"
+#include "game/scene/gameplay/scene-game.hpp"
+#endif
 
 #ifdef USE_LAN
   #include "game/netplay/scene/scene-netplay-menu.hpp"
@@ -129,9 +132,11 @@ void Scene_main_menu::draw(Image& dst) const noexcept {
 void Scene_main_menu::init_menu() {
   init_unique<Text_menu>( menu,
     Menu_items {
+      #ifndef NO_GAMEPLAY
       // старт
       new_shared<Menu_text_item>(get_locale_str("main_menu.start"),
         []{ hpw::scene_mgr.add(new_shared<Scene_difficulty>()); }),
+      #endif
         
       #ifdef USE_TESTS
       // меню тестов и отладки

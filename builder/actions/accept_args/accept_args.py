@@ -171,6 +171,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true',
     help='без PCH'
   )
+  parser.add_argument(
+    '--no_gameplay', 
+    action='store_true',
+    help='Не компилить уровни, игрока, противников и всего прочего для геймплея'
+  )
 
   args = parser.parse_args()
 
@@ -204,6 +209,7 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_assets = not bool(args.no_assets)
   ctx.with_tests = bool(args.with_tests)
   ctx.with_lan = not bool(args.no_lan)
+  ctx.with_gameplay = not bool(args.no_gameplay)
   if bool(args.no_pch):
     ctx.pch_path = ''
     tgt.pch_path = ''

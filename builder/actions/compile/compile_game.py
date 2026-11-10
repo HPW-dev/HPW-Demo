@@ -6,6 +6,13 @@ from structs.host import *
 from utils.ui import *
 from utils.fs import *
 
+def exclude_files(src: list[str], ban_list: list[str]):
+  '''
+  Убирает из списка файлов для сборки ненужные файлы из ban_list
+  '''
+  to_remove_set = {path_abs(path) for path in ban_list}
+  return [path for path in src if path_abs(path) not in to_remove_set]
+
 def compile_game(tgt: Target, ctx: Context, host: Host):
   print('=== Сборка игры ===')
 
@@ -29,7 +36,7 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
        tgt.opt_preset != 'fast-build':
       print(to_green('> Вырубаем консоль для H.P.W'))
       tgt.linked_libs.append('-mwindows')
-  elif Sys_name.linux:
+  elif host.system == Sys_name.linux:
     tgt.linked_libs.extend([
       '-lglfw',
       '-lGL',
@@ -53,6 +60,8 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.defines.append('PORT_GLFW3') # TODO остальные хосты
   if ctx.with_tests:
     tgt.defines.append('USE_TESTS')
+  if not ctx.with_gameplay:
+    tgt.defines.append('NO_GAMEPLAY')
 
   netplay_sources = []
   if ctx.with_lan:
@@ -92,34 +101,49 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
   tgt.sources.extend(find(f'{src_dir}game/util/cmd/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/util/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/input/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/bgp/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/bgp/legacy/*.cpp'))
+  tgt.sources.extend(find(f'{src_dir}game/bgp/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/core/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/hud/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/player/ability/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/player/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/enemy/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/collider/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/util/info/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/util/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/entity/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/menu/item/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/menu/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/scene/gameplay/cutscene/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/scene/gameplay/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/options/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/common/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/msgbox/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/scene/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/level/util/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}game/level/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}game/*.cpp'))
+
+  if ctx.with_gameplay:
+    tgt.sources.extend(find(f'{src_dir}engine/graphic/animation/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/player/ability/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/player/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/enemy/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/collider/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/util/info/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/util/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/entity/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/scene/gameplay/cutscene/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/scene/gameplay/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/level/util/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/level/*.cpp'))
+    tgt.sources.extend(find(f'{src_dir}game/hud/*.cpp'))
+  else:
+    print('> сборка без уровней и геймплея...')
+    tgt.sources = exclude_files(tgt.sources, [
+      f'{src_dir}game/scene/options/scene-hud-select.cpp',
+      f'{src_dir}game/util/difficulty-helper.cpp',
+      f'{src_dir}game/util/animation-helper.cpp',
+      f'{src_dir}game/util/anim-helper.cpp',
+      f'{src_dir}game/util/camera.cpp',
+      f'{src_dir}game/util/shop.cpp',
+      f'{src_dir}game/util/cmd/cmd-entity.cpp',
+      f'{src_dir}game/util/cmd/cmd-player.cpp',
+      f'{src_dir}game/util/cmd/cmd-level.cpp',
+    ])
 
   if ctx.with_tests:
     tgt.sources.extend(find(f'{src_dir}game/scene/tests/*.cpp'))
   
   tgt.sources.extend(find(f'{src_dir}engine/graphic/epge/*.cpp'))
-  tgt.sources.extend(find(f'{src_dir}engine/graphic/animation/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}engine/graphic/image/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}engine/graphic/sprite/*.cpp'))
   tgt.sources.extend(find(f'{src_dir}engine/graphic/effect/*.cpp'))

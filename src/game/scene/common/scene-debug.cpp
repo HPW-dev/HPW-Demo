@@ -55,6 +55,7 @@ void Scene_debug::init_menu() {
         [] { return hpw::show_entity_mem_map; },
         [] (bool new_val) { hpw::show_entity_mem_map = new_val; }
       ),
+    #ifndef NO_GAMEPLAY
       new_shared<Menu_bool_item>(U"Неуязвимость",
         [] {
           ret_if (!hpw::entity_mgr, false);
@@ -72,6 +73,7 @@ void Scene_debug::init_menu() {
           }
         }
       ),
+    #endif
       new_shared<Menu_bool_item>(U"Пошаговый   ",
         [] { return graphic::step_mode; },
         [] (bool new_val) {

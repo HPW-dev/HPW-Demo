@@ -30,3 +30,4 @@ class Context:
   forced_rebuild        : bool = False # принудительный пересбор
   with_game_ver         : bool = True  # добавить в .exe версию файла
   with_lan              : bool = True  # сетевая игра
+  with_gameplay         : bool = True  # компилить уровни, игрока и противников

@@ -125,6 +125,8 @@ def make_db(header_map: dict, tgt: Target, ctx: Context):
     "obj_dir": ctx.obj_dir,
     "src_dir": ctx.src_dir,
     "tmp_dir": ctx.tmp_dir,
+    "with_lan": ctx.with_lan,
+    "with_gameplay": ctx.with_gameplay,
     "compiler_path": ctx.compiler_path,
   }
 
@@ -236,6 +238,8 @@ def equal_opts(db_path: str, tgt: Target, ctx: Context) -> bool:
       opts_differ(db['opts'], tgt.use_openmp, 'use_openmp', 'изменилась опция OpenMP') or \
       opts_differ(db['opts'], ctx.author, 'author', 'изменился автор сборки') or \
       opts_differ(db['opts'], ctx.bin_dir, 'bin_dir', 'изменилась папка бинарника') or \
+      opts_differ(db['opts'], ctx.with_lan, 'with_lan', 'изменили флаг LAN') or \
+      opts_differ(db['opts'], ctx.with_gameplay, 'with_gameplay', 'изменили сборку с геймплеем') or \
       opts_differ(db['opts'], ctx.obj_dir, 'obj_dir', 'изменился путь к объектникам') or \
       opts_differ(db['opts'], ctx.src_dir, 'src_dir', 'изменился путь к сурсам') or \
       opts_differ(db['opts'], ctx.tmp_dir, 'tmp_dir', 'изменился путь tmp-папки') or \

@@ -8,14 +8,17 @@
 #include "game/scene/options/scene-graphic.hpp"
 #include "game/scene/options/scene-locale.hpp"
 #include "game/scene/options/scene-epge.hpp"
-#include "game/scene/gameplay/scene-game-pause.hpp"
-#include "game/scene/gameplay/scene-gameover.hpp"
-#include "game/scene/gameplay/scene-game.hpp"
 #include "game/scene/common/scene-epiwarn.hpp"
 #include "game/scene/common/scene-dummy.hpp"
 #include "game/scene/common/scene-debug.hpp"
 #include "game/scene/common/scene-cmd.hpp"
 #include "scene-main-menu.hpp"
+
+#ifndef NO_GAMEPLAY
+#include "game/scene/gameplay/scene-game-pause.hpp"
+#include "game/scene/gameplay/scene-gameover.hpp"
+#include "game/scene/gameplay/scene-game.hpp"
+#endif
 
 
 using Maker = std::function<Shared<Scene> ()>;
@@ -25,18 +28,21 @@ static std::unordered_map<Str, Maker> table {
   ITEM(Scene_palette_select)
   ITEM(Scene_locale_select)
   ITEM(Scene_bgp_select)
-  ITEM(Scene_game_pause)
-  ITEM(Scene_hud_select)
   ITEM(Scene_main_menu)
-  ITEM(Scene_gameover)
   ITEM(Scene_nickname)
   ITEM(Scene_epiwarn)
   ITEM(Scene_graphic)
   ITEM(Scene_dummy)
   ITEM(Scene_debug)
-  ITEM(Scene_game)
   ITEM(Scene_epge)
   ITEM(Scene_cmd)
+  
+  #ifndef NO_GAMEPLAY
+  ITEM(Scene_hud_select)
+  ITEM(Scene_game_pause)
+  ITEM(Scene_gameover)
+  ITEM(Scene_game)
+  #endif
 #undef ITEM
 };
 
