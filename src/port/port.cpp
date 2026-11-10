@@ -1,176 +1,38 @@
 #include "pch.hpp"
 #include "port.hpp"
-#include "port-util.hpp"
-#include "port-resize.hpp"
-#include "command.hpp"
-#include "game/core/common.hpp"
-#include "game/core/canvas.hpp"
-#include "game/core/tasks.hpp"
-#include "game/core/user.hpp"
-#include "game/core/debug.hpp"
-#include "game/core/graphic.hpp"
-#include "game/core/core.hpp"
-#include "game/input/keys.hpp"
-#include "game/util/sync.hpp"
-#include "game/util/config.hpp"
-#include "game/util/logo.hpp"
-#include "game/util/version.hpp"
-#include "game/util/screenshot.hpp"
-#include "engine/graphic/image/color-table.hpp"
-
-// если перенести это вверх, то всё взорвётся >_<
-#ifdef WINDOWS
-#include <windows.h>
-#endif
-
-// отложенный выбор фуллскрина
-class Task_fullscreen final: public Task {
-  bool _mode {};
-
-public:
-  inline explicit Task_fullscreen(bool mode): _mode {mode} {}
-
-  inline void update(const Delta_time dt) override final {
-    assert(hpw::set_fullscreen);
-    hpw::set_fullscreen(_mode);
-    this->kill();
-  }
-};
-
-struct Port::Impl final {
-  nocopy(Impl);
-  Port& _master;
-  std::optional<uint32_t> custom_seed {};
-
-  explicit inline Impl(Port& master): _master {master} {}
-
-  inline void parse_args(int argc, char** argv) {
-    Pparser ret( Pparser::v_param_t {
-      {{"-s", "--seed"}, "set random seed", [this](cr<Str> val){ custom_seed = s2n<uint32_t>(val); }},
-      {{"-ox", "--offset_x"}, "set window startup offset by x", [this](cr<Str> val){ _master._wnd_off.x = s2n<uint32_t>(val); }},
-      {{"-oy", "--offset_y"}, "set window startup offset by y", [this](cr<Str> val){ _master._wnd_off.y = s2n<uint32_t>(val); }},
-      {{"-w", "--windowed"}, "enable windowed mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(false)); }},
-      {{"-f", "--fullscreen"}, "enable fullscreen mode", [this](cr<Str> val){ hpw::task_mgr.add(new_shared<Task_fullscreen>(true)); }},
-      {{"-dw", "--debug_warnings"}, "enable debug log stream", [this](cr<Str> _){ hpw::logger.config.use_stream_debug = true; }},
-      {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
-        ret.print_info();
-        std::exit(EXIT_SUCCESS);
-      }},
-      {{"-t", "--title"}, "set window title (if not defined, set HPW)", [this](cr<Str> val)
-        { hpw::default_tile = val.empty() ? "HPW" : val; }},
-      {{"-v", "--version"}, "print game version and exit", [this](cr<Str> val){
-        cauto ver = get_game_version();
-        cauto creation_date = get_game_creation_date();
-        cauto creation_time = get_game_creation_time();
-        log_info << std::format("game version: {} ({} {})", ver, creation_date, creation_time);
-        std::exit(EXIT_SUCCESS);
-      }},
-    } );
-    ret.skip_empty = true;
-    ret(argc, argv);
-  }
-}; // Impl
-
-Port::Port(int argc, char** argv)
-: _argc(argc)
-, _argv(argv)
-, _impl(new_unique<Impl>(*this))
-{
-  // парс аргументов:
-  hpw::argc = _argc;
-  hpw::argv = _argv;
-  _impl->parse_args(hpw::argc, hpw::argv);
-
-  init_app_mutex();
 
 #ifdef WINDOWS
-  // переключить консоль винды в UTF8
-  SetConsoleOutputCP(CP_UTF8);
-#endif
-
-  // настроить генерацию рандома
-  uint32_t seed;
-  if (_impl->custom_seed.has_value())
-    seed = _impl->custom_seed.value();
-  else
-    seed = time({});
-  set_rnd_seed({.old_seed=seed});
-  log_debug << std::format("Сид рандома: {}\n", seed);
-
-  log_info << '\n' << get_random_logo();
-  callbacks_init();
-
-  // узнать в какойо папке игра запущена
-  hpw::cur_dir = launch_dir_from_argv0(argv);
-
-  #ifndef DISABLE_CONFIG
-    load_config();
+  #ifndef NOMINMAX
+    #define NOMINMAX
   #endif
-  log_debug << "Директория запуска игры: \"" + hpw::cur_dir + "\"";
-} // c-tor
-
-Port::~Port() {
-  #ifndef DISABLE_CONFIG
-    save_config();
+  #ifndef WIN32_LEAN_AND_MEAN
+    #define WIN32_LEAN_AND_MEAN
   #endif
-  free_app_mutex();
-  log_info << "Корректное завершение H.P.W";
-}
+  #include <windows.h>
 
-void Port::exit() {
-  log_info << "вызов программного выхода из игры...";
-  _is_ran = false;
-}
- 
-void Port::callbacks_init() {
-  hpw::soft_exit = [this] { this->exit(); };
-  hpw::make_screenshot = [this] {
-    if (graphic::canvas)
-      save_screenshot(*graphic::canvas);
-    else
-      log_error << "не удалось сохранить скриншот, так как graphic::canvas ещё не инициализирован";
-  };
-}
+  #include <iostream>
+  #include <clocale>
+  #include <cstdlib>
+  #include <string>
+#endif
 
-void Port::init_app_mutex() {
+// выводит окно с ошибкой
+static inline void draw_error_window(cr<Str> msg) {
 #ifdef WINDOWS
-  _app_mutex = CreateMutex(NULL, TRUE, "HPW: Double window mutex");
-  if (ERROR_ALREADY_EXISTS == GetLastError()) {
-    hpw::multiple_apps = true;
-    CloseHandle(_app_mutex);
-  }
-#else
-  #pragma message("need impl for other_game_started() on Linux")
+  std::setlocale(LC_ALL, "en_US.utf8");
+  std::wstring msg_wstr;
+  msg_wstr.resize(msg.size());
+  std::mbstowcs(msg_wstr.data(), msg.data(), msg.size());
+  MessageBoxW(NULL, msg_wstr.c_str(), L"Error", MB_ICONERROR | MB_OK);
 #endif
 }
 
-void Port::free_app_mutex() {
-#ifdef WINDOWS
-  ReleaseMutex(_app_mutex);
-  CloseHandle(_app_mutex);
-#else
-  #pragma message("need impl for free_app_mutex() on Linux")
-#endif
+namespace Port {
+
+void process_error(cr<Str> error) {
+  std::cerr << error << std::endl;
+  log_error << error;
+  draw_error_window(error);
 }
 
-void Port::update(const Delta_time dt) {
-  hpw::task_mgr.update(dt);
-  ++hpw::global_ticks;
-  process_input();
-}
-
-void Port::process_input() {
-  // обработка специальных кнопок
-  if (is_pressed_once(hpw::keycode::fulscrn)) {
-    assert(hpw::set_fullscreen);
-    hpw::set_fullscreen( !graphic::fullscreen );
-  }
-
-  if (is_pressed_once(hpw::keycode::screenshot)) {
-    assert(hpw::make_screenshot);
-    hpw::make_screenshot();
-  }
-
-  if (is_pressed_once(hpw::keycode::fps))
-    graphic::show_fps = !graphic::show_fps;
-}
+} // Port ns

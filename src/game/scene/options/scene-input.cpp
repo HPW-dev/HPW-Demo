@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "scene-input.hpp"
 
 #include "engine/graphic/image/image.hpp"
@@ -9,7 +10,7 @@
 #include "game/core/scenes.hpp"
 #include "game/input/keys.hpp"
 #include "game/core/fonts.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 
 
 Scene_input::Scene_input() {
@@ -39,7 +40,7 @@ cr<Str> locale_name, hpw::keycode keycode) {
   // создать пункт меню с именем клавиши
   dst.emplace_back( new_shared<Menu_text_item>(
     get_locale_str(locale_name),
-    [=] { hpw::rebind_key(hpw_key); },
+    [=] { safe_call(Port::rebind_key, hpw_key); },
     [=] { return get_key_name(hpw_key); }
   ));
 } // add_menu_item
@@ -64,7 +65,7 @@ void Scene_input::init_menu() {
 
   menu_items.emplace_back( new_shared<Menu_text_item> (
     get_locale_str("common.reset"), []{
-      hpw::reset_keymap();
+      safe_call(Port::reset_keymap);
       hpw::scene_mgr.back();
       save_config();
     }

@@ -5,7 +5,7 @@
 #include "engine/sound/sound-mgr.hpp"
 #include "game/scene/common/scene-loading.hpp"
 #include "game/scene/scene-mgr.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 #include "game/core/core.hpp"
 #include "game/core/user.hpp"
 #include "game/core/common.hpp"
@@ -182,7 +182,7 @@ void Scene_game::update(const Delta_time dt) {
     if ((hpw::game_ticks % 72) == 0)
       replay_stable_log();
     /*if (hpw::game_ticks >= 6'000)
-      hpw::soft_exit();*/
+      safe_call(Port::soft_exit);*/
   #endif
 } // update
 

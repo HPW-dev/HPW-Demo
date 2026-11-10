@@ -4,8 +4,7 @@
 
 #include "scene-palette-select.hpp"
 #include "scene-epge.hpp"
-#include "port/port-util.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 #include "game/scene/options/scene-gamma.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "game/core/common.hpp"
@@ -36,7 +35,7 @@
 
 
 void set_high_quality() {
-  graphic::set_vsync(true);
+  graphic::toggle_vsync(true);
   graphic::set_disable_frame_limit(false);
   graphic::blink_particles = false;
   graphic::motion_blur_quality_mul = 0.5;
@@ -81,7 +80,7 @@ struct Scene_graphic::Impl {
   }
 
   inline static void set_adaptive() {
-    graphic::set_vsync(false);
+    graphic::toggle_vsync(false);
     graphic::set_disable_frame_limit(false);
     graphic::set_target_fps(graphic::get_target_vsync_fps());
     graphic::autoopt_timeout_max = graphic::default_autoopt_timeout;
@@ -108,7 +107,7 @@ struct Scene_graphic::Impl {
   }
 
   inline static void set_high_plus_stream() {
-    graphic::set_vsync(false);
+    graphic::toggle_vsync(false);
     graphic::set_disable_frame_limit(false);
     graphic::set_target_fps(graphic::get_target_vsync_fps() + 15);
     graphic::blink_particles = false;
@@ -126,7 +125,7 @@ struct Scene_graphic::Impl {
   }
 
   inline static void set_low_pc() {
-    graphic::set_vsync(false);
+    graphic::toggle_vsync(false);
     graphic::set_disable_frame_limit(false);
     graphic::set_target_fps(std::min(240, graphic::get_target_vsync_fps() * 2));
     graphic::autoopt_timeout_max = 15;
@@ -175,7 +174,7 @@ struct Scene_graphic::Impl {
     return new_shared<Menu_bool_item>(
       get_locale_str("graphic_menu.fullscreen"),
       []{ return graphic::fullscreen; },
-      [](bool new_val) { hpw::set_fullscreen(new_val); },
+      [](bool new_val) { safe_call(Port::toggle_fullscreen, new_val); },
       get_locale_str("graphic_menu.description.fullscreen")
     );
   }
@@ -184,7 +183,7 @@ struct Scene_graphic::Impl {
     return new_shared<Menu_bool_item>(
       get_locale_str("graphic_menu.vsync"),
       []{ return graphic::get_vsync(); },
-      [](bool new_val) { graphic::set_vsync(new_val); },
+      [](bool new_val) { graphic::toggle_vsync(new_val); },
       get_locale_str("graphic_menu.description.vsync")
     );
   }
@@ -250,7 +249,7 @@ struct Scene_graphic::Impl {
     return new_shared<Menu_bool_item>(
       get_locale_str("graphic_menu.show_mouse_cursour"),
       []{ return graphic::show_mouse_cursour; },
-      [](bool new_val) { hpw::set_mouse_cursour_mode(new_val); },
+      [](bool new_val) { safe_call(Port::toggle_mouse_visible, new_val); },
       get_locale_str("graphic_menu.description.show_mouse_cursour")
     );
   }
@@ -281,22 +280,22 @@ struct Scene_graphic::Impl {
         Menu_list_item::Item {
           .name = get_locale_str("graphic_menu.resize_type.one_to_one"),
           .desc = get_locale_str("graphic_menu.description.resize_type.one_to_one"),
-          .action = []{ hpw::set_resize_mode(Resize_mode::one_to_one); }
+          .action = []{ safe_call(Port::set_resize_mode, Resize_mode::one_to_one); }
         },
         Menu_list_item::Item {
           .name = get_locale_str("graphic_menu.resize_type.x_only"),
           .desc = get_locale_str("graphic_menu.description.resize_type.x_only"),
-          .action = []{ hpw::set_resize_mode(Resize_mode::by_width); }
+          .action = []{ safe_call(Port::set_resize_mode, Resize_mode::by_width); }
         },
         Menu_list_item::Item {
           .name = get_locale_str("graphic_menu.resize_type.y_only"),
           .desc = get_locale_str("graphic_menu.description.resize_type.y_only"),
-          .action = []{ hpw::set_resize_mode(Resize_mode::by_height); }
+          .action = []{ safe_call(Port::set_resize_mode, Resize_mode::by_height); }
         },
         Menu_list_item::Item {
           .name = get_locale_str("graphic_menu.resize_type.full"),
           .desc = get_locale_str("graphic_menu.description.resize_type.full"),
-          .action = []{ hpw::set_resize_mode(Resize_mode::full); }
+          .action = []{ safe_call(Port::set_resize_mode, Resize_mode::full); }
         }
       }, // items
       []{ return scast<std::size_t>(graphic::resize_mode); }
@@ -340,8 +339,8 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_epilepsy_item() {
     return new_shared<Menu_text_item>(get_locale_str("graphic_menu.epilepsy"), [] {
-      hpw::init_palette_from_archive("graphic/images/palettes/zebura.png");
-      hpw::set_resize_mode(Resize_mode::full);
+      safe_call(Port::set_palette, "graphic/images/palettes/zebura.png");
+      safe_call(Port::set_resize_mode, Resize_mode::full);
       graphic::set_disable_frame_limit(true);
     }, []->utf32 { return {}; },
     get_locale_str("graphic_menu.description.epilepsy") );
@@ -349,10 +348,10 @@ struct Scene_graphic::Impl {
 
   inline Shared<Menu_text_item> get_reset_item() {
     return new_shared<Menu_text_item>(get_locale_str("common.reset"), [] {
-      hpw::init_palette_from_archive(Str(graphic::DEFAULT_PALETTE_FILE));
+      safe_call(Port::set_palette, Str(graphic::DEFAULT_PALETTE_FILE));
       graphic::cur_test_image_path = graphic::DEFAULT_TEST_IMAGE;
-      hpw::set_resize_mode(graphic::default_resize_mode);
-      hpw::set_gamma(1.0);
+      safe_call(Port::set_resize_mode, graphic::default_resize_mode);
+      safe_call(Port::set_gamma, 1.0);
       graphic::set_disable_frame_limit(false);
       graphic::show_fps = false;
       graphic::epges.clear();
@@ -473,7 +472,7 @@ struct Scene_graphic::Impl {
         new_shared<Menu_bool_item>(
           get_locale_str("graphic_menu.double_buffering"),
           []{ return graphic::double_buffering; },
-          [](bool new_val) { hpw::set_double_buffering(new_val); },
+          [](bool new_val) { safe_call(Port::toggle_double_buffering, new_val); },
           get_locale_str("graphic_menu.description.double_buffering")
         ),
         new_shared<Menu_bool_item>(

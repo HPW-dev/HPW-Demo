@@ -16,7 +16,7 @@ inline Delta_time cur_fps {}; // текущий FPS
 inline Delta_time soft_draw_time {}; // время отрисовки графики движком
 inline Delta_time hard_draw_time {}; // время отрисовки графики системой
 
-void set_vsync(bool val);
+void toggle_vsync(bool val);
 void set_disable_frame_limit(bool val);
 void set_fast_forward(bool val);
 void set_target_fps(int val); // меняет лимит кадров

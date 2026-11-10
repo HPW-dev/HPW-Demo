@@ -18,8 +18,7 @@
 #include "game/menu/advanced-text-menu.hpp"
 #include "game/menu/item/double-item.hpp"
 #include "game/menu/item/text-item.hpp"
-#include "port/command.hpp"
-#include "util/error.hpp"
+#include "port/port.hpp"
 
 
 struct Scene_gamma::Impl {
@@ -34,15 +33,15 @@ struct Scene_gamma::Impl {
     assert(test_image);
     // тест надо проводить в масштабе 1:1 
     fullscreen_bak = graphic::fullscreen;
-    hpw::set_fullscreen(false);
+    safe_call(Port::toggle_fullscreen, false);
     // стандартная палитра для теста
     palette_bak = graphic::current_palette_file;
-    hpw::init_palette_from_archive("graphic/images/palettes/default.png");
+    safe_call(Port::set_palette, "graphic/images/palettes/default.png");
   } // impl
 
   inline ~Impl() {
-    hpw::set_fullscreen(fullscreen_bak);
-    hpw::init_palette_from_archive(palette_bak);
+    safe_call(Port::toggle_fullscreen, fullscreen_bak);
+    safe_call(Port::set_palette, palette_bak);
   }
 
   inline void update(const Delta_time dt) {
@@ -61,11 +60,14 @@ struct Scene_gamma::Impl {
       new_shared<Menu_double_item>(
         get_locale_str("graphic_menu.gamma.gamma_value"),
         []()->double { return graphic::gamma; },
-        [](const double val) { hpw::set_gamma(val); },
+        [](const double val) { safe_call(Port::set_gamma, val); },
         0.005,
         get_locale_str("graphic_menu.gamma.description.gamma_value")
       ),
-      new_shared<Menu_text_item>( get_locale_str("common.reset"), []{ hpw::set_gamma(1.0); hpw::scene_mgr.back(); } ),
+      new_shared<Menu_text_item>( get_locale_str("common.reset"), []{
+        safe_call(Port::set_gamma, 1.0);
+        hpw::scene_mgr.back();
+      } ),
       new_shared<Menu_text_item>( get_locale_str("common.exit"), []{ hpw::scene_mgr.back(); } ),
     }; // menu_items
 

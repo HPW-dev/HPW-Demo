@@ -1,46 +1,49 @@
 #pragma once
-#include <atomic>
-#include "util/macro.hpp"
-#include "util/mem-types.hpp"
-#include "util/vec.hpp"
-#include "util/num-types.hpp"
-#include "port-resize.hpp"
-#include "command.hpp"
+#include <functional>
 
-// базовый класс для игрового хоста
-class Port {
-  void callbacks_init(); // задать колбэки для общих команд
-  void process_input();
+#include "game/core/core-window.hpp"
+#include "game/input/keys.hpp"
+#include "util/str.hpp"
 
-protected:
-  int _argc {};
-  char** _argv {};
-  std::atomic_bool _is_ran {true};
-  Veci _wnd_off {440, 240}; // Стартовое смещение окна
 
-  #ifdef WINDOWS
-  void* _app_mutex {};
-  #endif
-  
-  virtual void _set_double_buffering(bool enable) = 0;
-  virtual void _set_resize_mode(Resize_mode mode) = 0;
-  virtual void _set_mouse_cursour_mode(bool mode) = 0;
-  virtual void set_gamma(const double gamma) = 0;
-  // получить текущее время в секундах
-  virtual Delta_time get_time() const = 0;
-  virtual void draw_game_frame() const = 0;
+namespace Port {
+#define STDFN(FUNC_TYPE, FUNC_NAME) inline std::function<FUNC_TYPE> FUNC_NAME {};
 
-  void init_app_mutex();
-  void free_app_mutex();
+// --- Input -------------------------------------------------------------------
+// Переназначить клавишу
+STDFN(void (hpw::keycode), rebind_key)
+// Переназначить клавишу по её сканкоду
+STDFN(void (hpw::keycode, int), rebind_key_by_scancode)
+// сброс настроек клавиатуры
+STDFN(void (), reset_keymap)
 
-public:
-  explicit Port(int argc, char** argv);
-  virtual ~Port();
-  inline virtual void run() {}
-  virtual void update(const Delta_time dt);
-  virtual void exit();
+// --- Graphic -----------------------------------------------------------------
+// V-Sync вкл/выкл
+STDFN(void (bool yes_no), toggle_vsync)
+// Установка палитры из файла
+STDFN(void (cr<Str> path), set_palette)
+// Выставить гамму для моника
+STDFN(void (double value), set_gamma)
+// Растянуть игру на полный экран
+STDFN(void (bool yes_no), toggle_fullscreen)
+// Двойная буфферизация вкл/выкл
+STDFN(void (bool yes_no), toggle_double_buffering)
+// Выбирает режим растягивания окна игры
+STDFN(void (Resize_mode), set_resize_mode)
+// Показ курсора мыши вкл/выкл
+STDFN(void (bool yes_no), toggle_mouse_visible)
 
-private:
-  struct Impl;
-  Unique<Impl> _impl {};
-}; // Port
+// --- Misc --------------------------------------------------------------------
+// Вежливо попросить игру завершиться
+STDFN(void (), soft_exit)
+// Сохранить сниомк экрана
+STDFN(void (), make_screenshot)
+// TODO перетащить это в подходящее место
+STDFN(void (uint), set_target_ups)
+// Получить время со старта игры (Сек)
+STDFN(double (), get_time)
+
+void process_error(cr<Str> error);
+
+#undef STDFN
+} // Port ns

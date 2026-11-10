@@ -1,26 +1,28 @@
 #include "pch.hpp"
 #include "cmd-core.hpp"
-#include "cmd-util.hpp"
-#include "cmd-common.hpp"
-#include "game/scene/scene-util.hpp"
-#include "game/core/graphic.hpp"
-#include "game/core/tasks.hpp"
-#include "game/core/scenes.hpp"
-#include "game/core/entities.hpp"
-#include "game/core/core.hpp"
-#include "game/core/debug.hpp"
-#include "game/core/canvas.hpp"
-#include "game/util/sync.hpp"
-#include "game/util/config.hpp"
-#include "game/entity/util/entity-util.hpp"
-#include "game/entity/collider/collider-empty.hpp"
+
+#include "game/entity/collider/collider-experimental-2.hpp"
+#include "game/entity/collider/collider-experimental.hpp"
+#include "game/entity/collider/collider-2d-tree.hpp"
 #include "game/entity/collider/collider-simple.hpp"
 #include "game/entity/collider/collider-qtree.hpp"
+#include "game/entity/collider/collider-empty.hpp"
 #include "game/entity/collider/collider-grid.hpp"
-#include "game/entity/collider/collider-2d-tree.hpp"
-#include "game/entity/collider/collider-experimental.hpp"
-#include "game/entity/collider/collider-experimental-2.hpp"
-#include "port/port-util.hpp"
+#include "game/entity/util/entity-util.hpp"
+#include "game/scene/scene-util.hpp"
+#include "game/core/entities.hpp"
+#include "game/core/graphic.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/scenes.hpp"
+#include "game/core/tasks.hpp"
+#include "game/core/debug.hpp"
+#include "game/core/core.hpp"
+#include "game/util/config.hpp"
+#include "game/util/sync.hpp"
+#include "cmd-common.hpp"
+#include "cmd-util.hpp"
+#include "port/port.hpp"
+
 
 // выполняет команду после задержки
 class Timed_cmd final: public Task {
@@ -104,7 +106,7 @@ void enable_render(Cmd_maker& command, Cmd& console, cr<Strs> args) {
 void set_tickrate(Cmd_maker& command, Cmd& console, cr<Strs> args) {
   iferror(args.size() < 2, "не указано количество UPS в команде");
   cauto new_ups = s2n<int>(args[1]);
-  set_target_ups(new_ups);
+  safe_call(Port::set_target_ups, new_ups);
   console.print("тикрейт игры = " + n2s(new_ups, 2));
 }
 

@@ -2,7 +2,7 @@
 #include "sync.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/core.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 
 static bool m_vsync {false};
 static bool m_disable_frame_limit {false};
@@ -16,13 +16,13 @@ static Delta_time m_draw_time_autoopt_limit = 1.0 / (60 * 0.9); // лимит р
 
 namespace graphic {
 
-void set_vsync(bool val) {
+void toggle_vsync(bool val) {
   m_vsync = val;
 
-  if (hpw::set_vsync)
-    hpw::set_vsync(val);
+  if (Port::toggle_vsync)
+    safe_call(Port::toggle_vsync, val);
   else
-    log_debug << "graphic::set_vsync: был вызван без иниц-го hpw::set_vsync";
+    log_debug << "graphic::toggle_vsync: был вызван без иниц-го Port::toggle_vsync";
 
   if (val) {
     set_disable_frame_limit(false);
@@ -37,7 +37,7 @@ void set_disable_frame_limit(bool val) {
   m_disable_frame_limit = val;
 
   if (val)
-    set_vsync(false);
+    toggle_vsync(false);
 }
 
 void set_fast_forward(bool val) {
@@ -68,7 +68,7 @@ void set_fast_forward(bool val) {
     graphic::light_quality = Light_quality::disabled;
     graphic::heat_distort_mode = Heat_distort_mode::disabled;
   } else { // off
-    set_vsync(bak_vsync);
+    toggle_vsync(bak_vsync);
     set_target_fps(bak_fps_limit);
     set_disable_frame_limit(bak_disable_frame_limit);
     graphic::motion_blur_mode = bak_motion_blur_mode;
@@ -82,7 +82,7 @@ void set_target_fps(int val) {
   assert(val > 0);
   // выключить VSync, если new_fps не совпадае с частотой монитора
   if (val != get_target_vsync_fps())
-    set_vsync(false);
+    toggle_vsync(false);
   m_target_fps = val;
   set_target_frame_time( 1.0 / m_target_fps );
   set_bad_fps( 0.9 * (get_vsync() ? get_target_vsync_fps() : val) );

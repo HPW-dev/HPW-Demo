@@ -1,33 +1,34 @@
 #include "pch.hpp"
 #include "entity-mgr.hpp"
-#include "entity-type.hpp"
-#include "particle-loader.hpp"
-#include "explosion-loader.hpp"
-#include "bonus-loader.hpp"
-#include "bullet-loader.hpp"
-#include "entity.hpp"
-#include "port/command.hpp"
-#include "player/player-dark.hpp"
-#include "collider/collider-empty.hpp"
-#include "util/hitbox.hpp"
-#include "util/phys.hpp"
-#include "game/util/game-archive.hpp"
-#include "game/util/camera.hpp"
-#include "game/util/vec-helper.hpp"
-#include "game/util/resource-helper.hpp"
-#include "game/core/time-scale.hpp"
-#include "game/core/core.hpp"
-#include "game/core/canvas.hpp"
-#include "game/core/common.hpp"
+
 #include "game/entity/util/collider-optimizer.hpp"
-#include "game/entity/util/scatter.hpp"
 #include "game/entity/util/entity-util.hpp"
+#include "game/entity/util/scatter.hpp"
+#include "game/entity/enemy/enemy-tutorial.hpp"
 #include "game/entity/enemy/cosmic-hunter.hpp"
 #include "game/entity/enemy/cosmic-waiter.hpp"
 #include "game/entity/enemy/cosmic.hpp"
 #include "game/entity/enemy/illaen.hpp"
 #include "game/entity/enemy/snake.hpp"
-#include "game/entity/enemy/enemy-tutorial.hpp"
+#include "collider/collider-empty.hpp"
+#include "game/util/resource-helper.hpp"
+#include "game/util/game-archive.hpp"
+#include "game/util/vec-helper.hpp"
+#include "game/util/camera.hpp"
+#include "player/player-dark.hpp"
+#include "game/core/time-scale.hpp"
+#include "game/core/canvas.hpp"
+#include "game/core/common.hpp"
+#include "game/core/core.hpp"
+#include "util/hitbox.hpp"
+#include "util/phys.hpp"
+#include "explosion-loader.hpp"
+#include "particle-loader.hpp"
+#include "bullet-loader.hpp"
+#include "bonus-loader.hpp"
+#include "entity-type.hpp"
+#include "entity.hpp"
+#include "port/port.hpp"
 
 struct Entity_mgr::Impl {
   Entities m_entities {}; // массив всех игровых объектов
@@ -74,7 +75,7 @@ struct Entity_mgr::Impl {
   }
 
   inline void update(const Delta_time dt) {
-    cauto st = hpw::get_time();
+    cauto st = safe_call(Port::get_time);
 
     accept_registrate_list();
     bound_check();
@@ -84,16 +85,16 @@ struct Entity_mgr::Impl {
     // просчёт столкновений
     m_collider_optimizer->update();
     if (m_collision_resolver) {
-      cauto cld_st = hpw::get_time();
+      cauto cld_st = safe_call(Port::get_time);
       (*m_collision_resolver)(m_entities, dt);
-      m_collider_time = hpw::get_time() - cld_st;
+      m_collider_time = safe_call(Port::get_time) - cld_st;
     } else {
       m_collider_time = 0;
     }
 
     update_entitys(dt);
 
-    cauto ed = hpw::get_time();
+    cauto ed = safe_call(Port::get_time);
     m_update_lag = (ed - st) >= hpw::target_tick_time * 1.1;
   } // update
   

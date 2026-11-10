@@ -23,7 +23,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/scene/scene-mgr.hpp"
 #include "util/file/archive.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 
 
 constx Vec cube_sz(13, 13); // размер квадратика для теста оттенков
@@ -84,7 +84,7 @@ struct Scene_palette_select::Impl {
           [this]{ _hide_menu = true; }),
         new_shared<Menu_text_item>(get_locale_str("common.reset"), [this]{ 
           graphic::current_palette_file = Str{graphic::DEFAULT_PALETTE_FILE};
-          hpw::init_palette_from_archive(graphic::current_palette_file);
+          safe_call(Port::set_palette, graphic::current_palette_file);
           //graphic::cur_test_image_path = graphic::DEFAULT_TEST_IMAGE;
           init_menu();
         }),

@@ -17,8 +17,7 @@
 #include "game/input/keys.hpp"
 #include "game/util/locale.hpp"
 #include "util/file/file-io.hpp"
-#include "port/port-util.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 
 #ifndef NO_EPGE
 #include "engine/graphic/epge/epge-util.hpp"
@@ -157,8 +156,9 @@ void load_config_game(cr<nlohmann::json> config) {
 
 void load_config_input(cr<nlohmann::json> config) {
   node_check(config);
-  if (hpw::rebind_key_by_scancode) {
-    #define LOAD_KEY(name) hpw::rebind_key_by_scancode(hpw::keycode::name, config.value<int>(#name, get_scancode(hpw::keycode::name)) );
+  if (Port::rebind_key_by_scancode) {
+    #define LOAD_KEY(name) Port::rebind_key_by_scancode( \
+      hpw::keycode::name, config.value<int>(#name, get_scancode(hpw::keycode::name)) );
     LOAD_KEY(enable)
     LOAD_KEY(escape)
     LOAD_KEY(bomb)
@@ -197,10 +197,10 @@ void load_config_graphic(cr<nlohmann::json> config) {
   graphic::max_motion_blur_quality_reduct =
     config.value<real>("max_motion_blur_quality_reduct", graphic::max_motion_blur_quality_reduct);
   graphic::start_focused = config.value<bool>("start_focused", graphic::start_focused);
-  safecall(hpw::init_palette_from_archive, config.value<Str>("palette", graphic::current_palette_file));
+  safe_call(Port::set_palette, config.value<Str>("palette", graphic::current_palette_file));
   graphic::frame_skip = config.value<uint>("frame_skip", graphic::frame_skip);
   graphic::auto_frame_skip = config.value<bool>("auto_frame_skip", graphic::auto_frame_skip);
-  safecall(hpw::set_gamma, config.value<double>("gamma", graphic::gamma));
+  safe_call(Port::set_gamma, config.value<double>("gamma", graphic::gamma));
   graphic::show_fps = config.value<bool>("show_fps", graphic::show_fps);
   load_light_quality(config);
   load_heat_distort_mode(config);
@@ -208,7 +208,7 @@ void load_config_graphic(cr<nlohmann::json> config) {
 
   cauto sync_node = node_or_empty(config, "sync");
   node_check(sync_node);
-  graphic::set_vsync( sync_node.value<bool>("vsync", graphic::get_vsync()) );
+  graphic::toggle_vsync( sync_node.value<bool>("vsync", graphic::get_vsync()) );
   graphic::wait_frame_bak = graphic::wait_frame = sync_node.value<bool>("wait_frame", graphic::wait_frame);
   graphic::set_disable_frame_limit( sync_node.value<bool>("disable_frame_limit", graphic::get_disable_frame_limit()) );
   graphic::set_target_fps( sync_node.value<int>("target_fps", graphic::get_target_vsync_fps()) );

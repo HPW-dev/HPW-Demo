@@ -1,3 +1,4 @@
+#include "pch.hpp"
 #include "scene-game-pause.hpp"
 
 #include "game/scene/options/scene-options.hpp"
@@ -13,7 +14,7 @@
 #include "game/menu/item/list-item.hpp"
 #include "game/menu/text-menu.hpp"
 #include "engine/graphic/image/image.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 
 Scene_game_pause::Scene_game_pause() {
   init_menu();
@@ -42,7 +43,7 @@ void Scene_game_pause::init_menu() {
       new_shared<Menu_text_item>(get_locale_str("options.title"),
         []{ hpw::scene_mgr.add(new_shared<Scene_options>()); }),
       new_shared<Menu_text_item>(get_locale_str("pause.screenshot"),
-        []{ hpw::make_screenshot(); }),
+        []{ safe_call(Port::make_screenshot); }),
       palette_list_item(),
       new_shared<Menu_text_item>(get_locale_str("pause.main_menu"), []{
         hpw::scene_mgr.back(3); // cur->пауза->игровой процесс->окно загрузки
@@ -53,7 +54,7 @@ void Scene_game_pause::init_menu() {
         }
       }),
       new_shared<Menu_text_item>(get_locale_str("pause.game_exit"),
-        []{ hpw::soft_exit(); }),
+        []{ safe_call(Port::soft_exit); }),
     },
     Vec{60, 80}
   );

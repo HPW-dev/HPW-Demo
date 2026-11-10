@@ -5,11 +5,11 @@
 #include "game/core/messages.hpp"
 #include "game/core/tasks.hpp"
 #include "game/util/version.hpp"
-#include "port/command.hpp"
+#include "port/port.hpp"
 
 void Cmd_exit::exec(cr<Strs> cmd_and_args) {
-  iferror(!hpw::soft_exit, "hpw::soft_exit не инициализирован");
-  hpw::soft_exit();
+  iferror(!Port::soft_exit, "Port::soft_exit не инициализирован");
+  safe_call(Port::soft_exit);
 }
 
 void Cmd_error::exec(cr<Strs> cmd_and_args) {

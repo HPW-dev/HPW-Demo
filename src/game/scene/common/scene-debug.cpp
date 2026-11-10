@@ -18,7 +18,7 @@
 #include "engine/graphic/image/image.hpp"
 #include "engine/graphic/font/font.hpp"
 #include "util/file/archive.hpp"
-#include "port/port-util.hpp"
+#include "port/port.hpp"
 
 
 Scene_debug::Scene_debug() {
@@ -118,7 +118,7 @@ void Scene_debug::init_menu() {
       new_shared<Menu_int_item>(
         U"тикрейт",
         [] { return hpw::target_ups; },
-        [] (int new_val) { set_target_ups(std::clamp(new_val, 10, 1'000)); },
+        [] (int new_val) { safe_call(Port::set_target_ups, std::clamp(new_val, 10, 1'000)); },
         10
       ),
       new_shared<Menu_text_item>(get_locale_str("common.exit"), []{
