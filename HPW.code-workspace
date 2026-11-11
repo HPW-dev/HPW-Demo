@@ -8,7 +8,8 @@
 		"search.followSymlinks": false,
 		"C_Cpp.default.includePath": [
 			".",
-			"src"
+			"src",
+			"thirdparty/include/_windows_only/GLFW/x64"
 		],
 		"files.associations": {
 			"*.h": "cpp",
@@ -154,7 +155,8 @@
 			"USE_LAN",
 			"_OPENMP",
 			"STABLE_REPLAY",
-			"PORT_GLFW3"
+			"PORT_GLFW3",
+			"GLFW_DLL"
 		]
 	}
 }
