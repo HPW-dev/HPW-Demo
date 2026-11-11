@@ -6,19 +6,22 @@ int main(int argc, char** argv) {
   Str err_msg;
   try {
 
-    /* TODO
-    Port::init() // make window, init port
+    Port::init();
+    // TODO game init
 
-    while Port::is_ran():
-      Port::update() // update input, calc dt
+    while (Port::is_ran()) {
+      Port::update();
+
+      /* TODO
       while accum_update:
         Game::update()
-      while accum_redraw:
-        Game::redraw()
-      Port::render_canvas()
-      Port::sync() // double buffer, delay
 
-    Port::finalize() */
+      Game::redraw() */
+      Port::render_canvas();
+      Port::sync();
+    }
+
+    Port::finalize();
     return EXIT_SUCCESS;
 
   } catch(cr<hpw::Error> err) { // ошибка игры
@@ -26,7 +29,7 @@ int main(int argc, char** argv) {
   } catch(cr<std::bad_alloc> ba) { // кончилась оперативка
     err_msg = "Need more RAM";
   } catch(cr<std::exception> err) { // std-ошибка
-    err_msg = Str{"STD Error: "} + err.what();
+    err_msg = Str{"STD-error: "} + err.what();
   } catch(...) { // нонейм
     err_msg = "Unknown error";
   }
