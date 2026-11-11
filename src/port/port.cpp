@@ -47,7 +47,7 @@ void process_error(cr<Str> error) {
 #endif
 }
 
-void init() { glfw3_init(); }
+void init(int argc, char** argv) { glfw3_init(argc, argv); }
 bool is_ran() { return glfw3_is_ran(); }
 void update() { glfw3_update(); }
 void render_canvas() { glfw3_render_canvas(); }

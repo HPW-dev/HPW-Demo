@@ -50,7 +50,7 @@ STDFN(double (), get_time)
 // Для показа ошибки юзеру
 void process_error(cr<Str> error);
 // Создаёт окно для игры и грузит функции портов
-void init(); 
+void init(int argc, char** argv); 
 // false, если игровой цикл завершили
 [[nodiscard]] bool is_ran();
 // Обновить состояния порта, чекнуть физический инпут, посчитать Dt

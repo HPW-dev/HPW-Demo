@@ -6,7 +6,7 @@ int main(int argc, char** argv) {
   Str err_msg;
   try {
 
-    Port::init();
+    Port::init(argc, argv);
     // TODO game init
 
     while (Port::is_ran()) {
