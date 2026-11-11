@@ -7,7 +7,7 @@ Error::Error (cr<Str> _msg, cr<Str> _location)
   , msg{_msg} {}
 
 Cstr Error::what() const noexcept {
-  last_err = "in " + location + ": " + msg;
+  last_err = "Error in " + location + "\r\nMessage: " + msg;
   return last_err.c_str();
 }
 
