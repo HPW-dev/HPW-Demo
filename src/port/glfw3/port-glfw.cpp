@@ -47,6 +47,21 @@ struct Glfw3_context {
 static Glfw3_context g_ctx {}; // Все нужные данные для GLFW окна
 
 
+// настроить сид рандома
+static void init_random() {
+  u32_t seed;
+  if (g_ctx.custom_seed.has_value()) {
+    seed = g_ctx.custom_seed.value();
+  } else {
+    seed = std::time(nullptr);
+  }
+
+  // TODO учесть большой сид
+  log_debug << std::format("Сид рандома: {}\n", seed);
+  set_rnd_seed({.old_seed=seed});
+}
+
+// для предупреждения о двух окнах игры
 static void init_app_mutex() {
 #ifdef WINDOWS
   g_ctx.app_mutex = ::CreateMutex(NULL, TRUE, "HPW: Double window mutex");
@@ -77,7 +92,10 @@ static void signal_handler(int signal) {
   }
 }
 
-static void parse_args(int argc, char** argv) {
+static void process_args(int argc, char** argv) {
+  hpw::argc = g_ctx.argc = argc;
+  hpw::argv = g_ctx.argv = argv;
+
   Pparser ret( Pparser::v_param_t {
     {{"-s", "--seed"}, "set random seed", [](cr<Str> val){
       g_ctx.custom_seed = s2n<uint32_t>(val);
@@ -123,13 +141,16 @@ void glfw3_init(int argc, char** argv) {
   log_info << "GLFW3 initialization...";
 
   std::signal(SIGINT, signal_handler); // для закрытия через Ctrl+C 
-  
-  // аргументы запуска:
-  hpw::argc = g_ctx.argc = argc;
-  hpw::argv = g_ctx.argv = argv;
-  parse_args(argc, argv);
 
-  init_app_mutex(); // предупреждаем о двух окнах игры
+#ifdef WINDOWS
+  // переключить консоль винды в UTF8
+  SetConsoleOutputCP(CP_UTF8);
+#endif
+  
+  process_args(argc, argv);
+
+  init_app_mutex();
+  init_random();
 
   log_debug << "GLFW3 end of initialization";
 }
