@@ -16,16 +16,20 @@
 // GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
 #include <GLFW/glfw3.h>
 
+#include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
 #include "game/core/common.hpp"
+#include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
+#include "port/port.hpp"
 
 #ifndef DISABLE_CONFIG
   #include "game/util/config.hpp"
 #endif
 
 
+//---- Все нужные данные для GLFW окна -----------------------------------------
 struct Glfw3_context {
   int argc {};
   char** argv {};
@@ -44,10 +48,45 @@ struct Glfw3_context {
   bool once_gamma_conf {true}; // защита от циклического выставления гаммы
   std::optional<uint32_t> custom_seed {};
 };
+static Glfw3_context g_ctx {};
 
-static Glfw3_context g_ctx {}; // Все нужные данные для GLFW окна
+//---- Внутренние функции порта ------------------------------------------------
 
+static void soft_exit() {
+  log_info << "software exit...";
+  g_ctx.is_ran = false;
+}
 
+static void make_screenshot() {
+  if (graphic::canvas)
+    save_screenshot(*graphic::canvas);
+  else
+    log_error << "graphic::canvas not initialized (ignore)";
+};
+
+// привязка функций порта
+static void init_port_cbs() {
+  log_debug << "init port callbacks...";
+
+  Port::soft_exit = &soft_exit;
+  Port::make_screenshot = &make_screenshot;
+  /* TODO
+  Port::rebind_key = ;
+  Port::rebind_key_by_scancode = ;
+  Port::reset_keymap = ;
+  Port::toggle_vsync = ;
+  Port::set_palette = ;
+  Port::set_gamma = ;
+  Port::toggle_fullscreen = ;
+  Port::toggle_double_buffering = ;
+  Port::set_resize_mode = ;
+  Port::toggle_mouse_visible = ;
+  Port::set_target_ups = ;
+  Port::get_time = ;
+  */
+}
+
+// рандомный логотип в консоли
 static void print_logo() {
   cauto print_source = hpw::logger.config.print_source;
   cauto print_stream_name = hpw::logger.config.print_stream_name;
@@ -167,6 +206,7 @@ void glfw3_init(int argc, char** argv) {
   init_app_mutex();
   init_random();
   print_logo();
+  init_port_cbs();
 
   log_debug << "GLFW3 end of initialization";
 }
