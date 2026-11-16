@@ -202,6 +202,8 @@ void glfw3_init(int argc, char** argv) {
 #endif
   
   process_args(argc, argv); // парс аргументов <--------------------------------
+  hpw::cur_dir = launch_dir_from_argv0(argv); // узнать в какойо папке игра запущена
+  log_debug << "launch directory: " << hpw::cur_dir;
 
   init_app_mutex();
   init_random();
