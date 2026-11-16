@@ -15,7 +15,10 @@ Strs root_tags(cr<nlohmann::json> src) {
   return ret;
 }
 
-void save(cr<nlohmann::json> src, cr<Str> path, bool readable) {
+void save(cr<nlohmann::json> src, cr<Str> path_, bool readable) {
+  Str path = path_;
+  conv_sep(path);
+
   std::ofstream file(path);
   iferror (!file.is_open(), "error while saving JSON-file \"" + path + "\"");
   
@@ -26,7 +29,10 @@ void save(cr<nlohmann::json> src, cr<Str> path, bool readable) {
     file << src.dump();
 }
 
-void load(nlohmann::json& dst, cr<Str> path, bool make_if_not_exist) {
+void load(nlohmann::json& dst, cr<Str> path_, bool make_if_not_exist) {
+  Str path = path_;
+  conv_sep(path);
+
   std::ifstream file(path);
 
   // если файл не вышло открыть, пытаться его создать:
