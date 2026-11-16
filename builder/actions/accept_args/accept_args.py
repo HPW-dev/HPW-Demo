@@ -176,6 +176,11 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
     action='store_true',
     help='Не компилить уровни, игрока, противников и всего прочего для геймплея'
   )
+  parser.add_argument(
+    '-s', '--static',
+    action='store_true',
+    help='Статическая сборка'
+  )
 
   args = parser.parse_args()
 
@@ -210,6 +215,10 @@ def accept_args(tgt: Target, ctx: Context, host: Host):
   ctx.with_tests = bool(args.with_tests)
   ctx.with_lan = not bool(args.no_lan)
   ctx.with_gameplay = not bool(args.no_gameplay)
+  ctx.static_linking = bool(args.static)
+  if ctx.static_linking:
+    # TODO ещё надо команды GCC на линухе и винде потестить
+    quit(to_red('(Заглушка) статическая сборка ещё недопилена'))
   if bool(args.no_pch):
     ctx.pch_path = ''
     tgt.pch_path = ''

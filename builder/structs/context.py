@@ -26,8 +26,9 @@ class Context:
   with_print_build_info : bool = True  # показывать инфу о сборке в консоли
   with_tests            : bool = False # включает тесты в игре
   clear_all             : bool = False # если True, то чистит всё и прерывает сборку
-  less_info             : bool = False # Выводить меньше логов сборки
+  less_info             : bool = False # выводить меньше логов сборки
   forced_rebuild        : bool = False # принудительный пересбор
   with_game_ver         : bool = True  # добавить в .exe версию файла
   with_lan              : bool = True  # сетевая игра
   with_gameplay         : bool = True  # компилить уровни, игрока и противников
+  static_linking        : bool = False # статическая сборка
