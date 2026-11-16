@@ -1,5 +1,5 @@
+#include "pch.hpp"
 #include "logo.hpp"
-#include "util/random.hpp"
 
 cr<Strs> get_all_logos() {
   sconst Strs table_logo {
@@ -334,6 +334,8 @@ R"(
 Str get_random_logo() {
   // случайный выбор лого
   crauto table_logo = get_all_logos();
+  for (crauto l: table_logo)
+    log_info << l << '\n';
   auto table_idx = rndu_fast(table_logo.size() - 1);
   return table_logo.at(table_idx);
 } // get_random_logo

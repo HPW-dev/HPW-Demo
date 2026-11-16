@@ -17,6 +17,7 @@
 #include <GLFW/glfw3.h>
 
 #include "game/util/version.hpp"
+#include "game/util/logo.hpp"
 #include "game/core/common.hpp"
 #include "game/input/keys.hpp"
 
@@ -46,6 +47,18 @@ struct Glfw3_context {
 
 static Glfw3_context g_ctx {}; // Все нужные данные для GLFW окна
 
+
+static void print_logo() {
+  cauto print_source = hpw::logger.config.print_source;
+  cauto print_stream_name = hpw::logger.config.print_stream_name;
+  hpw::logger.config.print_source = false;
+  hpw::logger.config.print_stream_name = false;
+
+  log_info << '\n' << get_random_logo();
+
+  hpw::logger.config.print_source = print_source;
+  hpw::logger.config.print_stream_name = print_stream_name;
+}
 
 // настроить сид рандома
 static void init_random() {
@@ -147,10 +160,11 @@ void glfw3_init(int argc, char** argv) {
   SetConsoleOutputCP(CP_UTF8);
 #endif
   
-  process_args(argc, argv);
+  process_args(argc, argv); // парс аргументов <--------------------------------
 
   init_app_mutex();
   init_random();
+  print_logo();
 
   log_debug << "GLFW3 end of initialization";
 }

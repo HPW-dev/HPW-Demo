@@ -21,6 +21,7 @@ enum class Logger_stream {
 // настройки логгера
 struct Logger_config {
   bool print_source {true};
+  bool print_stream_name {true};
   bool use_endl {true};
   bool use_terminal {true};
   bool use_stream_info {true};

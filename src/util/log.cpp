@@ -135,7 +135,8 @@ hpw::Logger& config_log_to_info(cr<std::source_location> sl) {
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::info);
   hpw::logger.set_stream(hpw::Logger_stream::info);
-  hpw::logger << "Info    | ";
+  if (hpw::Logger::config.print_stream_name)
+    hpw::logger << "Info    | ";
   hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
@@ -146,7 +147,8 @@ hpw::Logger& config_log_to_error(cr<std::source_location> sl) {
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::error);
   hpw::logger.set_stream(hpw::Logger_stream::error);
-  hpw::logger << "Error   | ";
+  if (hpw::Logger::config.print_stream_name)
+    hpw::logger << "Error   | ";
   hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
@@ -157,7 +159,8 @@ hpw::Logger& config_log_to_debug(cr<std::source_location> sl) {
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::debug);
   hpw::logger.set_stream(hpw::Logger_stream::debug);
-  hpw::logger << "Debug   | ";
+  if (hpw::Logger::config.print_stream_name)
+    hpw::logger << "Debug   | ";
   hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
@@ -168,7 +171,8 @@ hpw::Logger& config_log_to_warning(cr<std::source_location> sl) {
   hpw::Logger::config.use_endl = false;
   hpw::Logger::set_color(hpw::Logger_stream::warning);
   hpw::logger.set_stream(hpw::Logger_stream::warning);
-  hpw::logger << "Warning | ";
+  if (hpw::Logger::config.print_stream_name)
+    hpw::logger << "Warning | ";
   hpw::logger << hpw::Logger::get_source_location(sl);
   hpw::Logger::config.use_endl = tmp;
   return hpw::logger;
