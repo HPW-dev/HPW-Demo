@@ -54,7 +54,7 @@ static void print_logo() {
   hpw::logger.config.print_source = false;
   hpw::logger.config.print_stream_name = false;
 
-  log_info << '\n' << get_random_logo();
+  log_info << get_random_logo();
 
   hpw::logger.config.print_source = print_source;
   hpw::logger.config.print_stream_name = print_stream_name;
@@ -62,6 +62,8 @@ static void print_logo() {
 
 // настроить сид рандома
 static void init_random() {
+  log_debug << "init random seed...";
+
   u32_t seed;
   if (g_ctx.custom_seed.has_value()) {
     seed = g_ctx.custom_seed.value();
@@ -70,7 +72,7 @@ static void init_random() {
   }
 
   // TODO учесть большой сид
-  log_debug << std::format("Сид рандома: {}\n", seed);
+  log_debug << std::format("seed: {}\n", seed);
   set_rnd_seed({.old_seed=seed});
 }
 
