@@ -37,7 +37,7 @@ struct Glfw3_context {
 
   GLFWwindow* window {};
   Veci wnd_off {440, 240}; // Стартовое смещение окна
-  Veci wnd_sz {512, 384}; // реальная ширина и высота окна (меняется при ресайзе)
+  Veci wnd_sz {graphic::width, graphic::height}; // реальная ширина и высота окна (меняется при ресайзе)
   Recti wnd_game_area {}; // видимая часть внутреннего окна игры
   Resize_mode resize_mode {Resize_mode::by_height}; // режим растягивания окна
   Str window_title {"H.P.W"};
