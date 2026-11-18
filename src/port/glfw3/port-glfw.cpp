@@ -208,13 +208,12 @@ void glfw3_init(int argc, char** argv) {
   hpw::cur_dir = launch_dir_from_argv0(argv); // узнать в какойо папке игра запущена
   log_debug << "launch directory: " << hpw::cur_dir;
 
-#ifndef DISABLE_CONFIG
-  load_config();
-#endif
-
   init_app_mutex();
   init_random();
   print_logo();
+#ifndef DISABLE_CONFIG
+  load_config();
+#endif
   init_port_cbs();
 
   log_debug << "GLFW3 end of initialization";

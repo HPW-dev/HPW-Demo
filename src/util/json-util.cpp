@@ -37,7 +37,7 @@ void load(nlohmann::json& dst, cr<Str> path_, bool make_if_not_exist) {
 
   // если файл не вышло открыть, пытаться его создать:
   if (file.is_open()) {
-    log_info << "loaded JSON-file \"" << path << "\"";
+    log_debug << "loaded JSON-file \"" << path << "\"";
   } else {
     if (make_if_not_exist) {
       log_warning << "JSON-file \"" << path << "\" not loaded";

@@ -48,6 +48,8 @@ void load_locale(cr<Str> user_path) {
     path = user_path;
   if (path.empty())
     path = hpw::fallback_locale_path;
+    
+  conv_sep(path);
   log_info << "файл для загрузки: \"" << path << "\"";
 
   try {

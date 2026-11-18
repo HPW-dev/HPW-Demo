@@ -114,7 +114,7 @@ static inline void load_nickname() {
     assert(hpw::player_name.size() == nick_sz / sizeof(char32_t));
     fr.read(ptr2ptr<byte*>(hpw::player_name.data()), nick_sz);
   } catch (...) {
-    log_warning << "не удалось загрузить файл с никнеймом игрока. Ник будет пустым";
+    log_debug << "не удалось загрузить файл с никнеймом игрока. Ник будет пустым";
     hpw::player_name = {};
   }
 }
@@ -305,9 +305,14 @@ void save_config() {
 
 void load_config() {
   log_info << "чтение конфига...";
+  
+  // сделать папки под конфиги, если нету
   make_dir_if_not_exist(hpw::cur_dir + hpw::config_dir);
-  log_info << "файл конфига: \"" + hpw::cur_dir + hpw::config_path + "\"";
-  load(hpw::config, hpw::cur_dir + hpw::config_path, true);
+
+  Str config_path = hpw::cur_dir + hpw::config_path;
+  conv_sep(config_path);
+  log_info << "файл конфига: \"" + config_path + "\"";
+  load(hpw::config, config_path, true);
 
   crauto config = hpw::config;
   hpw::first_start = config.value<bool>("first_start", true);
