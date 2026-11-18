@@ -19,7 +19,7 @@
 #include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
-#include "game/core/window.hpp"
+#include "game/core/core-window.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
@@ -85,7 +85,7 @@ static void apply_resize_mode() {
       // максимальный множитель, при котором игра целиком влезает в окно
       const int scale_x = g_ctx.wnd_sz.x / base_w;
       const int scale_y = g_ctx.wnd_sz.y / base_h;
-      const int scale = std::min(scale_x, scale_y);
+      int scale = std::min(scale_x, scale_y);
 
       // выбираем наибольший кратный 2 множитель или 1
       if (scale >= 2)

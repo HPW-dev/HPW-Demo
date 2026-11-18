@@ -177,9 +177,6 @@ void load_config_input(cr<nlohmann::json> config) {
 
 void load_config_graphic(cr<nlohmann::json> config) {
   node_check(config);
-  cauto canvas_size = config.value("canvas_size", Vector<int>{graphic::width, graphic::height});
-  graphic::width  = canvas_size.at(0);
-  graphic::height = canvas_size.at(1);
   graphic::enable_motion_interp = config.value<bool>("enable_motion_interp", graphic::enable_motion_interp);
   graphic::fullscreen = config.value<bool>("fullscren", graphic::fullscreen);
   graphic::draw_border = config.value<bool>("draw_border", graphic::draw_border);
@@ -245,7 +242,6 @@ void save_config() {
   debug["start_script"] = hpw::start_script;
 
   rauto graphic_node = make_node(config, "graphic");
-  graphic_node["canvas_size"] = Vector<int>{graphic::width, graphic::height};
   graphic_node["light_quality"] = scast<int>(graphic::light_quality);
   graphic_node["enable_motion_interp"] = graphic::enable_motion_interp;
   graphic_node["fullscren"] = graphic::fullscreen;
