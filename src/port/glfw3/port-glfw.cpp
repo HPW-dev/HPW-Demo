@@ -218,7 +218,7 @@ void glfw3_init(int argc, char** argv) {
 }
 
 bool glfw3_is_ran() {
-  return g_ctx.is_ran && (glfwWindowShouldClose(g_ctx.window) == GL_FALSE);
+  return g_ctx.is_ran && g_ctx.window && (glfwWindowShouldClose(g_ctx.window) == GL_FALSE);
 }
 
 void glfw3_update() {
