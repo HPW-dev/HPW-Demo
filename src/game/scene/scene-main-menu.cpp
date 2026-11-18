@@ -88,7 +88,7 @@ void Scene_main_menu::init_logo() {
 
   // нарисовать логотип по центру меню
   const Vec logo_sz(logo->X(), logo->Y());
-  const Vec menu_sz(graphic::canvas->X, 160);
+  const Vec menu_sz(graphic::canvas.X, 160);
   logo_pos = center_point(menu_sz, logo_sz);
   logo_pos.y += 50;
 } // init_logo

@@ -22,19 +22,17 @@ Vec get_rand_pos_graphic(const real sx, const real sy, const real ex, const real
 }
 
 Vec rnd_screen_pos_safe() {
-  assert(graphic::canvas);
   return Vec {
-    rndr(0, graphic::canvas->X),
-    rndr(0, graphic::canvas->Y)
+    rndr(0, graphic::canvas.X),
+    rndr(0, graphic::canvas.Y)
   };
 }
 
 Vec rnd_screen_pos_fast() {
-  assert(graphic::canvas);
   return Vec {
-    rndr_fast(0, graphic::canvas->X),
-    rndr_fast(0, graphic::canvas->Y)
+    rndr_fast(0, graphic::canvas.X),
+    rndr_fast(0, graphic::canvas.Y)
   };
 }
 
-[[nodiscard]] Rect get_screen_rect() { return Rect(0,0, graphic::canvas->X,graphic::canvas->Y); }
+[[nodiscard]] Rect get_screen_rect() { return Rect(0,0, graphic::canvas.X,graphic::canvas.Y); }

@@ -67,7 +67,7 @@ struct Scene_msgbox_enter::Impl {
 
   inline void make_bg() {
     // затенить прошлый кадр игры
-    _bg = *graphic::canvas;
+    _bg = graphic::canvas;
     sub_brightness(_bg, Pal8::from_real(0.55));
 
     Rect window(

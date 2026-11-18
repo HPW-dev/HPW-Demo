@@ -46,6 +46,8 @@ struct Glfw3_context {
   void* app_mutex {};
 #endif
 
+  Vector<GLfloat> pal_rgb {}; // Палитра игры подготовленная к отправке на видяху
+
   bool is_ran {true};
   bool rebind_key_mode {false};
   hpw::keycode key_for_rebind {hpw::keycode::error}; // появится при hpw::rebind_key
@@ -127,12 +129,7 @@ static void soft_exit() {
   g_ctx.is_ran = false;
 }
 
-static void make_screenshot() {
-  if (graphic::canvas)
-    save_screenshot(*graphic::canvas);
-  else
-    log_error << "graphic::canvas not initialized (ignore)";
-};
+static void make_screenshot() { save_screenshot(graphic::canvas); };
 
 // привязка функций порта
 static void init_port_cbs() {

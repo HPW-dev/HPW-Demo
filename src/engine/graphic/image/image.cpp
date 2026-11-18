@@ -207,7 +207,7 @@ bool IMGTMPL::size_check(int x, int y) const noexcept {
   const bool ret = x > 0 && x <= 1024 * 16 && y > 0 && y <= 1024 * 16;
 
   if (!ret)
-    log_warning << "bad sizes for image init";
+    log_warning << "bad sizes for image init (" << x << ", " << y << ")";
 
   return ret;
 }

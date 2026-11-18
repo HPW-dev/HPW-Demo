@@ -17,7 +17,7 @@ struct Scene_empty::Impl {
   inline void draw(Image& _) const {
     // если экран не чёрный, то стереть всё с экрана
     if (_screen_cleared == false) {
-      graphic::canvas->fill(Pal8::black);
+      graphic::canvas.fill(Pal8::black);
       _screen_cleared = true;
     }
   }

@@ -201,7 +201,7 @@ void Scene_game::draw(Image& dst) const {
 
 void Scene_game::init_entitys() {
   // для показа хитбоксов
-  init_shared(hpw::hitbox_layer, graphic::canvas->X, graphic::canvas->Y);
+  init_shared(hpw::hitbox_layer, graphic::canvas.X, graphic::canvas.Y);
   init_unique(hpw::entity_mgr);
 }
 

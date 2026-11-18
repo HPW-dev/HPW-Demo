@@ -16,7 +16,7 @@ struct Scene_dummy::Impl {
   int alpha = 128;
 
   inline explicit Impl() {
-    test_pic.init(*graphic::canvas);
+    test_pic.init(graphic::canvas);
   }
 
   inline void update(const Delta_time dt) {
