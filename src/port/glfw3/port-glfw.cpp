@@ -152,13 +152,13 @@ static void process_args(int argc, char** argv) {
 
   Pparser ret( Pparser::v_param_t {
     {{"-s", "--seed"}, "set random seed", [](cr<Str> val){
-      g_ctx.custom_seed = s2n<uint32_t>(val);
+      g_ctx.custom_seed = s2n<u32_t>(val);
     }},
     {{"-ox", "--offset_x"}, "set window startup offset by x", [](cr<Str> val){
-      g_ctx.wnd_off.x = s2n<uint32_t>(val);
+      g_ctx.wnd_off.x = s2n<int>(val);
     }},
     {{"-oy", "--offset_y"}, "set window startup offset by y", [](cr<Str> val){
-      g_ctx.wnd_off.y = s2n<uint32_t>(val);
+      g_ctx.wnd_off.y = s2n<int>(val);
     }},
     {{"-w", "--windowed"}, "enable windowed mode", [](cr<Str> val){
       g_ctx.start_fullscreen = false;
@@ -222,7 +222,7 @@ bool glfw3_is_ran() {
 }
 
 void glfw3_update() {
-  // TODO
+  // TODO update states
 }
 
 void glfw3_render_canvas() {
