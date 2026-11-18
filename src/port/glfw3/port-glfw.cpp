@@ -19,6 +19,7 @@
 #include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
+#include "game/core/window.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
@@ -36,6 +37,9 @@ struct Glfw3_context {
 
   GLFWwindow* window {};
   Veci wnd_off {440, 240}; // Стартовое смещение окна
+  Veci wnd_sz {512, 384}; // реальная ширина и высота окна (меняется при ресайзе)
+  Recti wnd_game_area {}; // видимая часть внутреннего окна игры
+  Resize_mode resize_mode {Resize_mode::by_height}; // режим растягивания окна
   Str window_title {"H.P.W"};
   bool start_fullscreen {false}; // через аргументы запуска можно указать запуститься в фулскрине
 #ifdef WINDOWS
@@ -51,6 +55,72 @@ struct Glfw3_context {
 static Glfw3_context g_ctx {};
 
 //---- Внутренние функции порта ------------------------------------------------
+
+static bool is_bad_wnd_sz() {
+  return
+    g_ctx.wnd_sz.x <= 0 ||
+    g_ctx.wnd_sz.y <= 0 ||
+    g_ctx.wnd_game_area.size.x <= 0 ||
+    g_ctx.wnd_game_area.size.y <= 0; 
+}
+
+// растягивает внутреннее окно игры с учётом соотношений и режимов
+static void apply_resize_mode() {
+  constexpr int base_w = graphic::width;
+  constexpr int base_h = graphic::height;
+  constexpr real aspect = scast<real>(base_w) / scast<real>(base_h);
+
+  // если окно винды свернуть, то оно станет нулевого размера. Защита от вылета:
+  if (g_ctx.wnd_sz.x <= 0 || g_ctx.wnd_sz.y <= 0) {
+    g_ctx.wnd_game_area.pos = {0, 0};
+    g_ctx.wnd_game_area.size = {0, 0};
+    return;
+  }
+
+  Veci new_sz {};
+
+  switch (g_ctx.resize_mode) {
+    default:
+    case Resize_mode::one_to_one: {
+      // максимальный множитель, при котором игра целиком влезает в окно
+      const int scale_x = g_ctx.wnd_sz.x / base_w;
+      const int scale_y = g_ctx.wnd_sz.y / base_h;
+      const int scale = std::min(scale_x, scale_y);
+
+      // выбираем наибольший кратный 2 множитель или 1
+      if (scale >= 2)
+        scale = (scale / 2) * 2; // нечётные -> чётные
+      else
+        scale = 1;
+
+      new_sz.x = base_w * scale;
+      new_sz.y = base_h * scale;
+      break;
+    }
+
+    case Resize_mode::by_width: {
+      new_sz.x = g_ctx.wnd_sz.x;
+      new_sz.y = scast<int>(new_sz.x / aspect);
+      break;
+    }
+
+    case Resize_mode::by_height: {
+      new_sz.y = g_ctx.wnd_sz.y;
+      new_sz.x = scast<int>(new_sz.y * aspect);
+      break;
+    }
+
+    case Resize_mode::full: {
+      new_sz = g_ctx.wnd_sz;
+      break;
+    }
+  } // switch resize mode
+
+  // Центрирование внутреннего окна игры в физическом внешнем:
+  g_ctx.wnd_game_area.size = new_sz;
+  g_ctx.wnd_game_area.pos.x = (g_ctx.wnd_sz.x - new_sz.x) / 2;
+  g_ctx.wnd_game_area.pos.y = (g_ctx.wnd_sz.y - new_sz.y) / 2;
+}
 
 static void soft_exit() {
   log_info << "software exit...";

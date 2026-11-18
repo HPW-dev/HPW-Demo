@@ -4,7 +4,7 @@
 
 // настройки графики
 namespace graphic {
-inline int width  = 512;  // ширина canvas
-inline int height = 384;  // высота canvas
+inline sconst int width  = 512;  // ширина canvas
+inline sconst int height = 384;  // высота canvas
 inline Unique<Image> canvas {}; // буффер рендера
 }
