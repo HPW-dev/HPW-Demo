@@ -119,9 +119,10 @@ static void init_random() {
 static void init_app_mutex() {
 #ifdef WINDOWS
   g_ctx.app_mutex = ::CreateMutex(NULL, TRUE, "HPW: Double window mutex");
-  if (ERROR_ALREADY_EXISTS == ::GetLastError()) {
+  if (::GetLastError() == ERROR_ALREADY_EXISTS) {
     hpw::multiple_apps = true;
     ::CloseHandle(g_ctx.app_mutex);
+    g_ctx.app_mutex = nullptr;
     log_warning << "Запущено больше двух экземпляров игры";
   }
 #else
@@ -131,8 +132,10 @@ static void init_app_mutex() {
 
 static void free_app_mutex() {
 #ifdef WINDOWS
-  ::ReleaseMutex(g_ctx.app_mutex);
-  ::CloseHandle(g_ctx.app_mutex);
+  if (g_ctx.app_mutex) {
+    ::ReleaseMutex(g_ctx.app_mutex);
+    ::CloseHandle(g_ctx.app_mutex);
+  }
 #else
   #pragma message("need impl for free_app_mutex() on Linux")
 #endif
