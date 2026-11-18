@@ -177,7 +177,7 @@ static void process_args(int argc, char** argv) {
       std::exit(EXIT_SUCCESS);
     }},
     {{"-t", "--title"}, "set window title (if not defined, set HPW)", [](cr<Str> val) {
-      if (val.empty())
+      if (!val.empty())
         g_ctx.window_title = val;
     }},
     {{"-v", "--version"}, "print game version and exit", [](cr<Str> val){
