@@ -19,7 +19,6 @@ inline bool sound_mgr_init_error {}; // true, если не удалось ин�
 inline bool multiple_apps {}; // true - два и более окна с игрой запущено
 inline bool rnd_pal_after_death {}; // true - менять палитру при проигрыше
 inline bool collider_autoopt {true}; // перебирать разные варианты детекторов коллизий при лагах
-inline bool forced_debug_log {false}; // ключ запуска -d принудительно включает дебаг логи
 inline Priority process_priority {Priority::normal};
 
 inline Str game_dir = "./../"; // корневая папка игры

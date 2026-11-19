@@ -75,6 +75,7 @@ public:
 }; // Logger
 
 inline Logger logger {};
+inline bool forced_debug_log {false}; // ключ запуска -d принудительно включает дебаг логи
 
 void close_log_file();
 // открыть файл лога для вставки в конец

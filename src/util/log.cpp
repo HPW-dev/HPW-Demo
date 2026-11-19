@@ -60,7 +60,7 @@ void Logger::_print(std::stringstream& ss) const {
   return_if (Logger::config.stream == Logger_stream::null);
   return_if (Logger::config.stream == Logger_stream::info && !Logger::config.use_stream_info);
   return_if (Logger::config.stream == Logger_stream::warning && !Logger::config.use_stream_warning);
-  return_if (Logger::config.stream == Logger_stream::debug && !(Logger::config.use_stream_debug || hpw::forced_debug_log));
+  return_if (Logger::config.stream == Logger_stream::debug && !(Logger::config.use_stream_debug || forced_debug_log));
   return_if (Logger::config.stream == Logger_stream::error && !Logger::config.use_stream_error);
 
   std::lock_guard lock(Logger::mu);
