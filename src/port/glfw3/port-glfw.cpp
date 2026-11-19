@@ -20,6 +20,7 @@
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
 #include "game/core/core-window.hpp"
+#include "game/core/graphic.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
@@ -39,7 +40,6 @@ struct Glfw3_context {
   Veci wnd_off {440, 240}; // Стартовое смещение окна
   Veci wnd_sz {graphic::width, graphic::height}; // реальная ширина и высота окна (меняется при ресайзе)
   Recti wnd_game_area {}; // видимая часть внутреннего окна игры
-  Resize_mode resize_mode {Resize_mode::by_height}; // режим растягивания окна
   Str window_title {"H.P.W"};
   bool start_fullscreen {false}; // через аргументы запуска можно указать запуститься в фулскрине
 #ifdef WINDOWS
@@ -81,7 +81,7 @@ static void apply_resize_mode() {
 
   Veci new_sz {};
 
-  switch (g_ctx.resize_mode) {
+  switch (graphic::resize_mode) {
     default:
     case Resize_mode::one_to_one: {
       // максимальный множитель, при котором игра целиком влезает в окно
@@ -131,12 +131,46 @@ static void soft_exit() {
 
 static void make_screenshot() { save_screenshot(graphic::canvas); };
 
+static void reshape(int w, int h) {
+  g_ctx.wnd_sz.x = w;
+  g_ctx.wnd_sz.y = h;
+  apply_resize_mode();
+
+  // окно нулевого размера не надо отображать
+  graphic::enable_render = !is_bad_wnd_sz();
+  if (graphic::enable_render) {
+    // настройка 2D координат и проекций OpenGL:
+    glViewport(
+      g_ctx.wnd_game_area.pos.x,
+      g_ctx.wnd_game_area.pos.y,
+      g_ctx.wnd_game_area.pos.x + g_ctx.wnd_game_area.size.x,
+      g_ctx.wnd_game_area.pos.y + g_ctx.wnd_game_area.size.y);
+  }
+
+  log_debug << "new window size: " << g_ctx.wnd_sz.x << ", " << g_ctx.wnd_sz.y
+    << " (area: " << to_str(g_ctx.wnd_game_area.pos) << ", " << to_str(g_ctx.wnd_game_area.size) << ")";
+}
+
+static void set_resize_mode(Resize_mode mode) {
+  log_debug << "new resize mode: " << scast<int>(mode);
+  graphic::resize_mode = mode;
+  reshape(graphic::width, graphic::height);
+  
+  /* если фулскрин был включён, то сначала выключить его,
+  иначе на линуксе экран погаснет */
+  if (graphic::fullscreen) {
+    Port::toggle_fullscreen(false);
+    Port::toggle_fullscreen(true);
+  }
+}
+
 // привязка функций порта
 static void init_port_cbs() {
   log_debug << "init port callbacks...";
 
   Port::soft_exit = &soft_exit;
   Port::make_screenshot = &make_screenshot;
+  Port::set_resize_mode = &set_resize_mode;
   /* TODO
   Port::rebind_key = ;
   Port::rebind_key_by_scancode = ;
@@ -146,7 +180,6 @@ static void init_port_cbs() {
   Port::set_gamma = ;
   Port::toggle_fullscreen = ;
   Port::toggle_double_buffering = ;
-  Port::set_resize_mode = ;
   Port::toggle_mouse_visible = ;
   Port::set_target_ups = ;
   Port::get_time = ;
