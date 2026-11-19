@@ -16,6 +16,8 @@
 // GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
 #include <GLFW/glfw3.h>
 
+#include "engine/graphic/image/color-rgb.hpp"
+#include "engine/graphic/image/palette.hpp"
 #include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
@@ -291,6 +293,19 @@ static void process_args(int argc, char** argv) {
 
   ret.skip_empty = true;
   ret(argc, argv);
+}
+
+static void init_rgb_pal() {
+  log_debug << "init rgb (float) palette for OGL...";
+  cauto default_pal = get_default_palette();
+  g_ctx.pal_rgb.resize(default_pal.size() * 3);
+
+  for (size_t i = 0; crauto c: default_pal) {
+    g_ctx.pal_rgb.at(i * 3 + 0) = c.r / 255.0;
+    g_ctx.pal_rgb.at(i * 3 + 1) = c.g / 255.0;
+    g_ctx.pal_rgb.at(i * 3 + 2) = c.b / 255.0;
+    ++i;
+  }
 }
 
 //---- Основные функции GLFW3 порта --------------------------------------------

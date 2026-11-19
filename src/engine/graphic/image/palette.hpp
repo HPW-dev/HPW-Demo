@@ -20,3 +20,6 @@ Palette load_palette(cr<File> src);
 
 // помогает сортировать палитры по похожести
 bool by_similar(cr<Palette> a, cr<Palette> b);
+
+// выдаёт стандартную палитру H.P.W
+[[nodiscard]] Palette get_default_palette();

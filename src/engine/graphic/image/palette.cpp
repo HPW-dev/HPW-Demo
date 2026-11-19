@@ -1,6 +1,7 @@
 #include "pch.hpp"
-#include "stb/stb_image.h"
 #include "palette.hpp"
+
+#include "stb/stb_image.h"
 #include "color.hpp"
 #include "color-convert.hpp"
 #include "util/file/file.hpp"
@@ -340,4 +341,8 @@ bool by_similar(cr<Palette> a, cr<Palette> b) {
     return to_luma(a_avg) < to_luma(b_avg);
 
   return a_hue < b_hue;
+}
+
+Palette get_default_palette() {
+  return Palette (pal8_default_table.begin(), pal8_default_table.end());
 }
