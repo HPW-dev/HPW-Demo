@@ -1,9 +1,12 @@
-#include <cassert>
+#include "pch.hpp"
 #include "color-table.hpp"
+
 #include "game/util/resource-helper.hpp"
 #include "util/file/file.hpp"
 
+
 void load_color_tables() {
+  log_debug << "load color tables...";
   const Str dir = "graphic/color tables/";
   table_inv          = load_res(dir + "table_inv.dat").data;
   table_inv_safe     = load_res(dir + "table_inv_safe.dat").data;

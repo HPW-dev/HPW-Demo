@@ -37,6 +37,7 @@ static inline void load_log_config(cr<nlohmann::json> config) {
   cfg.use_stream_info    = streams_node.value<bool>("info",     cfg.use_stream_info);
   cfg.use_stream_warning = streams_node.value<bool>("warning",  cfg.use_stream_warning);
   cfg.use_stream_debug   = streams_node.value<bool>("debug",    cfg.use_stream_debug);
+  cfg.use_stream_debug   |= hpw::forced_debug_log;
   cfg.use_stream_error   = streams_node.value<bool>("error",    cfg.use_stream_error);
 }
 

@@ -29,6 +29,7 @@
 #include "port/port.hpp"
 
 #ifndef DISABLE_CONFIG
+  #include "game/util/game-archive.hpp"
   #include "game/util/config.hpp"
 #endif
 
@@ -38,6 +39,7 @@ struct Glfw3_context {
   int argc {};
   char** argv {};
 
+// GLFW окно:
   GLFWwindow* window {};
   Veci wnd_off {440, 240}; // Стартовое смещение окна
   Veci wnd_sz {graphic::width, graphic::height}; // реальная ширина и высота окна (меняется при ресайзе)
@@ -48,8 +50,19 @@ struct Glfw3_context {
   void* app_mutex {};
 #endif
 
+// OpenGL:
   Vector<GLfloat> pal_rgb {}; // Палитра игры подготовленная к отправке на видяху
+  uint screen_tex = 0; // OpenGL текстура экрана
+  uint vao = 0;
+  GLuint pbos[2] = {0, 0};
+  bool use_double_pbo {true};
+  int pbo_index = 0;
+  size_t pbo_sz = 0;
+  uint shader_prog = 0, vert_shader = 0, frag_shader = 0;
+  uint pal_tex = 0;
+  cp<void> pixels {}; // данные для копирования в текстуру
 
+// Общее для игры:
   bool is_ran {true};
   bool rebind_key_mode {false};
   hpw::keycode key_for_rebind {hpw::keycode::error}; // появится при hpw::rebind_key
@@ -273,6 +286,7 @@ static void process_args(int argc, char** argv) {
     }},
     {{"-d", "--debug"}, "enable debug log stream", [](cr<Str> _){
       hpw::logger.config.use_stream_debug = true;
+      hpw::forced_debug_log = true;
     }},
     {{"-h", "--help", "--info"}, "print this help and exit", [&](cr<Str> val){
       ret.print_info();
@@ -318,9 +332,9 @@ void glfw3_init(int argc, char** argv) {
   // переключить консоль винды в UTF8
   SetConsoleOutputCP(CP_UTF8);
 #endif
-  
+
   process_args(argc, argv); // парс аргументов <--------------------------------
-  hpw::cur_dir = launch_dir_from_argv0(argv); // узнать в какойо папке игра запущена
+  hpw::cur_dir = launch_dir_from_argv0(argv); // узнать в какой папке игра запущена
   log_debug << "launch directory: " << hpw::cur_dir;
 
   init_app_mutex();
@@ -330,6 +344,15 @@ void glfw3_init(int argc, char** argv) {
   load_config();
 #endif
   init_port_cbs();
+
+  g_ctx.pixels = scast<cp<void>>(graphic::canvas.data());
+
+#ifndef DISABLE_CONFIG
+  init_archive(); // из архива понадобятся шейдеры
+#endif
+#ifndef ECOMEM
+  load_color_tables();
+#endif
 
   log_debug << "GLFW3 end of initialization";
 }

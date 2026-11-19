@@ -188,7 +188,7 @@ File load_res(cr<Str> name) {
   assert(!name.empty());
 
   // попытка загрузить ресурс с архива:
-  #if !defined(EDITOR) && !defined(DISABLE_ARCHIVE)
+#if !defined(EDITOR) && !defined(DISABLE_ARCHIVE)
   try {
     iferror(!hpw::archive, "hpw::archive не инициализирован");
     return hpw::archive->get_file(name);
@@ -197,7 +197,7 @@ File load_res(cr<Str> name) {
   } catch(...) {
     log_error << "не удалось загрузить ресурс \"" + name + "\" из архива";
   }
-  #endif
+#endif
 
   // попытка загрузить ресурс из файловой ситсемы ОС:
   auto os_path = hpw::cur_dir + hpw::os_resources_dir + name;
