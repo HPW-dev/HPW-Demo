@@ -17,6 +17,7 @@
 // GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
 #include <GLFW/glfw3.h>
 
+#include "port/windows/windows-keycodes.hpp" // TODO add Linux keycodes file
 #include "engine/graphic/image/color-convert.hpp"
 #include "engine/graphic/image/color-rgb.hpp"
 #include "engine/graphic/image/palette.hpp"
@@ -29,8 +30,9 @@
 #include "game/core/palette.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
+#include "game/core/tasks.hpp"
+#include "game/core/user.hpp"
 #include "game/input/keys.hpp"
-#include "port/windows/windows-keycodes.hpp" // TODO add Linux keycodes file
 #include "port/port.hpp"
 
 #ifndef DISABLE_CONFIG
@@ -39,8 +41,8 @@
 #endif
 
 
-//---- Все нужные данные для GLFW окна -----------------------------------------
-//! перенаправляет управление с GLFW в игру
+//---- классы/контексты/глобалы ------------------------------------------------
+// перенаправляет управление с GLFW в игру
 class Key_mapper final {
   nocopy(Key_mapper);
 
@@ -61,6 +63,28 @@ public:
   Keys_info get_info() const;
 };
 
+// отложенное нажатие кнопки
+class Lazy_press final: public Task {
+  hpw::keycode _keycode {};
+  bool _kill_me_on_next_update {};
+
+public:
+  inline explicit Lazy_press(const hpw::keycode keycode): _keycode {keycode} {}
+
+  inline void update(const Delta_time dt) override final { 
+    if (!_kill_me_on_next_update) {
+      press(_keycode);
+      _kill_me_on_next_update = true;
+    } else
+      this->kill();
+  }
+
+  inline void on_end() {
+    release(_keycode);
+  }
+};
+
+// Все нужные данные для GLFW окна
 struct Glfw3_context {
   int argc {};
   char** argv {};
@@ -470,6 +494,14 @@ static void set_resize_mode(Resize_mode mode) {
   }
 }
 
+static void set_gamma(const double gamma) {
+  ret_if(gamma == 1);
+
+  graphic::gamma = std::clamp<double>(gamma, 0.025, 3);
+  auto monitor = glfwGetPrimaryMonitor();
+  glfwSetGamma(monitor, graphic::gamma);
+}
+
 // привязка функций порта
 static void init_port_cbs() {
   log_debug << "init port callbacks...";
@@ -478,12 +510,12 @@ static void init_port_cbs() {
   Port::make_screenshot = []{ save_screenshot(graphic::canvas); };
   Port::set_resize_mode = &set_resize_mode;
   Port::set_palette = &set_palette;
+  Port::set_gamma = &set_gamma;
   /* TODO
   Port::rebind_key = ;
   Port::rebind_key_by_scancode = ;
   Port::reset_keymap = ;
   Port::toggle_vsync = ;
-  Port::set_gamma = ;
   Port::toggle_fullscreen = ;
   Port::toggle_double_buffering = ;
   Port::toggle_mouse_visible = ;
@@ -673,6 +705,110 @@ static void draw_game_frame() {
 
   if (!graphic::double_buffering)
     glFlush();
+}
+
+static void hotkey_process(GLFWwindow* window,
+int key, int scancode, int action, int mods) {
+  // альтернативная кнопка скриншота
+  if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
+    hpw::task_mgr.add(new_shared<Lazy_press>(hpw::keycode::screenshot));
+  
+  // альтернативная кнопка фуллскрина
+  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
+    hpw::task_mgr.add(new_shared<Lazy_press>(hpw::keycode::fulscrn));
+    release(hpw::keycode::enable);
+  }
+  
+  // вставка текста из буффера Ctrl + V
+  if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {
+    if (hpw::text_input_mode) {
+      const Str buffer = glfwGetClipboardString(window);
+      if (!buffer.empty()) {
+        hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
+        hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(),
+          hpw::text_input.size());
+      }
+    }
+  }
+
+  // снос всей введёной строки текста (Ctrl + C)
+  if (action == GLFW_PRESS && key == GLFW_KEY_C && mods == GLFW_MOD_CONTROL) {
+    if (hpw::text_input_mode) {
+      hpw::text_input.clear();
+      hpw::text_input_pos = 0;
+    }
+  }
+}
+
+static void mouse_button_callback(GLFWwindow* window,
+int button, int action, int mods) {
+  // вставка текста из буффера при правой кнопке мыши
+  if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
+    if (hpw::text_input_mode) {
+      const Str buffer = glfwGetClipboardString(window);
+      if (!buffer.empty()) {
+        hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
+        hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(), hpw::text_input.size());
+      }
+    }
+  }
+}
+
+static void key_callback(GLFWwindow* window, int key, int scancode,
+int action, int mods) {
+  hpw::any_key_pressed = true;
+  rauto keymap_table = g_ctx.key_mapper.get_table();
+
+  // режим ребинда клавиши
+  if (g_ctx.rebind_key_mode) {
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+      g_ctx.key_mapper.bind(g_ctx.key_for_rebind, scancode);
+      hpw::keys_info = g_ctx.key_mapper.get_info();
+      g_ctx.rebind_key_mode = false;
+      return; // чтобы нажатие не применилось в игровой логике
+    }
+  }
+
+  // проверить нажатия на игровые клавиши
+  for (crauto [hpw_key, key]: keymap_table) {
+    if (key.scancode == scancode) {
+      if (action == GLFW_PRESS || action == GLFW_REPEAT)
+        press(hpw_key);
+      else // GLFW_RELEASE
+        release(hpw_key);
+    }
+  }
+
+  hotkey_process(window, key, scancode, action, mods);
+}
+
+// колбэк для вывода ошибок GLFW
+static void error_callback(int error, Cstr description) {
+  // поставить дефолтную гамму при ошибке
+  if (g_ctx.window && g_ctx.once_gamma_conf) {
+    set_gamma(1);
+    g_ctx.once_gamma_conf = false;
+  }
+
+  Str addition_desc;
+  if (error == 65540)
+    addition_desc += ". Maybe need delete config/config.json";
+
+  error("GLFW error: " << error << ": " << description << addition_desc);
+}
+
+static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h) {
+  reshape(w, h);
+}
+
+// utf32 text input callback
+static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoint) {
+  return_if (!hpw::text_input_mode);
+
+  hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos, 0, hpw::text_input.size());
+  cauto ch = scast<decltype(hpw::text_input)::value_type>(codepoint);
+  hpw::text_input.insert(hpw::text_input_pos, 1, ch);
+  hpw::text_input_pos = std::min<int>(hpw::text_input_pos + 1, hpw::text_input.size());
 }
 
 //---- Основные функции GLFW3 порта --------------------------------------------
