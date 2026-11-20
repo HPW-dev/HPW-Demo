@@ -30,6 +30,7 @@
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
+#include "port/windows/windows-keycodes.hpp" // TODO add Linux keycodes file
 #include "port/port.hpp"
 
 #ifndef DISABLE_CONFIG
@@ -39,6 +40,27 @@
 
 
 //---- Все нужные данные для GLFW окна -----------------------------------------
+//! перенаправляет управление с GLFW в игру
+class Key_mapper final {
+  nocopy(Key_mapper);
+
+  struct GLFW_key {
+    utf32 name {};
+    int scancode {}; // системный код клавиши
+  };
+
+  // <hpw key, GLFW key>
+  std::unordered_map<hpw::keycode, GLFW_key> table {};
+
+public:
+  inline Key_mapper() { reset(); }
+  ~Key_mapper() = default;
+  void reset(); // поставить клавиши по умолчанию
+  void bind(hpw::keycode dst_hpw_key, int glfw_key); // забиндить клавишу
+  inline decltype(table)& get_table() { return table; }
+  Keys_info get_info() const;
+};
+
 struct Glfw3_context {
   int argc {};
   char** argv {};
@@ -53,6 +75,7 @@ struct Glfw3_context {
 #ifdef WINDOWS
   void* app_mutex {};
 #endif
+  Key_mapper key_mapper {};
 
 // OpenGL:
   Vector<GLfloat> pal_rgb {}; // Палитра игры подготовленная к отправке на видяху
@@ -76,6 +99,56 @@ struct Glfw3_context {
 static Glfw3_context g_ctx {};
 
 //---- Внутренние функции порта ------------------------------------------------
+
+void Key_mapper::bind(hpw::keycode dst_hpw_key, int scancode) {
+  rauto dst = table[dst_hpw_key];
+  dst.scancode = scancode;
+  utf32 name = n2s<utf32>(scancode);
+  // получить читаемое название кнопки
+  if (auto win_name = get_windows_keycode_name(scancode); win_name) {
+    name = *win_name;
+  } else { // если имя не найдено, то попытаться найти его в GLFW
+    auto glfw_key_name = glfwGetKeyName(GLFW_KEY_UNKNOWN, dst.scancode);
+    if (glfw_key_name)
+      name = sconv<utf32>(Str(glfw_key_name)) + U" (" + n2s<utf32>(dst.scancode) + U")";
+  }
+  dst.name = name;
+}
+
+Keys_info Key_mapper::get_info() const {
+  Keys_info info;
+  for (crauto [hpw_key, glfw_key]: table) {
+    info.keys.emplace_back(Keys_info::Item {
+      .hpw_key = hpw_key,
+      .name = glfw_key.name,
+      .scancode = glfw_key.scancode
+    });
+  }
+  return info;
+}
+
+void Key_mapper::reset() { 
+  // бинды по умолчанию
+  bind(hpw::keycode::up,           glfwGetKeyScancode(GLFW_KEY_UP));
+  bind(hpw::keycode::down,         glfwGetKeyScancode(GLFW_KEY_DOWN));
+  bind(hpw::keycode::left,         glfwGetKeyScancode(GLFW_KEY_LEFT));
+  bind(hpw::keycode::right,        glfwGetKeyScancode(GLFW_KEY_RIGHT));
+  bind(hpw::keycode::focus,        glfwGetKeyScancode(GLFW_KEY_LEFT_ALT));
+  bind(hpw::keycode::shoot,        glfwGetKeyScancode(GLFW_KEY_Z));
+  bind(hpw::keycode::bomb,         glfwGetKeyScancode(GLFW_KEY_X));
+  bind(hpw::keycode::mode,         glfwGetKeyScancode(GLFW_KEY_A));
+  bind(hpw::keycode::enable,       glfwGetKeyScancode(GLFW_KEY_ENTER));
+  bind(hpw::keycode::escape,       glfwGetKeyScancode(GLFW_KEY_ESCAPE));
+
+  bind(hpw::keycode::reset,        glfwGetKeyScancode(GLFW_KEY_F5));
+  bind(hpw::keycode::fast_forward, glfwGetKeyScancode(GLFW_KEY_F4));
+  bind(hpw::keycode::debug,        glfwGetKeyScancode(GLFW_KEY_F3));
+  bind(hpw::keycode::console,      glfwGetKeyScancode(GLFW_KEY_GRAVE_ACCENT));
+  bind(hpw::keycode::text_delete,  glfwGetKeyScancode(GLFW_KEY_BACKSPACE));
+  bind(hpw::keycode::fps,          glfwGetKeyScancode(GLFW_KEY_F1));
+  bind(hpw::keycode::fulscrn,      glfwGetKeyScancode(GLFW_KEY_F11));
+  bind(hpw::keycode::screenshot,   glfwGetKeyScancode(GLFW_KEY_F2));
+}
 
 static void init_rgb_pal() {
   log_debug << "init rgb (float) palette for OGL...";
