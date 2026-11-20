@@ -17,7 +17,7 @@
 // GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
 #include <GLFW/glfw3.h>
 
-#include "port/windows/windows-keycodes.hpp" // TODO add Linux keycodes file
+#include "port/windows/windows-keycodes.hpp" // TODO add Linux keycode-file
 #include "engine/graphic/image/color-convert.hpp"
 #include "engine/graphic/image/color-rgb.hpp"
 #include "engine/graphic/image/palette.hpp"
@@ -25,6 +25,7 @@
 #include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
+#include "game/util/sync.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
 #include "game/core/palette.hpp"
@@ -32,6 +33,7 @@
 #include "game/core/canvas.hpp"
 #include "game/core/tasks.hpp"
 #include "game/core/user.hpp"
+#include "game/core/core.hpp"
 #include "game/input/keys.hpp"
 #include "port/port.hpp"
 
@@ -433,6 +435,11 @@ static void soft_exit() {
 }
 
 static void reshape(int w, int h) {
+  ret_if (w <= 0 || h <= 0);
+
+  if (!graphic::fullscreen)
+    glfwSetWindowSize(g_ctx.window, w, h);
+
   g_ctx.wnd_sz.x = w;
   g_ctx.wnd_sz.y = h;
   apply_resize_mode();
@@ -502,26 +509,94 @@ static void set_gamma(const double gamma) {
   glfwSetGamma(monitor, graphic::gamma);
 }
 
+// включить режим переназначения кнопки
+static void rebind_key(hpw::keycode hpw_key) {
+  g_ctx.rebind_key_mode = true;
+  g_ctx.key_for_rebind = hpw_key;
+};
+
+static void rebind_key_by_scancode(hpw::keycode hpw_key, int scancode){
+  g_ctx.key_mapper.bind(hpw_key, scancode);
+  hpw::keys_info = g_ctx.key_mapper.get_info();
+};
+  
+static void reset_keymap() {
+  log_debug << "reseting keymap...";
+  g_ctx.key_mapper.reset();
+  hpw::keys_info = g_ctx.key_mapper.get_info();
+};
+
+static void toggle_vsync(const bool enable) {
+  log_debug << "V-Sync: " << yn2s(enable);
+  glfwSwapInterval(enable ? 1 : 0);
+};
+
+static void set_target_ups(int new_ups) {
+  assert(new_ups > 0);
+  hpw::target_ups = new_ups;
+  hpw::target_tick_time = 1.0 / hpw::target_ups;
+}
+
+static void toggle_mouse_visible(bool enable) {
+  graphic::show_mouse_cursour = enable;
+  glfwSetInputMode(g_ctx.window, GLFW_CURSOR, enable
+    ? GLFW_CURSOR_NORMAL
+    : GLFW_CURSOR_HIDDEN);
+}
+
+static void toggle_fullscreen(bool enable) {
+  log_debug << "new fullscreen mode: " << yn2s(enable);
+  graphic::fullscreen = enable;
+  
+  if (enable) {
+    auto monitor = glfwGetPrimaryMonitor();
+    auto mode = glfwGetVideoMode(monitor);
+    reshape(mode->width, mode->height);
+    glfwSetWindowMonitor(g_ctx.window, monitor, 0, 0, mode->width, mode->height,
+      mode->refreshRate);
+    graphic::toggle_vsync( graphic::get_vsync() );
+    set_gamma(graphic::gamma);
+  } else { // переключение обратно в окно
+    glfwSetWindowMonitor(g_ctx.window, nullptr, g_ctx.wnd_off.x, g_ctx.wnd_off.y,
+      g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, GLFW_DONT_CARE);
+    reshape(g_ctx.wnd_sz.x, g_ctx.wnd_sz.y);
+    graphic::toggle_vsync( graphic::get_vsync() );
+  }
+}
+
+static void init_window() {
+  // TODO
+}
+
+static void toggle_double_buffering(bool enable) {
+  log_debug << "new double-buffering mode: " << yn2s(enable);
+  graphic::double_buffering = enable;
+  init_window();
+}
+
 // привязка функций порта
 static void init_port_cbs() {
   log_debug << "init port callbacks...";
 
-  Port::soft_exit = &soft_exit;
+  // misc
   Port::make_screenshot = []{ save_screenshot(graphic::canvas); };
+  Port::set_target_ups = &set_target_ups;
+  Port::soft_exit = &soft_exit;
+  Port::get_time = &glfwGetTime;
+  
+  // graphic
+  Port::toggle_double_buffering = &toggle_double_buffering;
+  Port::toggle_mouse_visible = &toggle_mouse_visible;
+  Port::toggle_fullscreen = &toggle_fullscreen;
   Port::set_resize_mode = &set_resize_mode;
+  Port::toggle_vsync = &toggle_vsync;
   Port::set_palette = &set_palette;
   Port::set_gamma = &set_gamma;
-  /* TODO
-  Port::rebind_key = ;
-  Port::rebind_key_by_scancode = ;
-  Port::reset_keymap = ;
-  Port::toggle_vsync = ;
-  Port::toggle_fullscreen = ;
-  Port::toggle_double_buffering = ;
-  Port::toggle_mouse_visible = ;
-  Port::set_target_ups = ;
-  Port::get_time = ;
-  */
+
+  // input
+  Port::rebind_key_by_scancode = &rebind_key_by_scancode;
+  Port::rebind_key = &rebind_key;
+  Port::reset_keymap = &reset_keymap;
 }
 
 // рандомный логотип в консоли
@@ -813,6 +888,8 @@ static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoin
 
 //---- Основные функции GLFW3 порта --------------------------------------------
 void glfw3_init(int argc, char** argv) {
+  iferror(g_ctx.window, "не использовать два окна");
+
   log_info << "GLFW3 initialization...";
 
   std::signal(SIGINT, signal_handler); // для закрытия через Ctrl+C 
