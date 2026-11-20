@@ -256,33 +256,12 @@ static void compie_fragment_shader() {
   }
 }
 
-static void init_opengl() {
-  // отключаю ненужное для оптимизации
-  glDisable(GL_DEPTH_TEST);
-  glDepthMask(GL_FALSE);
-  //glDisable(GL_LIGHT0);
-  //glDisable(GL_LIGHTING);
-  //glDisable(GL_COLOR_MATERIAL);
-  glDisable(GL_BLEND);
-  glDisable(GL_MULTISAMPLE); // отключение сглаживания
-  //glShadeModel(GL_FLAT); // не гладкая заливка
-  glDisable(GL_CULL_FACE); // без отсечения обратных граней полигона
-  //glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
-  glDisable(GL_DITHER); // Дизер цвета не юзать
-  //glDisable(GL_FOG); // Туман не нужен
-  glDisable(GL_STENCIL_TEST); // трафарет чекать - лишнее
-  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
+static void init_screen_poly() {
+  // VBO не юзать, сделать пустой VAO
+  glGenVertexArrays(1, &g_ctx.vao);
+  glBindVertexArray(g_ctx.vao);
 
-  glClearColor(0,0,0,0);
-  set_palette(graphic::current_palette_file);
-  screen_tex_init();
-
-  compie_vertex_shader();
-  compie_fragment_shader();
-  compile_program();
-
-  /*init_screen_poly();
-  ogl_resize(m_w, m_h);*/
+  glBindVertexArray(0); 
 }
 
 static bool is_bad_wnd_sz() {
@@ -374,6 +353,35 @@ static void reshape(int w, int h) {
 
   log_debug << "new window size: " << g_ctx.wnd_sz.x << ", " << g_ctx.wnd_sz.y
     << " (area: " << to_str(g_ctx.wnd_game_area.pos) << ", " << to_str(g_ctx.wnd_game_area.size) << ")";
+}
+
+static void init_opengl() {
+  // отключаю ненужное для оптимизации
+  glDisable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
+  //glDisable(GL_LIGHT0);
+  //glDisable(GL_LIGHTING);
+  //glDisable(GL_COLOR_MATERIAL);
+  glDisable(GL_BLEND);
+  glDisable(GL_MULTISAMPLE); // отключение сглаживания
+  //glShadeModel(GL_FLAT); // не гладкая заливка
+  glDisable(GL_CULL_FACE); // без отсечения обратных граней полигона
+  //glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
+  glDisable(GL_DITHER); // Дизер цвета не юзать
+  //glDisable(GL_FOG); // Туман не нужен
+  glDisable(GL_STENCIL_TEST); // трафарет чекать - лишнее
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
+
+  glClearColor(0,0,0,0);
+  set_palette(graphic::current_palette_file);
+  screen_tex_init();
+
+  compie_vertex_shader();
+  compie_fragment_shader();
+  compile_program();
+
+  init_screen_poly();
+  reshape(g_ctx.wnd_sz.x, g_ctx.wnd_sz.y);
 }
 
 static void set_resize_mode(Resize_mode mode) {
