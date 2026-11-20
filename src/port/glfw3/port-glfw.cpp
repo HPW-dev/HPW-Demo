@@ -159,6 +159,43 @@ static void set_palette(cr<Str> fname) {
   glBindTexture(GL_TEXTURE_1D, 0); // unbind g_ctx.pal_tex
 }
 
+static void check_max_gltex_sz() {
+  auto max_canvas_sz = std::max(graphic::width, graphic::height);
+  GLint avaliable_max_sz = -1;
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &avaliable_max_sz);
+  log_debug << "max texture size: " << avaliable_max_sz;
+  // если эта ошибка выстрелит, то напиши разбивку на тайлы и их рендери
+  iferror(avaliable_max_sz < max_canvas_sz,
+    "GL_MAX_TEXTURE_SIZE < " << n2s(max_canvas_sz));
+}
+
+static void screen_tex_init() {
+  check_max_gltex_sz();
+  glGenTextures(1, &g_ctx.screen_tex);
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, g_ctx.screen_tex);
+  
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, 0, GL_RED,
+    GL_UNSIGNED_BYTE, nullptr);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  // Двойной PBO
+  static_assert(sizeof(Pal8) == 1, "m_pbo_sz ожидает что пиксели весят 1 байт");
+  g_ctx.pbo_sz = g_ctx.wnd_sz.x * g_ctx.wnd_sz.y;
+  glGenBuffers(2, g_ctx.pbos);
+  
+  cfor (i, 2) {
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[i]);
+    // Режим GL_STREAM_DRAW сообщает драйверу схему "Запись CPU -> Чтение GPU"
+    glBufferData(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbo_sz, nullptr, GL_STREAM_DRAW);
+  }
+
+  glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+}
+
 static void init_opengl() {
   // отключаю ненужное для оптимизации
   glDisable(GL_DEPTH_TEST);
@@ -178,9 +215,9 @@ static void init_opengl() {
 
   glClearColor(0,0,0,0);
   set_palette(graphic::current_palette_file);
-  /*screen_tex_init(); TODO
+  screen_tex_init();
 
-  compie_vertex_shader();
+  /*compie_vertex_shader();
   compie_fragment_shader();
   compile_program();
 
