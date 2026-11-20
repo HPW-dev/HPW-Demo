@@ -183,7 +183,7 @@ static void screen_tex_init() {
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Двойной PBO
-  static_assert(sizeof(Pal8) == 1, "m_pbo_sz ожидает что пиксели весят 1 байт");
+  static_assert(sizeof(Pal8) == 1, "g_ctx.pbo_sz ожидает что пиксели весят 1 байт");
   g_ctx.pbo_sz = g_ctx.wnd_sz.x * g_ctx.wnd_sz.y;
   glGenBuffers(2, g_ctx.pbos);
   
@@ -525,6 +525,81 @@ static void process_args(int argc, char** argv) {
 
   ret.skip_empty = true;
   ret(argc, argv);
+}
+
+// перегоняет пиксели игры в OpenGL текстуру
+static void draw_game_frame() {
+  ret_if (!graphic::enable_render);
+
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, g_ctx.screen_tex);
+
+  if (g_ctx.use_double_pbo) {
+    const int next_pbo_index = (g_ctx.pbo_index + 1) % 2;
+
+    // Пока готовим текущий PBO, отправляем на видяху предыдущий
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[g_ctx.pbo_index]);
+    /* nullptr в конце означает: брать данные со смещением 0 внутри
+    привязанного PBO. Это триггерит сверхбыстрый DMA-трансфер в видеопамять. */
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, GL_RED,
+      GL_UNSIGNED_BYTE, nullptr);
+
+    // Грузим текущий кадр в PBO
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[next_pbo_index]);
+    /* Флаг GL_MAP_INVALIDATE_BUFFER_BIT сбрасывает старую память буфера.
+    Драйвер мгновенно выдает CPU новый кусок памяти,
+    не дожидаясь рендеринга старого кадра на GPU. */
+    void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, g_ctx.pbo_sz, 
+      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    if (mapped_ptr) {
+      std::memcpy(mapped_ptr, g_ctx.pixels, g_ctx.pbo_sz);
+      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    }
+
+    // отвязываем PBO перед вызовом отрисовки
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+
+    // Ротация буферов
+    g_ctx.pbo_index = next_pbo_index;
+  } else { // Режим без двойного PBO
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[0]);
+    
+    // Загружаем текущие пиксели прямо сейчас
+    void* mapped_ptr = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, g_ctx.pbo_sz, 
+      GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT);
+
+    if (mapped_ptr) {
+      std::memcpy(mapped_ptr, g_ctx.pixels, g_ctx.pbo_sz);
+      glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+    }
+    
+    // Сразу же принудительно отправляем их в текстуру и ждем
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, GL_RED,
+      GL_UNSIGNED_BYTE, nullptr);
+
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+  }
+
+  // Отрисовка полигона и палитры
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_1D, g_ctx.pal_tex);
+
+  glBindVertexArray(g_ctx.vao);
+  glUseProgram(g_ctx.shader_prog);
+
+  // Треугольник на весь экран, в котором текстура игры
+  glDrawArrays(GL_TRIANGLES, 0, 3); 
+
+  glUseProgram(0);
+  glBindVertexArray(0);
+  glBindTexture(GL_TEXTURE_1D, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  if (!graphic::double_buffering)
+    glFlush();
 }
 
 //---- Основные функции GLFW3 порта --------------------------------------------
