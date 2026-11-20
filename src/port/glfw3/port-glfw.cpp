@@ -144,8 +144,6 @@ static void soft_exit() {
   g_ctx.is_ran = false;
 }
 
-static void make_screenshot() { save_screenshot(graphic::canvas); };
-
 static void reshape(int w, int h) {
   g_ctx.wnd_sz.x = w;
   g_ctx.wnd_sz.y = h;
@@ -184,7 +182,7 @@ static void init_port_cbs() {
   log_debug << "init port callbacks...";
 
   Port::soft_exit = &soft_exit;
-  Port::make_screenshot = &make_screenshot;
+  Port::make_screenshot = []{ save_screenshot(graphic::canvas); };
   Port::set_resize_mode = &set_resize_mode;
   /* TODO
   Port::rebind_key = ;
