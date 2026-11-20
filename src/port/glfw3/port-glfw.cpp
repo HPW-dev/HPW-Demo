@@ -196,6 +196,66 @@ static void screen_tex_init() {
   glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 }
 
+static void compile_program() {
+  g_ctx.shader_prog = glCreateProgram();
+  glAttachShader(g_ctx.shader_prog, g_ctx.vert_shader);
+  glAttachShader(g_ctx.shader_prog, g_ctx.frag_shader);
+
+  glLinkProgram(g_ctx.shader_prog);
+  glUseProgram(g_ctx.shader_prog);
+  glUniform1i(glGetUniformLocation(g_ctx.shader_prog, "main_tex"), 0);
+  glUniform1i(glGetUniformLocation(g_ctx.shader_prog, "pal_tex"), 1);
+
+  // check
+  GLint result;
+  int info_len;
+  glGetProgramiv(g_ctx.shader_prog, GL_LINK_STATUS, &result);
+  glGetProgramiv(g_ctx.shader_prog, GL_INFO_LOG_LENGTH, &info_len);
+  if (info_len > 0) {
+    Vector<char> info_msg(info_len + 1);
+    glGetProgramInfoLog(g_ctx.shader_prog, info_len, {}, info_msg.data());
+    log_debug << "Shader program info: " << Str(info_msg.begin(), info_msg.end());
+  }
+}
+
+static void compie_vertex_shader() {
+  auto source_file = load_res("graphic/shaders/default.vert");
+  auto source_text = Str(source_file.data.begin(), source_file.data.end());
+  auto source = scast<cp<GLchar>>(source_text.c_str());
+  g_ctx.vert_shader = glCreateShader(GL_VERTEX_SHADER);
+  glShaderSource(g_ctx.vert_shader, 1, &source, 0);
+  glCompileShader(g_ctx.vert_shader);
+  // check
+  GLint result;
+  int info_len;
+  glGetShaderiv(g_ctx.vert_shader, GL_COMPILE_STATUS, &result);
+  glGetShaderiv(g_ctx.vert_shader, GL_INFO_LOG_LENGTH, &info_len);
+  if (info_len > 0) {
+    Vector<char> info_msg(info_len + 1);
+    glGetShaderInfoLog(g_ctx.vert_shader, info_len, {}, info_msg.data());
+    log_debug << "Vertex shader info: " << Str(info_msg.begin(), info_msg.end());
+  }
+}
+
+static void compie_fragment_shader() {
+  auto source_file = load_res("graphic/shaders/default.frag");
+  auto source_text = Str(source_file.data.begin(), source_file.data.end());
+  auto source = scast<cp<GLchar>>(source_text.c_str());
+  g_ctx.frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(g_ctx.frag_shader, 1, &source, 0);
+  glCompileShader(g_ctx.frag_shader);
+  // check
+  GLint result;
+  int info_len;
+  glGetShaderiv(g_ctx.frag_shader, GL_COMPILE_STATUS, &result);
+  glGetShaderiv(g_ctx.frag_shader, GL_INFO_LOG_LENGTH, &info_len);
+  if (info_len > 0) {
+    Vector<char> info_msg(info_len + 1);
+    glGetShaderInfoLog(g_ctx.frag_shader, info_len, {}, info_msg.data());
+    log_debug << "Fragment shader info: " << Str(info_msg.begin(), info_msg.end());
+  }
+}
+
 static void init_opengl() {
   // отключаю ненужное для оптимизации
   glDisable(GL_DEPTH_TEST);
@@ -217,11 +277,11 @@ static void init_opengl() {
   set_palette(graphic::current_palette_file);
   screen_tex_init();
 
-  /*compie_vertex_shader();
+  compie_vertex_shader();
   compie_fragment_shader();
   compile_program();
 
-  init_screen_poly();
+  /*init_screen_poly();
   ogl_resize(m_w, m_h);*/
 }
 
