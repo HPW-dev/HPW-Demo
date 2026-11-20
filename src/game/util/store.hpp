@@ -65,7 +65,7 @@ Store<T>::Velue Store<T>::operator[](cr<Str> name) const {
 
 template <class T>
 Store<T>::Velue& Store<T>::push(cr<Str> name, cr<Velue> res) {
-  log_debug << "Store.push: " + name;
+  //log_debug << "Store.push: " + name;
   res->set_path(name);
   if (m_table.count(name) != 0)
     log_debug << 

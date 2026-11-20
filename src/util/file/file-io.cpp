@@ -52,12 +52,14 @@ struct File_reader::Impl {
 
   inline Impl(cr<Str> fname) { open(fname); }
 
-  inline void open(cr<Str> fname) {
+  inline void open(cr<Str> fname_) {
+    Str fname = fname_;
+    conv_sep(fname);
     iferror(fname.empty(), "file name is empty");
 
     try {
+      log_debug << "load \"" << fname << "\"";
       cauto path = std::filesystem::path(fname);
-      log_debug << "opening file " << path << "...";
       _file.open(path, std::ios_base::binary);
 
       if (!operator bool())
@@ -67,7 +69,7 @@ struct File_reader::Impl {
       _file.seekg(0, std::ios::end);
       _sz = _file.tellg();
       _file.seekg(0, std::ios::beg);
-      log_debug << "file size: " << _sz << " bytes";
+      //log_debug << "file size: " << _sz << " bytes";
     } catch (...) {
       error("error while opening file \"" + fname + "\"");
     }
