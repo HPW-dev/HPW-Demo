@@ -2,6 +2,7 @@
 #include "port-glfw.hpp"
 
 #include <csignal>
+#include "stb/stb_image.h"
 
 #ifdef WINDOWS
   #define WIN32_LEAN_AND_MEAN
@@ -16,13 +17,16 @@
 // GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
 #include <GLFW/glfw3.h>
 
+#include "engine/graphic/image/color-convert.hpp"
 #include "engine/graphic/image/color-rgb.hpp"
 #include "engine/graphic/image/palette.hpp"
+#include "game/util/resource-helper.hpp"
 #include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
 #include "game/core/core-window.hpp"
 #include "game/core/graphic.hpp"
+#include "game/core/palette.hpp"
 #include "game/core/common.hpp"
 #include "game/core/canvas.hpp"
 #include "game/input/keys.hpp"
@@ -72,6 +76,117 @@ struct Glfw3_context {
 static Glfw3_context g_ctx {};
 
 //---- Внутренние функции порта ------------------------------------------------
+
+static void init_rgb_pal() {
+  log_debug << "init rgb (float) palette for OGL...";
+  cauto default_pal = get_default_palette();
+  g_ctx.pal_rgb.resize(default_pal.size() * 3);
+
+  for (size_t i = 0; crauto c: default_pal) {
+    g_ctx.pal_rgb.at(i * 3 + 0) = c.r / 255.0;
+    g_ctx.pal_rgb.at(i * 3 + 1) = c.g / 255.0;
+    g_ctx.pal_rgb.at(i * 3 + 2) = c.b / 255.0;
+    ++i;
+  }
+}
+
+static Rgb24 pal8_to_rgb24_by_file(const Pal8 x) {
+  if ( !g_ctx.pal_rgb.empty())
+    return to_rgb24(
+      g_ctx.pal_rgb.at(x.val * 3 + 0) * 255,
+      g_ctx.pal_rgb.at(x.val * 3 + 1) * 255,
+      g_ctx.pal_rgb.at(x.val * 3 + 2) * 255
+    );
+  return to_rgb24(x);
+}
+
+static Vector<GLfloat> load_ogl_palette(cr<Str> fname) {
+  // загрузка png
+  int x, y;
+  int comp; // сколько цветовых каналов
+  cauto mem = load_res(fname);
+  cauto mem_data = cptr2ptr<cp<stbi_uc>>(mem.data.data());
+  auto decoded = stbi_load_from_memory(mem_data, mem.data.size(), &x, &y, &comp, STBI_rgb);
+  iferror( !decoded, "image data is not decoded");
+  iferror(x < 256, "ширина картинки должна быть не меньше 256");
+
+  // rgb -> palette array
+  Vector<GLfloat> ogl_pal;
+  int rgb_index = 0;
+  for (int i = 0; i < x * y; ++i) {
+    constexpr auto mul = (1.0 / 255.0);
+    ogl_pal.push_back(decoded[rgb_index + 0] * mul);
+    ogl_pal.push_back(decoded[rgb_index + 1] * mul);
+    ogl_pal.push_back(decoded[rgb_index + 2] * mul);
+    rgb_index += 3;
+  }
+
+  stbi_image_free(decoded);
+  to_palette_rgb24 = &pal8_to_rgb24_by_file;
+  return ogl_pal;
+}
+
+static void set_palette(cr<Str> fname) {
+  graphic::current_palette_file = fname.empty()
+    ? Str{graphic::DEFAULT_PALETTE_FILE}
+    : fname;
+  
+  glGenTextures(1, &g_ctx.pal_tex);
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_1D, g_ctx.pal_tex);
+  // не делать линейным, иначе появятся розовые оттенки
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  // фиксит индекс палитры внутри шейдера
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_1D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  try {
+    // загрузка палитры
+    g_ctx.pal_rgb = load_ogl_palette(fname);
+  } catch (...) {
+    // если палитру не удастся получить, то сгенерировать её
+    if (!fname.empty()) {
+      log_warning << "не удалось загрузить файл палитры \"" <<
+        fname << "\". Будет выбрана стандартная палитра";
+      graphic::current_palette_file = graphic::DEFAULT_PALETTE_FILE;
+    }
+    init_rgb_pal();
+  }
+
+  // в 1D текстуре хранятся триплеты палитры для шейдера
+  glTexImage1D(GL_TEXTURE_1D, 0, GL_RGB, 256, 0, GL_RGB, GL_FLOAT, g_ctx.pal_rgb.data());
+  glBindTexture(GL_TEXTURE_1D, 0); // unbind g_ctx.pal_tex
+}
+
+static void init_opengl() {
+  // отключаю ненужное для оптимизации
+  glDisable(GL_DEPTH_TEST);
+  glDepthMask(GL_FALSE);
+  //glDisable(GL_LIGHT0);
+  //glDisable(GL_LIGHTING);
+  //glDisable(GL_COLOR_MATERIAL);
+  glDisable(GL_BLEND);
+  glDisable(GL_MULTISAMPLE); // отключение сглаживания
+  //glShadeModel(GL_FLAT); // не гладкая заливка
+  glDisable(GL_CULL_FACE); // без отсечения обратных граней полигона
+  //glDisable(GL_ALPHA_TEST); // Альфа канал не чекать
+  glDisable(GL_DITHER); // Дизер цвета не юзать
+  //glDisable(GL_FOG); // Туман не нужен
+  glDisable(GL_STENCIL_TEST); // трафарет чекать - лишнее
+  //glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_FASTEST); // простое преобразование кординат
+
+  glClearColor(0,0,0,0);
+  set_palette(graphic::current_palette_file);
+  /*screen_tex_init(); TODO
+
+  compie_vertex_shader();
+  compie_fragment_shader();
+  compile_program();
+
+  init_screen_poly();
+  ogl_resize(m_w, m_h);*/
+}
 
 static bool is_bad_wnd_sz() {
   return
@@ -184,12 +299,12 @@ static void init_port_cbs() {
   Port::soft_exit = &soft_exit;
   Port::make_screenshot = []{ save_screenshot(graphic::canvas); };
   Port::set_resize_mode = &set_resize_mode;
+  Port::set_palette = &set_palette;
   /* TODO
   Port::rebind_key = ;
   Port::rebind_key_by_scancode = ;
   Port::reset_keymap = ;
   Port::toggle_vsync = ;
-  Port::set_palette = ;
   Port::set_gamma = ;
   Port::toggle_fullscreen = ;
   Port::toggle_double_buffering = ;
@@ -305,19 +420,6 @@ static void process_args(int argc, char** argv) {
 
   ret.skip_empty = true;
   ret(argc, argv);
-}
-
-static void init_rgb_pal() {
-  log_debug << "init rgb (float) palette for OGL...";
-  cauto default_pal = get_default_palette();
-  g_ctx.pal_rgb.resize(default_pal.size() * 3);
-
-  for (size_t i = 0; crauto c: default_pal) {
-    g_ctx.pal_rgb.at(i * 3 + 0) = c.r / 255.0;
-    g_ctx.pal_rgb.at(i * 3 + 1) = c.g / 255.0;
-    g_ctx.pal_rgb.at(i * 3 + 2) = c.b / 255.0;
-    ++i;
-  }
 }
 
 //---- Основные функции GLFW3 порта --------------------------------------------
