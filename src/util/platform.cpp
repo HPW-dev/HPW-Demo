@@ -175,7 +175,7 @@ void set_timer(cr<Str> name) {
     g_timer_name = "std_delay";
   }
 
-  log_info << "selected delay timer: " << g_timer_name;
+  log_debug << "selected delay timer: " << g_timer_name;
 } // set_timer
 
 Str get_timer() { return g_timer_name; }
