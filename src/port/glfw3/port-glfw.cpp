@@ -958,6 +958,36 @@ static Str get_window_name() {
     : hpw::default_tile;
 }
 
+static void draw_startup_screen() {
+  // рисуем надпись о загрузке:
+  constexpr uint SCALE = 2;
+  constexpr uint OFF_X = 30;
+  constexpr uint OFF_Y = 30;
+  constexpr uint LT_W = 38;
+  constexpr uint LT_H = 4;
+  scauto LOADING_TITLE =
+    "#     #    #   ##   #  ##    ##       " 
+    "#    # #  # #  # #     # #  #         " 
+    "#    # #  ###  # #  #  # #  # #       " 
+    "###   #   # #  ##   #  # #   ##  # # #";
+  graphic::canvas.fill({});
+  cfor (y, LT_H)
+  cfor (x, LT_W) {
+    cauto c = Pal8::from_real(LOADING_TITLE[y * LT_W + x] == ' ' ? 0.0 : 0.75);
+    cfor (sy, SCALE)
+    cfor (sx, SCALE) {
+      cauto _x = x * SCALE + sx;
+      cauto _y = y * SCALE + sy;
+      graphic::canvas.set(OFF_X + _x, OFF_Y + _y, c, {});
+    }
+  }
+
+  // их три, чтобы увидеть что-то при двойной буфферизации
+  draw_game_frame(), glfwSwapBuffers(g_ctx.window);
+  draw_game_frame(), glfwSwapBuffers(g_ctx.window);
+  draw_game_frame(), glfwSwapBuffers(g_ctx.window);
+}
+
 static void init_window() {
   log_info << "создание окна игры...";
   if (g_ctx.window) // на случай реинита
@@ -1017,6 +1047,7 @@ static void init_window() {
   glfwSwapBuffers(g_ctx.window);
 
   init_opengl();
+  draw_startup_screen();
 
   glfwSetWindowSizeCallback(g_ctx.window, reshape_cb);
   safe_call(Port::set_resize_mode, graphic::resize_mode);
@@ -1057,10 +1088,6 @@ static void init_window() {
   init_icon();
 }
 
-static void draw_startup_screen() {
-  // TODO
-}
-
 //---- Основные функции GLFW3 порта --------------------------------------------
 void glfw3_init(int argc, char** argv) {
   iferror(g_ctx.window, "не использовать два окна");
@@ -1071,7 +1098,6 @@ void glfw3_init(int argc, char** argv) {
   iferror(!glfwInit(), "glfwInit error");
   init_window();
 
-  draw_startup_screen();
   reset_keymap();
 }
 
@@ -1093,6 +1119,8 @@ void glfw3_sync() {
 
 void glfw3_finalize() {
   log_debug << "GLFW3 finalization...";
+  glfwDestroyWindow(g_ctx.window);
+  glfwTerminate();
   
 #ifndef DISABLE_CONFIG
   save_config();
