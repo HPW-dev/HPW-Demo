@@ -23,6 +23,7 @@
 #include "engine/graphic/image/palette.hpp"
 #include "game/util/resource-helper.hpp"
 #include "game/util/screenshot.hpp"
+#include "game/util/game-title.hpp"
 #include "game/util/version.hpp"
 #include "game/util/logo.hpp"
 #include "game/util/sync.hpp"
@@ -564,9 +565,7 @@ static void toggle_fullscreen(bool enable) {
   }
 }
 
-static void init_window() {
-  // TODO
-}
+static void init_window();
 
 static void toggle_double_buffering(bool enable) {
   log_debug << "new double-buffering mode: " << yn2s(enable);
@@ -815,7 +814,7 @@ int key, int scancode, int action, int mods) {
   }
 }
 
-static void mouse_button_callback(GLFWwindow* window,
+static void mouse_button_cb(GLFWwindow* window,
 int button, int action, int mods) {
   // вставка текста из буффера при правой кнопке мыши
   if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
@@ -829,7 +828,7 @@ int button, int action, int mods) {
   }
 }
 
-static void key_callback(GLFWwindow* window, int key, int scancode,
+static void key_cb(GLFWwindow* window, int key, int scancode,
 int action, int mods) {
   hpw::any_key_pressed = true;
   rauto keymap_table = g_ctx.key_mapper.get_table();
@@ -858,7 +857,7 @@ int action, int mods) {
 }
 
 // колбэк для вывода ошибок GLFW
-static void error_callback(int error, Cstr description) {
+static void error_cb(int error, Cstr description) {
   // поставить дефолтную гамму при ошибке
   if (g_ctx.window && g_ctx.once_gamma_conf) {
     set_gamma(1);
@@ -872,12 +871,12 @@ static void error_callback(int error, Cstr description) {
   error("GLFW error: " << error << ": " << description << addition_desc);
 }
 
-static void reshape_callback(GLFWwindow* /*m_window*/, int w, int h) {
+static void reshape_cb(GLFWwindow* /*g_ctx.window*/, int w, int h) {
   reshape(w, h);
 }
 
 // utf32 text input callback
-static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoint) {
+static void utf32_text_input_cb(GLFWwindow* /*g_ctx.window*/, std::uint32_t codepoint) {
   return_if (!hpw::text_input_mode);
 
   hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos, 0, hpw::text_input.size());
@@ -886,11 +885,8 @@ static void utf32_text_input_cb(GLFWwindow* /*m_window*/, std::uint32_t codepoin
   hpw::text_input_pos = std::min<int>(hpw::text_input_pos + 1, hpw::text_input.size());
 }
 
-//---- Основные функции GLFW3 порта --------------------------------------------
-void glfw3_init(int argc, char** argv) {
-  iferror(g_ctx.window, "не использовать два окна");
-
-  log_info << "GLFW3 initialization...";
+static void init_port(int argc, char** argv) {
+  log_info << "Common port initialization...";
 
   std::signal(SIGINT, signal_handler); // для закрытия через Ctrl+C 
 
@@ -920,7 +916,163 @@ void glfw3_init(int argc, char** argv) {
   load_color_tables();
 #endif
 
-  log_debug << "GLFW3 end of initialization";
+  set_target_ups(hpw::target_ups);
+  graphic::set_target_fps(graphic::get_target_fps());
+  hpw::safe_dt = graphic::get_target_frame_time();
+}
+
+static void init_icon() {
+  GLFWimage icon;
+  icon.pixels = nullptr;
+
+  try {
+    // случайно выбрать ярлык окна
+    sconst Strs icon_names {
+      "graphic/images/icons/128x128/Alles.png",
+      "graphic/images/icons/128x128/boo.png",
+      "graphic/images/icons/128x128/pattern 1.png",
+      "graphic/images/icons/128x128/pattern 2.png",
+      "graphic/images/icons/128x128/pattern 3.png",
+    };
+    cauto icon_name = icon_names.at(rndu_fast(icon_names.size() - 1));
+    cauto icon_file = load_res(icon_name);
+    int channels;
+    icon.pixels = stbi_load_from_memory (
+      rcast<cp<stbi_uc>>(icon_file.data.data()), icon_file.data.size(),
+      &icon.width, &icon.height, &channels, 4
+    );
+    iferror(channels != 4, "цветовых каналов в изображении " << n2s(channels) << ", а нужно 4");
+    glfwSetWindowIcon(g_ctx.window, 1, &icon); 
+  } catch (cr<hpw::Error> err) {
+    log_error << "не удалось установить иконку для окна: " << err.what();
+  } catch (...) {
+    log_error << "не удалось установить иконку для окна. Неизвестная ошибка";
+  }
+
+  stbi_image_free(icon.pixels);
+}
+
+static Str get_window_name() {
+  return hpw::default_tile.empty()
+    ? rnd_game_title()
+    : hpw::default_tile;
+}
+
+static void init_window() {
+  log_info << "создание окна игры...";
+  if (g_ctx.window) // на случай реинита
+    glfwDestroyWindow(g_ctx.window);
+
+  // настройки для контекста OGL
+  glfwWindowHint(GLFW_DEPTH_BITS, 0);
+  glfwWindowHint(GLFW_STENCIL_BITS, 0);
+  glfwWindowHint(GLFW_ALPHA_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_RED_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_GREEN_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_BLUE_BITS, 0);
+  glfwWindowHint(GLFW_ACCUM_ALPHA_BITS, 0);
+  glfwWindowHint(GLFW_AUX_BUFFERS, 0);
+  glfwWindowHint(GLFW_STEREO, 0);
+  glfwWindowHint(GLFW_SAMPLES, 0);
+  glfwWindowHint(GLFW_SRGB_CAPABLE, 0);
+  // выбор версии OGL
+  glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API); // Не GLES
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3); // всё что ниже OGL3.3 лагает на встройке
+  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // старые функции вырубить
+  glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+  if (graphic::start_focused) {
+    glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+    glfwWindowHint(GLFW_FOCUSED, GLFW_TRUE);
+    glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+  }
+  // вкл/выкл даблбуфер
+  glfwWindowHint (
+    GLFW_DOUBLEBUFFER,
+    graphic::double_buffering
+      ? GL_TRUE
+      : GL_FALSE
+  ); 
+  g_ctx.window = glfwCreateWindow(g_ctx.wnd_sz.x, g_ctx.wnd_sz.y,
+    get_window_name().c_str(), nullptr, nullptr);
+  iferror(!g_ctx.window, "g_ctx.window is null");
+  glfwSetWindowPos(g_ctx.window, g_ctx.wnd_off.x, g_ctx.wnd_off.y);
+  glfwMakeContextCurrent(g_ctx.window);
+
+  log_debug << "GLAD2 init...";
+  int version = gladLoadGL(glfwGetProcAddress);
+  iferror(version == 0, "GLAD2 init error");
+  log_debug << "GLAD2 version: " << version;
+
+  // подгрузка расширений OGL
+  cauto ogl_ver_cstr = glGetString(GL_VERSION);
+  iferror( !ogl_ver_cstr, "не удалось получить версию OpenGL\n");
+  const Str ogl_ver( cptr2ptr<Cstr>(ogl_ver_cstr) );
+  log_debug << "OpenGL version: " << ogl_ver;
+
+  // заливка окна
+  glClearColor(0, 0, 0, 0);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glFinish();
+  glfwSwapBuffers(g_ctx.window);
+
+  init_opengl();
+
+  glfwSetWindowSizeCallback(g_ctx.window, reshape_cb);
+  safe_call(Port::set_resize_mode, graphic::resize_mode);
+  safe_call(Port::toggle_fullscreen, graphic::fullscreen);
+
+  // поставить лимит фпс в 2 раза больше чем на экране
+  auto monitor = glfwGetPrimaryMonitor();
+  assert(monitor);
+  auto monitor_mode = glfwGetVideoMode(monitor);
+  assert(monitor_mode);
+
+  // подстрока по частоте монитора
+  auto monitor_framerate = monitor_mode->refreshRate;
+  if (monitor_framerate > 0)
+    graphic::set_target_vsync_fps(monitor_framerate);
+  if (graphic::get_target_fps() == 0)
+    graphic::set_target_fps(std::max(monitor_framerate * 2, 90));
+  // определить растягивание окна по умолчанию
+  if (monitor_mode->width > 0 && monitor_mode->height > 0) {
+    if (monitor_mode->width == monitor_mode->height)
+      graphic::default_resize_mode = Resize_mode::one_to_one;
+    elif (monitor_mode->width > monitor_mode->height)
+      graphic::default_resize_mode = Resize_mode::by_height;
+    else
+      graphic::default_resize_mode = Resize_mode::by_width;
+  }
+
+  // ивенты клавы
+  glfwSetKeyCallback(g_ctx.window, &key_cb);
+  // клавиши надо стереть, чтобы при пересоздании окна не было залипания
+  clear_cur_keys();
+  // для чтения юникод текста при вводе
+  glfwSetCharCallback(g_ctx.window, &utf32_text_input_cb);
+  // настройка мыши
+  safe_call(Port::toggle_mouse_visible, graphic::show_mouse_cursour);
+  glfwSetMouseButtonCallback(g_ctx.window, &mouse_button_cb);
+
+  init_icon();
+}
+
+static void draw_startup_screen() {
+  // TODO
+}
+
+//---- Основные функции GLFW3 порта --------------------------------------------
+void glfw3_init(int argc, char** argv) {
+  iferror(g_ctx.window, "не использовать два окна");
+  init_port(argc, argv);
+
+  log_debug << "GLFW3 initialization...";
+  glfwSetErrorCallback(error_cb);
+  iferror(!glfwInit(), "glfwInit error");
+  init_window();
+
+  draw_startup_screen();
+  reset_keymap();
 }
 
 bool glfw3_is_ran() {
