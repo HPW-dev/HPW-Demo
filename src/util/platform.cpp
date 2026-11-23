@@ -135,7 +135,7 @@ void calibrate_delay(const Seconds target) {
     // среднее время работы таймера
     cauto avg = std::accumulate(results.begin(), results.end(), Seconds{0}) / scast<double>(TESTS);
     stat.delay_error = std::abs(avg - target);
-    Str txt = "Неточность для таймера " + stat.name + " = ";
+    Str txt = "погрешность " + stat.name + ": ";
     txt += n2s(stat.delay_error, 14) + " сек.";
     log_debug << txt;
   }
