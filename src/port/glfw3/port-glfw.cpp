@@ -58,7 +58,7 @@ class Key_mapper final {
   std::unordered_map<hpw::keycode, GLFW_key> table {};
 
 public:
-  inline Key_mapper() { reset(); }
+  Key_mapper() = default;
   ~Key_mapper() = default;
   void reset(); // поставить клавиши по умолчанию
   void bind(hpw::keycode dst_hpw_key, int glfw_key); // забиндить клавишу
@@ -155,6 +155,8 @@ Keys_info Key_mapper::get_info() const {
 }
 
 void Key_mapper::reset() { 
+  table.clear();
+
   // бинды по умолчанию
   bind(hpw::keycode::up,           glfwGetKeyScancode(GLFW_KEY_UP));
   bind(hpw::keycode::down,         glfwGetKeyScancode(GLFW_KEY_DOWN));
@@ -1145,8 +1147,6 @@ static void init_window() {
 
   // ивенты клавы
   glfwSetKeyCallback(g_ctx.window, &key_cb);
-  // клавиши надо стереть, чтобы при пересоздании окна не было залипания
-  clear_cur_keys();
   // для чтения юникод текста при вводе
   glfwSetCharCallback(g_ctx.window, &utf32_text_input_cb);
   // настройка мыши
@@ -1159,14 +1159,17 @@ static void init_window() {
 //---- Основные функции GLFW3 порта --------------------------------------------
 void glfw3_init(int argc, char** argv) {
   iferror(g_ctx.window, "не использовать два окна");
-  init_port(argc, argv);
 
   log_debug << "GLFW3 initialization...";
   glfwSetErrorCallback(error_cb);
   iferror(!glfwInit(), "glfwInit error");
-  init_window();
 
   reset_keymap();
+  clear_cur_keys();
+
+  init_port(argc, argv);
+
+  init_window();
 }
 
 bool glfw3_is_ran() {

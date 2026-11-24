@@ -9,8 +9,10 @@ void release(hpw::keycode code) {
 }
 
 void clear_cur_keys() {
-  for (rauto key: hpw::keys)
+  for (rauto key: hpw::keys) {
     key.cur = false;
+    key.prev = false;
+  }
 }
 
 void keys_cur_to_prev() {
