@@ -108,18 +108,18 @@ void calibrate_delay(const Seconds target) {
   assert(target >= 1.0 / 10'000.0 && target <= 1.0);
 
   Vector<Timer_stat> statistic {
-    Timer_stat {.name="std_delay", .delay_pf = &std_delay},
-    Timer_stat {.name="std_delay_nop", .delay_pf = &std_delay_nop},
-    Timer_stat {.name="std_sleep_until", .delay_pf = &std_sleep_until},
+    Timer_stat {.name="std_delay ............", .delay_pf = &std_delay},
+    Timer_stat {.name="std_delay_nop ........", .delay_pf = &std_delay_nop},
+    Timer_stat {.name="std_sleep_until ......", .delay_pf = &std_sleep_until},
     #ifdef WINDOWS
-    Timer_stat {.name="win_sleep", .delay_pf = &win_sleep},
-    Timer_stat {.name="win_htimer", .delay_pf = &win_htimer},
-    Timer_stat {.name="win_bussy_loop_70", .delay_pf = &win_bussy_loop_70},
-    Timer_stat {.name="win_bussy_loop_92", .delay_pf = &win_bussy_loop_92},
+    Timer_stat {.name="win_sleep ............", .delay_pf = &win_sleep},
+    Timer_stat {.name="win_htimer ...........", .delay_pf = &win_htimer},
+    Timer_stat {.name="win_bussy_loop_70 ....", .delay_pf = &win_bussy_loop_70},
+    Timer_stat {.name="win_bussy_loop_92 ....", .delay_pf = &win_bussy_loop_92},
     #else // LINUX
-    Timer_stat {.name="lin_usleep", .delay_pf = &lin_usleep},
-    Timer_stat {.name="lin_bussy_loop_70", .delay_pf = &lin_bussy_loop_70},
-    Timer_stat {.name="lin_bussy_loop_92", .delay_pf = &lin_bussy_loop_92},
+    Timer_stat {.name="lin_usleep ...........", .delay_pf = &lin_usleep},
+    Timer_stat {.name="lin_bussy_loop_70 ....", .delay_pf = &lin_bussy_loop_70},
+    Timer_stat {.name="lin_bussy_loop_92 ....", .delay_pf = &lin_bussy_loop_92},
     #endif
   };
 
@@ -136,8 +136,8 @@ void calibrate_delay(const Seconds target) {
     // среднее время работы таймера
     cauto avg = std::accumulate(results.begin(), results.end(), Seconds{0}) / scast<double>(TESTS);
     stat.delay_error = std::abs(avg - target);
-    Str txt = "погрешность " + stat.name + ": ";
-    txt += n2s(stat.delay_error, 14) + " сек.";
+    Str txt = "погрешность " + stat.name + " ";
+    txt += n2s(stat.delay_error, 14) + " Сек";
     log_debug << txt;
   }
 
@@ -163,8 +163,12 @@ void set_timer(cr<Str> name) {
     #ifdef WINDOWS
     {"win_sleep", &win_sleep},
     {"win_htimer", &win_htimer},
+    {"win_bussy_loop_70", &win_bussy_loop_70},
+    {"win_bussy_loop_92", &win_bussy_loop_92},
     #else // LINUX
     {"lin_usleep", &lin_usleep},
+    {"lin_bussy_loop_70", &lin_bussy_loop_70},
+    {"lin_bussy_loop_92", &lin_bussy_loop_92},
     #endif
   };
   try {
