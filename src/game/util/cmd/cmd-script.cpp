@@ -15,11 +15,11 @@ public:
     { conv_sep(m_fname); }
 
   inline void on_start() {
-    m_file = std::ifstream(m_fname);
+    m_file = open_ifstream(m_fname);
 
     if (!m_file.is_open()) {
       m_fname = hpw::cur_dir + m_fname;
-      m_file = std::ifstream(m_fname);
+      m_file = open_ifstream(m_fname);
       if (!m_file.is_open()) {
         hpw::cmd.print("файл скрипта \"" + m_fname
           + "\" не найден.\n" + "Игнор исполнения скрипта");
@@ -58,11 +58,11 @@ public:
   inline void on_end() { m_fname.clear(); }
 
   inline void update(const Delta_time dt) {
-    std::ifstream m_file = std::ifstream(m_fname);
+    auto m_file = open_ifstream(m_fname);
 
     if (!m_file.is_open()) {
       m_fname = hpw::cur_dir + m_fname;
-      m_file = std::ifstream(m_fname);
+      m_file = open_ifstream(m_fname);
       if (!m_file.is_open()) {
         hpw::cmd.print("файл скрипта \"" + m_fname
           + "\" не найден.\n" + "Игнор исполнения скрипта");

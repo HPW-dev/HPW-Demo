@@ -4,6 +4,7 @@
 #include <format>
 
 #include "log.hpp"
+#include "util/file/std-stream.hpp"
 #include "util/str-util.hpp"
 
 // не перемещать это ниже чем log.hpp и str-util.hpp
@@ -96,7 +97,7 @@ void reopen_log_file(cr<Str> fname) {
     path = fname;
     conv_sep(path);
     path = std::filesystem::weakly_canonical(path).string();
-    Logger::config.file.open(std::filesystem::path(path), std::ios_base::app);
+    Logger::config.file = open_ofstream(path, std::ios_base::app);
   } catch (...) {
     std::cerr << "[Error] log file not created at \"" << fname << "\"\n";
     return;

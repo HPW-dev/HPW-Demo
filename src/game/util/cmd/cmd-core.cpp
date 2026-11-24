@@ -173,7 +173,7 @@ public:
   } // c-tor
 
   inline void on_start() override {
-    m_file.open(m_fname);
+    m_file = open_ofstream(m_fname);
     iferror(!m_file.is_open(), "не удалось открыть файл \"" << m_fname << "\"");
     Str grid_title;
     for (crauto stat: m_stats)

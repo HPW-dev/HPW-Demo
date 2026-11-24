@@ -43,6 +43,7 @@
 #include <list>
 #include <map>
 
+#include "util/file/std-stream.hpp"
 #include "util/vector-types.hpp"
 #include "util/num-types.hpp"
 #include "util/mem-types.hpp"

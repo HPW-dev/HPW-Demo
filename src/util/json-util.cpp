@@ -19,7 +19,7 @@ void save(cr<nlohmann::json> src, cr<Str> path_, bool readable) {
   Str path = path_;
   conv_sep(path);
 
-  std::ofstream file(path);
+  auto file = open_ofstream(path);
   iferror (!file.is_open(), "error while saving JSON-file \"" + path + "\"");
   
   log_debug << "saving to JSON-file \"" << path << "\"...";
@@ -33,7 +33,7 @@ void load(nlohmann::json& dst, cr<Str> path_, bool make_if_not_exist) {
   Str path = path_;
   conv_sep(path);
 
-  std::ifstream file(path);
+  auto file = open_ifstream(path);
 
   // если файл не вышло открыть, пытаться его создать:
   if (file.is_open()) {
@@ -43,12 +43,12 @@ void load(nlohmann::json& dst, cr<Str> path_, bool make_if_not_exist) {
       log_warning << "JSON-file \"" << path << "\" not loaded";
       file.close();
       log_info << "creating empty JSON-file...";
-      std::ofstream ofile(path);
+      auto ofile = open_ofstream(path);
       iferror(!ofile.is_open(),
         "error while creating empty JSON-file \"" << path << "\"");
       ofile << "{}\n";
       ofile.close();
-      file.open(path);
+      file = open_ifstream(path);
     } else {
       error("JSON-file \"" << path << "\" not loaded");
     }

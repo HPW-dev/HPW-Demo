@@ -15,8 +15,7 @@ struct File_writer::Impl {
     iferror(fname.empty(), "file name is empty");
 
     try {
-      cauto path = std::filesystem::path(fname);
-      _file.open(path, std::ios_base::binary);
+      _file = open_ofstream(fname, std::ios_base::binary);
 
       if (!operator bool())
         throw hpw::Error{};
@@ -59,8 +58,7 @@ struct File_reader::Impl {
 
     try {
       log_debug << "load \"" << fname << "\"";
-      cauto path = std::filesystem::path(fname);
-      _file.open(path, std::ios_base::binary);
+      _file = open_ifstream(fname, std::ios_base::binary);
 
       if (!operator bool())
         throw hpw::Error{};
