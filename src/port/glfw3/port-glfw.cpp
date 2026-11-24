@@ -278,13 +278,13 @@ static void screen_tex_init() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, 0, GL_RED,
-    GL_UNSIGNED_BYTE, nullptr);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, graphic::width, graphic::height,
+    0, GL_RED, GL_UNSIGNED_BYTE, nullptr);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   // Двойной PBO
   static_assert(sizeof(Pal8) == 1, "g_ctx.pbo_sz ожидает что пиксели весят 1 байт");
-  g_ctx.pbo_sz = g_ctx.wnd_sz.x * g_ctx.wnd_sz.y;
+  g_ctx.pbo_sz = graphic::width * graphic::height; 
   glGenBuffers(2, g_ctx.pbos);
   
   cfor (i, 2) {
@@ -435,29 +435,28 @@ static void soft_exit() {
   g_ctx.is_ran = false;
 }
 
-static void reshape(int w, int h) {
-  ret_if (w <= 0 || h <= 0);
-
-  if (!graphic::fullscreen)
-    glfwSetWindowSize(g_ctx.window, w, h);
-
-  g_ctx.wnd_sz.x = w;
-  g_ctx.wnd_sz.y = h;
+static void update_viewport() {
   apply_resize_mode();
 
-  // окно нулевого размера не надо отображать
   graphic::enable_render = !is_bad_wnd_sz();
-  if (graphic::enable_render) {
-    // настройка 2D координат и проекций OpenGL:
+  if (graphic::enable_render)
     glViewport(
       g_ctx.wnd_game_area.pos.x,
       g_ctx.wnd_game_area.pos.y,
-      g_ctx.wnd_game_area.pos.x + g_ctx.wnd_game_area.size.x,
-      g_ctx.wnd_game_area.pos.y + g_ctx.wnd_game_area.size.y);
-  }
+      g_ctx.wnd_game_area.size.x,
+      g_ctx.wnd_game_area.size.y
+    );
 
-  log_debug << "new window size: " << g_ctx.wnd_sz.x << ", " << g_ctx.wnd_sz.y
+  log_debug << "window size: " << g_ctx.wnd_sz.x << ", " << g_ctx.wnd_sz.y
     << " (area: " << to_str(g_ctx.wnd_game_area.pos) << ", " << to_str(g_ctx.wnd_game_area.size) << ")";
+}
+
+static void reshape(int w, int h) {
+  ret_if (w <= 0 || h <= 0);
+
+  g_ctx.wnd_sz.x = w;
+  g_ctx.wnd_sz.y = h;
+  update_viewport();
 }
 
 static void init_opengl() {
@@ -492,14 +491,7 @@ static void init_opengl() {
 static void set_resize_mode(Resize_mode mode) {
   log_debug << "new resize mode: " << scast<int>(mode);
   graphic::resize_mode = mode;
-  reshape(graphic::width, graphic::height);
-  
-  /* если фулскрин был включён, то сначала выключить его,
-  иначе на линуксе экран погаснет */
-  if (graphic::fullscreen) {
-    Port::toggle_fullscreen(false);
-    Port::toggle_fullscreen(true);
-  }
+  update_viewport();
 }
 
 static void set_gamma(const double gamma) {
@@ -548,20 +540,22 @@ static void toggle_mouse_visible(bool enable) {
 static void toggle_fullscreen(bool enable) {
   log_debug << "new fullscreen mode: " << yn2s(enable);
   graphic::fullscreen = enable;
-  
-  if (enable) {
+
+  if (enable) { // весь экран
     auto monitor = glfwGetPrimaryMonitor();
     auto mode = glfwGetVideoMode(monitor);
+    glfwSetWindowMonitor(g_ctx.window, monitor, 0, 0,
+      mode->width, mode->height, mode->refreshRate);
     reshape(mode->width, mode->height);
-    glfwSetWindowMonitor(g_ctx.window, monitor, 0, 0, mode->width, mode->height,
-      mode->refreshRate);
-    graphic::toggle_vsync( graphic::get_vsync() );
+    graphic::toggle_vsync(graphic::get_vsync());
     set_gamma(graphic::gamma);
-  } else { // переключение обратно в окно
-    glfwSetWindowMonitor(g_ctx.window, nullptr, g_ctx.wnd_off.x, g_ctx.wnd_off.y,
+  } else { // окно
+    g_ctx.wnd_sz = {graphic::width, graphic::height};
+    glfwSetWindowMonitor(g_ctx.window, nullptr,
+      g_ctx.wnd_off.x, g_ctx.wnd_off.y,
       g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, GLFW_DONT_CARE);
     reshape(g_ctx.wnd_sz.x, g_ctx.wnd_sz.y);
-    graphic::toggle_vsync( graphic::get_vsync() );
+    graphic::toggle_vsync(graphic::get_vsync());
   }
 }
 
@@ -722,8 +716,8 @@ static void draw_game_frame() {
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[g_ctx.pbo_index]);
     /* nullptr в конце означает: брать данные со смещением 0 внутри
     привязанного PBO. Это триггерит сверхбыстрый DMA-трансфер в видеопамять. */
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, GL_RED,
-      GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, graphic::width, graphic::height,
+      GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
     // Грузим текущий кадр в PBO
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[next_pbo_index]);
@@ -756,8 +750,8 @@ static void draw_game_frame() {
     }
     
     // Сразу же принудительно отправляем их в текстуру и ждем
-    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, g_ctx.wnd_sz.x, g_ctx.wnd_sz.y, GL_RED,
-      GL_UNSIGNED_BYTE, nullptr);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, graphic::width, graphic::height,
+      GL_RED, GL_UNSIGNED_BYTE, nullptr);
 
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
   }
