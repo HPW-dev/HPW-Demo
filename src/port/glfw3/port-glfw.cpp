@@ -318,41 +318,51 @@ static void compile_program() {
   }
 }
 
-static void compie_vertex_shader() {
+static void compile_vertex_shader() {
   auto source_file = load_res("graphic/shaders/default.vert");
+  iferror(!source_file, "empty vertex shader");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
   g_ctx.vert_shader = glCreateShader(GL_VERTEX_SHADER);
+  iferror (g_ctx.vert_shader == 0, "Failed to create vertex shader object");
   glShaderSource(g_ctx.vert_shader, 1, &source, 0);
   glCompileShader(g_ctx.vert_shader);
-  // check
-  GLint result;
-  int info_len;
+  
+  GLint result = GL_FALSE;
   glGetShaderiv(g_ctx.vert_shader, GL_COMPILE_STATUS, &result);
+
+  int info_len = 0;
   glGetShaderiv(g_ctx.vert_shader, GL_INFO_LOG_LENGTH, &info_len);
   if (info_len > 0) {
     Vector<char> info_msg(info_len + 1);
     glGetShaderInfoLog(g_ctx.vert_shader, info_len, {}, info_msg.data());
-    log_debug << "Vertex shader info: " << Str(info_msg.begin(), info_msg.end());
+    const Str info_str(info_msg.begin(), info_msg.end());
+    iferror (result == GL_FALSE, "Vertex shader compilation failed:\n" + info_str);
+    log_debug << "Vertex shader info: " << info_str;
   }
 }
 
-static void compie_fragment_shader() {
+static void compile_fragment_shader() {
   auto source_file = load_res("graphic/shaders/default.frag");
+  iferror(!source_file, "empty fragment shader");
   auto source_text = Str(source_file.data.begin(), source_file.data.end());
   auto source = scast<cp<GLchar>>(source_text.c_str());
   g_ctx.frag_shader = glCreateShader(GL_FRAGMENT_SHADER);
+  iferror (g_ctx.frag_shader == 0, "Failed to create fragment shader object");
   glShaderSource(g_ctx.frag_shader, 1, &source, 0);
   glCompileShader(g_ctx.frag_shader);
-  // check
-  GLint result;
-  int info_len;
+  
+  GLint result = GL_FALSE;
   glGetShaderiv(g_ctx.frag_shader, GL_COMPILE_STATUS, &result);
+
+  int info_len = 0;
   glGetShaderiv(g_ctx.frag_shader, GL_INFO_LOG_LENGTH, &info_len);
   if (info_len > 0) {
     Vector<char> info_msg(info_len + 1);
     glGetShaderInfoLog(g_ctx.frag_shader, info_len, {}, info_msg.data());
-    log_debug << "Fragment shader info: " << Str(info_msg.begin(), info_msg.end());
+    const Str info_str(info_msg.begin(), info_msg.end());
+    iferror (result == GL_FALSE, "Fragment shader compilation failed:\n" + info_str);
+    log_debug << "Fragment shader info: " << info_str;
   }
 }
 
@@ -480,8 +490,8 @@ static void init_opengl() {
   set_palette(graphic::current_palette_file);
   screen_tex_init();
 
-  compie_vertex_shader();
-  compie_fragment_shader();
+  compile_vertex_shader();
+  compile_fragment_shader();
   compile_program();
 
   init_screen_poly();
