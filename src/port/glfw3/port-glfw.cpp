@@ -815,8 +815,9 @@ int key, int scancode, int action, int mods) {
   // вставка текста из буффера Ctrl + V
   if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {
     if (hpw::text_input_mode) {
-      const Str buffer = glfwGetClipboardString(window);
-      if (!buffer.empty()) {
+      cauto str_for_buf = glfwGetClipboardString(window);
+      if (str_for_buf) {
+        const Str buffer(str_for_buf);
         hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
         hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(),
           hpw::text_input.size());
