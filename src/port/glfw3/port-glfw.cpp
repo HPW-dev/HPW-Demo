@@ -117,7 +117,7 @@ struct Glfw3_context {
   cp<void> pixels {}; // данные для копирования в текстуру
 
 // Общее для игры:
-  bool is_ran {true};
+  std::atomic_bool is_ran {true};
   bool rebind_key_mode {false};
   hpw::keycode key_for_rebind {hpw::keycode::error}; // появится при hpw::rebind_key
   bool once_gamma_conf {true}; // защита от циклического выставления гаммы
@@ -922,7 +922,7 @@ static void init_port(int argc, char** argv) {
   init_app_mutex();
   init_random();
   print_logo();
-  
+
 #ifndef DISABLE_CONFIG
   load_config();
 #endif
