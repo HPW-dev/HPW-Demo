@@ -5,6 +5,7 @@
   #include <windows.h>
 #else // LINUX
   #include <unistd.h>
+  #include <climits>
 #endif
 
 using std_seconds = std::chrono::duration<double, std::ratio<1, 1>>;
@@ -228,4 +229,49 @@ Str get_pc_name() {
 
 Seconds get_cur_time() {
   return std::chrono::duration_cast<std_seconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+Str get_launch_dir() {
+   Str fallback = Str(".") + SEPARATOR;
+
+#ifdef WINDOWS
+  std::vector<wchar_t> wbuf(MAX_PATH);
+  DWORD wlen = 0;
+  while (true) {
+    wlen = ::GetModuleFileNameW(nullptr, wbuf.data(), scast<DWORD>(wbuf.size()));
+    ret_if (wlen == 0, fallback);
+    break_if (wlen < wbuf.size());
+    wbuf.resize(wbuf.size() * 2);
+  }
+
+  const int utf8_len = ::WideCharToMultiByte(CP_UTF8, 0, wbuf.data(),
+    scast<int>(wlen), nullptr, 0, nullptr, nullptr);
+  ret_if (utf8_len <= 0, fallback);
+
+  Str path(utf8_len, '\0');
+  ::WideCharToMultiByte(CP_UTF8, 0, wbuf.data(), scast<int>(wlen),
+    path.data(), utf8_len, nullptr, nullptr);
+
+  // В Windows/MSYS2 разделителем может быть как '\', так и '/'
+  std::size_t sep_pos = path.find_last_of("\\/");
+#else // Linux:
+  std::vector<char> buf(PATH_MAX);
+  ssize_t len = 0;
+  while (true) {
+    len = readlink("/proc/self/exe", buf.data(), buf.size());
+    ret_if (len == -1, fallback);
+    break_if (scast<size_t>(len) < buf.size());
+    buf.resize(buf.size() * 2);
+  }
+
+  Str path(buf.data(), scast<size_t>(len));
+  std::size_t sep_pos = path.find_last_of('/');
+#endif
+
+  ret_if (sep_pos == Str::npos, fallback);
+
+  // Если бинарник лежит в корне диска (например, "C:\app.exe" или "/app")
+  ret_if (sep_pos == 0, Str(1, SEPARATOR));
+
+  return path.substr(0, sep_pos) + SEPARATOR;
 }

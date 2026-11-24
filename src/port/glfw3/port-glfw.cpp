@@ -920,13 +920,8 @@ static void init_port(int argc, char** argv) {
 
   std::signal(SIGINT, signal_handler); // для закрытия через Ctrl+C 
 
-#ifdef WINDOWS
-  // переключить консоль винды в UTF8
-  SetConsoleOutputCP(CP_UTF8);
-#endif
-
   process_args(argc, argv); // парс аргументов <--------------------------------
-  hpw::cur_dir = launch_dir_from_argv0(argv); // узнать в какой папке игра запущена
+  hpw::cur_dir = get_launch_dir(); // узнать в какой папке игра запущена
   log_debug << "launch directory: " << hpw::cur_dir;
 
   init_app_mutex();
@@ -1166,6 +1161,11 @@ static void init_window() {
 
 //---- Основные функции GLFW3 порта --------------------------------------------
 void glfw3_init(int argc, char** argv) {
+#ifdef WINDOWS
+  // переключить консоль винды в UTF8
+  SetConsoleOutputCP(CP_UTF8);
+#endif
+
   iferror(g_ctx.window, "не использовать два окна");
 
   log_debug << "GLFW3 initialization...";
