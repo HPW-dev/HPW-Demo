@@ -547,8 +547,12 @@ static void reset_keymap() {
 };
 
 static void toggle_vsync(const bool enable) {
-  log_debug << "V-Sync: " << yn2s(enable);
-  glfwSwapInterval(enable ? 1 : 0);
+  if (g_ctx.window) {
+    log_debug << "V-Sync: " << yn2s(enable);
+    glfwSwapInterval(enable ? 1 : 0);
+  } else {
+    log_debug << "Ignore V-Sync modification - window is not created";
+  }
 };
 
 static void set_target_ups(int new_ups) {
@@ -559,14 +563,17 @@ static void set_target_ups(int new_ups) {
 
 static void toggle_mouse_visible(bool enable) {
   graphic::show_mouse_cursour = enable;
-  glfwSetInputMode(g_ctx.window, GLFW_CURSOR, enable
-    ? GLFW_CURSOR_NORMAL
-    : GLFW_CURSOR_HIDDEN);
+  if (g_ctx.window) {
+    glfwSetInputMode(g_ctx.window, GLFW_CURSOR, enable
+      ? GLFW_CURSOR_NORMAL
+      : GLFW_CURSOR_HIDDEN);
+  }
 }
 
 static void toggle_fullscreen(bool enable) {
   log_debug << "new fullscreen mode: " << yn2s(enable);
   graphic::fullscreen = enable;
+  ret_if (!g_ctx.window);
 
   if (enable) { // весь экран
     auto monitor = glfwGetPrimaryMonitor();
@@ -591,7 +598,8 @@ static void init_window();
 static void toggle_double_buffering(bool enable) {
   log_debug << "new double-buffering mode: " << yn2s(enable);
   graphic::double_buffering = enable;
-  init_window();
+  if (g_ctx.window)
+    init_window();
 }
 
 // привязка функций порта
