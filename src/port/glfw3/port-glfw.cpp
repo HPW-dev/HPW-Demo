@@ -306,10 +306,17 @@ static void compile_program() {
   glUniform1i(glGetUniformLocation(g_ctx.shader_prog, "main_tex"), 0);
   glUniform1i(glGetUniformLocation(g_ctx.shader_prog, "pal_tex"), 1);
 
-  // check
   GLint result;
-  int info_len;
   glGetProgramiv(g_ctx.shader_prog, GL_LINK_STATUS, &result);
+  // данные шейдера можно теперь не держать в памяти
+  glDetachShader(g_ctx.shader_prog, g_ctx.vert_shader);
+  glDetachShader(g_ctx.shader_prog, g_ctx.frag_shader);
+  glDeleteShader(g_ctx.vert_shader);
+  glDeleteShader(g_ctx.frag_shader);
+  g_ctx.vert_shader = 0;
+  g_ctx.frag_shader = 0;  
+  
+  int info_len;
   glGetProgramiv(g_ctx.shader_prog, GL_INFO_LOG_LENGTH, &info_len);
   if (info_len > 0) {
     Vector<char> info_msg(info_len + 1);
@@ -338,7 +345,8 @@ static void compile_vertex_shader() {
     glGetShaderInfoLog(g_ctx.vert_shader, info_len, {}, info_msg.data());
     const Str info_str(info_msg.begin(), info_msg.end());
     iferror (result == GL_FALSE, "Vertex shader compilation failed:\n" + info_str);
-    log_debug << "Vertex shader info: " << info_str;
+    if (!info_str.empty())
+      log_debug << "Vertex shader info: " << info_str;
   }
 }
 
@@ -362,7 +370,8 @@ static void compile_fragment_shader() {
     glGetShaderInfoLog(g_ctx.frag_shader, info_len, {}, info_msg.data());
     const Str info_str(info_msg.begin(), info_msg.end());
     iferror (result == GL_FALSE, "Fragment shader compilation failed:\n" + info_str);
-    log_debug << "Fragment shader info: " << info_str;
+    if (!info_str.empty())
+      log_debug << "Fragment shader info: " << info_str;
   }
 }
 
@@ -992,10 +1001,51 @@ static void draw_startup_screen() {
   draw_game_frame(), glfwSwapBuffers(g_ctx.window);
 }
 
+static void cleanup_opengl() {
+  ret_if (!g_ctx.window);
+
+  glfwMakeContextCurrent(g_ctx.window);
+
+  if (g_ctx.shader_prog) {
+    glDeleteProgram(g_ctx.shader_prog);
+    g_ctx.shader_prog = 0;
+  }
+  if (g_ctx.vert_shader) {
+    glDeleteShader(g_ctx.vert_shader);
+    g_ctx.vert_shader = 0;
+  }
+  if (g_ctx.frag_shader) {
+    glDeleteShader(g_ctx.frag_shader);
+    g_ctx.frag_shader = 0;
+  }
+  if (g_ctx.vao) {
+    glDeleteVertexArrays(1, &g_ctx.vao);
+    g_ctx.vao = 0;
+  }
+  if (g_ctx.pbos[0] || g_ctx.pbos[1]) {
+    glDeleteBuffers(2, g_ctx.pbos);
+    g_ctx.pbos[0] = 0;
+    g_ctx.pbos[1] = 0;
+  }
+  if (g_ctx.screen_tex) {
+    glDeleteTextures(1, &g_ctx.screen_tex);
+    g_ctx.screen_tex = 0;
+  }
+  if (g_ctx.pal_tex) {
+    glDeleteTextures(1, &g_ctx.pal_tex);
+    g_ctx.pal_tex = 0;
+  }
+
+  g_ctx.pbo_index = 0;
+}
+
 static void init_window() {
   log_info << "создание окна игры...";
-  if (g_ctx.window) // на случай реинита
+  if (g_ctx.window) { // на случай реинита
+    cleanup_opengl();
     glfwDestroyWindow(g_ctx.window);
+    g_ctx.window = nullptr;
+  }
 
   // настройки для контекста OGL
   glfwWindowHint(GLFW_DEPTH_BITS, 0);
@@ -1123,7 +1173,13 @@ void glfw3_sync() {
 
 void glfw3_finalize() {
   log_debug << "GLFW3 finalization...";
-  glfwDestroyWindow(g_ctx.window);
+  cleanup_opengl();
+
+  if (g_ctx.window) {
+    glfwDestroyWindow(g_ctx.window);
+    g_ctx.window = nullptr;
+  }
+
   glfwTerminate();
   
 #ifndef DISABLE_CONFIG
