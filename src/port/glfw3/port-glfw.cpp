@@ -98,7 +98,7 @@ struct Glfw3_context {
   Veci wnd_sz {graphic::width, graphic::height}; // реальная ширина и высота окна (меняется при ресайзе)
   Recti wnd_game_area {}; // видимая часть внутреннего окна игры
   Str window_title {"H.P.W"};
-  bool start_fullscreen {false}; // через аргументы запуска можно указать запуститься в фулскрине
+  std::optional<bool> start_fullscreen {}; // через аргументы запуска можно указать запуститься в фулскрине
 #ifdef WINDOWS
   void* app_mutex {};
 #endif
@@ -922,9 +922,14 @@ static void init_port(int argc, char** argv) {
   init_app_mutex();
   init_random();
   print_logo();
+  
 #ifndef DISABLE_CONFIG
   load_config();
 #endif
+
+  if (g_ctx.start_fullscreen.has_value())
+    graphic::fullscreen = *g_ctx.start_fullscreen;
+
   init_port_cbs();
 
   g_ctx.pixels = scast<cp<void>>(graphic::canvas.data());
