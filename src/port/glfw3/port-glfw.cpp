@@ -208,9 +208,11 @@ static Vector<GLfloat> load_ogl_palette(cr<Str> fname) {
   int comp; // сколько цветовых каналов
   cauto mem = load_res(fname);
   cauto mem_data = cptr2ptr<cp<stbi_uc>>(mem.data.data());
-  auto decoded = stbi_load_from_memory(mem_data, mem.data.size(), &x, &y, &comp, STBI_rgb);
+  auto decoded = stbi_load_from_memory(mem_data, mem.data.size(),
+    &x, &y, &comp, STBI_rgb);
   iferror( !decoded, "image data is not decoded");
-  iferror(x < 256, "ширина картинки должна быть не меньше 256");
+  iferror(x < 256, "ширина картинки должна быть не меньше 256 пикселей");
+  iferror(y < 1, "высота картинки должна быть не меньше 1 пикселя");
 
   // rgb -> palette array
   Vector<GLfloat> ogl_pal;
