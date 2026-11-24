@@ -26,6 +26,7 @@ def compile_game(tgt: Target, ctx: Context, host: Host):
 
   if host.system == Sys_name.windows:
     tgt.linked_libs.extend([
+      '-lwinmm', # <mmsystem.h>
       '-lglfw3dll',
       '-lopengl32',
       '-lOpenAL32.dll',

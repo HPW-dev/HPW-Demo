@@ -5,7 +5,6 @@
 int main(int argc, char** argv) {
   Str err_msg;
   try {
-
     Port::init(argc, argv);
     // TODO game init
 

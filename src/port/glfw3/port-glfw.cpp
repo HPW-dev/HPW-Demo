@@ -7,6 +7,7 @@
 #ifdef WINDOWS
   #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
+  #include <mmsystem.h>
 
   #define GLFW_DLL
 #else
@@ -1161,16 +1162,42 @@ static void init_window() {
   init_icon();
 }
 
-//---- Основные функции GLFW3 порта --------------------------------------------
-void glfw3_init(int argc, char** argv) {
+static void init_platform() {
+  std::setlocale(LC_ALL, "C"); // чтобы нормально парсить дробные числа
+
 #ifdef WINDOWS
   // переключить консоль винды в UTF8
-  SetConsoleOutputCP(CP_UTF8);
+  ::SetConsoleOutputCP(CP_UTF8);
+  ::SetConsoleCP(CP_UTF8);
+
+  auto hOut = ::GetStdHandle(STD_OUTPUT_HANDLE);
+  if (hOut != INVALID_HANDLE_VALUE) {
+    DWORD mode = 0;
+    if (::GetConsoleMode(hOut, &mode))
+      ::SetConsoleMode(hOut, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+  }
+
+  ::timeBeginPeriod(1); // Повысит точность таймера Windows до 1 мс
+
+  // не предлагать краш-дампы и зависшее окно "Не отвечает"
+  ::SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
 #endif
+}
+
+static void finalize_platform() {
+#ifdef WINDOWS
+  ::timeEndPeriod(1);
+#endif
+}
+
+//---- Основные функции GLFW3 порта --------------------------------------------
+void glfw3_init(int argc, char** argv) {
+  init_platform();
+
+  log_debug << "GLFW3 port initialization...";
 
   iferror(g_ctx.window, "не использовать два окна");
 
-  log_debug << "GLFW3 initialization...";
   glfwSetErrorCallback(error_cb);
   iferror(!glfwInit(), "glfwInit error");
 
@@ -1178,7 +1205,6 @@ void glfw3_init(int argc, char** argv) {
   clear_cur_keys();
 
   init_port(argc, argv);
-
   init_window();
 }
 
@@ -1214,6 +1240,7 @@ void glfw3_finalize() {
 #endif
   
   free_app_mutex();
+  finalize_platform();
   
   log_info << "Корректное завершение";
 }
