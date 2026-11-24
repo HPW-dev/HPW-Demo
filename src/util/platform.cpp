@@ -60,11 +60,13 @@ inline void win_bussy_loop_92(const Seconds seconds) { return win_bussy_loop(sec
 
 #else //LINUX
 
-inline void lin_usleep(const Seconds seconds) { usleep(seconds * 1'000'000.0); }
+inline void lin_sleep(const Seconds seconds) {
+  std::this_thread::sleep_for(std_seconds(seconds));
+}
 
 inline void lin_bussy_loop(const Seconds seconds, const double scale) {
   auto st = std::chrono::steady_clock::now();
-  lin_usleep(seconds * scale);
+  lin_sleep(seconds * scale);
   while (std::chrono::steady_clock::now() - st <= std_seconds(seconds)) {
     asm volatile ("");
   }
@@ -117,7 +119,6 @@ void calibrate_delay(const Seconds target) {
     Timer_stat {.name="win_bussy_loop_70 ....", .delay_pf = &win_bussy_loop_70},
     Timer_stat {.name="win_bussy_loop_92 ....", .delay_pf = &win_bussy_loop_92},
     #else // LINUX
-    Timer_stat {.name="lin_usleep ...........", .delay_pf = &lin_usleep},
     Timer_stat {.name="lin_bussy_loop_70 ....", .delay_pf = &lin_bussy_loop_70},
     Timer_stat {.name="lin_bussy_loop_92 ....", .delay_pf = &lin_bussy_loop_92},
     #endif
@@ -166,7 +167,6 @@ void set_timer(cr<Str> name) {
     {"win_bussy_loop_70", &win_bussy_loop_70},
     {"win_bussy_loop_92", &win_bussy_loop_92},
     #else // LINUX
-    {"lin_usleep", &lin_usleep},
     {"lin_bussy_loop_70", &lin_bussy_loop_70},
     {"lin_bussy_loop_92", &lin_bussy_loop_92},
     #endif
