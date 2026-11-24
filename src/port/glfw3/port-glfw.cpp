@@ -973,6 +973,8 @@ static void init_icon() {
 }
 
 static Str get_window_name() {
+  if (!g_ctx.window_title.empty())
+    return g_ctx.window_title;
   return hpw::default_tile.empty()
     ? rnd_game_title()
     : hpw::default_tile;
