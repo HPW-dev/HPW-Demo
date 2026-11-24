@@ -231,6 +231,12 @@ static void set_palette(cr<Str> fname) {
     ? Str{graphic::DEFAULT_PALETTE_FILE}
     : fname;
   
+  // если текстура палитры есть - снести её
+  if (g_ctx.pal_tex) {
+    glDeleteTextures(1, &g_ctx.pal_tex);
+    g_ctx.pal_tex = 0;
+  }
+  
   glGenTextures(1, &g_ctx.pal_tex);
   glActiveTexture(GL_TEXTURE1);
   glBindTexture(GL_TEXTURE_1D, g_ctx.pal_tex);
