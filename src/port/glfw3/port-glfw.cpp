@@ -652,8 +652,11 @@ static void init_random() {
     seed = g_ctx.custom_seed.value();
   } else {
     cauto now = std::chrono::steady_clock::now().time_since_epoch().count();
-    cauto u64_seed = scast<u64_t>(now);
-    seed = scast<u32_t>((u64_seed & 0xFFFF'FFFFu) ^ (u64_seed >> 32));
+    // splitmix64:
+    auto x = scast<u64_t>(now);
+    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9ULL;
+    x = (x ^ (x >> 27)) * 0x94d049bb133111ebULL;
+    seed = scast<u32_t>(x ^ (x >> 31));
   }
 
   // TODO учесть большой сид
