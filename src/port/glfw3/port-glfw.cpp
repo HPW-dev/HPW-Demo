@@ -651,7 +651,9 @@ static void init_random() {
   if (g_ctx.custom_seed.has_value()) {
     seed = g_ctx.custom_seed.value();
   } else {
-    seed = std::time(nullptr);
+    cauto now = std::chrono::steady_clock::now().time_since_epoch().count();
+    cauto u64_seed = scast<u64_t>(now);
+    seed = scast<u32_t>((u64_seed & 0xFFFF'FFFFu) ^ (u64_seed >> 32));
   }
 
   // TODO учесть большой сид
