@@ -4,9 +4,21 @@
 #ifdef WINDOWS
   #define WIN32_LEAN_AND_MEAN
   #include <windows.h>
+
+  inline void cpu_relax() { ::YieldProcessor(); }
 #else // LINUX
   #include <unistd.h>
   #include <climits>
+
+  inline void cpu_relax() {
+    #if defined(__x86_64__) || defined(__i386__)
+      asm volatile("pause" ::: "memory");
+    #elif defined(__aarch64__) || defined(__arm__)
+      asm volatile("yield" ::: "memory");
+    #else
+      asm volatile("" ::: "memory");
+    #endif
+  }
 #endif
 
 
@@ -21,7 +33,7 @@ inline void std_delay(const Seconds seconds) {
 inline void std_delay_nop(const Seconds seconds) {
   auto st = std::chrono::steady_clock::now();
   while (std::chrono::steady_clock::now() - st <= std_seconds(seconds)) {
-    asm volatile ("");
+    cpu_relax();
   }
 }
 
@@ -37,13 +49,16 @@ inline void win_htimer(const Seconds seconds) {
   // TODO x32 версия таймера
   win_sleep(seconds);
 #else // x64
+  thread_local ::HANDLE timer = ::CreateWaitableTimerExW(
+    NULL, NULL, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+  if (!timer) {
+    win_sleep(seconds);
+    return;
+  }
   ::LARGE_INTEGER ft;
-  ft.QuadPart = -static_cast<std::int64_t>(seconds * 10'000'000);  // '-' using relative time
-  ::HANDLE timer = ::CreateWaitableTimerExW(NULL, NULL,
-    CREATE_WAITABLE_TIMER_HIGH_RESOLUTION, TIMER_ALL_ACCESS);
+  ft.QuadPart = -static_cast<std::int64_t>(seconds * 10'000'000.0);
   ::SetWaitableTimer(timer, &ft, 0, NULL, NULL, 0);
   ::WaitForSingleObject(timer, INFINITE);
-  ::CloseHandle(timer);
 #endif
 }
 
@@ -51,7 +66,7 @@ inline void win_bussy_loop(const Seconds seconds, const double scale) {
   auto st = std::chrono::steady_clock::now();
   win_htimer(seconds * scale);
   while (std::chrono::steady_clock::now() - st <= std_seconds(seconds)) {
-    asm volatile ("");
+    cpu_relax();
   }
 }
 
@@ -70,7 +85,7 @@ inline void lin_bussy_loop(const Seconds seconds, const double scale) {
   auto st = std::chrono::steady_clock::now();
   lin_sleep(seconds * scale);
   while (std::chrono::steady_clock::now() - st <= std_seconds(seconds)) {
-    asm volatile ("");
+    cpu_relax();
   }
 }
 
@@ -113,17 +128,17 @@ void calibrate_delay(const Seconds target) {
   };
 
   Vector<Timer_stat> statistic {
-    Timer_stat {.name="std_delay ............", .delay_pf = &std_delay},
-    Timer_stat {.name="std_delay_nop ........", .delay_pf = &std_delay_nop},
-    Timer_stat {.name="std_sleep_until ......", .delay_pf = &std_sleep_until},
+    Timer_stat {.name="std_delay", .delay_pf = &std_delay},
+    Timer_stat {.name="std_delay_nop", .delay_pf = &std_delay_nop},
+    Timer_stat {.name="std_sleep_until", .delay_pf = &std_sleep_until},
     #ifdef WINDOWS
-    Timer_stat {.name="win_sleep ............", .delay_pf = &win_sleep},
-    Timer_stat {.name="win_htimer ...........", .delay_pf = &win_htimer},
-    Timer_stat {.name="win_bussy_loop_70 ....", .delay_pf = &win_bussy_loop_70},
-    Timer_stat {.name="win_bussy_loop_92 ....", .delay_pf = &win_bussy_loop_92},
+    Timer_stat {.name="win_sleep", .delay_pf = &win_sleep},
+    Timer_stat {.name="win_htimer", .delay_pf = &win_htimer},
+    Timer_stat {.name="win_bussy_loop_70", .delay_pf = &win_bussy_loop_70},
+    Timer_stat {.name="win_bussy_loop_92", .delay_pf = &win_bussy_loop_92},
     #else // LINUX
-    Timer_stat {.name="lin_bussy_loop_70 ....", .delay_pf = &lin_bussy_loop_70},
-    Timer_stat {.name="lin_bussy_loop_92 ....", .delay_pf = &lin_bussy_loop_92},
+    Timer_stat {.name="lin_bussy_loop_70", .delay_pf = &lin_bussy_loop_70},
+    Timer_stat {.name="lin_bussy_loop_92", .delay_pf = &lin_bussy_loop_92},
     #endif
   };
   // вычислить отставать ние для каждого таймера и выбрать лучший из них
@@ -143,8 +158,8 @@ void calibrate_delay(const Seconds target) {
     stat.signed_error = avg - target;
     stat.abs_error = std::abs(stat.signed_error);
 
-    log_debug << "погрешность " << stat.name << " "
-              << n2s(stat.signed_error, 14) << " Сек";
+    log_debug << std::format("погрешность {:.<22} {} Сек",
+      stat.name, n2s(stat.signed_error, 14));
   }
 
   // найти самый точный таймер

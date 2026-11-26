@@ -55,7 +55,7 @@ void process_error(cr<Str> error) {
 }
 
 static void init_platform() {
-  log_debug << "platform initialization...";
+  log_info << "platform initialization...";
   std::setlocale(LC_ALL, "C"); // чтобы нормально парсить дробные числа
 
 #ifdef WINDOWS
