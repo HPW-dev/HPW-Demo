@@ -1,24 +1,10 @@
 #include "pch.hpp"
 #include "port-glfw.hpp"
+#include "glfw-context.hpp"
 
 #include <csignal>
 #include "stb/stb_image.h"
 
-#ifdef WINDOWS
-  #define WIN32_LEAN_AND_MEAN
-  #include <windows.h>
-  #include <mmsystem.h>
-
-  #define GLFW_DLL
-#else
-  #include <unistd.h>
-#endif
-
-#include <glad/gl.h>
-// GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
-#include <GLFW/glfw3.h>
-
-#include "port/windows/windows-keycodes.hpp" // TODO add Linux keycode-file
 #include "engine/graphic/image/color-convert.hpp"
 #include "engine/graphic/image/color-rgb.hpp"
 #include "engine/graphic/image/palette.hpp"
@@ -32,8 +18,6 @@
 #include "game/core/graphic.hpp"
 #include "game/core/palette.hpp"
 #include "game/core/common.hpp"
-#include "game/core/canvas.hpp"
-#include "game/core/tasks.hpp"
 #include "game/core/user.hpp"
 #include "game/core/core.hpp"
 #include "game/input/keys.hpp"
@@ -45,140 +29,7 @@
 #endif
 
 
-//---- классы/контексты/глобалы ------------------------------------------------
-// перенаправляет управление с GLFW в игру
-class Key_mapper final {
-  nocopy(Key_mapper);
-
-  struct GLFW_key {
-    utf32 name {};
-    int scancode {}; // системный код клавиши
-  };
-
-  // <hpw key, GLFW key>
-  std::unordered_map<hpw::keycode, GLFW_key> table {};
-
-public:
-  Key_mapper() = default;
-  ~Key_mapper() = default;
-  void reset(); // поставить клавиши по умолчанию
-  void bind(hpw::keycode dst_hpw_key, int glfw_key); // забиндить клавишу
-  inline decltype(table)& get_table() { return table; }
-  Keys_info get_info() const;
-};
-
-// отложенное нажатие кнопки
-class Lazy_press final: public Task {
-  hpw::keycode _keycode {};
-  bool _kill_me_on_next_update {};
-
-public:
-  inline explicit Lazy_press(const hpw::keycode keycode): _keycode {keycode} {}
-
-  inline void update(const Delta_time dt) override final { 
-    if (!_kill_me_on_next_update) {
-      press(_keycode);
-      _kill_me_on_next_update = true;
-    } else
-      this->kill();
-  }
-
-  inline void on_end() {
-    release(_keycode);
-  }
-};
-
-// Все нужные данные для GLFW окна
-struct Glfw3_context {
-  int argc {};
-  char** argv {};
-
-// GLFW окно:
-  GLFWwindow* window {};
-  Veci wnd_off {440, 240}; // Стартовое смещение окна
-  Veci wnd_sz {graphic::width, graphic::height}; // реальная ширина и высота окна (меняется при ресайзе)
-  Recti wnd_game_area {}; // видимая часть внутреннего окна игры
-  Str window_title {"H.P.W"};
-  std::optional<bool> start_fullscreen {}; // через аргументы запуска можно указать запуститься в фулскрине
-#ifdef WINDOWS
-  void* app_mutex {};
-#endif
-  Key_mapper key_mapper {};
-
-// OpenGL:
-  Vector<GLfloat> pal_rgb {}; // Палитра игры подготовленная к отправке на видяху
-  uint screen_tex = 0; // OpenGL текстура экрана
-  uint vao = 0;
-  GLuint pbos[2] = {0, 0};
-  bool use_double_pbo {true};
-  int pbo_index = 0;
-  size_t pbo_sz = 0;
-  uint shader_prog = 0, vert_shader = 0, frag_shader = 0;
-  uint pal_tex = 0;
-  cp<void> pixels {}; // данные для копирования в текстуру
-
-// Общее для игры:
-  std::atomic_bool is_ran {true};
-  bool rebind_key_mode {false};
-  hpw::keycode key_for_rebind {hpw::keycode::error}; // появится при hpw::rebind_key
-  bool once_gamma_conf {true}; // защита от циклического выставления гаммы
-  std::optional<uint32_t> custom_seed {};
-};
-static Glfw3_context g_ctx {};
-
 //---- Внутренние функции порта ------------------------------------------------
-
-void Key_mapper::bind(hpw::keycode dst_hpw_key, int scancode) {
-  rauto dst = table[dst_hpw_key];
-  dst.scancode = scancode;
-  utf32 name = n2s<utf32>(scancode);
-  // получить читаемое название кнопки
-  if (auto win_name = get_windows_keycode_name(scancode); win_name) {
-    name = *win_name;
-  } else { // если имя не найдено, то попытаться найти его в GLFW
-    auto glfw_key_name = glfwGetKeyName(GLFW_KEY_UNKNOWN, dst.scancode);
-    if (glfw_key_name)
-      name = sconv<utf32>(Str(glfw_key_name)) + U" (" + n2s<utf32>(dst.scancode) + U")";
-  }
-  dst.name = name;
-}
-
-Keys_info Key_mapper::get_info() const {
-  Keys_info info;
-  for (crauto [hpw_key, glfw_key]: table) {
-    info.keys.emplace_back(Keys_info::Item {
-      .hpw_key = hpw_key,
-      .name = glfw_key.name,
-      .scancode = glfw_key.scancode
-    });
-  }
-  return info;
-}
-
-void Key_mapper::reset() { 
-  table.clear();
-
-  // бинды по умолчанию
-  bind(hpw::keycode::up,           glfwGetKeyScancode(GLFW_KEY_UP));
-  bind(hpw::keycode::down,         glfwGetKeyScancode(GLFW_KEY_DOWN));
-  bind(hpw::keycode::left,         glfwGetKeyScancode(GLFW_KEY_LEFT));
-  bind(hpw::keycode::right,        glfwGetKeyScancode(GLFW_KEY_RIGHT));
-  bind(hpw::keycode::focus,        glfwGetKeyScancode(GLFW_KEY_LEFT_ALT));
-  bind(hpw::keycode::shoot,        glfwGetKeyScancode(GLFW_KEY_Z));
-  bind(hpw::keycode::bomb,         glfwGetKeyScancode(GLFW_KEY_X));
-  bind(hpw::keycode::mode,         glfwGetKeyScancode(GLFW_KEY_A));
-  bind(hpw::keycode::enable,       glfwGetKeyScancode(GLFW_KEY_ENTER));
-  bind(hpw::keycode::escape,       glfwGetKeyScancode(GLFW_KEY_ESCAPE));
-
-  bind(hpw::keycode::reset,        glfwGetKeyScancode(GLFW_KEY_F5));
-  bind(hpw::keycode::fast_forward, glfwGetKeyScancode(GLFW_KEY_F4));
-  bind(hpw::keycode::debug,        glfwGetKeyScancode(GLFW_KEY_F3));
-  bind(hpw::keycode::console,      glfwGetKeyScancode(GLFW_KEY_GRAVE_ACCENT));
-  bind(hpw::keycode::text_delete,  glfwGetKeyScancode(GLFW_KEY_BACKSPACE));
-  bind(hpw::keycode::fps,          glfwGetKeyScancode(GLFW_KEY_F1));
-  bind(hpw::keycode::fulscrn,      glfwGetKeyScancode(GLFW_KEY_F11));
-  bind(hpw::keycode::screenshot,   glfwGetKeyScancode(GLFW_KEY_F2));
-}
 
 static void init_rgb_pal() {
   log_debug << "init rgb (float) palette for OGL...";
@@ -818,82 +669,6 @@ static void draw_game_frame() {
     glFlush();
 }
 
-static void hotkey_process(GLFWwindow* window,
-int key, int scancode, int action, int mods) {
-  // альтернативная кнопка скриншота
-  if (action == GLFW_PRESS && key == GLFW_KEY_PRINT_SCREEN)
-    hpw::task_mgr.add(new_shared<Lazy_press>(hpw::keycode::screenshot));
-  
-  // альтернативная кнопка фуллскрина
-  if (action == GLFW_PRESS && key == GLFW_KEY_ENTER && mods == GLFW_MOD_ALT) {
-    hpw::task_mgr.add(new_shared<Lazy_press>(hpw::keycode::fulscrn));
-    release(hpw::keycode::enable);
-  }
-  
-  // вставка текста из буффера Ctrl + V
-  if (action == GLFW_PRESS && key == GLFW_KEY_V && mods == GLFW_MOD_CONTROL) {
-    if (hpw::text_input_mode) {
-      cauto str_for_buf = glfwGetClipboardString(window);
-      if (str_for_buf) {
-        const Str buffer(str_for_buf);
-        hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
-        hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(),
-          hpw::text_input.size());
-      }
-    }
-  }
-
-  // снос всей введёной строки текста (Ctrl + C)
-  if (action == GLFW_PRESS && key == GLFW_KEY_C && mods == GLFW_MOD_CONTROL) {
-    if (hpw::text_input_mode) {
-      hpw::text_input.clear();
-      hpw::text_input_pos = 0;
-    }
-  }
-}
-
-static void mouse_button_cb(GLFWwindow* window,
-int button, int action, int mods) {
-  // вставка текста из буффера при правой кнопке мыши
-  if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS) {
-    if (hpw::text_input_mode) {
-      const Str buffer = glfwGetClipboardString(window);
-      if (!buffer.empty()) {
-        hpw::text_input.insert(hpw::text_input_pos, utf8_to_32(buffer));
-        hpw::text_input_pos = std::min<int>(hpw::text_input_pos + buffer.size(), hpw::text_input.size());
-      }
-    }
-  }
-}
-
-static void key_cb(GLFWwindow* window, int key, int scancode,
-int action, int mods) {
-  hpw::any_key_pressed = true;
-  rauto keymap_table = g_ctx.key_mapper.get_table();
-
-  // режим ребинда клавиши
-  if (g_ctx.rebind_key_mode) {
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-      g_ctx.key_mapper.bind(g_ctx.key_for_rebind, scancode);
-      hpw::keys_info = g_ctx.key_mapper.get_info();
-      g_ctx.rebind_key_mode = false;
-      return; // чтобы нажатие не применилось в игровой логике
-    }
-  }
-
-  // проверить нажатия на игровые клавиши
-  for (crauto [hpw_key, key]: keymap_table) {
-    if (key.scancode == scancode) {
-      if (action == GLFW_PRESS || action == GLFW_REPEAT)
-        press(hpw_key);
-      else // GLFW_RELEASE
-        release(hpw_key);
-    }
-  }
-
-  hotkey_process(window, key, scancode, action, mods);
-}
-
 // колбэк для вывода ошибок GLFW
 static void error_cb(int error, Cstr description) {
   // поставить дефолтную гамму при ошибке
@@ -911,16 +686,6 @@ static void error_cb(int error, Cstr description) {
 
 static void reshape_cb(GLFWwindow* /*g_ctx.window*/, int w, int h) {
   reshape(w, h);
-}
-
-// utf32 text input callback
-static void utf32_text_input_cb(GLFWwindow* /*g_ctx.window*/, std::uint32_t codepoint) {
-  return_if (!hpw::text_input_mode);
-
-  hpw::text_input_pos = std::clamp<int>(hpw::text_input_pos, 0, hpw::text_input.size());
-  cauto ch = scast<decltype(hpw::text_input)::value_type>(codepoint);
-  hpw::text_input.insert(hpw::text_input_pos, 1, ch);
-  hpw::text_input_pos = std::min<int>(hpw::text_input_pos + 1, hpw::text_input.size());
 }
 
 static void init_port(int argc, char** argv) {
