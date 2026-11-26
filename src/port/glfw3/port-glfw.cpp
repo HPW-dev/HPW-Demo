@@ -4,6 +4,7 @@
 #include "port-glfw.hpp"
 
 #include <csignal>
+#include "glfw-include.hpp"
 
 #include "game/util/screenshot.hpp"
 #include "game/util/version.hpp"
@@ -77,32 +78,6 @@ static void init_random() {
   // TODO учесть большой сид
   log_debug << std::format("seed: {}\n", seed);
   set_rnd_seed({.old_seed=seed});
-}
-
-// для предупреждения о двух окнах игры
-static void init_app_mutex() {
-#ifdef WINDOWS
-  g_ctx.app_mutex = ::CreateMutex(NULL, TRUE, "HPW: Double window mutex");
-  if (::GetLastError() == ERROR_ALREADY_EXISTS) {
-    hpw::multiple_apps = true;
-    ::CloseHandle(g_ctx.app_mutex);
-    g_ctx.app_mutex = nullptr;
-    log_warning << "Запущено больше двух экземпляров игры";
-  }
-#else
-  #pragma message("need impl for other_game_started() on Linux")
-#endif
-}
-
-static void free_app_mutex() {
-#ifdef WINDOWS
-  if (g_ctx.app_mutex) {
-    ::ReleaseMutex(g_ctx.app_mutex);
-    ::CloseHandle(g_ctx.app_mutex);
-  }
-#else
-  #pragma message("need impl for free_app_mutex() on Linux")
-#endif
 }
 
 // Обработчик для Ctrl+C
@@ -182,7 +157,6 @@ static void init_port(int argc, char** argv) {
   hpw::cur_dir = get_launch_dir(); // узнать в какой папке игра запущена
   log_debug << "launch directory: " << hpw::cur_dir;
 
-  init_app_mutex();
   init_random();
   print_logo();
 
@@ -209,38 +183,8 @@ static void init_port(int argc, char** argv) {
   hpw::safe_dt = graphic::get_target_frame_time();
 }
 
-static void init_platform() {
-  std::setlocale(LC_ALL, "C"); // чтобы нормально парсить дробные числа
-
-#ifdef WINDOWS
-  // переключить консоль винды в UTF8
-  ::SetConsoleOutputCP(CP_UTF8);
-  ::SetConsoleCP(CP_UTF8);
-
-  auto hOut = ::GetStdHandle(STD_OUTPUT_HANDLE);
-  if (hOut != INVALID_HANDLE_VALUE) {
-    DWORD mode = 0;
-    if (::GetConsoleMode(hOut, &mode))
-      ::SetConsoleMode(hOut, mode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
-  }
-
-  ::timeBeginPeriod(1); // Повысит точность таймера Windows до 1 мс
-
-  // не предлагать краш-дампы и зависшее окно "Не отвечает"
-  ::SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOGPFAULTERRORBOX);
-#endif
-}
-
-static void finalize_platform() {
-#ifdef WINDOWS
-  ::timeEndPeriod(1);
-#endif
-}
-
 //---- Основные функции GLFW3 порта --------------------------------------------
 void glfw3_init(int argc, char** argv) {
-  init_platform();
-
   log_debug << "GLFW3 port initialization...";
 
   iferror(g_ctx.window, "не использовать два окна");
@@ -285,9 +229,4 @@ void glfw3_finalize() {
 #ifndef DISABLE_CONFIG
   save_config();
 #endif
-  
-  free_app_mutex();
-  finalize_platform();
-  
-  log_info << "Корректное завершение";
 }

@@ -4,6 +4,7 @@
 
 #include <type_traits>
 #include "stb/stb_image.h"
+#include "glfw-include.hpp"
 
 #include "engine/graphic/image/color-convert.hpp"
 #include "engine/graphic/image/color-rgb.hpp"
@@ -67,6 +68,7 @@ void draw_game_frame() {
 
   if (g_ctx.use_double_pbo) {
     const int next_pbo_index = (g_ctx.pbo_index + 1) % 2;
+    static_assert (std::is_same_v<GLuint, uint>, "GLuint != uint");
 
     // Пока готовим текущий PBO, отправляем на видяху предыдущий
     glBindBuffer(GL_PIXEL_UNPACK_BUFFER, g_ctx.pbos[g_ctx.pbo_index]);

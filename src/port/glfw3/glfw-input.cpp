@@ -1,15 +1,11 @@
 #include "pch.hpp"
 #include "glfw-input.hpp"
-#include "glfw-context.hpp"
 
+#include "glfw-context.hpp"
+#include "glfw-include.hpp"
 #include "port/windows/windows-keycodes.hpp"
 #include "game/core/common.hpp"
 #include "game/core/user.hpp"
-
-#ifdef WINDOWS
-  #define GLFW_DLL
-#endif
-#include <GLFW/glfw3.h>
 
 
 void Key_mapper::bind(hpw::keycode dst_hpw_key, int scancode) {

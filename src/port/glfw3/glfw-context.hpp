@@ -1,21 +1,12 @@
 #pragma once
+#include <optional>
+#include <atomic>
+
 #include "game/core/canvas.hpp"
 #include "glfw-input.hpp"
 
-#ifdef WINDOWS
-  #define WIN32_LEAN_AND_MEAN
-  #include <windows.h>
-  #include <mmsystem.h>
 
-  #define GLFW_DLL
-#else
-  #include <unistd.h>
-#endif
-
-#include <glad/gl.h>
-// GLAD ниже GLFW не ставить. GL/glcorearb.h не подключать
-#include <GLFW/glfw3.h>
-
+struct GLFWwindow;
 
 // Все нужные данные для GLFW окна
 struct Glfw3_context {
@@ -29,16 +20,13 @@ struct Glfw3_context {
   Recti wnd_game_area {}; // видимая часть внутреннего окна игры
   Str window_title {"H.P.W"};
   std::optional<bool> start_fullscreen {}; // через аргументы запуска можно указать запуститься в фулскрине
-#ifdef WINDOWS
-  void* app_mutex {};
-#endif
   Key_mapper key_mapper {};
 
 // OpenGL:
-  Vector<GLfloat> pal_rgb {}; // Палитра игры подготовленная к отправке на видяху
+  Vector<float> pal_rgb {}; // Палитра игры подготовленная к отправке на видяху
   uint screen_tex = 0; // OpenGL текстура экрана
   uint vao = 0;
-  GLuint pbos[2] = {0, 0};
+  uint pbos[2] = {0, 0};
   bool use_double_pbo {true};
   int pbo_index = 0;
   size_t pbo_sz = 0;
