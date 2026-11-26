@@ -166,3 +166,19 @@ void utf32_text_input_cb(GLFWwindow* __blcic_u32, std::uint32_t codepoint) {
   hpw::text_input_pos = std::min<int>(hpw::text_input_pos + 1, hpw::text_input.size());
 }
 
+void rebind_key(hpw::keycode hpw_key) {
+  g_ctx.rebind_key_mode = true;
+  g_ctx.key_for_rebind = hpw_key;
+};
+
+void rebind_key_by_scancode(hpw::keycode hpw_key, int scancode) {
+  g_ctx.key_mapper.bind(hpw_key, scancode);
+  hpw::keys_info = g_ctx.key_mapper.get_info();
+};
+  
+void reset_keymap() {
+  log_debug << "reseting keymap...";
+  g_ctx.key_mapper.reset();
+  hpw::keys_info = g_ctx.key_mapper.get_info();
+};
+

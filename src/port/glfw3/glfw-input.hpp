@@ -45,3 +45,7 @@ void hotkey_process(GLFWwindow* window, int key, int scancode, int action, int m
 void mouse_button_cb(GLFWwindow* window, int button, int action, int mods);
 void key_cb(GLFWwindow* window, int key, int scancode, int action, int mods);
 void utf32_text_input_cb(GLFWwindow* _, std::uint32_t codepoint);
+void reset_keymap();
+void rebind_key_by_scancode(hpw::keycode hpw_key, int scancode);
+// включить режим переназначения кнопки
+void rebind_key(hpw::keycode hpw_key);
